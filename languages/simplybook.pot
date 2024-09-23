@@ -1,0 +1,388 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: GA Google Analytics\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-09-23 21:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: "
+
+#admin.main.twig
+msgid "Settings"
+msgstr ""
+
+#admin.main.twig
+msgid "Plugin themes:"
+msgstr ""
+
+#admin.main.twig
+msgid "Domain:"
+msgstr ""
+
+#admin.main.twig
+msgid "Select timeline type:"
+msgstr ""
+
+#admin.main.twig
+msgid "Flexible"
+msgstr ""
+
+#admin.main.twig
+msgid "Modern"
+msgstr ""
+
+#admin.main.twig
+msgid "Flexible weekly"
+msgstr ""
+
+#admin.main.twig
+msgid "Slots weekly"
+msgstr ""
+
+#admin.main.twig
+msgid "Modern Provider"
+msgstr ""
+
+#admin.main.twig
+msgid "Flexible Provider"
+msgstr ""
+
+#admin.main.twig
+msgid "Classes"
+msgstr ""
+
+#admin.main.twig
+msgid "What is calendar layout type?"
+msgstr ""
+
+#admin.main.twig
+msgid "Select datepicker type:"
+msgstr ""
+
+#admin.main.twig
+msgid "Top calendar"
+msgstr ""
+
+#admin.main.twig
+msgid "Inline datepicker"
+msgstr ""
+
+#admin.main.twig
+msgid "RTL:"
+msgstr ""
+
+#admin.main.twig
+msgid "Disable"
+msgstr ""
+
+#admin.main.twig
+msgid "Enable"
+msgstr ""
+
+#admin.main.twig
+msgid "What is RTL?"
+msgstr ""
+
+#admin.main.twig
+msgid "Theme settings"
+msgstr ""
+
+#admin.main.twig
+msgid "Predefined settings"
+msgstr ""
+
+#admin.main.twig
+msgid "Location:"
+msgstr ""
+
+#admin.main.twig
+msgid "Select location"
+msgstr ""
+
+#admin.main.twig
+msgid "Category:"
+msgstr ""
+
+#admin.main.twig
+msgid "Select category"
+msgstr ""
+
+#admin.main.twig
+msgid "Provider:"
+msgstr ""
+
+#admin.main.twig
+msgid "Select provider"
+msgstr ""
+
+#admin.main.twig
+msgid "Service:"
+msgstr ""
+
+#admin.main.twig
+msgid "Select service"
+msgstr ""
+
+#admin.main.twig
+msgid "Save changes"
+msgstr ""
+
+#admin.main.twig
+msgid "Preview"
+msgstr ""
+
+#admin.main.twig
+msgid "Reset to default"
+msgstr ""
+
+# admin.js:201
+msgid "Space"
+msgstr ""
+
+# admin.js:201
+msgid "Creative"
+msgstr ""
+
+# admin.js:201
+msgid "Minimal"
+msgstr ""
+
+# admin.js:201
+msgid "Dainty"
+msgstr ""
+
+# admin.js:201
+msgid "Inspiration"
+msgstr ""
+
+# admin.js:201
+msgid "Air"
+msgstr ""
+
+# admin.js:201
+msgid "Emeri"
+msgstr ""
+
+# admin.js:201
+msgid "Bookingtroll"
+msgstr ""
+
+# admin.js:201
+msgid "classic"
+msgstr ""
+
+# admin.js:201
+msgid "Hugo"
+msgstr ""
+
+# admin.js:494
+msgid "Display timeline"
+msgstr ""
+
+# admin.js:558
+msgid "as slots"
+msgstr ""
+
+# admin.js:558
+msgid "as table"
+msgstr ""
+
+# admin.js:494
+msgid "Display item mode"
+msgstr ""
+
+# admin.js:558
+msgid "block"
+msgstr ""
+
+# admin.js:558
+msgid "list"
+msgstr ""
+
+# admin.js:494
+msgid "Navigation background color"
+msgstr ""
+
+# admin.js:494
+msgid "Body background color"
+msgstr ""
+
+# admin.js:494
+msgid "Dark base font color"
+msgstr ""
+
+# admin.js:494
+msgid "Light base font color"
+msgstr ""
+
+# admin.js:494
+msgid "Buttons color"
+msgstr ""
+
+# admin.js:494
+msgid "Company title color"
+msgstr ""
+
+# admin.js:494
+msgid "Busy time color"
+msgstr ""
+
+# admin.js:494
+msgid "Available time color"
+msgstr ""
+
+# admin.js:494
+msgid "Base color"
+msgstr ""
+
+# admin.js:494
+msgid "Show end time"
+msgstr ""
+
+# admin.js:494
+msgid "Hide unavailable time"
+msgstr ""
+
+# admin.js:494
+msgid "Hide past days on calendar"
+msgstr ""
+
+# admin.js:494
+msgid "Hide images on booking steps"
+msgstr ""
+
+# admin.js:494
+msgid "Display timeline sidebar"
+msgstr ""
+
+# admin.js:494
+msgid "Logo image"
+msgstr ""
+
+# admin.js:494
+msgid "Background image"
+msgstr ""
+
+# admin.js:494
+msgid "Review image"
+msgstr ""
+
+# admin.js:201
+msgid "belle"
+msgstr ""
+
+# admin.js:201
+msgid "Concise"
+msgstr ""
+
+# admin.js:201
+msgid "Simple beauty"
+msgstr ""
+
+# admin.js:201
+msgid "blur"
+msgstr ""
+
+# admin.js:201
+msgid "Skittish"
+msgstr ""
+
+# admin.js:201
+msgid "Tender"
+msgstr ""
+
+# admin.js:201
+msgid "default"
+msgstr ""
+
+# admin.js:201
+msgid "ADA compliant"
+msgstr ""
+
+# admin.js:231
+msgid "Flexible"
+msgstr ""
+
+# admin.js:231
+msgid "Modern"
+msgstr ""
+
+# admin.js:231
+msgid "Flexible weekly"
+msgstr ""
+
+# admin.js:231
+msgid "Slots weekly"
+msgstr ""
+
+# admin.js:231
+msgid "Flexible Provider"
+msgstr ""
+
+# admin.js:231
+msgid "Weekly classes"
+msgstr ""
+
+# admin.js:231
+msgid "Daily classes"
+msgstr ""
+
+
+# admin.auth.twig
+msgid "Simplybook"
+msgstr ""
+
+# admin.auth.twig
+msgid "SimplyBook.me is an online appointment booking system for small businesses to enterprises across all service-providing industries. The solution caters for all service businesses provided that they accept bookings on a time scheduled basis including beauty salons, spas, gyms, medical clinics, pet services, restaurants, universities, child care providers, financial advisers, counselors, and more. On top of that we provide a high class enterprise solution where corporations can offer online bookings for each of their outlets and maintain a high level overview of each outlet, all from within the admin interface."
+msgstr ""
+
+# admin.auth.twig
+msgid "The software provides tools for creating custom online booking websites or widgets to put on your own website, and enables you to accept bookings there as well as on Facebook, Instagram, Google my Business and through Booking.page the global service marketplace. SimplyBook.me can be tailored to meet particular business needs and staff access levels are completely configurable, with administrators able to determine what information each member can access."
+msgstr ""
+
+# admin.auth.twig
+msgid "In addition to the basic features provided, SimplyBook.me enables business to accept payments online an onsite with POS feature, generate reports on sales and website traffic, request additional information from clients upon booking, launch promotions, sell products upon booking, sell gift cards, offer coupons, implement a waiting list, enable a loyalty system, manage memberships and classes and more. The system will automatically send email or SMS appointment reminders to clients, helping to reduce no-shows. Businesses can launch referral programs and send review request emails to clients with SimplyBook.me."
+msgstr ""
+
+# admin.auth.twig
+msgid "Login to Simplybook"
+msgstr ""
+
+# admin.auth.twig
+msgid "Register new company"
+msgstr ""
+
+# admin.auth.twig
+msgid "Server"
+msgstr ""
+
+# admin.auth.twig
+msgid "add custom"
+msgstr ""
+
+# admin.auth.twig
+msgid "Please enter server domain name (not company custom domain). For example: simplybook.vip"
+msgstr ""
+
+# admin.auth.twig
+msgid "Authorization Confirmation"
+msgstr ""
+
+# admin.auth.twig
+msgid "Please enter the code you received in your email to confirm your authorization:"
+msgstr ""
+
+# admin.auth.twig
+msgid "Confirmation Code:"
+msgstr ""
+
+# admin.auth.twig
+msgid "Confirm"
+msgstr ""

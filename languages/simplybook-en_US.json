@@ -1,0 +1,143 @@
+{
+    "translation-revision-date": "+0000",
+    "generator": "GlotPress\/2.3.0-alpha",
+    "domain": "simplybook",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "simplybook",
+                "plural-forms": "nplurals=2; plural=n != 1",
+                "lang": "en-gb"
+            },
+            "flexible_week": [
+                "Flexible weekly"
+            ],
+            "flexible_provider": [
+                "Flexible Provider"
+            ],
+            "modern": [
+                "Modern"
+            ],
+            "flexible": [
+                "Flexible"
+            ],
+            "modern_week": [
+                "Slots weekly"
+            ],
+            "grid_week": [
+                "Weekly classes"
+            ],
+            "classes_plugin": [
+                "Daily classes"
+            ],
+            "as_slots": [
+                "as slots"
+            ],
+            "as_table": [
+                "as table"
+            ],
+            "block": [
+                "block"
+            ],
+            "list": [
+                "list"
+            ],
+            "Settings": [
+                "Settings"
+            ],
+            "Plugin themes:": [
+                "Plugin themes:"
+            ],
+            "Domain:": [
+                "Domain:"
+            ],
+            "Select timeline type:": [
+                "Select timeline type:"
+            ],
+            "Flexible": [
+                "Flexible"
+            ],
+            "Modern": [
+                "Modern"
+            ],
+            "Flexible weekly": [
+                "Flexible weekly"
+            ],
+            "Slots weekly": [
+                "Slots weekly"
+            ],
+            "Modern Provider": [
+                "Modern Provider"
+            ],
+            "Flexible Provider": [
+                "Flexible Provider"
+            ],
+            "Classes": [
+                "Classes"
+            ],
+            "What is timeline type?": [
+                "What is timeline type?"
+            ],
+            "Select datepicker type:": [
+                "Select datepicker type:"
+            ],
+            "Top calendar": [
+                "Top calendar"
+            ],
+            "Inline datepicker": [
+                "Inline datepicker"
+            ],
+            "RTL:": [
+                "RTL:"
+            ],
+            "Disable": [
+                "Disable"
+            ],
+            "Enable": [
+                "Enable"
+            ],
+            "What is RTL?": [
+                "What is RTL?"
+            ],
+            "Theme settings": [
+                "Theme settings"
+            ],
+            "Predefined settings": [
+                "Predefined settings"
+            ],
+            "Location:": [
+                "Location:"
+            ],
+            "Select location": [
+                "Select location"
+            ],
+            "Category:": [
+                "Category:"
+            ],
+            "Select category": [
+                "Select category"
+            ],
+            "Provider:": [
+                "Provider:"
+            ],
+            "Select provider": [
+                "Select provider"
+            ],
+            "Service:": [
+                "Service:"
+            ],
+            "Select service": [
+                "Select service"
+            ],
+            "Save changes": [
+                "Save changes"
+            ],
+            "Preview": [
+                "Preview"
+            ],
+            "Reset to default": [
+                "Reset to default"
+            ]
+        }
+    }
+}

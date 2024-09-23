@@ -1,0 +1,192 @@
+
+
+{% if not code %}
+
+    <div class="wp-sb wp-sb--page wp-sb--welcome-page">
+        <div class="wp-sb--message-container">
+            {% if flash and flash.messages %}
+                {% for message in flash.messages %}
+                    <div class="notice notice-success is-dismissible">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if error %}
+                <div class="notice notice-error is-dismissible">
+                    <p>{{ error }}</p>
+                </div>
+            {% endif %}
+
+            {% if flash and flash.errors %}
+                {% for message in flash.errors %}
+                    <div class="notice notice-error is-dismissible">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <header class="wp-sb--welcome-page_header">
+            <div class="wp-sb--row">
+                <div class="wp-sb--col">
+                    <img class="logo" src="{{ makeurl("images/sb-logo__full.svg") }}" alt="simplybook.me logo" />
+                </div>
+                <div class="wp-sb--col col-sign-up">
+                    <p class="wp-sb--p wp-sb--p_primary sign-in-row">{{ __("Already have an account?") }} <a class="btn btn--secondary-outline sb-button sb-login" href="{{ login_url }}">{{ __("Sign in here") }}</a></p>
+                </div>
+            </div>
+        </header>
+
+        <main class="wp-sb--welcome-page_main">
+            <article class="wp-sb--row wp-sb--row_hero">
+                <div class="wp-sb--col wp-sb--col_content">
+                    <div class="wp-sb--section-header">
+                        <h2 class="wp-sb--title wp-sb--title_h2 --has-subtitle">{{ __("Online Booking System<br/> for <span class='color-primary'>all service based industries</span>")|raw() }}</h2>
+                        <p class="wp-sb--p wp-sb--p_secondary">{{ __("Simply define your services and providers, display their availability, and you will have clients both old and new making bookings 24/7.") }}</p>
+                    </div>
+
+
+                    <div class="wp-sb--btn-bar">
+                        <div class="wp-sb--btn-bar_row">
+                            <a class="btn btn--primary sb-button sb-login" href="{{ register_url }}">{{ __("Create free account") }}</a>
+                        </div>
+                        <p class="wp-sb--p wp-sb--p_primary info-lable">{{ __("100% free. No credit card needed.") }}</p>
+                    </div>
+
+                    <p class="wp-sb--p wp-sb--p_small wp-sb--p_secondary">{{ __("By continuing, Wordpress will share your name, email, company name and domain with SimplyBook.me") }}</p>
+                    <br>
+                    <p class="wp-sb--p wp-sb--p_small wp-sb--p_secondary">{{ __("We’re committed to your privacy. SimplyBook.me uses the information you provide to us to contact you about our relevant content, products, and services. You may unsubscribe from these communications at any time. For more information, check out our privacy Policy") }}</p>
+                </div>
+
+                <div class="wp-sb--col wp-sb--col_picture">
+                    <picture class="hero-img_wrapper">
+                        <img style="max-height: 544px" class="hero-img" src="{{ makeurl("images/hero-image.png") }}" alt="hero image">
+                    </picture>
+                </div>
+            </article>
+        </main>
+
+        <footer class="wp-sb--welcome-page_footer">
+            <div class="sb-server-selector">
+                {% set servers = [
+                    {'name': 'simplybook.me (.it, .asia, .net)', 'value': 'simplybook.me'},
+                    {'name': 'simplybook.plus', 'value': 'simplybook.plus'},
+                ] %}
+
+                {% set isSelected = false %}
+
+                <div class="wp-sb--form-group">
+                    <label for="sb-server wp-sb--label">{{ __("Server") }}</label>
+                    <select id="sb-server" class="wp-sb--select select-server">
+                        {% for server in servers %}
+                            {% if server.value == api_domain %}
+                                {% set isSelected = true %}
+                                <option value="{{ server.value }}" selected>{{ server.name }}</option>
+                            {% else %}
+                                <option value="{{ server.value }}">{{ server.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                        {% if not isSelected %}
+                            <option value="{{ api_domain }}" selected>{{ api_domain }}</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <button type="button" class="btn btn--primary" id="sb-server-custom">{{ __("add custom") }}</button>
+            </div>
+
+            <a href="{{ makeUrl({'sbpage': 'check', 'amp_symbol': '%amp%'}) }}" class="link check-system v1">{{ __("Check system") }}</a>
+        </footer>
+    </div>
+
+{% else %}
+{# OAUTH code confirmation. User need to enter code from email #}
+<div  class="sb-plugin-container booking-system">
+    <h2>{{ __("Authorization Confirmation") }}</h2>
+
+
+    {% if flash and flash.messages %}
+        {% for message in flash.messages %}
+            <div class="notice notice-success is-dismissible">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if error %}
+        <div class="notice notice-error is-dismissible">
+            <p>{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {% if flash and flash.errors %}
+        {% for message in flash.errors %}
+            <div class="notice notice-error is-dismissible">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <p>{{ __("Please enter the code you received in your email to confirm your authorization:") }}</p>
+
+    <form action="{{ makeUrl({'m': 'confirm', 'amp_symbol': '%amp%'}) }}" method="post">
+        <input type="hidden" name="_wpnonce" value="{{ _wpnonce|escape }}">
+        <input type="hidden" name="code" value="{{ code|escape }}">
+        <input type="hidden" name="company_login" value="{{ company_login|escape }}">
+        <input type="hidden" name="session_id" value="{{ session_id|escape }}">
+        <input type="hidden" name="domain" value="{{ domain|escape }}">
+
+        <label for="verification_code">{{ __("Confirmation Code:") }}</label>
+        <input type="text" id="verification_code" name="verification_code" value="{{ verification_code|escape }}" placeholder="XXXXXX" required>
+        <br><br>
+        <input type="submit" class="button button-primary" value="{{ __("Confirm") }}">
+    </form>
+
+    <footer class="wp-sb--welcome-page_footer">
+        <a href="{{ makeUrl({'sbpage': 'check', 'amp_symbol': '%amp%'}) }}" class="check-system v2">{{ __("Check system") }}</a>
+    </footer>
+</div>
+{% endif %}
+
+
+<script type="application/javascript">
+    try {
+        localStorage.removeItem('apiData');
+        localStorage.removeItem('apiDataExpiry');
+        localStorage.removeItem('cachedLogin');
+
+        document.addEventListener("DOMContentLoaded", function () {
+            function setServerF(server) {
+                var setUrl = "{{ makeUrl({'m': 'setserver', 'amp_symbol': '%amp%'})|raw }}";
+
+                jQuery.ajax({
+                    url: setUrl,
+                    type: 'POST',
+                    data: {
+                        'domain': server,
+                        '_wpnonce': "{{ _wpnonce|escape }}"
+                    },
+                    success: function (data) {
+                        window.location.reload();
+                    }
+                });
+            }
+
+            jQuery(document).on('change', '#sb-server', function (){
+                var server = jQuery(this).val();
+                setServerF(server);
+            });
+
+            jQuery(document).on('click', '#sb-server-custom', function (){
+                var server = prompt("{{ __('Please enter server domain name (not company custom domain). For example: simplybook.vip') }}", "");
+                if (server != null) {
+                    setServerF(server);
+                }
+            });
+        });
+
+
+    } catch (e) {
+        console.log(e);
+    }
+</script>

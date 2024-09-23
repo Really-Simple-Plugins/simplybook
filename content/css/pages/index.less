@@ -1,0 +1,23 @@
+//page grid
+.wp-sb{
+  &--page{
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    //min-height: calc(100vh - 190px);
+    padding: 24px;
+    border-radius: 4px;
+    margin: 20px 20px 0 0;
+    font-family: @noto-sans;
+    font-size: @fz-default;
+    font-weight: @normal;
+
+    @media screen and (max-width: @mob){
+      margin: 10px 10px 0 0;
+    }
+  }
+}
+
+@import "dashboard-page";
+@import "loading-page";

@@ -1,0 +1,41 @@
+{% if is_auth and server %}
+<script>
+    {% set js_code %}
+    document.addEventListener("DOMContentLoaded", function () {
+        new SimplybookWidget({
+            "widget_type": "iframe",
+            "url": "https:\/\/{{ server }}",
+            "theme": {{ template|json_encode|raw }},
+            "theme_settings": {{ themeparams|json_encode|raw }},
+            "timeline": {{ timeline_type|json_encode|raw }},
+            "datepicker": {{ datepicker_type|json_encode|raw }},
+            "is_rtl": {{ is_rtl|number_format }},
+            "app_config": {"clear_session": {{ clear_session|number_format }}, "allow_switch_to_ada": {{ allow_switch_to_ada|number_format }}, "predefined": {
+                {% for key, value in predefined %}
+                    {% if value %}
+                        "{{ key }}": "{{ value }}",
+                    {% endif %}
+                {% endfor %}
+            }},
+            "container_id": "sbw_z0hg2i"
+        });
+
+    });
+    {% endset %}
+    {{ js_code|replace({'\n': ' ', '\r': ' ', '\t': ' '})|pregReplace('/\\s+/',' ')|raw }}
+</script>
+{% else %}
+<script>
+    {% set js_code %}
+    document.addEventListener("DOMContentLoaded", function () {
+        var container = document.getElementById("sbw_z0hg2i");
+        container.innerHTML = '<div class="alert alert-danger">' +
+                    '<strong>Warning!</strong> Please setup plugin settings.'+
+            '</div>';
+
+    });
+    {% endset %}
+    {{ js_code|replace({'\n': ' ', '\r': ' ', '\t': ' '})|pregReplace('/\\s+/',' ')|raw }}
+</script>
+{% endif %}
+

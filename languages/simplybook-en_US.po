@@ -1,0 +1,141 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 1.0.0\n"
+"Report-Msgid-Bugs-To: Vetal\n"
+"Last-Translator: Vetal\n"
+"Language-Team: Simplybook\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2023-09-06T10:17:02+03:00\n"
+"PO-Revision-Date: 2023-09-06T10:17:02+03:00\n"
+"Language: en_US\n"
+
+msgid "flexible_week"
+msgstr "Flexible weekly"
+
+msgid "flexible_provider"
+msgstr "Flexible Provider"
+
+msgid "modern"
+msgstr "Modern"
+
+msgid "flexible"
+msgstr "Flexible"
+
+msgid "modern_week"
+msgstr "Slots weekly"
+
+msgid "grid_week"
+msgstr "Weekly classes"
+
+msgid "classes_plugin"
+msgstr "Daily classes"
+
+msgid "as_slots"
+msgstr "as slots"
+
+msgid "as_table"
+msgstr "as table"
+
+msgid "block"
+msgstr "block"
+
+msgid "list"
+msgstr "list"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Plugin themes:"
+msgstr "Plugin themes:"
+
+msgid "Domain:"
+msgstr "Domain:"
+
+msgid "Select timeline type:"
+msgstr "Select timeline type:"
+
+msgid "Flexible"
+msgstr "Flexible"
+
+msgid "Modern"
+msgstr "Modern"
+
+msgid "Flexible weekly"
+msgstr "Flexible weekly"
+
+msgid "Slots weekly"
+msgstr "Slots weekly"
+
+msgid "Modern Provider"
+msgstr "Modern Provider"
+
+msgid "Flexible Provider"
+msgstr "Flexible Provider"
+
+msgid "Classes"
+msgstr "Classes"
+
+msgid "What is timeline type?"
+msgstr "What is timeline type?"
+
+msgid "Select datepicker type:"
+msgstr "Select datepicker type:"
+
+msgid "Top calendar"
+msgstr "Top calendar"
+
+msgid "Inline datepicker"
+msgstr "Inline datepicker"
+
+msgid "RTL:"
+msgstr "RTL:"
+
+msgid "Disable"
+msgstr "Disable"
+
+msgid "Enable"
+msgstr "Enable"
+
+msgid "What is RTL?"
+msgstr "What is RTL?"
+
+msgid "Theme settings"
+msgstr "Theme settings"
+
+msgid "Predefined settings"
+msgstr "Predefined settings"
+
+msgid "Location:"
+msgstr "Location:"
+
+msgid "Select location"
+msgstr "Select location"
+
+msgid "Category:"
+msgstr "Category:"
+
+msgid "Select category"
+msgstr "Select category"
+
+msgid "Provider:"
+msgstr "Provider:"
+
+msgid "Select provider"
+msgstr "Select provider"
+
+msgid "Service:"
+msgstr "Service:"
+
+msgid "Select service"
+msgstr "Select service"
+
+msgid "Save changes"
+msgstr "Save changes"
+
+msgid "Preview"
+msgstr "Preview"
+
+msgid "Reset to default"
+msgstr "Reset to default"

@@ -1,0 +1,361 @@
+/*!************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[3].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[3].use[2]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[3].use[3]!./src/editor.scss ***!
+  \************************************************************************************************************************************************************************************************************************************************************************/
+.wp-sb * {
+  box-sizing: border-box;
+}
+.wp-sb ul, .wp-sb ol {
+  margin: 0;
+}
+.wp-sb p, .wp-sb h1, .wp-sb h2, .wp-sb h3, .wp-sb h4 {
+  margin: 0;
+}
+
+.wp-sb .color-primary {
+  color: #06ADEF;
+}
+.wp-sb .color-neutral-dark {
+  color: #0B3052;
+}
+.wp-sb .color-danger {
+  color: #FF3259;
+}
+.wp-sb .color-success {
+  color: #00D38B;
+}
+.wp-sb .--fw-bold {
+  font-weight: 700;
+}
+.wp-sb .--fw-semibold {
+  font-weight: 500;
+}
+.wp-sb .--fw-normal {
+  font-weight: 400;
+}
+.wp-sb .--fw-light {
+  font-weight: 300;
+}
+.wp-sb--p {
+  font-size: 14px;
+  line-height: 1.44;
+  font-weight: normal;
+  padding: 0;
+  margin: 0;
+  font-family: "Noto Sans", sans-serif;
+}
+.wp-sb--p_secondary {
+  color: #788291;
+}
+.wp-sb--p_primary {
+  color: #0B3052;
+}
+.wp-sb--p_small {
+  font-size: 12px;
+}
+.wp-sb--p_caption {
+  font-size: 16px;
+}
+.wp-sb--p_hint {
+  padding-left: 4px;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  line-height: 1.22;
+  font-weight: normal;
+  font-style: italic;
+  color: #788291;
+  border-left: 4px solid #06ADEF;
+}
+.wp-sb--p.--fw-bold {
+  font-weight: 700;
+}
+.wp-sb--p.--fw-semibold {
+  font-weight: 500;
+}
+.wp-sb--p.--fw-normal {
+  font-weight: 400;
+}
+.wp-sb--p.--fw-light {
+  font-weight: 300;
+}
+.wp-sb--title {
+  font-weight: 700;
+  line-height: 1.46;
+  padding: 0;
+  margin: 0;
+  font-family: "Mulish", sans-serif;
+  letter-spacing: 0.01em;
+}
+.wp-sb--title_h2 {
+  font-size: 24px;
+}
+.wp-sb--title_h3 {
+  font-size: 18px;
+}
+.wp-sb--title_h4 {
+  font-size: 16px;
+}
+.wp-sb--title.--fw-bold {
+  font-weight: 700;
+}
+.wp-sb--title.--fw-semibold {
+  font-weight: 500;
+}
+.wp-sb--title.--fw-normal {
+  font-weight: 400;
+}
+.wp-sb--title.--fw-light {
+  font-weight: 300;
+}
+
+.custom-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.custom-checkbox--input {
+  display: block !important;
+  position: absolute;
+  width: 46px !important;
+  height: 26px !important;
+  top: 0;
+  right: 0;
+  opacity: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 2;
+}
+.custom-checkbox--label {
+  flex: 1;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px 6px;
+}
+.custom-checkbox--checkbox {
+  position: relative;
+  display: inline-block;
+  border-radius: 25px;
+  width: 46px;
+  min-width: 46px;
+  max-width: 46px;
+  height: 26px;
+  border: 1px solid #d5e0f0;
+  background: #fff;
+  cursor: pointer;
+}
+.custom-checkbox--icon {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  height: 20px;
+  width: 20px;
+  border-radius: 20px;
+  background: #ABBCCC;
+  transition: all 0.3s ease-in-out;
+}
+.custom-checkbox input[type=checkbox]:checked + .custom-checkbox--checkbox .custom-checkbox--icon,
+.custom-checkbox input[type=checkbox]:checked + .custom-checkbox--checkbox .custom-checkbox--icon {
+  transform: translateX(20px);
+  background: #06ADEF;
+}
+
+.sb-widget-container {
+  position: relative;
+  padding: 24px 30px;
+  border-radius: 8px;
+  border: 1px solid #d5e0f0;
+  background: #F1F6FF;
+  margin: 22px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px 6px;
+  flex-wrap: wrap;
+  text-align: center;
+}
+.sb-widget-container .sb-widget-icon {
+  color: #06ADEF;
+  width: 25px !important;
+  height: 25px !important;
+  font-size: 25px !important;
+  line-height: 0.6;
+}
+.sb-widget-container .sb-widget-title {
+  color: #06ADEF;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  width: auto;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.22;
+}
+.sb-widget-container .--subtitle.wp-sb--p {
+  margin-top: 20px;
+  width: 100%;
+  margin-bottom: 0;
+  font-weight: 300;
+}
+.sb-widget-container .wp-sb--p {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #0B3052;
+}
+.sb-widget-container .wp-sb--p_secondary {
+  color: #788291;
+}
+.sb-widget-container .sb-widget-predefined {
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  width: 100%;
+  font-weight: 500;
+}
+.sb-widget-container .sb-widget-edit-btn {
+  margin-top: 8px;
+  position: relative;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 14px;
+  background: #06ADEF;
+  color: #fff;
+  min-height: 36px;
+  padding: 4px 25px;
+}
+.sb-widget-container .sb-widget-edit-btn:hover, .sb-widget-container .sb-widget-edit-btn:focus {
+  background: #059bd6;
+  color: #fff;
+}
+.sb-widget-container .sb-widget-save-btn {
+  margin-top: 20px;
+}
+.sb-widget-container .sb-widget-alert {
+  color: #FF3259;
+  font-style: italic;
+  font-size: 16px;
+  margin: 0;
+  display: inline-block;
+  width: 100%;
+  padding: 0px 0px 0px 0px;
+  text-align: center;
+}
+.sb-widget-container .sb-widget-alert a {
+  color: #FF3259;
+  text-decoration: underline;
+  border-bottom: 0;
+  border: 0;
+}
+
+.wp-sb-popup-info {
+  max-width: 480px;
+  margin-bottom: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid #d5e0f0;
+}
+.wp-sb-popup-info p {
+  color: #0B3052;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+}
+
+.wp-sb-popup-predefine-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.wp-sb-popup-predefine-form .components-base-control {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.wp-sb-popup-predefine-form .components-base-control__label {
+  text-transform: unset;
+  font-size: 14px;
+  color: #0B3052;
+}
+.wp-sb-popup-predefine-form .components-base-control__field {
+  padding: 0;
+  margin: 0;
+}
+.wp-sb-popup-predefine-form .components-base-control__field .components-select-control {
+  padding: 0;
+  margin: 0;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+.wp-sb-popup-predefine-form .components-base-control__field .components-flex-item {
+  flex-grow: 1;
+  flex-basis: 200px;
+}
+.wp-sb-popup-predefine-form .components-base-control__field .components-input-control__container {
+  flex: unset;
+  width: auto;
+  flex-grow: 1;
+  flex-basis: 200px;
+}
+.wp-sb-popup-predefine-form .components-base-control__field .components-input-control__container .components-select-control__input {
+  border-radius: 6px;
+  padding-left: 18px;
+  padding-right: 30px;
+  height: 36px;
+  font-size: 14px;
+}
+.wp-sb-popup-predefine-form .components-base-control__field .components-input-control__container .components-input-control__backdrop {
+  border-color: #d5e0f0;
+  border-radius: 6px;
+}
+
+.wp-sb-popup-predefine-btnBar {
+  display: flex;
+  align-items: stretch;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.wp-sb-popup-predefine-btnBar button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 36px;
+  padding: 4px 25px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 110px;
+}
+.wp-sb-popup-predefine-btnBar button.components-button.is-primary {
+  background: #06ADEF;
+  color: #fff;
+}
+.wp-sb-popup-predefine-btnBar button.components-button.is-primary:hover, .wp-sb-popup-predefine-btnBar button.components-button.is-primary:focus {
+  background: #059bd6;
+  color: #fff;
+}
+
+.components-modal__frame.sb-widget-modal .components-panel__body.is-opened {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.sb-widget-preview-modal {
+  width: 80%;
+}
+
+/*# sourceMappingURL=index.css.map*/

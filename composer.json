@@ -1,0 +1,24 @@
+{
+    "config": {
+        "optimize-autoloader": true,
+        "prepend-autoloader": false,
+        "platform": {
+            "php": "7.4"
+        }
+    },
+    "require": {
+        "twig/twig": "^3.8",
+        "ext-openssl": "*",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-gettext": "*"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@langjson"
+        ],
+        "langjson": [
+            "msgfmt languages/simplybook-en_US.po -o languages/simplybook-en_US.mo && po2json languages/simplybook-en_US.mo languages/simplybook-en_US.json"
+        ]
+    }
+}

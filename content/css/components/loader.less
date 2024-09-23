@@ -1,0 +1,79 @@
+.loader-container {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+}
+
+.loader-container .loader-overlay {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.loader-container {
+  .loader {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    width: 32px;
+    height: 32px;
+    /// background: url('/common/images/catalogue/loading.gif') no-repeat top left transparent;
+  }
+
+  .lds-eclipse div {
+    position: absolute;
+    -webkit-animation: lds-eclipse 1s linear infinite;
+    animation: lds-eclipse 1s linear infinite;
+    width: 160px;
+    height: 160px;
+    top: 20px;
+    left: 20px;
+    border-radius: 50%;
+    box-shadow: 0 4px 0 0 #1d0e0b;
+    -webkit-transform-origin: 80px 82px;
+    transform-origin: 80px 82px;
+  }
+
+  .lds-eclipse {
+    width: 86px !important;
+    height: 86px !important;
+    -webkit-transform: translate(-43px, -43px) scale(0.43) translate(43px, 43px);
+    transform: translate(-43px, -43px) scale(0.43) translate(43px, 43px);
+  }
+
+}
+
+@keyframes lds-eclipse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@-webkit-keyframes lds-eclipse {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  50% {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}

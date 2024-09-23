@@ -1,0 +1,456 @@
+{% apply spaceless %}
+
+<div class="wp-sb wp-sb--page wp-sb--dashboard-page booking-system">
+    <section class="wp-sb--message-container">
+        <div class="wp-sb--message-container_errors">
+            <div class="error"></div>
+        </div>
+
+        {% if flash and flash.messages %}
+            {% for message in flash.messages %}
+                <div class="notice notice-success is-dismissible">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if flash and flash.errors %}
+            {% for message in flash.errors %}
+                <div class="notice notice-error is-dismissible">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    <header class="wp-sb--welcome-page_header">
+        <div class="wp-sb--row">
+            <div class="wp-sb--col">
+                <img class="logo" src="{{ makeurl("images/sb-logo__full.svg") }}" alt="simplybook.me logo" />
+                <p class="wp-sb--p wp-sb--p_secondary">{{ __("SimplyBook.me is an appointment scheduling software that allows you to manage your bookings and reservations.")|raw() }}</p>
+            </div>
+            <div class="wp-sb--col col-login">
+                <p class="wp-sb--p wp-sb--p_secondary wp-sb--p_small">{{ 'You are logged in to SimplyBook:'|replace({'%login%': auth_data.company })|raw() }}</p>
+                <div class="col-login_row">
+                    <span class="--color-neutral-dark">{{ auth_data.company }}</span> <a id="sb-logout" class="link" href="{{ makeUrl({'m': 'logout', 'amp_symbol': '%amp%'}) }}">{{ __("Logout")|raw() }}</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="wp-sb--welcome-page_main">
+        <div class="wp-sb--tabs">
+            <ul class="wp-sb--tabs-nav">
+                <li class="wp-sb--tabs-nav_item">
+                    <a href="#general-tab" class="wp-sb--tabs-nav_item-link --active">{{ __("General")|raw() }}</a>
+                </li>
+                <li class="wp-sb--tabs-nav_item">
+                    <a href="#design-tab" class="wp-sb--tabs-nav_item-link">{{ __("Design settings")|raw() }}</a>
+                </li>
+            </ul>
+
+            <div id="general-tab" class="wp-sb--tab show">
+                <div class="wp-sb--tab_content">
+                    <section class="sb-general--row">
+                        <div class="sb-general--col sb-general--col_info">
+                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Welcome to the SimplyBook.me plugin for WordPress!")|raw() }}</h3>
+
+                            <br>
+                            <p class="wp-sb--p wp-sb--p_primary">
+                                {{ __("This plugin allows you to seamlessly integrate your SimplyBook.me booking widget into your WordPress site, making it easier for your clients to book your services online. With just a few clicks, you can add the booking widget to any page or post. On the right, you’ll find useful links to manage services, providers, schedules, bookings and notifications in your SimplyBook.me admin.") }}
+                            </p>
+
+                            <br>
+
+                            <div id="sb-widget-install-instruction" class="widget-install-instruction">
+                                <h3 class="wp-sb--title wp-sb--title_h3">{{ __("How to add a widget to a page?")|raw() }}</h3>
+
+                                {% if widget_page_url %}
+                                <div class="wp-sb--form-group">
+                                    <label for="sb-server wp-sb--label">{{ __("Your page with booking widget is ready by the following link:") }}</label>
+                                    <div class="wp-sb--copy-line">
+                                        <div class="wp-sb--copy-txt">{{ widget_page_url|replace({'&':'%amp%'}) }}</div>
+                                        <a href="{{ widget_page_url|replace({'&':'%amp%'}) }}" target="_blank" class="btn btn--no-text btn--secondary-outline" type="button" >
+                                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                        </a>
+                                        <a href="{{ widget_page_edit_url|replace({'&':'%amp%'}) }}" target="_blank" class="btn btn--no-text btn--secondary-outline" type="button" >
+                                            <i class="fa-regular fa-pen-to-square"></i>
+                                        </a>
+
+                                        <button class="btn btn--no-text btn--secondary-outline btn--danger" type="button" id="sb-delete-page">
+                                            <i class="fa-regular fa-trash-can"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="widget-install-instruction_or"><span class="wp-sb--title wp-sb--title_h2">{{ __("or") }}</span></div>
+                                {% endif %}
+
+                                <div class="wp-sb--form-group">
+                                    <label for="sb-server wp-sb--label">{{ __("To install the booking widget on your custom page or post, please use the following shortcode:") }}</label>
+                                    <div class="wp-sb--copy-line">
+                                        <div class="wp-sb--copy-txt">[simplybook_widget]</div>
+                                        <button class="btn btn--no-text btn--secondary-outline btn--copy" type="button" id="sb-copy-shortcode">
+                                            <i class="fa-regular fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sb-general--col sb-general--col_links">
+                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Useful links")|raw() }}</h3>
+
+                            <ul class="wp-sb--useful-links">
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_services_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid wp-sb--icon fa-bell-concierge"></i>
+                                        <span class="wp-sb--txt">{{ __("Manage services")|raw() }}</span>
+                                    </a>
+                                </li>
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_providers_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid fa-users wp-sb--icon "></i>
+                                        <span class="wp-sb--txt">{{ __("Manage providers")|raw() }}</span>
+                                    </a>
+                                </li>
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_bookings_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid fa-calendar-days wp-sb--icon "></i>
+                                        <span class="wp-sb--txt">{{ __("Manage bookings")|raw() }}</span>
+                                    </a>
+                                </li>
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_plugins_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid fa-boxes-packing wp-sb--icon "></i>
+                                        <span class="wp-sb--txt">{{ __("Custom features")|raw() }}</span>
+                                    </a>
+                                </li>
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_manage_schedule_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid fa-clock wp-sb--icon "></i>
+                                        <span class="wp-sb--txt">{{ __("Manage schedule")|raw() }}</span>
+                                    </a>
+                                </li>
+                                <li class="wp-sb--useful-links_item">
+                                    <a href="{{ sb_manage_notifications_url }}" target="_blank" class="wp-sb--useful-links_item-link">
+                                        <i class="fa-solid fa-bell wp-sb--icon "></i>
+                                        <span class="wp-sb--txt">{{ __("Manage notifications")|raw() }}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <div id="design-tab" class="wp-sb--tab">
+                <div class="wp-sb--tab_content">
+{#                    <h3 class="wp-sb--title wp-sb--title_h3">{{ __("")|raw() }}</h3>#}
+
+
+                    <div id="sb-settings-container" class="timeline-{{ timeline_type }} theme-{{ template }}">
+{#                        <h2>{{ __("Settings") }}</h2>#}
+                        <form method='POST' id="sb-widget-form" class="form-setting" name="sb-widget-form" action='{{ makeUrl({'m': 'settings', 'amp_symbol': '%amp%'}) }}' >
+                            <input type="hidden" name="_wpnonce" value="{{ _wpnonce|escape }}">
+
+                            <div class="setting-block--main-body-grid mb-xl">
+                                <div class="api-data-wrapper">
+                                    <section class="setting-block--theme-config">
+                                        <header class="setting-block--header">
+                                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Main settings") }}</h3>
+                                        </header>
+
+                                        <div class="setting-block--body">
+                                            <div class='api-data template hidden domain'>
+                                                <div scope="row"><label>{{ __("Domain:") }}</label></div>
+                                                <div class="data-input">
+                                                    <input type="text" name="server" value="{{ server|escape }}" class="regular-text" />
+                                                </div>
+                                            </div>
+
+                                            <div class='api-data template hidden'>
+                                                <div scope="row"><label>{{ __("Select calendar layout:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control regular-text" id="timeline_type" name="timeline_type">
+                                                        <option value="flexible">{{ __("Flexible") }}</option>
+                                                        <option value="modern">{{ __("Modern") }}</option>
+                                                        <option value="flexible_week">{{ __("Flexible weekly") }}</option>
+                                                        <option value="modern_week">{{ __("Slots weekly") }}</option>
+                                                        <option value="classes">{{ __("Modern Provider") }}</option>
+                                                        <option value="flexible_provider">{{ __("Flexible Provider") }}</option>
+                                                        <option value="classes_plugin">{{ __("Classes") }}</option>
+                                                    </select>
+
+                                                    <p class="description">
+                                                        <a href="https://help.simplybook.me/index.php/How_to_change_the_way_time_slots_are_shown" target="_blank" class="link">{{ __("What is calendar layout type?") }}</a>
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class='api-data template hidden'>
+                                                <div scope="row"><label>{{ __("Select datepicker type:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control" id="datepicker_type" name="datepicker_type">
+                                                        <option value="top_calendar">{{ __("Top calendar") }}</option>
+                                                        <option value="inline_datepicker">{{ __("Inline datepicker") }}</option>
+                                                    </select>
+
+
+                                                </div>
+                                            </div>
+
+                                            <div class='api-data template hidden'>
+                                                <div scope="row">
+                                                    <label class="wp-sb--label custom-checkbox--label" for="is_rtl">{{ __("RTL:") }}</label>
+                                                </div>
+                                                <div class="data-input --one-line">
+                                                    <div class="custom-checkbox">
+                                                        <input type="hidden" name="is_rtl">
+                                                        <input type="checkbox" id="is_rtl" class="custom-checkbox--input">
+                                                        <div class="custom-checkbox--checkbox">
+                                                            <div class="custom-checkbox--icon"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <a href="https://en.wikipedia.org/wiki/Right-to-left" target="_blank" class="link">{{ __("What is RTL?") }}</a>
+                                                </div>
+                                            </div>
+
+                                            <div class='api-data template hidden'>
+                                                <div scope="row">
+                                                    <label class="wp-sb--label custom-checkbox--label" for="allow_switch_to_ada">{{ __("Allow switch site view to ADA compliant theme:") }}</label>
+                                                </div>
+                                                <div class="data-input">
+                                                    <div class="custom-checkbox">
+                                                        <input type="hidden" name="allow_switch_to_ada">
+                                                        <input type="checkbox" id="allow_switch_to_ada" class="custom-checkbox--input">
+                                                        <div class="custom-checkbox--checkbox">
+                                                            <div class="custom-checkbox--icon"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class='api-data template hidden'>
+                                                <div scope="row"><label class="wp-sb--label custom-checkbox--label" for="clear_session">{{ __("Сlear the session of each widget initialization:") }}</label></div>
+                                                <div class="data-input">
+                                                    <div class="custom-checkbox">
+                                                        <input type="hidden" name="clear_session">
+                                                        <input type="checkbox" id="clear_session" class="custom-checkbox--input">
+                                                        <div class="custom-checkbox--checkbox">
+                                                            <div class="custom-checkbox--icon"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+
+                                    <section class='api-data hidden setting-block--themes'>
+                                        <header class="setting-block--header">
+                                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Plugin themes:") }}</h3>
+                                            <span class="btn collapse-toggler" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" >
+                                                <span class="show-all">{{ __("Show themes") }}</span>
+                                                <span class="hide-all">{{ __("Hide themes") }}</span>
+                                                <i class="fa-solid fa-angle-down"></i>
+                                            </span>
+                                        </header>
+
+                                        <div class="collapse" id="collapseExample">
+                                            <div class="collapse-body">
+                                                <div id='themes-container'></div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                </div>
+
+                                <section class="theme-data-wrapper setting-block--color-settings">
+                                    <div class='theme-data hidden'>
+                                        <header class="setting-block--header">
+                                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Theme settings") }}</h3>
+                                        </header>
+                                    </div>
+
+                                    <div class='theme-data hidden template'>
+                                        <div scope="row"><label class='title wp-sb--label'></label></div>
+                                        <div class='data-input'></div>
+                                    </div>
+                                </section>
+
+                                <section id="palettes-data" class="setting-block--palettes palettes-data-wrapper">
+                                    <header class="palettes-data setting-block--header">
+                                        <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Palettes") }}</h3>
+                                    </header>
+
+                                    <div id='palettes-data-content'></div>
+                                </section>
+
+                                <section class="theme-data-wrapper setting-block--predefined">
+                                    {% if predefined_existed %}
+                                        <header class="setting-block--header">
+                                            <h3 class="wp-sb--title wp-sb--title_h3">{{ __("Predefined settings") }}</h3>
+                                        </header>
+                                    {% endif %}
+
+                                    <div class="api-data-wrapper">
+                                        {% if locations and locations|length %}
+                                            <div class='api-data template api-data-location'>
+                                                <div scope="row"><label>{{ __("Location:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control" id="predefined_location" name="predefined[location]">
+                                                        <option value="">{{ __("Select location") }}</option>
+                                                        {% for location in locations %}
+                                                            <option value="{{ location.id|escape }}">{{ location.name|escape }}</option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                                    <p class="description">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if categories and categories|length %}
+                                            <div class='api-data template api-data-category'>
+                                                <div scope="row"><label>{{ __("Category:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control" id="predefined_category" name="predefined[category]">
+                                                        <option value="">{{ __("Select category") }}</option>
+                                                        {% for category in categories %}
+                                                            <option value="{{ category.id|escape }}">{{ category.name|escape }}</option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                                    <p class="description">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if providers and providers|length %}
+                                            <div class='api-data template api-data-provider'>
+                                                <div scope="row"><label>{{ __("Provider:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control" id="predefined_provider" name="predefined[provider]">
+                                                        <option value="">{{ __("Select provider") }}</option>
+                                                        {% for provider in providers %}
+                                                            <option value="{{ provider.id|escape }}">{{ provider.name|escape }}</option>
+                                                        {% endfor %}
+
+                                                        {% if plugins and plugins['any_unit'] and plugins['any_unit']['is_active'] %}
+                                                            <option value="any">{{ __("Any provider") }}</option>
+                                                        {% endif %}
+                                                    </select>
+
+                                                    <p class="description">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if services and services|length %}
+                                            <div class='api-data template api-data-service'>
+                                                <div scope="row"><label>{{ __("Service:") }}</label></div>
+                                                <div class="data-input">
+                                                    <select class="form-control" id="predefined_service" name="predefined[service]">
+                                                        <option value="">{{ __("Select service") }}</option>
+                                                        {% for service in services %}
+                                                            <option value="{{ service.id|escape }}">{{ service.name|escape }}</option>
+                                                        {% endfor %}
+                                                    </select>
+
+                                                    <p class="description">
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        <div id="sb-widget-install-predefined">
+                                            <div class="widget-install-predefined--body">
+                                                <div class="booking-system-description"></div>
+                                                <button class="btn btn--no-text btn--secondary-outline btn--copy" type="button" id="sb-copy-shortcode-predefined"><i class="fa-regular fa-copy"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div class="btn-bar btn-bar__sticky --wrap btn-bar--theme-settings">
+                                <div class="btn-bar__row">
+                                    <button type="submit" name="submit" id="submit" class="btn btn--primary"> {{ __("Save changes") }}</button>
+
+                                    <button class="btn btn--secondary-outline" type="button" id="sb-preview">{{ __("Preview") }}</button>
+
+                                    <button class="btn btn--secondary-outline" type="button" id="sb-reset">{{ __("Reset to default") }}</button>
+                                </div>
+                            </div>
+                            <div class="btn-bar__sticky-phantom hidden"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="wp-sb--welcome-page_footer">
+            <a href="{{ makeUrl({'sbpage': 'check', 'amp_symbol': '%amp%'}) }}" class="link check-system v3">{{ __("Check system") }}</a>
+        </footer>
+    </main>
+    {% endapply %}
+
+    <script type='application/javascript'>
+        jQuery(document).ready(function (){
+            function setElemVal(id, valueToSelect){
+                if(valueToSelect){
+                    var element = document.getElementById(id);
+
+                    //check if parent class custom-checkbox exists, if yes, set checked attribute
+                    if(element.parentElement.classList.contains('custom-checkbox')){
+                        element.parentElement.querySelector('input[type="hidden"]').value = valueToSelect;
+                        element.checked = !!parseInt(valueToSelect);
+                    } else {
+                        element.value = valueToSelect;
+                    }
+                }
+            }
+
+            {% set valsKeys = ['timeline_type', 'datepicker_type', 'is_rtl', 'allow_switch_to_ada', 'clear_session'] %}
+
+            {% for key in valsKeys %}
+                setElemVal('{{ key }}', {{ attribute(_context, key)|json_encode|raw }});
+            {% endfor %}
+
+            {% if predefined %}
+                {% set valsKeys = ['location', 'category', 'provider', 'service'] %}
+
+                {% for key in valsKeys %}
+                    setElemVal('predefined_{{ key }}', {{ attribute(predefined, key)|json_encode|raw }});
+                {% endfor %}
+            {% endif %}
+
+            {% set dataEncoded = base64Encode({
+                apiUrl: api_url is defined ? api_url : null,
+                ajaxurl: ajax_url,
+                deletePageUrl: delete_widget_page_url,
+                login: auth_data.company,
+                timeline_type: timeline_type,
+                template: template is defined ? template : 'default',
+                themeparams: themeparams,
+                providers: providers,
+                services: services,
+                categories: categories,
+                locations: locations,
+                _wpnonce: _wpnonce,
+            }) %}
+
+            {% if dataEncoded %}
+                var data = JSON.parse(jQuery.base64.decode({{ dataEncoded|json_encode|raw }}));
+            {% else %}
+                var data = {};
+            {% endif %}
+
+            console.log(data);
+
+            new SimplybookAdminInterface(data);
+        });
+
+    </script>
+</div>

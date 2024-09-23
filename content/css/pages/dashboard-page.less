@@ -1,0 +1,96 @@
+
+// black -- How to add a widget to a page
+.widget-install-instruction{
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid @color-primary;
+
+  &_or{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+    width: 100%;
+
+    &:before, &:after{
+      content: '';
+      display: block;
+      flex: 1;
+      height: 1px;
+      background: @border-color;
+    }
+
+    .wp-sb--title{
+      line-height: 0.6;
+      text-transform: uppercase;
+      color: @color-icon;
+    }
+  }
+
+  .wp-sb--form-group{
+    margin: 0;
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    label,
+    .wp-sb--label{color: @color-neutral-dark;}
+  }
+}
+
+//dashboard page grid
+.sb-general--row{
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 22px;
+
+  @media screen and (max-width: 980px){
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+
+  .sb-general--col{
+    flex: 1;
+
+    &.sb-general--col_info{
+      @media screen and (min-width: 980px){
+        max-width: 600px;
+      }
+    }
+  }
+}
+
+.wp-sb--dashboard-page{
+  .wp-sb--welcome-page_header .wp-sb--row{
+    @media screen and (max-width: @tab){
+      flex-direction: column;
+
+      .wp-sb--col{
+        width: 100%;
+
+        &.col-login{
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          flex-wrap: wrap;
+          gap: 8px 12px;
+        }
+      }
+    }
+  }
+  .wp-sb--welcome-page_main {padding-top: 30px;}
+}
+

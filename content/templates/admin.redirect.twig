@@ -1,0 +1,35 @@
+<div class="wp-sb wp-sb--page wp-sb--loading-page">
+    <header class="wp-sb--welcome-page_header">
+        <div class="wp-sb--row">
+            <div class="wp-sb--col">
+                <img class="logo" src="{{ makeurl("images/sb-logo__full.svg") }}" alt="simplybook.me logo" />
+            </div>
+        </div>
+    </header>
+
+    <main class="wp-sb--welcome-page_main">
+        <section class="loading-page--content">
+            <div class="wp-sb--loader">
+                <img class="logo" src="{{ makeurl("images/birdLoader.gif") }}" alt="loader" />
+            </div>
+            <p class="wp-sb--p wp-sb--p_secondary">{{ __("Redirecting to the SimplyBook.me page") }}... </p>
+            <p class="wp-sb--p wp-sb--p_secondary">{{ __("If you are not redirected automatically, follow this") }} <a class="link" href="{{ redirect_url }}">{{ __("link") }}</a></p>
+        </section>
+    </main>
+
+
+    <footer class="wp-sb--welcome-page_footer"></footer>
+</div>
+
+
+<script type="application/javascript">
+
+    var redirectUrl = {{ redirect_url|json_encode|raw }};
+    var redirectDelay = 1000;
+
+    setTimeout(function() {
+        window.location.href = redirectUrl;
+    }, redirectDelay);
+
+</script>
+

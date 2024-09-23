@@ -1,0 +1,58 @@
+.wp-sb--useful-links{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 8px;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+
+  &_item{
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  &_item-link{
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 36px;
+    gap: 4px;
+    color: @color-neutral-dark;
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0;
+    padding: 4px 0;
+    transition: all 0.25s ease-out;
+
+    .wp-sb--icon{
+      min-width: 26px;
+      width: 26px;
+      text-align: center;
+      color: @color-neutral;
+    }
+
+    .wp-sb--txt{
+      flex: 1;
+    }
+
+    &:hover, &:focus{
+      color: @color-primary;
+      .wp-sb--icon{color: @color-primary;}
+    }
+  }
+}
+
+.sb-general--col_links{
+  padding: 25px;
+  max-width: 300px;
+  min-width: 300px;
+  border: 1px solid @border-color;
+  border-radius: 8px;
+  background: @second-brand-color;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

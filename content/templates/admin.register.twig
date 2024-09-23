@@ -1,0 +1,38 @@
+{% apply spaceless %}
+
+<div class="booking-system">
+
+    <div class="error"></div>
+
+    {% if flash and flash.messages %}
+        {% for message in flash.messages %}
+            <div class="notice notice-success is-dismissible">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if flash and flash.errors %}
+        {% for message in flash.errors %}
+            <div class="notice notice-error is-dismissible">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div id="sb-settings-container" class="">
+        <iframe src="" data-src="{{ register_url }}" scrolling="no" height="1200" width="100%" style="overflow:hidden" frameborder="0" id="sb-iframe" name="sb-iframe"></iframe>
+    </div>
+
+    {% endapply %}
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            window.sb_regpage = new RegistrationPage({
+                registrationData: {{ registration_data|json_encode|raw }},
+            });
+        });
+    </script>
+
+
+</div>

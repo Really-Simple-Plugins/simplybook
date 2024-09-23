@@ -1,0 +1,104 @@
+{% apply spaceless %}
+
+<div class="wp-sb wp-sb--page wp-sb--dashboard-page booking-system">
+    <section class="wp-sb--message-container">
+        <div class="wp-sb--message-container_errors">
+            <div class="error"></div>
+        </div>
+
+        {% if flash and flash.messages %}
+            {% for message in flash.messages %}
+                <div class="notice notice-success is-dismissible">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if flash and flash.errors %}
+            {% for message in flash.errors %}
+                <div class="notice notice-error is-dismissible">
+                    <p>{{ message }}</p>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </section>
+
+    <header class="wp-sb--welcome-page_header">
+        <div class="wp-sb--row">
+            <div class="wp-sb--col">
+                <img class="logo" src="{{ makeurl("images/sb-logo__full.svg") }}" alt="simplybook.me logo" />
+                <p class="wp-sb--p wp-sb--p_secondary">{{ __("SimplyBook.me is an appointment scheduling software that allows you to manage your bookings and reservations.")|raw() }}</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="wp-sb--welcome-page_main">
+
+        <section class="sb-general--row --check-row">
+            <div class="sb-general--col sb-general--col_info">
+                <section class="sb-general--check-wrapper">
+                    {% for check in check_result %}
+                        <div class="sb-general--check">
+                            <div class="sb-general--check_icon">
+                                {% if check.status %}
+                                    <img src="{{ makeurl("images/check-solid.svg") }}" alt="check" />
+                                {% else %}
+                                    <img src="{{ makeurl("images/exclamation-solid.svg") }}" alt="error" />
+                                {% endif %}
+                            </div>
+                            <div class="sb-general--check_text">
+                                <p class="wp-sb--p wp-sb--p_secondary">{{ check.name }}</p>
+                            </div>
+                            {% if check.status %}
+                                <div class="sb-general--check_status sb-general--check_status_success">
+                                    <p class="wp-sb--p">{{ check.message }}</p>
+                                </div>
+                            {% else %}
+                                <div class="sb-general--check_status sb-general--check_status_error">
+                                    <p class="wp-sb--p">{{ check.error }}</p>
+                                </div>
+                            {% endif %}
+
+                            {% if check.solution and not check.status %}
+                            <div class="sb-how-to-solve">
+                                <p class="wp-sb--p wp-sb--p_hint --fw-light">
+                                    <b>{{ __("How to solve") }}</b>:
+                                    {{ check.solution }}
+                                </p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+            </section>
+            </div>
+            <div class="sb-general--col sb-general--col_info">
+                <div class="sb-general--logfile">
+                    <div class="sb-general logfile">
+                        <div class="sb-general logfile_header">
+                            <h3>{{ __("Log file") }}</h3>
+                        </div>
+                        <div class="sb-general logfile_content">
+                            <textarea readonly="readonly" class="sb-general logfile_content_textarea">{% for logRow in log_file %}{{ logRow }}{% endfor %}</textarea>
+                        </div>
+                        <a href="{{ log_file_url }}" class="btn btn--primary sb-button sb-general logfile_download">{{ __("Download log file") }}</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    {% endapply %}
+
+    <script type='application/javascript'>
+        jQuery(document).ready(function (){
+
+            //scroll to the end of the log file
+            var textarea = document.querySelector('.logfile_content_textarea');
+            if(textarea){
+                textarea.scrollTop = textarea.scrollHeight;
+            }
+
+            //new SimplybookAdminInterface(data);
+        });
+
+    </script>
+</div>
