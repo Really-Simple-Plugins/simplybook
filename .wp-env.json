@@ -5,10 +5,10 @@
     "https://downloads.wordpress.org/plugin/query-monitor.zip",
     "https://downloads.wordpress.org/plugin/wp-debugging.zip"
   ],
-  "port": 6666,
+  "port": 3000,
   "env": {
     "tests": {
-      "port": 6667
+      "port": 3001
     }
   },
   "config": {
