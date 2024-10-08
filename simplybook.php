@@ -26,6 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 define ( 'SIMPLYBOOK_VERSION', '2.1' );
 define ( 'SIMPLYBOOK_PATH', plugin_dir_path( __FILE__ ) );
+define( 'SIMPLYBOOK_URL', plugin_dir_url( __FILE__ ) );
 
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';

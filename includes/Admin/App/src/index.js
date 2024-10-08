@@ -2,6 +2,8 @@ import {
   render, createRoot,
 } from '@wordpress/element';
 
+import './tailwind.css';
+
 import {
   QueryClient,
   QueryCache,
@@ -16,7 +18,7 @@ import {
   createHashHistory,
   NotFoundRoute,
 } from '@tanstack/react-router';
-import {Route as rootRoute} from './routes/__root.tsx';
+import {Route as rootRoute} from './routes/__root.jsx';
 
 // Import the generated route tree
 import {routeTree} from './routeTree.gen';
@@ -67,9 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
       createRoot(container).render(
           <React.StrictMode>
             <QueryClientProvider client={queryClient}>
-              <div className="simplybook_app">
                 <RouterProvider router={router}/>
-              </div>
               <ReactQueryDevtools/>
             </QueryClientProvider>
           </React.StrictMode>,
@@ -79,9 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
       render(
           <React.StrictMode>
             <QueryClientProvider client={queryClient}>
-              <div className="simplybook_app">
                 <RouterProvider router={router}/>
-              </div>
               <ReactQueryDevtools/>
             </QueryClientProvider>
           </React.StrictMode>,

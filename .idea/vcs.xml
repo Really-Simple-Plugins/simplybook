@@ -2,5 +2,19 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../burst-pro" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../burst-statistics" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../complianz-gdpr" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../complianz-gdpr-premium" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../complianz-terms-conditions" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../edd-moneybird" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../no-hassle-feature-requests" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../phpdoc-parser" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../really-simple-ssl" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../really-simple-ssl-pro" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../really-simple-ssl-pro-multisite" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../rsp-shop-addons" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../zip-recipes" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../zip-recipes-lover" vcs="Git" />
   </component>
 </project>

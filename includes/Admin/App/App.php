@@ -9,9 +9,14 @@ class App {
 
 	public function simplybook_app() {
 		?>
-		<div id="simplybook_app">
+        <style>
+            .toplevel_page_simplybook #wpcontent {
+                padding-left: 0;
+            }
+        </style>
+        <div id="simplybook_app">
 
-		</div>
+        </div>
 		<?php
 	}
 }
