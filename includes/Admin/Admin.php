@@ -3,6 +3,8 @@ namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
 
+
+
 class Admin {
 	protected $app;
 

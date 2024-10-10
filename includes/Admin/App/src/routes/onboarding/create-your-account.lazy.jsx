@@ -8,7 +8,7 @@ export const Route = createLazyFileRoute('/onboarding/create-your-account')({
 
     return (
         <>
-          <div className="col-span-5 col-start-2 py-12 text-center flex flex-col">
+          <div className="col-span-12 col-start-2 py-12 text-center flex flex-col">
 
             <h1 className={"text-2xl font-bold mt-6"}>{__('Create your free account', 'simplybook')}</h1>
             <h2 className={"text-base mt-2 mb-8"}>{__('100% free. No credit card needed.')}</h2>

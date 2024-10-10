@@ -105,7 +105,7 @@ const Header = () => {
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
     className: "w-40 h-12 py-2 px-5"
   }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flexitems-center"
+    className: "flex items-center"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/",
     className: linkClassName

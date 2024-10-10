@@ -33,4 +33,10 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 use Simplybook\Admin\Admin;
 
-( new Admin() );
+//if (simplybook_user_can_view()){
+	( new Admin() );
+//}
+
+//function simplybook_user_can_view() {
+//	return current_user_can( 'manage_options' );
+//}

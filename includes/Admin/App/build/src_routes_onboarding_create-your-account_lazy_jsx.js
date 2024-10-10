@@ -93,7 +93,7 @@ __webpack_require__.r(__webpack_exports__);
 const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)('/onboarding/create-your-account')({
   component: () => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "col-span-5 col-start-2 py-12 text-center flex flex-col"
+      className: "col-span-12 col-start-2 py-12 text-center flex flex-col"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
       className: "text-2xl font-bold mt-6"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Create your free account', 'simplybook')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
