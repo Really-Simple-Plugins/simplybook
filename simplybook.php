@@ -19,24 +19,21 @@
     License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 */
+namespace SimplyBook;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
 define ( 'SIMPLYBOOK_VERSION', '2.1' );
 define ( 'SIMPLYBOOK_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLYBOOK_URL', plugin_dir_url( __FILE__ ) );
 
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/lib/functions.php';
 
 use Simplybook\Admin\Admin;
 
-//if (simplybook_user_can_view()){
+if ( simplybook_has_admin_access() ){
 	( new Admin() );
-//}
-
-//function simplybook_user_can_view() {
-//	return current_user_can( 'manage_options' );
-//}
+}
