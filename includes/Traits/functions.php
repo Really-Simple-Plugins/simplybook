@@ -1,5 +1,5 @@
 <?php
-namespace SimplyBook;
+namespace Simplybook;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }

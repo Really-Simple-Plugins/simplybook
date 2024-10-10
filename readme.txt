@@ -4,6 +4,7 @@ Donate link: https://simplybook.me/
 Tags: Booking System, Scheduling system, Appointment System, Bookings, Appointment Plugin
 Requires at least: 6.0
 Tested up to: 6.6.1
+Requires PHP: 8.0
 Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
