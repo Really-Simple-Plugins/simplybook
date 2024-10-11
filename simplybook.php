@@ -10,7 +10,7 @@
     Requires at least: 6.0
     Tested up to: 6.6.2
     Stable tag: 2.1
-    Version: 2.1
+    Version: 3.0.0
     Requires PHP: 7.4
     Text Domain: simplybook
     Domain Path: /languages
@@ -24,13 +24,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SIMPLYBOOK_VERSION', '2.1' );
+define( 'SIMPLYBOOK_VERSION', '3.0.0' );
 define( 'SIMPLYBOOK_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLYBOOK_URL', plugin_dir_url( __FILE__ ) );
 define( 'SIMPLYBOOK_PLUGIN', plugin_basename( __FILE__ ) );
-
-$debug = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '#' . time() : '';
-define( 'BURST_VERSION', '2.1' . $debug );
 
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';

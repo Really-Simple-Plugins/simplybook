@@ -1,6 +1,7 @@
 <?php
 namespace Simplybook\Upgrades;
 
+use Simplybook\Admin\Capability\Capability;
 use function Simplybook\simplybook_has_admin_access;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +29,7 @@ class Upgrades {
         }
 
         if ( $prev_version && version_compare( $prev_version, '3.0', '<' ) ) {
-            //upgrade
+            Capability::add_capability('simplybook_manage');
         }
 
         update_option( 'simplybook_current_version', SIMPLYBOOK_VERSION, false );
