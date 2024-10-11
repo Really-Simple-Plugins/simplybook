@@ -110,15 +110,15 @@ class Admin {
 		$assetFilename     = '';
 		$json_translations = [];
 		foreach ( $filenames as $filename ) {
-			if ( str_starts_with($filename, 'index.') ) {
-				if (str_ends_with($filename, '.js')) {
+            if ( strpos( $filename, 'index.' ) === 0 ) {
+                if ( substr( $filename, -3 ) === '.js' ) {
 					$jsFilename = $filename;
 				} elseif ( str_ends_with($filename, '.asset.php') ) {
 					$assetFilename = $filename;
 				}
 			}
 
-			if ( !str_contains($filename, '.js') ) {
+            if ( strpos( $filename, '.js' ) === false ) {
 				continue;
 			}
 
