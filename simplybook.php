@@ -38,11 +38,22 @@ use Simplybook\Admin\RestApi\RestApi;
 use Simplybook\Upgrades\Upgrades;
 use Simplybook\Admin\Admin;
 
-if ( simplybook_has_admin_access() ){
-    ( new Upgrades() );
-    ( new Admin() );
-    ( new Capability() );
-    ( new RestApi() );
+if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
+    /**
+     * Plugin loader, runs on plugins_loaded to ensure we have access to all WP functions
+     *
+     * @return void
+     */
+    function simplybook_init(): void
+    {
+        if ( simplybook_has_admin_access() ){
+            ( new Upgrades() );
+            ( new Admin() );
+            ( new Capability() );
+            ( new RestApi() );
+        }
+    }
+    add_action( 'plugins_loaded', __NAMESPACE__ . '\simplybook_init', 9 );
 }
 
 if ( ! function_exists( __NAMESPACE__ . '\burst_activation' ) ) {
