@@ -2,14 +2,13 @@
 /**
     Plugin Name: Simplybook
     Plugin URI: https://help.simplybook.me/index.php/WordPress_plugn
-    Description: SimplyBook.me plugin allows you to add SimplyBook.me widget to your WordPress website.
+    Description: SimplyBook.me plugin allows you to add the SimplyBook.me widget to your WordPress website.
     Tags: appointment, scheduling, booking, reservation system, meeting
     Author: SimplyBook Inc.
     Author URI: https://simplybook.me/
     Contributors: simplybook
     Requires at least: 6.0
     Tested up to: 6.6.2
-    Stable tag: 2.1
     Version: 3.0.0
     Requires PHP: 7.4
     Text Domain: simplybook
