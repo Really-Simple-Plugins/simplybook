@@ -12,7 +12,7 @@ function Dashboard() {
     return (
         <>
             <Header/>
-            <div className="flex mx-auto max-w-screen-xl py-5">
+            <div className="flex mx-auto max-w-screen-2xl py-5">
                 <div className="grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full">
                     <ProgressBlock/>
                     <div className="bg-white shadow-md rounded-md col-span-3 row-span-3">

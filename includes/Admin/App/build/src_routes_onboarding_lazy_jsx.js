@@ -70,23 +70,25 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)('/onboarding')({
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)("/onboarding")({
   component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(OnboardingPage, null)
 });
 function OnboardingPage() {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-xl  justify-between"
+    className: "mx-auto flex max-w-screen-2xl items-center justify-between"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "w-40 py-2 m-5"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Already got an account?', 'simplybook'), "  ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: "font-bold ",
-    href: 'https://simplybook.me'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Sign in here')), " ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex mx-auto max-w-screen-xl py-5"
+    className: "m-5 w-40 py-2"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "text-black m-5"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Already got an account?", "simplybook"), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "font-bold text-black",
+    href: "https://simplybook.me"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Sign in here")), " ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mx-auto flex flex-col max-w-screen-2xl py-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "grid grid-cols-12 grid-rows-5 gap-24 w-full min-h-full"
+    className: "grid min-h-full w-full grid-cols-12 grid-rows-5 gap-24"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.Outlet, null))));
 }
 

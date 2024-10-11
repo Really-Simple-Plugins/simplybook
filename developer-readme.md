@@ -4,29 +4,24 @@
 ### 1. Install wp-env & docker. Instructions can be found here: https://developer.wordpress.org/block-editor/getting-started/devenv/get-started-with-wp-env/
 ### 2. Installl composer
 ### 3. Install npm and node.js
+### 4. Configure prettier for Tailwind
 
+To set up Prettier in PHPStorm:
+
+- Go to Preferences search for Prettier.
+- Set the path to the prettier binary (e.g., node_modules/.bin/prettier).
+- Check the box for **"On code reformat"** (cmd + shift + L)  or on Save if you like.
+- Now, whenever you format your files and/or save them, Prettier will run and order your Tailwind CSS classes.
 
 # Example structure
 ```
 /my-plugin/
 │
-├── /admin-app/           # Your React app for the admin dashboard
-│   └── ...               # React app files (JS, CSS, etc.)
-│
 ├── /includes/            # All PHP code goes here
-│   ├── class-plugin.php  # Main plugin class
-│   ├── admin.php         # Admin-specific PHP code
-│   ├── frontend.php      # Frontend-specific PHP code
-│   └── helpers.php       # Helper functions
-│
-├── /assets/              # Any CSS, JS, or images
-│   ├── /css/             # Plugin stylesheets
-│   └── /js/              # Plugin JavaScript
 │
 ├── /languages/           # Translation files (optional)
 │
 ├── my-plugin.php         # Main plugin file
-├── package.json          # NPM dependencies (if any)
 ├── readme.txt            # Plugin readme
 └── uninstall.php         # Code to clean up on uninstall
 ```

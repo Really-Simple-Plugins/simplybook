@@ -1,7 +1,7 @@
-const InputText = ({ value, onChange, onError }) => {
+const InputEmail = ({ value, onChange, onError }) => {
   return (
       <input
-          type="text"
+          type="email"
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onError={onError}
@@ -10,4 +10,4 @@ const InputText = ({ value, onChange, onError }) => {
   );
 };
 
-export default InputText;
+export default InputEmail;

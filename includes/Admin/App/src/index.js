@@ -1,33 +1,30 @@
-import {
-  render, createRoot,
-} from '@wordpress/element';
+import { render, createRoot } from "@wordpress/element";
 
-import './tailwind.css';
+import "./tailwind.css";
 
 import {
   QueryClient,
   QueryCache,
   QueryClientProvider,
-} from '@tanstack/react-query';
+} from "@tanstack/react-query";
 
-import {ReactQueryDevtools} from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import {
   RouterProvider,
   createRouter,
   createHashHistory,
   NotFoundRoute,
-} from '@tanstack/react-router';
-import {Route as rootRoute} from './routes/__root.jsx';
+} from "@tanstack/react-router";
+import { Route as rootRoute } from "./routes/__root.jsx";
 
 // Import the generated route tree
-import {routeTree} from './routeTree.gen';
+import { routeTree } from "./routeTree.gen";
 
 const hashHistory = createHashHistory();
 const HOUR_IN_SECONDS = 3600;
 const queryCache = new QueryCache({
   onError: (error) => {
-
     // any error handling code...
   },
 });
@@ -42,13 +39,13 @@ let config = {
 };
 
 // merge queryCache with config
-config = {...config, ...{queryCache}};
+config = { ...config, ...{ queryCache } };
 
 const queryClient = new QueryClient(config);
 
 const notFoundRoute = new NotFoundRoute({
   getParentRoute: () => rootRoute,
-  component: () => <div className={'simplybook'}>404 Not Found</div>,
+  component: () => <div className={"simplybook"}>404 Not Found</div>,
 });
 
 const router = createRouter({
@@ -58,35 +55,32 @@ const router = createRouter({
     queryClient,
   },
   history: hashHistory,
-  defaultPreload: 'intent',
+  defaultPreload: "intent",
   defaultPreloadStaleTime: 0,
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-  const container = document.getElementById('simplybook_app');
+document.addEventListener("DOMContentLoaded", () => {
+  const container = document.getElementById("simplybook_app");
   if (container) {
     if (createRoot) {
       createRoot(container).render(
-          <React.StrictMode>
-            <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router}/>
-              <ReactQueryDevtools/>
-            </QueryClientProvider>
-          </React.StrictMode>,
+        <React.StrictMode>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools />
+          </QueryClientProvider>
+        </React.StrictMode>,
       );
-    }
-    else {
+    } else {
       render(
-          <React.StrictMode>
-            <QueryClientProvider client={queryClient}>
-                <RouterProvider router={router}/>
-              <ReactQueryDevtools/>
-            </QueryClientProvider>
-          </React.StrictMode>,
-          container,
+        <React.StrictMode>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            <ReactQueryDevtools />
+          </QueryClientProvider>
+        </React.StrictMode>,
+        container,
       );
     }
   }
 });
-
-

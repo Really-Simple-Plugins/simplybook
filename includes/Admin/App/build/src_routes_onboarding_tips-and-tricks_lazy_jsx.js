@@ -22,7 +22,7 @@ const Button = ({
   link = {},
   ...props
 }) => {
-  const className = "bg-red-500 hover:bg-red-700 hover:text-white text-white font-bold py-2 px-24 rounded-2xl max-w-xs mx-auto";
+  const className = "bg-red-500 hover:bg-red-700 hover:text-white text-white  text-center font-bold py-2 px-24 rounded-2xl";
   if (link.to) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.Link, {
       to: link.to,

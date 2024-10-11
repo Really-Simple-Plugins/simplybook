@@ -99,7 +99,7 @@ const Header = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white shadow-md"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-xl"
+    className: "flex items-center mx-auto max-w-screen-2xl"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
@@ -162,7 +162,7 @@ var Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.createLazyFil
 function Dashboard() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Header__WEBPACK_IMPORTED_MODULE_4__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "flex mx-auto max-w-screen-xl py-5",
+      className: "flex mx-auto max-w-screen-2xl py-5",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ProgressBlock, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
