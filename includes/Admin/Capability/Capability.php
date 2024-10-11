@@ -1,15 +1,11 @@
 <?php
 namespace Simplybook\Admin\Capability;
 
-use Simplybook\Traits\Admin\Helper;
-
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 class Capability {
-    use Helper;
-
     public function __construct() {
         add_action( 'wp_initialize_site', array( $this, 'add_role_to_subsite'), 10, 1 );
     }
