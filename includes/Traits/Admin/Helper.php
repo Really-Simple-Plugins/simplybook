@@ -14,7 +14,6 @@ trait Helper {
      * @return bool
      */
     public function user_can_manage(): bool {
-        return true;
         if ( defined( 'WP_CLI' ) && WP_CLI ){
             return true;
         }

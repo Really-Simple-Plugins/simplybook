@@ -36,10 +36,27 @@ define( 'BURST_VERSION', '2.1' . $debug );
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/Traits/functions.php';
 
+use Simplybook\Admin\Capability\Capability;
 use Simplybook\Upgrades\Upgrades;
 use Simplybook\Admin\Admin;
 
 if ( simplybook_has_admin_access() ){
     ( new Upgrades() );
     ( new Admin() );
+    ( new Capability() );
+}
+
+if ( ! function_exists( __NAMESPACE__ . '\burst_activation' ) ) {
+    /**
+     * Run hooks on activation
+     * @hook register_activation_hook
+     * @return void
+     */
+    function burst_activation(): void
+    {
+        update_option( 'simplybook_run_activation', true, false );
+        do_action( 'burst_activation' );
+    }
+
+    register_activation_hook( __FILE__, __NAMESPACE__ . '\burst_activation' );
 }

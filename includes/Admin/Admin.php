@@ -2,6 +2,7 @@
 namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
+use Simplybook\Admin\Capability\Capability;
 use Simplybook\Traits\Admin\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,12 +20,35 @@ class Admin {
 
 		// Add action to register the admin menu
 		add_action('admin_menu', array($this, 'add_admin_menu'));
+		add_action('admin_init', array($this, 'maybe_run_activation'));
 
         $plugin = SIMPLYBOOK_PLUGIN;
         add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 	}
 
-    public function plugin_settings_link($links) {
+    /**
+     * Run activation hooks when on the settings page
+     * @hook admin_init
+     * @return void
+     */
+    public function maybe_run_activation(): void
+    {
+        if ( ! get_option( 'simplybook_run_activation' ) ) {
+            return;
+        }
+
+        Capability::add_capability('simplybook_manage');
+        delete_option( 'simplybook_run_activation' );
+        do_action( 'simplybook_activation' );
+    }
+    /**
+     * Add settings and support link to the plugin page
+     *
+     * @param array $links
+     * @return array
+     */
+    public function plugin_settings_link(array $links): array
+    {
         if ( ! $this->user_can_manage() ) {
             return $links;
         }
@@ -57,7 +81,7 @@ class Admin {
 		$page_hook_suffix = add_menu_page(
 			__('Bookings', 'simplybook'),
 			$menu_label,
-			'manage_options',
+			'simplybook_manage',
 			'simplybook',
 			array( $this->app, 'simplybook_app' ), // Reference the App instance's method
 			'dashicons-calendar-alt',
