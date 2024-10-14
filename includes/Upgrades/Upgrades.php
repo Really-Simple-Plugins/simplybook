@@ -14,6 +14,12 @@ class Upgrades {
         add_action( 'plugins_loaded' , [ $this, 'check_for_upgrades' ] );
     }
 
+    /**
+     * Handle all upgrades required for the next version
+     *
+     * @return void
+     */
+
     public function check_for_upgrades(): void
     {
         #only run upgrade check if cron, or if admin.
