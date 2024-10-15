@@ -102,7 +102,7 @@ class Admin {
 		}
 		wp_enqueue_script(
 			'simplybook-app',
-			plugins_url( 'App/build/' . $js_data['js_file'], __FILE__ ),
+			plugins_url( 'build/index.js' , __FILE__ ),
 			$js_data['dependencies'],
 			$js_data['version'],
 			true

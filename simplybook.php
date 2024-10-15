@@ -34,6 +34,7 @@ require_once __DIR__ . '/includes/Traits/functions.php';
 
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\RestApi;
+use Simplybook\Blocks\Blocks;
 use Simplybook\Upgrades\Upgrades;
 use Simplybook\Admin\Admin;
 
@@ -51,6 +52,7 @@ if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
             ( new Capability() );
             ( new RestApi() );
         }
+        ( new Blocks() );
     }
     add_action( 'plugins_loaded', __NAMESPACE__ . '\simplybook_init', 9 );
 }

@@ -11,7 +11,7 @@ class RestApi {
     use Helper;
 
     public function __construct() {
-        add_action( 'rest_api_init', 'register_rest_route', 1 );
+        add_action( 'rest_api_init', array( $this, 'register_rest_route') );
     }
 
     public function register_rest_route(): void

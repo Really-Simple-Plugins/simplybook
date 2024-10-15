@@ -1,0 +1,22 @@
+{
+	"name": "simplybook",
+	"version": "7.0.0",
+	"description": "Gutenberg block for Complianz",
+	"main": "build/index.js",
+	"scripts": {
+		"start": "wp-scripts start",
+		"build": "wp-scripts build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "rogierlankhorst",
+	"license": "GPL-2.0-only",
+	"devDependencies": {
+		"@wordpress/scripts": "^27.1.0"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.9.0",
+		"@wordpress/icons": "^9.20.0",
+		"dompurify": "^3.0.8",
+		"react-native-html-parser": "^0.1.0"
+	}
+}
