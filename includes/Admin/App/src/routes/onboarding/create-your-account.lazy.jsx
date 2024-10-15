@@ -1,9 +1,10 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
-import InputText from "../../components/Inputs/InputText";
-import InputSwitch from "../../components/Inputs/InputSwitch";
-import InputWrapper from "../../components/Inputs/InputWrapper";
-import Button from "../../components/Inputs/Button";
+import SwitchInput from "../../components/Inputs/SwitchInput";
+import InputField from "../../components/Forms/InputField";
+import ButtonInput from "../../components/Inputs/ButtonInput";
+import EmailField from "../../components/Fields/EmailField";
+import SwitchField from '../../components/Fields/SwitchField';
 
 export const Route = createLazyFileRoute("/onboarding/create-your-account")({
   component: () => {
@@ -11,7 +12,7 @@ export const Route = createLazyFileRoute("/onboarding/create-your-account")({
 
     return (
       <>
-        <div className="col-span-5 col-start-2 my-12 flex flex-col text-black">
+        <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
           <div className={"my-6 text-center"}>
             <h1 className={"text-3xl font-semibold text-black"}>
               {__("Create your free account", "simplybook")}
@@ -21,20 +22,26 @@ export const Route = createLazyFileRoute("/onboarding/create-your-account")({
             </h2>
           </div>
           <div className={"flex flex-col"}>
-            <InputWrapper label={__("Email address", "simplybook")} >
-              <InputText placeholder={__("Email address", "simplybook")} />
-            </InputWrapper>
-            <Button
+            <EmailField
+                label={__("Email address", "simplybook")}
+                help={__("We'll never share your email with anyone else.", "simplybook")}
+                placeholder={__("Enter your email address", "simplybook")}
+
+
+              />
+            <ButtonInput
               onClick={() => {}}
               link={{
                 to: "/onboarding/tips-and-tricks",
               }}
             >
               {__("Verify email", "simplybook")}
-            </Button>
-            <InputWrapper label={__("I have read the Terms & Conditions", "simplybook") } reverseLabel={true}>
-              <InputSwitch />
-            </InputWrapper>
+            </ButtonInput>
+            <SwitchField
+                label={__("I have read the Terms & Conditions", "simplybook") }
+                value={true}
+                onChange={() => {}}
+            />
             <p className="mt-4 text-xs text-center font-light text-gray-600">
               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
               nisi ut. Ut enim ad minim veniam, quis nostrud exercitation
@@ -42,7 +49,7 @@ export const Route = createLazyFileRoute("/onboarding/create-your-account")({
             </p>
           </div>
         </div>
-        <div className="col-span-5 col-start-7 my-12">
+        <div className="col-span-4 col-start-7 my-12">
           <iframe
             width="100%"
             className={"aspect-video"}

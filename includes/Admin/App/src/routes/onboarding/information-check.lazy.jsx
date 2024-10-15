@@ -1,7 +1,7 @@
 import {createLazyFileRoute} from '@tanstack/react-router';
 import {__} from '@wordpress/i18n';
-import InputText from '../../components/Inputs/InputText';
-import Button from '../../components/Inputs/Button';
+import TextInput from '../../components/Inputs/TextInput';
+import ButtonInput from '../../components/Inputs/ButtonInput';
 
 export const Route = createLazyFileRoute('/onboarding/information-check')({
   component: () => {
@@ -16,14 +16,14 @@ export const Route = createLazyFileRoute('/onboarding/information-check')({
             <h1 className={'text-2xl font-bold mt-6'}>{__(
                 'Is this information correct?', 'simplybook')}</h1>
 
-            <InputText
+            <TextInput
                 placeholder={__('Email address', 'simplybook')}
             />
-            <Button onClick={() => {}} link={{
+            <ButtonInput onClick={() => {}} link={{
               to: '/onboarding/style-widget',
             }}>
               {__('Next Step: Styling', 'simplybook')}
-            </Button>
+            </ButtonInput>
           </div>
           <div className="col-span-5 col-start-7 py-12">
             <iframe width="100%"  className={"aspect-video"} src="https://www.youtube-nocookie.com/embed/adYNTa9Gicw?si=A1cJfYkkfvlE9Yn0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>

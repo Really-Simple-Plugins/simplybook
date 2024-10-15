@@ -49,9 +49,61 @@ var SvgLogo = function SvgLogo(props) {
 
 /***/ }),
 
-/***/ "./src/components/Block/BlockHeading.jsx":
+/***/ "./src/components/Blocks/Block.jsx":
+/*!*****************************************!*\
+  !*** ./src/components/Blocks/Block.jsx ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const Block = ({
+  colSpan,
+  rowSpan,
+  children
+}) => {
+  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} col-start-${rowSpan}`;
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: classes
+  }, children);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Block);
+
+/***/ }),
+
+/***/ "./src/components/Blocks/BlockContent.jsx":
+/*!************************************************!*\
+  !*** ./src/components/Blocks/BlockContent.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const BlockContent = ({
+  children,
+  className = 'p-5'
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: className
+  }, children);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockContent);
+
+/***/ }),
+
+/***/ "./src/components/Blocks/BlockFooter.jsx":
 /*!***********************************************!*\
-  !*** ./src/components/Block/BlockHeading.jsx ***!
+  !*** ./src/components/Blocks/BlockFooter.jsx ***!
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -62,7 +114,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-// @todo move to separate file
+const BlockFooter = ({
+  children
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "py-4 px-5 flex justify-between items-center"
+  }, children);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockFooter);
+
+/***/ }),
+
+/***/ "./src/components/Blocks/BlockHeading.jsx":
+/*!************************************************!*\
+  !*** ./src/components/Blocks/BlockHeading.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
 const BlockHeading = ({
   title,
   controls
@@ -99,7 +174,7 @@ const Header = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white shadow-md"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl"
+    className: "flex items-center mx-auto max-w-screen-2xl mx-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
@@ -143,104 +218,58 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   Route: () => (/* binding */ Route)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Block/BlockHeading */ "./src/components/Block/BlockHeading.jsx");
-/* harmony import */ var _components_Header__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Header */ "./src/components/Header.jsx");
+/* harmony import */ var _components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Header.jsx */ "./src/components/Header.jsx");
+/* harmony import */ var _components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Blocks/Block.jsx */ "./src/components/Blocks/Block.jsx");
+/* harmony import */ var _components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Blocks/BlockContent.jsx */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Blocks/BlockHeading.jsx */ "./src/components/Blocks/BlockHeading.jsx");
+/* harmony import */ var _components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Blocks/BlockFooter.jsx */ "./src/components/Blocks/BlockFooter.jsx");
 
 
 
 
 
 
-var Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.createLazyFileRoute)('/')({
+
+
+var Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyFileRoute)('/')({
   component: Dashboard
 });
 function Dashboard() {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Header__WEBPACK_IMPORTED_MODULE_4__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "flex mx-auto max-w-screen-2xl py-5",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+      className: "flex mx-auto max-w-screen-2xl",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ProgressBlock, {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "bg-white shadow-md rounded-md col-span-3 row-span-3",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Bookings', 'simplybook'),
+        className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          colSpan: 6,
+          rowSpan: 3,
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Welcome', 'simplybook'),
             controls: null
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "bg-white shadow-md rounded-md col-span-3 row-span-3",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Management', 'simplybook'),
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            children: "Content"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            children: "Footer"
+          })]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          colSpan: 6,
+          rowSpan: 3,
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Welcome', 'simplybook'),
             controls: null
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "bg-white shadow-md rounded-md col-span-6 row-span-2",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Tips & Tricks', 'simplybook'),
-            controls: null
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "col-span-6 row-span-2",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Our plugins', 'simplybook'),
-            controls: null
-          })
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            children: "Content"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            children: "Footer"
+          })]
         })]
       })
     })]
   });
 }
-var ProgressContent = function () {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "flex justify-between items-center px-5",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex flex-col",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-sm text-gray-500",
-        children: "Total bookings"
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-2xl font-bold",
-        children: "0"
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex flex-col",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-sm text-gray-500",
-        children: "Total revenue"
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-2xl font-bold",
-        children: "0"
-      })]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-      className: "flex flex-col",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-sm text-gray-500",
-        children: "Total clients"
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-        className: "text-2xl font-bold",
-        children: "0"
-      })]
-    })]
-  });
-};
-var ProgressBlock = function () {
-  var _a = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(null),
-    ProgressStatus = _a[0],
-    setProgressStatus = _a[1];
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-    className: "bg-white shadow-md rounded-md col-span-6 row-span-3",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Block_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Progress', 'simplybook'),
-      controls: null
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(ProgressContent, {
-      ProgressStatus: ProgressStatus
-    })]
-  });
-};
 
 /***/ }),
 

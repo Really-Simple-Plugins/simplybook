@@ -1,6 +1,6 @@
 import * as RadioGroup from "@radix-ui/react-radio-group";
 
-const InputRadioGroup = ({ value, onChange, onError, options = [] }) => {
+const RadioGroupInput = ({ value, onChange, onError, options = [] }) => {
   return (
       <RadioGroup.Root
           className="flex flex-col space-y-2"
@@ -27,4 +27,4 @@ const InputRadioGroup = ({ value, onChange, onError, options = [] }) => {
   );
 };
 
-export default InputRadioGroup;
+export default RadioGroupInput;

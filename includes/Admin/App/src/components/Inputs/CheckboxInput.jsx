@@ -1,4 +1,4 @@
-const InputCheckbox = ({ value, onChange, onError }) => {
+const CheckboxInput = ({ value, onChange, onError }) => {
   return (
       <label className="flex items-center space-x-2">
         <input
@@ -13,4 +13,4 @@ const InputCheckbox = ({ value, onChange, onError }) => {
   );
 };
 
-export default InputCheckbox;
+export default CheckboxInput;

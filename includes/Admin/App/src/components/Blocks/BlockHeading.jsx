@@ -1,4 +1,3 @@
-// @todo move to separate file
 const BlockHeading = ({title, controls }) => {
 
   return (

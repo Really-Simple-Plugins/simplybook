@@ -5,8 +5,9 @@ import {
     useNavigate,
 } from '@tanstack/react-router'
 import {__} from '@wordpress/i18n'
-import BlockHeading from '..//components/Block/BlockHeading'
+import BlockHeading from '../components/Blocks/BlockHeading.jsx'
 import Header from "../components/Header";
+import Block from "../components/Blocks/Block";
 
 export const Route = createLazyFileRoute('/settings')({
     component: Settings,
@@ -22,7 +23,7 @@ function Settings() {
             <Header/>
             <div className="flex mx-auto max-w-screen-2xl py-5">
                 <div className="grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full">
-                    <div className="col-span-3 bg-white shadow-md rounded-md row-span-4">
+                    <Block colSpan={3} rowSpan={4}>
                         <BlockHeading title={__('Settings', 'simplybook')} controls={null}/>
                         <div className="flex flex-col justify-start">
                             <Link to="/settings/general" className={linkClassName}>
@@ -49,8 +50,8 @@ function Settings() {
                             <a href={'https://simplybook.me'} className={linkClassName}>
                                 {__('Bookings', 'simplybook')} (O)
                             </a>
-                        </div>
                     </div>
+                    </Block>
                     <div className="col-span-6  row-span-4">
                         <Outlet/>
                     </div>

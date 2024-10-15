@@ -1,6 +1,6 @@
 import * as Switch from '@radix-ui/react-switch';
 
-const InputSwitch = ({ value, onChange, onError }) => {
+const SwitchInput = ({ value, onChange, onError }) => {
   return (
       <Switch.Root
           checked={value}
@@ -13,4 +13,4 @@ const InputSwitch = ({ value, onChange, onError }) => {
   );
 };
 
-export default InputSwitch;
+export default SwitchInput;

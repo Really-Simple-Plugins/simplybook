@@ -1,10 +1,10 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_style-widget_lazy_jsx"],{
 
-/***/ "./src/components/Inputs/Button.jsx":
-/*!******************************************!*\
-  !*** ./src/components/Inputs/Button.jsx ***!
-  \******************************************/
+/***/ "./src/components/Inputs/ButtonInput.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Inputs/ButtonInput.jsx ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 
 
-const Button = ({
+const ButtonInput = ({
   children,
   onClick,
   link = {},
@@ -36,13 +36,13 @@ const Button = ({
     ...props
   }, children);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonInput);
 
 /***/ }),
 
-/***/ "./src/components/Inputs/InputText.jsx":
+/***/ "./src/components/Inputs/TextInput.jsx":
 /*!*********************************************!*\
-  !*** ./src/components/Inputs/InputText.jsx ***!
+  !*** ./src/components/Inputs/TextInput.jsx ***!
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -53,20 +53,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-const InputText = ({
+const TextInput = ({
+  type = "text",
   value,
   onChange,
   onError
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
+    type: type,
     value: value,
     onChange: e => onChange(e.target.value),
     onError: onError,
-    className: "w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
+    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring"
   });
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InputText);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),
 
@@ -85,8 +86,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_Inputs_InputText__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/InputText */ "./src/components/Inputs/InputText.jsx");
-/* harmony import */ var _components_Inputs_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Inputs/Button */ "./src/components/Inputs/Button.jsx");
+/* harmony import */ var _components_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/TextInput */ "./src/components/Inputs/TextInput.jsx");
+/* harmony import */ var _components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.jsx");
 
 
 
@@ -100,9 +101,9 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyF
       className: 'text-base mt-2 mb-8'
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('100% free. No credit card needed.')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
       className: 'text-2xl font-bold mt-6'
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("What's your Style?", 'simplybook')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_InputText__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("What's your Style?", 'simplybook')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
       placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Email address', 'simplybook')
-    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_Button__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
       onClick: () => {},
       link: {
         to: '/onboarding/implementation'

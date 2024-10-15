@@ -1,4 +1,4 @@
-const InputSelect = ({ value, onChange, onError, options = [] }) => {
+const SelectInput = ({ value, onChange, onError, options = [] }) => {
   return (
       <Select.Root value={value} onValueChange={(val) => onChange(val)} onError={onError}>
         <Select.Trigger className="w-full flex justify-between items-center p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500">
@@ -46,4 +46,4 @@ const SelectItem = React.forwardRef(({ children, className, ...props }, forwarde
   );
 });
 
-export default InputSelect;
+export default SelectInput;

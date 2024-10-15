@@ -1,4 +1,4 @@
-const InputCheckboxGroup = ({ value, onChange, onError, options = [] }) => {
+const CheckboxGroupInput = ({ value, onChange, onError, options = [] }) => {
   const handleChange = (optionValue) => {
     if (value.includes(optionValue)) {
       onChange(value.filter((v) => v !== optionValue));
@@ -25,4 +25,4 @@ const InputCheckboxGroup = ({ value, onChange, onError, options = [] }) => {
   );
 };
 
-export default InputCheckboxGroup;
+export default CheckboxGroupInput;

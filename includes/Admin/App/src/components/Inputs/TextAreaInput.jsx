@@ -1,13 +1,13 @@
-const InputEmail = ({ value, onChange, onError }) => {
+const TextAreaInput = ({ value, onChange, onError }) => {
   return (
-      <input
-          type="email"
+      <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           onError={onError}
           className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
+          rows={4}
       />
   );
 };
 
-export default InputEmail;
+export default TextAreaInput;

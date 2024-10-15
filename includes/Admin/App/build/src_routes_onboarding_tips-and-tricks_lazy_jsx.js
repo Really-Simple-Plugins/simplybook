@@ -1,10 +1,10 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_tips-and-tricks_lazy_jsx"],{
 
-/***/ "./src/components/Inputs/Button.jsx":
-/*!******************************************!*\
-  !*** ./src/components/Inputs/Button.jsx ***!
-  \******************************************/
+/***/ "./src/components/Inputs/ButtonInput.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Inputs/ButtonInput.jsx ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -16,7 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 
 
-const Button = ({
+const ButtonInput = ({
   children,
   onClick,
   link = {},
@@ -36,7 +36,7 @@ const Button = ({
     ...props
   }, children);
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Button);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonInput);
 
 /***/ }),
 
@@ -55,7 +55,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_Inputs_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/Button */ "./src/components/Inputs/Button.jsx");
+/* harmony import */ var _components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.jsx");
 
 
 
@@ -68,7 +68,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyF
       className: "text-2xl font-bold mt-6"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Tips & Tricks', 'simplybook')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
       className: "text-base mt-2 mb-8"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('100% free. No credit card needed.')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('100% free. No credit card needed.')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
       onClick: () => {},
       link: {
         to: '/onboarding/information-check'

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 
-const Button = ({ children, onClick, link = {}, ...props }) => {
+const ButtonInput = ({ children, onClick, link = {}, ...props }) => {
   const className =
     "bg-red-500 hover:bg-red-700 hover:text-white text-white  text-center font-bold py-2 px-24 rounded-2xl";
   if (link.to) {
@@ -18,4 +18,4 @@ const Button = ({ children, onClick, link = {}, ...props }) => {
   );
 };
 
-export default Button;
+export default ButtonInput;
