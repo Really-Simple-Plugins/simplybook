@@ -17,12 +17,13 @@ const InputField = ({
   help,
   error,
   reverseLabel = false,
+  className,
   children,
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
 
   return (
-      <div className="my-4 flex flex-col">
+      <div className={`flex flex-col ${className || ""}`}>
         <Label.Root className={"flex w-full cursor-pointer flex-col " + colReverse}>
           <div className="w-full flex gap-1 my-1">
             {label && (

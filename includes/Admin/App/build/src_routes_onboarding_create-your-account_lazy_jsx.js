@@ -126,11 +126,12 @@ const InputField = ({
   help,
   error,
   reverseLabel = false,
+  className,
   children
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "my-4 flex flex-col"
+    className: `flex flex-col ${className || ""}`
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
     className: "flex w-full cursor-pointer flex-col " + colReverse
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -309,9 +310,9 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyF
       value: true,
       onChange: () => {}
     }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-      className: "mt-4 text-xs text-center font-light text-gray-600"
+      className: "mt-4 text-center text-xs font-light text-gray-600"
     }, "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "col-span-4 col-start-7 my-12"
+      className: "col-span-4 col-start-7 row-span-2 my-12"
     }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("iframe", {
       width: "100%",
       className: "aspect-video",

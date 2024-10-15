@@ -4,12 +4,10 @@ import SwitchInput from "../../components/Inputs/SwitchInput";
 import InputField from "../../components/Forms/InputField";
 import ButtonInput from "../../components/Inputs/ButtonInput";
 import EmailField from "../../components/Fields/EmailField";
-import SwitchField from '../../components/Fields/SwitchField';
+import SwitchField from "../../components/Fields/SwitchField";
 
 export const Route = createLazyFileRoute("/onboarding/create-your-account")({
   component: () => {
-
-
     return (
       <>
         <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
@@ -23,12 +21,13 @@ export const Route = createLazyFileRoute("/onboarding/create-your-account")({
           </div>
           <div className={"flex flex-col"}>
             <EmailField
-                label={__("Email address", "simplybook")}
-                help={__("We'll never share your email with anyone else.", "simplybook")}
-                placeholder={__("Enter your email address", "simplybook")}
-
-
-              />
+              label={__("Email address", "simplybook")}
+              help={__(
+                "We'll never share your email with anyone else.",
+                "simplybook",
+              )}
+              placeholder={__("Enter your email address", "simplybook")}
+            />
             <ButtonInput
               onClick={() => {}}
               link={{
@@ -38,18 +37,18 @@ export const Route = createLazyFileRoute("/onboarding/create-your-account")({
               {__("Verify email", "simplybook")}
             </ButtonInput>
             <SwitchField
-                label={__("I have read the Terms & Conditions", "simplybook") }
-                value={true}
-                onChange={() => {}}
+              label={__("I have read the Terms & Conditions", "simplybook")}
+              value={true}
+              onChange={() => {}}
             />
-            <p className="mt-4 text-xs text-center font-light text-gray-600">
+            <p className="mt-4 text-center text-xs font-light text-gray-600">
               Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
               nisi ut. Ut enim ad minim veniam, quis nostrud exercitation
               ullamco laboris nisi ut
             </p>
           </div>
         </div>
-        <div className="col-span-4 col-start-7 my-12">
+        <div className="col-span-4 col-start-7 row-span-2 my-12">
           <iframe
             width="100%"
             className={"aspect-video"}

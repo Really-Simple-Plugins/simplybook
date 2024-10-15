@@ -1,6 +1,7 @@
 import { createLazyFileRoute, Outlet } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../../assets/img/logo.svg";
 import { __ } from "@wordpress/i18n";
+import OnboardingFooter from '../components/Onboarding/OnboardingFooter';
 
 export const Route = createLazyFileRoute("/onboarding")({
   component: () => <OnboardingPage />,
@@ -19,10 +20,11 @@ function OnboardingPage() {
         </span>
       </div>
       <div className="mx-auto flex flex-col max-w-screen-2xl py-5">
-        <div className="grid min-h-full w-full grid-cols-12 grid-rows-5 gap-24">
+        <div className="grid min-h-full w-full grid-cols-12 gap-24">
           <Outlet />
         </div>
       </div>
+      <OnboardingFooter />
     </div>
   );
 }

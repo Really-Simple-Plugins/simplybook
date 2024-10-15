@@ -24,14 +24,14 @@ export const Route = createRootRoute({
 
     const navigate = useNavigate(); // Move this outside conditional
 
-    // Handle navigation in useEffect instead of inside render
-    useEffect(() => {
-      if (onboardingCompleted.data === false && onboardingCompleted.isFetched) {
-        navigate({
-          to: '/onboarding/create-your-account',
-        });
-      }
-    }, [onboardingCompleted.data, onboardingCompleted.isFetched, navigate]);
+    // // Handle navigation in useEffect instead of inside render
+    // useEffect(() => {
+    //   if (onboardingCompleted.data === false && onboardingCompleted.isFetched) {
+    //     navigate({
+    //       to: '/onboarding/create-your-account',
+    //     });
+    //   }
+    // }, [onboardingCompleted.data, onboardingCompleted.isFetched, navigate]);
 
     if (onboardingCompleted.isLoading) {
       return <div>Loading...</div>;

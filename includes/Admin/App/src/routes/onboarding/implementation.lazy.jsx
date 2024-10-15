@@ -2,6 +2,7 @@ import {createLazyFileRoute,} from '@tanstack/react-router';
 import {__} from '@wordpress/i18n';
 import TextInput from '../../components/Inputs/TextInput';
 import ButtonInput from '../../components/Inputs/ButtonInput';
+import TextField from '../../components/Fields/TextField';
 
 export const Route = createLazyFileRoute('/onboarding/implementation')({
   component: () => {
@@ -9,23 +10,35 @@ export const Route = createLazyFileRoute('/onboarding/implementation')({
     return (
         <>
           <div
-              className="col-span-5 col-start-2 py-12 text-center flex flex-col">
-            <h2 className={'text-base mt-2 mb-8'}>{__(
-                '100% free. No credit card needed.')}</h2>
-            <h1 className={'text-2xl font-bold mt-6'}>{__(
-                'Implement SimplyBook.me', 'simplybook')}</h1>
+              className="col-span-4 col-start-3 row-span-2 my-12 flex flex-col text-black">
+            <div className={"my-1 text-center"}>
+              <h2 className={"mt-6 text-base"}>
+                {__("Alpha Bedum Beauty & Welness")}
+              </h2>
+              <h1 className={"mt-2 text-2xl font-bold"}>
+                {__("Implement SimplyBook.me", "simplybook")}
+              </h1>
+            </div>
 
-            <TextInput
-                placeholder={__('Email address', 'simplybook')}
-            />
-            <ButtonInput onClick={() => {}} link={{
-              to: '/',
-            }}>
-              {__('Verify email', 'simplybook')}
+            <div className={"grid grid-cols-2 gap-3 my-8"}>
+              <TextField className={"col-span-2"}
+                         label={__("Company Name", "simplybook")}
+                         value={"My Business Name"}
+                         context={__('More customisation available under settings', 'simplybook')}
+              />
+
+            </div>
+            <ButtonInput
+                onClick={() => {}}
+                link={{
+                  to: "/settings/general/",
+                }}
+            >
+              {__("Continue Configuration", "simplybook")}
             </ButtonInput>
           </div>
-          <div className="col-span-5 col-start-7 py-12">
-            <iframe width="100%"  className={"aspect-video"} src="https://www.youtube-nocookie.com/embed/adYNTa9Gicw?si=A1cJfYkkfvlE9Yn0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+          <div className="col-span-4 col-start-7 py-12">
+            Calender hier
           </div>
         </>
     );
