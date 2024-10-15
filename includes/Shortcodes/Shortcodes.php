@@ -11,7 +11,7 @@ class Shortcodes {
     use Helper;
 
     public function __construct() {
-        add_shortcode( 'cmplz-document', array( $this, 'load_document' ) );
+        add_shortcode( 'simplybook_widget', array( $this, 'load_document' ) );
 
     }
 
