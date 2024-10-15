@@ -1,7 +1,6 @@
 <?php
 namespace Simplybook\Blocks;
-use Simplybook\Traits\Admin\Helper;
-use Simplybook\Admin\Capability\Capability;
+use Simplybook\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

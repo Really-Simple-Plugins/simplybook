@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Traits\Admin;
+namespace Simplybook\Traits;
 
 /**
  * Trait admin helper
@@ -53,8 +53,35 @@ trait Helper {
      */
     public function log( string $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( "Really Simple Security: ".$message );
+            error_log( "Simplybook: ".$message );
         }
+    }
+
+    /**
+     * Sanitize the attribute
+     *
+     * @param string $attribute
+     * @return string
+     */
+    public function sanitize_attribute(string $attribute ): string
+    {
+        $allowed_attributes = array('location', 'category', 'provider', 'service');
+        return in_array($attribute, $allowed_attributes) ? $attribute : 'location';
+    }
+
+    /**
+     * Sanitize an array of attributes
+     *
+     * @param array $attributes
+     * @return array
+     */
+    public function sanitize_attributes(array $attributes): array
+    {
+        $sanitized_attributes = [];
+        foreach ($attributes as $attribute) {
+            $sanitized_attributes[] = $this->sanitize_attribute($attribute);
+        }
+        return array_unique( $sanitized_attributes );
     }
 
 }

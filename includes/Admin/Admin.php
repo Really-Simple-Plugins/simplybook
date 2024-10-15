@@ -3,7 +3,7 @@ namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
-use Simplybook\Traits\Admin\Helper;
+use Simplybook\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

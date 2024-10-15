@@ -1,7 +1,7 @@
 <?php
 namespace Simplybook\Admin\RestApi;
 
-use Simplybook\Traits\Admin\Helper;
+use Simplybook\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
