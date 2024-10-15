@@ -23,8 +23,8 @@ class Shortcodes {
      */
     public function load_widget($atts = [], $content = null, $tag = ''): string
     {
-        wp_register_script('simplybookMePl_widget_scripts', 'https://simplybook.me/v2/widget/widget.js', array(), '1.3.0');
-        wp_enqueue_script('simplybookMePl_widget_scripts');
+        wp_register_script('simplybook_widget_scripts', 'https://simplybook.me/v2/widget/widget.js', array(), '1.3.0');
+        wp_enqueue_script('simplybook_widget_scripts');
 
         // normalize attribute keys, lowercase
         $atts = array_change_key_case( (array) $atts, CASE_LOWER );
