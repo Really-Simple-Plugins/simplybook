@@ -6,7 +6,7 @@ const  Header = () => {
 
   return (
       <div className="bg-white shadow-md">
-        <div className="flex items-center mx-auto max-w-screen-2xl mx-5">
+        <div className="flex items-center mx-auto max-w-screen-2xl px-5">
           <div>
             <Link to="/">
               <Logo className="w-40 h-12 py-2 px-5"/>

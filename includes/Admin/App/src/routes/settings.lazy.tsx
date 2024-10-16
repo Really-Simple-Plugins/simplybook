@@ -21,8 +21,8 @@ function Settings() {
     return (
         <>
             <Header/>
-            <div className="flex mx-auto max-w-screen-2xl py-5">
-                <div className="grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full">
+            <div className="flex mx-auto max-w-screen-2xl">
+                <div className="grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5">
                     <Block colSpan={3} rowSpan={4}>
                         <BlockHeading title={__('Settings', 'simplybook')} controls={null}/>
                         <div className="flex flex-col justify-start">

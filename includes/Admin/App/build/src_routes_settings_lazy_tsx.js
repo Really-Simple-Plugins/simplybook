@@ -67,7 +67,7 @@ const Block = ({
   rowSpan,
   children
 }) => {
-  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} col-start-${rowSpan}`;
+  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} row-span-${rowSpan}`;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: classes
   }, children);
@@ -125,7 +125,7 @@ const Header = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white shadow-md"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl mx-5"
+    className: "flex items-center mx-auto max-w-screen-2xl px-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
@@ -194,9 +194,9 @@ function Settings() {
   });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Header__WEBPACK_IMPORTED_MODULE_3__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "flex mx-auto max-w-screen-2xl py-5",
+      className: "flex mx-auto max-w-screen-2xl",
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full",
+        className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Blocks_Block__WEBPACK_IMPORTED_MODULE_4__["default"], {
           colSpan: 3,
           rowSpan: 4,

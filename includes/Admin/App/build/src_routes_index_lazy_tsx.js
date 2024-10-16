@@ -67,7 +67,7 @@ const Block = ({
   rowSpan,
   children
 }) => {
-  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} col-start-${rowSpan}`;
+  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} row-span-${rowSpan}`;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: classes
   }, children);
@@ -174,7 +174,7 @@ const Header = () => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white shadow-md"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl mx-5"
+    className: "flex items-center mx-auto max-w-screen-2xl px-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
