@@ -1,17 +1,20 @@
 {
 	"name": "simplybook",
 	"version": "7.0.0",
-	"description": "Gutenberg block for Complianz",
+	"description": "This block is a simple block for the SimplyBook.me booking system",
 	"main": "build/index.js",
 	"scripts": {
 		"start": "wp-scripts start",
 		"build": "wp-scripts build",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "rogierlankhorst",
-	"license": "GPL-2.0-only",
+	"author": "simplybook",
+	"license": "ISC",
 	"devDependencies": {
-		"@wordpress/scripts": "^27.1.0"
+		"@wordpress/scripts": "^27.1.0",
+		"@wordpress/i18n": "^3.0.0",
+		"@wordpress/blocks": "^12.0.0",
+		"@wordpress/block-editor": "^10.0.0"
 	},
 	"dependencies": {
 		"@wordpress/api-fetch": "^7.9.0",

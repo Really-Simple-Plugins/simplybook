@@ -1,0 +1,224 @@
+@import "../../../css/ui-kit/index";
+
+.sb-widget-container {
+	position: relative;
+	padding: 24px 30px;
+	border-radius: 8px;
+	border: 1px solid $border-color;
+	background: $second-brand-color;
+	margin: 22px 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px 6px;
+	flex-wrap: wrap;
+	text-align: center;
+
+	.sb-widget-icon {
+		color: $color-primary;
+		width: 25px !important;
+		height: 25px !important;
+		font-size: 25px !important;
+		line-height: 0.6;
+	}
+
+	.sb-widget-title {
+		color : $color-primary;
+		margin: 0;
+		padding: 0;
+		display: inline-block;
+		width: auto;
+		font-size: 24px;
+		font-weight: $bold;
+		line-height: 1.22;
+	}
+
+	.--subtitle{
+		&.wp-sb--p{
+			margin-top: 20px;
+			width: 100%;
+			margin-bottom: 0;
+			font-weight: 300;
+		}
+	}
+
+	.wp-sb--p{
+		width: 100%;
+		margin: 0;
+		padding: 0;
+		font-size: 14px;
+		line-height: 1.4;
+		color: $color-neutral-dark;
+
+		&_secondary{
+			color: $color-neutral;
+		}
+	}
+
+	.sb-widget-predefined {
+		padding: 0;
+		margin: 0;
+		font-size: 16px;
+		width: 100%;
+		font-weight: 500;
+	}
+
+	.sb-widget-edit-btn {
+		margin-top: 8px;
+		position: relative;
+		border-radius: 6px;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		font-size: 14px;
+		background: $color-primary;
+		color: #fff;
+		min-height: 36px;
+		padding: 4px 25px;
+
+		&:hover, &:focus{
+			background: darken($color-primary, 5%);
+			color: #fff;
+		}
+	}
+	.sb-widget-save-btn {
+		margin-top: 20px;
+	}
+
+	.sb-widget-alert{
+		color: $color-danger;
+		font-style: italic;
+		font-size: 16px;
+		margin: 0;
+		display: inline-block;
+		width: 100%;
+		padding: 0px 0px 0px 0px;
+		text-align: center;
+
+		a{
+			color: $color-danger;
+			text-decoration: underline;
+			border-bottom: 0;
+			border: 0;
+		}
+	}
+}
+
+/// popup
+.wp-sb-popup-info{
+	max-width: 480px;
+	margin-bottom: 22px;
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding-bottom: 22px;
+	border-bottom: 1px solid $border-color;
+
+	p{
+		color: $color-neutral-dark;
+		font-size: 13px;
+		margin: 0;
+		padding: 0;
+	}
+}
+
+.wp-sb-popup-predefine-form{
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
+	margin-bottom: 22px;
+
+	.components-base-control{
+		width: 100%;
+		margin: 0;
+		padding: 0;
+
+		&__label{
+			text-transform: unset;
+			font-size: 14px;
+			color: $color-neutral-dark;
+		}
+
+		&__field{
+			padding: 0;
+			margin: 0;
+
+			.components-select-control{
+				padding: 0;
+				margin: 0;
+				flex-direction: row;
+				flex-wrap: wrap;
+				align-items: center;
+				gap: 4px;
+			}
+
+			.components-flex-item{
+				flex-grow: 1;
+				flex-basis: 200px;
+			}
+
+			.components-input-control__container{
+				flex: unset;
+				width: auto;
+				flex-grow: 1;
+				flex-basis: 200px;
+
+				.components-select-control__input{
+					border-radius: 6px;
+					padding-left: 18px;
+					padding-right: 30px;
+					height: 36px;
+					font-size: 14px;
+				}
+
+				.components-input-control__backdrop{
+					border-color: $border-color;
+					border-radius: 6px;
+				}
+			}
+		}
+	}
+}
+
+.wp-sb-popup-predefine-btnBar{
+	display: flex;
+	align-items: stretch;
+	justify-content: flex-end;
+	gap: 8px;
+	flex-wrap: wrap;
+
+	button{
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		min-height: 36px;
+		padding: 4px 25px;
+		border-radius: 6px;
+		font-size: 14px;
+		font-weight: 500;
+		min-width: 110px;
+
+		&.components-button.is-primary{
+			background: $color-primary;
+			color: #fff;
+
+			&:hover, &:focus{
+				background: darken($color-primary, 5%);
+				color: #fff;
+			}
+		}
+	}
+}
+
+.components-modal__frame.sb-widget-modal{
+	.components-panel__body.is-opened{
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+}
+
+.sb-widget-preview-modal{
+	width: 80%;
+}
