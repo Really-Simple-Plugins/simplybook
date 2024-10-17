@@ -95,7 +95,7 @@ class Blocks {
         wp_register_script('simplybookMePl_widget_scripts', 'https://simplybook.me/v2/widget/widget.js', array(), '1.3.0');
         wp_enqueue_script('simplybookMePl_widget_scripts');
 
-        wp_register_style('simplybookMePl_widget_styles', plugins_url(SimplybookMePl_PLUGIN_NAME . '/content/js/simplybook-widget/build/index.css'));
+        wp_register_style('simplybookMePl_widget_styles', plugins_url( 'build/index.css',  __FILE__ ) );
         wp_enqueue_style('simplybookMePl_widget_styles');
 
     }
