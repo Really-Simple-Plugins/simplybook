@@ -2,58 +2,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-
-if(!function_exists('simplybookMePl_clearFlashMessages')) {
-    function simplybookMePl_clearFlashMessages()
-    {
-        simplybookMePl_setConfig('flash_messages', array());
-    }
-}
-
-if(!function_exists('simplybookMePl_addFlashMessage')) {
-    function simplybookMePl_addFlashMessage($message, $type = 'error')
-    {
-        $messages = simplybookMePl_getConfig('flash_messages', array());
-        $messages[] = array(
-            'message' => $message,
-            'type' => $type,
-        );
-        simplybookMePl_setConfig('flash_messages', $messages);
-    }
-}
-
-if(!function_exists('simplybookMePl_getFlashMessages')) {
-    function simplybookMePl_getFlashMessages()
-    {
-        $messages = simplybookMePl_getConfig('flash_messages', array());
-        simplybookMePl_setConfig('flash_messages', array());
-        return $messages;
-    }
-}
-
-if(!function_exists('simplybookMePl_encryptString')) {
-    function simplybookMePl_encryptString($string, $key){
-    $ivLength = openssl_cipher_iv_length('AES-256-CBC');
-    $iv = openssl_random_pseudo_bytes($ivLength);
-
-    $encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, 0, $iv);
-
-    return base64_encode($iv . $encrypted);
-}
-}
-
-if(!function_exists('simplybookMePl_decryptString')) {
-    function simplybookMePl_decryptString($encryptedString, $key)
-    {
-        $data = base64_decode($encryptedString);
-        $ivLength = openssl_cipher_iv_length('AES-256-CBC');
-        $iv = substr($data, 0, $ivLength);
-        $encrypted = substr($data, $ivLength);
-
-        return openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
-    }
-}
-
 if(!function_exists('simplybookMePl_redirectToAdminPage')) {
     function simplybookMePl_redirectToAdminPage($page, $params = array())
     {
@@ -136,78 +84,6 @@ if(!function_exists('simplybookMePl_addQueryParamsToUrl')) {
     }
 }
 
-if(!function_exists('simplybookMePl_initTwig')) {
-    function simplybookMePl_initTwig()
-    {
-        $loader = new FilesystemLoader(SimplybookMePl_TEMPLATE_DIR);
-        $twig = new Environment($loader, array(
-            'cache' => SimplybookMePl_PLUGIN_DIR . 'cache',
-            'auto_reload' => true,
-        ));
-
-        $function = new TwigFunction('makeUrl', function ($params = array()) {
-            $params['_wpnonce'] = wp_create_nonce('simplybook_rest');
-            return simplybookMePl_makeUrl($params);
-        });
-        $twig->addFunction($function);
-
-        //add preg_replace
-        $pregReplaceFunction = new TwigFilter('pregReplace', function ($subject, $pattern, $replacement) {
-            return preg_replace($pattern, $replacement, $subject);
-        });
-
-        $twig->addFilter($pregReplaceFunction);
-
-        //add base64_encode
-        $base64EncodeFunction = new TwigFunction('base64Encode', function ($string) {
-            if(!is_string($string)){
-                $string = json_encode($string);
-            }
-            return base64_encode($string);
-        });
-        $twig->addFunction($base64EncodeFunction);
-
-        $translationFunction = new TwigFunction('__', function ($key) {
-//        //check if translation exists
-//        $translation = __($key, 'simplybook');
-//        if($translation == $key){
-//            $text = "# .twig file\n";
-//            $text .= "msgid \"$key\"\nmsgstr \"\"\n\n";
-//            file_put_contents(SimplybookMePl_PLUGIN_DIR . 'translation.log', $text, FILE_APPEND);
-//            return $key;
-//        }
-            return __($key, 'simplybook');
-            //return $key;
-        });
-
-        $twig->addFunction($translationFunction);
-
-        //create file url
-        $fileUrlFunction = new TwigFunction('makeurl', function ($url) {
-            return plugins_url(SimplybookMePl_PLUGIN_NAME . '/content/' . $url);
-        });
-
-        $twig->addFunction($fileUrlFunction);
-
-        return $twig;
-    }
-}
-
-if(!function_exists('simplybookMePl_js_load_custom_translation')) {
-    function simplybookMePl_js_load_custom_translation(){
-        $currentLocale = get_locale();
-        $pluginLanguagesDir = SimplybookMePl_PLUGIN_DIR . 'languages/';
-
-        $jsonFile = $pluginLanguagesDir . 'simplybook-' . $currentLocale . '.json';
-        $defaultJsonFile = $pluginLanguagesDir . 'simplybook-en_US.json';
-
-        if (file_exists($jsonFile)) {
-            //    wp_register_script('sb_js_translations', plugins_url( str_replace(SimplybookMePl_PLUGIN_DIR, SimplybookMePl_PLUGIN_NAME, $jsonFile) ), array( 'wp-i18n' ), '0.0.1');
-        } else {
-            //     wp_register_script('sb_js_translations', plugins_url( str_replace(SimplybookMePl_PLUGIN_DIR, SimplybookMePl_PLUGIN_NAME, $defaultJsonFile) ), array( 'wp-i18n' ), '0.0.1');
-        }
-    }
-}
 
 if(!function_exists('simplybookMePl_getAllowedHtmlEntities')){
     function simplybookMePl_getAllowedHtmlEntities(){

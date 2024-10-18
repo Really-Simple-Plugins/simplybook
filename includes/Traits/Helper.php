@@ -1,6 +1,8 @@
 <?php
 namespace Simplybook\Traits;
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 /**
  * Trait admin helper
  *

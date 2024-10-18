@@ -84,16 +84,6 @@ if ( !class_exists('InternalApi') ) {
                 );
                 $providers = array_merge(array($anyProvider), $providers);
             }
-
-
-
-//            if($locationId){
-//
-//            }
-//
-//            if($serviceId){
-//
-//            }
             return $providers;
         }
 

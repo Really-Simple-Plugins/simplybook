@@ -32,11 +32,9 @@ define( 'SIMPLYBOOK_PLUGIN', plugin_basename( __FILE__ ) );
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/Traits/functions.php';
 
-use Simplybook\Admin\Capability\Capability;
-use Simplybook\Admin\RestApi\RestApi;
-use Simplybook\Blocks\Blocks;
-use Simplybook\Upgrades\Upgrades;
+use Simplybook\Frontend\Frontend;
 use Simplybook\Admin\Admin;
+$simplybook_cache = [];
 
 if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
     /**
@@ -47,12 +45,9 @@ if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
     function simplybook_init(): void
     {
         if ( simplybook_has_admin_access() ){
-            ( new Upgrades() );
             ( new Admin() );
-            ( new Capability() );
-            ( new RestApi() );
         }
-        ( new Blocks() );
+        ( new Frontend() );
     }
     add_action( 'plugins_loaded', __NAMESPACE__ . '\simplybook_init', 9 );
 }

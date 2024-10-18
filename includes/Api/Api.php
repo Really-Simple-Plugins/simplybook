@@ -3,8 +3,14 @@ namespace Simplybook\Api;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
- class Api
+
+use Simplybook\Traits\Load;
+use Simplybook\Traits\Save;
+
+class Api
 {
+    use Load;
+    use Save;
     protected $_commonCacheKey = '_v13';
     protected $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
@@ -26,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     public function getDomain()
     {
-        $domain = simplybookMePl_getConfig('domain');
+        $domain = $this->get_option('domain');
         if (!$domain) {
             $domain = 'simplybook.me';
         }
@@ -49,7 +55,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         if (!$dns) {
             return false;
         }
-        simplybookMePl_setConfig('domain', $domain);
+        $this->update_option('domain', $domain);
         return true;
     }
 
@@ -96,9 +102,9 @@ if ( ! defined( 'ABSPATH' ) ) {
             'domain' => $result['domain'],
         );
 
-        simplybookMePl_setConfig('auth_data', $authData);
-        simplybookMePl_setConfig('auth_datetime', time());
-        simplybookMePl_setConfig('is_auth', true);
+        $this->update_option('auth_data', $authData);
+        $this->update_option('auth_datetime', time());
+        $this->update_option('is_auth', true);
 
         return true;
     }
@@ -109,7 +115,7 @@ if ( ! defined( 'ABSPATH' ) ) {
         $clearKeys = array('auth_data', 'is_auth', 'auth_datetime', 'widget_settings', 'api_status', 'widget_page_deleted');
 
         foreach ($clearKeys as $key) {
-            simplybookMePl_setConfig($key, null);
+            $this->update_option($key, null);
         }
         $this->_clearCache();
     }
@@ -181,9 +187,9 @@ if ( ! defined( 'ABSPATH' ) ) {
             'refresh_time' => time(),
         ));
 
-        simplybookMePl_setConfig('auth_data', $authData);
-        simplybookMePl_setConfig('auth_datetime', time());
-        simplybookMePl_setConfig('is_auth', true);
+        $this->update_option('auth_data', $authData);
+        $this->update_option('auth_datetime', time());
+        $this->update_option('is_auth', true);
 
         return true;
     }
@@ -191,8 +197,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     public function isAuthorized()
     {
         $authData = $this->getAuthData();
-        $authDatetime = simplybookMePl_getConfig('auth_datetime');
-        $isAuth = simplybookMePl_getConfig('is_auth');
+        $authDatetime = $this->get_option('auth_datetime');
+        $isAuth = $this->get_option('is_auth');
 
         if ($isAuth && $authDatetime) {
             if ($authData && !isset($authData['is_refreshed'])) {
@@ -219,7 +225,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     public function getAuthData()
     {
-        $authData = simplybookMePl_getConfig('auth_data');
+        $authData = $this->get_option('auth_data');
 
         if ($authData) {
             return $authData;
@@ -231,9 +237,9 @@ if ( ! defined( 'ABSPATH' ) ) {
                 'domain' => sanitize_text_field($_GET['domain']),
             );
 
-            simplybookMePl_setConfig('auth_data', $authData);
-            simplybookMePl_setConfig('auth_datetime', time());
-            simplybookMePl_setConfig('is_auth', true);
+            $this->update_option('auth_data', $authData);
+            $this->update_option('auth_datetime', time());
+            $this->update_option('is_auth', true);
 
             return $authData;
         } else {
@@ -273,7 +279,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             }
             return "https://{$login}.secure.{$domain}";
         } else {
-            $publicUrl = simplybookMePl_getConfig('public_url');
+            $publicUrl = $this->get_option('public_url');
             if($publicUrl){
                 return 'https://' . $publicUrl;
             } else {
@@ -392,14 +398,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 
     protected function _clearCache()
     {
-        $cachedKeys = simplybookMePl_getConfig('cached_keys');
+        $cachedKeys = $this->get_option('cached_keys');
         if (!$cachedKeys) {
             $cachedKeys = array();
         }
         foreach ($cachedKeys as $key => $time) {
             delete_transient($key);
         }
-        simplybookMePl_setConfig('cached_keys', array());
+        $this->update_option('cached_keys', array());
     }
 
 
@@ -515,7 +521,7 @@ if ( ! defined( 'ABSPATH' ) ) {
      */
     protected function makeApiCall($url, $cacheKey = null, $type = "GET", $params = array())
     {
-        $apiStatus = simplybookMePl_getConfig('api_status');
+        $apiStatus = $this->get_option('api_status');
         if ($apiStatus && $apiStatus['status'] == 'error' && $apiStatus['time'] > time() - 60 * 60 && $cacheKey) {
             $longCacheData = get_transient($cacheKey . '_long'); //return long cache
             return $longCacheData ? (isset($longCacheData['data'])? $longCacheData['data'] : $longCacheData) : null;
@@ -571,7 +577,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             // $this->logout(); //todo: maybe remove this and return cached data
 
             if($cacheKey) {
-                simplybookMePl_setConfig('api_status', array(
+                $this->update_option('api_status', array(
                     'status' => 'error',
                     'error' => $errorMsg,
                     'time' => time(),
@@ -585,23 +591,23 @@ if ( ! defined( 'ABSPATH' ) ) {
         $result = json_decode($result, true);
 
         if($cacheKey) {
-            $cachedKeys = simplybookMePl_getConfig('cached_keys');
+            $cachedKeys = $this->get_option('cached_keys');
             if (!$cachedKeys) {
                 $cachedKeys = array();
             }
             $cachedKeys[$cacheKey] = time();
             $cachedKeys[$cacheKey . '_long'] = time();
-            simplybookMePl_setConfig('cached_keys', $cachedKeys);
+            $this->update_option('cached_keys', $cachedKeys);
 
             set_transient($cacheKey, $result, 30 * 60);
             //save current data to long cache
             set_transient($cacheKey . '_long', $result, 0); //never expire
         }
 
-        simplybookMePl_setConfig('api_status', array(
+        $this->update_option('api_status', array(
             'status' => 'success',
             'time' => time(),
         ));
-        return isset($result['data']) ? $result['data'] : $result;
+        return $result['data'] ?? $result;
     }
 }
