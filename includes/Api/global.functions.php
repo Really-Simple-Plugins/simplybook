@@ -1,10 +1,6 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-use Twig\TwigFilter;
-use Twig\TwigFunction;
-use Twig\Environment;
-use Twig\Loader\FilesystemLoader;
 
 $cache = array();
 
@@ -205,7 +201,7 @@ if(!function_exists('simplybookMePl_initTwig')) {
         ));
 
         $function = new TwigFunction('makeUrl', function ($params = array()) {
-            $params['_wpnonce'] = SimplybookMePl_NonceProtect::getNonce();
+            $params['_wpnonce'] = wp_create_nonce('simplybook_rest');
             return simplybookMePl_makeUrl($params);
         });
         $twig->addFunction($function);

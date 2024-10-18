@@ -314,7 +314,7 @@ if (!class_exists('Api')) {
 
             $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'sbpage', 'login');
             $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'm', 'confirm');
-            $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, '_wpnonce', SimplybookMePl_NonceProtect::getNonce());
+            $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, '_wpnonce', wp_create_nonce('simplybook_rest'));
 
             $wpLanguage = get_locale();
 
@@ -353,7 +353,7 @@ if (!class_exists('Api')) {
 
             $url = simplybookMePl_makeUrl(array(
                 'sbpage' => 'sbredirect',
-                '_wpnonce' => SimplybookMePl_NonceProtect::getNonce(),
+                '_wpnonce' => wp_create_nonce('simplybook_rest'),
                 'sburl' => $simplybookAdminUrl . $urlPath,
             ));
 
@@ -384,7 +384,7 @@ if (!class_exists('Api')) {
         protected function _getApiCurl()
         {
             if (!$this->isAuthorized()) {
-                throw new SimplybookMePl_Exception('Not authorized');
+                throw new SimplybookException('Not authorized');
             }
 
             $args = array(
@@ -518,7 +518,7 @@ if (!class_exists('Api')) {
          * @param $url
          * @param $cacheKey
          * @return array|mixed
-         * @throws SimplybookMePl_Exception
+         * @throws SimplybookException
          */
         protected function makeApiCall($url, $cacheKey = null, $type = "GET", $params = array())
         {

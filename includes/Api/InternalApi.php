@@ -1,24 +1,25 @@
 <?php
+namespace Simplybook\InternalApi;
+use Simplybook\Api\Api;
+
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-
-if (!class_exists('SimplybookMePl_InternalApi')) {
-    class SimplybookMePl_InternalApi
+if ( !class_exists('InternalApi') ) {
+    class InternalApi
     {
         protected $auth = null;
         protected $error = null;
         protected $message = null;
         protected $request = null;
 
-
         public function __construct()
         {
-            $this->auth = new SimplybookMePl_Api();
+            $this->auth = new Api();
             $this->error = null;
             $this->message = null;
         }
 
-        public function isAuthorized()
+        public function isAuthorized(): bool
         {
             return $this->auth->isAuthorized();
         }
