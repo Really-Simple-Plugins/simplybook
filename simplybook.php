@@ -22,7 +22,7 @@ namespace Simplybook;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-
+$cache = array();
 define( 'SIMPLYBOOK_VERSION', '3.0.0' );
 define( 'SIMPLYBOOK_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLYBOOK_URL', plugin_dir_url( __FILE__ ) );

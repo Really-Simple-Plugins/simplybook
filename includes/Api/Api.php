@@ -323,12 +323,7 @@ if ( ! defined( 'ABSPATH' ) ) {
             $iso2lang = 'en';
         }
 
-        //check if EXTENDIFY_PARTNER_ID is set
-        if(defined('EXTENDIFY_PARTNER_ID')){
-            $extendifyPartnerId = EXTENDIFY_PARTNER_ID;
-        } else {
-            $extendifyPartnerId = null;
-        }
+        $extendifyPartnerId = defined('EXTENDIFY_PARTNER_ID') ? EXTENDIFY_PARTNER_ID : null;
 
         $params = array(
             'redirect_uri' => get_site_url() . "/?p=-1&sbcburl=" . urlencode(base64_encode($callbackUrl)),

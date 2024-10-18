@@ -2,61 +2,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-$cache = array();
-
-if(!function_exists('simplybookMePl_setConfig')){
-    function simplybookMePl_setConfig($key, $value){
-        global $cache;
-
-        $pass = '7*w$9pumLw5koJc#JT6';
-        $key = 'simplybookMePl_' . $key;
-
-        if (is_array($value) || is_bool($value) || is_object($value)) {
-            $value = serialize($value);
-        }
-
-        $value = simplybookMePl_encryptString($value, $pass);
-        update_option($key, $value);
-
-        // Оновлення кешу
-        $cache[$key] = $value;
-    }
-}
-
-if(!function_exists('simplybookMePl_getConfig')) {
-    function simplybookMePl_getConfig($key, $default = null)
-    {
-        global $cache;
-
-        if (isset($cache[$key])) {
-            // Use cached value if available
-            $value = $cache[$key];
-        } else {
-            $pass = '7*w$9pumLw5koJc#JT6';
-            $key = 'simplybookMePl_' . $key;
-            $value = get_option($key);
-
-            if ($value === false) {
-                $value = $default;
-            } else {
-                $decryptedValue = simplybookMePl_decryptString($value, $pass);
-
-                $unserializedValue = @unserialize($decryptedValue); // Suppress unserialize errors
-
-                if ($unserializedValue !== false) {
-                    $value = $unserializedValue;
-                } else {
-                    $value = $decryptedValue;
-                }
-            }
-
-            // Кешувати отримане значення
-            $cache[$key] = $value;
-        }
-
-        return $value;
-    }
-}
 
 if(!function_exists('simplybookMePl_clearFlashMessages')) {
     function simplybookMePl_clearFlashMessages()
