@@ -1,5 +1,6 @@
 <?php
 namespace Simplybook\Blocks;
+use Simplybook\Api\InternalApi;
 use Simplybook\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -25,7 +26,6 @@ class Blocks {
     public function register_rest_route(): void
     {
         $internalApi = new InternalApi();
-
         register_rest_route( 'simplybook', '/is-authorized', array(
             'methods' => 'GET',
             'callback' => array($internalApi, 'isAuthorized'),

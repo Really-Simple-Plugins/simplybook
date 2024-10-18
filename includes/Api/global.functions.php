@@ -29,7 +29,7 @@ if(!function_exists('simplybookMePl_getConfig')) {
         global $cache;
 
         if (isset($cache[$key])) {
-            // Використовувати кешоване значення, якщо воно є
+            // Use cached value if available
             $value = $cache[$key];
         } else {
             $pass = '7*w$9pumLw5koJc#JT6';
