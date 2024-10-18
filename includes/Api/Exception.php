@@ -1,5 +1,6 @@
 <?php
 namespace Simplybook\Api;
+use Exception;
 
 if ( ! defined( 'ABSPATH' ) ) exit;
 
