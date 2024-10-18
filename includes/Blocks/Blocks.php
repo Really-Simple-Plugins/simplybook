@@ -60,36 +60,9 @@ class Blocks {
             array(
                 'rest_url' => get_rest_url(),
                 'preview' => plugins_url( 'img/preview.png',  __FILE__ ),
-                'user_can_unfiltered_html' => current_user_can('unfiltered_html'),
+                'nonce' => wp_create_nonce( 'simplybook_rest' ),
             )
         );
-
-        wp_set_script_translations( 'simplybook-block', 'simplybook' );
-
-
-        //old code
-
-        $dir = dirname( __FILE__ );
-        $script_asset_path = "$dir/content/js/simplybook-widget/build/index.asset.php";
-
-        if ( ! file_exists( $script_asset_path ) ) {
-            throw new Exception(
-                'You need to run `npm start` or `npm run build` for the block first.'
-            );
-        }
-        $script_asset = require( $script_asset_path );
-
-        wp_enqueue_script(
-            'simplybook-widget-block-editor',
-            plugins_url( 'content/js/simplybook-widget/build/index.js', __FILE__ ),
-            $script_asset['dependencies'],
-            filemtime( plugin_dir_path( __FILE__ ) . 'content/js/simplybook-widget/build/index.js' )
-        );
-
-        //add nonce param to script
-        wp_localize_script( 'simplybook-widget-block-editor', 'simplybookData', array(
-            'nonce' => SimplybookMePl_NonceProtect::getNonce(),
-        ));
 
         //add widget.js script
         wp_register_script('simplybookMePl_widget_scripts', 'https://simplybook.me/v2/widget/widget.js', array(), '1.3.0');
@@ -98,6 +71,7 @@ class Blocks {
         wp_register_style('simplybookMePl_widget_styles', plugins_url( 'build/index.css',  __FILE__ ) );
         wp_enqueue_style('simplybookMePl_widget_styles');
 
+        wp_set_script_translations( 'simplybook-block', 'simplybook' );
     }
 
     /**
