@@ -13,12 +13,64 @@ const useSettingsData = () => {
   // Store for managing local changes before saving
   const [localSettings, setLocalSettings] = useState({});
 
+  // Placeholder settings array to simulate settings from server
+  const placeholderSettings = {
+    'general': {
+    'authentication': {
+      'apiKey': {
+        'label': 'API Key',
+        'type': 'text',
+        'value': '1234567890',
+      },
+      'apiSecret': {
+        'label': 'API Secret',
+        'type': 'text',
+        'value': '1234567890',
+      },
+    },
+      'widgets': {
+      'bookings_page': {
+        'label': 'Bookings Page',
+        'type': 'text',
+        'value': 'https://simplybook.me',
+      },
+      'calendar_page': {
+        'label': 'Calendar Page',
+        'type': 'text',
+        'value': 'https://simplybook.me',
+      },
+        'short_code': {
+          'label': 'Short Code',
+          'type': 'text',
+          'value': '1234567890',
+        },
+      }
+    },
+    'providers': {
+      'name': {
+        'label': 'Name',
+        'type': 'text',
+        'value': 'John Doe',
+      },
+      'email': {
+        'label': 'Email',
+        'type': 'email',
+        'value': '',
+      },
+      'phone': {
+        'label': 'Phone',
+        'type': 'tel',
+        'value': '',
+      },
+    }
+  };
+
   // Placeholder function for fetching settings from server
   const fetchSettings = async () => {
     // Simulate an API call
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({ siteTitle: 'My Website', enableComments: true });
+        resolve(placeholderSettings);
       }, 1000);
     });
   };
@@ -45,7 +97,8 @@ const useSettingsData = () => {
   });
 
   // Mutation for updating settings on server
-  const updateSettingsMutation = useMutation(updateSettings, {
+  const updateSettingsMutation = useMutation({
+    mutationFn: updateSettings,
     onSuccess: () => {
       // Invalidate and refetch settings after successful update
       queryClient.invalidateQueries(['settings']);
