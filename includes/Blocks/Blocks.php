@@ -24,17 +24,47 @@ class Blocks {
 
     public function register_rest_route(): void
     {
-        register_rest_route(
-            'simplybook/v1',
-            'embed',
-            array(
-                'methods' => 'GET',
-                'callback' => array( $this, 'get_embed_data' ),
-                'permission_callback' => function () {
-                    return $this->user_can_manage();
-                },
-            )
-        );
+        $internalApi = new SimplybookMePl_InternalApi();
+
+        register_rest_route( 'simplybook', '/is-authorized', array(
+            'methods' => 'GET',
+            'callback' => array($internalApi, 'isAuthorized'),
+            'permission_callback' => function () {
+                return $this->user_can_manage();
+            },
+        ));
+
+        register_rest_route( 'simplybook', '/locations', array(
+            'methods' => 'GET',
+            'callback' => array($internalApi, 'getLocations'),
+            'permission_callback' => function () {
+                return $this->user_can_manage();
+            },
+        ));
+
+        register_rest_route( 'simplybook', '/services', array(
+            'methods' => 'GET',
+            'callback' => array($internalApi, 'getServices'),
+            'permission_callback' => function () {
+                return $this->user_can_manage();
+            },
+        ));
+
+        register_rest_route( 'simplybook', '/categories', array(
+            'methods' => 'GET',
+            'callback' => array($internalApi, 'getCategories'),
+            'permission_callback' => function () {
+                return $this->user_can_manage();
+            },
+        ));
+
+        register_rest_route( 'simplybook', '/providers', array(
+            'methods' => 'GET',
+            'callback' => array($internalApi, 'getProviders'),
+            'permission_callback' => function () {
+                return $this->user_can_manage();
+            },
+        ));
     }
 
     /**
