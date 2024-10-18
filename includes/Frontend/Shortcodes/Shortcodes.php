@@ -1,7 +1,9 @@
 <?php
-namespace Simplybook\Shortcodes;
+namespace Simplybook\Frontend\Shortcodes;
 
+use Simplybook\Shortcodes\SimplybookMePl_Exception;
 use Simplybook\Traits\Helper;
+use function Simplybook\Shortcodes\simplybookMePl_Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

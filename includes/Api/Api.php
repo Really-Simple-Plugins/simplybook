@@ -318,7 +318,7 @@ class Api
 
         $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'sbpage', 'login');
         $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'm', 'confirm');
-        $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, '_wpnonce', wp_create_nonce('simplybook_rest'));
+        $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, '_wpnonce', wp_create_nonce('simplybook_nonce'));
 
         $wpLanguage = get_locale();
 
@@ -352,7 +352,7 @@ class Api
 
         $url = simplybookMePl_makeUrl(array(
             'sbpage' => 'sbredirect',
-            '_wpnonce' => wp_create_nonce('simplybook_rest'),
+            '_wpnonce' => wp_create_nonce('simplybook_nonce'),
             'sburl' => $simplybookAdminUrl . $urlPath,
         ));
 

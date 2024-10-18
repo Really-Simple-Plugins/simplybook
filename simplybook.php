@@ -28,6 +28,11 @@ define( 'SIMPLYBOOK_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SIMPLYBOOK_URL', plugin_dir_url( __FILE__ ) );
 define( 'SIMPLYBOOK_PLUGIN', plugin_basename( __FILE__ ) );
 
+if ( !file_exists(__DIR__ . '/vendor/autoload.php')) {
+    error_log("Simplybook plugin: Composer autoload file not found. Please run composer install in the plugin directory.");
+    return;
+}
+
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/includes/Traits/functions.php';

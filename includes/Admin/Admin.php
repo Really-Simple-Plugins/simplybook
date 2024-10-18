@@ -3,7 +3,8 @@ namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
-use Simplybook\Admin\RestApi\RestApi;
+use Simplybook\Admin\RestApi\Onboarding;
+use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Traits\Helper;
 use Simplybook\Upgrades\Upgrades;
 
@@ -15,13 +16,13 @@ class Admin {
     use Helper;
 
     protected App $app;
-    protected RestApi $restApi;
 
 	public function __construct() {
         ( new Upgrades() );
         ( new Capability() );
+        ( new Onboarding() );
+        ( new Settings() );
 
-        $this->restApi = new RestApi();
         $this->app = new App();
 
 		// Add action to register the admin menu
@@ -108,14 +109,14 @@ class Admin {
 		}
 		wp_enqueue_script(
 			'simplybook-app',
-			plugins_url( 'build/index.js' , __FILE__ ),
+			plugins_url( 'App/build/index.js' , __FILE__ ),
 			$js_data['dependencies'],
 			$js_data['version'],
 			true
 		);
 
 		wp_localize_script(
-			'simplybook',
+			'simplybook-app',
 			'simplybook',
 			$this->localized_settings( $js_data )
 		);

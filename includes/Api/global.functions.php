@@ -2,29 +2,6 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 
-if(!function_exists('simplybookMePl_redirectToAdminPage')) {
-    function simplybookMePl_redirectToAdminPage($page, $params = array())
-    {
-        $currentUrl = sanitize_url($_SERVER['REQUEST_URI']);
-
-        $newUrl = simplybookMePl_addQueryParamsToUrl($currentUrl, array(
-            'sbpage' => $page,
-            //clear other params
-            'm' => null,
-            '_wpnonce' => null,
-            'token' => null,
-            'refresh_token' => null,
-            'company' => null,
-            'domain' => null,
-            'session_id' => null,
-            'code' => null,
-        ));
-
-        echo "<script>location.href = '" . esc_url($newUrl, null, 'db') . "';</script>";
-        wp_redirect($newUrl);
-        exit;
-    }
-}
 
 if(!function_exists('simplybookMePl_makeUrl')) {
     function simplybookMePl_makeUrl($params){

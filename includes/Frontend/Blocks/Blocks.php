@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Blocks;
+namespace Simplybook\Frontend\Blocks;
 use Simplybook\Api\InternalApi;
 use Simplybook\Traits\Helper;
 
@@ -90,7 +90,7 @@ class Blocks {
             array(
                 'rest_url' => get_rest_url(),
                 'preview' => plugins_url( 'img/preview.png',  __FILE__ ),
-                'nonce' => wp_create_nonce( 'simplybook_rest' ),
+                'nonce' => wp_create_nonce( 'simplybook_nonce' ),
             )
         );
 
