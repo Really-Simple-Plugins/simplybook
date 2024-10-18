@@ -24,7 +24,7 @@ class Blocks {
 
     public function register_rest_route(): void
     {
-        $internalApi = new SimplybookMePl_InternalApi();
+        $internalApi = new InternalApi();
 
         register_rest_route( 'simplybook', '/is-authorized', array(
             'methods' => 'GET',
