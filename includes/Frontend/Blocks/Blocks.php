@@ -133,6 +133,32 @@ class Blocks {
         wp_set_script_translations( 'simplybook-block', 'simplybook' );
     }
 
+    public function addWidget($atts = [], $content = null, $tag = '')
+    {
+        wp_register_script('simplybook_widget_scripts', 'https://simplybook.me/v2/widget/widget.js', array(), '1.3.0');
+        wp_enqueue_script('simplybook_widget_scripts');
+
+        // normalize attribute keys, lowercase
+        $atts = array_change_key_case( (array) $atts, CASE_LOWER );
+
+        $allowedAtts = array('location', 'category', 'provider', 'service');
+
+        foreach ($atts as $key => $value) {
+            if (!in_array($key, $allowedAtts)) {
+                unset($atts[$key]);
+            }
+        }
+        $content = '<div id="sbw_z0hg2i"></div>';
+        try {
+            $script = simplybookMePl_Widget($atts);
+        } catch (SimplybookMePl_Exception $e) {
+            $content .= wp_kses_post("<div class='error'><p>" . $e->getMessage() . "</p></div>");
+            return $content;
+        }
+        $content .= sprintf('<script type="text/javascript">%s</script>', $script);
+        return $content;
+    }
+
 }
 
 

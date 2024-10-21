@@ -10,7 +10,7 @@ class Frontend {
     protected array $cache = array();
 
     public function __construct() {
-        //( new Blocks() );
+        ( new Blocks() );
     }
 
 }
