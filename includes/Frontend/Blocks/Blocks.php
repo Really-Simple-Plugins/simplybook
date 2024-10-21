@@ -12,6 +12,7 @@ class Blocks {
 
     public function __construct()
     {
+        error_log("register block type");
         add_action('enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
         register_block_type('simplybook/embed', array(
             'render_callback' => array( $this, 'render_document_block' ),
