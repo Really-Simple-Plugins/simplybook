@@ -13,10 +13,38 @@ class Blocks {
     public function __construct()
     {
         error_log("register block type");
+
+        if ( ! function_exists( 'register_block_type' ) ) {
+            // Block editor is not available.
+            return;
+        }
         add_action('enqueue_block_editor_assets', array( $this, 'editor_assets' ) );
-        register_block_type('simplybook/embed', array(
-            'render_callback' => array( $this, 'render_document_block' ),
+
+        register_block_type( 'simplybook/widget', array(
+            'title' => 'Simplybook Widget',
+            'icon' => 'simplybook',
+            'category' => 'widgets',
+            'render_callback' => array($this, 'addWidgetBlock'),
+            'attributes' => array(
+                'location' => array(
+                    'type' => 'integer',
+                    'default' => 0
+                ),
+                'category' => array(
+                    'type' => 'integer',
+                    'default' => 0
+                ),
+                'provider' => array(
+                    'type' => 'string', //any provide id = any
+                    'default' => 0
+                ),
+                'service' => array(
+                    'type' => 'integer',
+                    'default' => 0
+                ),
+            ),
         ));
+
         add_action( 'rest_api_init', array( $this, 'register_rest_route') );
     }
 
@@ -105,30 +133,6 @@ class Blocks {
         wp_set_script_translations( 'simplybook-block', 'simplybook' );
     }
 
-    /**
-     * Get the data for the embed
-     *
-     * @return array
-     */
-    public function get_embed_data(): array
-    {
-        $html = 'TEST';
-        $data = [];
-        $data['html'] = $html;
-        return $data;
-    }
-
-    /**
-     * Handles the front end rendering of the simplybook block
-     *
-     * @param $attributes
-     * @param $content
-     * @return string
-     */
-    public function render_document_block($attributes, $content): string {
-        $data = $this->get_embed_data();
-        return $data['html'];
-    }
 }
 
 
