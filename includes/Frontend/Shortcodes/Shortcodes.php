@@ -1,13 +1,13 @@
 <?php
 namespace Simplybook\Frontend\Shortcodes;
-use Simplybook\Frontend\Traits\Frontend;
+use Simplybook\Frontend\Traits\Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 class Shortcodes {
-    use Frontend;
+    use Widget;
 
     public function __construct() {
         add_shortcode( 'simplybook_widget', array( $this, 'load_widget' ) );

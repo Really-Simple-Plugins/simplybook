@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since   3.0
  *
  */
-trait Frontend {
+trait Widget {
     use Load;
 
     /**
@@ -84,8 +84,8 @@ trait Frontend {
             'nonce' => wp_create_nonce('simplybook_nonce'),
         );
 
-        $widgetSettings = $this->get_option('widget_settings');
-        if(!$widgetSettings){
+        $widgetSettings = $this->get_option('widget_settings' );
+        if ( !$widgetSettings ) {
             $widgetSettings = array();
         }
 

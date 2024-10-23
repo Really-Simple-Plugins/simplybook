@@ -89,7 +89,14 @@ trait Save {
         $this->update_option('flash_messages', array());
     }
 
-    public function encryptString($string, $key){
+    /**
+     * Encrypt data
+     * @param $string
+     * @param $key
+     * @return string
+     */
+    public function encryptString($string, $key): string
+    {
         $ivLength = openssl_cipher_iv_length('AES-256-CBC');
         $iv = openssl_random_pseudo_bytes($ivLength);
 
@@ -120,7 +127,7 @@ trait Save {
             return;
         }
 
-        $pass = '7*w$9pumLw5koJc#JT6';
+        //$pass = '7*w$9pumLw5koJc#JT6';
         $options = get_option('simplybook_options', []);
         //sanitize the value
         $field = $this->get_field_by_id($key);
@@ -135,7 +142,7 @@ trait Save {
             $value = serialize($value);
         }
 
-        $value = $this->encryptString($value, $pass);
+        //$value = $this->encryptString($value, $pass);
         $options[$key] = $value;
         update_option('simplybook_options', $options);
     }
@@ -153,13 +160,13 @@ trait Save {
         }
 
         $options = get_option( 'simplybook_options', array() );
-        $pass = '7*w$9pumLw5koJc#JT6';
+//        $pass = '7*w$9pumLw5koJc#JT6';
 
         // build a new options array
         foreach ( $fields as $field ) {
-            $field['prev_value'] = isset( $options[ $field['id'] ] ) ? $this->decryptString($options[ $field['id'] ], $pass ) : false;
+            $field['prev_value'] = $options[$field['id']] ?? false;
             do_action( 'simplybook_before_save_option', $field['id'], $field['value'], $field['prev_value'], $field['type'] );
-            $options[ $field['id'] ] = $this->encryptString( $field['value'], $pass );
+            $options[ $field['id'] ] = $field['value'];
         }
 
         if ( ! empty( $options ) ) {
