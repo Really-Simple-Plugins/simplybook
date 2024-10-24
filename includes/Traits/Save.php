@@ -17,14 +17,13 @@ trait Save {
      */
     public function get_config_obsolete($key, $default = null)
     {
-        $pass = '7*w$9pumLw5koJc#JT6';
         $key = 'simplybookMePl_' . $key;
         $value = get_option($key);
 
         if ( $value === false ) {
             $value = $default;
         } else {
-            $decryptedValue = $this->decryptString($value, $pass);
+            $decryptedValue = $this->decryptString_obsolete($value);
 
             $unserializedValue = @unserialize($decryptedValue); // Suppress unserialize errors
 
@@ -38,6 +37,15 @@ trait Save {
         return $value;
     }
 
+    public function upgrade_options_testing( $array ): void
+    {
+        foreach ( $array as $key => $value ) {
+            if ( $value !== false ) {
+                $this->update_option($key, $value);
+            }
+        }
+    }
+
     /**
      * Upgrade the options to one single option
      *
@@ -48,22 +56,25 @@ trait Save {
         $upgrade_keys = [
             'widget_settings',
             'api_status',
-            'widget_page_id',
-            'widget_page_deleted',
             'domain',
             'auth_datetime',
             'is_auth',
             'auth_data',
-            'public_url',
-            'cached_keys',
-            'flash_messages',
         ];
         foreach ($upgrade_keys as $key) {
             $value = $this->get_config_obsolete($key);
-            if ($value !== false) {
-                $this->update_option($key, $value);
-                delete_option('simplybookMePl_' . $key);
+            if ( $value !== false ) {
+                if ( $key === 'widget_settings' || $key === 'auth_data' ) {
+                    if ( is_array( $value ) ) {
+                        foreach ( $value as $key => $val) {
+                            $this->update_option($key, $val);
+                        }
+                    }
+                } else {
+                    $this->update_option($key, $value);
+                }
             }
+            delete_option('simplybookMePl_' . $key);
         }
     }
 
@@ -95,8 +106,10 @@ trait Save {
      * @param $key
      * @return string
      */
-    public function encryptString($string, $key): string
+    public function encryptString($string): string
     {
+        //@todo: use a different key for each wordpress setup
+        $key = '7*w$9pumLw5koJc#JT6';
         $ivLength = openssl_cipher_iv_length('AES-256-CBC');
         $iv = openssl_random_pseudo_bytes($ivLength);
 
@@ -105,8 +118,15 @@ trait Save {
         return base64_encode($iv . $encrypted);
     }
 
-    public function decryptString($encryptedString, $key): bool|string
+    /**
+     * Decryption method for old options
+     *
+     * @param string $encryptedString
+     * @return bool|string
+     */
+    public function decryptString_obsolete(string $encryptedString): bool|string
     {
+        $key = '7*w$9pumLw5koJc#JT6';
         $data = base64_decode($encryptedString);
         $ivLength = openssl_cipher_iv_length('AES-256-CBC');
         $iv = substr($data, 0, $ivLength);
@@ -134,27 +154,28 @@ trait Save {
 
         //don't save if not found
         if ( !$field ) {
+            error_log("field ".$key." not found in fields config");
             return;
         }
 
         $value = $this->sanitize_field($value, $field['type']);
-        if ( is_array($value) || is_bool($value) || is_object($value) ) {
-            $value = serialize($value);
+        if ( $field['encrypt'] ) {
+            $value = $this->encryptString($value);
         }
-
-        //$value = $this->encryptString($value, $pass);
         $options[$key] = $value;
         update_option('simplybook_options', $options);
     }
 
     public function update_options( $fields ) {
         foreach ( $fields as $index => $field ) {
-            $config_field = $this->get_field_by_id( $field['id'] );
-            if ( ! $config_field ) {
-                unset( $fields[ $index ] );
-                continue;
+//            $config_field = $this->get_field_by_id( $field['id'] );
+//            if ( ! $config_field ) {
+//                unset( $fields[ $index ] );
+//                continue;
+//            }
+            if ( !isset($config_field['type']) ) {
+                $config_field['type'] = 'textarea';
             }
-
             $field['value']   = $this->sanitize_field( $field['value'], $config_field['type'] );
             $fields[ $index ] = $field;
         }
@@ -188,37 +209,6 @@ trait Save {
             }
         }
         return false;
-    }
-
-
-    /**
-     * Get fields array for the settings
-     * @param bool $load_values
-     * @return array
-     */
-    public function fields( bool $load_values = false ): array
-    {
-        $fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
-        $fields = apply_filters('simplybook_fields', $fields);
-
-        foreach ( $fields as $key => $field ) {
-            $field = wp_parse_args( $field, [
-                'id'                 => false,
-                'visible'            => true,
-                'disabled'           => false,
-                'new_features_block' => false,
-            ] );
-
-            if ( $load_values ) {
-                $value          = $this->sanitize_field( $this->get_option( $field['id'], $field['default'] ), $field['type'] );
-                $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
-                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
-            }
-        }
-
-        $fields = apply_filters( 'simplybook_fields_values', $fields );
-
-        return array_values( $fields );
     }
 
     /**

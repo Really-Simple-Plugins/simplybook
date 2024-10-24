@@ -32,31 +32,11 @@ class Api
 
     public function getDomain()
     {
-        $domain = $this->get_option('domain');
-        if (!$domain) {
+        $domain = $this->getAuthData()['domain'];
+        if ( !$domain ) {
             $domain = 'simplybook.me';
         }
         return $domain;
-    }
-
-    public function setDomain($domain)
-    {
-        //check domain
-        if (!$domain || !preg_match('/^[a-z0-9\-\.]+$/i', $domain)) {
-            return false;
-        }
-        if (strpos($domain, '.em.') !== false) {
-            //remove all before .em.
-            $domain = substr($domain, strpos($domain, '.em.') + 1);
-        }
-
-        //check domain DNS
-        $dns = dns_get_record($domain, DNS_A);
-        if (!$dns) {
-            return false;
-        }
-        $this->update_option('domain', $domain);
-        return true;
     }
 
     public function confirm($companyLogin, $code, $confirmationCode, $sessionId)
@@ -95,14 +75,10 @@ class Api
             return false;
         }
 
-        $authData = array(
-            'token' => $result['token'],
-            'company' => $companyLogin,
-            'refresh_token' => $result['refresh_token'],
-            'domain' => $result['domain'],
-        );
-
-        $this->update_option('auth_data', $authData);
+        $this->update_option('token', $result['token']);
+        $this->update_option('company', $companyLogin);
+        $this->update_option('refresh_token', $result['refresh_token'] );
+        $this->update_option('domain', $result['domain']);
         $this->update_option('auth_datetime', time());
         $this->update_option('is_auth', true);
 
@@ -112,11 +88,7 @@ class Api
     public function logout()
     {
         $this->_log(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-        $clearKeys = array('auth_data', 'is_auth', 'auth_datetime', 'widget_settings', 'api_status', 'widget_page_deleted');
-
-        foreach ($clearKeys as $key) {
-            $this->update_option($key, null);
-        }
+        delete_option( 'simplybook_options' );
         $this->_clearCache();
     }
 
@@ -187,7 +159,10 @@ class Api
             'refresh_time' => time(),
         ));
 
-        $this->update_option('auth_data', $authData);
+        foreach ( $authData as $key => $value ) {
+            $this->update_option($key, $value);
+        }
+
         $this->update_option('auth_datetime', time());
         $this->update_option('is_auth', true);
 
@@ -225,21 +200,16 @@ class Api
 
     public function getAuthData()
     {
-        $authData = $this->get_option('auth_data');
-
-        if ($authData) {
+        $authData = $this->get_api_data();
+        if ( !empty($authData) ) {
             return $authData;
-        } else if (isset($_GET['token']) && isset($_GET['refresh_token'])) {
-            $authData = array(
-                'token' => sanitize_text_field($_GET['token']),
-                'company' => sanitize_text_field($_GET['company']),
-                'refresh_token' => sanitize_text_field($_GET['refresh_token']),
-                'domain' => sanitize_text_field($_GET['domain']),
-            );
-
-            $this->update_option('auth_data', $authData);
-            $this->update_option('auth_datetime', time());
-            $this->update_option('is_auth', true);
+        } else if ( isset($_GET['token']) && isset($_GET['refresh_token']) ) {
+            $this->update_option( 'token', sanitize_text_field($_GET['token']) );
+            $this->update_option( 'company', sanitize_text_field($_GET['company']) );
+            $this->update_option( 'refresh_token', sanitize_text_field($_GET['refresh_token']) );
+            $this->update_option( 'domain', sanitize_text_field($_GET['domain']) );
+            $this->update_option( 'auth_datetime', time() );
+            $this->update_option( 'is_auth', true );
 
             return $authData;
         } else {

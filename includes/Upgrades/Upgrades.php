@@ -27,25 +27,54 @@ class Upgrades {
         if ( ! simplybook_has_admin_access() ) {
             return;
         }
+        error_log("setting some defaults");
 
-//        $authData = [
-//            "token" => "46f4518a0599a7aed9b98fba6ad7802611d544f1dd4d0b13b61ae61765ff9816",
-//            "company" => "rsptest1",
-//            "refresh_token" => "ea2c27ee61f123082acd52d06d022e60d003aefbf8d2f5870088f4d1d941c08a",
-//            "domain" => "simplybook.me",
-//            "login" => "rogier@really-simple-ssl.com",
-//            "require2fa" => null,
-//            "allowed2fa_providers" => [],
-//            "auth_session_id" => null,
-//            "id" => null,
-//            "is_refreshed" => 1,
-//            "refresh_time" => 1729756105
-//        ];
-//
-//        $this->update_option('auth_data', $authData);
-//        $this->update_option('auth_datetime', time());
-//        $this->update_option('is_auth', true);
 
+        $this->update_option('auth_datetime', time());
+        $this->update_option('is_auth', true);
+
+
+        $data = [
+            "token" => "a02a894305827078fa2bf9311c1de206a8d32299942fed322bab4c29c77fa536",
+            "company" => "rsptest1",
+            "refresh_token" => "694a034a57b0b6b4866db35b592bf7003173252afb5dc454044cb4af15e6a303",
+            "domain" => "simplybook.me",
+            "login" => "rogier@really-simple-ssl.com",
+            "require2fa" => null,
+            "allowed2fa_providers" => [],
+            "auth_session_id" => null,
+            "id" => null,
+            "is_refreshed" => 1,
+            "refresh_time" => time(),
+            "template" => "default",
+            "server" => "rsptest1.simplybook.it",
+            "timeline_type" => "modern",
+            "datepicker_type" => "top_calendar",
+            "is_rtl" => null,
+            "allow_switch_to_ada" => null,
+            "clear_session" => null,
+            "timeline_modern_display" => "as_slots",
+            "display_item_mode" => "block",
+            "booking_nav_bg_color" => "#DD3649",
+            "body_bg_color" => "#F2F2F2",
+            "dark_font_color" => "#474747",
+            "light_font_color" => "#F5FCFF",
+            "btn_color_1" => "#DD3649",
+            "sb_company_label_color" => "#FFFFFF",
+            "sb_busy" => "#c7b3b3",
+            "sb_available" => "#D6EBFF",
+            "sb_base_color" => "#DD3649",
+            "timeline_show_end_time" => 0,
+            "timeline_hide_unavailable" => 1,
+            "hide_past_days" => 0,
+            "hide_img_mode" => 1,
+            "show_sidebar" => 1,
+            "predefined" => [
+                "provider" => null,
+                "service" => null
+            ]
+        ];
+        $this->upgrade_options_testing( $data );
         $prev_version = get_option( 'simplybook_current_version', false );
 
         //no version change, skip upgrade.

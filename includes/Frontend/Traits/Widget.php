@@ -74,20 +74,24 @@ trait Widget {
      * @param array $atts
      * @return string
      */
-    public function get_widget(array $atts = array()): string
+    public function get_widget( array $atts = [] ): string
     {
         $auth = new Api();
-        $post_settings = false;
+        $post_settings = [];
         $data = array(
             'is_auth' => $auth->isAuthorized(),
             'auth_data' => $auth->getAuthData(),
             'nonce' => wp_create_nonce('simplybook_nonce'),
         );
 
-        $widget_settings = $this->get_option('widget_settings' );
+        $widget_settings = $this->get_widget_settings();
+        error_log("widget_settings straight from option");
+        error_log(print_r($widget_settings, true));
         if ( !$widget_settings ) {
             $widget_settings = array();
         }
+
+        $widget_settings = wp_parse_args($widget_settings, $data);
 
         //check if attributes are set
         if ( count($atts) ) {
@@ -96,29 +100,19 @@ trait Widget {
             //create new array with predefined attributes from $atts
             $predefinedAtts = array();
             foreach ($predefinedAttsKeys as $key) {
-                if(isset($atts[$key])){
+                if ( isset($atts[$key]) ) {
                     $predefinedAtts[$key] = $atts[$key];
                 }
             }
-            if(!isset($post_settings['predefined'])){
-                $post_settings['predefined'] = array();
-            }
-            $post_settings['predefined'] = array_merge(!is_array($post_settings['predefined']) ? array() : $post_settings['predefined'], $predefinedAtts);
+
+            $post_settings['predefined'] = $predefinedAtts;
         }
 
-        if( !$post_settings ){
-            $post_settings = array();
-        }
+        $widget_settings = wp_parse_args($post_settings, $widget_settings);
 
-        $widget_settings = array_merge($widget_settings, $post_settings);
-
-        if( $widget_settings ) {
-            foreach ($widget_settings as $key => $value) {
-                $data[$key] = $value;
-            }
-        }
-
-       $script = $this->load_template('widget.js', $data);
+        error_log(print_r("widget_settings", true));
+        error_log(print_r($widget_settings, true));
+       $script = $this->load_template('widget.js', $widget_settings);
         error_log($script);
        return '<script>' . $script . '</script>';
     }
@@ -131,7 +125,7 @@ trait Widget {
     public function load_template(string $template, array $data = array() ): string
     {
         ob_start();
-        include SIMPLYBOOK_PATH . 'Frontend/templates/' . $template;
+        include SIMPLYBOOK_PATH . 'includes/Frontend/templates/' . $template;
 
         $content = ob_get_clean();
 
