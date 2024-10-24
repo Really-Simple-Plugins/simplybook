@@ -77,20 +77,20 @@ trait Widget {
     public function get_widget(array $atts = array()): string
     {
         $auth = new Api();
-
+        $post_settings = false;
         $data = array(
             'is_auth' => $auth->isAuthorized(),
             'auth_data' => $auth->getAuthData(),
             'nonce' => wp_create_nonce('simplybook_nonce'),
         );
 
-        $widgetSettings = $this->get_option('widget_settings' );
-        if ( !$widgetSettings ) {
-            $widgetSettings = array();
+        $widget_settings = $this->get_option('widget_settings' );
+        if ( !$widget_settings ) {
+            $widget_settings = array();
         }
 
         //check if attributes are set
-        if(count($atts)){
+        if ( count($atts) ) {
             $atts = array_map('sanitize_text_field', $atts);
             $predefinedAttsKeys = array('location', 'category', 'provider', 'service');
             //create new array with predefined attributes from $atts
@@ -100,25 +100,26 @@ trait Widget {
                     $predefinedAtts[$key] = $atts[$key];
                 }
             }
-            if(!isset($postSettings['predefined'])){
-                $postSettings['predefined'] = array();
+            if(!isset($post_settings['predefined'])){
+                $post_settings['predefined'] = array();
             }
-            $postSettings['predefined'] = array_merge(!is_array($postSettings['predefined']) ? array() : $postSettings['predefined'], $predefinedAtts);
+            $post_settings['predefined'] = array_merge(!is_array($post_settings['predefined']) ? array() : $post_settings['predefined'], $predefinedAtts);
         }
 
-        if(!$postSettings){
-            $postSettings = array();
+        if( !$post_settings ){
+            $post_settings = array();
         }
 
-        $widgetSettings = array_merge($widgetSettings, $postSettings);
+        $widget_settings = array_merge($widget_settings, $post_settings);
 
-        if( $widgetSettings ) {
-            foreach ($widgetSettings as $key => $value) {
+        if( $widget_settings ) {
+            foreach ($widget_settings as $key => $value) {
                 $data[$key] = $value;
             }
         }
 
        $script = $this->load_template('widget.js', $data);
+        error_log($script);
        return '<script>' . $script . '</script>';
     }
 

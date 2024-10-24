@@ -1,6 +1,7 @@
 <?php
 namespace Simplybook\Frontend;
 use Simplybook\Frontend\Blocks\Blocks;
+use Simplybook\Frontend\Shortcodes\Shortcodes;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -11,6 +12,7 @@ class Frontend {
 
     public function __construct() {
         ( new Blocks() );
+        ( new Shortcodes() );
     }
 
 }

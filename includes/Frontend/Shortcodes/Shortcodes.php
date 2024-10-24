@@ -10,6 +10,7 @@ class Shortcodes {
     use Widget;
 
     public function __construct() {
+
         add_shortcode( 'simplybook_widget', array( $this, 'load_widget' ) );
     }
 
