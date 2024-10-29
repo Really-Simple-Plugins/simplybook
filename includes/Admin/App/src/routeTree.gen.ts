@@ -307,7 +307,7 @@ export const routeTree = rootRoute
       ]
     },
     "/": {
-      "filePath": "index.lazy.tsx"
+      "filePath": "index.lazy.jsx"
     },
     "/onboarding": {
       "filePath": "onboarding.lazy.jsx",
@@ -346,7 +346,7 @@ export const routeTree = rootRoute
       "parent": "/onboarding"
     },
     "/settings/$settingsId": {
-      "filePath": "settings/$settingsId.lazy.tsx",
+      "filePath": "settings/$settingsId.lazy.jsx",
       "parent": "/settings"
     }
   }

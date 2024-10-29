@@ -14,7 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.jsx");
-/* harmony import */ var _Forms_InputField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/InputField */ "./src/components/Forms/InputField.jsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
 
 
 
@@ -34,7 +34,7 @@ const EmailField = ({
   onChange,
   ...props
 }) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_InputField__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
     type: 'email',
@@ -59,7 +59,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Forms_InputField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Forms/InputField */ "./src/components/Forms/InputField.jsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
 /* harmony import */ var _Inputs_SwitchInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Inputs/SwitchInput */ "./src/components/Inputs/SwitchInput.jsx");
 
 
@@ -80,7 +80,7 @@ const SwitchField = ({
   onChange,
   ...props
 }) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_InputField__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_1__["default"], {
     label: label,
     reverseLabel: true
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_SwitchInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
@@ -93,10 +93,10 @@ const SwitchField = ({
 
 /***/ }),
 
-/***/ "./src/components/Forms/InputField.jsx":
-/*!*********************************************!*\
-  !*** ./src/components/Forms/InputField.jsx ***!
-  \*********************************************/
+/***/ "./src/components/Forms/FieldWrapper.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Forms/FieldWrapper.jsx ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -117,10 +117,11 @@ __webpack_require__.r(__webpack_exports__);
  * @param {string} help
  * @param {string} error
  * @param {boolean} reverseLabel
+ * @param {string} className
  * @param {JSX.Element} children
  * @constructor
  */
-const InputField = ({
+const FieldWrapper = ({
   label,
   context,
   help,
@@ -131,7 +132,7 @@ const InputField = ({
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `flex flex-col ${className || ""}`
+    className: `flex flex-col w-full ${className || ""}`
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
     className: "flex w-full cursor-pointer flex-col " + colReverse
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -149,7 +150,7 @@ const InputField = ({
     className: "w-full my-1 text-xs font-light text-gray-600"
   }, context));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InputField);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
 
 /***/ }),
 
@@ -255,18 +256,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * Styled text input component
+ * @param type
+ * @param props
+ * @return {JSX.Element}
+ * @constructor
+ */
 const TextInput = ({
   type = "text",
-  value,
-  onChange,
-  onError
+  ...props
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: type,
-    value: value,
-    onChange: e => onChange(e.target.value),
-    onError: onError,
-    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring"
+    className: " w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-200 ",
+    ...props
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
@@ -289,7 +293,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Inputs_SwitchInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/SwitchInput */ "./src/components/Inputs/SwitchInput.jsx");
-/* harmony import */ var _components_Forms_InputField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Forms/InputField */ "./src/components/Forms/InputField.jsx");
+/* harmony import */ var _components_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
 /* harmony import */ var _components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.jsx");
 /* harmony import */ var _components_Fields_EmailField__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Fields/EmailField */ "./src/components/Fields/EmailField.jsx");
 /* harmony import */ var _components_Fields_SwitchField__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../components/Fields/SwitchField */ "./src/components/Fields/SwitchField.jsx");

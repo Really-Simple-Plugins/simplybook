@@ -1,8 +1,12 @@
 <?php
 
 namespace Simplybook\Admin\App;
+use Simplybook\Traits\Helper;
+use Simplybook\Traits\Load;
 
 class App {
+    use Load;
+    use Helper;
 	public function __construct() {
 		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
 	}
@@ -14,6 +18,9 @@ class App {
 	 * @return void
 	 */
 	public function add_admin_menu(): void {
+        if( ! $this->user_can_manage() ) {
+            return;
+        }
 		$menu_label = __( 'Bookings', 'simplybook' );
 
 		// Add admin menu page and set the callback to the simplybook_app method in App
@@ -47,7 +54,6 @@ class App {
 	 * Enqueue the app scripts
 	 */
 	public function enqueue_app_scripts(): void {
-		error_log( 'enqueue_app_scripts' );
 		$js_data = $this->get_chunk_translations( 'includes/Admin/App/build' );
 		if ( empty( $js_data ) ) {
 			error_log( 'No JS data found' );
@@ -137,73 +143,9 @@ class App {
 			'simplybook_localize_script',
 			[
 				'json_translations' => $js_data['json_translations'],
-				'settings_menu'     => $this->settings_menu(),
-//                'settings_fields'   => $this->settings_fields(),
+				'settings_menu'     => $this->menus(),
+                'settings_fields'   => $this->fields( true ),
 			]
 		);
-	}
-
-	private function settings_menu() {
-		$menu_items = [
-			[
-				'id'       => 'general',
-				'title'    => __( 'General', 'simplybook' ),
-				'step'     => 1,
-				'groups'   => [
-					[
-						'id'    => 'general',
-						'title' => __( 'General', 'simplybook' ),
-					],
-					[
-						'id'          => 'email_reports',
-						'title'       => __( 'Email reports', 'simplybook' ),
-						'description' => __( 'Get weekly or monthly reports sent to your email.', 'simplybook' ),
-					],
-				],
-			],
-			[
-				'id'       => 'goals',
-				'title'    => __( 'Goals', 'simplybook' ),
-				'step'     => 1,
-				'groups'   => [
-					[
-						'id'    => 'goals',
-						'title' => __( 'Goals', 'simplybook' ),
-					],
-				],
-			],
-			[
-				'id'       => 'data',
-				'title'    => __( 'Data', 'simplybook' ),
-				'step'     => 1,
-				'groups'   => [
-					[
-						'id'    => 'data_archiving',
-						'title' => __( 'Archiving', 'simplybook' ),
-					],
-					[
-						'id'       => 'restore_archives',
-						'title'    => __( 'Archived Data', 'simplybook' ),
-					],
-				],
-			],
-			[
-				'id'       => 'advanced',
-				'title'    => __( 'Advanced', 'simplybook' ),
-				'step'     => 1,
-				'groups'   => [
-					[
-						'id'    => 'tracking',
-						'title' => __( 'Tracking', 'simplybook' ),
-					],
-					[
-						'id'    => 'scripts',
-						'title' => __( 'Scripts', 'simplybook' ),
-					],
-				],
-			],
-		];
-
-		return apply_filters( 'simplybook_menu', $menu_items );
 	}
 }

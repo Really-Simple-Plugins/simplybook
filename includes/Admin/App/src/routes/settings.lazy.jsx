@@ -18,7 +18,7 @@ const Settings = () => {
       <Header />
       <div className="flex mx-auto max-w-screen-2xl">
         <div className="flex gap-5  m-5 w-full">
-          <Block colSpan={3} rowSpan={4} className={'flex-1 max-w-xs'}>
+          <Block colSpan={3} rowSpan={4} className={'flex-1 max-w-xs pb-2'}>
             <BlockHeading
               title={__('Settings', 'simplybook')}
               controls={null}
@@ -29,15 +29,30 @@ const Settings = () => {
               {!menuIsLoading &&
                 !menuIsError &&
                 menu &&
-                menu.map((item) => (
+                menu.map((item) => {
+                  const className = "py-2 px-5 border-l-4 text-black  border-transparent [&.active]:border-blue-500 focus:outline-none hover:border-gray-500 hover:bg-gray-100 focus:outline-none";
+                  if (item.url) {
+                    return (
+                      <Link
+                        key={item.id}
+                        to={item.url}
+                        className={className}
+                        target="_blank"
+                      >
+                        {item.title} (O)
+                      </Link>
+                    )
+                  }
+                  return (
                   <Link
                     key={item.id}
                     to={`/settings/${item.id}`}
-                    className="py-2 px-5 border-l-4 text-black  border-transparent [&.active]:border-blue-500 focus:outline-none hover:border-gray-500 hover:bg-gray-100 focus:outline-none"
+                    className={className}
                   >
                     {item.title}
                   </Link>
-                ))}
+                )}
+                )}
             </div>
           </Block>
           <div className="flex-1 flex flex-col">

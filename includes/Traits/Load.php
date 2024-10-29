@@ -171,4 +171,39 @@ trait Load {
         return array_values( $fields );
     }
 
+
+	/**
+	 * Get fields array for the settings
+	 * @param bool $load_values
+	 * @return array
+	 */
+	public function menus(): array
+	{
+		$menus = include( SIMPLYBOOK_PATH . 'includes/Config/Menus.php' );
+		$menus = apply_filters('simplybook_menu', $menus);
+
+		foreach ( $menus as $key => $menu ) {
+			$menu = wp_parse_args( $menu, [
+				'id' => false,
+				'title' => 'No title',
+				'groups' => [],
+			] );
+
+			// if empty group add group with same title and id as menu
+			if ( empty( $menu['groups'] ) ) {
+				$menu['groups'][] = [
+					'id' => $menu['id'],
+					'title' => $menu['title'],
+				];
+			}
+
+			//only preload menu values for logged in admins
+			$menus[ $key ] = apply_filters( 'simplybook_menu', $menu, $menu['id'] );
+		}
+
+		$menus = apply_filters( 'simplybook_menus_values', $menus );
+
+		return array_values( $menus );
+	}
+
 }

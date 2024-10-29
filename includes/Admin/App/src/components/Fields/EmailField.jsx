@@ -1,5 +1,5 @@
 import TextInput from '../Inputs/TextInput';
-import InputField from '../Forms/InputField';
+import FieldWrapper from '../Forms/FieldWrapper';
 
 /**
  * TextField component
@@ -12,9 +12,9 @@ import InputField from '../Forms/InputField';
  */
 const EmailField = ({ label, value, onChange, ...props }) => {
   return (
-      <InputField label={label}>
+      <FieldWrapper label={label}>
         <TextInput type={'email'} value={value} onChange={onChange} {...props} />
-      </InputField>
+      </FieldWrapper>
   );
 }
 export default EmailField;

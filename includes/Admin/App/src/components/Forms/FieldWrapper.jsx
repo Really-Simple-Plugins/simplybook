@@ -8,10 +8,11 @@ import * as Label from "@radix-ui/react-label";
  * @param {string} help
  * @param {string} error
  * @param {boolean} reverseLabel
+ * @param {string} className
  * @param {JSX.Element} children
  * @constructor
  */
-const InputField = ({
+const FieldWrapper = ({
   label,
   context,
   help,
@@ -23,7 +24,7 @@ const InputField = ({
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
 
   return (
-      <div className={`flex flex-col ${className || ""}`}>
+      <div className={`flex flex-col w-full ${className || ""}`}>
         <Label.Root className={"flex w-full cursor-pointer flex-col " + colReverse}>
           <div className="w-full flex gap-1 my-1">
             {label && (
@@ -45,4 +46,4 @@ const InputField = ({
   );
 };
 
-export default InputField;
+export default FieldWrapper;

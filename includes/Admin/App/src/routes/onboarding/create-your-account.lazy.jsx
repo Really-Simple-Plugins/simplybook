@@ -1,7 +1,7 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import SwitchInput from "../../components/Inputs/SwitchInput";
-import InputField from "../../components/Forms/InputField";
+import FieldWrapper from "../../components/Forms/FieldWrapper";
 import ButtonInput from "../../components/Inputs/ButtonInput";
 import EmailField from "../../components/Fields/EmailField";
 import SwitchField from "../../components/Fields/SwitchField";

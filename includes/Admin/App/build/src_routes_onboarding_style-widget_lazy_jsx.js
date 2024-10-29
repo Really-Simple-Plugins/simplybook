@@ -14,7 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.jsx");
-/* harmony import */ var _Forms_InputField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/InputField */ "./src/components/Forms/InputField.jsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
 
 
 
@@ -36,10 +36,9 @@ const TextField = ({
   className,
   ...props
 }) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_InputField__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
-    className: className,
-    ...props
+    className: className
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
     type: 'text',
     value: value,
@@ -51,10 +50,10 @@ const TextField = ({
 
 /***/ }),
 
-/***/ "./src/components/Forms/InputField.jsx":
-/*!*********************************************!*\
-  !*** ./src/components/Forms/InputField.jsx ***!
-  \*********************************************/
+/***/ "./src/components/Forms/FieldWrapper.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Forms/FieldWrapper.jsx ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -75,10 +74,11 @@ __webpack_require__.r(__webpack_exports__);
  * @param {string} help
  * @param {string} error
  * @param {boolean} reverseLabel
+ * @param {string} className
  * @param {JSX.Element} children
  * @constructor
  */
-const InputField = ({
+const FieldWrapper = ({
   label,
   context,
   help,
@@ -89,7 +89,7 @@ const InputField = ({
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `flex flex-col ${className || ""}`
+    className: `flex flex-col w-full ${className || ""}`
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
     className: "flex w-full cursor-pointer flex-col " + colReverse
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -107,7 +107,7 @@ const InputField = ({
     className: "w-full my-1 text-xs font-light text-gray-600"
   }, context));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (InputField);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
 
 /***/ }),
 
@@ -180,18 +180,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * Styled text input component
+ * @param type
+ * @param props
+ * @return {JSX.Element}
+ * @constructor
+ */
 const TextInput = ({
   type = "text",
-  value,
-  onChange,
-  onError
+  ...props
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: type,
-    value: value,
-    onChange: e => onChange(e.target.value),
-    onError: onError,
-    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring"
+    className: " w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-200 ",
+    ...props
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);

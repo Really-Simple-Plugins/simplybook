@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_settings_lazy_tsx"],{
+(self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_index_lazy_jsx"],{
 
 /***/ "../../assets/img/logo.svg":
 /*!*********************************!*\
@@ -63,17 +63,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
 const Block = ({
-  colSpan,
-  rowSpan,
-  className,
+  className = '',
   children
 }) => {
-  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} row-span-${rowSpan} ${className}`;
+  const classes = `bg-white shadow-md rounded-md  ${className}`;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: classes
   }, children);
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Block);
+
+/***/ }),
+
+/***/ "./src/components/Blocks/BlockContent.jsx":
+/*!************************************************!*\
+  !*** ./src/components/Blocks/BlockContent.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const BlockContent = ({
+  children,
+  className = 'p-5'
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: className
+  }, children);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockContent);
+
+/***/ }),
+
+/***/ "./src/components/Blocks/BlockFooter.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Blocks/BlockFooter.jsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const BlockFooter = ({
+  children
+}) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "py-4 px-5 flex justify-between items-center"
+  }, children);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockFooter);
 
 /***/ }),
 
@@ -159,27 +206,26 @@ const Header = () => {
 
 /***/ }),
 
-/***/ "./src/routes/settings.lazy.tsx":
-/*!**************************************!*\
-  !*** ./src/routes/settings.lazy.tsx ***!
-  \**************************************/
+/***/ "./src/routes/index.lazy.jsx":
+/*!***********************************!*\
+  !*** ./src/routes/index.lazy.jsx ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   Route: () => (/* binding */ Route)
 /* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/useNavigate.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Blocks/BlockHeading.jsx */ "./src/components/Blocks/BlockHeading.jsx");
-/* harmony import */ var _components_Header__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Header */ "./src/components/Header.jsx");
-/* harmony import */ var _components_Blocks_Block__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Blocks/Block */ "./src/components/Blocks/Block.jsx");
-/* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
+/* harmony import */ var _components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Header.jsx */ "./src/components/Header.jsx");
+/* harmony import */ var _components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Blocks/Block.jsx */ "./src/components/Blocks/Block.jsx");
+/* harmony import */ var _components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Blocks/BlockContent.jsx */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Blocks/BlockHeading.jsx */ "./src/components/Blocks/BlockHeading.jsx");
+/* harmony import */ var _components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/Blocks/BlockFooter.jsx */ "./src/components/Blocks/BlockFooter.jsx");
 
 
 
@@ -187,91 +233,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__.createLazyFileRoute)('/settings')({
-  loader: function (_a) {
-    var _b;
-    var params = _a.params;
-    // Instead of fetching from an API, we access the localized menu data
-    var menuData = ((_b = window.simplybook) === null || _b === void 0 ? void 0 : _b.settings_menu) || [];
-    var settingsData = menuData.find(function (item) {
-      return item.id === params.settingsId;
-    });
-    if (!settingsData) {
-      throw new Error('Settings not found');
-    }
-    return {
-      settingsData: settingsData
-    };
-  },
-  component: Settings
+
+
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyFileRoute)('/')({
+  component: Dashboard
 });
-function Settings() {
-  var settingsId = Route.useParams().settingsId;
-  var linkClassName = 'py-2 px-5 border-l-4 text-black  border-transparent [&.active]:border-blue-500 focus:outline-none hover:border-gray-500 hover:bg-gray-100 focus:outline-none';
-  var navigate = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.useNavigate)({
-    from: '/settings'
-  });
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Header__WEBPACK_IMPORTED_MODULE_3__["default"], {}), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("h1", {
-      children: ["test: ", settingsId]
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "flex mx-auto max-w-screen-2xl",
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-        className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5",
-        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_components_Blocks_Block__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          colSpan: 3,
-          rowSpan: 4,
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-            title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Settings', 'simplybook'),
-            controls: null
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "flex flex-col justify-start",
-            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/general",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('General', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/providers",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Providers', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/services",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Services', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/design",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Design', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/notifications",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Notifications', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/custom",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Custom', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-              to: "/settings/schedule",
-              className: linkClassName,
-              children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Schedule', 'simplybook')
-            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-              href: 'https://simplybook.me',
-              className: linkClassName,
-              children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Bookings', 'simplybook'), " (O)"]
-            })]
-          })]
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "col-span-6  row-span-4 flex flex-col",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_9__.Outlet, {})
-          })
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "col-span-3 rounded-md row-span-4",
-          children: "Hello from settings!"
-        })]
-      })
-    })]
-  });
+function Dashboard() {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex mx-auto max-w-screen-2xl"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    colSpan: 6,
+    rowSpan: 3
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Welcome', 'simplybook'),
+    controls: null
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null, "Content"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], null, "Footer")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    colSpan: 6,
+    rowSpan: 3
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Welcome', 'simplybook'),
+    controls: null
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], null, "Content"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Blocks_BlockFooter_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], null, "Footer")))));
 }
 
 /***/ }),
@@ -539,4 +523,4 @@ function isCtrlEvent(e) {
 /***/ })
 
 }]);
-//# sourceMappingURL=src_routes_settings_lazy_tsx.js.map
+//# sourceMappingURL=src_routes_index_lazy_jsx.js.map

@@ -1,5 +1,5 @@
 import TextInput from '../Inputs/TextInput';
-import InputField from '../Forms/InputField';
+import FieldWrapper from '../Forms/FieldWrapper';
 
 /**
  * TextField component
@@ -13,9 +13,9 @@ import InputField from '../Forms/InputField';
  */
 const TextField = ({ label, value, onChange, className, ...props }) => {
   return (
-      <InputField label={label} className={className} {...props}>
+      <FieldWrapper label={label} className={className}>
         <TextInput type={'text'} value={value} onChange={onChange} {...props} />
-      </InputField>
+      </FieldWrapper>
   );
 }
 export default TextField;

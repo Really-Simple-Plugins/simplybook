@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Route } from '../routes/settings/$settingsId.lazy';
 
 /**
  * Custom hook for managing settings data using Tanstack Query.
@@ -9,140 +9,61 @@ import { useState, useEffect } from 'react';
  */
 const useSettingsData = () => {
   const queryClient = useQueryClient();
+  const { settingsId } = Route.useParams();
 
-  // Store for managing local changes before saving
-  const [localSettings, setLocalSettings] = useState({});
-
-  // Placeholder settings array to simulate settings from server
-  const placeholderSettings = {
-    'general': {
-    'authentication': {
-      'apiKey': {
-        'label': 'API Key',
-        'type': 'text',
-        'value': '1234567890',
-      },
-      'apiSecret': {
-        'label': 'API Secret',
-        'type': 'text',
-        'value': '1234567890',
-      },
-    },
-      'widgets': {
-      'bookings_page': {
-        'label': 'Bookings Page',
-        'type': 'text',
-        'value': 'https://simplybook.me',
-      },
-      'calendar_page': {
-        'label': 'Calendar Page',
-        'type': 'text',
-        'value': 'https://simplybook.me',
-      },
-        'short_code': {
-          'label': 'Short Code',
-          'type': 'text',
-          'value': '1234567890',
-        },
-      }
-    },
-    'providers': {
-      'name': {
-        'label': 'Name',
-        'type': 'text',
-        'value': 'John Doe',
-      },
-      'email': {
-        'label': 'Email',
-        'type': 'email',
-        'value': '',
-      },
-      'phone': {
-        'label': 'Phone',
-        'type': 'tel',
-        'value': '',
-      },
-    }
-  };
-
-  // Placeholder function for fetching settings from server
-  const fetchSettings = async () => {
-    // Simulate an API call
-    return  new Promise((resolve, reject) => {
-        // window.simplybook && window.simplybook.settings_fields
+  // Query for fetching settings from server
+  const query = useQuery({
+    queryKey: ['settings_fields'],
+    queryFn: () => {
+      return new Promise((resolve, reject) => {
         if (window.simplybook && window.simplybook.settings_fields) {
           resolve(window.simplybook.settings_fields);
         }
         reject(new Error('Settings fields not found'));
       });
-  };
-
-
-
-  // Placeholder function for updating settings on server
-  const updateSettings = async (updatedSettings) => {
-    // Simulate an API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(updatedSettings);
-      }, 1000);
-    });
-  };
-
-  // Query for fetching settings from server
-  const { data: settings, isLoading, isError } = useQuery({
-    queryKey: ['settings'],
-    queryFn: fetchSettings,
-    onSuccess: (data) => {
-      // Set initial settings to state
-      setLocalSettings(data);
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Mutation for updating settings on server
-  const updateSettingsMutation = useMutation({
-    mutationFn: updateSettings,
+  // Update Mutation for settings data with destructured values
+  const { mutate: updateSettings, isLoading: settingsIsUpdating } = useMutation({
+    mutationFn: (data) => {
+      console.log('mutate data', data);
+      // Simulate async operation
+      return new Promise((resolve) => setTimeout(resolve, 10000));
+    },
     onSuccess: () => {
-      // Invalidate and refetch settings after successful update
-      queryClient.invalidateQueries(['settings']);
+      // Invalidate cache by specific query key for updated data
+      queryClient.invalidateQueries(['settings_fields']);
     },
   });
 
-  /**
-   * Function to handle updating local settings state.
-   *
-   * @param {string} key - The key of the setting to update.
-   * @param {any} value - The new value for the setting.
-   */
-  const updateSetting = (key, value) => {
-    setLocalSettings((prevSettings) => ({
-      ...prevSettings,
-      [key]: value,
-    }));
-  };
 
-  /**
-   * Function to save the updated settings to the server.
-   */
-  const saveSettings = () => {
-    updateSettingsMutation.mutate(localSettings);
-  };
+  // Filtered settings based on the current settingsId
+  const currentSettings = query.isFetched
+      ? query.data.filter((setting) => setting.menu_id === settingsId)
+      : {};
 
-  useEffect(() => {
-    // Sync localSettings with fetched settings
-    if (settings) {
-      setLocalSettings(settings);
-    }
-  }, [settings]);
+  console.log('currentSettings', currentSettings);
+  // get default values id: value
+  // if currentSettings is not empty
+
+  const defaultValues = currentSettings.length > 0 ?currentSettings.reduce((acc, setting) => {
+    acc[setting.id] = setting.value || setting.default;
+    return acc;
+  }, {}) : {};
+
+  console.log('currentSettings', currentSettings);
+  console.log('settingsIsUpdating', settingsIsUpdating);
 
   return {
-    settings: localSettings,
-    updateSetting,
-    saveSettings,
-    isLoading,
-    isError,
-    isSaving: updateSettingsMutation.isLoading,
+    settings: query.data,
+    currentSettings: currentSettings,
+    settingsIsLoading: query.isLoading,
+    settingsIsError: query.isError,
+    settingsIsUpdating, // @todo fix as this does not work
+    updateSettings,
+    defaultValues
   };
 };
 

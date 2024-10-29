@@ -1,4 +1,4 @@
-import InputField from '../Forms/InputField';
+import FieldWrapper from '../Forms/FieldWrapper';
 import SwitchInput from '../Inputs/SwitchInput';
 
 /**
@@ -13,9 +13,9 @@ import SwitchInput from '../Inputs/SwitchInput';
 const SwitchField = ({ label, value, onChange, ...props }) => {
 
   return (
-      <InputField label={label} reverseLabel={true}>
+      <FieldWrapper label={label} reverseLabel={true}>
         <SwitchInput value={value} onChange={onChange} {...props} />
-      </InputField>
+      </FieldWrapper>
   );
 }
 export default SwitchField;
