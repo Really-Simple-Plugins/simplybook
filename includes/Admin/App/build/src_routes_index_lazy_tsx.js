@@ -63,11 +63,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
 const Block = ({
-  colSpan,
-  rowSpan,
+  className = '',
   children
 }) => {
-  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} row-span-${rowSpan}`;
+  const classes = `bg-white shadow-md rounded-md  ${className}`;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: classes
   }, children);

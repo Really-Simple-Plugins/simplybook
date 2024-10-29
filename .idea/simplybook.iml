@@ -3,6 +3,7 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$/../../..">
       <sourceFolder url="file://$MODULE_DIR$/includes" isTestSource="false" packagePrefix="Simplybook\" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
     </content>
     <content url="file://$MODULE_DIR$/../burst-pro/.gitlab-ci-local">
       <excludeFolder url="file://$MODULE_DIR$/../burst-pro/.gitlab-ci-local" />

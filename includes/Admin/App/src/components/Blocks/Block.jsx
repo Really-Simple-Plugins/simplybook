@@ -1,5 +1,5 @@
-const Block = ({ colSpan, rowSpan, children }) => {
-  const classes = `bg-white shadow-md rounded-md col-span-${colSpan} row-span-${rowSpan}`;
+const Block = ({ className = '', children }) => {
+  const classes = `bg-white shadow-md rounded-md  ${className}`;
 
   return <div className={classes}>{children}</div>;
 };

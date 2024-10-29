@@ -68,12 +68,16 @@ const useSettingsData = () => {
   // Placeholder function for fetching settings from server
   const fetchSettings = async () => {
     // Simulate an API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(placeholderSettings);
-      }, 1000);
-    });
+    return  new Promise((resolve, reject) => {
+        // window.simplybook && window.simplybook.settings_fields
+        if (window.simplybook && window.simplybook.settings_fields) {
+          resolve(window.simplybook.settings_fields);
+        }
+        reject(new Error('Settings fields not found'));
+      });
   };
+
+
 
   // Placeholder function for updating settings on server
   const updateSettings = async (updatedSettings) => {
@@ -93,7 +97,7 @@ const useSettingsData = () => {
       // Set initial settings to state
       setLocalSettings(data);
     },
-    staleTime: 60000, // Keep data fresh for 1 minute
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Mutation for updating settings on server

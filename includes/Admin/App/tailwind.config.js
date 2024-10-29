@@ -19,4 +19,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
+  important: '#simplybook_app',
 };

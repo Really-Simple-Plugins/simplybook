@@ -7,6 +7,7 @@ import {
 import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 import {useQuery} from '@tanstack/react-query';
 import {useEffect} from 'react';
+import ErrorBoundary from '../components/Common/ErrorBoundary';
 
 const getData = async ({queryKey}) => {
   await new Promise(resolve => setTimeout(resolve, 1000));
@@ -38,10 +39,10 @@ export const Route = createRootRoute({
     }
 
     return (
-        <>
+        <ErrorBoundary>
           <Outlet />
           <TanStackRouterDevtools />
-        </>
+        </ErrorBoundary>
     );
   },
 });

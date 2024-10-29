@@ -19,15 +19,7 @@ import { Route as rootRoute } from './routes/__root'
 const SettingsLazyImport = createFileRoute('/settings')()
 const OnboardingLazyImport = createFileRoute('/onboarding')()
 const IndexLazyImport = createFileRoute('/')()
-const SettingsServicesLazyImport = createFileRoute('/settings/services')()
-const SettingsScheduleLazyImport = createFileRoute('/settings/schedule')()
-const SettingsProvidersLazyImport = createFileRoute('/settings/providers')()
-const SettingsNotificationsLazyImport = createFileRoute(
-  '/settings/notifications',
-)()
-const SettingsGeneralLazyImport = createFileRoute('/settings/general')()
-const SettingsDesignLazyImport = createFileRoute('/settings/design')()
-const SettingsCustomLazyImport = createFileRoute('/settings/custom')()
+const SettingsSettingsIdLazyImport = createFileRoute('/settings/$settingsId')()
 const OnboardingTipsAndTricksLazyImport = createFileRoute(
   '/onboarding/tips-and-tricks',
 )()
@@ -61,53 +53,11 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
-const SettingsServicesLazyRoute = SettingsServicesLazyImport.update({
-  path: '/services',
+const SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
+  path: '/$settingsId',
   getParentRoute: () => SettingsLazyRoute,
 } as any).lazy(() =>
-  import('./routes/settings/services.lazy').then((d) => d.Route),
-)
-
-const SettingsScheduleLazyRoute = SettingsScheduleLazyImport.update({
-  path: '/schedule',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/schedule.lazy').then((d) => d.Route),
-)
-
-const SettingsProvidersLazyRoute = SettingsProvidersLazyImport.update({
-  path: '/providers',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/providers.lazy').then((d) => d.Route),
-)
-
-const SettingsNotificationsLazyRoute = SettingsNotificationsLazyImport.update({
-  path: '/notifications',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/notifications.lazy').then((d) => d.Route),
-)
-
-const SettingsGeneralLazyRoute = SettingsGeneralLazyImport.update({
-  path: '/general',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/general.lazy').then((d) => d.Route),
-)
-
-const SettingsDesignLazyRoute = SettingsDesignLazyImport.update({
-  path: '/design',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/design.lazy').then((d) => d.Route),
-)
-
-const SettingsCustomLazyRoute = SettingsCustomLazyImport.update({
-  path: '/custom',
-  getParentRoute: () => SettingsLazyRoute,
-} as any).lazy(() =>
-  import('./routes/settings/custom.lazy').then((d) => d.Route),
+  import('./routes/settings/$settingsId.lazy').then((d) => d.Route),
 )
 
 const OnboardingTipsAndTricksLazyRoute =
@@ -209,53 +159,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingTipsAndTricksLazyImport
       parentRoute: typeof OnboardingLazyImport
     }
-    '/settings/custom': {
-      id: '/settings/custom'
-      path: '/custom'
-      fullPath: '/settings/custom'
-      preLoaderRoute: typeof SettingsCustomLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/design': {
-      id: '/settings/design'
-      path: '/design'
-      fullPath: '/settings/design'
-      preLoaderRoute: typeof SettingsDesignLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/general': {
-      id: '/settings/general'
-      path: '/general'
-      fullPath: '/settings/general'
-      preLoaderRoute: typeof SettingsGeneralLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/notifications': {
-      id: '/settings/notifications'
-      path: '/notifications'
-      fullPath: '/settings/notifications'
-      preLoaderRoute: typeof SettingsNotificationsLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/providers': {
-      id: '/settings/providers'
-      path: '/providers'
-      fullPath: '/settings/providers'
-      preLoaderRoute: typeof SettingsProvidersLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/schedule': {
-      id: '/settings/schedule'
-      path: '/schedule'
-      fullPath: '/settings/schedule'
-      preLoaderRoute: typeof SettingsScheduleLazyImport
-      parentRoute: typeof SettingsLazyImport
-    }
-    '/settings/services': {
-      id: '/settings/services'
-      path: '/services'
-      fullPath: '/settings/services'
-      preLoaderRoute: typeof SettingsServicesLazyImport
+    '/settings/$settingsId': {
+      id: '/settings/$settingsId'
+      path: '/$settingsId'
+      fullPath: '/settings/$settingsId'
+      preLoaderRoute: typeof SettingsSettingsIdLazyImport
       parentRoute: typeof SettingsLazyImport
     }
   }
@@ -284,23 +192,11 @@ const OnboardingLazyRouteWithChildren = OnboardingLazyRoute._addFileChildren(
 )
 
 interface SettingsLazyRouteChildren {
-  SettingsCustomLazyRoute: typeof SettingsCustomLazyRoute
-  SettingsDesignLazyRoute: typeof SettingsDesignLazyRoute
-  SettingsGeneralLazyRoute: typeof SettingsGeneralLazyRoute
-  SettingsNotificationsLazyRoute: typeof SettingsNotificationsLazyRoute
-  SettingsProvidersLazyRoute: typeof SettingsProvidersLazyRoute
-  SettingsScheduleLazyRoute: typeof SettingsScheduleLazyRoute
-  SettingsServicesLazyRoute: typeof SettingsServicesLazyRoute
+  SettingsSettingsIdLazyRoute: typeof SettingsSettingsIdLazyRoute
 }
 
 const SettingsLazyRouteChildren: SettingsLazyRouteChildren = {
-  SettingsCustomLazyRoute: SettingsCustomLazyRoute,
-  SettingsDesignLazyRoute: SettingsDesignLazyRoute,
-  SettingsGeneralLazyRoute: SettingsGeneralLazyRoute,
-  SettingsNotificationsLazyRoute: SettingsNotificationsLazyRoute,
-  SettingsProvidersLazyRoute: SettingsProvidersLazyRoute,
-  SettingsScheduleLazyRoute: SettingsScheduleLazyRoute,
-  SettingsServicesLazyRoute: SettingsServicesLazyRoute,
+  SettingsSettingsIdLazyRoute: SettingsSettingsIdLazyRoute,
 }
 
 const SettingsLazyRouteWithChildren = SettingsLazyRoute._addFileChildren(
@@ -316,13 +212,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
-  '/settings/custom': typeof SettingsCustomLazyRoute
-  '/settings/design': typeof SettingsDesignLazyRoute
-  '/settings/general': typeof SettingsGeneralLazyRoute
-  '/settings/notifications': typeof SettingsNotificationsLazyRoute
-  '/settings/providers': typeof SettingsProvidersLazyRoute
-  '/settings/schedule': typeof SettingsScheduleLazyRoute
-  '/settings/services': typeof SettingsServicesLazyRoute
+  '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -334,13 +224,7 @@ export interface FileRoutesByTo {
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
-  '/settings/custom': typeof SettingsCustomLazyRoute
-  '/settings/design': typeof SettingsDesignLazyRoute
-  '/settings/general': typeof SettingsGeneralLazyRoute
-  '/settings/notifications': typeof SettingsNotificationsLazyRoute
-  '/settings/providers': typeof SettingsProvidersLazyRoute
-  '/settings/schedule': typeof SettingsScheduleLazyRoute
-  '/settings/services': typeof SettingsServicesLazyRoute
+  '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
 export interface FileRoutesById {
@@ -353,13 +237,7 @@ export interface FileRoutesById {
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
-  '/settings/custom': typeof SettingsCustomLazyRoute
-  '/settings/design': typeof SettingsDesignLazyRoute
-  '/settings/general': typeof SettingsGeneralLazyRoute
-  '/settings/notifications': typeof SettingsNotificationsLazyRoute
-  '/settings/providers': typeof SettingsProvidersLazyRoute
-  '/settings/schedule': typeof SettingsScheduleLazyRoute
-  '/settings/services': typeof SettingsServicesLazyRoute
+  '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -373,13 +251,7 @@ export interface FileRouteTypes {
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
-    | '/settings/custom'
-    | '/settings/design'
-    | '/settings/general'
-    | '/settings/notifications'
-    | '/settings/providers'
-    | '/settings/schedule'
-    | '/settings/services'
+    | '/settings/$settingsId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -390,13 +262,7 @@ export interface FileRouteTypes {
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
-    | '/settings/custom'
-    | '/settings/design'
-    | '/settings/general'
-    | '/settings/notifications'
-    | '/settings/providers'
-    | '/settings/schedule'
-    | '/settings/services'
+    | '/settings/$settingsId'
   id:
     | '__root__'
     | '/'
@@ -407,13 +273,7 @@ export interface FileRouteTypes {
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
-    | '/settings/custom'
-    | '/settings/design'
-    | '/settings/general'
-    | '/settings/notifications'
-    | '/settings/providers'
-    | '/settings/schedule'
-    | '/settings/services'
+    | '/settings/$settingsId'
   fileRoutesById: FileRoutesById
 }
 
@@ -460,15 +320,9 @@ export const routeTree = rootRoute
       ]
     },
     "/settings": {
-      "filePath": "settings.lazy.tsx",
+      "filePath": "settings.lazy.jsx",
       "children": [
-        "/settings/custom",
-        "/settings/design",
-        "/settings/general",
-        "/settings/notifications",
-        "/settings/providers",
-        "/settings/schedule",
-        "/settings/services"
+        "/settings/$settingsId"
       ]
     },
     "/onboarding/create-your-account": {
@@ -491,32 +345,8 @@ export const routeTree = rootRoute
       "filePath": "onboarding/tips-and-tricks.lazy.jsx",
       "parent": "/onboarding"
     },
-    "/settings/custom": {
-      "filePath": "settings/custom.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/design": {
-      "filePath": "settings/design.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/general": {
-      "filePath": "settings/general.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/notifications": {
-      "filePath": "settings/notifications.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/providers": {
-      "filePath": "settings/providers.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/schedule": {
-      "filePath": "settings/schedule.lazy.jsx",
-      "parent": "/settings"
-    },
-    "/settings/services": {
-      "filePath": "settings/services.lazy.jsx",
+    "/settings/$settingsId": {
+      "filePath": "settings/$settingsId.lazy.tsx",
       "parent": "/settings"
     }
   }
