@@ -4,6 +4,23 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 trait Load {
+
+    /**
+     * Get a field by ID
+     * @param string $id
+     * @return mixed
+     */
+    public function get_field_by_id(string $id ): mixed
+    {
+        $fields = $this->fields();
+        foreach ( $fields as $field ) {
+            if ( $field['id'] === $id ) {
+                return $field;
+            }
+        }
+        return false;
+    }
+
     /**
      * Get option
      *
@@ -14,8 +31,6 @@ trait Load {
     public function get_option(string $key, $default = null)
     {
         global $simplybook_cache;
-        error_log("check value of cached global ");
-        error_log(print_r($simplybook_cache, true));
         if ( !empty($simplybook_cache) ) {
             $options = $simplybook_cache;
         } else {
@@ -29,10 +44,12 @@ trait Load {
         }
 
         $field = $this->get_field_by_id($key);
-        error_log("get field $key");
-        error_log(print_r($field, true));
         if ( $field['encrypt'] ) {
             $value = $this->decrypt_string($value);
+        }
+
+        if ( $field['type'] === 'checkbox' ) {
+            $value = (int) $value;
         }
         return $value;
     }
@@ -60,16 +77,22 @@ trait Load {
      */
     public function get_widget_settings(): array
     {
-        $theme_param_fields = $this->get_fields_by_attribute( 'widget_field', true );
-        $theme_params = [];
-        foreach ( $theme_param_fields as $field ) {
+        $fields = $this->get_fields_by_attribute( 'widget_field', true );
+        $widget_fields = [];
+        foreach ( $fields as $field ) {
             if ( $field['widget_field'] === '/') {
-                $theme_params[ $field['id'] ] = $this->get_option( $field['id'] );
+                $widget_fields[ $field['id'] ] = $this->get_option( $field['id'] );
             } else {
-                $theme_params[ $field['widget_field'] ][ $field['id'] ] = $this->get_option( $field['id'] );
+                $widget_fields[ $field['widget_field'] ][ $field['id'] ] = $this->get_option( $field['id'] );
             }
         }
-        return $theme_params;
+        $widget_fields['is_rtl'] = (int) is_rtl();
+
+        if ( !is_array($widget_fields['predefined']) ) {
+            $widget_fields['predefined'] = [];
+        }
+
+        return $widget_fields;
     }
 
     /**
@@ -107,9 +130,7 @@ trait Load {
             if ( !isset( $field[ $attribute ] ) ) {
                 continue;
             }
-            if ( $field[ $attribute ] === $attribute_value ) {
-                $fields_of_type[] = $field;
-            }
+            $fields_of_type[] = $field;
         }
         return $fields_of_type;
     }
@@ -134,7 +155,6 @@ trait Load {
                 'disabled' => false,
                 'default' => false,
                 'encrypt' => false,
-                'widget_field' => false,
                 'label' => '',
             ] );
 

@@ -201,16 +201,6 @@ trait Save {
         do_action( 'simplybook_after_save_options', $fields );
     }
 
-    public function get_field_by_id( $id ) {
-        $fields = $this->fields();
-        foreach ( $fields as $field ) {
-            if ( $field['id'] === $id ) {
-                return $field;
-            }
-        }
-        return false;
-    }
-
     /**
      * Sanitize a value based on the field type
      *

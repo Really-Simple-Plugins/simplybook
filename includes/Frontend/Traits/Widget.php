@@ -78,11 +78,12 @@ trait Widget {
     {
         $auth = new Api();
         $post_settings = [];
-        $data = array(
-            'is_auth' => $auth->isAuthorized(),
-            'auth_data' => $auth->getAuthData(),
-            'nonce' => wp_create_nonce('simplybook_nonce'),
-        );
+        $data = [];
+        //array(
+//            'is_auth' => $auth->isAuthorized(),
+//            'auth_data' => $auth->getAuthData(),
+//            'nonce' => wp_create_nonce('simplybook_nonce'),
+//        );
 
         $widget_settings = $this->get_widget_settings();
         error_log("widget_settings straight from option");
@@ -112,9 +113,10 @@ trait Widget {
 
         error_log(print_r("widget_settings", true));
         error_log(print_r($widget_settings, true));
+
        $script = $this->load_template('widget.js', $widget_settings);
-        error_log($script);
-       return '<script>' . $script . '</script>';
+       error_log($script);
+       return $script;
     }
 
     /**
@@ -128,11 +130,17 @@ trait Widget {
         include SIMPLYBOOK_PATH . 'includes/Frontend/templates/' . $template;
 
         $content = ob_get_clean();
-
         //replace variables
         foreach ( $data as $key => $value ) {
-            $content = str_replace( '{{' . $key . '}}', $value, $content );
+            error_log(print_r($key, true));
+            error_log(print_r($value, true));
+            if ( is_array($value) ) {
+                $value = json_encode($value);
+            }
+
+            $content = str_replace( '{{ ' . $key . ' }}', $value, $content );
         }
+
         return $content;
     }
 
