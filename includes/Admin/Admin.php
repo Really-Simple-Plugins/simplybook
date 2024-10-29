@@ -4,7 +4,10 @@ namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
-use Simplybook\Traits\Admin\Helper;
+use Simplybook\Admin\RestApi\Onboarding;
+use Simplybook\Admin\RestApi\Settings;
+use Simplybook\Traits\Helper;
+use Simplybook\Upgrades\Upgrades;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,8 +19,12 @@ class Admin {
 	protected App $app;
 
 	public function __construct() {
-		// Instantiate the App class
-		$this->app = new App();
+        ( new Upgrades() );
+        ( new Capability() );
+        ( new Onboarding() );
+        ( new Settings() );
+
+        $this->app = new App();
 
 		// Add action to register the admin menu
 		add_action( 'admin_init', array( $this, 'maybe_run_activation' ) );

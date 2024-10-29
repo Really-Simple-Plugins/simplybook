@@ -1,0 +1,29 @@
+{
+  "apiVersion": 2,
+  "name": "simplybook/widget",
+  "title": "Simplybook Widget",
+  "category": "widgets",
+  "icon": "simplybook",
+  "description": "A widget for Simplybook.me",
+  "attributes": {
+    "location": {
+      "type": "number",
+      "default": 0
+    },
+    "category": {
+      "type": "number",
+      "default": 0
+    },
+    "service": {
+      "type": "number",
+      "default": 0
+    },
+    "provider": {
+      "type": "string",
+      "default": 0
+    }
+  },
+  "editorScript": "file:./index.js",
+  "editorStyle": "file:./editor.scss",
+  "style": "file:./style.scss"
+}
