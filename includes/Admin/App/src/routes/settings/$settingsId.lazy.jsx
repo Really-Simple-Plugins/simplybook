@@ -1,88 +1,109 @@
-import { createLazyFileRoute } from '@tanstack/react-router'
-import { useForm, Controller } from 'react-hook-form';
-import FormFooter from '../../components/Forms/FormFooter';
-import useSettingsMenu from '../../hooks/useSettingsMenu'
-import useSettingsData from '../../hooks/useSettingsData'
-import Block from '../../components/Blocks/Block';
-import BlockHeading from '../../components/Blocks/BlockHeading';
-import BlockContent from '../../components/Blocks/BlockContent';
-import FormField from '../../components/Forms/FormField';
+import { createLazyFileRoute } from "@tanstack/react-router";
+import useSettingsData from "../../hooks/useSettingsData";
+import {useForm, useFormState} from 'react-hook-form';
+import useSettingsMenu from "../../hooks/useSettingsMenu";
+import FormField from "../../components/Forms/FormField";
+import FormFooter from "../../components/Forms/FormFooter";
+import Block from "../../components/Blocks/Block";
+import BlockHeading from "../../components/Blocks/BlockHeading";
+import BlockContent from "../../components/Blocks/BlockContent";
+import {memo, useCallback, useMemo} from 'react';
+import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
+import {useBlocker} from '@tanstack/react-router';
 
 const useSettingsLoader = (settingsId) => {
-  const menuData = window.simplybook?.settings_menu || []
-  const settingsData = menuData.find((item) => item.id === settingsId)
+  const menuData = window.simplybook?.settings_menu || [];
+  const settingsData = menuData.find((item) => item.id === settingsId);
 
   if (!settingsData) {
-    throw new Error('Settings not found')
+    throw new Error("Settings not found");
   }
-  return { settingsData }
-}
+  return { settingsData };
+};
 
 // Route Definition
-export const Route = createLazyFileRoute('/settings/$settingsId')({
+export const Route = createLazyFileRoute("/settings/$settingsId")({
   loader: ({ params }) => useSettingsLoader(params.settingsId),
   component: Settings,
-})
+});
 
 // Settings Component
 function Settings() {
-  const { currentSettings, settingsIsLoading, updateSettings, settingsIsUpdating, defaultValues } = useSettingsData();
-  // @todo make sure defaultValues is not empty before using it. I should make it a new component and wrap it in a conditional
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { isDirty },
-  } = useForm({
-    defaultValues,
+  const { settingsId } = Route.useParams();
+  const { settings, saveSettings} = useSettingsData();
+  const { currentForm } = useSettingsMenu();
+
+  console.log('Settings', settingsId, settings, currentForm);
+
+  const currentFormFields = useMemo(
+      () => settings.filter((setting) => setting.menu_id === settingsId),
+      [settings, settingsId]
+  );
+
+  const currentFormDefaultValues = useMemo(
+      () => extractFormValuesPerMenuId(settings, settingsId),
+      [settings, settingsId]
+  );
+
+  const currentFormValues = useMemo(
+      () => extractFormValuesPerMenuId(settings, settingsId, 'value'),
+      [settings, settingsId]
+  );
+
+  const lastGroup = useMemo(
+      () => currentForm.groups[currentForm.groups.length - 1],
+      [currentForm.groups]
+  );
+
+  // Initialize useForm with default values from the fetched settings data
+  const {handleSubmit, control, reset, formState: {isDirty}} = useForm({
+    defaultValues: currentFormDefaultValues,
+    values: currentFormValues,
   });
-  const { menuIsError, menuIsLoading, currentSection } = useSettingsMenu()
-console.log('defaultValues', defaultValues)
 
-  if (menuIsLoading) return <div>Loading...</div>
-  if (menuIsError) return <div>Error loading settings menu</div>
+  useBlocker({
+    blockerFn: () => window.confirm('Are you sure you want to leave?'),
+    condition: isDirty,
+  })
 
-  const handleFormSubmit = (values) => {
-    updateSettings(values, { onSuccess: () => reset() })
-  }
 
-  const lastGroup = currentSection.groups[currentSection.groups.length - 1];
   return (
-      <>
-        {currentSection.groups?.map((group) =>
-        {
-          const isLastGroup =  lastGroup.id ===  group.id;
-          const groupSettings = currentSettings.filter(
-              (setting) => setting.group_id === group.id
+      <form>
+        {currentForm.groups?.map((group) => {
+          const isLastGroup = lastGroup.id === group.id;
+          const currentGroupFields = currentFormFields.filter(
+              (field) => field.group_id === group.id
           );
-          const className= isLastGroup ? "rounded-b-none" : "mb-5";
 
           return (
-              <Block key={group.id} className={className}>
-                <BlockHeading title={group.title} />
-                <BlockContent>
-                  <div className="flex flex-wrap">
-                    {groupSettings.map((setting) => (
-                        <Controller
-                            key={setting.id}
-                            name={setting.id}
-                            control={control}
-                            render={({ field }) => (
-                                <FormField
-                                    setting={setting}
-                                    {...field}
-                                    settingsIsUpdating={settingsIsUpdating}
-                                />
-                            )}
-                        />
-                        ))}
-                  </div>
-                </BlockContent>
-              </Block>
+              <SettingsGroupBlock
+                  key={group.id}
+                  group={group}
+                  currentGroupFields={currentGroupFields}
+                  control={control}
+                  isLastGroup={isLastGroup}
+              />
           );
         })}
 
-        <FormFooter isDirty={isDirty} onSubmit={handleSubmit(handleFormSubmit)} />
-      </>
-  )
+        <FormFooter onSubmit={handleSubmit((formData) => {
+          saveSettings(formData).then(() => {
+            reset(currentFormDefaultValues);
+            console.log('Settings saved');
+          });
+        })} control={control} />
+      </form>
+  );
 }
+
+const extractFormValuesPerMenuId = (settings, menuId, key = 'default') => {
+  // Extract default values from settings data where menu_id ===  settingsId
+  const formValues = {};
+  settings.forEach((setting) => {
+    if (setting.menu_id === menuId) {
+      formValues[setting.id] = setting[key]
+    }
+  });
+
+  return formValues;
+};

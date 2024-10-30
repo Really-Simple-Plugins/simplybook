@@ -1,3 +1,5 @@
+import {forwardRef} from 'react';
+
 /**
  * Styled text input component
  * @param type
@@ -5,7 +7,7 @@
  * @return {JSX.Element}
  * @constructor
  */
-const TextInput = ({ type = "text", ...props }) => {
+const TextInput = forwardRef(({ type = "text", ...props }, ref) => {
   return (
       <input
           type={type}
@@ -17,6 +19,6 @@ const TextInput = ({ type = "text", ...props }) => {
           {...props}
       />
   );
-};
+});
 
 export default TextInput;

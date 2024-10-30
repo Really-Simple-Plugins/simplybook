@@ -17,14 +17,16 @@ const useSettingsMenu = () => {
         reject(new Error('Settings menu not found'));
       });
     },
+   initialData: window.simplybook && window.simplybook.settings_menu,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const currentSection = query.isFetched && query.data.find((section) => section.id === settingsId) || {};
+
+  const currentForm = query.data.find((section) => section.id === settingsId) || {};
 
   return {
     menu: query.data,
-    currentSection,
+    currentForm,
     menuIsLoading: query.isLoading,
     menuIsError: query.isError,
   }

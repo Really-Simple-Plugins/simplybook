@@ -62,7 +62,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-const Block = ({
+
+const Block = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   className = '',
   children
 }) => {
@@ -70,7 +71,7 @@ const Block = ({
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: classes
   }, children);
-};
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Block);
 
 /***/ }),
@@ -90,7 +91,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const BlockContent = ({
   children,
-  className = 'p-5'
+  className = 'p-5 pt-0'
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: className

@@ -109,17 +109,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 /**
- * InputWrapper component
-  * @param {string} label
+ * FieldWrapper component
+ * @param {string} label
  * @param {string} context
  * @param {string} help
  * @param {string} error
  * @param {boolean} reverseLabel
  * @param {string} className
+ * @param {string} inputId
  * @param {JSX.Element} children
- * @constructor
  */
 const FieldWrapper = ({
   label,
@@ -127,27 +126,25 @@ const FieldWrapper = ({
   help,
   error,
   reverseLabel = false,
-  className,
+  className = '',
+  inputId,
   children
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `flex flex-col w-full ${className || ""}`
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
-    className: "flex w-full cursor-pointer flex-col " + colReverse
+    className: `flex flex-col w-full ${className} pt-4`
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "w-full flex gap-1 my-1"
-  }, label && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "font-medium text-gray-700"
-  }, label), label && help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "text-xs font-light text-gray-600"
+    className: `flex w-full flex-col ${colReverse}`
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
+    className: "font-medium text-gray-700 cursor-pointer pb-1",
+    htmlFor: inputId // Associate the label with the input ID
+  }, label), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "text-xs font-light text-gray-600 pb-1"
   }, help) // Placeholder for the help component
-  ), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex flex-col"
-  }, children)), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "w-full text-xs my-1 font-light text-red-600"
+  , children), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "w-full text-xs pb-1font-light text-red-600"
   }, error), context && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "w-full my-1 text-xs font-light text-gray-600"
+    className: "w-full pb-1 text-xs font-light text-gray-600"
   }, context));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
@@ -256,6 +253,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+
+
 /**
  * Styled text input component
  * @param type
@@ -263,16 +262,16 @@ __webpack_require__.r(__webpack_exports__);
  * @return {JSX.Element}
  * @constructor
  */
-const TextInput = ({
+const TextInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   type = "text",
   ...props
-}) => {
+}, ref) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
     type: type,
     className: " w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-200 ",
     ...props
   });
-};
+});
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),

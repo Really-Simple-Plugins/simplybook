@@ -1,15 +1,18 @@
+import { Controller } from 'react-hook-form';
 import TextField from '../Fields/TextField';
 import SwitchField from '../Fields/SwitchField';
 import EmailField from '../Fields/EmailField';
 import ErrorBoundary from '../../components/Common/ErrorBoundary';
+import {memo} from 'react';
 
 const fieldComponents = {
   text: TextField,
+  api: TextField,
   switch: SwitchField,
   email: EmailField,
 };
 
-const FormField = ({ setting, ...props }) => {
+const FormField = memo(({ setting, control, ...props }) => {
   if (setting.visible === false) {
     return <input type="hidden" value={setting.value || setting.default} />;
   }
@@ -17,21 +20,29 @@ const FormField = ({ setting, ...props }) => {
   const FieldComponent = fieldComponents[setting.type];
 
   if (!FieldComponent) {
-    return <div>Unknown field type: {setting.type}</div>;
+    return <div className={"w-full"}>Unknown field type: {setting.type} {setting.id}</div>;
   }
 
   return (
       <ErrorBoundary>
-        <FieldComponent
-            {...props}
-            label={setting.label}
-            disabled={props.settingsIsUpdating || setting.disabled}
-            key={setting.id}
+        <Controller
+            name={setting.id} // Use setting.id as the name
+            control={control}
+            rules={setting.validation}
             defaultValue={setting.value || setting.default}
-            options={setting.options}  // For fields like select, radio, etc.
+            render={({ field, fieldState }) => (
+                <FieldComponent
+                    field={field}
+                    fieldState={fieldState}
+                    label={setting.label || setting.id}
+                    disabled={props.settingsIsUpdating || setting.disabled}
+                    options={setting.options}
+                    {...props}
+                />
+            )}
         />
       </ErrorBoundary>
   );
-};
+});
 
 export default FormField;

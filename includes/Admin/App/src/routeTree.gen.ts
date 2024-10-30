@@ -19,6 +19,9 @@ import { Route as rootRoute } from './routes/__root'
 const SettingsLazyImport = createFileRoute('/settings')()
 const OnboardingLazyImport = createFileRoute('/onboarding')()
 const IndexLazyImport = createFileRoute('/')()
+const Settings221122settingsIdLazyImport = createFileRoute(
+  '/settings/221122settingsId',
+)()
 const SettingsSettingsIdLazyImport = createFileRoute('/settings/$settingsId')()
 const OnboardingTipsAndTricksLazyImport = createFileRoute(
   '/onboarding/tips-and-tricks',
@@ -52,6 +55,14 @@ const IndexLazyRoute = IndexLazyImport.update({
   path: '/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+
+const Settings221122settingsIdLazyRoute =
+  Settings221122settingsIdLazyImport.update({
+    path: '/221122settingsId',
+    getParentRoute: () => SettingsLazyRoute,
+  } as any).lazy(() =>
+    import('./routes/settings/221122settingsId.lazy').then((d) => d.Route),
+  )
 
 const SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
   path: '/$settingsId',
@@ -166,6 +177,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsSettingsIdLazyImport
       parentRoute: typeof SettingsLazyImport
     }
+    '/settings/221122settingsId': {
+      id: '/settings/221122settingsId'
+      path: '/221122settingsId'
+      fullPath: '/settings/221122settingsId'
+      preLoaderRoute: typeof Settings221122settingsIdLazyImport
+      parentRoute: typeof SettingsLazyImport
+    }
   }
 }
 
@@ -193,10 +211,12 @@ const OnboardingLazyRouteWithChildren = OnboardingLazyRoute._addFileChildren(
 
 interface SettingsLazyRouteChildren {
   SettingsSettingsIdLazyRoute: typeof SettingsSettingsIdLazyRoute
+  Settings221122settingsIdLazyRoute: typeof Settings221122settingsIdLazyRoute
 }
 
 const SettingsLazyRouteChildren: SettingsLazyRouteChildren = {
   SettingsSettingsIdLazyRoute: SettingsSettingsIdLazyRoute,
+  Settings221122settingsIdLazyRoute: Settings221122settingsIdLazyRoute,
 }
 
 const SettingsLazyRouteWithChildren = SettingsLazyRoute._addFileChildren(
@@ -213,6 +233,7 @@ export interface FileRoutesByFullPath {
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
+  '/settings/221122settingsId': typeof Settings221122settingsIdLazyRoute
 }
 
 export interface FileRoutesByTo {
@@ -225,6 +246,7 @@ export interface FileRoutesByTo {
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
+  '/settings/221122settingsId': typeof Settings221122settingsIdLazyRoute
 }
 
 export interface FileRoutesById {
@@ -238,6 +260,7 @@ export interface FileRoutesById {
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
+  '/settings/221122settingsId': typeof Settings221122settingsIdLazyRoute
 }
 
 export interface FileRouteTypes {
@@ -252,6 +275,7 @@ export interface FileRouteTypes {
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
+    | '/settings/221122settingsId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -263,6 +287,7 @@ export interface FileRouteTypes {
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
+    | '/settings/221122settingsId'
   id:
     | '__root__'
     | '/'
@@ -274,6 +299,7 @@ export interface FileRouteTypes {
     | '/onboarding/style-widget'
     | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
+    | '/settings/221122settingsId'
   fileRoutesById: FileRoutesById
 }
 
@@ -322,7 +348,8 @@ export const routeTree = rootRoute
     "/settings": {
       "filePath": "settings.lazy.jsx",
       "children": [
-        "/settings/$settingsId"
+        "/settings/$settingsId",
+        "/settings/221122settingsId"
       ]
     },
     "/onboarding/create-your-account": {
@@ -347,6 +374,10 @@ export const routeTree = rootRoute
     },
     "/settings/$settingsId": {
       "filePath": "settings/$settingsId.lazy.jsx",
+      "parent": "/settings"
+    },
+    "/settings/221122settingsId": {
+      "filePath": "settings/221122settingsId.lazy.jsx",
       "parent": "/settings"
     }
   }

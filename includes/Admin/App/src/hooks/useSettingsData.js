@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Route } from '../routes/settings/$settingsId.lazy';
 
 /**
  * Custom hook for managing settings data using Tanstack Query.
@@ -9,28 +8,33 @@ import { Route } from '../routes/settings/$settingsId.lazy';
  */
 const useSettingsData = () => {
   const queryClient = useQueryClient();
-  const { settingsId } = Route.useParams();
 
   // Query for fetching settings from server
   const query = useQuery({
     queryKey: ['settings_fields'],
     queryFn: () => {
+      // Simulate fetching settings data
       return new Promise((resolve, reject) => {
+        console.log('Fetching settings data');
         if (window.simplybook && window.simplybook.settings_fields) {
           resolve(window.simplybook.settings_fields);
+        } else {
+          reject(new Error('Settings not found'));
         }
-        reject(new Error('Settings fields not found'));
       });
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
+    initialData: window.simplybook && window.simplybook.settings_fields,
   });
 
   // Update Mutation for settings data with destructured values
-  const { mutate: updateSettings, isLoading: settingsIsUpdating } = useMutation({
-    mutationFn: (data) => {
-      console.log('mutate data', data);
-      // Simulate async operation
-      return new Promise((resolve) => setTimeout(resolve, 10000));
+  const { mutateAsync: saveSettings, isLoading: isSavingSettings } = useMutation({
+    mutationFn: async (data) => {
+      console.log('Saving settings data', data);
+      // Simulate async operation (e.g., API call to save settings)
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      // Optionally return data or a result
+      return data; // Or any other meaningful result
     },
     onSuccess: () => {
       // Invalidate cache by specific query key for updated data
@@ -38,33 +42,13 @@ const useSettingsData = () => {
     },
   });
 
-
-  // Filtered settings based on the current settingsId
-  const currentSettings = query.isFetched
-      ? query.data.filter((setting) => setting.menu_id === settingsId)
-      : {};
-
-  console.log('currentSettings', currentSettings);
-  // get default values id: value
-  // if currentSettings is not empty
-
-  const defaultValues = currentSettings.length > 0 ?currentSettings.reduce((acc, setting) => {
-    acc[setting.id] = setting.value || setting.default;
-    return acc;
-  }, {}) : {};
-
-  console.log('currentSettings', currentSettings);
-  console.log('settingsIsUpdating', settingsIsUpdating);
-
   return {
     settings: query.data,
-    currentSettings: currentSettings,
-    settingsIsLoading: query.isLoading,
-    settingsIsError: query.isError,
-    settingsIsUpdating, // @todo fix as this does not work
-    updateSettings,
-    defaultValues
+    saveSettings,
+    isSavingSettings,
+    invalidateSettings: () => queryClient.invalidateQueries(['settings_fields']),
   };
 };
 
 export default useSettingsData;
+
