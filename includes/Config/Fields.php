@@ -1,4 +1,7 @@
 <?php
+/**
+ * @Rogier maybe move folder to Admin?
+ */
 return $fields = [
     [
         'id'       => 'review_notice_shown',

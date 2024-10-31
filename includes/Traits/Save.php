@@ -3,7 +3,9 @@ namespace Simplybook\Traits;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
-
+/**
+ * @Rogier maybe move to Admin?
+ */
 trait Save {
     use Load;
     use Helper;
