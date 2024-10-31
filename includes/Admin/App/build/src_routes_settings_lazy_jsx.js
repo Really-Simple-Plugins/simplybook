@@ -128,6 +128,61 @@ const BlockHeading = ({
 
 /***/ }),
 
+/***/ "./src/components/Common/Header.jsx":
+/*!******************************************!*\
+  !*** ./src/components/Common/Header.jsx ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../assets/img/logo.svg */ "./assets/img/logo.svg");
+
+
+
+const Header = () => {
+  const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bg-white"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex items-center mx-auto max-w-screen-2xl px-5"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+    to: "/"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
+    className: "w-40 h-12 py-2 px-5"
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex items-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+    to: "/",
+    className: linkClassName
+  }, "Dashboard"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://simplybook.me",
+    target: "_blank",
+    className: linkClassName
+  }, "Clients (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://simplybook.me",
+    target: "_blank",
+    className: linkClassName
+  }, "Calendar (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+    to: "/settings/general",
+    className: linkClassName
+  }, "Settings")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex-1 gap-6 items-center px-4"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    href: "https://simplybook.me",
+    target: "_blank",
+    className: "float-right py-6 px-2[&.active]:font-bold"
+  }, "Upgrade"))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
 /***/ "./src/components/Fields/EmailField.jsx":
 /*!**********************************************!*\
   !*** ./src/components/Fields/EmailField.jsx ***!
@@ -496,61 +551,6 @@ const FormScrollProgressLine = () => {
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormScrollProgressLine);
-
-/***/ }),
-
-/***/ "./src/components/Header.jsx":
-/*!***********************************!*\
-  !*** ./src/components/Header.jsx ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
-/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../assets/img/logo.svg */ "./assets/img/logo.svg");
-
-
-
-const Header = () => {
-  const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bg-white shadow-md"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl px-5"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
-    to: "/"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "w-40 h-12 py-2 px-5"
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
-    to: "/",
-    className: linkClassName
-  }, "Dashboard"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://simplybook.me",
-    target: "_blank",
-    className: linkClassName
-  }, "Clients (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://simplybook.me",
-    target: "_blank",
-    className: linkClassName
-  }, "Calendar (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
-    to: "/settings/general",
-    className: linkClassName
-  }, "Settings")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex-1 gap-6 items-center px-4"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://simplybook.me",
-    target: "_blank",
-    className: "float-right py-6 px-2[&.active]:font-bold"
-  }, "Upgrade"))));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
 
 /***/ }),
 
@@ -955,7 +955,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
-/* harmony import */ var _components_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Header */ "./src/components/Header.jsx");
+/* harmony import */ var _components_Common_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Common/Header */ "./src/components/Common/Header.jsx");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 /* harmony import */ var _components_Settings_SettingsMenu__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Settings/SettingsMenu */ "./src/components/Settings/SettingsMenu.jsx");
 
@@ -967,7 +967,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyF
   component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(Settings, null)
 });
 const Settings = () => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_Header__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex mx-auto max-w-screen-2xl"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex gap-5  m-5 w-full"

@@ -152,10 +152,10 @@ const BlockHeading = ({
 
 /***/ }),
 
-/***/ "./src/components/Header.jsx":
-/*!***********************************!*\
-  !*** ./src/components/Header.jsx ***!
-  \***********************************/
+/***/ "./src/components/Common/Header.jsx":
+/*!******************************************!*\
+  !*** ./src/components/Common/Header.jsx ***!
+  \******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -165,14 +165,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
-/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../assets/img/logo.svg */ "./assets/img/logo.svg");
+/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../assets/img/logo.svg */ "./assets/img/logo.svg");
 
 
 
 const Header = () => {
   const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "bg-white shadow-md"
+    className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex items-center mx-auto max-w-screen-2xl px-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
@@ -222,7 +222,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Header.jsx */ "./src/components/Header.jsx");
+/* harmony import */ var _components_Common_Header_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../components/Common/Header.jsx */ "./src/components/Common/Header.jsx");
 /* harmony import */ var _components_Blocks_Block_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Blocks/Block.jsx */ "./src/components/Blocks/Block.jsx");
 /* harmony import */ var _components_Blocks_BlockContent_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/Blocks/BlockContent.jsx */ "./src/components/Blocks/BlockContent.jsx");
 /* harmony import */ var _components_Blocks_BlockHeading_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/Blocks/BlockHeading.jsx */ "./src/components/Blocks/BlockHeading.jsx");
@@ -240,7 +240,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyF
   component: Dashboard
 });
 function Dashboard() {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Header_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_Header_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex mx-auto max-w-screen-2xl"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "grid grid-cols-12 grid-rows-5 gap-5 w-full min-h-full m-5"

@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Link, Outlet } from '@tanstack/react-router'
-import Header from '../components/Header'
+import Header from '../components/Common/Header'
 import ErrorBoundary from '../components/Common/ErrorBoundary'
 import SettingsMenu from '../components/Settings/SettingsMenu';
 

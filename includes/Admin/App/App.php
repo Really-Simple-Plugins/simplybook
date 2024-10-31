@@ -145,7 +145,14 @@ class App {
 				'json_translations' => $js_data['json_translations'],
 				'settings_menu'     => $this->menus(),
                 'settings_fields'   => $this->fields( true ),
+				'is_onboarding_completed' => $this->onboarding_completed(),
 			]
 		);
+	}
+
+	private function onboarding_completed(): bool {
+		// TODO: check if all onboarding fields are set, or use a seperate option for completing the onboarding
+
+		return false;
 	}
 }
