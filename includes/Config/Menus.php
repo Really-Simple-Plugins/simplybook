@@ -23,10 +23,6 @@ return $menus = [
 			],
 		],
 		[
-			'id'       => 'providers',
-			'title'    => __( 'Providers', 'simplybook' ),
-		],
-		[
 			'id'       => 'services',
 			'title'    => __( 'Services', 'simplybook' ),
 		],

@@ -1,5 +1,5 @@
 import {Link} from '@tanstack/react-router';
-import { ReactComponent as Logo } from '../../../../assets/img/logo.svg';
+import { ReactComponent as Logo } from '../../assets/img/logo.svg';
 
 const  Header = () => {
   const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
