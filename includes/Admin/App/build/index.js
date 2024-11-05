@@ -111,9 +111,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/route.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/useNavigate.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
-/* harmony import */ var _tanstack_router_devtools__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/router-devtools */ "./node_modules/@tanstack/router-devtools/dist/esm/devtools.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/redirects.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/useNavigate.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
+/* harmony import */ var _tanstack_router_devtools__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tanstack/router-devtools */ "./node_modules/@tanstack/router-devtools/dist/esm/devtools.js");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 
 
@@ -132,15 +133,15 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.createRootR
     location
   }) => {
     if (!simplybook.isOnboardingCompleted) {
-      throw redirect({
+      (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.redirect)({
         to: '/onboarding/create-your-account'
       });
     }
   },
   component: () => {
-    const navigate = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.useNavigate)(); // Move this outside conditional
+    const navigate = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.useNavigate)(); // Move this outside conditional
 
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.Outlet, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_router_devtools__WEBPACK_IMPORTED_MODULE_5__.TanStackRouterDevtools, null));
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_1__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Outlet, null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_router_devtools__WEBPACK_IMPORTED_MODULE_6__.TanStackRouterDevtools, null));
   }
 });
 
@@ -4888,6 +4889,17 @@ module.exports = window["React"];
 
 "use strict";
 module.exports = window["ReactDOM"];
+
+/***/ }),
+
+/***/ "@wordpress/api-fetch":
+/*!**********************************!*\
+  !*** external ["wp","apiFetch"] ***!
+  \**********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["apiFetch"];
 
 /***/ }),
 

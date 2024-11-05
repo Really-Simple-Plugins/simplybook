@@ -1,6 +1,225 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx"],{
 
+/***/ "./src/api/config.js":
+/*!***************************!*\
+  !*** ./src/api/config.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   AJAX_URL: () => (/* binding */ AJAX_URL),
+/* harmony export */   API_BASE_PATH: () => (/* binding */ API_BASE_PATH),
+/* harmony export */   NONCE: () => (/* binding */ NONCE),
+/* harmony export */   SITE_URL: () => (/* binding */ SITE_URL),
+/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN)
+/* harmony export */ });
+// src/api/config.js
+
+// Token for authenticated requests; fix to get the SimplyBook nonce
+const NONCE = simplybook.nonce;
+
+// Base URL for SimplyBook API requests
+const API_BASE_PATH = 'simplybook/v1/';
+
+// URLs for the site and AJAX endpoint
+const SITE_URL = getSiteUrl('site_url');
+const AJAX_URL = getSiteUrl('ajax_url');
+
+// Text domain for SimplyBook translations
+const TEXT_DOMAIN = 'simplybook';
+
+/**
+ * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
+ * If the site is loaded over HTTPS, enforces HTTPS for the URL to prevent mixed content issues.
+ * @param {string} type - 'site_url' or 'admin_ajax_url'.
+ * @returns {string} The requested URL with HTTPS enforced if necessary.
+ */
+function getSiteUrl(type) {
+  // Retrieve URL from burst_settings based on type
+  let url = simplybook[type];
+
+  // If the page is loaded over HTTPS and the URL is not, update it to HTTPS
+  if (window.location.protocol === 'https:' && !url.includes('https://')) {
+    url = url.replace('http://', 'https://');
+  }
+  return url;
+}
+
+/***/ }),
+
+/***/ "./src/api/endpoints/getSettingsFields.js":
+/*!************************************************!*\
+  !*** ./src/api/endpoints/getSettingsFields.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Get settings fields (with or without values)
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const getSettingsFields = async ({
+  withValues = true
+}) => {
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])('settings/get_fields', 'POST', {
+    withValues
+  });
+  console.log('getSettingsFields', res);
+  return res;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
+
+/***/ }),
+
+/***/ "./src/api/helpers/errorHandler.js":
+/*!*****************************************!*\
+  !*** ./src/api/helpers/errorHandler.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const errorHandler = (error, path) => {
+  console.error(`API Error at ${path}:`, error.message || error);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorHandler);
+
+/***/ }),
+
+/***/ "./src/api/helpers/glue.js":
+/*!*********************************!*\
+  !*** ./src/api/helpers/glue.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
+// src/api/helpers/glue.js
+
+const usesPlainPermalinks = () => _config__WEBPACK_IMPORTED_MODULE_0__.SITE_URL.includes('?');
+const glue = () => usesPlainPermalinks() ? '&' : '?';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (glue);
+
+/***/ }),
+
+/***/ "./src/api/requests/fetchRequest.js":
+/*!******************************************!*\
+  !*** ./src/api/requests/fetchRequest.js ***!
+  \******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
+
+
+/**
+ * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
+ * @param path
+ * @param method
+ * @param data
+ * @param url
+  * @return {Promise<void>}
+ */
+const fetchRequest = async (path, method = 'POST', data = {}, url) => {
+  const args = {
+    path,
+    method,
+    data
+  };
+  console.log(path);
+  const test_url = 'simplybook/v1/settings/get_fields';
+  console.log(test_url);
+  console.log('Fetch: Requesting data from ' + path + ' using ' + method + ' method');
+  // resolve or reject
+  return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()(args);
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchRequest);
+
+/***/ }),
+
+/***/ "./src/api/requests/request.js":
+/*!*************************************!*\
+  !*** ./src/api/requests/request.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _fetchRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetchRequest */ "./src/api/requests/fetchRequest.js");
+/* harmony import */ var _helpers_glue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/glue */ "./src/api/helpers/glue.js");
+/* harmony import */ var _helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/errorHandler */ "./src/api/helpers/errorHandler.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
+
+
+
+
+
+/**
+ * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
+ * @param path
+ * @param method
+ * @param data
+ * @return {Promise<void>}
+ */
+const request = async (path, method = 'POST', data = {}) => {
+  const args = {
+    path,
+    method,
+    data
+  };
+  args.path = _config__WEBPACK_IMPORTED_MODULE_3__.API_BASE_PATH + args.path + (0,_helpers_glue__WEBPACK_IMPORTED_MODULE_1__["default"])() + '&token=' + Math.random().toString(36).substring(2, 7);
+  args.data = {
+    ...data,
+    nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
+  };
+  console.log('request : ', args);
+  // if (method === 'POST') {
+  //
+  // } else {
+  //   args.path += glue() + getNonce();
+  // }
+
+  try {
+    // Try the fetch request first
+    return await (0,_fetchRequest__WEBPACK_IMPORTED_MODULE_0__["default"])(args.path, args.method, args.data);
+  } catch (fetchError) {
+    // If fetch fails, log error with handler and try AJAX fallback
+    (0,_helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__["default"])(fetchError, args.path);
+
+    // try {
+    //   // Try the AJAX fallback request
+    //   return await ajaxRequest(args.path, args.method, args.data);
+    // } catch (ajaxError) {
+    //   // If AJAX also fails, handle the final error
+    //   errorHandler(ajaxError, args.path);
+    //   throw new Error('API request failed');
+    // }
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
+
+/***/ }),
+
 /***/ "./src/components/Blocks/Block.jsx":
 /*!*****************************************!*\
   !*** ./src/components/Blocks/Block.jsx ***!
@@ -396,7 +615,6 @@ function FormFooter({
   } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_5__.useFormState)({
     control
   });
-  console.log('FormFooter', isDirty, isSubmitting, isValidating, isValid, dirtyFields);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "sticky bg-gray-50 shadow-md rounded-b-md z-10"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FormScrollProgressLine__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -632,9 +850,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
+
 
 
 /**
@@ -644,34 +864,27 @@ __webpack_require__.r(__webpack_exports__);
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
 const useSettingsData = () => {
-  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_0__.useQueryClient)();
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
 
   // Query for fetching settings from server
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
     queryKey: ['settings_fields'],
-    queryFn: () => {
-      // Simulate fetching settings data
-      return new Promise((resolve, reject) => {
-        console.log('Fetching settings data');
-        if (window.simplybook && window.simplybook.settings_fields) {
-          resolve(window.simplybook.settings_fields);
-        } else {
-          reject(new Error('Settings not found'));
-        }
-      });
-    },
+    queryFn: () => (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__["default"])({
+      withValues: true
+    }),
     staleTime: 1000 * 60 * 5,
     // 5 minutes
-    initialData: window.simplybook && window.simplybook.settings_fields
+    initialData: window.simplybook && window.simplybook.settings_fields,
+    retry: 0,
+    select: data => [...data] // create a new array so dependencies are updated
   });
 
   // Update Mutation for settings data with destructured values
   const {
     mutateAsync: saveSettings,
     isLoading: isSavingSettings
-  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useMutation)({
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
     mutationFn: async data => {
-      console.log('Saving settings data', data);
       // Simulate async operation (e.g., API call to save settings)
       await new Promise(resolve => setTimeout(resolve, 1000));
       // Optionally return data or a result
@@ -808,7 +1021,6 @@ function Settings() {
   const {
     currentForm
   } = (0,_hooks_useSettingsMenu__WEBPACK_IMPORTED_MODULE_2__["default"])();
-  console.log('Settings', settingsId, settings, currentForm);
   const currentFormFields = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => settings.filter(setting => setting.menu_id === settingsId), [settings, settingsId]);
   const currentFormDefaultValues = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => extractFormValuesPerMenuId(settings, settingsId), [settings, settingsId]);
   const currentFormValues = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => extractFormValuesPerMenuId(settings, settingsId, 'value'), [settings, settingsId]);
@@ -844,7 +1056,6 @@ function Settings() {
     onSubmit: handleSubmit(formData => {
       saveSettings(formData).then(() => {
         reset(currentFormDefaultValues);
-        console.log('Settings saved');
       });
     }),
     control: control

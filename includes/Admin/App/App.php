@@ -142,6 +142,9 @@ class App {
 		return apply_filters(
 			'simplybook_localize_script',
 			[
+				'nonce'             => wp_create_nonce( 'simplybook_nonce' ),
+                'ajax_url'          => admin_url( 'admin-ajax.php' ),
+                'site_url'          => get_rest_url(),
 				'json_translations' => $js_data['json_translations'],
 				'settings_menu'     => $this->menus(),
                 'settings_fields'   => $this->fields( true ),

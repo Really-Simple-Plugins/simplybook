@@ -12,8 +12,6 @@ class Blocks {
 
     public function __construct()
     {
-        error_log("register block type");
-
         if ( ! function_exists( 'register_block_type' ) ) {
             // Block editor is not available.
             return;

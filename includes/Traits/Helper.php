@@ -49,13 +49,18 @@ trait Helper {
     /**
      * Log a message if WP_DEBUG is enabled
      *
-     * @param string $message
+     * @param string | object | array $message
      *
      * @return void
      */
-    public function log( string $message ): void {
+    public function log(  $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-            error_log( "Simplybook: ".$message );
+			$prepend = 'Simplybook: ';
+            if ( is_array( $message ) || is_object( $message ) ) {
+				error_log( $prepend . print_r( $message, true ) );
+			} else {
+				error_log( $prepend . $message );
+			}
         }
     }
 

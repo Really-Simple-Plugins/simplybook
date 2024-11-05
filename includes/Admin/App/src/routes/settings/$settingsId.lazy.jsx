@@ -33,8 +33,6 @@ function Settings() {
   const { settings, saveSettings} = useSettingsData();
   const { currentForm } = useSettingsMenu();
 
-  console.log('Settings', settingsId, settings, currentForm);
-
   const currentFormFields = useMemo(
       () => settings.filter((setting) => setting.menu_id === settingsId),
       [settings, settingsId]
@@ -89,7 +87,6 @@ function Settings() {
         <FormFooter onSubmit={handleSubmit((formData) => {
           saveSettings(formData).then(() => {
             reset(currentFormDefaultValues);
-            console.log('Settings saved');
           });
         })} control={control} />
       </form>

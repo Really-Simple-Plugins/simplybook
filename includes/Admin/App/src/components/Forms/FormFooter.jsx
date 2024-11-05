@@ -7,7 +7,6 @@ function FormFooter({ onSubmit, control }) {
   const { isDirty, isSubmitting, isValidating, isValid, dirtyFields } = useFormState({
     control
   });
-  console.log('FormFooter', isDirty, isSubmitting, isValidating, isValid, dirtyFields);
 
   return (
       <div className="sticky bg-gray-50 shadow-md rounded-b-md z-10">

@@ -1,27 +1,33 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import getSettingsFields from '../api/endpoints/getSettingsFields';
 
 /**
- * Custom hook for managing settings data using Tanstack Query.
+ * Custom hook for managing onboarding data (e.g. prefills and existing data) using Tanstack Query.
  * This hook provides functions to fetch and update settings.
  *
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
-const useSettingsData = () => {
+const useOnboardingData = () => {
   const queryClient = useQueryClient();
 
   // Query for fetching settings from server
   const query = useQuery({
-    queryKey: ['settings_fields'],
-    queryFn: () => getSettingsFields({ withValues: true }),
+    queryKey: ['onboarding_fields'],
+    queryFn: () => {
+      // Simulate fetching settings data
+      return new Promise((resolve, reject) => {
+        if (window.simplybook && window.simplybook.onboarding_fields) {
+          resolve(window.simplybook.onboarding_fields);
+        } else {
+          reject(new Error('Settings not found'));
+        }
+      });
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
-    initialData: window.simplybook && window.simplybook.settings_fields,
-    retry: 0,
-    select: (data) => [...data], // create a new array so dependencies are updated
+    initialData: window.simplybook && window.simplybook.onboarding_fields,
   });
 
   // Update Mutation for settings data with destructured values
-  const { mutateAsync: saveSettings, isLoading: isSavingSettings } = useMutation({
+  const { mutateAsync: saveOnboarding, isLoading: isSavingOnboarding } = useMutation({
     mutationFn: async (data) => {
       // Simulate async operation (e.g., API call to save settings)
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -30,17 +36,17 @@ const useSettingsData = () => {
     },
     onSuccess: () => {
       // Invalidate cache by specific query key for updated data
-      queryClient.invalidateQueries(['settings_fields']);
+      queryClient.invalidateQueries(['onboarding_fields']);
     },
   });
 
   return {
     settings: query.data,
-    saveSettings,
-    isSavingSettings,
-    invalidateSettings: () => queryClient.invalidateQueries(['settings_fields']),
+    saveOnboarding,
+    isSavingOnboarding,
+    invalidateOnboarding: () => queryClient.invalidateQueries(['onboarding_fields']),
   };
 };
 
-export default useSettingsData;
+export default useOnboardingData;
 

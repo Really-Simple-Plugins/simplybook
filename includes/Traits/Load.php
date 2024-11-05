@@ -81,6 +81,7 @@ trait Load {
      */
     public function get_widget_settings(): array
     {
+		error_log('get_widget_settings');
         $fields = $this->get_fields_by_attribute( 'widget_field', true );
         $widget_fields = [];
         foreach ( $fields as $field ) {
@@ -106,6 +107,7 @@ trait Load {
      */
     public function get_api_data(): array
     {
+		error_log('get_api_data');
         $fields = $this->get_fields_by_attribute( 'type', 'api' );
         $data = [];
         foreach ( $fields as $field ) {
@@ -144,11 +146,12 @@ trait Load {
      * @param bool $load_values
      * @return array
      */
-    public function fields( bool $load_values = false ): array
+    public function fields( $load_values = false ): array
     {
         $fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
         $fields = apply_filters('simplybook_fields', $fields);
 
+		error_log('load_values: ' . $load_values);
         foreach ( $fields as $key => $field ) {
             $field = wp_parse_args( $field, [
                 'id' => false,

@@ -27,7 +27,6 @@ class Upgrades {
         if ( ! simplybook_has_admin_access() ) {
             return;
         }
-        error_log("setting some defaults");
 
 
         $this->update_option('auth_datetime', time());

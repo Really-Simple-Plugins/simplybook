@@ -1,9 +1,9 @@
 import {
   createRootRoute,
   Link,
-  Outlet,
+  Outlet, redirect,
   useNavigate,
-  } from '@tanstack/react-router';
+} from '@tanstack/react-router';
 import {TanStackRouterDevtools} from '@tanstack/router-devtools';
 import {useQuery} from '@tanstack/react-query';
 import {useEffect} from 'react';
@@ -17,7 +17,7 @@ const getData = async ({queryKey}) => {
 export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
     if (!simplybook.isOnboardingCompleted) {
-      throw redirect({
+       redirect({
         to: '/onboarding/create-your-account',
       })
     }
