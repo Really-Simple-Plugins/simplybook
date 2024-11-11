@@ -122,7 +122,7 @@ const getSettingsFields = async ({
     withValues
   });
   console.log('getSettingsFields', res);
-  return res;
+  return res.data;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
 

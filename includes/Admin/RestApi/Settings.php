@@ -108,7 +108,7 @@ class Settings extends RestApi {
 		$with_values = $data['withValues'] === 1;
 		$this->log('with_values');
 		$this->log($data['withValues']);
-        $fields = $this->fields(true);
+        $fields = $this->fields_and_values(true);
 		error_log(print_r($fields, true));
         return $this->response( $fields );
     }

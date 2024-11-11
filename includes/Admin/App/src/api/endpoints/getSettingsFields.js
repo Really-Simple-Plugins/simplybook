@@ -9,7 +9,7 @@ const getSettingsFields = async ({ withValues = true }) => {
   const res =  await request('settings/get_fields', 'POST', { withValues });
 
   console.log('getSettingsFields', res);
-  return res;
+  return res.data;
 };
 
 export default getSettingsFields;

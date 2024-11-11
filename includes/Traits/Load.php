@@ -178,6 +178,43 @@ trait Load {
         return array_values( $fields );
     }
 
+	/**
+	 * Get fields array for the settings
+	 * @param bool $load_values
+	 * @return array
+	 */
+	public function fields_and_values( $load_values = true ): array
+	{
+		$fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
+		$fields = apply_filters('simplybook_fields', $fields);
+
+		error_log('fields_and_values load_values: ' . $load_values);
+		foreach ( $fields as $key => $field ) {
+			$field = wp_parse_args( $field, [
+				'id' => false,
+				'menu_id' => 'general',
+				'group_id' => 'general',
+				'type' => 'text',
+				'visible' => true,
+				'disabled' => false,
+				'default' => false,
+				'encrypt' => false,
+				'label' => '',
+			] );
+
+			//only preload field values for logged in admins
+			if ( $load_values && $this->user_can_manage() ) {
+				$value          = $this->get_option( $field['id'], $field['default'] );
+				$field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
+			}
+			$fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
+		}
+
+		$fields = apply_filters( 'simplybook_fields_values', $fields );
+
+		return array_values( $fields );
+	}
+
 
 	/**
 	 * Get fields array for the settings
