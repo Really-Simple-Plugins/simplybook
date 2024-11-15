@@ -2,8 +2,6 @@
 namespace Simplybook\Admin\RestApi;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
-use WP_Error;
-use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -14,7 +12,8 @@ class CompanyRegistration extends RestApi {
 	use Save;
 
 	/**
-	 * Register the rest route
+	 * Register a dynamic rest route
+	 * Publicly available, but the rest route itself is valid only 5 minutes.
 	 *
 	 * @return void
 	 */
@@ -57,40 +56,22 @@ class CompanyRegistration extends RestApi {
 	 * Register a user with email addres with Simplybookme
 	 *
 	 * @param $request
-	 * @return WP_Error|WP_REST_Response
+	 * @return void
 	 */
-	public function company_registration($request ): WP_Error|WP_REST_Response
+	public function company_registration($request ): void
 	{
 		$data = $request->get_json_params();
-
-		$validated_response = $this->validate_request( $data );
-		if ( is_wp_error( $validated_response ) ) {
-			return $validated_response;
-		}
-//		success: true if the company was created successfully, false otherwise
-//company_id: The ID of the company that was created
-//company_login: The login of the company that was created
-//error: object containing the error details if the company creation failed
-//error[message] The error message if the company creation failed
-		// get the nonce
 		error_log("Company Registration API POST response");
 		error_log(print_r($data,true));
-		$nonce  = (bool) $data['success'];
-		$company_id = $data['company_id'];
-		$company_login = $data['company_login'];
-		$error = $data['error'] ?? false;
-		if ( $error && isset($error['message']) ){
-			$this->log($error['message']);
+		$success = (bool) $data['success'];
+		$token  = (bool) $data['token'];
+		if ( $success ) {
+			$this->update_option( 'company_token', $token );
+		} else {
+			$error = $data['error'] ?? false;
+			if ( $error && isset($error['message']) ){
+				$this->log($error['message']);
+			}
 		}
-
-
-
-		if ( ob_get_length() ) {
-			ob_clean();
-		}
-
-		return $this->response( $data );
 	}
-
-
 }

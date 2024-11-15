@@ -316,7 +316,66 @@ class Api
 		} else {
 			update_option('simplybook_company_registration_error', true, false);
 		}
+	}
 
+	/**
+	 * Registers a company with the API
+	 *
+	 * @return void
+	 */
+	public function confirm(string $email_code){
+		if ( !$this->user_can_manage() ) {
+			return;
+		}
+
+		if ( empty($email_code) ) {
+			$this->log("Missing email code for company registration");
+			return;
+		}
+
+		//check if the company registration was completed already
+		if ( !$this->company_registration_complete() ) {
+			$this->log("Company registration not completed yet");
+			return;
+		}
+
+		$request = wp_remote_post( $this->endpoint( 'confirm' ), array(
+			'headers' => $this->get_headers( true ),
+			'timeout' => 15,
+			'sslverify' => true,
+			'body' => json_encode(
+				[
+					'company_login' => $this->get_option('company_login'),
+					'confirmation_code' => $email_code,
+					'recaptcha' => get_option('simplybook_recaptcha_site_key'),
+				]
+			),
+		) );
+
+		error_log("email confirmation response");
+		error_log(print_r($request,true));
+
+		if ( ! is_wp_error( $request ) ) {
+			$request = json_decode( wp_remote_retrieve_body( $request ) );
+			if ( $request->success ) {
+				delete_option('simplybook_company_registration_error' );
+				error_log(print_r($request,true));
+				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key), false );
+				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ), false );
+
+				$this->update_option( 'company_login', sanitize_text_field( $request->company_login ) );
+				$this->update_option( 'company_id', (int) $request->company_id );
+			} else {
+				if ( str_contains( $request->message, 'Token Expired')) {
+					//invalid token, refresh.
+					$this->refresh_token();
+				}
+				$this->log("Error during company registration: ".$request->message);
+				update_option('simplybook_company_registration_error', $request->message, false);
+			}
+		} else {
+			update_option('simplybook_company_registration_error', true, false);
+		}
 	}
 
 	/**
@@ -383,7 +442,6 @@ class Api
 
 		if (!$result || !isset($result['token']) || !$result['token']) {
 			$this->_log('Logout after Refresh token because incorrect data received');
-			//$this->logout();
 			return false;
 		}
 
@@ -402,78 +460,14 @@ class Api
 		return true;
 	}
 
-
     public function auth()
     {
         $url = $this->getAuthUrl();
         $this->_redirect($url);
     }
 
-    public function getDomain()
-    {
-        $domain = $this->getAuthData()['domain'];
-        if ( !$domain ) {
-            $domain = 'simplybook.me';
-        }
-        return $domain;
-    }
-
-    public function confirm($companyLogin, $code, $confirmationCode, $sessionId)
-    {
-        if (!$code || !$confirmationCode || !$sessionId || !$companyLogin) {
-            return false;
-        }
-
-        $url = $this->_getApiUrl() . 'admin/auth/2fa';
-        $args = array(
-            'body' => json_encode(array(
-                'code' => $code,
-                'confirmation_code' => $confirmationCode,
-                'session_id' => $sessionId,
-                'company' => $companyLogin,
-                'type' => 'oauth',
-            )),
-            'headers' => array(
-                'Content-Type' => 'application/json',
-            ),
-        );
-        $response = wp_remote_post($url, $args);
-        $resultRaw = wp_remote_retrieve_body($response);
-
-        if (is_wp_error($response)) {
-            $this->_log(json_encode($response));
-            return false;
-        }
-
-        $result = json_decode($resultRaw, true);
-
-        if (!$result || !isset($result['token']) || !$result['token']) {
-            $this->_log('Logout because incorrect data received');
-            $this->_log($resultRaw);
-            $this->logout();
-            return false;
-        }
-
-        $this->update_option('token', $result['token']);
-        $this->update_option('company', $companyLogin);
-        $this->update_option('refresh_token', $result['refresh_token'] );
-        $this->update_option('domain', $result['domain']);
-        $this->update_option('auth_datetime', time());
-        $this->update_option('is_auth', true);
-
-        return true;
-    }
-
-    public function logout()
-    {
-        $this->_log(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-        delete_option( 'simplybook_options' );
-        $this->_clearCache();
-    }
-
     public function checkApiConnection(){
-        $apiUrl = $this->_getApiUrl() . 'admin';
-        $response = wp_remote_get($apiUrl);
+        $response = wp_remote_get($this->endpoint('admin'));
 
         //if reponse 401 and valid json - api is working
         if(wp_remote_retrieve_response_code($response) == 401){

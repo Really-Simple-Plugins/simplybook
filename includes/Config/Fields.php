@@ -24,6 +24,13 @@ return $fields = [
         'label'    => '',
         'default'  => '',
     ],
+	[
+		'id'       => 'company_token',
+		'type'     => 'api',
+		'encrypt'  => true,
+		'label'    => '',
+		'default'  => '',
+	],
     [
         'id'       => 'company_name',
         'type'     => 'api',
