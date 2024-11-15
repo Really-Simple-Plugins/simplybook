@@ -44,6 +44,11 @@ trait Load {
         }
 
         $field = $this->get_field_by_id($key);
+        if ( !$field ) {
+            error_log("field $key not found");
+            return $default;
+        }
+
         if ( $field['encrypt'] ) {
             $value = $this->decrypt_string($value);
         }

@@ -62,8 +62,12 @@ trait Save {
             'auth_data',
         ];
         foreach ($upgrade_keys as $key) {
+
             $value = $this->get_config_obsolete($key);
             if ( $value !== false ) {
+                if ( $key === 'api_status' ) {
+                    update_option('simplybook_api_status', $value);
+                } else
                 if ( $key === 'widget_settings' || $key === 'auth_data' ) {
                     if ( is_array( $value ) ) {
                         foreach ( $value as $key => $val) {
@@ -165,6 +169,27 @@ trait Save {
         $options[$key] = $value;
         update_option('simplybook_options', $options);
     }
+
+	/**
+	 * Delete an option from the settings array
+	 *
+	 * @param $key
+	 *
+	 * @return void
+	 */
+	public function delete_option($key): void
+	{
+		if ( !$this->user_can_manage() ) {
+			return;
+		}
+
+		$options = get_option('simplybook_options', []);
+		if ( isset($options[$key]) ) {
+			unset($options[$key]);
+		}
+
+		update_option('simplybook_options', $options);
+	}
 
     public function update_options( $fields ) {
         foreach ( $fields as $index => $field ) {

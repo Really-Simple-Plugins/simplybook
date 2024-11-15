@@ -51,7 +51,6 @@ class Settings extends RestApi {
     public function save($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
         $data = $ajax_data ?: $request->get_json_params();
-
         $validated_response = $this->validate_request( $data );
         if ( is_wp_error( $validated_response ) ) {
             return $validated_response;
@@ -61,10 +60,6 @@ class Settings extends RestApi {
             return new WP_Error( 'rest_forbidden', 'You do not have permission to perform this action.', [ 'status' => 403 ] );
         }
 
-        $data = $ajax_data ?: $request->get_json_params();
-        if ( ! $ajax_data ) {
-            //burst_remove_fallback_notice();
-        }
         // get the nonce
         $nonce  = $data['nonce'];
         $fields = $data['fields'];

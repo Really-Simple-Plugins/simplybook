@@ -3,63 +3,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 
 
-if(!function_exists('simplybookMePl_makeUrl')) {
-    function simplybookMePl_makeUrl($params){
 
-        if(!is_array($params) && is_string($params)){
-            $params = array(
-                'sbpage' => $params,
-            );
-        }
-        $orherAmpSymbol = '&';
-        if(isset($params['amp_symbol'])){
-            $orherAmpSymbol = $params['amp_symbol'];
-            unset($params['amp_symbol']);
-        }
-        $currentUrl = sanitize_url($_SERVER['REQUEST_URI']);
-        $newUrl = simplybookMePl_addQueryParamsToUrl($currentUrl, array_merge(array(
-            //clear other params
-            'm' => null,
-            '_wpnonce' => null,
-            'token' => null,
-            'refresh_token' => null,
-            'company' => null,
-            'domain' => null,
-            'session_id' => null,
-            'code' => null,
-        ), $params));
-        return str_replace('&', $orherAmpSymbol, $newUrl);
-    }
-}
-
-if(!function_exists('simplybookMePl_addQueryParamsToUrl')) {
-    function simplybookMePl_addQueryParamsToUrl($url, $queryParams)
-    {
-        $urlParts = parse_url($url);
-        $scheme = isset($urlParts['scheme']) ? $urlParts['scheme'] . '://' : '';
-        $host = isset($urlParts['host']) ? $urlParts['host'] : '';
-        $path = isset($urlParts['path']) ? $urlParts['path'] : '';
-        $existingQuery = isset($urlParts['query']) ? $urlParts['query'] : '';
-
-        $existingParams = array();
-        parse_str($existingQuery, $existingParams);
-
-        $mergedParams = array_merge($existingParams, $queryParams);
-
-        $newQuery = http_build_query($mergedParams);
-
-        $newUrl = $scheme . $host . $path;
-        if (!empty($newQuery)) {
-            $newUrl .= '?' . $newQuery;
-        }
-
-        if (isset($urlParts['fragment'])) {
-            $newUrl .= '#' . $urlParts['fragment'];
-        }
-
-        return $newUrl;
-    }
-}
 
 
 if(!function_exists('simplybookMePl_getAllowedHtmlEntities')){

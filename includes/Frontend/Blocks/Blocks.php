@@ -1,6 +1,7 @@
 <?php
 namespace Simplybook\Frontend\Blocks;
 use Simplybook\Api\InternalApi;
+use Simplybook\Frontend\Traits\Widget;
 use Simplybook\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Blocks {
     use Helper;
-
+    use Widget;
     public function __construct()
     {
         error_log("register block type");
@@ -149,12 +150,8 @@ class Blocks {
             }
         }
         $content = '<div id="sbw_z0hg2i"></div>';
-        try {
-            $script = simplybookMePl_Widget($atts);
-        } catch (SimplybookMePl_Exception $e) {
-            $content .= wp_kses_post("<div class='error'><p>" . $e->getMessage() . "</p></div>");
-            return $content;
-        }
+        $script = $this->load_widget($atts);
+
         $content .= sprintf('<script type="text/javascript">%s</script>', $script);
         return $content;
     }

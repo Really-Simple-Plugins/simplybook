@@ -25,20 +25,70 @@ return $fields = [
         'default'  => '',
     ],
     [
-        'id'       => 'company',
+        'id'       => 'company_name',
         'type'     => 'api',
         'default'  => false,
     ],
+	[
+        'id'       => 'company_id',
+        'type'     => 'api',
+        'default'  => false,
+    ],
+	[
+		'id'       => 'email',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
+		'id'       => 'phone',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
+		'id'       => 'address',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
+		'id'       => 'expires',
+		'type'     => 'api',
+		'default'  => false,
+	],
+	[
+		'id'       => 'recaptcha_site_key',
+		'type'     => 'api',
+		'default'  => false,
+	],
+	[
+		'id'       => 'recaptcha_version',
+		'type'     => 'api',
+		'default'  => false,
+	],
+	[
+		'id'       => 'company_login',
+		'type'     => 'api',
+		'default'  => false,
+	],
+	[
+		'id'       => 'zip',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
+		'id'       => 'category',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
+		'id'       => 'city',
+		'type'     => 'text',
+		'default'  => false,
+	],
     [
         'id'       => 'refresh_token',
         'type'     => 'api',
         'encrypt'  => true,
         'default'  => false,
-    ],
-    [
-        'id'       => 'domain',
-        'type'     => 'api',
-        'default'  => 'simplybook.me',
     ],
     [
         'id'       => 'login',

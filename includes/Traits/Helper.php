@@ -23,6 +23,21 @@ trait Helper {
     }
 
     /**
+     * Sanitize the api token
+     * @param string $token
+     * @return string
+     */
+    public function sanitize_token($token): string
+    {
+        $token = trim($token);
+        if (preg_match('/^[a-f0-9]{64}$/i', $token)) {
+            return $token;
+        } else {
+            return '';
+        }
+    }
+
+    /**
      * Check if this is an authenticated rest request
      *
      * @return bool
@@ -42,8 +57,12 @@ trait Helper {
      *
      * @return string
      */
-    public function admin_url(): string {
-        return admin_url( 'admin.php?page=simplybook' );
+    public function admin_url( $path = '' ): string {
+        $url = add_query_arg([ 'page' => 'simplybook' ], admin_url( 'admin.php' ) );
+		if ( ! empty( $path ) ) {
+			$url .= $path;
+		}
+		return $url;
     }
 
     /**

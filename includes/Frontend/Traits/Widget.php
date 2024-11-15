@@ -31,12 +31,7 @@ trait Widget {
         $atts = $this->sanitize_attributes($atts);
 
         $content = '<div id="sbw_z0hg2i"></div>';
-//        try {
-            $script = $this->get_widget($atts);
-//        } catch (SimplybookMePl_Exception $e) {
-//            $content .= wp_kses_post("<div class='error'><p>" . $e->getMessage() . "</p></div>");
-//            return $content;
-//        }
+        $script = $this->get_widget($atts);
         $content .= sprintf('<script type="text/javascript">%s</script>', $script);
         return $content;
     }
@@ -79,11 +74,6 @@ trait Widget {
         $auth = new Api();
         $post_settings = [];
         $data = [];
-        //array(
-//            'is_auth' => $auth->isAuthorized(),
-//            'auth_data' => $auth->getAuthData(),
-//            'nonce' => wp_create_nonce('simplybook_nonce'),
-//        );
 
         $widget_settings = $this->get_widget_settings();
         error_log("widget_settings straight from option");
