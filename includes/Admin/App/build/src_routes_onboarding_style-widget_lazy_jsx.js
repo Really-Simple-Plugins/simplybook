@@ -271,20 +271,20 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 
 /**
  * Styled text input component
- * @param type
- * @param props
- * @return {JSX.Element}
- * @constructor
+ * @param props - Props for the input component
+ * @returns {JSX.Element} The rendered input element
  */
 var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
   var _b = _a.type,
     type = _b === void 0 ? "text" : _b,
     props = __rest(_a, ["type"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
+    ref: ref,
     type: type,
-    className: "\n          w-full rounded-md border border-gray-300 p-2 focus:border-blue-500\n          focus:outline-none focus:ring\n          disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-200\n          "
+    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200"
   }, props));
 });
+TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),

@@ -169,16 +169,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const Header = () => {
   const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl px-5"
+    className: "mx-auto flex max-w-screen-2xl items-center px-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "w-40 h-12 py-2 px-5"
+    className: "h-12 w-40 px-5 py-2"
   }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex items-center"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
@@ -196,11 +197,11 @@ const Header = () => {
     to: "/settings/general",
     className: linkClassName
   }, "Settings")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex-1 gap-6 items-center px-4"
+    className: "flex-1 items-center gap-6 px-4"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://simplybook.me",
     target: "_blank",
-    className: "float-right py-6 px-2[&.active]:font-bold"
+    className: "px-2[&.active]:font-bold float-right py-6"
   }, "Upgrade"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);

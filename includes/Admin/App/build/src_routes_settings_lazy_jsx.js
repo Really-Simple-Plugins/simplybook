@@ -364,16 +364,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const Header = () => {
   const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-2xl px-5"
+    className: "mx-auto flex max-w-screen-2xl items-center px-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "w-40 h-12 py-2 px-5"
+    className: "h-12 w-40 px-5 py-2"
   }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex items-center"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
@@ -391,106 +392,14 @@ const Header = () => {
     to: "/settings/general",
     className: linkClassName
   }, "Settings")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex-1 gap-6 items-center px-4"
+    className: "flex-1 items-center gap-6 px-4"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://simplybook.me",
     target: "_blank",
-    className: "float-right py-6 px-2[&.active]:font-bold"
+    className: "px-2[&.active]:font-bold float-right py-6"
   }, "Upgrade"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
-
-/***/ }),
-
-/***/ "./src/components/Fields/EmailField.jsx":
-/*!**********************************************!*\
-  !*** ./src/components/Fields/EmailField.jsx ***!
-  \**********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
-/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
-
-
-
-
-/**
- * TextField component
- * @param {string} label
- * @param {string} value
- * @param {function} onChange
- * @param {object} props
- * @return {JSX.Element}
- * @constructor
- */
-const EmailField = ({
-  label,
-  value,
-  onChange,
-  ...props
-}) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    label: label
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    type: 'email',
-    value: value,
-    onChange: onChange,
-    ...props
-  }));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (EmailField);
-
-/***/ }),
-
-/***/ "./src/components/Fields/SwitchField.jsx":
-/*!***********************************************!*\
-  !*** ./src/components/Fields/SwitchField.jsx ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
-/* harmony import */ var _Inputs_SwitchInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Inputs/SwitchInput */ "./src/components/Inputs/SwitchInput.tsx");
-
-
-
-
-/**
- * TextField component
- * @param {string} label
- * @param {string} value
- * @param {function} onChange
- * @param {object} props
- * @return {JSX.Element}
- * @constructor
- */
-const SwitchField = ({
-  label,
-  value,
-  onChange,
-  ...props
-}) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    label: label,
-    reverseLabel: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_SwitchInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    value: value,
-    onChange: onChange,
-    ...props
-  }));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SwitchField);
 
 /***/ }),
 
@@ -623,13 +532,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
-/* harmony import */ var _Fields_SwitchField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/SwitchField */ "./src/components/Fields/SwitchField.jsx");
-/* harmony import */ var _Fields_EmailField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/EmailField */ "./src/components/Fields/EmailField.jsx");
-/* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
-
-
+/* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 
 
 
@@ -637,9 +542,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const fieldComponents = {
   text: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"],
-  api: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"],
-  switch: _Fields_SwitchField__WEBPACK_IMPORTED_MODULE_2__["default"],
-  email: _Fields_EmailField__WEBPACK_IMPORTED_MODULE_3__["default"]
+  api: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"]
 };
 const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   setting,
@@ -658,7 +561,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
       className: "w-full"
     }, "Unknown field type: ", setting.type, " ", setting.id);
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_5__.Controller, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_3__.Controller, {
     name: setting.id // Use setting.id as the name
     ,
     control: control,
@@ -697,9 +600,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 
 
 
@@ -715,7 +616,7 @@ function FormFooter({
     isValidating,
     isValid,
     dirtyFields
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_5__.useFormState)({
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useFormState)({
     control
   });
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
@@ -1254,40 +1155,6 @@ var ButtonInput = function (_a) {
 
 /***/ }),
 
-/***/ "./src/components/Inputs/SwitchInput.tsx":
-/*!***********************************************!*\
-  !*** ./src/components/Inputs/SwitchInput.tsx ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _radix_ui_react_switch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @radix-ui/react-switch */ "./node_modules/@radix-ui/react-switch/dist/index.mjs");
-
-
-var SwitchInput = function (_a) {
-  var value = _a.value,
-    onChange = _a.onChange,
-    onError = _a.onError;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_switch__WEBPACK_IMPORTED_MODULE_1__.Root, {
-    checked: value,
-    onCheckedChange: function (checked) {
-      return onChange(checked);
-    },
-    className: "relative inline-flex h-6 w-11 items-center rounded-full bg-gray-200",
-    onError: onError,
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_switch__WEBPACK_IMPORTED_MODULE_1__.Thumb, {
-      className: "inline-block h-4 w-4 transform bg-white rounded-full transition-transform"
-    })
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SwitchInput);
-
-/***/ }),
-
 /***/ "./src/components/Inputs/TextInput.tsx":
 /*!*********************************************!*\
   !*** ./src/components/Inputs/TextInput.tsx ***!
@@ -1323,20 +1190,20 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 
 /**
  * Styled text input component
- * @param type
- * @param props
- * @return {JSX.Element}
- * @constructor
+ * @param props - Props for the input component
+ * @returns {JSX.Element} The rendered input element
  */
 var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
   var _b = _a.type,
     type = _b === void 0 ? "text" : _b,
     props = __rest(_a, ["type"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
+    ref: ref,
     type: type,
-    className: "\n          w-full rounded-md border border-gray-300 p-2 focus:border-blue-500\n          focus:outline-none focus:ring\n          disabled:bg-gray-200 disabled:cursor-not-allowed disabled:border-gray-200\n          "
+    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200"
   }, props));
 });
+TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),

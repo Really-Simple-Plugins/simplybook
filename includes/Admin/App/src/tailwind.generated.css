@@ -630,9 +630,6 @@ video {
 #simplybook_app .grid {
   display: grid;
 }
-#simplybook_app .contents {
-  display: contents;
-}
 #simplybook_app .hidden {
   display: none;
 }
@@ -650,9 +647,6 @@ video {
 }
 #simplybook_app .h-4 {
   height: 1rem;
-}
-#simplybook_app .h-5 {
-  height: 1.25rem;
 }
 #simplybook_app .h-6 {
   height: 1.5rem;
@@ -677,9 +671,6 @@ video {
 }
 #simplybook_app .w-40 {
   width: 10rem;
-}
-#simplybook_app .w-5 {
-  width: 1.25rem;
 }
 #simplybook_app .w-full {
   width: 100%;
@@ -773,11 +764,6 @@ video {
 }
 #simplybook_app .gap-8 {
   gap: 2rem;
-}
-#simplybook_app :is(.space-x-2 > :not([hidden]) ~ :not([hidden])) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
-  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
 }
 #simplybook_app :is(.space-y-2 > :not([hidden]) ~ :not([hidden])) {
   --tw-space-y-reverse: 0;
@@ -928,10 +914,6 @@ video {
   font-size: 1rem;
   line-height: 1.5rem;
 }
-#simplybook_app .text-sm {
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-}
 #simplybook_app .text-xl {
   font-size: 1.25rem;
   line-height: 1.75rem;
@@ -954,10 +936,6 @@ video {
 }
 #simplybook_app .text-black {
   color: rgb(0 0 0 / 0.8);
-}
-#simplybook_app .text-blue-500 {
-  --tw-text-opacity: 1;
-  color: rgb(59 130 246 / var(--tw-text-opacity));
 }
 #simplybook_app .text-blue-600 {
   --tw-text-opacity: 1;

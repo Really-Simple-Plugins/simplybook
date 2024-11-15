@@ -1,15 +1,11 @@
 import { Controller } from 'react-hook-form';
 import TextField from '../Fields/TextField';
-import SwitchField from '../Fields/SwitchField';
-import EmailField from '../Fields/EmailField';
 import ErrorBoundary from '../../components/Common/ErrorBoundary';
 import {memo} from 'react';
 
 const fieldComponents = {
   text: TextField,
   api: TextField,
-  switch: SwitchField,
-  email: EmailField,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {

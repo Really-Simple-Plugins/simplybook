@@ -1,7 +1,6 @@
 import FormScrollProgressLine from './FormScrollProgressLine';
 import ButtonInput from '../Inputs/ButtonInput';
 import { __ } from '@wordpress/i18n';
-import useSettingsData from '../../hooks/useSettingsData';
 import {useFormState} from 'react-hook-form';
 function FormFooter({ onSubmit, control }) {
   const { isDirty, isSubmitting, isValidating, isValid, dirtyFields } = useFormState({
