@@ -1,21 +1,17 @@
-import {createLazyFileRoute} from '@tanstack/react-router';
-import {__} from '@wordpress/i18n';
-import TextInput from '../../components/Inputs/TextInput';
-import ButtonInput from '../../components/Inputs/ButtonInput';
-import TextField from '../../components/Fields/TextField';
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { __ } from "@wordpress/i18n";
+import TextInput from "../../components/Inputs/TextInput";
+import ButtonInput from "../../components/Inputs/ButtonInput";
+import TextField from "../../components/Fields/TextField";
 
-export const Route = createLazyFileRoute('/onboarding/information-check')({
+export const Route = createLazyFileRoute("/onboarding/information-check")({
   component: () => {
-
     return (
       <>
         <div className="col-span-4 col-start-3 row-span-2 my-12 flex flex-col text-black">
           <div className={"my-1 text-center"}>
-            <h2 className={" text-base font-light text-black"}>
-              {__(
-                "Nice to meet you Aert!",
-                "simplybook",
-              )}
+            <h2 className={"text-base font-light text-black"}>
+              {__("Nice to meet you Aert!", "simplybook")}
             </h2>
             <h1 className={"mt-2 text-3xl font-semibold text-black"}>
               {__("Is this information correct?", "simplybook")}

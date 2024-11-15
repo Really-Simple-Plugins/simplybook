@@ -1,7 +1,7 @@
-import fetchRequest from './fetchRequest';
-import glue from '../helpers/glue';
-import errorHandler from '../helpers/errorHandler';
-import {API_BASE_PATH, NONCE} from '../config';
+import fetchRequest from "./fetchRequest";
+import glue from "../helpers/glue";
+import errorHandler from "../helpers/errorHandler";
+import { API_BASE_PATH, NONCE } from "../config";
 
 /**
  * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
@@ -10,13 +10,18 @@ import {API_BASE_PATH, NONCE} from '../config';
  * @param data
  * @return {Promise<void>}
  */
-const request = async (path, method = 'POST', data = {}) => {
+const request = async (path, method = "POST", data = {}) => {
   const args = { path, method, data };
 
-  args.path = API_BASE_PATH + args.path + glue() + '&token=' +  Math.random().toString(36).substring(2, 7);
+  args.path =
+    API_BASE_PATH +
+    args.path +
+    glue() +
+    "&token=" +
+    Math.random().toString(36).substring(2, 7);
   args.data = { ...data, nonce: NONCE };
 
-  console.log('request : ', args);
+  console.log("request : ", args);
   // if (method === 'POST') {
   //
   // } else {

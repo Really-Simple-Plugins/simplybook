@@ -1,9 +1,8 @@
-const BlockFooter = ({children}) => {
-
+const BlockFooter = ({ children }) => {
   return (
-      <div className="py-4 px-5 flex justify-between items-center">
-        {children}
-      </div>
-  )
-}
+    <div className="flex items-center justify-between px-5 py-4">
+      {children}
+    </div>
+  );
+};
 export default BlockFooter;

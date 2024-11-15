@@ -1,6 +1,6 @@
-import React from 'react';
-import * as Select from '@radix-ui/react-select';
-import { clsx as classnames } from 'clsx';
+import React from "react";
+import * as Select from "@radix-ui/react-select";
+import { clsx as classnames } from "clsx";
 
 interface SelectOption {
   value: string;
@@ -24,13 +24,13 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
       <Select.Root value={value} onValueChange={(value) => onChange(value)}>
         <Select.Trigger
           ref={ref}
-          className="w-full flex justify-between items-center p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:border-blue-500"
+          className="flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring"
         >
           <Select.Value placeholder="Select an option…" />
           <Select.Icon className="ml-2">v</Select.Icon>
         </Select.Trigger>
         <Select.Portal>
-          <Select.Content className="bg-white border border-gray-300 rounded-md shadow-lg">
+          <Select.Content className="rounded-md border border-gray-300 bg-white shadow-lg">
             <Select.ScrollUpButton className="flex items-center justify-center p-2">
               {/*<ChevronUpIcon />*/}
             </Select.ScrollUpButton>
@@ -48,14 +48,15 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
         </Select.Portal>
       </Select.Root>
     );
-  }
+  },
 );
 
-SelectInput.displayName = 'SelectInput';
+SelectInput.displayName = "SelectInput";
 
 export default SelectInput;
 
-interface SelectItemProps extends React.ComponentPropsWithoutRef<typeof Select.Item> {
+interface SelectItemProps
+  extends React.ComponentPropsWithoutRef<typeof Select.Item> {
   children: React.ReactNode;
   className?: string;
 }
@@ -71,8 +72,8 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
       <Select.Item
         ref={ref}
         className={classnames(
-          'flex justify-between items-center p-2 rounded-md cursor-pointer hover:bg-gray-100 focus:bg-gray-200',
-          className
+          "flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100 focus:bg-gray-200",
+          className,
         )}
         {...props}
       >
@@ -80,10 +81,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         <Select.ItemIndicator className="ml-2">Check</Select.ItemIndicator>
       </Select.Item>
     );
-  }
+  },
 );
 
-SelectItem.displayName = 'SelectItem';
+SelectItem.displayName = "SelectItem";
 
 export { SelectItem };
-

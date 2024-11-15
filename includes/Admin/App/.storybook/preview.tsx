@@ -1,6 +1,6 @@
-import * as React from 'react';
+import * as React from "react";
 import type { Preview } from "@storybook/react";
-import '../src/tailwind.generated.css';
+import "../src/tailwind.generated.css";
 
 const preview: Preview = {
   parameters: {
@@ -16,7 +16,7 @@ const preview: Preview = {
       <div id={"simplybook_app"}>
         <Story />
       </div>
-    )
+    ),
   ],
 };
 

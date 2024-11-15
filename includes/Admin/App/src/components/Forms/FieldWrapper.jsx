@@ -17,33 +17,35 @@ const FieldWrapper = ({
   help,
   error,
   reverseLabel = false,
-  className ='',
+  className = "",
   inputId,
   children,
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
 
   return (
-      <div className={`flex flex-col w-full ${className} pt-4`}>
-        <div className={`flex w-full flex-col ${colReverse}`}>
-          <Label.Root
-              className="font-medium text-gray-700 cursor-pointer pb-1"
-              htmlFor={inputId} // Associate the label with the input ID
-          >
-            {label}
-          </Label.Root>
-          {help && (
-              <p className="text-xs font-light text-gray-600 pb-1">{help}</p> // Placeholder for the help component
-          )}
-          {children}
-        </div>
-        {error && (
-            <p className="w-full text-xs pb-1font-light text-red-600">{error}</p>
+    <div className={`flex w-full flex-col ${className} pt-4`}>
+      <div className={`flex w-full flex-col ${colReverse}`}>
+        <Label.Root
+          className="cursor-pointer pb-1 font-medium text-gray-700"
+          htmlFor={inputId} // Associate the label with the input ID
+        >
+          {label}
+        </Label.Root>
+        {help && (
+          <p className="pb-1 text-xs font-light text-gray-600">{help}</p> // Placeholder for the help component
         )}
-        {context && (
-            <p className="w-full pb-1 text-xs font-light text-gray-600">{context}</p>
-        )}
+        {children}
       </div>
+      {error && (
+        <p className="pb-1font-light w-full text-xs text-red-600">{error}</p>
+      )}
+      {context && (
+        <p className="w-full pb-1 text-xs font-light text-gray-600">
+          {context}
+        </p>
+      )}
+    </div>
   );
 };
 

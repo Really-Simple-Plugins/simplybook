@@ -4,14 +4,14 @@
 export const NONCE = simplybook.nonce;
 
 // Base URL for SimplyBook API requests
-export const API_BASE_PATH = 'simplybook/v1/';
+export const API_BASE_PATH = "simplybook/v1/";
 
 // URLs for the site and AJAX endpoint
-export const SITE_URL = getSiteUrl('site_url');
-export const AJAX_URL = getSiteUrl('ajax_url');
+export const SITE_URL = getSiteUrl("site_url");
+export const AJAX_URL = getSiteUrl("ajax_url");
 
 // Text domain for SimplyBook translations
-export const TEXT_DOMAIN = 'simplybook';
+export const TEXT_DOMAIN = "simplybook";
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
@@ -24,8 +24,8 @@ function getSiteUrl(type) {
   let url = simplybook[type];
 
   // If the page is loaded over HTTPS and the URL is not, update it to HTTPS
-  if (window.location.protocol === 'https:' && !url.includes('https://')) {
-    url = url.replace('http://', 'https://');
+  if (window.location.protocol === "https:" && !url.includes("https://")) {
+    url = url.replace("http://", "https://");
   }
 
   return url;

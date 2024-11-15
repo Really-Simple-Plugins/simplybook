@@ -1,4 +1,4 @@
-import request from '../requests/request';
+import request from "../requests/request";
 
 /**
  * Get settings fields (with or without values)
@@ -6,9 +6,9 @@ import request from '../requests/request';
  * @return {Promise<void>}
  */
 const getSettingsFields = async ({ withValues = true }) => {
-  const res =  await request('settings/get_fields', 'POST', { withValues });
+  const res = await request("settings/get_fields", "POST", { withValues });
 
-  console.log('getSettingsFields', res);
+  console.log("getSettingsFields", res);
   return res.data;
 };
 

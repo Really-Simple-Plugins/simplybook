@@ -1,6 +1,6 @@
-import {forwardRef} from 'react';
-import TextInput from '../Inputs/TextInput';
-import FieldWrapper from '../Forms/FieldWrapper';
+import { forwardRef } from "react";
+import TextInput from "../Inputs/TextInput";
+import FieldWrapper from "../Forms/FieldWrapper";
 
 /**
  * TextField component
@@ -13,35 +13,24 @@ import FieldWrapper from '../Forms/FieldWrapper';
  * @param {object} props
  * @return {JSX.Element}
  */
-const TextField = forwardRef(({
-  field,
-  fieldState,
-  label,
-  help,
-  context,
-  className,
-  ...props
-}, ref) => {
-  // Generate a unique ID for the input if not provided
-  const inputId = props.id || field.name;
+const TextField = forwardRef(
+  ({ field, fieldState, label, help, context, className, ...props }, ref) => {
+    // Generate a unique ID for the input if not provided
+    const inputId = props.id || field.name;
 
-  return (
+    return (
       <FieldWrapper
-          label={label}
-          help={help}
-          error={fieldState.error?.message}
-          context={context}
-          className={className}
-          inputId={inputId}
+        label={label}
+        help={help}
+        error={fieldState.error?.message}
+        context={context}
+        className={className}
+        inputId={inputId}
       >
-        <TextInput
-            {...field}
-            id={inputId}
-            type="text"
-            {...props}
-        />
+        <TextInput {...field} id={inputId} type="text" {...props} />
       </FieldWrapper>
-  );
-});
+    );
+  },
+);
 
 export default TextField;

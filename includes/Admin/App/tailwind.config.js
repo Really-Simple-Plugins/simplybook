@@ -19,5 +19,5 @@ module.exports = {
     extend: {},
   },
   plugins: [],
-  important: '#simplybook_app',
+  important: "#simplybook_app",
 };
