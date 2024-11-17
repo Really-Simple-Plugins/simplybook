@@ -1,11 +1,10 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { __ } from "@wordpress/i18n";
-import { useState } from "react";
 import Header from "../components/Common/Header.jsx";
-import Block from "../components/Blocks/Block.jsx";
-import BlockContent from "../components/Blocks/BlockContent.jsx";
-import BlockHeading from "../components/Blocks/BlockHeading.jsx";
-import BlockFooter from "../components/Blocks/BlockFooter.jsx";
+import Progress from "../components/Dashboard/Progress";
+import Bookings from "../components/Dashboard/Bookings";
+import Management from "../components/Dashboard/Management";
+import TipsTricks from "../components/Dashboard/TipsTricks";
+import OurPlugins from "../components/Dashboard/OurPlugins";
 
 export const Route = createLazyFileRoute("/")({
   component: Dashboard,
@@ -17,16 +16,11 @@ function Dashboard() {
       <Header />
       <div className="mx-auto flex max-w-screen-2xl">
         <div className="m-5 grid min-h-full w-full grid-cols-12 grid-rows-5 gap-5">
-          <Block colSpan={6} rowSpan={3}>
-            <BlockHeading title={__("Welcome", "simplybook")} controls={null} />
-            <BlockContent>Content</BlockContent>
-            <BlockFooter>Footer</BlockFooter>
-          </Block>
-          <Block colSpan={6} rowSpan={3}>
-            <BlockHeading title={__("Welcome", "simplybook")} controls={null} />
-            <BlockContent>Content</BlockContent>
-            <BlockFooter>Footer</BlockFooter>
-          </Block>
+          <Progress />
+          <Bookings />
+          <Management />
+          <TipsTricks />
+          <OurPlugins />
         </div>
       </div>
     </>

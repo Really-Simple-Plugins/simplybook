@@ -4,10 +4,22 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      color: {
-        primary: "#06adef",
-        secondary: "#0b3052",
-        tertiary: "#ff3259",
+      colors: {
+        primary: {
+          light: "#b3e4f9",
+          DEFAULT: "#06adef",
+          dark: "#055b78",
+        },
+        secondary: {
+          light: "#ffb3c1",
+          DEFAULT: "#ff3259",
+          dark: "#7f192c",
+        },
+        tertiary: {
+          light: "#f0f4fe",
+          DEFAULT: "#8191bb",
+          dark: "#0b3052",
+        },
       },
       textColor: {
         black: "rgb(0 0 0 / 0.8)",
