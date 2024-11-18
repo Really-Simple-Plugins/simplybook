@@ -245,7 +245,10 @@ const OnboardingStep = ({
   subtitle,
   rightColumn,
   bottomText,
-  buttonLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Next", "simplybook")
+  primaryButton = {
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Next", "simplybook")
+  },
+  secondaryButton = null
 }) => {
   const {
     getURLForStep,
@@ -270,18 +273,32 @@ const OnboardingStep = ({
     mode: "onBlur"
   });
   const currentStep = getCurrentStep(path);
-  const onSubmit = formData => {
+  const onSubmit = async (formData, buttonType = 'primary') => {
+    let updatedFormData = {
+      ...formData
+    };
     if (currentStep.beforeSubmit) {
-      currentStep.beforeSubmit(formData);
+      currentStep.beforeSubmit(updatedFormData);
     }
-    if (isLastStep(path)) {
+    if (buttonType === 'primary' && primaryButton.modifyData) {
+      updatedFormData = primaryButton.modifyData(updatedFormData);
+    } else if (buttonType === 'secondary' && secondaryButton.modifyData) {
+      updatedFormData = secondaryButton.modifyData(updatedFormData);
+    }
+    updateData(updatedFormData);
+    if (buttonType === 'primary' && primaryButton.navigateTo) {
+      navigate({
+        to: primaryButton.navigateTo
+      });
+    } else if (buttonType === 'secondary' && secondaryButton.navigateTo) {
+      navigate({
+        to: secondaryButton.navigateTo
+      });
+    } else if (isLastStep(path)) {
       navigate({
         to: "/"
       });
-      // @todo: action to save and redirect to the dashboard
-      return;
     } else {
-      updateData(formData);
       navigate({
         to: getURLForStep(getCurrentStepId(path) + 1)
       });
@@ -297,16 +314,19 @@ const OnboardingStep = ({
     className: "mt-2 text-base font-light text-black"
   }, subtitle)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex flex-col"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
-    onSubmit: handleSubmit(onSubmit)
-  }, currentStep.fields.map(field => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FormField__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", null, currentStep.fields.map(field => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FormField__WEBPACK_IMPORTED_MODULE_2__["default"], {
     setting: field,
     key: field.id,
     control: control
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Fields_ButtonField__WEBPACK_IMPORTED_MODULE_3__["default"], {
     btnVariant: "primary",
-    label: buttonLabel,
-    context: bottomText
+    label: primaryButton.label,
+    context: bottomText,
+    onClick: handleSubmit(data => onSubmit(data, 'primary'))
+  }), secondaryButton && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Fields_ButtonField__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    btnVariant: "tertiary",
+    label: secondaryButton.label,
+    onClick: handleSubmit(data => onSubmit(data, 'secondary'))
   })))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "col-span-4 col-start-7 row-span-2 my-12"
   }, rightColumn));
@@ -328,23 +348,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Onboarding/OnboardingStep */ "./src/components/Onboarding/OnboardingStep.jsx");
+/* harmony import */ var _stores_onboardingStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../stores/onboardingStore */ "./src/stores/onboardingStore.js");
+
 
 
 
 
 const path = "/onboarding/tips-and-tricks";
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)(path)({
-  component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    path: path,
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Tips & Tricks", "simplybook"),
-    subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Get weekly tips & tricks for your business and working with SimplyBook.me to book success.", "simplybook"),
-    buttonLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue", "simplybook"),
-    rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right")
-  })
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)(path)({
+  component: () => {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      path: path,
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Tips & Tricks", "simplybook"),
+      subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Get weekly tips & tricks for your business and working with SimplyBook.me to book success.", "simplybook"),
+      primaryButton: {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue", "simplybook"),
+        modifyData: formData => ({
+          ...formData,
+          "tips-and-tricks": true
+        })
+      },
+      secondaryButton: {
+        label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Skip", "simplybook"),
+        modifyData: formData => ({
+          ...formData,
+          "tips-and-tricks": false
+        })
+      },
+      rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right")
+    });
+  }
 });
 
 /***/ }),

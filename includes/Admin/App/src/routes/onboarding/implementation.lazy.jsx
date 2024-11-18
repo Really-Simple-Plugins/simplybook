@@ -5,13 +5,22 @@ import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 const path = "/onboarding/implementation";
 
 export const Route = createLazyFileRoute(path)({
-  component: () => (
-    <OnboardingStep
-      path={path}
-      title={__("Alpha Bedum Beauty & Welness", "simplybook")}
-      subtitle={__("Implement SimplyBook.me", "simplybook")}
-      buttonLabel={__("Continue Configuration", "simplybook")}
-      rightColumn={<p>right</p>}
-    />
-  ),
+  component: () => {
+    return (
+      <OnboardingStep
+        path={path}
+        title={__("Implementation", "simplybook")}
+        subtitle={__("Choose how to implement SimplyBook.me", "simplybook")}
+        primaryButton={{
+          label: __("Continue Configuration", "simplybook"),
+          navigateTo: "/settings/general",
+        }}
+        secondaryButton={{
+          label: __("Skip and go to Dashboard", "simplybook"),
+          navigateTo: "/",
+        }}
+        rightColumn={<p>right</p>}
+      />
+    );
+  },
 });

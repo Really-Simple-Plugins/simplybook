@@ -45,8 +45,62 @@ class App {
             }
         </style>
         <div id="simplybook_app">
+  <!-- Header -->
+  <div class="bg-white">
+    <div class="mx-auto flex max-w-screen-2xl items-center px-5">
+      <div>
+        <img src="<?php echo SIMPLYBOOK_URL . 'includes/Admin/App/assets/img/logo.svg'; ?>" alt="SimplyBook" class="h-12 w-40 px-5 py-2">
+      </div>
+      <div class="flex items-center blur-sm animate-pulse">
+        <div class="py-6 px-5 border-b-4 border-transparent">Dashboard</div>
+        <div class="py-6 px-5 border-b-4 border-transparent ml-2">Clients 0</div>
+        <div class="py-6 px-5 border-b-4 border-transparent ml-2">Calendar 0</div>
+        <div class="py-6 px-5 border-b-4 border-transparent ml-2">Settings</div>
+      </div>
+    </div>
+  </div>
 
-        </div>
+  <!-- Content Grid -->
+  <div class="mx-auto flex max-w-screen-2xl">
+    <div class="m-5 grid min-h-full w-full grid-cols-12 grid-rows-5 gap-5">
+      <!-- Left Block -->
+      <div class="col-span-6 row-span-2 bg-white shadow-md rounded-xl p-5">
+        <div class="h-6 w-1/2 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+      </div>
+
+      <!-- Middle Block -->
+      <div class="col-span-3 row-span-2 bg-white shadow-md rounded-xl p-5">
+        <div class="h-6 w-1/2 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+      </div>
+
+      <!-- Right Block -->
+      <div class="col-span-3 row-span-2 bg-white shadow-md rounded-xl p-5">
+        <div class="h-6 w-1/2 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-full px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+        <div class="h-6 w-5/6 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
+      </div>
+    </div>
+  </div>
+</div>
 		<?php
 	}
 
@@ -59,6 +113,15 @@ class App {
 			error_log( 'No JS data found' );
 			return;
 		}
+
+		// Enqueue the Tailwind CSS file
+		wp_enqueue_style(
+			'simplybook-tailwind',
+			plugins_url('/src/tailwind.generated.css', __FILE__),
+			[],
+			$js_data['version']
+		);
+
 		wp_enqueue_script(
 			'simplybook',
 			plugins_url( '/build/' . $js_data['js_file'], __FILE__ ),

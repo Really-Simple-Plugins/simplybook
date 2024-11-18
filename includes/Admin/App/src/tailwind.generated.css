@@ -587,10 +587,6 @@ video {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
-#simplybook_app .my-1 {
-  margin-top: 0.25rem;
-  margin-bottom: 0.25rem;
-}
 #simplybook_app .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -606,6 +602,9 @@ video {
 #simplybook_app .mb-8 {
   margin-bottom: 2rem;
 }
+#simplybook_app .ml-1 {
+  margin-left: 0.25rem;
+}
 #simplybook_app .ml-2 {
   margin-left: 0.5rem;
 }
@@ -617,12 +616,6 @@ video {
 }
 #simplybook_app .mt-4 {
   margin-top: 1rem;
-}
-#simplybook_app .ml-1 {
-  margin-left: 0.25rem;
-}
-#simplybook_app .mt-1 {
-  margin-top: 0.25rem;
 }
 #simplybook_app .block {
   display: block;
@@ -648,6 +641,12 @@ video {
 #simplybook_app .h-full {
   height: 100%;
 }
+#simplybook_app .h-\[500px\] {
+  height: 500px;
+}
+#simplybook_app .h-6 {
+  height: 1.5rem;
+}
 #simplybook_app .max-h-48 {
   max-height: 12rem;
 }
@@ -666,6 +665,24 @@ video {
 #simplybook_app .w-full {
   width: 100%;
 }
+#simplybook_app .w-24 {
+  width: 6rem;
+}
+#simplybook_app .w-1\/5 {
+  width: 20%;
+}
+#simplybook_app .w-4\/5 {
+  width: 80%;
+}
+#simplybook_app .w-5\/6 {
+  width: 83.333333%;
+}
+#simplybook_app .w-3\/4 {
+  width: 75%;
+}
+#simplybook_app .w-2\/3 {
+  width: 66.666667%;
+}
 #simplybook_app .max-w-7xl {
   max-width: 80rem;
 }
@@ -683,6 +700,15 @@ video {
 }
 #simplybook_app .flex-1 {
   flex: 1 1 0%;
+}
+@keyframes pulse {
+
+  50% {
+    opacity: .5;
+  }
+}
+#simplybook_app .animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 #simplybook_app .cursor-not-allowed {
   cursor: not-allowed;
@@ -948,11 +974,11 @@ video {
 #simplybook_app .font-medium {
   font-weight: 500;
 }
-#simplybook_app .font-semibold {
-  font-weight: 600;
-}
 #simplybook_app .font-normal {
   font-weight: 400;
+}
+#simplybook_app .font-semibold {
+  font-weight: 600;
 }
 #simplybook_app .text-black {
   color: rgb(0 0 0 / 0.8);
@@ -968,10 +994,6 @@ video {
 #simplybook_app .text-gray-600 {
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity));
-}
-#simplybook_app .text-gray-700 {
-  --tw-text-opacity: 1;
-  color: rgb(55 65 81 / var(--tw-text-opacity));
 }
 #simplybook_app .text-red-600 {
   --tw-text-opacity: 1;
@@ -1005,6 +1027,18 @@ video {
   --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+#simplybook_app .blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+#simplybook_app .blur-md {
+  --tw-blur: blur(12px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+#simplybook_app .blur-sm {
+  --tw-blur: blur(4px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 #simplybook_app .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);

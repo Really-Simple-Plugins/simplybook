@@ -1,14 +1,10 @@
 import { render, createRoot } from "@wordpress/element";
 
-import "./tailwind.css";
-
 import {
   QueryClient,
   QueryCache,
   QueryClientProvider,
 } from "@tanstack/react-query";
-
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import {
   RouterProvider,
@@ -34,6 +30,7 @@ let config = {
       staleTime: HOUR_IN_SECONDS * 1000, // hour in ms
       refetchOnWindowFocus: false,
       retry: false,
+      suspense: false,
     },
   },
 };
@@ -59,28 +56,38 @@ const router = createRouter({
   defaultPreloadStaleTime: 0,
 });
 
+// Lazy load dev tools
+const ReactQueryDevtools = React.lazy(() =>
+  import("@tanstack/react-query-devtools").then((d) => ({
+    default: d.ReactQueryDevtools,
+  })),
+);
+
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("simplybook_app");
   if (container) {
-    if (createRoot) {
-      createRoot(container).render(
-        <React.StrictMode>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools />
-          </QueryClientProvider>
-        </React.StrictMode>,
-      );
-    } else {
-      render(
-        <React.StrictMode>
-          <QueryClientProvider client={queryClient}>
-            <RouterProvider router={router} />
-            <ReactQueryDevtools />
-          </QueryClientProvider>
-        </React.StrictMode>,
-        container,
-      );
-    }
+    // Disable React Query's suspense by default
+    config.defaultOptions.queries.suspense = false;
+    
+    // Don't clear the container immediately
+    const root = createRoot(container, {
+      hydrate: true, // Tell React to hydrate instead of render
+      onRecoverableError: (err) => {
+        console.warn('Hydration error (usually harmless):', err);
+      },
+    });
+
+    root.render(
+      <React.StrictMode>
+        <QueryClientProvider client={queryClient}>
+          <RouterProvider router={router} />
+          {process.env.NODE_ENV === "development" && (
+            <React.Suspense>
+              <ReactQueryDevtools />
+            </React.Suspense>
+          )}
+        </QueryClientProvider>
+      </React.StrictMode>,
+    );
   }
 });
