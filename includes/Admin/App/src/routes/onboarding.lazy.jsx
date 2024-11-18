@@ -5,9 +5,11 @@ import OnboardingFooter from "../components/Onboarding/OnboardingFooter";
 
 export const Route = createLazyFileRoute("/onboarding")({
   component: () => <OnboardingPage />,
+  // navigate to first step 
 });
 
 function OnboardingPage() {
+
   return (
     <div className={"bg-white"}>
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between">

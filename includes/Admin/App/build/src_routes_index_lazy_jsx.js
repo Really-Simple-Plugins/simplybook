@@ -267,6 +267,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
 /* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -336,7 +339,7 @@ var Bookings = function () {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "grid auto-rows-max grid-cols-4 gap-2 p-2",
           children: DataList.map(function (block, index) {
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "text-2xl font-bold",
                 children: block.icon
@@ -350,7 +353,7 @@ var Bookings = function () {
                 className: "text-2xl font-bold",
                 children: block.value
               })]
-            });
+            }, index);
           })
         })
       })]
@@ -564,16 +567,19 @@ var ButtonInput = function (_a) {
   var children = _a.children,
     onClick = _a.onClick,
     _b = _a.btnVariant,
-    btnVariant = _b === void 0 ? "primary" : _b,
+    btnVariant = _b === void 0 ? "secondary" : _b,
+    // default is secondary because there needs to be a good reason to use primary
     _c = _a.disabled,
+    // default is secondary because there needs to be a good reason to use primary
     disabled = _c === void 0 ? false : _c,
     props = __rest(_a, ["children", "onClick", "btnVariant", "disabled"]);
   // Base styles for both variants
-  var baseStyles = "font-bold py-2 px-6 rounded-md transition-all duration-200";
+  var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
   // Variants for primary and secondary buttons
   var variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-    secondary: "border border-blue-600 text-blue-600 hover:bg-blue-100 active:bg-blue-200"
+    primary: "bg-secondary text-white hover:bg-secondary-dark",
+    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
+    tertiary: "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light"
   };
   // Disabled styles
   var disabledStyles = "opacity-50 cursor-not-allowed";

@@ -13,12 +13,12 @@ module.exports = {
         secondary: {
           light: "#ffb3c1",
           DEFAULT: "#ff3259",
-          dark: "#7f192c",
+          dark: "#950c28",
         },
         tertiary: {
           light: "#f0f4fe",
-          DEFAULT: "#8191bb",
-          dark: "#0b3052",
+          DEFAULT: "#0c3052",
+          dark: "#061f32",
         },
       },
       textColor: {

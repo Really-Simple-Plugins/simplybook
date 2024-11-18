@@ -131,6 +131,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)("/onboarding")({
   component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(OnboardingPage, null)
+  // navigate to first step 
 });
 function OnboardingPage() {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {

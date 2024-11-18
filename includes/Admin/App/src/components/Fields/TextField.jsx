@@ -15,19 +15,27 @@ import FieldWrapper from "../Forms/FieldWrapper";
  */
 const TextField = forwardRef(
   ({ field, fieldState, label, help, context, className, ...props }, ref) => {
-    // Generate a unique ID for the input if not provided
     const inputId = props.id || field.name;
-
+    const errorMessage = fieldState?.error?.message;
+  
     return (
       <FieldWrapper
         label={label}
         help={help}
-        error={fieldState.error?.message}
+        error={errorMessage}
         context={context}
         className={className}
         inputId={inputId}
+        required={props.required}
+        context={context}
       >
-        <TextInput {...field} id={inputId} type="text" {...props} />
+        <TextInput 
+          {...field} 
+          id={inputId} 
+          type="text" 
+          aria-invalid={!!errorMessage}
+          {...props} 
+        />
       </FieldWrapper>
     );
   },

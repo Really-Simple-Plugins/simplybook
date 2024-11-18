@@ -9,6 +9,7 @@ import * as Label from "@radix-ui/react-label";
  * @param {boolean} reverseLabel
  * @param {string} className
  * @param {string} inputId
+ * @param {boolean} required
  * @param {JSX.Element} children
  */
 const FieldWrapper = ({
@@ -19,6 +20,7 @@ const FieldWrapper = ({
   reverseLabel = false,
   className = "",
   inputId,
+  required = false,
   children,
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
@@ -32,6 +34,7 @@ const FieldWrapper = ({
         >
           {label}
         </Label.Root>
+        {required && <span className="text-red-600">Required</span>}
         {help && (
           <p className="pb-1 text-xs font-light text-gray-600">{help}</p> // Placeholder for the help component
         )}

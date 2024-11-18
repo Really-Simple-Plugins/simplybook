@@ -73,7 +73,6 @@ const getSettingsFields = async ({
   const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get_fields", "POST", {
     withValues
   });
-  console.log("getSettingsFields", res);
   return res.data;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
@@ -144,7 +143,6 @@ const fetchRequest = async (path, method = "POST", data = {}, url) => {
     method,
     data
   };
-  console.log(path);
   const test_url = "simplybook/v1/settings/get_fields";
   console.log(test_url);
   console.log("Fetch: Requesting data from " + path + " using " + method + " method");
@@ -311,19 +309,22 @@ const TextField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   className,
   ...props
 }, ref) => {
-  // Generate a unique ID for the input if not provided
   const inputId = props.id || field.name;
+  const errorMessage = fieldState?.error?.message;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
     help: help,
-    error: fieldState.error?.message,
+    error: errorMessage,
     context: context,
     className: className,
-    inputId: inputId
+    inputId: inputId,
+    required: props.required,
+    context: context
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
     ...field,
     id: inputId,
     type: "text",
+    "aria-invalid": !!errorMessage,
     ...props
   }));
 });
@@ -356,6 +357,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {boolean} reverseLabel
  * @param {string} className
  * @param {string} inputId
+ * @param {boolean} required
  * @param {JSX.Element} children
  */
 const FieldWrapper = ({
@@ -366,6 +368,7 @@ const FieldWrapper = ({
   reverseLabel = false,
   className = "",
   inputId,
+  required = false,
   children
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
@@ -376,7 +379,9 @@ const FieldWrapper = ({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
     className: "cursor-pointer pb-1 font-medium text-gray-700",
     htmlFor: inputId // Associate the label with the input ID
-  }, label), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+  }, label), required && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "text-red-600"
+  }, "Required"), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     className: "pb-1 text-xs font-light text-gray-600"
   }, help) // Placeholder for the help component
   , children), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
@@ -401,9 +406,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -430,11 +438,43 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
       className: "w-full"
     }, "Unknown field type: ", setting.type, " ", setting.id);
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_3__.Controller, {
+
+  // rules	Object		Validation rules in the same format for register options, which includes:
+
+  // only set what is available and set: required, min, max, minLength, maxLength, pattern, validate
+  const validationRules = {};
+  if (setting.required) {
+    validationRules.required = {
+      value: true,
+      message: setting.requiredMessage || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This field is required", "simplybook")
+    };
+  }
+  if (setting.validation?.regex) {
+    validationRules.pattern = {
+      value: new RegExp(setting.validation.regex),
+      message: setting.validation.message || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Invalid format", "simplybook")
+    };
+  }
+  if (setting.min) {
+    validationRules.min = setting.min;
+  }
+  if (setting.max) {
+    validationRules.max = setting.max;
+  }
+  if (setting.minLength) {
+    validationRules.minLength = setting.minLength;
+  }
+  if (setting.maxLength) {
+    validationRules.maxLength = setting.maxLength;
+  }
+  if (setting.validate) {
+    validationRules.validate = setting.validate;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
     name: setting.id // Use setting.id as the name
     ,
     control: control,
-    rules: setting.validation,
+    rules: validationRules,
     defaultValue: setting.value || setting.default,
     render: ({
       field,
@@ -442,8 +482,11 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(FieldComponent, {
       field: field,
       fieldState: fieldState,
+      required: setting.required,
       label: setting.label || setting.id,
       disabled: props.settingsIsUpdating || setting.disabled,
+      context: setting.context,
+      help: setting.help,
       options: setting.options,
       ...props
     })
@@ -887,16 +930,19 @@ var ButtonInput = function (_a) {
   var children = _a.children,
     onClick = _a.onClick,
     _b = _a.btnVariant,
-    btnVariant = _b === void 0 ? "primary" : _b,
+    btnVariant = _b === void 0 ? "secondary" : _b,
+    // default is secondary because there needs to be a good reason to use primary
     _c = _a.disabled,
+    // default is secondary because there needs to be a good reason to use primary
     disabled = _c === void 0 ? false : _c,
     props = __rest(_a, ["children", "onClick", "btnVariant", "disabled"]);
   // Base styles for both variants
-  var baseStyles = "font-bold py-2 px-6 rounded-md transition-all duration-200";
+  var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
   // Variants for primary and secondary buttons
   var variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-    secondary: "border border-blue-600 text-blue-600 hover:bg-blue-100 active:bg-blue-200"
+    primary: "bg-secondary text-white hover:bg-secondary-dark",
+    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
+    tertiary: "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light"
   };
   // Disabled styles
   var disabledStyles = "opacity-50 cursor-not-allowed";

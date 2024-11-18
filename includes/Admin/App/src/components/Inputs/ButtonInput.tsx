@@ -8,7 +8,7 @@ type ButtonInputProps = {
     to: string;
     from?: string;
   };
-  btnVariant?: "primary" | "secondary";
+  btnVariant?: "primary" | "secondary" | "tertiary";
   disabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -19,19 +19,20 @@ type ButtonInputProps = {
 const ButtonInput: React.FC<ButtonInputProps> = ({
   children,
   onClick,
-  btnVariant = "primary",
+  btnVariant = "secondary", // default is secondary because there needs to be a good reason to use primary
   disabled = false,
   ...props
 }) => {
   // Base styles for both variants
   const baseStyles =
-    "font-bold py-2 px-6 rounded-md transition-all duration-200";
+    "font-semibold py-2 px-6 rounded-full transition-all duration-200";
 
   // Variants for primary and secondary buttons
   const variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-    secondary:
-      "border border-blue-600 text-blue-600 hover:bg-blue-100 active:bg-blue-200",
+    primary: "bg-secondary text-white hover:bg-secondary-dark",
+    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
+    tertiary:
+      "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light",
   };
 
   // Disabled styles

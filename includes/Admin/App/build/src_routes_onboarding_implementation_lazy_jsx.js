@@ -1,6 +1,57 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_implementation_lazy_jsx"],{
 
+/***/ "./src/components/Fields/ButtonField.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Fields/ButtonField.jsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
+
+
+
+
+
+/**
+ * TextField component
+ * @param {object} field - Provided by react-hook-form's Controller
+ * @param {object} fieldState - Contains validation state
+ * @param {string} label
+ * @param {string} help
+ * @param {string} context
+ * @param {string} className
+ * @param {object} props
+ * @return {JSX.Element}
+ */
+const ButtonField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
+  field,
+  label,
+  help,
+  context,
+  className,
+  ...props
+}, ref) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    help: help,
+    context: context,
+    className: className
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    ...field,
+    ...props
+  }, label));
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonField);
+
+/***/ }),
+
 /***/ "./src/components/Fields/TextField.jsx":
 /*!*********************************************!*\
   !*** ./src/components/Fields/TextField.jsx ***!
@@ -40,19 +91,22 @@ const TextField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   className,
   ...props
 }, ref) => {
-  // Generate a unique ID for the input if not provided
   const inputId = props.id || field.name;
+  const errorMessage = fieldState?.error?.message;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
     help: help,
-    error: fieldState.error?.message,
+    error: errorMessage,
     context: context,
     className: className,
-    inputId: inputId
+    inputId: inputId,
+    required: props.required,
+    context: context
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
     ...field,
     id: inputId,
     type: "text",
+    "aria-invalid": !!errorMessage,
     ...props
   }));
 });
@@ -85,6 +139,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param {boolean} reverseLabel
  * @param {string} className
  * @param {string} inputId
+ * @param {boolean} required
  * @param {JSX.Element} children
  */
 const FieldWrapper = ({
@@ -95,6 +150,7 @@ const FieldWrapper = ({
   reverseLabel = false,
   className = "",
   inputId,
+  required = false,
   children
 }) => {
   const colReverse = reverseLabel ? "flex-col-reverse" : "";
@@ -105,7 +161,9 @@ const FieldWrapper = ({
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
     className: "cursor-pointer pb-1 font-medium text-gray-700",
     htmlFor: inputId // Associate the label with the input ID
-  }, label), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+  }, label), required && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "text-red-600"
+  }, "Required"), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
     className: "pb-1 text-xs font-light text-gray-600"
   }, help) // Placeholder for the help component
   , children), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
@@ -115,6 +173,211 @@ const FieldWrapper = ({
   }, context));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
+
+/***/ }),
+
+/***/ "./src/components/Forms/FormField.jsx":
+/*!********************************************!*\
+  !*** ./src/components/Forms/FormField.jsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+
+const fieldComponents = {
+  text: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"],
+  api: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"]
+};
+const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
+  setting,
+  control,
+  ...props
+}) => {
+  if (setting.visible === false) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+      type: "hidden",
+      value: setting.value || setting.default
+    });
+  }
+  const FieldComponent = fieldComponents[setting.type];
+  if (!FieldComponent) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      className: "w-full"
+    }, "Unknown field type: ", setting.type, " ", setting.id);
+  }
+
+  // rules	Object		Validation rules in the same format for register options, which includes:
+
+  // only set what is available and set: required, min, max, minLength, maxLength, pattern, validate
+  const validationRules = {};
+  if (setting.required) {
+    validationRules.required = {
+      value: true,
+      message: setting.requiredMessage || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This field is required", "simplybook")
+    };
+  }
+  if (setting.validation?.regex) {
+    validationRules.pattern = {
+      value: new RegExp(setting.validation.regex),
+      message: setting.validation.message || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Invalid format", "simplybook")
+    };
+  }
+  if (setting.min) {
+    validationRules.min = setting.min;
+  }
+  if (setting.max) {
+    validationRules.max = setting.max;
+  }
+  if (setting.minLength) {
+    validationRules.minLength = setting.minLength;
+  }
+  if (setting.maxLength) {
+    validationRules.maxLength = setting.maxLength;
+  }
+  if (setting.validate) {
+    validationRules.validate = setting.validate;
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
+    name: setting.id // Use setting.id as the name
+    ,
+    control: control,
+    rules: validationRules,
+    defaultValue: setting.value || setting.default,
+    render: ({
+      field,
+      fieldState
+    }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(FieldComponent, {
+      field: field,
+      fieldState: fieldState,
+      required: setting.required,
+      label: setting.label || setting.id,
+      disabled: props.settingsIsUpdating || setting.disabled,
+      context: setting.context,
+      help: setting.help,
+      options: setting.options,
+      ...props
+    })
+  }));
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormField);
+
+/***/ }),
+
+/***/ "./src/components/Onboarding/OnboardingStep.jsx":
+/*!******************************************************!*\
+  !*** ./src/components/Onboarding/OnboardingStep.jsx ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/useNavigate.js");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _stores_onboardingStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../stores/onboardingStore */ "./src/stores/onboardingStore.js");
+/* harmony import */ var _Forms_FormField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FormField */ "./src/components/Forms/FormField.jsx");
+/* harmony import */ var _Fields_ButtonField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/ButtonField */ "./src/components/Fields/ButtonField.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+
+
+const OnboardingStep = ({
+  path,
+  title,
+  subtitle,
+  rightColumn,
+  bottomText,
+  buttonLabel = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Next", "simplybook")
+}) => {
+  const {
+    getURLForStep,
+    getCurrentStepId,
+    getCurrentStep,
+    updateData,
+    data,
+    defaultData,
+    isLastStep
+  } = (0,_stores_onboardingStore__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  const navigate = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.useNavigate)();
+  const {
+    handleSubmit,
+    control,
+    formState: {
+      isDirty,
+      errors
+    }
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_6__.useForm)({
+    defaultValues: defaultData,
+    values: data,
+    mode: "onBlur"
+  });
+  const currentStep = getCurrentStep(path);
+  const onSubmit = formData => {
+    if (currentStep.beforeSubmit) {
+      currentStep.beforeSubmit(formData);
+    }
+    if (isLastStep(path)) {
+      navigate({
+        to: "/"
+      });
+      // @todo: action to save and redirect to the dashboard
+      return;
+    } else {
+      updateData(formData);
+      navigate({
+        to: getURLForStep(getCurrentStepId(path) + 1)
+      });
+    }
+  };
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-4 col-start-3 my-12 flex flex-col text-black"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "my-6 text-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
+    className: "text-3xl font-semibold text-black"
+  }, title), subtitle && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "mt-2 text-base font-light text-black"
+  }, subtitle)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex flex-col"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("form", {
+    onSubmit: handleSubmit(onSubmit)
+  }, currentStep.fields.map(field => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FormField__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    setting: field,
+    key: field.id,
+    control: control
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Fields_ButtonField__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    btnVariant: "primary",
+    label: buttonLabel
+  }), bottomText && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "mt-4 text-center text-xs font-light text-gray-600"
+  }, bottomText)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "col-span-4 col-start-7 row-span-2 my-12"
+  }, rightColumn));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnboardingStep);
 
 /***/ }),
 
@@ -130,45 +393,164 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
-/* harmony import */ var _components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
-/* harmony import */ var _components_Fields_TextField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Fields/TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Onboarding/OnboardingStep */ "./src/components/Onboarding/OnboardingStep.jsx");
 
 
 
 
-
-
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.createLazyFileRoute)("/onboarding/implementation")({
-  component: () => {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "col-span-4 col-start-3 row-span-2 my-12 flex flex-col text-black"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "my-1 text-center"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
-      className: "mt-6 text-base"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Alpha Bedum Beauty & Welness")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", {
-      className: "mt-2 text-2xl font-bold"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Implement SimplyBook.me", "simplybook"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "my-8 grid grid-cols-2 gap-3"
-    }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Fields_TextField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      className: "col-span-2",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company Name", "simplybook"),
-      value: "My Business Name",
-      context: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("More customisation available under settings", "simplybook")
-    })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      onClick: () => {},
-      link: {
-        to: "/settings/general/"
-      }
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue Configuration", "simplybook"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      className: "col-span-4 col-start-7 py-12"
-    }, "Calender hier"));
-  }
+const path = "/onboarding/implementation";
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)(path)({
+  component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    path: path,
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Alpha Bedum Beauty & Welness", "simplybook"),
+    subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Implement SimplyBook.me", "simplybook"),
+    buttonLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Continue Configuration", "simplybook"),
+    rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right")
+  })
 });
+
+/***/ }),
+
+/***/ "./src/stores/onboardingStore.js":
+/*!***************************************!*\
+  !*** ./src/stores/onboardingStore.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
+
+const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)(set => {
+  // Create initial data object by collecting all field IDs
+  const initialData = {};
+  const steps = [{
+    id: 1,
+    path: "/onboarding/create-your-account",
+    fields: [{
+      id: "email",
+      type: "text",
+      label: "Email",
+      required: true,
+      validation: {
+        regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+        message: "Please enter a valid email address"
+      },
+      context: "This is a context",
+      help: "This is a help"
+    }, {
+      id: "terms-and-conditions",
+      type: "text",
+      label: "I agree to the terms and conditions"
+    }],
+    beforeSubmit: data => {
+      console.log(data);
+    }
+  }, {
+    id: 2,
+    path: "/onboarding/tips-and-tricks",
+    fields: [{
+      id: "tips-and-tricks",
+      type: "hidden"
+    }],
+    beforeSubmit: data => {
+      console.log(data);
+    }
+  }, {
+    id: 3,
+    path: "/onboarding/information-check",
+    fields: [{
+      id: "company-name",
+      type: "text",
+      label: "Company name"
+    }, {
+      id: "business-category",
+      type: "text",
+      label: "Business category"
+    }, {
+      id: "services",
+      type: "text",
+      label: "Services"
+    }, {
+      id: "street",
+      type: "text",
+      label: "Street"
+    }, {
+      id: "number",
+      type: "text",
+      label: "No."
+    }, {
+      id: "zip",
+      type: "text",
+      label: "Postal Code"
+    }, {
+      id: "city",
+      type: "text",
+      label: "City"
+    }, {
+      id: "country",
+      type: "text",
+      label: "Country"
+    }],
+    beforeSubmit: data => {
+      console.log(data);
+    }
+  }, {
+    id: 4,
+    path: "/onboarding/style-widget",
+    fields: [{
+      id: "widget-color-simple",
+      type: "text"
+    }],
+    beforeSubmit: data => {
+      console.log(data);
+    }
+  }, {
+    id: 5,
+    path: "/onboarding/implementation",
+    fields: [],
+    beforeSubmit: data => {
+      console.log(data);
+    }
+  }];
+  steps.forEach(step => {
+    step.fields.forEach(field => {
+      initialData[field.id] = '';
+    });
+  });
+  return {
+    steps,
+    data: initialData,
+    defaultData: initialData,
+    updateData: data => {
+      set(state => ({
+        data: {
+          ...state.data,
+          ...data
+        }
+      }));
+    },
+    // Current step is based on the URL path not a number
+    getCurrentStepId: path => {
+      return useOnboardingStore.getState().steps.find(step => step.path === path).id;
+    },
+    getCurrentStep: path => {
+      return useOnboardingStore.getState().steps.find(step => step.path === path);
+    },
+    getURLForStep: step => {
+      return useOnboardingStore.getState().steps[step - 1].path;
+    },
+    isLastStep: path => {
+      return useOnboardingStore.getState().steps.length === useOnboardingStore.getState().getCurrentStepId(path);
+    }
+  };
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOnboardingStore);
 
 /***/ }),
 
@@ -209,16 +591,19 @@ var ButtonInput = function (_a) {
   var children = _a.children,
     onClick = _a.onClick,
     _b = _a.btnVariant,
-    btnVariant = _b === void 0 ? "primary" : _b,
+    btnVariant = _b === void 0 ? "secondary" : _b,
+    // default is secondary because there needs to be a good reason to use primary
     _c = _a.disabled,
+    // default is secondary because there needs to be a good reason to use primary
     disabled = _c === void 0 ? false : _c,
     props = __rest(_a, ["children", "onClick", "btnVariant", "disabled"]);
   // Base styles for both variants
-  var baseStyles = "font-bold py-2 px-6 rounded-md transition-all duration-200";
+  var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
   // Variants for primary and secondary buttons
   var variants = {
-    primary: "bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800",
-    secondary: "border border-blue-600 text-blue-600 hover:bg-blue-100 active:bg-blue-200"
+    primary: "bg-secondary text-white hover:bg-secondary-dark",
+    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
+    tertiary: "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light"
   };
   // Disabled styles
   var disabledStyles = "opacity-50 cursor-not-allowed";
@@ -289,240 +674,79 @@ TextInput.displayName = "TextInput";
 
 /***/ }),
 
-/***/ "./node_modules/@radix-ui/react-compose-refs/dist/index.mjs":
-/*!******************************************************************!*\
-  !*** ./node_modules/@radix-ui/react-compose-refs/dist/index.mjs ***!
-  \******************************************************************/
+/***/ "./node_modules/zustand/esm/react.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/zustand/esm/react.mjs ***!
+  \********************************************/
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   composeRefs: () => (/* binding */ composeRefs),
-/* harmony export */   useComposedRefs: () => (/* binding */ useComposedRefs)
+/* harmony export */   create: () => (/* binding */ create),
+/* harmony export */   useStore: () => (/* binding */ useStore)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-// packages/react/compose-refs/src/composeRefs.tsx
-
-function setRef(ref, value) {
-  if (typeof ref === "function") {
-    ref(value);
-  } else if (ref !== null && ref !== void 0) {
-    ref.current = value;
-  }
-}
-function composeRefs(...refs) {
-  return (node) => refs.forEach((ref) => setRef(ref, node));
-}
-function useComposedRefs(...refs) {
-  return react__WEBPACK_IMPORTED_MODULE_0__.useCallback(composeRefs(...refs), refs);
-}
-
-//# sourceMappingURL=index.mjs.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@radix-ui/react-label/dist/index.mjs":
-/*!***********************************************************!*\
-  !*** ./node_modules/@radix-ui/react-label/dist/index.mjs ***!
-  \***********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Label: () => (/* binding */ Label),
-/* harmony export */   Root: () => (/* binding */ Root)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-primitive */ "./node_modules/@radix-ui/react-primitive/dist/index.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-"use client";
-
-// packages/react/label/src/Label.tsx
+/* harmony import */ var zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand/vanilla */ "./node_modules/zustand/esm/vanilla.mjs");
 
 
 
-var NAME = "Label";
-var Label = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((props, forwardedRef) => {
-  return /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(
-    _radix_ui_react_primitive__WEBPACK_IMPORTED_MODULE_2__.Primitive.label,
-    {
-      ...props,
-      ref: forwardedRef,
-      onMouseDown: (event) => {
-        const target = event.target;
-        if (target.closest("button, input, select, textarea")) return;
-        props.onMouseDown?.(event);
-        if (!event.defaultPrevented && event.detail > 1) event.preventDefault();
-      }
-    }
+const identity = (arg) => arg;
+function useStore(api, selector = identity) {
+  const slice = react__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore(
+    api.subscribe,
+    () => selector(api.getState()),
+    () => selector(api.getInitialState())
   );
-});
-Label.displayName = NAME;
-var Root = Label;
-
-//# sourceMappingURL=index.mjs.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@radix-ui/react-primitive/dist/index.mjs":
-/*!***************************************************************!*\
-  !*** ./node_modules/@radix-ui/react-primitive/dist/index.mjs ***!
-  \***************************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Primitive: () => (/* binding */ Primitive),
-/* harmony export */   Root: () => (/* binding */ Root),
-/* harmony export */   dispatchDiscreteCustomEvent: () => (/* binding */ dispatchDiscreteCustomEvent)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "react-dom");
-/* harmony import */ var _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @radix-ui/react-slot */ "./node_modules/@radix-ui/react-slot/dist/index.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-// packages/react/primitive/src/Primitive.tsx
-
-
-
-
-var NODES = [
-  "a",
-  "button",
-  "div",
-  "form",
-  "h2",
-  "h3",
-  "img",
-  "input",
-  "label",
-  "li",
-  "nav",
-  "ol",
-  "p",
-  "span",
-  "svg",
-  "ul"
-];
-var Primitive = NODES.reduce((primitive, node) => {
-  const Node = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((props, forwardedRef) => {
-    const { asChild, ...primitiveProps } = props;
-    const Comp = asChild ? _radix_ui_react_slot__WEBPACK_IMPORTED_MODULE_3__.Slot : node;
-    if (typeof window !== "undefined") {
-      window[Symbol.for("radix-ui")] = true;
-    }
-    return /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(Comp, { ...primitiveProps, ref: forwardedRef });
-  });
-  Node.displayName = `Primitive.${node}`;
-  return { ...primitive, [node]: Node };
-}, {});
-function dispatchDiscreteCustomEvent(target, event) {
-  if (target) react_dom__WEBPACK_IMPORTED_MODULE_1__.flushSync(() => target.dispatchEvent(event));
+  react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue(slice);
+  return slice;
 }
-var Root = Primitive;
-
-//# sourceMappingURL=index.mjs.map
-
-
-/***/ }),
-
-/***/ "./node_modules/@radix-ui/react-slot/dist/index.mjs":
-/*!**********************************************************!*\
-  !*** ./node_modules/@radix-ui/react-slot/dist/index.mjs ***!
-  \**********************************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   Root: () => (/* binding */ Root),
-/* harmony export */   Slot: () => (/* binding */ Slot),
-/* harmony export */   Slottable: () => (/* binding */ Slottable)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var _radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-compose-refs */ "./node_modules/@radix-ui/react-compose-refs/dist/index.mjs");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-// packages/react/slot/src/Slot.tsx
-
-
-
-var Slot = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((props, forwardedRef) => {
-  const { children, ...slotProps } = props;
-  const childrenArray = react__WEBPACK_IMPORTED_MODULE_0__.Children.toArray(children);
-  const slottable = childrenArray.find(isSlottable);
-  if (slottable) {
-    const newElement = slottable.props.children;
-    const newChildren = childrenArray.map((child) => {
-      if (child === slottable) {
-        if (react__WEBPACK_IMPORTED_MODULE_0__.Children.count(newElement) > 1) return react__WEBPACK_IMPORTED_MODULE_0__.Children.only(null);
-        return react__WEBPACK_IMPORTED_MODULE_0__.isValidElement(newElement) ? newElement.props.children : null;
-      } else {
-        return child;
-      }
-    });
-    return /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children: react__WEBPACK_IMPORTED_MODULE_0__.isValidElement(newElement) ? react__WEBPACK_IMPORTED_MODULE_0__.cloneElement(newElement, void 0, newChildren) : null });
-  }
-  return /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(SlotClone, { ...slotProps, ref: forwardedRef, children });
-});
-Slot.displayName = "Slot";
-var SlotClone = react__WEBPACK_IMPORTED_MODULE_0__.forwardRef((props, forwardedRef) => {
-  const { children, ...slotProps } = props;
-  if (react__WEBPACK_IMPORTED_MODULE_0__.isValidElement(children)) {
-    const childrenRef = getElementRef(children);
-    return react__WEBPACK_IMPORTED_MODULE_0__.cloneElement(children, {
-      ...mergeProps(slotProps, children.props),
-      // @ts-ignore
-      ref: forwardedRef ? (0,_radix_ui_react_compose_refs__WEBPACK_IMPORTED_MODULE_2__.composeRefs)(forwardedRef, childrenRef) : childrenRef
-    });
-  }
-  return react__WEBPACK_IMPORTED_MODULE_0__.Children.count(children) > 1 ? react__WEBPACK_IMPORTED_MODULE_0__.Children.only(null) : null;
-});
-SlotClone.displayName = "SlotClone";
-var Slottable = ({ children }) => {
-  return /* @__PURE__ */ (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, { children });
+const createImpl = (createState) => {
+  const api = (0,zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__.createStore)(createState);
+  const useBoundStore = (selector) => useStore(api, selector);
+  Object.assign(useBoundStore, api);
+  return useBoundStore;
 };
-function isSlottable(child) {
-  return react__WEBPACK_IMPORTED_MODULE_0__.isValidElement(child) && child.type === Slottable;
-}
-function mergeProps(slotProps, childProps) {
-  const overrideProps = { ...childProps };
-  for (const propName in childProps) {
-    const slotPropValue = slotProps[propName];
-    const childPropValue = childProps[propName];
-    const isHandler = /^on[A-Z]/.test(propName);
-    if (isHandler) {
-      if (slotPropValue && childPropValue) {
-        overrideProps[propName] = (...args) => {
-          childPropValue(...args);
-          slotPropValue(...args);
-        };
-      } else if (slotPropValue) {
-        overrideProps[propName] = slotPropValue;
-      }
-    } else if (propName === "style") {
-      overrideProps[propName] = { ...slotPropValue, ...childPropValue };
-    } else if (propName === "className") {
-      overrideProps[propName] = [slotPropValue, childPropValue].filter(Boolean).join(" ");
-    }
-  }
-  return { ...slotProps, ...overrideProps };
-}
-function getElementRef(element) {
-  let getter = Object.getOwnPropertyDescriptor(element.props, "ref")?.get;
-  let mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.ref;
-  }
-  getter = Object.getOwnPropertyDescriptor(element, "ref")?.get;
-  mayWarn = getter && "isReactWarning" in getter && getter.isReactWarning;
-  if (mayWarn) {
-    return element.props.ref;
-  }
-  return element.props.ref || element.ref;
-}
-var Root = Slot;
+const create = (createState) => createState ? createImpl(createState) : createImpl;
 
-//# sourceMappingURL=index.mjs.map
+
+
+
+/***/ }),
+
+/***/ "./node_modules/zustand/esm/vanilla.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/zustand/esm/vanilla.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createStore: () => (/* binding */ createStore)
+/* harmony export */ });
+const createStoreImpl = (createState) => {
+  let state;
+  const listeners = /* @__PURE__ */ new Set();
+  const setState = (partial, replace) => {
+    const nextState = typeof partial === "function" ? partial(state) : partial;
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+  const getState = () => state;
+  const getInitialState = () => initialState;
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+  const api = { setState, getState, getInitialState, subscribe };
+  const initialState = state = createState(setState, getState, api);
+  return api;
+};
+const createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
+
+
 
 
 /***/ })

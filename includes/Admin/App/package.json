@@ -63,6 +63,7 @@
     "@tanstack/react-router": "^1.62.1",
     "@wordpress/api-fetch": "^7.11.0",
     "clsx": "^2.1.1",
-    "react-hook-form": "^7.53.1"
+    "react-hook-form": "^7.53.1",
+    "zustand": "^5.0.1"
   }
 }

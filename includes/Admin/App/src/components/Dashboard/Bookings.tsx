@@ -4,6 +4,7 @@ import { __ } from "@wordpress/i18n";
 import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
 import ButtonInput from "../Inputs/ButtonInput";
+import { Fragment } from "react";
 
 const Bookings = () => {
   const FeaturedBlocks = [
@@ -70,14 +71,14 @@ const Bookings = () => {
         <div>
           <div className={"grid auto-rows-max grid-cols-4 gap-2 p-2"}>
             {DataList.map((block, index) => (
-              <>
+              <Fragment key={index}>
                 <div className={"text-2xl font-bold"}>{block.icon}</div>
                 <div className={"text-sm"}>{block.title}</div>
                 <div className={"ml-auto text-2xl font-bold"}>
                   {block.uplift}
                 </div>
                 <div className={"text-2xl font-bold"}>{block.value}</div>
-              </>
+              </Fragment>
             ))}
           </div>
         </div>
