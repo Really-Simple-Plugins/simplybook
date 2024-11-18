@@ -1,5 +1,6 @@
 import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
+import { __ } from "@wordpress/i18n";
 
 interface FieldWrapperProps {
   label: string;
@@ -38,28 +39,31 @@ const FieldWrapper = memo(({
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>
+        <div className="flex items-center justify-between">
         <Label.Root
-          className="cursor-pointer pb-1 font-medium text-gray-700"
+          className="cursor-pointer pb-1 font-medium text-black text-md"
           htmlFor={inputId}
         >
           {label}
-          {required && <span className="ml-1 text-red-600">*</span>}
+          {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>}
         </Label.Root>
         
+        {/* TODO: MAKE ICON ON HOVER:  */}
         {help && (
           <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
         )}
+        </div>
         {children}
       </div>
       
       {error && (
-        <p className="mt-1 text-xs font-light text-red-600" role="alert">
+        <p className="mt-2 text-xs font-light text-red-600" role="alert">
           {error}
         </p>
       )}
       
       {context && (
-        <p className="mt-1 text-xs font-light text-gray-600">
+        <p className="mt-2 text-xs font-light text-gray-600">
           {context}
         </p>
       )}

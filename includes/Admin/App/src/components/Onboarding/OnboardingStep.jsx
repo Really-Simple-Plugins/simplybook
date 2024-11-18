@@ -69,12 +69,7 @@ const OnboardingStep = ({
             {currentStep.fields.map((field) => (
               <FormField setting={field} key={field.id} control={control} />
             ))}
-            <ButtonField btnVariant="primary" label={buttonLabel} />
-            {bottomText && (
-              <p className="mt-4 text-center text-xs font-light text-gray-600">
-                {bottomText}
-              </p>
-            )}
+            <ButtonField btnVariant="primary" label={buttonLabel} context={bottomText} />
           </form>
         </div>
       </div>

@@ -17,8 +17,8 @@ const useOnboardingStore = create((set) => {
             regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message: "Please enter a valid email address",
           },
-          context: "This is a context",
-          help: "This is a help",
+        //   context: "This is a context",
+        //   help: "This is a help",
         },
         {
           id: "terms-and-conditions",

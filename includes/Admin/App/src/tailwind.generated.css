@@ -587,6 +587,10 @@ video {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
+#simplybook_app .my-1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
 #simplybook_app .mb-2 {
   margin-bottom: 0.5rem;
 }
@@ -946,6 +950,9 @@ video {
 }
 #simplybook_app .font-semibold {
   font-weight: 600;
+}
+#simplybook_app .font-normal {
+  font-weight: 400;
 }
 #simplybook_app .text-black {
   color: rgb(0 0 0 / 0.8);
