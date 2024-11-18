@@ -16,24 +16,22 @@ import FieldWrapper from "../Forms/FieldWrapper";
 const TextField = forwardRef(
   ({ field, fieldState, label, help, context, className, ...props }, ref) => {
     const inputId = props.id || field.name;
-    const errorMessage = fieldState?.error?.message;
-  
+    
     return (
       <FieldWrapper
         label={label}
         help={help}
-        error={errorMessage}
+        error={fieldState?.error?.message}
         context={context}
         className={className}
         inputId={inputId}
         required={props.required}
-        context={context}
       >
         <TextInput 
           {...field} 
           id={inputId} 
           type="text" 
-          aria-invalid={!!errorMessage}
+          aria-invalid={!!fieldState?.error?.message}
           {...props} 
         />
       </FieldWrapper>
@@ -41,4 +39,5 @@ const TextField = forwardRef(
   },
 );
 
+TextField.displayName = 'TextField';
 export default TextField;

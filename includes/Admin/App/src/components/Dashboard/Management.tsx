@@ -17,4 +17,5 @@ const Management = () => {
   );
 };
 
+Management.displayName = "Management";
 export default Management;

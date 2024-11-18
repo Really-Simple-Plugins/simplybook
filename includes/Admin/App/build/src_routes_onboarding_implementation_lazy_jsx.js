@@ -14,7 +14,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
-/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.tsx");
 
 
 
@@ -48,6 +48,7 @@ const ButtonField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
     ...props
   }, label));
 });
+ButtonField.displayName = 'ButtonField';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonField);
 
 /***/ }),
@@ -65,7 +66,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
-/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.jsx");
+/* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.tsx");
 
 
 
@@ -92,87 +93,24 @@ const TextField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   ...props
 }, ref) => {
   const inputId = props.id || field.name;
-  const errorMessage = fieldState?.error?.message;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
     help: help,
-    error: errorMessage,
+    error: fieldState?.error?.message,
     context: context,
     className: className,
     inputId: inputId,
-    required: props.required,
-    context: context
+    required: props.required
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
     ...field,
     id: inputId,
     type: "text",
-    "aria-invalid": !!errorMessage,
+    "aria-invalid": !!fieldState?.error?.message,
     ...props
   }));
 });
+TextField.displayName = 'TextField';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextField);
-
-/***/ }),
-
-/***/ "./src/components/Forms/FieldWrapper.jsx":
-/*!***********************************************!*\
-  !*** ./src/components/Forms/FieldWrapper.jsx ***!
-  \***********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @radix-ui/react-label */ "./node_modules/@radix-ui/react-label/dist/index.mjs");
-
-
-
-/**
- * FieldWrapper component
- * @param {string} label
- * @param {string} context
- * @param {string} help
- * @param {string} error
- * @param {boolean} reverseLabel
- * @param {string} className
- * @param {string} inputId
- * @param {boolean} required
- * @param {JSX.Element} children
- */
-const FieldWrapper = ({
-  label,
-  context,
-  help,
-  error,
-  reverseLabel = false,
-  className = "",
-  inputId,
-  required = false,
-  children
-}) => {
-  const colReverse = reverseLabel ? "flex-col-reverse" : "";
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `flex w-full flex-col ${className} pt-4`
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: `flex w-full flex-col ${colReverse}`
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_1__.Root, {
-    className: "cursor-pointer pb-1 font-medium text-gray-700",
-    htmlFor: inputId // Associate the label with the input ID
-  }, label), required && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "text-red-600"
-  }, "Required"), help && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "pb-1 text-xs font-light text-gray-600"
-  }, help) // Placeholder for the help component
-  , children), error && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "pb-1font-light w-full text-xs text-red-600"
-  }, error), context && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: "w-full pb-1 text-xs font-light text-gray-600"
-  }, context));
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
 
 /***/ }),
 
@@ -211,7 +149,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   if (setting.visible === false) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
       type: "hidden",
-      value: setting.value || setting.default
+      defaultValue: setting.value || setting.default
     });
   }
   const FieldComponent = fieldComponents[setting.type];
@@ -220,41 +158,37 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
       className: "w-full"
     }, "Unknown field type: ", setting.type, " ", setting.id);
   }
-
-  // rules	Object		Validation rules in the same format for register options, which includes:
-
-  // only set what is available and set: required, min, max, minLength, maxLength, pattern, validate
-  const validationRules = {};
-  if (setting.required) {
-    validationRules.required = {
-      value: true,
-      message: setting.requiredMessage || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This field is required", "simplybook")
-    };
-  }
-  if (setting.validation?.regex) {
-    validationRules.pattern = {
-      value: new RegExp(setting.validation.regex),
-      message: setting.validation.message || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Invalid format", "simplybook")
-    };
-  }
-  if (setting.min) {
-    validationRules.min = setting.min;
-  }
-  if (setting.max) {
-    validationRules.max = setting.max;
-  }
-  if (setting.minLength) {
-    validationRules.minLength = setting.minLength;
-  }
-  if (setting.maxLength) {
-    validationRules.maxLength = setting.maxLength;
-  }
-  if (setting.validate) {
-    validationRules.validate = setting.validate;
-  }
+  const validationRules = {
+    ...(setting.required && {
+      required: {
+        value: true,
+        message: setting.requiredMessage || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This field is required", "simplybook")
+      }
+    }),
+    ...(setting.validation?.regex && {
+      pattern: {
+        value: new RegExp(setting.validation.regex),
+        message: setting.validation.message || (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Invalid format", "simplybook")
+      }
+    }),
+    ...(setting.min && {
+      min: setting.min
+    }),
+    ...(setting.max && {
+      max: setting.max
+    }),
+    ...(setting.minLength && {
+      minLength: setting.minLength
+    }),
+    ...(setting.maxLength && {
+      maxLength: setting.maxLength
+    }),
+    ...(setting.validate && {
+      validate: setting.validate
+    })
+  };
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_2__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
-    name: setting.id // Use setting.id as the name
-    ,
+    name: setting.id,
     control: control,
     rules: validationRules,
     defaultValue: setting.value || setting.default,
@@ -274,6 +208,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     })
   }));
 });
+FormField.displayName = 'FormField';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormField);
 
 /***/ }),
@@ -377,6 +312,7 @@ const OnboardingStep = ({
     className: "col-span-4 col-start-7 row-span-2 my-12"
   }, rightColumn));
 };
+OnboardingStep.displayName = 'OnboardingStep';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnboardingStep);
 
 /***/ }),
@@ -554,6 +490,68 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)(set =
 
 /***/ }),
 
+/***/ "./src/components/Forms/FieldWrapper.tsx":
+/*!***********************************************!*\
+  !*** ./src/components/Forms/FieldWrapper.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _radix_ui_react_label__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @radix-ui/react-label */ "./node_modules/@radix-ui/react-label/dist/index.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+
+
+
+var FieldWrapper = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
+  var label = _a.label,
+    context = _a.context,
+    help = _a.help,
+    error = _a.error,
+    _b = _a.reverseLabel,
+    reverseLabel = _b === void 0 ? false : _b,
+    _c = _a.className,
+    className = _c === void 0 ? "" : _c,
+    inputId = _a.inputId,
+    _d = _a.required,
+    required = _d === void 0 ? false : _d,
+    children = _a.children;
+  var wrapperClasses = ["flex w-full flex-col", className, "pt-4"].filter(Boolean).join(" ");
+  var contentClasses = ["flex w-full flex-col", reverseLabel ? "flex-col-reverse" : ""].filter(Boolean).join(" ");
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+    className: wrapperClasses,
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+      className: contentClasses,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_2__.Root, {
+        className: "cursor-pointer pb-1 font-medium text-gray-700",
+        htmlFor: inputId,
+        children: [label, required && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "ml-1 text-red-600",
+          children: "*"
+        })]
+      }), help && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+        className: "pb-1 text-xs font-light text-gray-600",
+        children: help
+      }), children]
+    }), error && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: "mt-1 text-xs font-light text-red-600",
+      role: "alert",
+      children: error
+    }), context && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+      className: "mt-1 text-xs font-light text-gray-600",
+      children: context
+    })]
+  });
+});
+FieldWrapper.displayName = 'FieldWrapper';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FieldWrapper);
+
+/***/ }),
+
 /***/ "./src/components/Inputs/ButtonInput.tsx":
 /*!***********************************************!*\
   !*** ./src/components/Inputs/ButtonInput.tsx ***!
@@ -617,6 +615,7 @@ var ButtonInput = function (_a) {
     children: children
   }));
 };
+ButtonInput.displayName = 'ButtonInput';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonInput);
 
 /***/ }),
@@ -662,14 +661,15 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
   var _b = _a.type,
     type = _b === void 0 ? "text" : _b,
-    props = __rest(_a, ["type"]);
+    className = _a.className,
+    props = __rest(_a, ["type", "className"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
     ref: ref,
     type: type,
-    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200"
+    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || '')
   }, props));
 });
-TextInput.displayName = "TextInput";
+TextInput.displayName = 'TextInput';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),

@@ -17,4 +17,5 @@ const OurPlugins = () => {
   );
 };
 
+OurPlugins.displayName = "OurPlugins";
 export default OurPlugins;

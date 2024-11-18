@@ -137,4 +137,6 @@ ErrorBoundary.propTypes = {
   fallback: PropTypes.node,
 };
 
+ErrorBoundary.displayName = "ErrorBoundary";
+
 export default ErrorBoundary;

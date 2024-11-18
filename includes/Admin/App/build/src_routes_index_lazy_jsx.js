@@ -70,6 +70,7 @@ const BlockContent = ({
     className: className
   }, children);
 };
+BlockContent.displayName = "BlockContent";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockContent);
 
 /***/ }),
@@ -94,6 +95,7 @@ const BlockFooter = ({
     className: "flex items-center justify-between px-5 py-4"
   }, children);
 };
+BlockFooter.displayName = "BlockFooter";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockFooter);
 
 /***/ }),
@@ -121,6 +123,7 @@ const BlockHeading = ({
     className: "text-base font-bold"
   }, title), controls);
 };
+BlockHeading.displayName = "BlockHeading";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (BlockHeading);
 
 /***/ }),
@@ -177,6 +180,7 @@ const Header = () => {
     className: "px-2[&.active]:font-bold float-right py-6"
   }, "Upgrade"))));
 };
+Header.displayName = "Header";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
 
 /***/ }),
@@ -245,6 +249,7 @@ var Block = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
     children: children
   });
 });
+Block.displayName = "Block";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Block);
 
 /***/ }),
@@ -366,6 +371,7 @@ var Bookings = function () {
     })]
   });
 };
+Bookings.displayName = "Bookings";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Bookings);
 
 /***/ }),
@@ -406,6 +412,7 @@ var Management = function () {
     })]
   });
 };
+Management.displayName = "Management";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Management);
 
 /***/ }),
@@ -446,6 +453,7 @@ var OurPlugins = function () {
     })]
   });
 };
+OurPlugins.displayName = "OurPlugins";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OurPlugins);
 
 /***/ }),
@@ -486,6 +494,7 @@ var Progress = function () {
     })]
   });
 };
+Progress.displayName = "Progress";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Progress);
 
 /***/ }),
@@ -526,6 +535,7 @@ var TipsTricks = function () {
     })]
   });
 };
+TipsTricks.displayName = "TipsTricks";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TipsTricks);
 
 /***/ }),
@@ -593,6 +603,7 @@ var ButtonInput = function (_a) {
     children: children
   }));
 };
+ButtonInput.displayName = 'ButtonInput';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonInput);
 
 /***/ }),

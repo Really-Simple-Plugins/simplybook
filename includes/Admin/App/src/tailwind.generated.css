@@ -614,6 +614,12 @@ video {
 #simplybook_app .mt-4 {
   margin-top: 1rem;
 }
+#simplybook_app .ml-1 {
+  margin-left: 0.25rem;
+}
+#simplybook_app .mt-1 {
+  margin-top: 0.25rem;
+}
 #simplybook_app .block {
   display: block;
 }

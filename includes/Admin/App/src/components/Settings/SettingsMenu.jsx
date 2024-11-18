@@ -35,4 +35,6 @@ const SettingsMenu = () => {
     </Block>
   );
 };
+
+SettingsMenu.displayName = 'SettingsMenu';
 export default SettingsMenu;

@@ -14,4 +14,5 @@ const Progress = () => {
   );
 };
 
+Progress.displayName = "Progress";
 export default Progress;

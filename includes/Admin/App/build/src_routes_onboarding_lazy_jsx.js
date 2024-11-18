@@ -102,6 +102,7 @@ const OnboardingFooter = () => {
     className: "text-gray-500"
   }, item.description))))));
 };
+OnboardingFooter.displayName = 'OnboardingFooter';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnboardingFooter);
 
 /***/ }),

@@ -6,4 +6,7 @@ const BlockHeading = ({ title, controls }) => {
     </div>
   );
 };
+
+BlockHeading.displayName = "BlockHeading";
+
 export default BlockHeading;

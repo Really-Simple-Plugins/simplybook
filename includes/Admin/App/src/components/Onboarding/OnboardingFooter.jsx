@@ -49,4 +49,6 @@ const OnboardingFooter = () => {
   );
 };
 
+OnboardingFooter.displayName = 'OnboardingFooter';
+
 export default OnboardingFooter;

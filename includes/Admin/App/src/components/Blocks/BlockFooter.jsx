@@ -5,4 +5,6 @@ const BlockFooter = ({ children }) => {
     </div>
   );
 };
+
+BlockFooter.displayName = "BlockFooter";
 export default BlockFooter;

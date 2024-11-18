@@ -85,4 +85,6 @@ const OnboardingStep = ({
   );
 };
 
+OnboardingStep.displayName = 'OnboardingStep';
+
 export default OnboardingStep; 

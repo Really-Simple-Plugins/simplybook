@@ -95,4 +95,6 @@ const Bookings = () => {
   );
 };
 
+Bookings.displayName = "Bookings";
+
 export default Bookings;

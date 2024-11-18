@@ -23,4 +23,6 @@ const SettingsGroupBlock = memo(
   },
 );
 
+SettingsGroupBlock.displayName = 'SettingsGroupBlock';
+
 export default SettingsGroupBlock;

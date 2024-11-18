@@ -53,4 +53,6 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
   );
 };
 
+ButtonInput.displayName = 'ButtonInput';
+
 export default ButtonInput;

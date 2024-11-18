@@ -26,4 +26,6 @@ const FormScrollProgressLine = () => {
     </div>
   );
 };
+
+FormScrollProgressLine.displayName = 'FormScrollProgressLine';
 export default FormScrollProgressLine;

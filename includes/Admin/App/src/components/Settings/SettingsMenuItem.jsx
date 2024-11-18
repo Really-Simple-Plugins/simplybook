@@ -18,4 +18,6 @@ const SettingsMenuItem = React.memo(({ item }) => {
   );
 });
 
+SettingsMenuItem.displayName = 'SettingsMenuItem';
+
 export default SettingsMenuItem;

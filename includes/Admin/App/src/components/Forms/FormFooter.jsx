@@ -22,4 +22,6 @@ function FormFooter({ onSubmit, control }) {
     </div>
   );
 }
+
+FormFooter.displayName = 'FormFooter';
 export default FormFooter;

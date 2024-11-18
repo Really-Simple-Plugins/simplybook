@@ -11,4 +11,6 @@ const Block = memo(({ className, children }: BlockProps) => {
   return <div className={classes}>{children}</div>;
 });
 
+Block.displayName = "Block";
+
 export default Block;

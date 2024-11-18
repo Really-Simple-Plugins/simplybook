@@ -17,4 +17,5 @@ const TipsTricks = () => {
   );
 };
 
+TipsTricks.displayName = "TipsTricks";
 export default TipsTricks;

@@ -51,8 +51,6 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
   },
 );
 
-SelectInput.displayName = "SelectInput";
-
 export default SelectInput;
 
 interface SelectItemProps
@@ -83,7 +81,5 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
     );
   },
 );
-
-SelectItem.displayName = "SelectItem";
 
 export { SelectItem };

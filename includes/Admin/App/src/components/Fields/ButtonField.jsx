@@ -29,4 +29,6 @@ const ButtonField = forwardRef(
   },
 );
 
+ButtonField.displayName = 'ButtonField';
+
 export default ButtonField;
