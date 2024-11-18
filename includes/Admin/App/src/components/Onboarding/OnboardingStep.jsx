@@ -37,24 +37,24 @@ const OnboardingStep = ({
 
   const currentStep = getCurrentStep(path);
 
-  const onSubmit = async (formData, buttonType = 'primary') => {
+  const onSubmit = async (formData, buttonType = "primary") => {
     let updatedFormData = { ...formData };
+
+    if (buttonType === "primary" && primaryButton.modifyData) {
+      updatedFormData = primaryButton.modifyData(updatedFormData);
+    } else if (buttonType === "secondary" && secondaryButton.modifyData) {
+      updatedFormData = secondaryButton.modifyData(updatedFormData);
+    }
 
     if (currentStep.beforeSubmit) {
       currentStep.beforeSubmit(updatedFormData);
     }
 
-    if (buttonType === 'primary' && primaryButton.modifyData) {
-      updatedFormData = primaryButton.modifyData(updatedFormData);
-    } else if (buttonType === 'secondary' && secondaryButton.modifyData) {
-      updatedFormData = secondaryButton.modifyData(updatedFormData);
-    }
-
     updateData(updatedFormData);
 
-    if (buttonType === 'primary' && primaryButton.navigateTo) {
+    if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
-    } else if (buttonType === 'secondary' && secondaryButton.navigateTo) {
+    } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
       navigate({ to: secondaryButton.navigateTo });
     } else if (isLastStep(path)) {
       navigate({ to: "/" });
@@ -79,17 +79,17 @@ const OnboardingStep = ({
             {currentStep.fields.map((field) => (
               <FormField setting={field} key={field.id} control={control} />
             ))}
-            <ButtonField 
-              btnVariant="primary" 
-              label={primaryButton.label} 
-              context={bottomText} 
-              onClick={handleSubmit((data) => onSubmit(data, 'primary'))}
+            <ButtonField
+              btnVariant="primary"
+              label={primaryButton.label}
+              context={bottomText}
+              onClick={handleSubmit((data) => onSubmit(data, "primary"))}
             />
             {secondaryButton && (
-              <ButtonField 
-                btnVariant="tertiary" 
-                label={secondaryButton.label} 
-                onClick={handleSubmit((data) => onSubmit(data, 'secondary'))}
+              <ButtonField
+                btnVariant="tertiary"
+                label={secondaryButton.label}
+                onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
               />
             )}
           </form>
@@ -102,6 +102,6 @@ const OnboardingStep = ({
   );
 };
 
-OnboardingStep.displayName = 'OnboardingStep';
+OnboardingStep.displayName = "OnboardingStep";
 
-export default OnboardingStep; 
+export default OnboardingStep;
