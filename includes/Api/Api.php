@@ -48,7 +48,7 @@ class Api
 	 *
 	 * @return bool
 	 */
-	protected function company_registration_complete(){
+	protected function company_registration_complete(): bool {
 		if ( !$this->get_option('company_id') ) {
 			return false;
 		}
@@ -217,6 +217,12 @@ class Api
 		return true;
 	}
 
+	/**
+	 * Clear tokens
+	 *
+	 * @return void
+	 */
+
 	protected function clear_tokens(): void {
 		$this->delete_option('token');
 		$this->delete_option('refresh_token');
@@ -226,17 +232,22 @@ class Api
 	/**
 	 * Registers a company with the API
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function register_company(){
 		if ( !$this->user_can_manage() ) {
-			return;
+			return false;
 		}
 
 		//check if we have a token
 		if ( !$this->token_is_valid() ) {
 			$this->get_common_token();
-			return;
+			return false;
+		}
+
+		if ( get_transient('simply_book_attempt_count') >2 ) {
+			$this->log("Too many attempts to register company");
+			return false;
 		}
 
 		$email = sanitize_email( $this->get_option('email') );
@@ -264,7 +275,7 @@ class Api
 		if ( empty($email) || empty($phone) || empty($company_name) || empty($description) || empty($city) || empty($address) || empty($zip) ) {
 			$this->log("Missing fields for company registration");
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
-			return;
+			return false;
 		}
 
 		$request = wp_remote_post( $this->endpoint( 'company' ), array(
@@ -305,10 +316,15 @@ class Api
 				$this->update_option( 'recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
 				$this->update_option( 'company_login', sanitize_text_field( $request->company_login ) );
 				$this->update_option( 'company_id', (int) $request->company_id );
+				//successful registered
+				return true;
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
 					//invalid token, refresh.
+
+					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
+					$this->register_company();
 				}
 				$this->log("Error during company registration: ".$request->message);
 				update_option('simplybook_company_registration_error', $request->message, false);
@@ -316,6 +332,9 @@ class Api
 		} else {
 			update_option('simplybook_company_registration_error', true, false);
 		}
+
+		//not successful registered
+		return false;
 	}
 
 	/**
