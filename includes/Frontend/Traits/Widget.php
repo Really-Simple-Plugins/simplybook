@@ -76,8 +76,6 @@ trait Widget {
         $data = [];
 
         $widget_settings = $this->get_widget_settings();
-        error_log("widget_settings straight from option");
-        error_log(print_r($widget_settings, true));
         if ( !$widget_settings ) {
             $widget_settings = array();
         }
@@ -101,11 +99,7 @@ trait Widget {
 
         $widget_settings = wp_parse_args($post_settings, $widget_settings);
 
-        error_log(print_r("widget_settings", true));
-        error_log(print_r($widget_settings, true));
-
        $script = $this->load_template('widget.js', $widget_settings);
-       error_log($script);
        return $script;
     }
 
@@ -122,8 +116,6 @@ trait Widget {
         $content = ob_get_clean();
         //replace variables
         foreach ( $data as $key => $value ) {
-            error_log(print_r($key, true));
-            error_log(print_r($value, true));
             if ( is_array($value) ) {
                 $value = json_encode($value);
             }

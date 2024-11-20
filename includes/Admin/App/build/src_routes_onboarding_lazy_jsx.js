@@ -1,10 +1,10 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_lazy_jsx"],{
 
-/***/ "../../assets/img/logo.svg":
-/*!*********************************!*\
-  !*** ../../assets/img/logo.svg ***!
-  \*********************************/
+/***/ "./assets/img/logo.svg":
+/*!*****************************!*\
+  !*** ./assets/img/logo.svg ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -49,6 +49,64 @@ var SvgLogo = function SvgLogo(props) {
 
 /***/ }),
 
+/***/ "./src/components/Onboarding/OnboardingFooter.jsx":
+/*!********************************************************!*\
+  !*** ./src/components/Onboarding/OnboardingFooter.jsx ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+const OnboardingFooter = () => {
+  const items = [{
+    id: 1,
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
+    image: "https://via.placeholder.com/150"
+  }, {
+    id: 2,
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
+    image: "https://via.placeholder.com/150"
+  }, {
+    id: 3,
+    title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
+    description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
+    image: "https://via.placeholder.com/150"
+  }];
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "bg-blue-50 py-10"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mx-auto max-w-screen-md items-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mb-8 text-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
+    className: "text-2xl font-bold"
+  }, "What can you do with SimplyBook.me?")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 md:grid-cols-3"
+  }, items.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    key: item.id,
+    className: "text-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
+    src: item.image,
+    alt: "Placeholder",
+    className: "mx-auto mb-4 h-20 w-20"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "mb-2 text-xl font-semibold"
+  }, item.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: "text-gray-500"
+  }, item.description))))));
+};
+OnboardingFooter.displayName = 'OnboardingFooter';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnboardingFooter);
+
+/***/ }),
+
 /***/ "./src/routes/onboarding.lazy.jsx":
 /*!****************************************!*\
   !*** ./src/routes/onboarding.lazy.jsx ***!
@@ -61,33 +119,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
-/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../assets/img/logo.svg */ "../../assets/img/logo.svg");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/Match.js");
+/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../assets/img/logo.svg */ "./assets/img/logo.svg");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _components_Onboarding_OnboardingFooter__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/Onboarding/OnboardingFooter */ "./src/components/Onboarding/OnboardingFooter.jsx");
 
 
 
 
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)('/onboarding')({
+
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)("/onboarding")({
   component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(OnboardingPage, null)
+  // navigate to first step 
 });
 function OnboardingPage() {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center mx-auto max-w-screen-xl  justify-between"
+    className: "mx-auto flex max-w-screen-2xl items-center justify-between"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "w-40 py-2 m-5"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Already got an account?', 'simplybook'), "  ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    className: "font-bold ",
-    href: 'https://simplybook.me'
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)('Sign in here')), " ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex mx-auto max-w-screen-xl py-5"
+    className: "m-5 w-40 py-2"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "m-5 text-black"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Already got an account?", "simplybook"), " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+    className: "font-bold text-black",
+    href: "https://simplybook.me"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Sign in here")), " ")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "mx-auto flex max-w-screen-2xl flex-col py-5"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "grid grid-cols-12 grid-rows-5 gap-24 w-full min-h-full"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.Outlet, null))));
+    className: "grid min-h-full w-full grid-cols-12 gap-24"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Outlet, null))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingFooter__WEBPACK_IMPORTED_MODULE_3__["default"], null));
 }
 
 /***/ })

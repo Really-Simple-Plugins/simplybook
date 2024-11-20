@@ -20,7 +20,7 @@ class RestApi {
      * @param $data
      * @return bool|WP_Error
      */
-    protected function validate_request($data ): bool|WP_Error
+    protected function validate_request( $data ): bool|WP_Error
     {
         if ( ! $this->user_can_manage() ) {
             return new WP_Error( 'rest_forbidden', 'You do not have permission to perform this action.', [ 'status' => 403 ] );

@@ -1,31 +1,20 @@
-import {createLazyFileRoute, Link} from '@tanstack/react-router';
-import {__} from '@wordpress/i18n';
-import InputText from '../../components/Inputs/InputText';
-import Button from '../../components/Inputs/Button';
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { __ } from "@wordpress/i18n";
+import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 
-export const Route = createLazyFileRoute('/onboarding/create-your-account')({
-  component: () => {
+const path = "/onboarding/create-your-account";
 
-    return (
-        <>
-          <div className="col-span-12 col-start-2 py-12 text-center flex flex-col">
-
-            <h1 className={"text-2xl font-bold mt-6"}>{__('Create your free account', 'simplybook')}</h1>
-            <h2 className={"text-base mt-2 mb-8"}>{__('100% free. No credit card needed.')}</h2>
-            <InputText
-                placeholder={__('Email address', 'simplybook')}
-            />
-            <Button onClick={() => {}} link={{
-              to: '/onboarding/tips-and-tricks',
-            }}>
-              {__('Verify email', 'simplybook')}
-            </Button>
-          </div>
-          <div className="col-span-5 col-start-7 py-12">
-            <iframe width="100%"  className={"aspect-video"} src="https://www.youtube-nocookie.com/embed/adYNTa9Gicw?si=A1cJfYkkfvlE9Yn0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-          </div>
-        </>
-    );
-  },
+export const Route = createLazyFileRoute(path)({
+  component: () => (
+    <OnboardingStep
+      path={path}
+      title={__("Create your free account", "simplybook")}
+      subtitle={__("100% free. No credit card needed.", "simplybook")}
+      bottomText={__(
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
+        "simplybook"
+      )}
+      rightColumn={<p>right</p>}
+    />
+  ),
 });
-

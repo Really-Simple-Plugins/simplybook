@@ -17,7 +17,7 @@ class Settings extends RestApi {
     public function register_rest_route(): void
     {
         register_rest_route(
-            'simplybook/v1',
+            'simplybook/v1/settings',
             'save',
             array(
                 'methods' => 'POST',
@@ -29,10 +29,10 @@ class Settings extends RestApi {
         );
 
         register_rest_route(
-            'simplybook/v1',
+            'simplybook/v1/settings',
             'get_fields',
             array(
-                'methods' => 'GET',
+                'methods' => 'POST',
                 'callback' => array( $this, 'get' ),
                 'permission_callback' => function () {
                     return $this->user_can_manage();
@@ -89,17 +89,23 @@ class Settings extends RestApi {
      */
     public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
-        $data = $ajax_data ?: $request->get_json_params();
 
+		$this->log('get fields');
+
+
+
+        $data = $ajax_data ?: $request->get_json_params();
+	    $this->log($data);
         $validated_response = $this->validate_request( $data );
         if ( is_wp_error( $validated_response ) ) {
             return $validated_response;
         }
-
-        $fields = $this->fields();
-        return $this->response([
-            'fields' => $fields,
-        ]);
+		$with_values = $data['withValues'] === 1;
+		$this->log('with_values');
+		$this->log($data['withValues']);
+        $fields = $this->fields_and_values(true);
+		error_log(print_r($fields, true));
+        return $this->response( $fields );
     }
 
 }

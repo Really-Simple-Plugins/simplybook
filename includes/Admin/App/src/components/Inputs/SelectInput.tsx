@@ -1,0 +1,85 @@
+import React from "react";
+import * as Select from "@radix-ui/react-select";
+import { clsx as classnames } from "clsx";
+
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface SelectInputProps {
+  value: string;
+  onChange: (value: string) => void;
+  options?: SelectOption[];
+}
+
+/**
+ * Styled select input component
+ * @param props - Props for the select component
+ * @returns {JSX.Element} The rendered select component
+ */
+const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
+  ({ value, onChange, options = [] }, ref) => {
+    return (
+      <Select.Root value={value} onValueChange={(value) => onChange(value)}>
+        <Select.Trigger
+          ref={ref}
+          className="flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring"
+        >
+          <Select.Value placeholder="Select an option…" />
+          <Select.Icon className="ml-2">v</Select.Icon>
+        </Select.Trigger>
+        <Select.Portal>
+          <Select.Content className="rounded-md border border-gray-300 bg-white shadow-lg">
+            <Select.ScrollUpButton className="flex items-center justify-center p-2">
+              {/*<ChevronUpIcon />*/}
+            </Select.ScrollUpButton>
+            <Select.Viewport className="p-2">
+              {options.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </Select.Viewport>
+            <Select.ScrollDownButton className="flex items-center justify-center p-2">
+              v
+            </Select.ScrollDownButton>
+          </Select.Content>
+        </Select.Portal>
+      </Select.Root>
+    );
+  },
+);
+
+export default SelectInput;
+
+interface SelectItemProps
+  extends React.ComponentPropsWithoutRef<typeof Select.Item> {
+  children: React.ReactNode;
+  className?: string;
+}
+
+/**
+ * Styled select item component
+ * @param props - Props for the select item component
+ * @returns {JSX.Element} The rendered select item component
+ */
+const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
+  ({ children, className, ...props }, ref) => {
+    return (
+      <Select.Item
+        ref={ref}
+        className={classnames(
+          "flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-gray-100 focus:bg-gray-200",
+          className,
+        )}
+        {...props}
+      >
+        <Select.ItemText>{children}</Select.ItemText>
+        <Select.ItemIndicator className="ml-2">Check</Select.ItemIndicator>
+      </Select.Item>
+    );
+  },
+);
+
+export { SelectItem };

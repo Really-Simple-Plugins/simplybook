@@ -3,6 +3,10 @@ namespace Simplybook\Traits;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+/**
+ * @Rogier maybe move to Admin?
+ */
 trait Load {
 
     /**
@@ -82,6 +86,7 @@ trait Load {
      */
     public function get_widget_settings(): array
     {
+		error_log('get_widget_settings');
         $fields = $this->get_fields_by_attribute( 'widget_field', true );
         $widget_fields = [];
         foreach ( $fields as $field ) {
@@ -107,6 +112,7 @@ trait Load {
      */
     public function get_api_data(): array
     {
+		error_log('get_api_data');
         $fields = $this->get_fields_by_attribute( 'type', 'api' );
         $data = [];
         foreach ( $fields as $field ) {
@@ -145,11 +151,12 @@ trait Load {
      * @param bool $load_values
      * @return array
      */
-    public function fields( bool $load_values = false ): array
+    public function fields( $load_values = false ): array
     {
         $fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
         $fields = apply_filters('simplybook_fields', $fields);
 
+		error_log('load_values: ' . $load_values);
         foreach ( $fields as $key => $field ) {
             $field = wp_parse_args( $field, [
                 'id' => false,
@@ -175,5 +182,77 @@ trait Load {
 
         return array_values( $fields );
     }
+
+	/**
+	 * Get fields array for the settings
+	 * @param bool $load_values
+	 * @return array
+	 */
+	public function fields_and_values( $load_values = true ): array
+	{
+		$fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
+		$fields = apply_filters('simplybook_fields', $fields);
+
+		error_log('fields_and_values load_values: ' . $load_values);
+		foreach ( $fields as $key => $field ) {
+			$field = wp_parse_args( $field, [
+				'id' => false,
+				'menu_id' => 'general',
+				'group_id' => 'general',
+				'type' => 'text',
+				'visible' => true,
+				'disabled' => false,
+				'default' => false,
+				'encrypt' => false,
+				'label' => '',
+			] );
+
+			//only preload field values for logged in admins
+			if ( $load_values && $this->user_can_manage() ) {
+				$value          = $this->get_option( $field['id'], $field['default'] );
+				$field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
+			}
+			$fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
+		}
+
+		$fields = apply_filters( 'simplybook_fields_values', $fields );
+
+		return array_values( $fields );
+	}
+
+
+	/**
+	 * Get fields array for the settings
+	 * @param bool $load_values
+	 * @return array
+	 */
+	public function menus(): array
+	{
+		$menus = include( SIMPLYBOOK_PATH . 'includes/Config/Menus.php' );
+		$menus = apply_filters('simplybook_menu', $menus);
+
+		foreach ( $menus as $key => $menu ) {
+			$menu = wp_parse_args( $menu, [
+				'id' => false,
+				'title' => 'No title',
+				'groups' => [],
+			] );
+
+			// if empty group add group with same title and id as menu
+			if ( empty( $menu['groups'] ) ) {
+				$menu['groups'][] = [
+					'id' => $menu['id'],
+					'title' => $menu['title'],
+				];
+			}
+
+			//only preload menu values for logged in admins
+			$menus[ $key ] = apply_filters( 'simplybook_menu', $menu, $menu['id'] );
+		}
+
+		$menus = apply_filters( 'simplybook_menus_values', $menus );
+
+		return array_values( $menus );
+	}
 
 }

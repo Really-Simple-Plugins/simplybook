@@ -1,4 +1,7 @@
 <?php
+/**
+ * @Rogier maybe move folder to Admin?
+ */
 return $fields = [
     [
         'id'       => 'review_notice_shown',
@@ -139,8 +142,8 @@ return $fields = [
     ],
     [
         'id'       => 'template',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
         'type'     => 'text',
         'label'    => '',
         'default'  => 'default',
@@ -148,8 +151,8 @@ return $fields = [
     ],
     [
         'id'       => 'server',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -158,8 +161,8 @@ return $fields = [
     ],
     [
         'id'       => 'timeline_type',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -168,8 +171,8 @@ return $fields = [
     ],
     [
         'id'       => 'datepicker_type',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -178,8 +181,8 @@ return $fields = [
     ],
     [
         'id'       => 'is_rtl',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -188,10 +191,10 @@ return $fields = [
     ],
     [
         'id'       => 'allow_switch_to_ada',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
-        'type'     => 'checkbox',
-        'label'    => '',
+        'menu_id'  => 'design',
+        'group_id' => 'design',
+        'type'     => 'switch',
+        'label'    => __('Allow switch to ADA', 'simplybook'),
         'disabled' => false,
         'default'  => false,
         'widget_field'  => '/',
@@ -200,8 +203,8 @@ return $fields = [
         'id'       => 'clear_session',
         'menu_id'  => 'general',
         'group_id' => 'general',
-        'type'     => 'checkbox',
-        'label'    => '',
+        'type'     => 'switch',
+        'label'    => __('Clear session', 'simplybook'),
         'disabled' => false,
         'default'  => false,
         'widget_field'  => '/',
@@ -229,8 +232,8 @@ return $fields = [
     ],
     [
         'id'       => 'booking_nav_bg_color',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -240,8 +243,8 @@ return $fields = [
     ],
     [
         'id'       => 'body_bg_color',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -251,8 +254,8 @@ return $fields = [
     ],
     [
         'id'       => 'dark_font_color',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -262,8 +265,8 @@ return $fields = [
     ],
     [
         'id'       => 'light_font_color',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -273,8 +276,8 @@ return $fields = [
     ],
     [
         'id'       => 'btn_color_1',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
@@ -284,8 +287,8 @@ return $fields = [
     ],
     [
         'id'       => 'sb_company_label_color',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
         'type'     => 'text',
         'label'    => '',
         'disabled' => false,
