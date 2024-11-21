@@ -1,5 +1,7 @@
 import { create } from "zustand";
-import registerEmail from "../api/endpoints/onBoardingUpdate";
+import { __ } from "@wordpress/i18n";
+import registerEmail from "../api/endpoints/onBoarding/registerEmail";
+import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 
 const useOnboardingStore = create((set) => {
   // Create initial data object by collecting all field IDs
@@ -16,15 +18,15 @@ const useOnboardingStore = create((set) => {
           required: true,
           validation: {
             regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            message: "Please enter a valid email address",
+            message: __("Please enter a valid email address",'simplybook'),
           },
         //   context: "This is a context",
         //   help: "This is a help",
         },
         {
           id: "terms-and-conditions",
-          type: "text",
-          label: "I agree to the terms and conditions",
+          type: "checkbox",
+          label: __("I agree to the terms and conditions", 'simplybook'),
         },
       ],
       beforeSubmit: async (data) => {
@@ -42,9 +44,9 @@ const useOnboardingStore = create((set) => {
           type: "checkbox",
         },
       ],
-      beforeSubmit: (data) => {
+      beforeSubmit: async (data) => {
         console.log("submit tips and tricks step");
-        console.log(data);
+        await registerTipsTricks({ data });
       },
     },
     {
@@ -59,7 +61,7 @@ const useOnboardingStore = create((set) => {
         {
           id: "business-category",
           type: "text",
-          label: "Business category",
+          label: __("Business category", 'simplybook'),
         },
         {
           id: "services",
@@ -69,27 +71,27 @@ const useOnboardingStore = create((set) => {
         {
           id: "street",
           type: "text",
-          label: "Street",
+          label: __("Street","simplybook"),
         },
         {
           id: "number",
           type: "text",
-          label: "No.",
+          label: __("No.","simplybook"),
         },
         {
           id: "zip",
           type: "text",
-          label: "Postal Code",
+          label: __("Postal Code","simplybook"),
         },
         {
           id: "city",
           type: "text",
-          label: "City",
+          label: __("City","simplybook"),
         },
         {
           id: "country",
           type: "text",
-          label: "Country",
+          label: __("Country","simplybook"),
         },
       ],
       beforeSubmit: (data) => {

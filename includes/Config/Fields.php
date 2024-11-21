@@ -55,6 +55,11 @@ return $fields = [
 		'default'  => false,
 	],
 	[
+		'id'       => 'tips-and-tricks',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
 		'id'       => 'phone',
 		'type'     => 'text',
 		'default'  => false,

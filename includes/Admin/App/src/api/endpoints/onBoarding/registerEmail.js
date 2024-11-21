@@ -1,4 +1,4 @@
-import request from "../requests/request";
+import request from "../../requests/request";
 
 /**
  * Update an onboarding step

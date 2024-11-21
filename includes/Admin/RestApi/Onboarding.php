@@ -74,10 +74,8 @@ class Onboarding extends RestApi {
 	    $data = $data['data'] ?? [];
 		error_log("tips tricks resposne");
 		error_log(print_r($data, true));
-		$tipstricks = (bool) ( $data['tipstricks'] );
-
         //de api registration
-        $this->update_option('tipstricks', $tipstricks);
+        $this->update_option('tips-and-tricks', (bool) ( $data['tips-and-tricks'] ));
 
         return $this->response([
             'message' => __('Success', 'simplybook'),
