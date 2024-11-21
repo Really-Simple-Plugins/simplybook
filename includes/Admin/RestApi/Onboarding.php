@@ -1,6 +1,7 @@
 <?php
 namespace Simplybook\Admin\RestApi;
 
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use WP_Error;
@@ -18,24 +19,24 @@ class Onboarding extends RestApi {
     {
         register_rest_route(
             'simplybook/v1',
-            'register_email',
+            'onboarding/register_email',
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'register_email' ),
-                'permission_callback' => function () {
-                    return $this->user_can_manage();
+                'permission_callback' => function ( $request ) {
+	                return $this->validate_request( $request );
                 },
             )
         );
 
         register_rest_route(
             'simplybook/v1',
-            'tipstricks',
+            'onboarding/tipstricks',
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'tipstricks' ),
-                'permission_callback' => function () {
-                    return $this->user_can_manage();
+                'permission_callback' => function ( $request ) {
+                    return $this->validate_request( $request );
                 },
             )
         );
@@ -45,21 +46,15 @@ class Onboarding extends RestApi {
      * Register a user with email addres with Simplybookme
      *
      * @param $request
-     * @param bool $ajax_data
-     * @return WP_Error|WP_REST_Response
+     * @param [] $ajax_data
+     * @return WP_REST_Response
      */
-    public function register_email($request, $ajax_data = false ): WP_Error|WP_REST_Response
+    public function register_email($request, $ajax_data = [] ): WP_REST_Response
     {
-        $data = $ajax_data ?: $request->get_json_params();
-        $email = sanitize_email( $data['email'] );
-
-        $validated_response = $this->validate_request( $data );
-        if ( is_wp_error( $validated_response ) ) {
-            return $validated_response;
-        }
-
-        //de api registration
-        $this->update_option('email', $email);
+		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+		$data = $data['data'] ?? [];
+	    $this->update_option('email', sanitize_email( $data['email'] ) );
+	    $this->update_option('terms-and-conditions', (bool) $data['terms-and-conditions'] );
 
         return $this->response([
             'message' => __('Email registered successfully', 'simplybook'),
@@ -70,18 +65,16 @@ class Onboarding extends RestApi {
      * Register a user with email addres with Simplybookme
      *
      * @param $request
-     * @param bool $ajax_data
-     * @return WP_Error|WP_REST_Response
+     * @param array $ajax_data
+     * @return WP_REST_Response
      */
-    public function tipstricks($request, $ajax_data = false ): WP_Error|WP_REST_Response
+    public function tipstricks($request, $ajax_data = [] ): WP_REST_Response
     {
-        $data = $ajax_data ?: $request->get_json_params();
-        $tipstricks = (bool) ( $data['tipstricks'] );
-
-        $validated_response = $this->validate_request( $data );
-        if ( is_wp_error( $validated_response ) ) {
-            return $validated_response;
-        }
+	    $data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+	    $data = $data['data'] ?? [];
+		error_log("tips tricks resposne");
+		error_log(print_r($data, true));
+		$tipstricks = (bool) ( $data['tipstricks'] );
 
         //de api registration
         $this->update_option('tipstricks', $tipstricks);

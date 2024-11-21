@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import registerEmail from "../api/endpoints/onBoardingUpdate";
 
 const useOnboardingStore = create((set) => {
   // Create initial data object by collecting all field IDs
@@ -26,7 +27,9 @@ const useOnboardingStore = create((set) => {
           label: "I agree to the terms and conditions",
         },
       ],
-      beforeSubmit: (data) => {
+      beforeSubmit: async (data) => {
+        console.log("submit email step");
+        await registerEmail({ data });
         console.log(data);
       },
     },
@@ -36,10 +39,11 @@ const useOnboardingStore = create((set) => {
       fields: [
         {
           id: "tips-and-tricks",
-          type: "hidden",
+          type: "checkbox",
         },
       ],
       beforeSubmit: (data) => {
+        console.log("submit tips and tricks step");
         console.log(data);
       },
     },
@@ -89,6 +93,7 @@ const useOnboardingStore = create((set) => {
         },
       ],
       beforeSubmit: (data) => {
+        console.log("submit information check step");
         console.log(data);
       },
     },

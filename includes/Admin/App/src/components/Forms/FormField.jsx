@@ -1,5 +1,7 @@
 import { Controller } from "react-hook-form";
 import TextField from "../Fields/TextField";
+import HiddenField from "../Fields/HiddenField";
+import CheckboxField from "../Fields/CheckboxField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
@@ -7,13 +9,14 @@ import { __ } from "@wordpress/i18n";
 const fieldComponents = {
   text: TextField,
   api: TextField,
+  hidden: HiddenField,
+  checkbox: CheckboxField,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {
   if (setting.visible === false) {
     return <input type="hidden" defaultValue={setting.value || setting.default} />;
   }
-
   const FieldComponent = fieldComponents[setting.type];
 
   if (!FieldComponent) {

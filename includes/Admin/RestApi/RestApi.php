@@ -2,6 +2,7 @@
 namespace Simplybook\Admin\RestApi;
 use Simplybook\Traits\Helper;
 use WP_Error;
+use WP_REST_Request;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -17,18 +18,23 @@ class RestApi {
 
     /**
      * Validate a Rest Request
-     * @param $data
-     * @return bool|WP_Error
+     *
+     * @param $request WP_REST_Request
+     *
+     * @return bool
      */
-    protected function validate_request( $data ): bool|WP_Error
+    protected function validate_request( WP_REST_Request $request ): bool
     {
-        if ( ! $this->user_can_manage() ) {
-            return new WP_Error( 'rest_forbidden', 'You do not have permission to perform this action.', [ 'status' => 403 ] );
-        }
+	    $data = $request->get_json_params();
+	    if ( !isset( $data['nonce']) || ! wp_verify_nonce( $data['nonce'], 'simplybook_nonce' ) ) {
+			error_log("missing nonce");
+		    return false;
+	    }
 
-        if ( !isset( $data['nonce']) || ! wp_verify_nonce( $data['nonce'], 'simplybook_nonce' ) ) {
-            return new WP_Error( 'rest_invalid_nonce', 'The provided nonce is not valid.', [ 'status' => 400 ] );
+        if ( ! $this->user_can_manage() ) {
+           return false;
         }
+		error_log("valid request");
         return true;
     }
 

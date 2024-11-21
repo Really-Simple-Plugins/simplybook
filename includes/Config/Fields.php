@@ -45,6 +45,11 @@ return $fields = [
         'default'  => false,
     ],
 	[
+		'id'       => 'terms-and-conditions',
+		'type'     => 'text',
+		'default'  => false,
+	],
+	[
 		'id'       => 'email',
 		'type'     => 'text',
 		'default'  => false,
