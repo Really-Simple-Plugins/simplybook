@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class RestApi {
     use Helper;
+	public $api = null;
 
     public function __construct() {
         add_action( 'rest_api_init', array( $this, 'register_rest_route') );

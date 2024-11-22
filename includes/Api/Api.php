@@ -30,6 +30,8 @@ class Api
 			add_action('init', array($this, 'register_company' ));
 		}
 
+		$this->get_services();
+
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
 		$token = $this->get_option('token');
@@ -136,6 +138,7 @@ class Api
 			return;
 		}
 
+		error_log("refreshing token");
 		$request = wp_remote_post( $this->endpoint( 'auth/refresh-token' ), array(
 			'headers' => $this->get_headers(),
 			'timeout' => 15,
@@ -227,6 +230,24 @@ class Api
 		$this->delete_option('token');
 		$this->delete_option('refresh_token');
 		$this->delete_option('expires');
+	}
+
+	/**
+	 * Check if authorization is valid and complete
+	 *
+	 * @return bool
+	 */
+	public function is_authorized(): bool {
+		//check if we have a token
+		if ( !$this->token_is_valid() ) {
+			$this->refresh_token();
+		}
+
+		//check if we have a company
+		if ( !$this->company_registration_complete() ) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -419,11 +440,99 @@ class Api
 	}
 
 	/**
+	 * Get list of Simplybook services
+	 *
+	 * @return array
+	 */
+	public function get_services(): array {
+		$services = get_transient('simplybook_services');
+		//if ( !$services ) {
+			$services = $this->api_call('admin/services' );
+			set_transient('simplybook_services', $services, WEEK_IN_SECONDS);
+		//}
+
+		return $services;
+	}
+
+	/**
+	 * Do an API request to simplybook
+	 *
+	 * @param string $path
+	 * @param array $data
+	 * @param int $attempt
+	 *
+	 * @return array
+	 */
+	protected function api_call( string $path, array $data = [], int $attempt = 1 ): array {
+		error_log("api call for $path");
+		$apiStatus = get_option('api_status');
+		//get part of $path after last /
+		$type = substr($path, strrpos($path, '/') + 1);
+
+		if ( $apiStatus && $apiStatus['status'] === 'error' && $apiStatus['time'] > time() - HOUR_IN_SECONDS ) {
+			$cache = get_option('simplybook_persistent_cache');
+			//return $cache[ $type ] ?? [];
+		}
+
+		$response_body = wp_remote_post( $this->endpoint( $path ), array(
+			'headers' => $this->get_headers( true ),
+			'timeout' => 15,
+			'sslverify' => true,
+			'body' => json_encode( $data ),
+		) );
+		$response_code = wp_remote_retrieve_response_code( $response_body );
+		if ( !is_wp_error( $response_body)) {
+			$response = json_decode( wp_remote_retrieve_body( $response_body ), true );
+		}
+
+		if ( $response_code === 200 ) {
+			update_option('api_status', [
+				'status' => 'success',
+				'time' => time(),
+			]);
+			delete_option("simplybook_{$type}_error" );
+			error_log("request success for $type");
+			error_log(print_r($response,true));
+			//update the persistent cache
+			$cache = get_option('simplybook_persistent_cache');
+			$cache[ $type ] = $response;
+			update_option('simplybook_persistent_cache', $cache, false);
+			return $response;
+		} else {
+			error_log("$$$$$$$");
+			error_log(print_r($response, true));
+			if ( isset($response['message'])) {
+				$message = $response['message'];
+			} else if (isset($response->message)){
+				$message = $response->message;
+			} else {
+				$message = '';
+			}
+			if ( $attempt===1 &&  str_contains( $message, 'Token Expired')) {
+				error_log("refresh expired token, attempt $attempt");
+				//invalid token, refresh.
+				$this->refresh_token();
+				$this->api_call( $path, $data, $attempt + 1 );
+			}
+			$this->log("Error during $type retrieval: ".$message);
+			update_option("simplybook_{$type}_error", $message, false);
+			$msg = "response code: $response_code, response body: ".print_r($response_body,true);
+
+			update_option('api_status', array(
+				'status' => 'error',
+				'error' => $msg,
+				'time' => time(),
+			) );
+			$this->_log($msg);
+		}
+		return [];
+	}
+
+	/**
 	 *
 	 *
 	 * Below old api functions
 	 */
-
 
 	/*POST https://user-api-v2.simplybook.me/admin/auth/refresh-token
 	Content-Type: application/json
