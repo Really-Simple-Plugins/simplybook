@@ -35,6 +35,7 @@ class Api
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
 		$token = $this->get_option('token');
+	    //$this->get_common_token();
 		if ( !$token ) {
 			$this->get_common_token();
 		} else {
@@ -91,10 +92,9 @@ class Api
 	 * @return void
 	 */
 	public function get_common_token(): void {
-		//if there's already a token, we can suffice with refreshing it.
-		$refresh_token = $this->get_option('refresh_token');
-		if ( $refresh_token ) {
-			$this->refresh_token();
+		error_log("GET COMMON TOKEN");
+		if ( $this->token_is_valid() ) {
+			error_log("we have a valid token");
 			return;
 		}
 
@@ -110,6 +110,8 @@ class Api
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
+			error_log("common token response");
+			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
 				$this->update_option( 'token', $request->token );
@@ -124,7 +126,6 @@ class Api
 		}
 	}
 
-
 	/**
 	 * Refresh the token
 	 *
@@ -133,14 +134,20 @@ class Api
 	public function refresh_token(): void {
 		//check if we have a token
 		$refresh_token = $this->get_option('refresh_token');
-		if ( !$refresh_token ) {
+		error_log("refresh token". $refresh_token);
+		if ( empty($refresh_token) ) {
 			$this->get_common_token();
+			return;
+		}
+
+		if ( $this->token_is_valid() ) {
+			error_log("no need to refresh");
 			return;
 		}
 
 		error_log("refreshing token");
 		$request = wp_remote_post( $this->endpoint( 'auth/refresh-token' ), array(
-			'headers' => $this->get_headers(),
+			'headers' => $this->get_headers(true),
 			'timeout' => 15,
 			'sslverify' => true,
 			'body' => json_encode(
@@ -150,7 +157,15 @@ class Api
 		) );
 
 		if ( ! is_wp_error( $request ) ) {
+			$response_code = wp_remote_retrieve_response_code( $request );
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
+			if ( $response_code === 401 ) {
+				error_log("unauthorized, get fresh common token");
+				$this->get_common_token();
+				return;
+			}
+			error_log(print_r("refresh token response",true));
+			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
 				$this->update_option( 'token', $request->token );
