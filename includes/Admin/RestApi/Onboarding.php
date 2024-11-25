@@ -40,6 +40,18 @@ class Onboarding extends RestApi {
                 },
             )
         );
+
+        register_rest_route(
+            'simplybook/v1',
+            'onboarding/company_registration',
+            array(
+                'methods' => 'POST',
+                'callback' => array( $this, 'register_company' ),
+                'permission_callback' => function ( $request ) {
+                    return $this->validate_request( $request );
+                },
+            )
+        );
     }
 
     /**
@@ -76,6 +88,44 @@ class Onboarding extends RestApi {
 		error_log(print_r($data, true));
         //de api registration
         $this->update_option('tips-and-tricks', (bool) ( $data['tips-and-tricks'] ));
+
+        return $this->response([
+            'message' => __('Success', 'simplybook'),
+        ]);
+    }
+
+
+    /**
+     * Register the company with Simplybookme
+     *
+     * @param $request
+     * @param array $ajax_data
+     * @return WP_REST_Response
+     */
+    public function register_company($request, $ajax_data = [] ): WP_REST_Response
+    {
+	    $data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+	    $data = $data['data'] ?? [];
+		error_log("company registration response");
+		error_log(print_r($data, true));
+        //de api registration
+        $this->update_option('email', sanitize_email( $data['email']) );
+        $this->update_option('category', (int) ( $data['category'] ));
+        $this->update_option('company_name', sanitize_text_field($data['company_name']) );
+		//get a description using the wordpress get_bloginfo function
+        $description = get_bloginfo('description');
+        $this->update_option('description', sanitize_text_field($description) );
+        $this->update_option('phone',  sanitize_text_field($data['phone']) );
+        $this->update_option('city',  sanitize_text_field($data['city']) );
+        $this->update_option('address',  sanitize_text_field($data['address']) );
+	    //no spaces allowed in zip
+	    $zip = sanitize_text_field( str_replace(' ', '', trim( $data['zip'] ) ) );
+        $this->update_option('zip', $zip );
+
+
+		$this->api->register_company();
+
+
 
         return $this->response([
             'message' => __('Success', 'simplybook'),

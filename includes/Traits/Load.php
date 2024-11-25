@@ -54,6 +54,7 @@ trait Load {
         }
 
         if ( $field['encrypt'] ) {
+	        error_log("decrypt field ".$field['id']);
             $value = $this->decrypt_string($value);
         }
 

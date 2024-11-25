@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Simplybook\Admin\RestApi\CompanyRegistration;
+use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
 
@@ -13,7 +14,9 @@ class Api
 {
     use Load;
     use Save;
-    protected $_commonCacheKey = '_v13';
+	use Helper;
+
+	protected $_commonCacheKey = '_v13';
     protected $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
     ];
@@ -34,16 +37,14 @@ class Api
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
-		$token = $this->get_option('token');
-	    //$this->get_common_token();
-		if ( !$token ) {
+		if ( !$this->get_token() ) {
 			$this->get_common_token();
-		} else {
-			$token_expiration = get_option('expires');
-			if ( $token_expiration < time() ) {
-				$this->refresh_token();
-			}
+		} else if ( !$this->token_is_valid() ) {
+			error_log("token expired, refresh");
+			$this->refresh_token();
 		}
+
+		$this->register_company();
     }
 
 	/**
@@ -80,10 +81,51 @@ class Api
 		);
 
 		if ( $include_token ) {
-			$headers['X-Token'] = $this->get_option('token');
+			$headers['X-Token'] = $this->get_token();
 		}
-
+		error_log("used headers:");
+		error_log(print_r($headers,true));
 		return $headers;
+	}
+
+	/**
+	 * get a token
+	 *
+	 * @param string $token
+	 * @param bool $is_refresh
+	 * @return void
+	 */
+
+	private function update_token( string $token, bool $is_refresh = false ): void {
+		$name = 'simplybook_token';
+		if ($is_refresh){
+			$name .= '_refresh';
+		}
+		$token = $this->sanitize_token( $token );
+		update_option($name, $this->encrypt_string($token) );
+	}
+
+	/**
+	 * Get a token
+	 * @param bool $is_refresh
+	 *
+	 * @return string
+	 */
+	private function get_token( bool $is_refresh = false) : string {
+		$name = 'simplybook_token';
+		if ($is_refresh){
+			$name .= '_refresh';
+		}
+		$token = get_option($name, '');
+		return $this->decrypt_string($token);
+	}
+
+	public function update_refresh_token(){
+
+	}
+
+	public function get_refresh_token(){
+
 	}
 
 	/**
@@ -114,11 +156,16 @@ class Api
 			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
-				$this->update_option( 'token', $request->token );
-				$this->update_option( 'refresh_token', $request->refresh_token );
-				$this->update_option( 'expires', time() + $request->expires_in );
+				error_log("setting token ".$request->token);
+				error_log("setting refresh token ".$request->refresh_token);
+				$expiration = time() + $request->expires_in;
+				error_log("set expiration to ".$expiration);
+				$this->update_token( $request->token );
+				$this->update_token( $request->refresh_token, true );
+				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 				$this->update_option( 'domain', $request->domain );
 			} else {
+				error_log("token not set in object");
 				update_option('simplybook_token_error', true, false);
 			}
 		} else {
@@ -133,15 +180,16 @@ class Api
 	 */
 	public function refresh_token(): void {
 		//check if we have a token
-		$refresh_token = $this->get_option('refresh_token');
+		$refresh_token = $this->get_token(true);
 		error_log("refresh token". $refresh_token);
 		if ( empty($refresh_token) ) {
+			error_log("MISSING REFRESH TOKEN, GET COMMON TOKEN");
 			$this->get_common_token();
 			return;
 		}
 
 		if ( $this->token_is_valid() ) {
-			error_log("no need to refresh");
+			error_log("no need to refresh, refresh token is already valid ");
 			return;
 		}
 
@@ -168,9 +216,9 @@ class Api
 			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
-				$this->update_option( 'token', $request->token );
-				$this->update_option( 'refresh_token', $request->refresh_token );
-				$this->update_option( 'expires', time() + $request->expires_in );
+				$this->update_token( $request->token );
+				$this->update_token( $request->refresh_token, true );
+				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 			} else {
 				update_option('simplybook_token_error', true, false);
 			}
@@ -225,7 +273,7 @@ class Api
 	 */
 	protected function token_is_valid(): bool {
 		$refresh_token = $this->get_option('refresh_token');
-		$expires = $this->get_option('expires');
+		$expires = get_option('simplybook_refresh_token_expiration',0);
 		if ( !$refresh_token || !$expires ) {
 			return false;
 		}
@@ -242,9 +290,9 @@ class Api
 	 */
 
 	protected function clear_tokens(): void {
-		$this->delete_option('token');
-		$this->delete_option('refresh_token');
-		$this->delete_option('expires');
+		delete_option('simplybook_token_refresh');
+		delete_option('simplybook_refresh_token_expiration');
+		delete_option('simplybook_token');
 	}
 
 	/**
@@ -270,7 +318,7 @@ class Api
 	 *
 	 * @return bool
 	 */
-	public function register_company(){
+	public function register_company(): bool {
 		if ( !$this->user_can_manage() ) {
 			return false;
 		}
@@ -656,11 +704,10 @@ class Api
         $token = $this->sanitize_token( $response['token'] ?? '' );
         $refresh_token = $this->sanitize_token( $response['refresh_token'] ?? '' );
         $domain = sanitize_text_field($response['domain'] ?? '');
-        $this->update_option('token', $token);
-        $this->update_option('refresh_token', $refresh_token);
+		$this->update_token( $token );
+		$this->update_token( $refresh_token, true );
+		update_option('simplybook_refresh_token_expiration', time() + 3600);
         $this->update_option('domain', $domain);
-        $this->update_option('is_refreshed', true);
-        $this->update_option('refresh_time', time() );
     }
 
 
@@ -700,9 +747,9 @@ class Api
         if ( !empty($authData) ) {
             return $authData;
         } else if ( isset($_GET['token']) && isset($_GET['refresh_token']) ) {
-            $this->update_option( 'token', sanitize_text_field($_GET['token']) );
-            $this->update_option( 'company', sanitize_text_field($_GET['company']) );
-            $this->update_option( 'refresh_token', sanitize_text_field($_GET['refresh_token']) );
+            $this->update_token(  sanitize_text_field($_GET['token']) );
+            $this->update_option( 'company', $this->sanitize_token($_GET['company']) );
+            $this->update_token( $this->sanitize_token($_GET['refresh_token']), true );
             $this->update_option( 'domain', sanitize_text_field($_GET['domain']) );
             $this->update_option( 'auth_datetime', time() );
             $this->update_option( 'is_auth', true );
@@ -836,7 +883,7 @@ class Api
             'headers' => array(
                 'Content-Type' => 'application/json',
                 'X-Company-Login' => $this->get_option('company'),
-                'X-Token' => $this->get_option('token'),
+                'X-Token' => $this->get_token(),
             ),
         );
     }

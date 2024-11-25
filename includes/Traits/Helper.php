@@ -19,8 +19,28 @@ trait Helper {
         if ( defined( 'WP_CLI' ) && WP_CLI ){
             return true;
         }
+		error_log(print_r($_REQUEST, true));
+		error_log(print_r($_REQUEST, true));
+		error_log("User ID: ".get_current_user_id());
         return current_user_can( 'simplybook_manage' );
     }
+
+	/**
+	 * Encrypt data
+	 * @param $string
+	 * @return string
+	 */
+	public function encrypt_string($string): string
+	{
+		//@todo: use a different key for each wordpress setup
+		$key = '7*w$9pumLw5koJc#JT6';
+		$ivLength = openssl_cipher_iv_length('AES-256-CBC');
+		$iv = openssl_random_pseudo_bytes($ivLength);
+
+		$encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, 0, $iv);
+
+		return base64_encode($iv . $encrypted);
+	}
 
     /**
      * Sanitize the api token

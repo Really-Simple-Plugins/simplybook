@@ -20,13 +20,6 @@ return $fields = [
         'label'    => '',
         'default'  => false,
     ],
-    [
-        'id'       => 'token',
-        'type'     => 'api',
-        'encrypt'  => true,
-        'label'    => '',
-        'default'  => '',
-    ],
 	[
 		'id'       => 'company_token',
 		'type'     => 'api',
@@ -104,12 +97,6 @@ return $fields = [
 		'type'     => 'text',
 		'default'  => false,
 	],
-    [
-        'id'       => 'refresh_token',
-        'type'     => 'api',
-        'encrypt'  => true,
-        'default'  => false,
-    ],
     [
         'id'       => 'login',
         'type'     => 'api',

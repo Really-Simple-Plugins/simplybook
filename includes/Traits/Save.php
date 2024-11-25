@@ -106,23 +106,7 @@ trait Save {
         $this->update_option('flash_messages', array());
     }
 
-    /**
-     * Encrypt data
-     * @param $string
-     * @param $key
-     * @return string
-     */
-    public function encryptString($string): string
-    {
-        //@todo: use a different key for each wordpress setup
-        $key = '7*w$9pumLw5koJc#JT6';
-        $ivLength = openssl_cipher_iv_length('AES-256-CBC');
-        $iv = openssl_random_pseudo_bytes($ivLength);
 
-        $encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, 0, $iv);
-
-        return base64_encode($iv . $encrypted);
-    }
 
     /**
      * Decryption method for old options
@@ -150,6 +134,7 @@ trait Save {
     public function update_option($key, $value): void
     {
         if ( !$this->user_can_manage() ) {
+			error_log("user cannot manage, exit update_option for $key");
             return;
         }
 
@@ -166,7 +151,11 @@ trait Save {
 
         $value = $this->sanitize_field($value, $field['type']);
         if ( $field['encrypt'] ) {
-            $value = $this->encryptString($value);
+			error_log("encrypt field ".$field['id']);
+            $value = $this->encrypt_string($value);
+        } else {
+	        error_log("DO NOT encrypt field ".$field['id']);
+
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);
@@ -194,35 +183,8 @@ trait Save {
 	}
 
     public function update_options( $fields ) {
-        foreach ( $fields as $index => $field ) {
-//            $config_field = $this->get_field_by_id( $field['id'] );
-//            if ( ! $config_field ) {
-//                unset( $fields[ $index ] );
-//                continue;
-//            }
-            if ( !isset($config_field['type']) ) {
-                $config_field['type'] = 'textarea';
-            }
-            $field['value']   = $this->sanitize_field( $field['value'], $config_field['type'] );
-            $fields[ $index ] = $field;
-        }
-
-        $options = get_option( 'simplybook_options', array() );
-//        $pass = '7*w$9pumLw5koJc#JT6';
-
-        // build a new options array
         foreach ( $fields as $field ) {
-            $field['prev_value'] = $options[$field['id']] ?? false;
-            do_action( 'simplybook_before_save_option', $field['id'], $field['value'], $field['prev_value'], $field['type'] );
-            $options[ $field['id'] ] = $field['value'];
-        }
-
-        if ( ! empty( $options ) ) {
-            update_option( 'simplybook_options', $options );
-        }
-
-        foreach ( $fields as $field ) {
-            do_action( 'simplybook_after_save_option', $field['id'], $field['value'], $field['prev_value'], $field['type'] );
+			$this->update_option( $field['id'], $field['value'] );
         }
 
         do_action( 'simplybook_after_save_options', $fields );

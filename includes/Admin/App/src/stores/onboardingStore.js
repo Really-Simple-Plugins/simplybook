@@ -69,14 +69,14 @@ const useOnboardingStore = create((set) => {
           label: "Services",
         },
         {
-          id: "street",
+          id: "address",
           type: "text",
-          label: __("Street","simplybook"),
+          label: __("Address","simplybook"),
         },
         {
-          id: "number",
+          id: "phone",
           type: "text",
-          label: __("No.","simplybook"),
+          label: __("Phone","simplybook"),
         },
         {
           id: "zip",
