@@ -5,6 +5,7 @@ import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
 import ButtonInput from "../Inputs/ButtonInput";
 import { Fragment } from "react";
+import Icon from "../Common/Icon";
 
 const Bookings = () => {
   const FeaturedBlocks = [
@@ -50,16 +51,16 @@ const Bookings = () => {
     <Block className={"col-span-3 row-span-2"}>
       <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
       <BlockContent className={"p-0"}>
-        <div className={"bg-tertiary-light flex flex-col"}>
+        <div className={"flex flex-col bg-tertiary-light"}>
           <div className={"flex flex-row justify-between gap-4 px-4"}>
             {FeaturedBlocks.map((block, index) => (
               <div
                 key={index}
                 className={
-                  "hover:border-tertiary my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:shadow-lg"
+                  "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg"
                 }
               >
-                <div className={"text-2xl font-bold"}>{block.icon}</div>
+                <Icon name={block.icon} />
                 <div className={"my-2 text-2xl font-extrabold"}>
                   {block.value}
                 </div>

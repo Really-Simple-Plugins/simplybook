@@ -140,48 +140,108 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 /* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../assets/img/logo.svg */ "./assets/img/logo.svg");
+/* harmony import */ var _Icon__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Icon */ "./src/components/Common/Icon.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+
+
+
 
 
 
 
 const Header = () => {
-  const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
+  const linkClassName = "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-white"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "mx-auto flex max-w-screen-2xl items-center px-5"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Link, {
     to: "/"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
     className: "h-12 w-40 px-5 py-2"
   }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "flex items-center"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Link, {
     to: "/",
     className: linkClassName
-  }, "Dashboard"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Dashboard", "simplybook")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://simplybook.me",
     target: "_blank",
     className: linkClassName
-  }, "Clients (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Clients", "simplybook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    name: "square-arrow-up-right"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://simplybook.me",
     target: "_blank",
     className: linkClassName
-  }, "Calendar (O)"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Calendar", "simplybook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    name: "square-arrow-up-right"
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Link, {
     to: "/settings/general",
     className: linkClassName
   }, "Settings")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex-1 items-center gap-6 px-4"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: "https://simplybook.me",
-    target: "_blank",
-    className: "px-2[&.active]:font-bold float-right py-6"
-  }, "Upgrade"))));
+    className: "float-right ml-auto flex items-center gap-6 px-4"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    link: {
+      to: "https://simplybook.me"
+    },
+    btnVariant: "tertiary"
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook")))));
 };
 Header.displayName = "Header";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
+
+/***/ }),
+
+/***/ "./src/components/Common/Icon.jsx":
+/*!****************************************!*\
+  !*** ./src/components/Common/Icon.jsx ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
+/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.mjs");
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+
+
+
+
+
+// Map your icons to keys for easy referencing
+const iconMap = {
+  "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__.faSquareArrowUpRight
+};
+const Icon = ({
+  name,
+  color = "black",
+  size = "1x",
+  className,
+  ...props
+}) => {
+  const icon = iconMap[name];
+  if (!icon) {
+    console.warn(`Icon "${name}" does not exist in iconMap.`);
+    return null;
+  }
+  const classes = (0,clsx__WEBPACK_IMPORTED_MODULE_2__["default"])("px-2", className);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__.FontAwesomeIcon, {
+    icon: icon,
+    size: size,
+    className: classes,
+    ...props
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Icon);
 
 /***/ }),
 
@@ -274,6 +334,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _Common_Icon__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Common/Icon */ "./src/components/Common/Icon.jsx");
+
 
 
 
@@ -321,15 +383,14 @@ var Bookings = function () {
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_4__["default"], {
       className: "p-0",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "bg-tertiary-light flex flex-col",
+        className: "flex flex-col bg-tertiary-light",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "flex flex-row justify-between gap-4 px-4",
           children: FeaturedBlocks.map(function (block, index) {
             return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "hover:border-tertiary my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:shadow-lg",
-              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "text-2xl font-bold",
-                children: block.icon
+              className: "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                name: block.icon
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "my-2 text-2xl font-extrabold",
                 children: block.value
@@ -551,6 +612,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -570,19 +632,19 @@ var __rest = undefined && undefined.__rest || function (s, e) {
   return t;
 };
 
+
 /**
  * Styled button component
  */
 var ButtonInput = function (_a) {
   var children = _a.children,
     onClick = _a.onClick,
+    link = _a.link,
     _b = _a.btnVariant,
     btnVariant = _b === void 0 ? "secondary" : _b,
-    // default is secondary because there needs to be a good reason to use primary
     _c = _a.disabled,
-    // default is secondary because there needs to be a good reason to use primary
     disabled = _c === void 0 ? false : _c,
-    props = __rest(_a, ["children", "onClick", "btnVariant", "disabled"]);
+    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled"]);
   // Base styles for both variants
   var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
   // Variants for primary and secondary buttons
@@ -595,6 +657,14 @@ var ButtonInput = function (_a) {
   var disabledStyles = "opacity-50 cursor-not-allowed";
   // Final className based on variant and disabled state
   var className = "".concat(baseStyles, " ").concat(variants[btnVariant], " ").concat(disabled ? disabledStyles : "");
+  if (link) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.Link, __assign({
+      to: link.to,
+      className: className
+    }, props, {
+      children: children
+    }));
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", __assign({
     onClick: onClick,
     className: className,

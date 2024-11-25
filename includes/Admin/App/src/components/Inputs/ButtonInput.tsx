@@ -19,7 +19,8 @@ type ButtonInputProps = {
 const ButtonInput: React.FC<ButtonInputProps> = ({
   children,
   onClick,
-  btnVariant = "secondary", // default is secondary because there needs to be a good reason to use primary
+  link,
+  btnVariant = "secondary",
   disabled = false,
   ...props
 }) => {
@@ -40,6 +41,18 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
 
   // Final className based on variant and disabled state
   const className = `${baseStyles} ${variants[btnVariant]} ${disabled ? disabledStyles : ""}`;
+
+  if (link) {
+    return (
+      <Link
+        to={link.to}
+        className={className}
+        {...props}
+      >
+        {children}
+      </Link>
+    );
+  }
 
   return (
     <button

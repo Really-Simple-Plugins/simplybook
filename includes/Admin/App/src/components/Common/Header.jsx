@@ -1,10 +1,13 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
+import Icon from "./Icon";
+import { __ } from "@wordpress/i18n";
+import ButtonInput from "../Inputs/ButtonInput";
 
 const Header = () => {
   const linkClassName =
-    "py-6 px-5 border-b-4  border-transparent [&.active]:border-blue-500 focus:outline-none";
+    "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
 
   return (
     <div className="bg-white">
@@ -16,34 +19,35 @@ const Header = () => {
         </div>
         <div className="flex items-center">
           <Link to="/" className={linkClassName}>
-            Dashboard
+            {__("Dashboard", "simplybook")}
           </Link>
           <a
             href="https://simplybook.me"
             target={"_blank"}
             className={linkClassName}
           >
-            Clients (O)
+            {__("Clients", "simplybook")}
+            <Icon name="square-arrow-up-right" />
           </a>
           <a
             href="https://simplybook.me"
             target={"_blank"}
             className={linkClassName}
           >
-            Calendar (O)
+            {__("Calendar", "simplybook")}
+            <Icon name="square-arrow-up-right" />
           </a>
           <Link to="/settings/general" className={linkClassName}>
             Settings
           </Link>
         </div>
-        <div className="flex-1 items-center gap-6 px-4">
-          <a
-            href="https://simplybook.me"
-            target={"_blank"}
-            className="px-2[&.active]:font-bold float-right py-6"
+        <div className="float-right ml-auto flex items-center gap-6 px-4">
+          <ButtonInput
+            link={{ to: "https://simplybook.me" }}
+            btnVariant="tertiary"
           >
-            Upgrade
-          </a>
+            {__("Upgrade", "simplybook")}
+          </ButtonInput>
         </div>
       </div>
     </div>

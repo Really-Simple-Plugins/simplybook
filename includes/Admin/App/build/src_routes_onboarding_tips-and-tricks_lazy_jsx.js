@@ -1001,6 +1001,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -1020,19 +1021,19 @@ var __rest = undefined && undefined.__rest || function (s, e) {
   return t;
 };
 
+
 /**
  * Styled button component
  */
 var ButtonInput = function (_a) {
   var children = _a.children,
     onClick = _a.onClick,
+    link = _a.link,
     _b = _a.btnVariant,
     btnVariant = _b === void 0 ? "secondary" : _b,
-    // default is secondary because there needs to be a good reason to use primary
     _c = _a.disabled,
-    // default is secondary because there needs to be a good reason to use primary
     disabled = _c === void 0 ? false : _c,
-    props = __rest(_a, ["children", "onClick", "btnVariant", "disabled"]);
+    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled"]);
   // Base styles for both variants
   var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
   // Variants for primary and secondary buttons
@@ -1045,6 +1046,14 @@ var ButtonInput = function (_a) {
   var disabledStyles = "opacity-50 cursor-not-allowed";
   // Final className based on variant and disabled state
   var className = "".concat(baseStyles, " ").concat(variants[btnVariant], " ").concat(disabled ? disabledStyles : "");
+  if (link) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.Link, __assign({
+      to: link.to,
+      className: className
+    }, props, {
+      children: children
+    }));
+  }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", __assign({
     onClick: onClick,
     className: className,
@@ -1104,10 +1113,10 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
     ref: ref,
     type: type,
-    className: "rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || '')
+    className: "rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
   }, props));
 });
-CheckboxInput.displayName = 'CheckboxInput';
+CheckboxInput.displayName = "CheckboxInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CheckboxInput);
 
 /***/ }),
@@ -1211,10 +1220,10 @@ var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, 
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
     ref: ref,
     type: type,
-    className: "w-full rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || '')
+    className: "w-full rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
   }, props));
 });
-TextInput.displayName = 'TextInput';
+TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
 
 /***/ }),
