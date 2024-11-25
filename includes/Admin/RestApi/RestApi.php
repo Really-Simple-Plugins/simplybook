@@ -27,6 +27,8 @@ class RestApi {
     protected function validate_request( WP_REST_Request $request ): bool
     {
 	    $data = $request->get_json_params();
+		error_log(print_r($request, true));
+		error_log(print_r($data, true));
 	    if ( !isset( $data['nonce']) || ! wp_verify_nonce( $data['nonce'], 'simplybook_nonce' ) ) {
 			error_log("missing nonce");
 		    return false;

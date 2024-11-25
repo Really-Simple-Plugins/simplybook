@@ -1,5 +1,5 @@
 "use strict";
-(self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_style-widget_lazy_jsx"],{
+(self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_confirm-email_lazy_jsx"],{
 
 /***/ "./src/api/config.js":
 /*!***************************!*\
@@ -46,6 +46,33 @@ function getSiteUrl(type) {
   }
   return url;
 }
+
+/***/ }),
+
+/***/ "./src/api/endpoints/onBoarding/getRecaptchaSitekey.js":
+/*!*************************************************************!*\
+  !*** ./src/api/endpoints/onBoarding/getRecaptchaSitekey.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @return {Promise<void>}
+ */
+const getRecaptchaSiteKey = async () => {
+  console.log("calling recaptcha sitekey api");
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/get_recaptcha_sitekey", "GET");
+  console.log(res);
+  return res.data.site_key;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getRecaptchaSiteKey);
 
 /***/ }),
 
@@ -704,10 +731,10 @@ OnboardingStep.displayName = "OnboardingStep";
 
 /***/ }),
 
-/***/ "./src/routes/onboarding/style-widget.lazy.jsx":
-/*!*****************************************************!*\
-  !*** ./src/routes/onboarding/style-widget.lazy.jsx ***!
-  \*****************************************************/
+/***/ "./src/routes/onboarding/confirm-email.lazy.jsx":
+/*!******************************************************!*\
+  !*** ./src/routes/onboarding/confirm-email.lazy.jsx ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -716,23 +743,66 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Onboarding/OnboardingStep */ "./src/components/Onboarding/OnboardingStep.jsx");
+/* harmony import */ var _api_endpoints_onBoarding_getRecaptchaSitekey__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/endpoints/onBoarding/getRecaptchaSitekey */ "./src/api/endpoints/onBoarding/getRecaptchaSitekey.js");
 
 
 
 
-const path = "/onboarding/style-widget";
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyFileRoute)(path)({
-  component: () => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    path: path,
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Alpha Bedum Beauty & Welness", "simplybook"),
-    subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("What's your style?", "simplybook"),
-    buttonLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next Step: Finish", "simplybook"),
-    rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right")
-  })
+
+
+const path = "/onboarding/confirm-email";
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)(path)({
+  component: () => {
+    const recaptchaContainerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+    const retrieveSiteKey = async () => {
+      return await (0,_api_endpoints_onBoarding_getRecaptchaSitekey__WEBPACK_IMPORTED_MODULE_3__["default"])();
+    };
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+      // Load the reCAPTCHA script
+      const script = document.createElement("script");
+      script.src = "https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+      let siteKey = retrieveSiteKey();
+      console.log("Site Key:", siteKey);
+      // Define the callback function globally to ensure it's accessible by reCAPTCHA
+      window.onloadRecaptchaCallback = () => {
+        if (window.grecaptcha && recaptchaContainerRef.current) {
+          window.grecaptcha.render(recaptchaContainerRef.current, {
+            sitekey: siteKey,
+            callback: token => {
+              console.log("reCAPTCHA Token:", token);
+              // Handle the token, e.g., pass it to a parent component or save it in the state
+            }
+          });
+        }
+      };
+
+      // Cleanup function to remove the script and callback when the component unmounts
+      return () => {
+        delete window.onloadRecaptchaCallback;
+        const existingScript = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
+        if (existingScript) {
+          document.body.removeChild(existingScript);
+        }
+      };
+    }, []);
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      path: path,
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Confirm your e-mail address", "simplybook"),
+      subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Type in the code from the e-mail you received.", "simplybook"),
+      bottomText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut", "simplybook"),
+      rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right"))
+    }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+      id: "recaptcha_container",
+      ref: recaptchaContainerRef
+    }));
+  }
 });
 
 /***/ }),
@@ -1280,4 +1350,4 @@ const createStore = (createState) => createState ? createStoreImpl(createState) 
 /***/ })
 
 }]);
-//# sourceMappingURL=src_routes_onboarding_style-widget_lazy_jsx.js.map
+//# sourceMappingURL=src_routes_onboarding_confirm-email_lazy_jsx.js.map

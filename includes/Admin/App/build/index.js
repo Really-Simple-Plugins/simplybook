@@ -173,18 +173,19 @@ __webpack_require__.r(__webpack_exports__);
 // Import Routes
 
 // Create Virtual Routes
-var SettingsLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/settings")();
-var OnboardingLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding")();
-var IndexLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/")();
-var SettingsSettingsIdLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/settings/$settingsId")();
-var OnboardingTipsAndTricksLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding/tips-and-tricks")();
-var OnboardingStyleWidgetLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding/style-widget")();
-var OnboardingInformationCheckLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding/information-check")();
-var OnboardingImplementationLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding/implementation")();
-var OnboardingCreateYourAccountLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)("/onboarding/create-your-account")();
+var SettingsLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/settings')();
+var OnboardingLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding')();
+var IndexLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/')();
+var SettingsSettingsIdLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/settings/$settingsId')();
+var OnboardingTipsAndTricksLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/tips-and-tricks')();
+var OnboardingStyleWidgetLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/style-widget')();
+var OnboardingInformationCheckLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/information-check')();
+var OnboardingImplementationLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/implementation')();
+var OnboardingCreateYourAccountLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/create-your-account')();
+var OnboardingConfirmEmailLazyImport = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.createFileRoute)('/onboarding/confirm-email')();
 // Create/Update Routes
 var SettingsLazyRoute = SettingsLazyImport.update({
-  path: "/settings",
+  path: '/settings',
   getParentRoute: function () {
     return _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route;
   }
@@ -194,7 +195,7 @@ var SettingsLazyRoute = SettingsLazyImport.update({
   });
 });
 var OnboardingLazyRoute = OnboardingLazyImport.update({
-  path: "/onboarding",
+  path: '/onboarding',
   getParentRoute: function () {
     return _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route;
   }
@@ -204,7 +205,7 @@ var OnboardingLazyRoute = OnboardingLazyImport.update({
   });
 });
 var IndexLazyRoute = IndexLazyImport.update({
-  path: "/",
+  path: '/',
   getParentRoute: function () {
     return _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route;
   }
@@ -214,7 +215,7 @@ var IndexLazyRoute = IndexLazyImport.update({
   });
 });
 var SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
-  path: "/$settingsId",
+  path: '/$settingsId',
   getParentRoute: function () {
     return SettingsLazyRoute;
   }
@@ -224,7 +225,7 @@ var SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
   });
 });
 var OnboardingTipsAndTricksLazyRoute = OnboardingTipsAndTricksLazyImport.update({
-  path: "/tips-and-tricks",
+  path: '/tips-and-tricks',
   getParentRoute: function () {
     return OnboardingLazyRoute;
   }
@@ -234,7 +235,7 @@ var OnboardingTipsAndTricksLazyRoute = OnboardingTipsAndTricksLazyImport.update(
   });
 });
 var OnboardingStyleWidgetLazyRoute = OnboardingStyleWidgetLazyImport.update({
-  path: "/style-widget",
+  path: '/style-widget',
   getParentRoute: function () {
     return OnboardingLazyRoute;
   }
@@ -244,7 +245,7 @@ var OnboardingStyleWidgetLazyRoute = OnboardingStyleWidgetLazyImport.update({
   });
 });
 var OnboardingInformationCheckLazyRoute = OnboardingInformationCheckLazyImport.update({
-  path: "/information-check",
+  path: '/information-check',
   getParentRoute: function () {
     return OnboardingLazyRoute;
   }
@@ -254,7 +255,7 @@ var OnboardingInformationCheckLazyRoute = OnboardingInformationCheckLazyImport.u
   });
 });
 var OnboardingImplementationLazyRoute = OnboardingImplementationLazyImport.update({
-  path: "/implementation",
+  path: '/implementation',
   getParentRoute: function () {
     return OnboardingLazyRoute;
   }
@@ -264,7 +265,7 @@ var OnboardingImplementationLazyRoute = OnboardingImplementationLazyImport.updat
   });
 });
 var OnboardingCreateYourAccountLazyRoute = OnboardingCreateYourAccountLazyImport.update({
-  path: "/create-your-account",
+  path: '/create-your-account',
   getParentRoute: function () {
     return OnboardingLazyRoute;
   }
@@ -273,7 +274,18 @@ var OnboardingCreateYourAccountLazyRoute = OnboardingCreateYourAccountLazyImport
     return d.Route;
   });
 });
+var OnboardingConfirmEmailLazyRoute = OnboardingConfirmEmailLazyImport.update({
+  path: '/confirm-email',
+  getParentRoute: function () {
+    return OnboardingLazyRoute;
+  }
+}).lazy(function () {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_react-hook-form_dist_in-837b8d"), __webpack_require__.e("src_routes_onboarding_confirm-email_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/confirm-email.lazy */ "./src/routes/onboarding/confirm-email.lazy.jsx")).then(function (d) {
+    return d.Route;
+  });
+});
 var OnboardingLazyRouteChildren = {
+  OnboardingConfirmEmailLazyRoute: OnboardingConfirmEmailLazyRoute,
   OnboardingCreateYourAccountLazyRoute: OnboardingCreateYourAccountLazyRoute,
   OnboardingImplementationLazyRoute: OnboardingImplementationLazyRoute,
   OnboardingInformationCheckLazyRoute: OnboardingInformationCheckLazyRoute,
@@ -309,6 +321,7 @@ var routeTree = _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route._addFileChildren
     "/onboarding": {
       "filePath": "onboarding.lazy.jsx",
       "children": [
+        "/onboarding/confirm-email",
         "/onboarding/create-your-account",
         "/onboarding/implementation",
         "/onboarding/information-check",
@@ -321,6 +334,10 @@ var routeTree = _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route._addFileChildren
       "children": [
         "/settings/$settingsId"
       ]
+    },
+    "/onboarding/confirm-email": {
+      "filePath": "onboarding/confirm-email.lazy.jsx",
+      "parent": "/onboarding"
     },
     "/onboarding/create-your-account": {
       "filePath": "onboarding/create-your-account.lazy.jsx",

@@ -831,13 +831,13 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       type: "text",
       label: "Services"
     }, {
-      id: "street",
+      id: "address",
       type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Street", "simplybook")
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Address", "simplybook")
     }, {
-      id: "number",
+      id: "phone",
       type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("No.", "simplybook")
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Phone", "simplybook")
     }, {
       id: "zip",
       type: "text",
@@ -857,6 +857,18 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     }
   }, {
     id: 4,
+    path: "/onboarding/confirm-email",
+    fields: [{
+      id: "confirmation-code",
+      type: "text",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", 'simplybook')
+    }],
+    beforeSubmit: data => {
+      console.log("confirm email step");
+      console.log(data);
+    }
+  }, {
+    id: 5,
     path: "/onboarding/style-widget",
     fields: [{
       id: "widget-color-simple",
@@ -866,7 +878,7 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       console.log(data);
     }
   }, {
-    id: 5,
+    id: 6,
     path: "/onboarding/implementation",
     fields: [],
     beforeSubmit: data => {
@@ -894,6 +906,7 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     getCurrentStepId: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path).id;
     },
+    getRecaptchaSiteKey: () => {},
     getCurrentStep: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path);
     },

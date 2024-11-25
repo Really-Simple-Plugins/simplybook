@@ -52,6 +52,18 @@ class Onboarding extends RestApi {
                 },
             )
         );
+
+		register_rest_route(
+            'simplybook/v1',
+            'onboarding/get_recaptcha_sitekey',
+            array(
+                'methods' => 'GET',
+                'callback' => array( $this, 'get_recaptcha_sitekey' ),
+                'permission_callback' => function ( $request ) {
+                    return $this->validate_request( $request );
+                },
+            )
+        );
     }
 
     /**
@@ -131,4 +143,10 @@ class Onboarding extends RestApi {
             'message' => __('Success', 'simplybook'),
         ]);
     }
+
+	public function get_recaptcha_sitekey(): WP_REST_Response {
+		return $this->response([
+			'site_key' => get_option('simplybook_recaptcha_site_key'),
+		]);
+	}
 }

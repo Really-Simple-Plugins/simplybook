@@ -101,6 +101,21 @@ const useOnboardingStore = create((set) => {
     },
     {
       id: 4,
+      path: "/onboarding/confirm-email",
+      fields: [
+        {
+          id: "confirmation-code",
+          type: "text",
+          label: __("Confirmation Code",'simplybook'),
+        },
+      ],
+      beforeSubmit: (data) => {
+        console.log("confirm email step");
+        console.log(data);
+      },
+    },
+    {
+      id: 5,
       path: "/onboarding/style-widget",
       fields: [
         {
@@ -113,7 +128,7 @@ const useOnboardingStore = create((set) => {
       },
     },
     {
-      id: 5,
+      id: 6,
       path: "/onboarding/implementation",
       fields: [],
       beforeSubmit: (data) => {
@@ -140,6 +155,9 @@ const useOnboardingStore = create((set) => {
       return useOnboardingStore
         .getState()
         .steps.find((step) => step.path === path).id;
+    },
+    getRecaptchaSiteKey: () => {
+
     },
     getCurrentStep: (path) => {
       return useOnboardingStore.getState().steps.find((step) => step.path === path);

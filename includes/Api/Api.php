@@ -33,7 +33,7 @@ class Api
 			add_action('init', array($this, 'register_company' ));
 		}
 
-		$this->get_services();
+//		$this->get_services();
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
@@ -44,8 +44,8 @@ class Api
 			$this->refresh_token();
 		}
 
-		$this->register_company();
-    }
+//		add_action('init', array($this, 'register_company'));
+	}
 
 	/**
 	 * Check if we have a company_id, which shows we have a registered company
@@ -82,7 +82,9 @@ class Api
 
 		if ( $include_token ) {
 			$headers['X-Token'] = $this->get_token();
+			$headers[ 'X-Company-Login' ] = $this->get_company_login();
 		}
+
 		error_log("used headers:");
 		error_log(print_r($headers,true));
 		return $headers;
@@ -118,14 +120,6 @@ class Api
 		}
 		$token = get_option($name, '');
 		return $this->decrypt_string($token);
-	}
-
-	public function update_refresh_token(){
-
-	}
-
-	public function get_refresh_token(){
-
 	}
 
 	/**
@@ -266,13 +260,24 @@ class Api
 		return $random_string;
 	}
 
+	protected function get_company_login(): string {
+		$login = get_option('simplybook_company_login', '');
+		if ( !empty($login) ) {
+			return $login;
+		}
+
+		$login = wp_generate_password( 32, false );
+		update_option('simplybook_company_login', $login, false );
+		return $login;
+	}
+
 	/**
 	 * Check if we have a valid token
 	 *
 	 * @return bool
 	 */
 	protected function token_is_valid(): bool {
-		$refresh_token = $this->get_option('refresh_token');
+		$refresh_token = $this->get_token(true);
 		$expires = get_option('simplybook_refresh_token_expiration',0);
 		if ( !$refresh_token || !$expires ) {
 			return false;
@@ -345,7 +350,8 @@ class Api
 		$city = sanitize_text_field( $this->get_option('city') );
 		$address = sanitize_text_field( $this->get_option('address') );
 		//no spaces allowed in zip
-		$zip = sanitize_text_field( str_replace(' ', '', trim($this->get_option('zip') ) ) );
+		$zip = (string) $this->get_option('zip');
+		$zip = sanitize_text_field( str_replace(' ', '', trim( $zip ) ) );
 
 		//use some defaults for testing purposes
 		$company_name = "really simple plugins";
@@ -354,14 +360,15 @@ class Api
 		$city = 'Groningen';
 		$address = 'Kalmarweg 14-5';
 		$email = "rogierlankhorst@gmail.com";
-		$company_login = sanitize_title($company_name);
+		$company_login = $this->get_company_login();
+		error_log("company login $company_login");
 		$zip = "12345";
 		if ( empty($email) || empty($phone) || empty($company_name) || empty($description) || empty($city) || empty($address) || empty($zip) ) {
 			$this->log("Missing fields for company registration");
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
 		}
-
+		//error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
 		$request = wp_remote_post( $this->endpoint( 'company' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -384,7 +391,7 @@ class Api
 				    "retype_password" => $random_password,
 					'categories' => [$category],
 					'lang' => $this->get_locale(),
-					'callback_url' => get_rest_url(null,"simplybook/v1/company_registration/$callback_url"),
+					'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
 				]
 			),
 		) );
@@ -396,9 +403,8 @@ class Api
 			if ( isset($request->recaptcha_site_key) && $request->success ) {
 				delete_option('simplybook_company_registration_error' );
 				error_log(print_r($request,true));
-				$this->update_option( 'recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
-				$this->update_option( 'recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
-				$this->update_option( 'company_login', sanitize_text_field( $request->company_login ) );
+				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
+				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
 				$this->update_option( 'company_id', (int) $request->company_id );
 				//successful registered
 				return true;
@@ -408,6 +414,12 @@ class Api
 
 					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
+					$this->register_company();
+				}
+				error_log(print_r($request->data, true));
+				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login)) {
+					error_log("company login already exists, generate new one");
+					delete_option('simplybook_company_login');
 					$this->register_company();
 				}
 				$this->log("Error during company registration: ".$request->message);
@@ -448,7 +460,7 @@ class Api
 			'sslverify' => true,
 			'body' => json_encode(
 				[
-					'company_login' => $this->get_option('company_login'),
+					'company_login' => $this->get_company_login(),
 					'confirmation_code' => $email_code,
 					'recaptcha' => get_option('simplybook_recaptcha_site_key'),
 				]
@@ -466,7 +478,6 @@ class Api
 				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key), false );
 				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ), false );
 
-				$this->update_option( 'company_login', sanitize_text_field( $request->company_login ) );
 				$this->update_option( 'company_id', (int) $request->company_id );
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
@@ -510,7 +521,7 @@ class Api
 	public function get_services(): array {
 		$services = get_transient('simplybook_services');
 		//if ( !$services ) {
-			$services = $this->api_call('admin/services' );
+			$services = $this->api_call('admin/services', [], 'GET');
 			set_transient('simplybook_services', $services, WEEK_IN_SECONDS);
 		//}
 
@@ -526,23 +537,29 @@ class Api
 	 *
 	 * @return array
 	 */
-	protected function api_call( string $path, array $data = [], int $attempt = 1 ): array {
-		error_log("api call for $path");
-		$apiStatus = get_option('api_status');
+	protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array {
+		error_log( "api call for $path" );
+		$apiStatus = get_option( 'api_status' );
 		//get part of $path after last /
-		$type = substr($path, strrpos($path, '/') + 1);
+		$path_type = substr( $path, strrpos( $path, '/' ) + 1 );
 
 		if ( $apiStatus && $apiStatus['status'] === 'error' && $apiStatus['time'] > time() - HOUR_IN_SECONDS ) {
-			$cache = get_option('simplybook_persistent_cache');
+			$cache = get_option( 'simplybook_persistent_cache' );
 			//return $cache[ $type ] ?? [];
 		}
 
-		$response_body = wp_remote_post( $this->endpoint( $path ), array(
-			'headers' => $this->get_headers( true ),
-			'timeout' => 15,
-			'sslverify' => true,
-			'body' => json_encode( $data ),
-		) );
+		if ( $type === 'POST' ) {
+			$response_body = wp_remote_post( $this->endpoint( $path ), array(
+				'headers'   => $this->get_headers( true ),
+				'timeout'   => 15,
+				'sslverify' => true,
+				'body'      => json_encode( $data ),
+			) );
+		} else {
+			$url = add_query_arg($data, $this->endpoint( $path ));
+			$response_body = wp_remote_get($url, $this->get_headers( true ) );
+		}
+
 		$response_code = wp_remote_retrieve_response_code( $response_body );
 		if ( !is_wp_error( $response_body)) {
 			$response = json_decode( wp_remote_retrieve_body( $response_body ), true );
@@ -553,12 +570,12 @@ class Api
 				'status' => 'success',
 				'time' => time(),
 			]);
-			delete_option("simplybook_{$type}_error" );
-			error_log("request success for $type");
+			delete_option("simplybook_{$path_type}_error" );
+			error_log("request success for $path_type");
 			error_log(print_r($response,true));
 			//update the persistent cache
 			$cache = get_option('simplybook_persistent_cache');
-			$cache[ $type ] = $response;
+			$cache[ $path_type ] = $response;
 			update_option('simplybook_persistent_cache', $cache, false);
 			return $response;
 		} else {
@@ -575,10 +592,10 @@ class Api
 				error_log("refresh expired token, attempt $attempt");
 				//invalid token, refresh.
 				$this->refresh_token();
-				$this->api_call( $path, $data, $attempt + 1 );
+				$this->api_call( $path, $data, $type, $attempt + 1 );
 			}
-			$this->log("Error during $type retrieval: ".$message);
-			update_option("simplybook_{$type}_error", $message, false);
+			$this->log("Error during $path_type retrieval: ".$message);
+			update_option("simplybook_{$path_type}_error", $message, false);
 			$msg = "response code: $response_code, response body: ".print_r($response_body,true);
 
 			update_option('api_status', array(

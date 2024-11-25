@@ -68,16 +68,6 @@ return $fields = [
 		'default'  => false,
 	],
 	[
-		'id'       => 'recaptcha_site_key',
-		'type'     => 'api',
-		'default'  => false,
-	],
-	[
-		'id'       => 'recaptcha_version',
-		'type'     => 'api',
-		'default'  => false,
-	],
-	[
 		'id'       => 'company_login',
 		'type'     => 'api',
 		'default'  => false,
@@ -98,6 +88,18 @@ return $fields = [
 		'default'  => false,
 	],
     [
+        'id'       => 'company',
+        'type'     => 'api',
+        'label'    => '',
+        'default'  => '',
+    ],
+    [
+        'id'       => 'description',
+        'type'     => 'api',
+        'label'    => '',
+        'default'  => '',
+    ],
+	[
         'id'       => 'login',
         'type'     => 'api',
         'label'    => '',
