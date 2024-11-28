@@ -67,10 +67,9 @@ const useTaskStore = create<TaskStore>((set, get) => ({
   getCompletionPercentage: () => {
     const tasks = get().tasks;
     const total = tasks.length;
-    console.log(tasks);
-    const completed = tasks.filter(task => task.status === 'dismissed' || task.status === 'completed').length 
-    console.log(completed, total);
-    return Math.round((completed / total) * 100);
+    const completed = tasks.filter(task => task.status === 'dismissed' || task.status === 'completed').length;
+    const actualPercentage = Math.round((completed / total) * 80);
+    return 20 + actualPercentage;
   },
 }));
 

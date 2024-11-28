@@ -69,7 +69,7 @@ const BlockContent = ({
   className = ""
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "p-5 pt-0 flex-grow")
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "p-5 flex-grow")
   }, children);
 };
 BlockContent.displayName = "BlockContent";
@@ -995,12 +995,11 @@ var useTaskStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)(function (set
     getCompletionPercentage: function () {
       var tasks = get().tasks;
       var total = tasks.length;
-      console.log(tasks);
       var completed = tasks.filter(function (task) {
         return task.status === 'dismissed' || task.status === 'completed';
       }).length;
-      console.log(completed, total);
-      return Math.round(completed / total * 100);
+      var actualPercentage = Math.round(completed / total * 80);
+      return 20 + actualPercentage;
     }
   };
 });

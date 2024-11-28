@@ -286,7 +286,7 @@ const BlockContent = ({
   className = ""
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "p-5 pt-0 flex-grow")
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "p-5 flex-grow")
   }, children);
 };
 BlockContent.displayName = "BlockContent";
