@@ -1,14 +1,17 @@
 import { memo } from "react";
+import clsx from "clsx";
 
 type BlockProps = {
   className?: string;
   children: React.ReactNode;
 };
 
-const Block = memo(({ className, children }: BlockProps) => {
-  const classes = `bg-white shadow-md rounded-xl  ${className}`;
-
-  return <div className={classes}>{children}</div>;
+const Block = memo(({ className = "", children }: BlockProps) => {
+  return (
+    <div className={clsx(className, "bg-white shadow-md rounded-xl flex flex-col")}>
+      {children}
+    </div>
+  );
 });
 
 Block.displayName = "Block";

@@ -1054,7 +1054,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -1075,6 +1076,7 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 };
 
 
+
 /**
  * Styled button component
  */
@@ -1086,21 +1088,24 @@ var ButtonInput = function (_a) {
     btnVariant = _b === void 0 ? "secondary" : _b,
     _c = _a.disabled,
     disabled = _c === void 0 ? false : _c,
-    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled"]);
-  // Base styles for both variants
-  var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
-  // Variants for primary and secondary buttons
-  var variants = {
-    primary: "bg-secondary text-white hover:bg-secondary-dark",
-    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
-    tertiary: "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light"
-  };
-  // Disabled styles
-  var disabledStyles = "opacity-50 cursor-not-allowed";
-  // Final className based on variant and disabled state
-  var className = "".concat(baseStyles, " ").concat(variants[btnVariant], " ").concat(disabled ? disabledStyles : "");
+    _d = _a.size,
+    size = _d === void 0 ? "md" : _d,
+    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled", "size"]);
+  var className = (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)(
+  // Base styles
+  "rounded-full transition-all duration-200", {
+    'bg-secondary text-white hover:bg-secondary-dark': btnVariant === 'primary',
+    'bg-tertiary text-white hover:bg-tertiary-dark': btnVariant === 'secondary',
+    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light': btnVariant === 'tertiary'
+  }, {
+    'py-.5 px-3 font-normal text-xs border-1': size === 'sm',
+    'py-2 px-6 font-semibold': size === 'md',
+    'py-3 px-8 text-lg font-semibold': size === 'lg'
+  }, {
+    'opacity-50 cursor-not-allowed': disabled
+  });
   if (link) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.Link, __assign({
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, __assign({
       to: link.to,
       className: className
     }, props, {

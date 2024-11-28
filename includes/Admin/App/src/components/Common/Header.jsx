@@ -27,7 +27,7 @@ const Header = () => {
             className={linkClassName}
           >
             {__("Clients", "simplybook")}
-            <Icon name="square-arrow-up-right" />
+            <Icon name="square-arrow-up-right" className="px-2"/>
           </a>
           <a
             href="https://simplybook.me"
@@ -35,7 +35,7 @@ const Header = () => {
             className={linkClassName}
           >
             {__("Calendar", "simplybook")}
-            <Icon name="square-arrow-up-right" />
+            <Icon name="square-arrow-up-right" className="px-2" />
           </a>
           <Link to="/settings/general" className={linkClassName}>
             Settings

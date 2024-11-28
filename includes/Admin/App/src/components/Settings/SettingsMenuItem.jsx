@@ -10,7 +10,7 @@ const SettingsMenuItem = React.memo(({ item }) => {
   const to = isExternalLink ? item.url : `/settings/${item.id}`;
   const target = isExternalLink ? "_blank" : undefined;
   const titleSuffix = isExternalLink ? (
-    <Icon name="square-arrow-up-right" />
+    <Icon name="square-arrow-up-right" className="px-2" />
   ) : (
     ""
   );

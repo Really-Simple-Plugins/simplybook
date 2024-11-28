@@ -61,13 +61,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+
 
 const BlockContent = ({
   children,
-  className = "p-5 pt-0"
+  className = ""
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: className
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "p-5 pt-0 flex-grow")
   }, children);
 };
 BlockContent.displayName = "BlockContent";
@@ -87,12 +89,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+
 
 const BlockFooter = ({
-  children
+  children,
+  className = ""
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center justify-between px-5 py-4"
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "flex items-center justify-between px-5 py-4")
   }, children);
 };
 BlockFooter.displayName = "BlockFooter";
@@ -112,13 +117,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+
 
 const BlockHeading = ({
   title,
-  controls
+  controls,
+  className = ""
 }) => {
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex items-center justify-between px-5 py-4"
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_1__["default"])(className, "flex items-center justify-between px-5 py-4")
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", {
     className: "text-base font-bold"
   }, title), controls);
@@ -173,13 +181,15 @@ const Header = () => {
     target: "_blank",
     className: linkClassName
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Clients", "simplybook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    name: "square-arrow-up-right"
+    name: "square-arrow-up-right",
+    className: "px-2"
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
     href: "https://simplybook.me",
     target: "_blank",
     className: linkClassName
   }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Calendar", "simplybook"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    name: "square-arrow-up-right"
+    name: "square-arrow-up-right",
+    className: "px-2"
   })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.Link, {
     to: "/settings/general",
     className: linkClassName
@@ -210,34 +220,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
-/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.mjs");
-/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
-
+/* harmony import */ var _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.mjs");
 
 
 
 
 // Map your icons to keys for easy referencing
 const iconMap = {
-  "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_3__.faSquareArrowUpRight
+  "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSquareArrowUpRight
 };
 const Icon = ({
   name,
   color = "black",
   size = "1x",
-  className,
+  className = "",
   ...props
 }) => {
-  const icon = iconMap[name];
+  let icon = iconMap[name];
   if (!icon) {
     console.warn(`Icon "${name}" does not exist in iconMap.`);
-    return null;
+    // set circle as default icon
+    icon = _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faCircle;
   }
-  const classes = (0,clsx__WEBPACK_IMPORTED_MODULE_2__["default"])("px-2", className);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_fortawesome_react_fontawesome__WEBPACK_IMPORTED_MODULE_1__.FontAwesomeIcon, {
     icon: icon,
     size: size,
-    className: classes,
+    className: className,
     ...props
   });
 };
@@ -298,14 +306,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
+
 
 
 var Block = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
-  var className = _a.className,
+  var _b = _a.className,
+    className = _b === void 0 ? "" : _b,
     children = _a.children;
-  var classes = "bg-white shadow-md rounded-xl  ".concat(className);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: classes,
+    className: (0,clsx__WEBPACK_IMPORTED_MODULE_2__["default"])(className, "bg-white shadow-md rounded-xl flex flex-col"),
     children: children
   });
 });
@@ -344,6 +354,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+// @TODO: Split up into multiple components? 
 var Bookings = function () {
   var FeaturedBlocks = [{
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Today", "simplybook"),
@@ -381,16 +392,17 @@ var Bookings = function () {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Bookings", "simplybook"),
       controls: undefined
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      className: "p-0",
+      className: "px-0 py-0",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "flex flex-col bg-tertiary-light",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "flex flex-row justify-between gap-4 px-4",
           children: FeaturedBlocks.map(function (block, index) {
             return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-              className: "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg",
+              className: "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg hover:cursor-pointer",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
-                name: block.icon
+                name: block.icon,
+                size: "2x"
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "my-2 text-2xl font-extrabold",
                 children: block.value
@@ -402,25 +414,27 @@ var Bookings = function () {
           })
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-          className: "grid auto-rows-max grid-cols-4 gap-2 p-2",
-          children: DataList.map(function (block, index) {
-            return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+        children: DataList.map(function (block, index) {
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react__WEBPACK_IMPORTED_MODULE_7__.Fragment, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50",
               children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "text-2xl font-bold",
-                children: block.icon
+                className: "flex items-center justify-center",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_8__["default"], {
+                  name: block.icon
+                })
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "text-sm",
                 children: block.title
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+                className: "text-green-500 text-l font-bold",
+                children: [block.uplift, "%"]
               }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "ml-auto text-2xl font-bold",
-                children: block.uplift
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-                className: "text-2xl font-bold",
+                className: "font-bold",
                 children: block.value
               })]
-            }, index);
-          })
+            })
+          }, index);
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -454,12 +468,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
 /* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
 
 
 
 
 
 
+
+
+// @TODO: Split up into multiple components? 
+var DataList = [{
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Providers", "simplybook"),
+  link: "/providers",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "simplybook"),
+  btnVariant: "primary"
+}, {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Services", "simplybook"),
+  link: "/services",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "simplybook"),
+  btnVariant: "primary"
+}, {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Bookings", "simplybook"),
+  link: "/settings",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "simplybook"),
+  btnVariant: "primary"
+}, {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Directory Listing", "simplybook"),
+  link: "https://simplybook.me/directory",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"),
+  btnVariant: "primary"
+}, {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Membership", "simplybook"),
+  link: "https://simplybook.me/membership",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"),
+  btnVariant: "primary"
+}, {
+  title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("White Label", "simplybook"),
+  link: "https://simplybook.me/white-label",
+  buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"),
+  btnVariant: "primary"
+}];
 var Management = function () {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
     className: "col-span-3 row-span-2",
@@ -467,7 +518,30 @@ var Management = function () {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Management", "simplybook"),
       controls: undefined
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      children: ""
+      className: "px-0 py-0",
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: DataList.map(function (block, index) {
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
+            children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              className: "grid grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50",
+              children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "text-sm",
+                children: block.title
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+                className: "flex justify-end",
+                children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__["default"], {
+                  link: {
+                    to: block.link
+                  },
+                  size: "sm",
+                  btnVariant: "tertiary",
+                  children: block.buttonText
+                })
+              })]
+            })
+          }, index);
+        })
+      })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
       children: ""
     })]
@@ -495,12 +569,29 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
 /* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _Common_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Common/Icon */ "./src/components/Common/Icon.jsx");
 
 
 
 
 
 
+
+
+var pluginsData = [{
+  url: "https://wordpress.org/plugins/really-simple-ssl/",
+  name: "Really Simple Security",
+  tagline: "Lightweight plugin. Heavyweight security features."
+}, {
+  url: "https://wordpress.org/plugins/complianz/",
+  name: "Complianz",
+  tagline: "Cookie Consent Management as it should be"
+}, {
+  url: "https://wordpress.org/plugins/burst-statistics/",
+  name: "Burst Statistics",
+  tagline: "Privacy-friendly Analytics made Simple"
+}];
 var OurPlugins = function () {
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
     className: "col-span-6 row-span-1 bg-transparent shadow-none",
@@ -508,7 +599,22 @@ var OurPlugins = function () {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Our Plugins", "simplybook"),
       controls: undefined
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      children: ""
+      className: "flex flex-col items-center",
+      children: pluginsData.map(function (plugin) {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "flex items-center gap-2 text-sm w-full py-2 ",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            name: "circle",
+            className: "text-green-500"
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.Link, {
+            to: plugin.url,
+            children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)(plugin.name, "simplybook"), " - ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)(plugin.tagline, "simplybook")]
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "text-sm ml-auto",
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Install", "simplybook")
+          })]
+        }, plugin.url);
+      })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
       children: ""
     })]
@@ -530,28 +636,145 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _Blocks_Block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Blocks/Block */ "./src/components/Blocks/Block.tsx");
-/* harmony import */ var _Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Blocks/BlockHeading */ "./src/components/Blocks/BlockHeading.jsx");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
-/* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _Blocks_Block__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Blocks/Block */ "./src/components/Blocks/Block.tsx");
+/* harmony import */ var _Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Blocks/BlockHeading */ "./src/components/Blocks/BlockHeading.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
+/* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _stores_taskStore__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../stores/taskStore */ "./src/stores/taskStore.ts");
 
 
 
 
 
 
+
+
+var getStatusStyles = function (status) {
+  switch (status) {
+    case 'open':
+      return 'bg-yellow-400 text-black';
+    case 'urgent':
+      return 'bg-red-800 text-white';
+    case 'premium':
+      return 'bg-tertiary text-white';
+    case 'completed':
+      return 'bg-green-500 text-white';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
 var Progress = function () {
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
+  var _a = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true),
+    showAll = _a[0],
+    setShowAll = _a[1];
+  var _b = (0,_stores_taskStore__WEBPACK_IMPORTED_MODULE_7__["default"])(),
+    tasks = _b.tasks,
+    dismissTask = _b.dismissTask,
+    getRemainingTasks = _b.getRemainingTasks,
+    getCompletionPercentage = _b.getCompletionPercentage;
+  var displayedTasks = showAll ? tasks : getRemainingTasks();
+  var completionPercentage = getCompletionPercentage();
+  console.log(completionPercentage);
+  if (tasks.length === 0) {
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: "col-span-6 row-span-2",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Progress", "simplybook"),
+        controls: undefined
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_6__["default"], {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "text-center py-8 text-gray-500",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("No tasks available", "simplybook")
+          })
+        })
+      })]
+    });
+  }
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "col-span-6 row-span-2",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Progress", "simplybook"),
-      controls: undefined
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      children: ""
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      children: ""
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Progress", "simplybook"),
+      controls: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "flex gap-4",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
+          onClick: function () {
+            return setShowAll(true);
+          },
+          className: "text-sm ".concat(showAll ? 'text-tertiary font-semibold' : 'text-gray-500'),
+          children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("All tasks", "simplybook"), " (", tasks.length, ")"]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          children: "|"
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("button", {
+          onClick: function () {
+            return setShowAll(false);
+          },
+          className: "text-sm ".concat(!showAll ? 'text-tertiary font-semibold' : 'text-gray-500'),
+          children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Remaining tasks", "simplybook"), " (", getRemainingTasks().length, ")"]
+        })]
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      className: "px-0 py-0",
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "px-5 py-4",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+          className: "w-full bg-gray-200 rounded-md h-5",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+            className: "bg-yellow-400 h-5 rounded-md transition-all duration-300",
+            style: {
+              width: "".concat(completionPercentage, "%")
+            }
+          })
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3",
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
+          className: "font-bold text-3xl",
+          children: [completionPercentage, "%"]
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+          className: "text-base",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__._n)("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", getRemainingTasks().length, "simplybook"), getRemainingTasks().length)
+        })]
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "grid gap-1",
+        children: displayedTasks.map(function (task) {
+          return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50",
+            children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+                className: "inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ".concat(getStatusStyles(task.status)),
+                children: task.status.charAt(0).toUpperCase() + task.status.slice(1)
+              })
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: task.status === 'dismissed' ? 'text-gray-400 line-through' : '',
+              children: task.text
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              children: task.action && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+                href: task.action.link,
+                className: "text-tertiary hover:text-tertiary/80 text-sm underline",
+                children: task.action.text
+              })
+            }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+              className: "text-right",
+              children: task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+                onClick: function () {
+                  return dismissTask(task.id);
+                },
+                className: "text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center",
+                children: "\u00D7"
+              })
+            })]
+          }, task.id);
+        })
+      })]
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "flex justify-between text-sm text-gray-500"
+      })
     })]
   });
 };
@@ -612,7 +835,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var clsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! clsx */ "./node_modules/clsx/dist/clsx.mjs");
 var __assign = undefined && undefined.__assign || function () {
   __assign = Object.assign || function (t) {
     for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -633,6 +857,7 @@ var __rest = undefined && undefined.__rest || function (s, e) {
 };
 
 
+
 /**
  * Styled button component
  */
@@ -644,21 +869,24 @@ var ButtonInput = function (_a) {
     btnVariant = _b === void 0 ? "secondary" : _b,
     _c = _a.disabled,
     disabled = _c === void 0 ? false : _c,
-    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled"]);
-  // Base styles for both variants
-  var baseStyles = "font-semibold py-2 px-6 rounded-full transition-all duration-200";
-  // Variants for primary and secondary buttons
-  var variants = {
-    primary: "bg-secondary text-white hover:bg-secondary-dark",
-    secondary: "bg-tertiary text-white hover:bg-tertiary-dark",
-    tertiary: "border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light"
-  };
-  // Disabled styles
-  var disabledStyles = "opacity-50 cursor-not-allowed";
-  // Final className based on variant and disabled state
-  var className = "".concat(baseStyles, " ").concat(variants[btnVariant], " ").concat(disabled ? disabledStyles : "");
+    _d = _a.size,
+    size = _d === void 0 ? "md" : _d,
+    props = __rest(_a, ["children", "onClick", "link", "btnVariant", "disabled", "size"]);
+  var className = (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)(
+  // Base styles
+  "rounded-full transition-all duration-200", {
+    'bg-secondary text-white hover:bg-secondary-dark': btnVariant === 'primary',
+    'bg-tertiary text-white hover:bg-tertiary-dark': btnVariant === 'secondary',
+    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light': btnVariant === 'tertiary'
+  }, {
+    'py-.5 px-3 font-normal text-xs border-1': size === 'sm',
+    'py-2 px-6 font-semibold': size === 'md',
+    'py-3 px-8 text-lg font-semibold': size === 'lg'
+  }, {
+    'opacity-50 cursor-not-allowed': disabled
+  });
   if (link) {
-    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_1__.Link, __assign({
+    return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, __assign({
       to: link.to,
       className: className
     }, props, {
@@ -675,6 +903,108 @@ var ButtonInput = function (_a) {
 };
 ButtonInput.displayName = 'ButtonInput';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ButtonInput);
+
+/***/ }),
+
+/***/ "./src/stores/taskStore.ts":
+/*!*********************************!*\
+  !*** ./src/stores/taskStore.ts ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
+var __assign = undefined && undefined.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+
+var initialTasks = [{
+  id: 1,
+  text: "Complete your account setup",
+  status: 'urgent',
+  type: 'required',
+  action: {
+    text: "Complete Setup",
+    link: "/setup"
+  }
+}, {
+  id: 2,
+  text: "Add your first service",
+  status: 'open',
+  type: 'required',
+  action: {
+    text: "Add Service",
+    link: "/services/new"
+  }
+}, {
+  id: 3,
+  text: "Set your business hours",
+  status: 'open',
+  type: 'required'
+}, {
+  id: 4,
+  text: "Configure email notifications",
+  status: 'premium',
+  type: 'optional'
+}, {
+  id: 5,
+  text: "Customize your booking widget",
+  status: 'premium',
+  type: 'optional'
+}];
+var useTaskStore = (0,zustand__WEBPACK_IMPORTED_MODULE_0__.create)(function (set, get) {
+  return {
+    tasks: initialTasks,
+    dismissTask: function (id) {
+      return set(function (state) {
+        return {
+          tasks: state.tasks.map(function (task) {
+            return task.id === id ? __assign(__assign({}, task), {
+              status: 'dismissed'
+            }) : task;
+          })
+        };
+      });
+    },
+    completeTask: function (id) {
+      return set(function (state) {
+        return {
+          tasks: state.tasks.map(function (task) {
+            return task.id === id ? __assign(__assign({}, task), {
+              status: 'completed'
+            }) : task;
+          })
+        };
+      });
+    },
+    getRemainingTasks: function () {
+      return get().tasks.filter(function (task) {
+        return ['open', 'urgent', 'premium'].includes(task.status);
+      });
+    },
+    getCompletionPercentage: function () {
+      var tasks = get().tasks;
+      var total = tasks.length;
+      console.log(tasks);
+      var completed = tasks.filter(function (task) {
+        return task.status === 'dismissed' || task.status === 'completed';
+      }).length;
+      console.log(completed, total);
+      return Math.round(completed / total * 100);
+    }
+  };
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useTaskStore);
 
 /***/ }),
 
@@ -936,6 +1266,98 @@ function isCtrlEvent(e) {
 }
 
 //# sourceMappingURL=link.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/clsx/dist/clsx.mjs":
+/*!*****************************************!*\
+  !*** ./node_modules/clsx/dist/clsx.mjs ***!
+  \*****************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   clsx: () => (/* binding */ clsx),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function r(e){var t,f,n="";if("string"==typeof e||"number"==typeof e)n+=e;else if("object"==typeof e)if(Array.isArray(e)){var o=e.length;for(t=0;t<o;t++)e[t]&&(f=r(e[t]))&&(n&&(n+=" "),n+=f)}else for(f in e)e[f]&&(n&&(n+=" "),n+=f);return n}function clsx(){for(var e,t,f=0,n="",o=arguments.length;f<o;f++)(e=arguments[f])&&(t=r(e))&&(n&&(n+=" "),n+=t);return n}/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (clsx);
+
+/***/ }),
+
+/***/ "./node_modules/zustand/esm/react.mjs":
+/*!********************************************!*\
+  !*** ./node_modules/zustand/esm/react.mjs ***!
+  \********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   create: () => (/* binding */ create),
+/* harmony export */   useStore: () => (/* binding */ useStore)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand/vanilla */ "./node_modules/zustand/esm/vanilla.mjs");
+
+
+
+const identity = (arg) => arg;
+function useStore(api, selector = identity) {
+  const slice = react__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore(
+    api.subscribe,
+    () => selector(api.getState()),
+    () => selector(api.getInitialState())
+  );
+  react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue(slice);
+  return slice;
+}
+const createImpl = (createState) => {
+  const api = (0,zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__.createStore)(createState);
+  const useBoundStore = (selector) => useStore(api, selector);
+  Object.assign(useBoundStore, api);
+  return useBoundStore;
+};
+const create = (createState) => createState ? createImpl(createState) : createImpl;
+
+
+
+
+/***/ }),
+
+/***/ "./node_modules/zustand/esm/vanilla.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/zustand/esm/vanilla.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createStore: () => (/* binding */ createStore)
+/* harmony export */ });
+const createStoreImpl = (createState) => {
+  let state;
+  const listeners = /* @__PURE__ */ new Set();
+  const setState = (partial, replace) => {
+    const nextState = typeof partial === "function" ? partial(state) : partial;
+    if (!Object.is(nextState, state)) {
+      const previousState = state;
+      state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
+      listeners.forEach((listener) => listener(state, previousState));
+    }
+  };
+  const getState = () => state;
+  const getInitialState = () => initialState;
+  const subscribe = (listener) => {
+    listeners.add(listener);
+    return () => listeners.delete(listener);
+  };
+  const api = { setState, getState, getInitialState, subscribe };
+  const initialState = state = createState(setState, getState, api);
+  return api;
+};
+const createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
+
+
 
 
 /***/ })

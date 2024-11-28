@@ -1,15 +1,139 @@
+import { useState } from "react";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
-import { __ } from "@wordpress/i18n";
+import { __, _n, sprintf } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
+import useTaskStore from "../../stores/taskStore";
+
+const getStatusStyles = (status: string) => {
+  switch (status) {
+    case 'open':
+      return 'bg-yellow-400 text-black';
+    case 'urgent':
+      return 'bg-red-800 text-white';
+    case 'premium':
+      return 'bg-tertiary text-white';
+    case 'completed':
+      return 'bg-green-500 text-white';
+    default:
+      return 'bg-gray-100 text-gray-800';
+  }
+};
 
 const Progress = () => {
+  const [showAll, setShowAll] = useState(true);
+  const { tasks, dismissTask, getRemainingTasks, getCompletionPercentage } = useTaskStore();
+
+  const displayedTasks = showAll ? tasks : getRemainingTasks();
+  const completionPercentage = getCompletionPercentage();
+  console.log(completionPercentage);
+
+  if (tasks.length === 0) {
+    return (
+      <Block className="col-span-6 row-span-2">
+        <BlockHeading title={__("Progress", "simplybook")} controls={undefined} />
+        <BlockContent>
+          <div className="text-center py-8 text-gray-500">
+            <p>{__("No tasks available", "simplybook")}</p>
+          </div>
+        </BlockContent>
+      </Block>
+    );
+  }
+
   return (
-    <Block className={"col-span-6 row-span-2"}>
-      <BlockHeading title={__("Progress", "simplybook")} controls={undefined} />
-      <BlockContent>{""}</BlockContent>
-      <BlockFooter>{""}</BlockFooter>
+    <Block className="col-span-6 row-span-2">
+      <BlockHeading 
+        title={__("Progress", "simplybook")} 
+        controls={
+          <div className="flex gap-4">
+            <button 
+              onClick={() => setShowAll(true)}
+              className={`text-sm ${showAll ? 'text-tertiary font-semibold' : 'text-gray-500'}`}
+            >
+              {__("All tasks", "simplybook")} ({tasks.length})
+            </button>
+            <span>|</span>
+            <button 
+              onClick={() => setShowAll(false)}
+              className={`text-sm ${!showAll ? 'text-tertiary font-semibold' : 'text-gray-500'}`}
+            >
+              {__("Remaining tasks", "simplybook")} ({getRemainingTasks().length})
+            </button>
+          </div>
+        } 
+      />
+      <BlockContent className="px-0 py-0">
+        <div className="px-5 py-4">
+        <div className="w-full bg-gray-200 rounded-md h-5">
+          <div 
+            className="bg-yellow-400 h-5 rounded-md transition-all duration-300" 
+            style={{ width: `${completionPercentage}%` }}
+          />
+        </div>
+        
+        </div>
+        <div className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3">
+        <span className="font-bold text-3xl">
+           {completionPercentage}%
+          </span>
+          <span className="text-base">
+          {sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", getRemainingTasks().length, "simplybook"), getRemainingTasks().length)}
+            </span>
+          </div>
+
+        <div className="grid gap-1">
+        
+          {displayedTasks.map((task) => (
+            <div 
+              key={task.id} 
+              className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50"
+            >
+              {/* Status pill - fixed width */}
+              <div>
+                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status)}`}>
+                  {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                </span>
+              </div>
+
+              {/* Task text */}
+              <div className={task.status === 'dismissed' ? 'text-gray-400 line-through' : ''}>
+                {task.text}
+              </div>
+
+              {/* Action button */}
+              <div>
+                {task.action && (
+                  <a
+                    href={task.action.link}
+                    className="text-tertiary hover:text-tertiary/80 text-sm underline"
+                  >
+                    {task.action.text}
+                  </a>
+                )}
+              </div>
+
+              {/* Dismiss button */}
+              <div className="text-right">
+                {task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (
+                  <button
+                    onClick={() => dismissTask(task.id)}
+                    className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </BlockContent>
+      <BlockFooter>
+        <div className="flex justify-between text-sm text-gray-500">
+      
+        </div>
+      </BlockFooter>
     </Block>
   );
 };
