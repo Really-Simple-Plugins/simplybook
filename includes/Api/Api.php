@@ -331,7 +331,6 @@ class Api
 		//check if we have a token
 		if ( !$this->token_is_valid() ) {
 			$this->get_common_token();
-			return false;
 		}
 
 		if ( get_transient('simply_book_attempt_count') >2 ) {
@@ -417,7 +416,16 @@ class Api
 					$this->register_company();
 				}
 				error_log(print_r($request->data, true));
-				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login)) {
+				if ( isset($request->data->company_login) &&
+				     in_array('The field contains illegal words',$request->data->company_login)
+				) {
+					error_log("company login contains illegal words, generate new one");
+					delete_option('simplybook_company_login');
+					$this->register_company();
+				}
+				if ( isset($request->data->company_login) &&
+						in_array('login_reserved',$request->data->company_login)
+				) {
 					error_log("company login already exists, generate new one");
 					delete_option('simplybook_company_login');
 					$this->register_company();

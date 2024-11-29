@@ -5,9 +5,7 @@ import request from "../../requests/request";
  * @return {Promise<void>}
  */
 const getRecaptchaSiteKey = async () => {
-    console.log("calling recaptcha sitekey api");
-    const res = await request("onboarding/get_recaptcha_sitekey", "GET");
-    console.log(res);
+    const res = await request("onboarding/get_recaptcha_sitekey", "POST");
     return res.data.site_key;
 };
 

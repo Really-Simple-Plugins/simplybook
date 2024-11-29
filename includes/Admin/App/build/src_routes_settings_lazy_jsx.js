@@ -238,6 +238,9 @@ const request = async (path, method = "POST", data = {}) => {
     ...data,
     nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
   };
+  if (method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //

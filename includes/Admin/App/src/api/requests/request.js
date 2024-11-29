@@ -20,7 +20,9 @@ const request = async (path, method = "POST", data = {}) => {
     "&token=" +
     Math.random().toString(36).substring(2, 7);
   args.data = { ...data, nonce: NONCE };
-
+  if ( method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //

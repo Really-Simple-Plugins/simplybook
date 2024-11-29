@@ -67,12 +67,41 @@ __webpack_require__.r(__webpack_exports__);
  * @return {Promise<void>}
  */
 const getRecaptchaSiteKey = async () => {
-  console.log("calling recaptcha sitekey api");
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/get_recaptcha_sitekey", "GET");
-  console.log(res);
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/get_recaptcha_sitekey", "POST");
   return res.data.site_key;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getRecaptchaSiteKey);
+
+/***/ }),
+
+/***/ "./src/api/endpoints/onBoarding/registerCompany.js":
+/*!*********************************************************!*\
+  !*** ./src/api/endpoints/onBoarding/registerCompany.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const registerCompany = async ({
+  data = true
+}) => {
+  console.log("calling registerCompany api", data);
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/company_registration", "POST", {
+    data
+  });
+  return res.data;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (registerCompany);
 
 /***/ }),
 
@@ -249,6 +278,9 @@ const request = async (path, method = "POST", data = {}) => {
     ...data,
     nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
   };
+  if (method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //
@@ -743,11 +775,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Onboarding/OnboardingStep */ "./src/components/Onboarding/OnboardingStep.jsx");
 /* harmony import */ var _api_endpoints_onBoarding_getRecaptchaSitekey__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../api/endpoints/onBoarding/getRecaptchaSitekey */ "./src/api/endpoints/onBoarding/getRecaptchaSitekey.js");
+/* harmony import */ var _stores_onboardingStore__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../stores/onboardingStore */ "./src/stores/onboardingStore.js");
+
 
 
 
@@ -755,33 +789,41 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const path = "/onboarding/confirm-email";
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)(path)({
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.createLazyFileRoute)(path)({
   component: () => {
+    const {
+      setRecaptchaToken
+    } = (0,_stores_onboardingStore__WEBPACK_IMPORTED_MODULE_4__["default"])();
     const recaptchaContainerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const retrieveSiteKey = async () => {
-      return await (0,_api_endpoints_onBoarding_getRecaptchaSitekey__WEBPACK_IMPORTED_MODULE_3__["default"])();
-    };
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-      // Load the reCAPTCHA script
+    const setupRecaptcha = async () => {
+      //get sitekey first, loading script has to wait.
+      let siteKey = await (0,_api_endpoints_onBoarding_getRecaptchaSitekey__WEBPACK_IMPORTED_MODULE_3__["default"])();
       const script = document.createElement("script");
       script.src = "https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit";
       script.async = true;
       script.defer = true;
-      document.body.appendChild(script);
-      let siteKey = retrieveSiteKey();
-      console.log("Site Key:", siteKey);
-      // Define the callback function globally to ensure it's accessible by reCAPTCHA
-      window.onloadRecaptchaCallback = () => {
-        if (window.grecaptcha && recaptchaContainerRef.current) {
-          window.grecaptcha.render(recaptchaContainerRef.current, {
-            sitekey: siteKey,
-            callback: token => {
-              console.log("reCAPTCHA Token:", token);
-              // Handle the token, e.g., pass it to a parent component or save it in the state
-            }
-          });
-        }
+      script.onload = () => {
+        console.log("Script loaded successfully!");
+        // Code to execute after the script has fully loaded
+        // Define the callback function globally to ensure it's accessible by reCAPTCHA
+        window.onloadRecaptchaCallback = () => {
+          if (window.grecaptcha && recaptchaContainerRef.current) {
+            console.log("rendering recaptcha with sitekey", siteKey);
+            window.grecaptcha.render(recaptchaContainerRef.current, {
+              sitekey: siteKey,
+              callback: recaptchaToken => {
+                console.log("resulting recaptchaToken", recaptchaToken);
+                setRecaptchaToken(recaptchaToken);
+              }
+            });
+          }
+        };
       };
+      document.body.appendChild(script);
+    };
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+      console.log("setup recaptcha");
+      setupRecaptcha();
 
       // Cleanup function to remove the script and callback when the component unmounts
       return () => {
@@ -817,16 +859,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerEmail */ "./src/api/endpoints/onBoarding/registerEmail.js");
 /* harmony import */ var _api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerTipsTricks */ "./src/api/endpoints/onBoarding/registerTipsTricks.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerCompany */ "./src/api/endpoints/onBoarding/registerCompany.js");
 
 
 
 
-const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set => {
+
+const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)(set => {
   // Create initial data object by collecting all field IDs
   const initialData = {};
   const steps = [{
@@ -904,9 +948,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       type: "text",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Country", "simplybook")
     }],
-    beforeSubmit: data => {
+    beforeSubmit: async data => {
       console.log("submit information check step");
       console.log(data);
+      await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__["default"])({
+        data
+      });
     }
   }, {
     id: 4,
@@ -917,6 +964,7 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", 'simplybook')
     }],
     beforeSubmit: data => {
+      data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
       console.log("confirm email step");
       console.log(data);
     }
@@ -959,7 +1007,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     getCurrentStepId: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path).id;
     },
-    getRecaptchaSiteKey: () => {},
+    recaptchaToken: "",
+    setRecaptchaToken: recaptchaToken => {
+      set({
+        recaptchaToken
+      });
+    },
     getCurrentStep: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path);
     },

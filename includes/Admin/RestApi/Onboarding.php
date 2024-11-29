@@ -57,7 +57,7 @@ class Onboarding extends RestApi {
             'simplybook/v1',
             'onboarding/get_recaptcha_sitekey',
             array(
-                'methods' => 'GET',
+                'methods' => 'POST',
                 'callback' => array( $this, 'get_recaptcha_sitekey' ),
                 'permission_callback' => function ( $request ) {
                     return $this->validate_request( $request );
@@ -96,8 +96,6 @@ class Onboarding extends RestApi {
     {
 	    $data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
 	    $data = $data['data'] ?? [];
-		error_log("tips tricks resposne");
-		error_log(print_r($data, true));
         //de api registration
         $this->update_option('tips-and-tricks', (bool) ( $data['tips-and-tricks'] ));
 
@@ -136,8 +134,6 @@ class Onboarding extends RestApi {
 
 
 		$this->api->register_company();
-
-
 
         return $this->response([
             'message' => __('Success', 'simplybook'),

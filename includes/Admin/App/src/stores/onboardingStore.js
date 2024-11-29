@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { __ } from "@wordpress/i18n";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
 import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
+import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 
 const useOnboardingStore = create((set) => {
   // Create initial data object by collecting all field IDs
@@ -94,9 +95,10 @@ const useOnboardingStore = create((set) => {
           label: __("Country","simplybook"),
         },
       ],
-      beforeSubmit: (data) => {
+      beforeSubmit: async (data) => {
         console.log("submit information check step");
         console.log(data);
+        await registerCompany({ data });
       },
     },
     {
@@ -110,6 +112,7 @@ const useOnboardingStore = create((set) => {
         },
       ],
       beforeSubmit: (data) => {
+        data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
         console.log("confirm email step");
         console.log(data);
       },
@@ -156,8 +159,9 @@ const useOnboardingStore = create((set) => {
         .getState()
         .steps.find((step) => step.path === path).id;
     },
-    getRecaptchaSiteKey: () => {
-
+    recaptchaToken: "",
+    setRecaptchaToken: (recaptchaToken) => {
+        set({ recaptchaToken });
     },
     getCurrentStep: (path) => {
       return useOnboardingStore.getState().steps.find((step) => step.path === path);

@@ -1,38 +1,48 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
-import {useEffect, useRef} from "react";
+import {useEffect, useRef, useState} from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
+import useOnboardingStore from "../../stores/onboardingStore";
 const path = "/onboarding/confirm-email";
 
 export const Route = createLazyFileRoute(path)({
     component: () => {
+        const {
+            setRecaptchaToken,
+        } = useOnboardingStore();
         const recaptchaContainerRef = useRef(null);
-        const retrieveSiteKey = async () => {
-            return await getRecaptchaSiteKey();
-        }
-        useEffect(() => {
-            // Load the reCAPTCHA script
+        const setupRecaptcha = async () => {
+            //get sitekey first, loading script has to wait.
+            let siteKey = await getRecaptchaSiteKey();
+
             const script = document.createElement("script");
             script.src = "https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit";
             script.async = true;
             script.defer = true;
-            document.body.appendChild(script);
-
-            let siteKey = retrieveSiteKey();
-            console.log("Site Key:", siteKey);
-            // Define the callback function globally to ensure it's accessible by reCAPTCHA
-            window.onloadRecaptchaCallback = () => {
-                if (window.grecaptcha && recaptchaContainerRef.current) {
-                    window.grecaptcha.render(recaptchaContainerRef.current, {
-                        sitekey: siteKey,
-                        callback: (token) => {
-                            console.log("reCAPTCHA Token:", token);
-                            // Handle the token, e.g., pass it to a parent component or save it in the state
-                        },
-                    });
-                }
+            script.onload = () => {
+                console.log("Script loaded successfully!");
+                // Code to execute after the script has fully loaded
+                // Define the callback function globally to ensure it's accessible by reCAPTCHA
+                window.onloadRecaptchaCallback = () => {
+                    if (window.grecaptcha && recaptchaContainerRef.current) {
+                        console.log("rendering recaptcha with sitekey", siteKey);
+                        window.grecaptcha.render(recaptchaContainerRef.current, {
+                            sitekey: siteKey,
+                            callback: (recaptchaToken) => {
+                                console.log("resulting recaptchaToken", recaptchaToken);
+                                setRecaptchaToken(recaptchaToken);
+                            },
+                        });
+                    }
+                };
             };
+
+            document.body.appendChild(script);
+        }
+        useEffect(() => {
+            console.log("setup recaptcha");
+            setupRecaptcha();
 
             // Cleanup function to remove the script and callback when the component unmounts
             return () => {

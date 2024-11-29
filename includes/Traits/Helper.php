@@ -19,9 +19,6 @@ trait Helper {
         if ( defined( 'WP_CLI' ) && WP_CLI ){
             return true;
         }
-		error_log(print_r($_REQUEST, true));
-		error_log(print_r($_REQUEST, true));
-		error_log("User ID: ".get_current_user_id());
         return current_user_can( 'simplybook_manage' );
     }
 

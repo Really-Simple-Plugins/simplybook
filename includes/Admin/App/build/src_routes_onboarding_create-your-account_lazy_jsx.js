@@ -49,6 +49,37 @@ function getSiteUrl(type) {
 
 /***/ }),
 
+/***/ "./src/api/endpoints/onBoarding/registerCompany.js":
+/*!*********************************************************!*\
+  !*** ./src/api/endpoints/onBoarding/registerCompany.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const registerCompany = async ({
+  data = true
+}) => {
+  console.log("calling registerCompany api", data);
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/company_registration", "POST", {
+    data
+  });
+  return res.data;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (registerCompany);
+
+/***/ }),
+
 /***/ "./src/api/endpoints/onBoarding/registerEmail.js":
 /*!*******************************************************!*\
   !*** ./src/api/endpoints/onBoarding/registerEmail.js ***!
@@ -222,6 +253,9 @@ const request = async (path, method = "POST", data = {}) => {
     ...data,
     nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
   };
+  if (method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //
@@ -747,16 +781,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerEmail */ "./src/api/endpoints/onBoarding/registerEmail.js");
 /* harmony import */ var _api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerTipsTricks */ "./src/api/endpoints/onBoarding/registerTipsTricks.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerCompany */ "./src/api/endpoints/onBoarding/registerCompany.js");
 
 
 
 
-const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set => {
+
+const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_4__.create)(set => {
   // Create initial data object by collecting all field IDs
   const initialData = {};
   const steps = [{
@@ -834,9 +870,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       type: "text",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Country", "simplybook")
     }],
-    beforeSubmit: data => {
+    beforeSubmit: async data => {
       console.log("submit information check step");
       console.log(data);
+      await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__["default"])({
+        data
+      });
     }
   }, {
     id: 4,
@@ -847,6 +886,7 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", 'simplybook')
     }],
     beforeSubmit: data => {
+      data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
       console.log("confirm email step");
       console.log(data);
     }
@@ -889,7 +929,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     getCurrentStepId: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path).id;
     },
-    getRecaptchaSiteKey: () => {},
+    recaptchaToken: "",
+    setRecaptchaToken: recaptchaToken => {
+      set({
+        recaptchaToken
+      });
+    },
     getCurrentStep: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path);
     },
