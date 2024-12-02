@@ -15,8 +15,9 @@ const useOnboardingStore = create((set) => {
         {
           id: "email",
           type: "text",
-          label: "Email",
+          label: __("Email", 'simplybook'),
           required: true,
+          value: '',//simplybook.company_data.email,
           validation: {
             regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message: __("Please enter a valid email address",'simplybook'),

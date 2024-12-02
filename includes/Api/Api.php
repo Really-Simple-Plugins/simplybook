@@ -260,13 +260,22 @@ class Api
 		return $random_string;
 	}
 
+	/**
+	 * Get company login and generate one if it does not exist
+	 * @return string
+	 *
+	 * @throws \Random\RandomException
+	 */
 	protected function get_company_login(): string {
 		$login = get_option('simplybook_company_login', '');
 		if ( !empty($login) ) {
 			return $login;
 		}
 
-		$login = wp_generate_password( 32, false );
+		//generate a random integer of 10 digits
+		//we don't use random characters because of forbidden words.
+		$random_int = random_int(1000000000, 9999999999);
+		$login = 'rsp-'.$random_int;
 		update_option('simplybook_company_login', $login, false );
 		return $login;
 	}
@@ -410,7 +419,6 @@ class Api
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
 					//invalid token, refresh.
-
 					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
 					$this->register_company();
@@ -423,13 +431,13 @@ class Api
 					delete_option('simplybook_company_login');
 					$this->register_company();
 				}
-				if ( isset($request->data->company_login) &&
-						in_array('login_reserved',$request->data->company_login)
-				) {
-					error_log("company login already exists, generate new one");
-					delete_option('simplybook_company_login');
-					$this->register_company();
+
+				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
+					error_log("company login already exists, and we should already have a company token");
+					//@todo if company token does not exist, delete company_login and register new.
+					return true;
 				}
+
 				$this->log("Error during company registration: ".$request->message);
 				update_option('simplybook_company_registration_error', $request->message, false);
 			}
@@ -728,13 +736,10 @@ class Api
         }
         $token = $this->sanitize_token( $response['token'] ?? '' );
         $refresh_token = $this->sanitize_token( $response['refresh_token'] ?? '' );
-        $domain = sanitize_text_field($response['domain'] ?? '');
 		$this->update_token( $token );
 		$this->update_token( $refresh_token, true );
 		update_option('simplybook_refresh_token_expiration', time() + 3600);
-        $this->update_option('domain', $domain);
     }
-
 
 
     public function isAuthorized(): bool

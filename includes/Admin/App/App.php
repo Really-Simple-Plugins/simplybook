@@ -212,6 +212,9 @@ class App {
 				'settings_menu'     => $this->menus(),
                 'settings_fields'   => $this->fields( true ),
 				'is_onboarding_completed' => $this->onboarding_completed(),
+                'company_data'      => [
+                        'email' => $this->get_option('email'),
+                ]
 			]
 		);
 	}
