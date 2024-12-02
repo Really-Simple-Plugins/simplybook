@@ -16,6 +16,10 @@ trait Helper {
      * @return bool
      */
     public function user_can_manage(): bool {
+		//during activation, we need to allow access
+	    if ( get_option('simplybook_run_activation') ) {
+		    return true;
+	    }
         if ( defined( 'WP_CLI' ) && WP_CLI ){
             return true;
         }
@@ -66,7 +70,7 @@ trait Helper {
             return false;
         }
 
-        return current_user_can( 'simplybook_manage' );
+	    return $this->user_can_manage();
     }
 
     /**

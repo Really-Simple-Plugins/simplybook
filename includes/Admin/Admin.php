@@ -6,6 +6,7 @@ use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Settings;
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Upgrades\Upgrades;
 
@@ -42,10 +43,25 @@ class Admin {
 		if ( ! get_option( 'simplybook_run_activation' ) ) {
 			return;
 		}
-
+		error_log("add cap0");
 		Capability::add_capability( 'simplybook_manage' );
 		delete_option( 'simplybook_run_activation' );
 		do_action( 'simplybook_activation' );
+
+		// Flush rewrite rules to ensure the new routes are available
+		add_action( 'shutdown', 'flush_rewrite_rules' );
+		// Redirect to onboarding
+		//check if company registration complete. If not, redirect to onboarding
+//		$api = new API();
+//		if ( !$api->company_registration_complete() ) {
+		//add redirect on a hook to ensure that the flush rewrite has been completed first
+		add_action('shutdown', array($this, 'redirect_to_onboarding'), 20);
+//		}
+	}
+
+	public function redirect_to_onboarding(): void {
+		wp_safe_redirect( admin_url( 'admin.php?page=simplybook-onboarding' ) );
+		exit;
 	}
 
 	/**

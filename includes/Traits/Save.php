@@ -151,11 +151,7 @@ trait Save {
 
         $value = $this->sanitize_field($value, $field['type']);
         if ( $field['encrypt'] ) {
-			error_log("encrypt field ".$field['id']);
             $value = $this->encrypt_string($value);
-        } else {
-	        error_log("DO NOT encrypt field ".$field['id']);
-
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);

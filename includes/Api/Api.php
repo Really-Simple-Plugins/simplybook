@@ -27,12 +27,6 @@ class Api
 	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
     {
-		//as long as the company is not registered, load the public api to register the company
-		if ( !$this->company_registration_complete() ) {
-			( new CompanyRegistration() );
-			add_action('init', array($this, 'register_company' ));
-		}
-
 //		$this->get_services();
 
 	    //if a token has never been set before, we load it.
@@ -52,7 +46,7 @@ class Api
 	 *
 	 * @return bool
 	 */
-	protected function company_registration_complete(): bool {
+	public function company_registration_complete(): bool {
 		if ( !$this->get_option('company_id') ) {
 			return false;
 		}
