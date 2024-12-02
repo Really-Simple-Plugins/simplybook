@@ -15,20 +15,20 @@ const useOnboardingStore = create((set) => {
         {
           id: "email",
           type: "text",
-          label: __("Email", 'simplybook'),
+          label: __("Email", "simplybook"),
           required: true,
-          value: '',//simplybook.company_data.email,
+          value: "", //simplybook.company_data.email,
           validation: {
             regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-            message: __("Please enter a valid email address",'simplybook'),
+            message: __("Please enter a valid email address", "simplybook"),
           },
-        //   context: "This is a context",
-        //   help: "This is a help",
+          //   context: "This is a context",
+          //   help: "This is a help",
         },
         {
           id: "terms-and-conditions",
           type: "checkbox",
-          label: __("I agree to the terms and conditions", 'simplybook'),
+          label: __("I agree to the terms and conditions", "simplybook"),
         },
       ],
       beforeSubmit: async (data) => {
@@ -63,7 +63,7 @@ const useOnboardingStore = create((set) => {
         {
           id: "business-category",
           type: "text",
-          label: __("Business category", 'simplybook'),
+          label: __("Business category", "simplybook"),
         },
         {
           id: "services",
@@ -73,27 +73,27 @@ const useOnboardingStore = create((set) => {
         {
           id: "address",
           type: "text",
-          label: __("Address","simplybook"),
+          label: __("Address", "simplybook"),
         },
         {
           id: "phone",
           type: "text",
-          label: __("Phone","simplybook"),
+          label: __("Phone", "simplybook"),
         },
         {
           id: "zip",
           type: "text",
-          label: __("Postal Code","simplybook"),
+          label: __("Postal Code", "simplybook"),
         },
         {
           id: "city",
           type: "text",
-          label: __("City","simplybook"),
+          label: __("City", "simplybook"),
         },
         {
           id: "country",
           type: "text",
-          label: __("Country","simplybook"),
+          label: __("Country", "simplybook"),
         },
       ],
       beforeSubmit: async (data) => {
@@ -109,7 +109,7 @@ const useOnboardingStore = create((set) => {
         {
           id: "confirmation-code",
           type: "text",
-          label: __("Confirmation Code",'simplybook'),
+          label: __("Confirmation Code", "simplybook"),
         },
       ],
       beforeSubmit: (data) => {
@@ -140,16 +140,24 @@ const useOnboardingStore = create((set) => {
       },
     },
   ];
-  
-  steps.forEach(step => {
-    step.fields.forEach(field => {
-      initialData[field.id] = '';
+
+  steps.forEach((step) => {
+    step.fields.forEach((field) => {
+      initialData[field.id] = "";
     });
+  });
+
+  // prefill data from simplybook.company_data
+  let prefilledData = {};
+  Object.keys(initialData).forEach((key) => {
+    prefilledData[key] = simplybook.company_data.hasOwnProperty(key)
+      ? simplybook.company_data[key]
+      : "";
   });
 
   return {
     steps,
-    data: initialData,
+    data: prefilledData,
     defaultData: initialData,
     updateData: (data) => {
       set((state) => ({ data: { ...state.data, ...data } }));
@@ -162,16 +170,21 @@ const useOnboardingStore = create((set) => {
     },
     recaptchaToken: "",
     setRecaptchaToken: (recaptchaToken) => {
-        set({ recaptchaToken });
+      set({ recaptchaToken });
     },
     getCurrentStep: (path) => {
-      return useOnboardingStore.getState().steps.find((step) => step.path === path);
+      return useOnboardingStore
+        .getState()
+        .steps.find((step) => step.path === path);
     },
     getURLForStep: (step) => {
       return useOnboardingStore.getState().steps[step - 1].path;
     },
     isLastStep: (path) => {
-      return useOnboardingStore.getState().steps.length === useOnboardingStore.getState().getCurrentStepId(path);
+      return (
+        useOnboardingStore.getState().steps.length ===
+        useOnboardingStore.getState().getCurrentStepId(path)
+      );
     },
   };
 });

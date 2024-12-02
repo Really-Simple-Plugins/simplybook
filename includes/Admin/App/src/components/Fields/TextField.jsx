@@ -1,4 +1,4 @@
-import {forwardRef, useEffect, useState} from "react";
+import { forwardRef, useEffect, useState } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
 import useSettingsData from "../../hooks/useSettingsData";
@@ -15,7 +15,7 @@ import useSettingsData from "../../hooks/useSettingsData";
  * @return {JSX.Element}
  */
 const TextField = forwardRef(
-  ({ field, fieldState, label, help, context, className, value, ...props }, ref) => {
+  ({ field, fieldState, label, help, context, className, ...props }, ref) => {
     const inputId = props.id || field.name;
 
     return (
@@ -28,19 +28,17 @@ const TextField = forwardRef(
         inputId={inputId}
         required={props.required}
       >
-        <TextInput 
+        <TextInput
           id={inputId}
           type="text"
           aria-invalid={!!fieldState?.error?.message}
           {...field}
           {...props}
-          value={value}
-
         />
       </FieldWrapper>
     );
   },
 );
 
-TextField.displayName = 'TextField';
+TextField.displayName = "TextField";
 export default TextField;
