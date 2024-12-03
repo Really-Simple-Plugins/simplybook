@@ -4,7 +4,7 @@ import BlockHeading from "../Blocks/BlockHeading";
 import { __, _n, sprintf } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
-import useTaskStore from "../../stores/taskStore";
+import useTaskData from "../../hooks/useTaskData";
 
 const getStatusStyles = (status: string) => {
   switch (status) {
@@ -23,7 +23,7 @@ const getStatusStyles = (status: string) => {
 
 const Progress = () => {
   const [showAll, setShowAll] = useState(true);
-  const { tasks, dismissTask, getRemainingTasks, getCompletionPercentage } = useTaskStore();
+  const { tasks, dismissTask, getRemainingTasks, getCompletionPercentage } = useTaskData();
 
   const displayedTasks = showAll ? tasks : getRemainingTasks();
   const completionPercentage = getCompletionPercentage();

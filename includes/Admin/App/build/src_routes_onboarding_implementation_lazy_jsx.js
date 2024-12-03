@@ -1,84 +1,6 @@
 "use strict";
 (self["webpackChunksimplybook_app"] = self["webpackChunksimplybook_app"] || []).push([["src_routes_onboarding_implementation_lazy_jsx"],{
 
-/***/ "./src/api/config.js":
-/*!***************************!*\
-  !*** ./src/api/config.js ***!
-  \***************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   AJAX_URL: () => (/* binding */ AJAX_URL),
-/* harmony export */   API_BASE_PATH: () => (/* binding */ API_BASE_PATH),
-/* harmony export */   NONCE: () => (/* binding */ NONCE),
-/* harmony export */   SITE_URL: () => (/* binding */ SITE_URL),
-/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN)
-/* harmony export */ });
-// src/api/config.js
-
-// Token for authenticated requests; fix to get the SimplyBook nonce
-const NONCE = simplybook.nonce;
-
-// Base URL for SimplyBook API requests
-const API_BASE_PATH = "simplybook/v1/";
-
-// URLs for the site and AJAX endpoint
-const SITE_URL = getSiteUrl("site_url");
-const AJAX_URL = getSiteUrl("ajax_url");
-
-// Text domain for SimplyBook translations
-const TEXT_DOMAIN = "simplybook";
-
-/**
- * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
- * If the site is loaded over HTTPS, enforces HTTPS for the URL to prevent mixed content issues.
- * @param {string} type - 'site_url' or 'admin_ajax_url'.
- * @returns {string} The requested URL with HTTPS enforced if necessary.
- */
-function getSiteUrl(type) {
-  // Retrieve URL from burst_settings based on type
-  let url = simplybook[type];
-
-  // If the page is loaded over HTTPS and the URL is not, update it to HTTPS
-  if (window.location.protocol === "https:" && !url.includes("https://")) {
-    url = url.replace("http://", "https://");
-  }
-  return url;
-}
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getSettingsFields.js":
-/*!************************************************!*\
-  !*** ./src/api/endpoints/getSettingsFields.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param withValues
- * @return {Promise<void>}
- */
-const getSettingsFields = async ({
-  withValues = true
-}) => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get_fields", "POST", {
-    withValues
-  });
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
-
-/***/ }),
-
 /***/ "./src/api/endpoints/onBoarding/confirmEmail.js":
 /*!******************************************************!*\
   !*** ./src/api/endpoints/onBoarding/confirmEmail.js ***!
@@ -201,148 +123,6 @@ const registerTipsTricks = async ({
   return res.data;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (registerTipsTricks);
-
-/***/ }),
-
-/***/ "./src/api/helpers/errorHandler.js":
-/*!*****************************************!*\
-  !*** ./src/api/helpers/errorHandler.js ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-const errorHandler = (error, path) => {
-  console.error(`API Error at ${path}:`, error.message || error);
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (errorHandler);
-
-/***/ }),
-
-/***/ "./src/api/helpers/glue.js":
-/*!*********************************!*\
-  !*** ./src/api/helpers/glue.js ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
-// src/api/helpers/glue.js
-
-const usesPlainPermalinks = () => _config__WEBPACK_IMPORTED_MODULE_0__.SITE_URL.includes("?");
-const glue = () => usesPlainPermalinks() ? "&" : "?";
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (glue);
-
-/***/ }),
-
-/***/ "./src/api/requests/fetchRequest.js":
-/*!******************************************!*\
-  !*** ./src/api/requests/fetchRequest.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
-
-
-/**
- * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
- * @param path
- * @param method
- * @param data
- * @param url
- * @return {Promise<void>}
- */
-const fetchRequest = async (path, method = "POST", data = {}, url) => {
-  const args = {
-    path,
-    method,
-    data
-  };
-  const test_url = "simplybook/v1/settings/get_fields";
-  console.log(test_url);
-  console.log("Fetch: Requesting data from " + path + " using " + method + " method");
-  // resolve or reject
-  return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()(args);
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (fetchRequest);
-
-/***/ }),
-
-/***/ "./src/api/requests/request.js":
-/*!*************************************!*\
-  !*** ./src/api/requests/request.js ***!
-  \*************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _fetchRequest__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./fetchRequest */ "./src/api/requests/fetchRequest.js");
-/* harmony import */ var _helpers_glue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/glue */ "./src/api/helpers/glue.js");
-/* harmony import */ var _helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/errorHandler */ "./src/api/helpers/errorHandler.js");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
-
-
-
-
-
-/**
- * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
- * @param path
- * @param method
- * @param data
- * @return {Promise<void>}
- */
-const request = async (path, method = "POST", data = {}) => {
-  const args = {
-    path,
-    method,
-    data
-  };
-  args.path = _config__WEBPACK_IMPORTED_MODULE_3__.API_BASE_PATH + args.path + (0,_helpers_glue__WEBPACK_IMPORTED_MODULE_1__["default"])() + "&token=" + Math.random().toString(36).substring(2, 7);
-  args.data = {
-    ...data,
-    nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
-  };
-  if (method === 'GET') {
-    console.log("the request method is not adjusted for GET requests yet. ");
-  }
-  console.log("request : ", args);
-  // if (method === 'POST') {
-  //
-  // } else {
-  //   args.path += glue() + getNonce();
-  // }
-
-  try {
-    // Try the fetch request first
-    return await (0,_fetchRequest__WEBPACK_IMPORTED_MODULE_0__["default"])(args.path, args.method, args.data);
-  } catch (fetchError) {
-    // If fetch fails, log error with handler and try AJAX fallback
-    (0,_helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__["default"])(fetchError, args.path);
-
-    // try {
-    //   // Try the AJAX fallback request
-    //   return await ajaxRequest(args.path, args.method, args.data);
-    // } catch (ajaxError) {
-    //   // If AJAX also fails, handle the final error
-    //   errorHandler(ajaxError, args.path);
-    //   throw new Error('API request failed');
-    // }
-  }
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
 
 /***/ }),
 
@@ -694,7 +474,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/useNavigate.js");
 /* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var _stores_onboardingStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../stores/onboardingStore */ "./src/stores/onboardingStore.js");
+/* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
 /* harmony import */ var _Forms_FormField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FormField */ "./src/components/Forms/FormField.jsx");
 /* harmony import */ var _Fields_ButtonField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/ButtonField */ "./src/components/Fields/ButtonField.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -725,7 +505,7 @@ const OnboardingStep = ({
     data,
     defaultData,
     isLastStep
-  } = (0,_stores_onboardingStore__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
   const navigate = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_5__.useNavigate)();
   const {
     handleSubmit,
@@ -803,77 +583,212 @@ OnboardingStep.displayName = "OnboardingStep";
 
 /***/ }),
 
-/***/ "./src/hooks/useSettingsData.js":
-/*!**************************************!*\
-  !*** ./src/hooks/useSettingsData.js ***!
-  \**************************************/
+/***/ "./src/hooks/useOnboardingData.js":
+/*!****************************************!*\
+  !*** ./src/hooks/useOnboardingData.js ***!
+  \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerEmail */ "./src/api/endpoints/onBoarding/registerEmail.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerTipsTricks */ "./src/api/endpoints/onBoarding/registerTipsTricks.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerCompany */ "./src/api/endpoints/onBoarding/registerCompany.js");
+/* harmony import */ var _api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/endpoints/onBoarding/confirmEmail */ "./src/api/endpoints/onBoarding/confirmEmail.js");
+/* harmony import */ var _useSettingsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./useSettingsData */ "./src/hooks/useSettingsData.js");
 
 
 
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-const useSettingsData = () => {
-  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
 
-  // Query for fetching settings from server
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
-    queryKey: ["settings_fields"],
-    queryFn: () => (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__["default"])({
-      withValues: true
-    }),
-    staleTime: 1000 * 60 * 5,
-    // 5 minutes
-    initialData: window.simplybook && window.simplybook.settings_fields,
-    retry: 0,
-    select: data => [...data] // create a new array so dependencies are updated
-  });
-  const getValue = id => query.data.find(field => field.id === id)?.value;
-  const setValue = (id, value) => {
-    const field = query.data.find(field => field.id === id);
-    if (field) {
-      field.value = value;
+
+
+
+
+const steps = [{
+  id: 1,
+  path: "/onboarding/create-your-account",
+  fields: [{
+    id: "email",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Email", "simplybook"),
+    required: true,
+    value: "",
+    //simplybook.company_data.email,
+    validation: {
+      regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+      message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid email address", "simplybook")
     }
-  };
-  // Update Mutation for settings data with destructured values
+    //   context: "This is a context",
+    //   help: "This is a help",
+  }, {
+    id: "terms-and-conditions",
+    type: "checkbox",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("I agree to the terms and conditions", "simplybook")
+  }],
+  beforeSubmit: async data => {
+    console.log("submit email step");
+    await (0,_api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__["default"])({
+      data
+    });
+    console.log(data);
+  }
+}, {
+  id: 2,
+  path: "/onboarding/tips-and-tricks",
+  fields: [{
+    id: "tips-and-tricks",
+    type: "checkbox"
+  }],
+  beforeSubmit: async data => {
+    console.log("submit tips and tricks step");
+    await (0,_api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__["default"])({
+      data
+    });
+  }
+}, {
+  id: 3,
+  path: "/onboarding/information-check",
+  fields: [{
+    id: "company-name",
+    type: "text",
+    label: "Company name"
+  }, {
+    id: "business-category",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Business category", "simplybook")
+  }, {
+    id: "services",
+    type: "text",
+    label: "Services"
+  }, {
+    id: "address",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Address", "simplybook")
+  }, {
+    id: "phone",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Phone", "simplybook")
+  }, {
+    id: "zip",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Postal Code", "simplybook")
+  }, {
+    id: "city",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("City", "simplybook")
+  }, {
+    id: "country",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Country", "simplybook")
+  }],
+  beforeSubmit: async data => {
+    console.log("submit information check step");
+    console.log(data);
+    await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__["default"])({
+      data
+    });
+  }
+}, {
+  id: 4,
+  path: "/onboarding/confirm-email",
+  fields: [{
+    id: "confirmation-code",
+    type: "text",
+    label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", "simplybook")
+  }],
+  beforeSubmit: async data => {
+    data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
+    console.log("confirm email step");
+    console.log(data);
+    await (0,_api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__["default"])({
+      data
+    });
+  }
+}, {
+  id: 5,
+  path: "/onboarding/style-widget",
+  fields: [{
+    id: "widget-color-simple",
+    type: "text"
+  }],
+  beforeSubmit: data => {
+    console.log(data);
+  }
+}, {
+  id: 6,
+  path: "/onboarding/implementation",
+  fields: [],
+  beforeSubmit: data => {
+    console.log(data);
+  }
+}];
+const useOnboardingData = () => {
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_6__.useQueryClient)();
   const {
-    mutateAsync: saveSettings,
-    isLoading: isSavingSettings
-  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
-    mutationFn: async data => {
-      // Simulate async operation (e.g., API call to save settings)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      // Optionally return data or a result
-      return data; // Or any other meaningful result
+    settings
+  } = (0,_useSettingsData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+
+  // Create initial data object
+  const initialData = {};
+  steps.forEach(step => {
+    step.fields.forEach(field => {
+      initialData[field.id] = "";
+    });
+  });
+
+  // Prefill with settings data
+  let prefilledData = {};
+  settings?.forEach(setting => {
+    if (setting.id in initialData) {
+      prefilledData[setting.id] = setting.value;
+    }
+  });
+  console.log(prefilledData);
+
+  // Query for managing onboarding data
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_7__.useQuery)({
+    queryKey: ["onboarding_data"],
+    initialData: {
+      ...initialData,
+      ...prefilledData
     },
-    onSuccess: () => {
-      // Invalidate cache by specific query key for updated data
-      queryClient.invalidateQueries(["settings_fields"]);
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  });
+
+  // Mutation for updating data
+  const {
+    mutate: updateData
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_8__.useMutation)({
+    mutationFn: async newData => {
+      queryClient.setQueryData(["onboarding_data"], oldData => ({
+        ...oldData,
+        ...newData
+      }));
     }
   });
   return {
-    settings: query.data,
-    saveSettings,
-    getValue,
-    setValue,
-    isSavingSettings,
-    invalidateSettings: () => queryClient.invalidateQueries(["settings_fields"])
+    steps,
+    data: query.data,
+    defaultData: initialData,
+    updateData,
+    getCurrentStepId: path => steps.find(step => step.path === path)?.id,
+    getCurrentStep: path => steps.find(step => step.path === path),
+    getURLForStep: step => steps[step - 1]?.path,
+    isLastStep: path => steps.length === steps.find(step => step.path === path)?.id,
+    recaptchaToken: query.data?.recaptchaToken || "",
+    setRecaptchaToken: token => updateData({
+      recaptchaToken: token
+    })
   };
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSettingsData);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOnboardingData);
 
 /***/ }),
 
@@ -916,198 +831,6 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_3__.createLazyF
     });
   }
 });
-
-/***/ }),
-
-/***/ "./src/stores/onboardingStore.js":
-/*!***************************************!*\
-  !*** ./src/stores/onboardingStore.js ***!
-  \***************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerEmail */ "./src/api/endpoints/onBoarding/registerEmail.js");
-/* harmony import */ var _api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerTipsTricks */ "./src/api/endpoints/onBoarding/registerTipsTricks.js");
-/* harmony import */ var _api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerCompany */ "./src/api/endpoints/onBoarding/registerCompany.js");
-/* harmony import */ var _api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/endpoints/onBoarding/confirmEmail */ "./src/api/endpoints/onBoarding/confirmEmail.js");
-
-
-
-
-
-
-const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)(set => {
-  // Create initial data object by collecting all field IDs
-  const initialData = {};
-  const steps = [{
-    id: 1,
-    path: "/onboarding/create-your-account",
-    fields: [{
-      id: "email",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Email", "simplybook"),
-      required: true,
-      value: "",
-      //simplybook.company_data.email,
-      validation: {
-        regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid email address", "simplybook")
-      }
-      //   context: "This is a context",
-      //   help: "This is a help",
-    }, {
-      id: "terms-and-conditions",
-      type: "checkbox",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("I agree to the terms and conditions", "simplybook")
-    }],
-    beforeSubmit: async data => {
-      console.log("submit email step");
-      await (0,_api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__["default"])({
-        data
-      });
-      console.log(data);
-    }
-  }, {
-    id: 2,
-    path: "/onboarding/tips-and-tricks",
-    fields: [{
-      id: "tips-and-tricks",
-      type: "checkbox"
-    }],
-    beforeSubmit: async data => {
-      console.log("submit tips and tricks step");
-      await (0,_api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__["default"])({
-        data
-      });
-    }
-  }, {
-    id: 3,
-    path: "/onboarding/information-check",
-    fields: [{
-      id: "company-name",
-      type: "text",
-      label: "Company name"
-    }, {
-      id: "business-category",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Business category", "simplybook")
-    }, {
-      id: "services",
-      type: "text",
-      label: "Services"
-    }, {
-      id: "address",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Address", "simplybook")
-    }, {
-      id: "phone",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Phone", "simplybook")
-    }, {
-      id: "zip",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Postal Code", "simplybook")
-    }, {
-      id: "city",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("City", "simplybook")
-    }, {
-      id: "country",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Country", "simplybook")
-    }],
-    beforeSubmit: async data => {
-      console.log("submit information check step");
-      console.log(data);
-      await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__["default"])({
-        data
-      });
-    }
-  }, {
-    id: 4,
-    path: "/onboarding/confirm-email",
-    fields: [{
-      id: "confirmation-code",
-      type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", "simplybook")
-    }],
-    beforeSubmit: async data => {
-      data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
-      console.log("confirm email step");
-      console.log(data);
-      await (0,_api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__["default"])({
-        data
-      });
-    }
-  }, {
-    id: 5,
-    path: "/onboarding/style-widget",
-    fields: [{
-      id: "widget-color-simple",
-      type: "text"
-    }],
-    beforeSubmit: data => {
-      console.log(data);
-    }
-  }, {
-    id: 6,
-    path: "/onboarding/implementation",
-    fields: [],
-    beforeSubmit: data => {
-      console.log(data);
-    }
-  }];
-  steps.forEach(step => {
-    step.fields.forEach(field => {
-      initialData[field.id] = "";
-    });
-  });
-
-  // prefill data from simplybook.company_data
-  let prefilledData = {};
-  Object.keys(initialData).forEach(key => {
-    prefilledData[key] = simplybook.company_data.hasOwnProperty(key) ? simplybook.company_data[key] : "";
-  });
-  return {
-    steps,
-    data: prefilledData,
-    defaultData: initialData,
-    updateData: data => {
-      set(state => ({
-        data: {
-          ...state.data,
-          ...data
-        }
-      }));
-    },
-    // Current step is based on the URL path not a number
-    getCurrentStepId: path => {
-      return useOnboardingStore.getState().steps.find(step => step.path === path).id;
-    },
-    recaptchaToken: "",
-    setRecaptchaToken: recaptchaToken => {
-      set({
-        recaptchaToken
-      });
-    },
-    getCurrentStep: path => {
-      return useOnboardingStore.getState().steps.find(step => step.path === path);
-    },
-    getURLForStep: step => {
-      return useOnboardingStore.getState().steps[step - 1].path;
-    },
-    isLastStep: path => {
-      return useOnboardingStore.getState().steps.length === useOnboardingStore.getState().getCurrentStepId(path);
-    }
-  };
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOnboardingStore);
 
 /***/ }),
 
@@ -1419,83 +1142,6 @@ var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, 
 });
 TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
-
-/***/ }),
-
-/***/ "./node_modules/zustand/esm/react.mjs":
-/*!********************************************!*\
-  !*** ./node_modules/zustand/esm/react.mjs ***!
-  \********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   create: () => (/* binding */ create),
-/* harmony export */   useStore: () => (/* binding */ useStore)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! zustand/vanilla */ "./node_modules/zustand/esm/vanilla.mjs");
-
-
-
-const identity = (arg) => arg;
-function useStore(api, selector = identity) {
-  const slice = react__WEBPACK_IMPORTED_MODULE_0__.useSyncExternalStore(
-    api.subscribe,
-    () => selector(api.getState()),
-    () => selector(api.getInitialState())
-  );
-  react__WEBPACK_IMPORTED_MODULE_0__.useDebugValue(slice);
-  return slice;
-}
-const createImpl = (createState) => {
-  const api = (0,zustand_vanilla__WEBPACK_IMPORTED_MODULE_1__.createStore)(createState);
-  const useBoundStore = (selector) => useStore(api, selector);
-  Object.assign(useBoundStore, api);
-  return useBoundStore;
-};
-const create = (createState) => createState ? createImpl(createState) : createImpl;
-
-
-
-
-/***/ }),
-
-/***/ "./node_modules/zustand/esm/vanilla.mjs":
-/*!**********************************************!*\
-  !*** ./node_modules/zustand/esm/vanilla.mjs ***!
-  \**********************************************/
-/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   createStore: () => (/* binding */ createStore)
-/* harmony export */ });
-const createStoreImpl = (createState) => {
-  let state;
-  const listeners = /* @__PURE__ */ new Set();
-  const setState = (partial, replace) => {
-    const nextState = typeof partial === "function" ? partial(state) : partial;
-    if (!Object.is(nextState, state)) {
-      const previousState = state;
-      state = (replace != null ? replace : typeof nextState !== "object" || nextState === null) ? nextState : Object.assign({}, state, nextState);
-      listeners.forEach((listener) => listener(state, previousState));
-    }
-  };
-  const getState = () => state;
-  const getInitialState = () => initialState;
-  const subscribe = (listener) => {
-    listeners.add(listener);
-    return () => listeners.delete(listener);
-  };
-  const api = { setState, getState, getInitialState, subscribe };
-  const initialState = state = createState(setState, getState, api);
-  return api;
-};
-const createStore = (createState) => createState ? createStoreImpl(createState) : createStoreImpl;
-
-
-
 
 /***/ })
 

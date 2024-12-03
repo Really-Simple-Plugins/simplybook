@@ -1,14 +1,14 @@
 import { create } from "zustand";
 import { __ } from "@wordpress/i18n";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
 import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
+import useSettingsData from "./useSettingsData";
 
-const useOnboardingStore = create((set) => {
-  // Create initial data object by collecting all field IDs
-  const initialData = {};
-  const steps = [
+
+const steps = [
     {
       id: 1,
       path: "/onboarding/create-your-account",
@@ -117,7 +117,7 @@ const useOnboardingStore = create((set) => {
         data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
         console.log("confirm email step");
         console.log(data);
-        await confirmEmail({data})
+        await confirmEmail({ data });
       },
     },
     {
@@ -143,52 +143,57 @@ const useOnboardingStore = create((set) => {
     },
   ];
 
+const useOnboardingData = () => {
+  const queryClient = useQueryClient();
+  const { settings } = useSettingsData();
+
+  // Create initial data object
+  const initialData = {};
   steps.forEach((step) => {
     step.fields.forEach((field) => {
       initialData[field.id] = "";
     });
   });
 
-  // prefill data from simplybook.company_data
+  // Prefill with settings data
   let prefilledData = {};
-  Object.keys(initialData).forEach((key) => {
-    prefilledData[key] = simplybook.company_data.hasOwnProperty(key)
-      ? simplybook.company_data[key]
-      : "";
+  settings?.forEach((setting) => {
+    if (setting.id in initialData) {
+      prefilledData[setting.id] = setting.value;
+    }
+  });
+
+  console.log(prefilledData);
+
+  // Query for managing onboarding data
+  const query = useQuery({
+    queryKey: ["onboarding_data"],
+    initialData: { ...initialData, ...prefilledData },
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  // Mutation for updating data
+  const { mutate: updateData } = useMutation({
+    mutationFn: async (newData) => {
+      queryClient.setQueryData(["onboarding_data"], (oldData) => ({
+        ...oldData,
+        ...newData,
+      }));
+    },
   });
 
   return {
     steps,
-    data: prefilledData,
+    data: query.data,
     defaultData: initialData,
-    updateData: (data) => {
-      set((state) => ({ data: { ...state.data, ...data } }));
-    },
-    // Current step is based on the URL path not a number
-    getCurrentStepId: (path) => {
-      return useOnboardingStore
-        .getState()
-        .steps.find((step) => step.path === path).id;
-    },
-    recaptchaToken: "",
-    setRecaptchaToken: (recaptchaToken) => {
-      set({ recaptchaToken });
-    },
-    getCurrentStep: (path) => {
-      return useOnboardingStore
-        .getState()
-        .steps.find((step) => step.path === path);
-    },
-    getURLForStep: (step) => {
-      return useOnboardingStore.getState().steps[step - 1].path;
-    },
-    isLastStep: (path) => {
-      return (
-        useOnboardingStore.getState().steps.length ===
-        useOnboardingStore.getState().getCurrentStepId(path)
-      );
-    },
+    updateData,
+    getCurrentStepId: (path) => steps.find((step) => step.path === path)?.id,
+    getCurrentStep: (path) => steps.find((step) => step.path === path),
+    getURLForStep: (step) => steps[step - 1]?.path,
+    isLastStep: (path) => steps.length === steps.find((step) => step.path === path)?.id,
+    recaptchaToken: query.data?.recaptchaToken || "",
+    setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
   };
-});
+};
 
-export default useOnboardingStore;
+export default useOnboardingData; 

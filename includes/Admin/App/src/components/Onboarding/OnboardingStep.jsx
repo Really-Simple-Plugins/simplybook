@@ -1,6 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
-import useOnboardingStore from "../../stores/onboardingStore";
+import useOnboardingData from "../../hooks/useOnboardingData";
 import FormField from "../Forms/FormField";
 import ButtonField from "../Fields/ButtonField";
 import { __ } from "@wordpress/i18n";
@@ -22,7 +22,7 @@ const OnboardingStep = ({
     data,
     defaultData,
     isLastStep,
-  } = useOnboardingStore();
+  } = useOnboardingData();
   const navigate = useNavigate();
 
   const {

@@ -1,7 +1,6 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
-import onboardingStore from "../../stores/onboardingStore";
 const path = "/onboarding/tips-and-tricks";
 
 export const Route = createLazyFileRoute(path)({
