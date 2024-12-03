@@ -54,7 +54,6 @@ trait Load {
         }
 
         if ( $field['encrypt'] ) {
-	        error_log("decrypt field ".$field['id']);
             $value = $this->decrypt_string($value);
         }
 
@@ -154,7 +153,7 @@ trait Load {
      */
     public function fields( $load_values = false ): array
     {
-        $fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
+        $fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
         $fields = apply_filters('simplybook_fields', $fields);
 
         foreach ( $fields as $key => $field ) {

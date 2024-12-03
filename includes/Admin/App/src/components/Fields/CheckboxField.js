@@ -16,7 +16,6 @@ import FieldWrapper from "../Forms/FieldWrapper";
 const CheckboxField = forwardRef(
     ({ field, fieldState, label, help, context, className, ...props }, ref) => {
         const inputId = props.id || field.name;
-        console.log("loading checkboxfield", field, fieldState, label, help, context, className, props);
         return (
             <FieldWrapper
                 label={label}

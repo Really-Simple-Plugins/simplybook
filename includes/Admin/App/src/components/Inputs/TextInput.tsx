@@ -4,6 +4,10 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: string;
 }
 
+interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
+  storedValue?: string; // Add the storedValue property
+}
+
 /**
  * Styled text input component
  * @param props - Props for the input component

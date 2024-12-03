@@ -1,7 +1,7 @@
 <?php
 namespace Simplybook\Admin\RestApi;
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
-use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 
@@ -15,6 +15,9 @@ class RestApi {
 
     public function __construct() {
         add_action( 'rest_api_init', array( $this, 'register_rest_route') );
+		if ( ! $this->api ) {
+			$this->api = new Api();
+		}
     }
 
     /**
@@ -27,8 +30,6 @@ class RestApi {
     protected function validate_request( WP_REST_Request $request ): bool
     {
 	    $data = $request->get_json_params();
-		error_log(print_r($request, true));
-		error_log(print_r($data, true));
 	    if ( !isset( $data['nonce']) || ! wp_verify_nonce( $data['nonce'], 'simplybook_nonce' ) ) {
 			error_log("missing nonce");
 		    return false;
@@ -37,7 +38,6 @@ class RestApi {
         if ( ! $this->user_can_manage() ) {
            return false;
         }
-		error_log("valid request");
         return true;
     }
 

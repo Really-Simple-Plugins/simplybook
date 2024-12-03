@@ -23,7 +23,7 @@ class CompanyRegistration extends RestApi {
 		if ( empty( $callback_url ) ) {
 			return;
 		}
-
+		error_log("call back url: company_registration/".$callback_url);
 		register_rest_route(
 			'simplybook/v1',
 			'company_registration/'.$callback_url,
@@ -44,9 +44,11 @@ class CompanyRegistration extends RestApi {
 		$callback_url = get_option('simplybook_callback_url', '' );
 		$expires = get_option('simplybook_callback_url_expires' );
 		if ( $expires > time() ) {
+			error_log("return callback url ".$callback_url);
 			return $callback_url;
 		}
 
+		error_log("the callback url is expired, delete the option");
 		//expired URL
 		delete_option('simplybook_callback_url');
 		return '';
@@ -61,7 +63,7 @@ class CompanyRegistration extends RestApi {
 	public function company_registration($request ): void
 	{
 		$data = $request->get_json_params();
-		error_log("Company Registration API POST response");
+		error_log("Company Registration API POST response on the callback URL");
 		error_log(print_r($data,true));
 		$success = (bool) $data['success'];
 		$token  = (bool) $data['token'];

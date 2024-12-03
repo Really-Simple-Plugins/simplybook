@@ -1,6 +1,7 @@
-import { forwardRef } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
+import useSettingsData from "../../hooks/useSettingsData";
 
 /**
  * TextField component
@@ -16,7 +17,7 @@ import FieldWrapper from "../Forms/FieldWrapper";
 const TextField = forwardRef(
   ({ field, fieldState, label, help, context, className, ...props }, ref) => {
     const inputId = props.id || field.name;
-    
+
     return (
       <FieldWrapper
         label={label}
@@ -27,17 +28,17 @@ const TextField = forwardRef(
         inputId={inputId}
         required={props.required}
       >
-        <TextInput 
-          {...field} 
-          id={inputId} 
-          type="text" 
+        <TextInput
+          id={inputId}
+          type="text"
           aria-invalid={!!fieldState?.error?.message}
-          {...props} 
+          {...field}
+          {...props}
         />
       </FieldWrapper>
     );
   },
 );
 
-TextField.displayName = 'TextField';
+TextField.displayName = "TextField";
 export default TextField;

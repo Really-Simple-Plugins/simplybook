@@ -54,6 +54,10 @@ if ( ! function_exists( 'simplybook_has_admin_access' ) ) {
      */
     function simplybook_has_admin_access(): bool
     {
+	    //during activation, we need to allow access
+	    if ( get_option('simplybook_run_activation') ) {
+		    return true;
+	    }
         $wpcli = defined( 'WP_CLI' ) && WP_CLI;
         return ( is_admin() && current_user_can('simplybook_manage') )
             || simplybook_is_logged_in_rest() || wp_doing_cron() || $wpcli;
@@ -103,7 +107,7 @@ if ( ! function_exists( __NAMESPACE__ . '\burst_activation' ) ) {
     function simplybook_activation(): void
     {
         update_option( 'simplybook_run_activation', true, false );
-        do_action( 'burst_activation' );
+        do_action( 'simplybook_activation' );
     }
 
     register_activation_hook( __FILE__, __NAMESPACE__ . '\simplybook_activation' );

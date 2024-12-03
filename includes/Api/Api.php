@@ -27,12 +27,6 @@ class Api
 	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
     {
-		//as long as the company is not registered, load the public api to register the company
-		if ( !$this->company_registration_complete() ) {
-			( new CompanyRegistration() );
-			add_action('init', array($this, 'register_company' ));
-		}
-
 //		$this->get_services();
 
 	    //if a token has never been set before, we load it.
@@ -52,7 +46,7 @@ class Api
 	 *
 	 * @return bool
 	 */
-	protected function company_registration_complete(): bool {
+	public function company_registration_complete(): bool {
 		if ( !$this->get_option('company_id') ) {
 			return false;
 		}
@@ -260,13 +254,22 @@ class Api
 		return $random_string;
 	}
 
+	/**
+	 * Get company login and generate one if it does not exist
+	 * @return string
+	 *
+	 * @throws \Random\RandomException
+	 */
 	protected function get_company_login(): string {
 		$login = get_option('simplybook_company_login', '');
 		if ( !empty($login) ) {
 			return $login;
 		}
 
-		$login = wp_generate_password( 32, false );
+		//generate a random integer of 10 digits
+		//we don't use random characters because of forbidden words.
+		$random_int = random_int(1000000000, 9999999999);
+		$login = 'rsp'.$random_int;
 		update_option('simplybook_company_login', $login, false );
 		return $login;
 	}
@@ -331,7 +334,6 @@ class Api
 		//check if we have a token
 		if ( !$this->token_is_valid() ) {
 			$this->get_common_token();
-			return false;
 		}
 
 		if ( get_transient('simply_book_attempt_count') >2 ) {
@@ -368,7 +370,8 @@ class Api
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
 		}
-		//error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
+		error_log("callback url");
+		error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
 		$request = wp_remote_post( $this->endpoint( 'company' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -411,17 +414,25 @@ class Api
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
 					//invalid token, refresh.
-
 					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
 					$this->register_company();
 				}
 				error_log(print_r($request->data, true));
-				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login)) {
-					error_log("company login already exists, generate new one");
+				if ( isset($request->data->company_login) &&
+				     in_array('The field contains illegal words',$request->data->company_login)
+				) {
+					error_log("company login contains illegal words, generate new one");
 					delete_option('simplybook_company_login');
 					$this->register_company();
 				}
+
+				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
+					error_log("company login already exists, and we should already have a company token");
+					//@todo if company token does not exist, delete company_login and register new.
+					return true;
+				}
+
 				$this->log("Error during company registration: ".$request->message);
 				update_option('simplybook_company_registration_error', $request->message, false);
 			}
@@ -438,13 +449,8 @@ class Api
 	 *
 	 * @return void
 	 */
-	public function confirm(string $email_code){
+	public function confirm(){
 		if ( !$this->user_can_manage() ) {
-			return;
-		}
-
-		if ( empty($email_code) ) {
-			$this->log("Missing email code for company registration");
 			return;
 		}
 
@@ -454,6 +460,13 @@ class Api
 			return;
 		}
 
+		error_log("confirming email with body:");
+		error_log(print_r(				[
+			'company_login' => $this->get_company_login(),
+			'confirmation_code' => get_option('simplybook_confirmation_code' ),
+			'recaptcha' => get_option('simplybook_recaptcha_token' ),
+		], true));
+
 		$request = wp_remote_post( $this->endpoint( 'confirm' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -461,8 +474,8 @@ class Api
 			'body' => json_encode(
 				[
 					'company_login' => $this->get_company_login(),
-					'confirmation_code' => $email_code,
-					'recaptcha' => get_option('simplybook_recaptcha_site_key'),
+					'confirmation_code' => get_option('simplybook_confirmation_code' ),
+					'recaptcha' => get_option('simplybook_recaptcha_token' ),
 				]
 			),
 		) );
@@ -473,10 +486,7 @@ class Api
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
 			if ( $request->success ) {
-				delete_option('simplybook_company_registration_error' );
-				error_log(print_r($request,true));
-				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key), false );
-				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ), false );
+				delete_option('simplybook_email_confirm_error' );
 
 				$this->update_option( 'company_id', (int) $request->company_id );
 			} else {
@@ -485,10 +495,10 @@ class Api
 					$this->refresh_token();
 				}
 				$this->log("Error during company registration: ".$request->message);
-				update_option('simplybook_company_registration_error', $request->message, false);
+				update_option('simplybook_email_confirm_error', $request->message, false);
 			}
 		} else {
-			update_option('simplybook_company_registration_error', true, false);
+			update_option('simplybook_email_confirm_error', true, false);
 		}
 	}
 
@@ -720,13 +730,10 @@ class Api
         }
         $token = $this->sanitize_token( $response['token'] ?? '' );
         $refresh_token = $this->sanitize_token( $response['refresh_token'] ?? '' );
-        $domain = sanitize_text_field($response['domain'] ?? '');
 		$this->update_token( $token );
 		$this->update_token( $refresh_token, true );
 		update_option('simplybook_refresh_token_expiration', time() + 3600);
-        $this->update_option('domain', $domain);
     }
-
 
 
     public function isAuthorized(): bool

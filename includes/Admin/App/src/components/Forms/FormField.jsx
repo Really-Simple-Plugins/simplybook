@@ -3,8 +3,9 @@ import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
-import { memo } from "react";
+import { memo, useEffect, useState } from "react";
 import { __ } from "@wordpress/i18n";
+import useSettingsData from "../../hooks/useSettingsData";
 
 const fieldComponents = {
   text: TextField,
@@ -15,26 +16,34 @@ const fieldComponents = {
 
 const FormField = memo(({ setting, control, ...props }) => {
   if (setting.visible === false) {
-    return <input type="hidden" defaultValue={setting.value || setting.default} />;
+    return (
+      <input type="hidden" defaultValue={setting.value || setting.default} />
+    );
   }
   const FieldComponent = fieldComponents[setting.type];
 
   if (!FieldComponent) {
-    return <div className="w-full">Unknown field type: {setting.type} {setting.id}</div>;
+    return (
+      <div className="w-full">
+        Unknown field type: {setting.type} {setting.id}
+      </div>
+    );
   }
 
   const validationRules = {
     ...(setting.required && {
       required: {
         value: true,
-        message: setting.requiredMessage || __("This field is required", "simplybook"),
-      }
+        message:
+          setting.requiredMessage || __("This field is required", "simplybook"),
+      },
     }),
     ...(setting.validation?.regex && {
       pattern: {
         value: new RegExp(setting.validation.regex),
-        message: setting.validation.message || __("Invalid format", "simplybook"),
-      }
+        message:
+          setting.validation.message || __("Invalid format", "simplybook"),
+      },
     }),
     ...(setting.min && { min: setting.min }),
     ...(setting.max && { max: setting.max }),
@@ -68,6 +77,6 @@ const FormField = memo(({ setting, control, ...props }) => {
   );
 });
 
-FormField.displayName = 'FormField';
+FormField.displayName = "FormField";
 
 export default FormField;
