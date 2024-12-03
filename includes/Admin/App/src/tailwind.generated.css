@@ -544,6 +544,12 @@ video {
 #simplybook_app .sticky {
   position: sticky;
 }
+#simplybook_app .bottom-0 {
+  bottom: 0px;
+}
+#simplybook_app .start-0 {
+  inset-inline-start: 0px;
+}
 #simplybook_app .z-10 {
   z-index: 10;
 }

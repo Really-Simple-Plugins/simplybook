@@ -592,21 +592,40 @@ function FormFooter({
     isDirty,
     isSubmitting,
     isValidating,
-    isValid,
-    dirtyFields
+    isValid
   } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useFormState)({
     control
   });
+  const formStates = [{
+    condition: isSubmitting,
+    message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Saving...", "simplybook"),
+    color: "blue"
+  }, {
+    condition: isValidating,
+    message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Validating...", "simplybook"),
+    color: "blue"
+  }, {
+    condition: !isValid,
+    message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Form contains errors", "simplybook"),
+    color: "red"
+  }, {
+    condition: isDirty,
+    message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("You have unsaved changes", "simplybook"),
+    color: "amber"
+  }];
+  const currentState = formStates.find(state => state.condition);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "sticky z-10 rounded-b-md bg-gray-50 shadow-md"
+    className: "sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_FormScrollProgressLine__WEBPACK_IMPORTED_MODULE_1__["default"], null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "flex flex-row justify-end p-5"
-  }, isDirty && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("You have unsaved changes", "simplybook")), isSubmitting && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Saving...", "simplybook")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
+    className: "flex flex-row justify-end gap-2 items-center p-5"
+  }, currentState && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
+    className: `text-sm text-${currentState.color}-500 flex items-center gap-2`
+  }, currentState.message), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
     onClick: onSubmit,
-    disabled: isSubmitting
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Save", "simplybook"))), "dirtyFields: ", JSON.stringify(dirtyFields));
+    disabled: isSubmitting || isValidating
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Save", "simplybook"))));
 }
-FormFooter.displayName = 'FormFooter';
+FormFooter.displayName = "FormFooter";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormFooter);
 
 /***/ }),
