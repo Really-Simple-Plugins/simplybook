@@ -1192,6 +1192,10 @@ video {
   --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+#simplybook_app .focus\:border-blue-500:focus {
+  --tw-border-opacity: 1;
+  border-color: rgb(59 130 246 / var(--tw-border-opacity));
+}
 #simplybook_app .focus\:border-tertiary:focus {
   --tw-border-opacity: 1;
   border-color: rgb(12 48 82 / var(--tw-border-opacity));
