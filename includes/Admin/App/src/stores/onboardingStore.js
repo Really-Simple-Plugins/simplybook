@@ -3,6 +3,7 @@ import { __ } from "@wordpress/i18n";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
 import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
+import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 
 const useOnboardingStore = create((set) => {
   // Create initial data object by collecting all field IDs
@@ -112,10 +113,11 @@ const useOnboardingStore = create((set) => {
           label: __("Confirmation Code", "simplybook"),
         },
       ],
-      beforeSubmit: (data) => {
+      beforeSubmit: async (data) => {
         data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
         console.log("confirm email step");
         console.log(data);
+        await confirmEmail({data})
       },
     },
     {

@@ -64,6 +64,18 @@ class Onboarding extends RestApi {
                 },
             )
         );
+
+	    register_rest_route(
+		    'simplybook/v1',
+		    'onboarding/confirm_email',
+		    array(
+			    'methods' => 'POST',
+			    'callback' => array( $this, 'confirm_email' ),
+			    'permission_callback' => function ( $request ) {
+				    return $this->validate_request( $request );
+			    },
+		    )
+	    );
     }
 
     /**
@@ -120,8 +132,8 @@ class Onboarding extends RestApi {
 		error_log(print_r($data, true));
         //de api registration
         $this->update_option('email', sanitize_email( $data['email']) );
-        $this->update_option('category', (int) ( $data['category'] ));
-        $this->update_option('company_name', sanitize_text_field($data['company_name']) );
+        $this->update_option('category', (int) ( $data['business-category'] ));
+        $this->update_option('company_name', sanitize_text_field($data['company-name']) );
 		//get a description using the wordpress get_bloginfo function
         $description = get_bloginfo('description');
         $this->update_option('description', sanitize_text_field($description) );
@@ -143,6 +155,22 @@ class Onboarding extends RestApi {
 	public function get_recaptcha_sitekey(): WP_REST_Response {
 		return $this->response([
 			'site_key' => get_option('simplybook_recaptcha_site_key'),
+		]);
+	}
+
+
+	public function confirm_email($request, $ajax_data = [] ): WP_REST_Response
+	{
+		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+		$data = $data['data'] ?? [];
+		error_log("email confirmation response");
+		error_log(print_r($data, true));
+
+		update_option('simplybook_confirmation_code', (int) $data['confirmation-code']);
+		update_option('simplybook_recaptcha_token', sanitize_text_field( $data['recaptchaToken']) );
+
+		return $this->response([
+			'message' => __('Success', 'simplybook'),
 		]);
 	}
 }

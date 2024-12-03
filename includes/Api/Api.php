@@ -269,7 +269,7 @@ class Api
 		//generate a random integer of 10 digits
 		//we don't use random characters because of forbidden words.
 		$random_int = random_int(1000000000, 9999999999);
-		$login = 'rsp-'.$random_int;
+		$login = 'rsp'.$random_int;
 		update_option('simplybook_company_login', $login, false );
 		return $login;
 	}
@@ -370,7 +370,8 @@ class Api
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
 		}
-		//error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
+		error_log("callback url");
+		error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
 		$request = wp_remote_post( $this->endpoint( 'company' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -448,13 +449,8 @@ class Api
 	 *
 	 * @return void
 	 */
-	public function confirm(string $email_code){
+	public function confirm(){
 		if ( !$this->user_can_manage() ) {
-			return;
-		}
-
-		if ( empty($email_code) ) {
-			$this->log("Missing email code for company registration");
 			return;
 		}
 
@@ -464,6 +460,13 @@ class Api
 			return;
 		}
 
+		error_log("confirming email with body:");
+		error_log(print_r(				[
+			'company_login' => $this->get_company_login(),
+			'confirmation_code' => get_option('simplybook_confirmation_code' ),
+			'recaptcha' => get_option('simplybook_recaptcha_token' ),
+		], true));
+
 		$request = wp_remote_post( $this->endpoint( 'confirm' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -471,8 +474,8 @@ class Api
 			'body' => json_encode(
 				[
 					'company_login' => $this->get_company_login(),
-					'confirmation_code' => $email_code,
-					'recaptcha' => get_option('simplybook_recaptcha_site_key'),
+					'confirmation_code' => get_option('simplybook_confirmation_code' ),
+					'recaptcha' => get_option('simplybook_recaptcha_token' ),
 				]
 			),
 		) );
@@ -483,10 +486,7 @@ class Api
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
 			if ( $request->success ) {
-				delete_option('simplybook_company_registration_error' );
-				error_log(print_r($request,true));
-				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key), false );
-				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ), false );
+				delete_option('simplybook_email_confirm_error' );
 
 				$this->update_option( 'company_id', (int) $request->company_id );
 			} else {
@@ -495,10 +495,10 @@ class Api
 					$this->refresh_token();
 				}
 				$this->log("Error during company registration: ".$request->message);
-				update_option('simplybook_company_registration_error', $request->message, false);
+				update_option('simplybook_email_confirm_error', $request->message, false);
 			}
 		} else {
-			update_option('simplybook_company_registration_error', true, false);
+			update_option('simplybook_email_confirm_error', true, false);
 		}
 	}
 

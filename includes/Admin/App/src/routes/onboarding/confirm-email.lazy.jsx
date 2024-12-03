@@ -12,6 +12,7 @@ export const Route = createLazyFileRoute(path)({
             setRecaptchaToken,
         } = useOnboardingStore();
         const recaptchaContainerRef = useRef(null);
+        const [recaptchaRendered, setRecaptchaRendered] = useState(false);
         const setupRecaptcha = async () => {
             //get sitekey first, loading script has to wait.
             let siteKey = await getRecaptchaSiteKey();
@@ -41,8 +42,11 @@ export const Route = createLazyFileRoute(path)({
             document.body.appendChild(script);
         }
         useEffect(() => {
-            console.log("setup recaptcha");
-            setupRecaptcha();
+            if ( !recaptchaRendered ) {
+                console.log("setup recaptcha");
+                setupRecaptcha();
+                setRecaptchaRendered(true);
+            }
 
             // Cleanup function to remove the script and callback when the component unmounts
             return () => {
