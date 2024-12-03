@@ -190,6 +190,9 @@ const request = async (path, method = "POST", data = {}) => {
     ...data,
     nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
   };
+  if (method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //
@@ -317,7 +320,6 @@ const CheckboxField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   ...props
 }, ref) => {
   const inputId = props.id || field.name;
-  console.log("loading checkboxfield", field, fieldState, label, help, context, className, props);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
     help: help,
@@ -404,6 +406,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
 /* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.tsx");
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
 
 
 
@@ -439,14 +443,14 @@ const TextField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
     inputId: inputId,
     required: props.required
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    ...field,
     id: inputId,
     type: "text",
     "aria-invalid": !!fieldState?.error?.message,
+    ...field,
     ...props
   }));
 });
-TextField.displayName = 'TextField';
+TextField.displayName = "TextField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextField);
 
 /***/ }),
@@ -463,13 +467,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
 /* harmony import */ var _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/HiddenField */ "./src/components/Fields/HiddenField.js");
 /* harmony import */ var _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/CheckboxField */ "./src/components/Fields/CheckboxField.js");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
 
 
 
@@ -530,7 +536,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
       validate: setting.validate
     })
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_6__.Controller, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: setting.id,
     control: control,
     rules: validationRules,
@@ -551,7 +557,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     })
   }));
 });
-FormField.displayName = 'FormField';
+FormField.displayName = "FormField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormField);
 
 /***/ }),
@@ -732,7 +738,13 @@ const useSettingsData = () => {
     retry: 0,
     select: data => [...data] // create a new array so dependencies are updated
   });
-
+  const getValue = id => query.data.find(field => field.id === id)?.value;
+  const setValue = (id, value) => {
+    const field = query.data.find(field => field.id === id);
+    if (field) {
+      field.value = value;
+    }
+  };
   // Update Mutation for settings data with destructured values
   const {
     mutateAsync: saveSettings,
@@ -752,6 +764,8 @@ const useSettingsData = () => {
   return {
     settings: query.data,
     saveSettings,
+    getValue,
+    setValue,
     isSavingSettings,
     invalidateSettings: () => queryClient.invalidateQueries(["settings_fields"])
   };
@@ -1155,7 +1169,7 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
     ref: ref,
     type: type,
-    className: "rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
+    className: "rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
   }, props));
 });
 CheckboxInput.displayName = "CheckboxInput";
@@ -1267,6 +1281,70 @@ var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, 
 });
 TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
+
+/***/ }),
+
+/***/ "./node_modules/@tanstack/react-router/dist/esm/useBlocker.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@tanstack/react-router/dist/esm/useBlocker.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   Block: () => (/* binding */ Block),
+/* harmony export */   useBlocker: () => (/* binding */ useBlocker)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var _useRouter_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useRouter.js */ "./node_modules/@tanstack/react-router/dist/esm/useRouter.js");
+
+
+function useBlocker(blockerFnOrOpts, condition) {
+  const { blockerFn, blockerCondition } = blockerFnOrOpts ? typeof blockerFnOrOpts === "function" ? { blockerFn: blockerFnOrOpts, blockerCondition: condition ?? true } : {
+    blockerFn: blockerFnOrOpts.blockerFn,
+    blockerCondition: blockerFnOrOpts.condition ?? true
+  } : { blockerFn: void 0, blockerCondition: condition ?? true };
+  const { history } = (0,_useRouter_js__WEBPACK_IMPORTED_MODULE_1__.useRouter)();
+  const [resolver, setResolver] = react__WEBPACK_IMPORTED_MODULE_0__.useState({
+    status: "idle",
+    proceed: () => {
+    },
+    reset: () => {
+    }
+  });
+  react__WEBPACK_IMPORTED_MODULE_0__.useEffect(() => {
+    const blockerFnComposed = async () => {
+      if (blockerFn) {
+        return await blockerFn();
+      }
+      const promise = new Promise((resolve) => {
+        setResolver({
+          status: "blocked",
+          proceed: () => resolve(true),
+          reset: () => resolve(false)
+        });
+      });
+      const canNavigateAsync = await promise;
+      setResolver({
+        status: "idle",
+        proceed: () => {
+        },
+        reset: () => {
+        }
+      });
+      return canNavigateAsync;
+    };
+    return !blockerCondition ? void 0 : history.block(blockerFnComposed);
+  }, [blockerFn, blockerCondition, history]);
+  return resolver;
+}
+function Block({ blockerFn, condition, children }) {
+  const resolver = useBlocker({ blockerFn, condition });
+  return children ? typeof children === "function" ? children(resolver) : children : null;
+}
+
+//# sourceMappingURL=useBlocker.js.map
+
 
 /***/ })
 

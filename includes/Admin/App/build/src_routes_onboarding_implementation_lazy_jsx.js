@@ -49,6 +49,99 @@ function getSiteUrl(type) {
 
 /***/ }),
 
+/***/ "./src/api/endpoints/getSettingsFields.js":
+/*!************************************************!*\
+  !*** ./src/api/endpoints/getSettingsFields.js ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Get settings fields (with or without values)
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const getSettingsFields = async ({
+  withValues = true
+}) => {
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get_fields", "POST", {
+    withValues
+  });
+  return res.data;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
+
+/***/ }),
+
+/***/ "./src/api/endpoints/onBoarding/confirmEmail.js":
+/*!******************************************************!*\
+  !*** ./src/api/endpoints/onBoarding/confirmEmail.js ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const confirmEmail = async ({
+  data = true
+}) => {
+  console.log("calling confirmEmail api", data);
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/confirm_email", "POST", {
+    data
+  });
+  console.log("confirmEmail response", res);
+  return res.data;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (confirmEmail);
+
+/***/ }),
+
+/***/ "./src/api/endpoints/onBoarding/registerCompany.js":
+/*!*********************************************************!*\
+  !*** ./src/api/endpoints/onBoarding/registerCompany.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @param withValues
+ * @return {Promise<void>}
+ */
+const registerCompany = async ({
+  data = true
+}) => {
+  console.log("calling registerCompany api", data);
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/company_registration", "POST", {
+    data
+  });
+  return res.data;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (registerCompany);
+
+/***/ }),
+
 /***/ "./src/api/endpoints/onBoarding/registerEmail.js":
 /*!*******************************************************!*\
   !*** ./src/api/endpoints/onBoarding/registerEmail.js ***!
@@ -222,6 +315,9 @@ const request = async (path, method = "POST", data = {}) => {
     ...data,
     nonce: _config__WEBPACK_IMPORTED_MODULE_3__.NONCE
   };
+  if (method === 'GET') {
+    console.log("the request method is not adjusted for GET requests yet. ");
+  }
   console.log("request : ", args);
   // if (method === 'POST') {
   //
@@ -342,7 +438,6 @@ const CheckboxField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   ...props
 }, ref) => {
   const inputId = props.id || field.name;
-  console.log("loading checkboxfield", field, fieldState, label, help, context, className, props);
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
     label: label,
     help: help,
@@ -429,6 +524,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
 /* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.tsx");
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
 
 
 
@@ -464,14 +561,14 @@ const TextField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
     inputId: inputId,
     required: props.required
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    ...field,
     id: inputId,
     type: "text",
     "aria-invalid": !!fieldState?.error?.message,
+    ...field,
     ...props
   }));
 });
-TextField.displayName = 'TextField';
+TextField.displayName = "TextField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextField);
 
 /***/ }),
@@ -488,13 +585,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
 /* harmony import */ var _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/HiddenField */ "./src/components/Fields/HiddenField.js");
 /* harmony import */ var _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/CheckboxField */ "./src/components/Fields/CheckboxField.js");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
 
 
 
@@ -555,7 +654,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
       validate: setting.validate
     })
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_6__.Controller, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: setting.id,
     control: control,
     rules: validationRules,
@@ -576,7 +675,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     })
   }));
 });
-FormField.displayName = 'FormField';
+FormField.displayName = "FormField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormField);
 
 /***/ }),
@@ -704,6 +803,80 @@ OnboardingStep.displayName = "OnboardingStep";
 
 /***/ }),
 
+/***/ "./src/hooks/useSettingsData.js":
+/*!**************************************!*\
+  !*** ./src/hooks/useSettingsData.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
+
+
+
+/**
+ * Custom hook for managing settings data using Tanstack Query.
+ * This hook provides functions to fetch and update settings.
+ *
+ * @returns {Object} - An object containing settings data, update function, and status flags.
+ */
+const useSettingsData = () => {
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+
+  // Query for fetching settings from server
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+    queryKey: ["settings_fields"],
+    queryFn: () => (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_0__["default"])({
+      withValues: true
+    }),
+    staleTime: 1000 * 60 * 5,
+    // 5 minutes
+    initialData: window.simplybook && window.simplybook.settings_fields,
+    retry: 0,
+    select: data => [...data] // create a new array so dependencies are updated
+  });
+  const getValue = id => query.data.find(field => field.id === id)?.value;
+  const setValue = (id, value) => {
+    const field = query.data.find(field => field.id === id);
+    if (field) {
+      field.value = value;
+    }
+  };
+  // Update Mutation for settings data with destructured values
+  const {
+    mutateAsync: saveSettings,
+    isLoading: isSavingSettings
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
+    mutationFn: async data => {
+      // Simulate async operation (e.g., API call to save settings)
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Optionally return data or a result
+      return data; // Or any other meaningful result
+    },
+    onSuccess: () => {
+      // Invalidate cache by specific query key for updated data
+      queryClient.invalidateQueries(["settings_fields"]);
+    }
+  });
+  return {
+    settings: query.data,
+    saveSettings,
+    getValue,
+    setValue,
+    isSavingSettings,
+    invalidateSettings: () => queryClient.invalidateQueries(["settings_fields"])
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSettingsData);
+
+/***/ }),
+
 /***/ "./src/routes/onboarding/implementation.lazy.jsx":
 /*!*******************************************************!*\
   !*** ./src/routes/onboarding/implementation.lazy.jsx ***!
@@ -756,16 +929,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
+/* harmony import */ var zustand__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! zustand */ "./node_modules/zustand/esm/react.mjs");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _api_endpoints_onBoarding_registerEmail__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerEmail */ "./src/api/endpoints/onBoarding/registerEmail.js");
 /* harmony import */ var _api_endpoints_onBoarding_registerTipsTricks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerTipsTricks */ "./src/api/endpoints/onBoarding/registerTipsTricks.js");
+/* harmony import */ var _api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/endpoints/onBoarding/registerCompany */ "./src/api/endpoints/onBoarding/registerCompany.js");
+/* harmony import */ var _api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../api/endpoints/onBoarding/confirmEmail */ "./src/api/endpoints/onBoarding/confirmEmail.js");
 
 
 
 
-const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set => {
+
+
+const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_5__.create)(set => {
   // Create initial data object by collecting all field IDs
   const initialData = {};
   const steps = [{
@@ -774,18 +951,20 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     fields: [{
       id: "email",
       type: "text",
-      label: "Email",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Email", "simplybook"),
       required: true,
+      value: "",
+      //simplybook.company_data.email,
       validation: {
         regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
-        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid email address", 'simplybook')
+        message: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Please enter a valid email address", "simplybook")
       }
       //   context: "This is a context",
       //   help: "This is a help",
     }, {
       id: "terms-and-conditions",
       type: "checkbox",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("I agree to the terms and conditions", 'simplybook')
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("I agree to the terms and conditions", "simplybook")
     }],
     beforeSubmit: async data => {
       console.log("submit email step");
@@ -817,7 +996,7 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     }, {
       id: "business-category",
       type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Business category", 'simplybook')
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Business category", "simplybook")
     }, {
       id: "services",
       type: "text",
@@ -843,9 +1022,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
       type: "text",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Country", "simplybook")
     }],
-    beforeSubmit: data => {
+    beforeSubmit: async data => {
       console.log("submit information check step");
       console.log(data);
+      await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_3__["default"])({
+        data
+      });
     }
   }, {
     id: 4,
@@ -853,11 +1035,15 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     fields: [{
       id: "confirmation-code",
       type: "text",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", 'simplybook')
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Confirmation Code", "simplybook")
     }],
-    beforeSubmit: data => {
+    beforeSubmit: async data => {
+      data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
       console.log("confirm email step");
       console.log(data);
+      await (0,_api_endpoints_onBoarding_confirmEmail__WEBPACK_IMPORTED_MODULE_4__["default"])({
+        data
+      });
     }
   }, {
     id: 5,
@@ -879,12 +1065,18 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
   }];
   steps.forEach(step => {
     step.fields.forEach(field => {
-      initialData[field.id] = '';
+      initialData[field.id] = "";
     });
+  });
+
+  // prefill data from simplybook.company_data
+  let prefilledData = {};
+  Object.keys(initialData).forEach(key => {
+    prefilledData[key] = simplybook.company_data.hasOwnProperty(key) ? simplybook.company_data[key] : "";
   });
   return {
     steps,
-    data: initialData,
+    data: prefilledData,
     defaultData: initialData,
     updateData: data => {
       set(state => ({
@@ -898,7 +1090,12 @@ const useOnboardingStore = (0,zustand__WEBPACK_IMPORTED_MODULE_3__.create)(set =
     getCurrentStepId: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path).id;
     },
-    getRecaptchaSiteKey: () => {},
+    recaptchaToken: "",
+    setRecaptchaToken: recaptchaToken => {
+      set({
+        recaptchaToken
+      });
+    },
     getCurrentStep: path => {
       return useOnboardingStore.getState().steps.find(step => step.path === path);
     },
@@ -1110,7 +1307,7 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
     ref: ref,
     type: type,
-    className: "rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
+    className: "rounded-md border border-gray-300 p-2 focus:border-blue-500 focus:outline-none focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ".concat(className || "")
   }, props));
 });
 CheckboxInput.displayName = "CheckboxInput";
