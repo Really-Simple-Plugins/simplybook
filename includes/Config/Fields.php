@@ -20,18 +20,16 @@ return $fields = [
         'label'    => '',
         'default'  => false,
     ],
-	[
-		'id'       => 'company_token',
-		'type'     => 'api',
-		'encrypt'  => true,
-		'label'    => '',
-		'default'  => '',
-	],
     [
         'id'       => 'company_name',
         'type'     => 'api',
         'default'  => false,
     ],
+	[
+		'id'       => 'domain',
+		'type'     => 'api',
+		'default'  => false,
+	],
 	[
         'id'       => 'company_id',
         'type'     => 'api',

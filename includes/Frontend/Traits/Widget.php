@@ -71,11 +71,12 @@ trait Widget {
      */
     public function get_widget( array $atts = [] ): string
     {
-        $auth = new Api();
+	    $api = new Api();
         $post_settings = [];
         $data = [];
 
         $widget_settings = $this->get_widget_settings();
+	    $widget_settings['company_login'] = $api->get_company_login();
         if ( !$widget_settings ) {
             $widget_settings = array();
         }
@@ -119,7 +120,9 @@ trait Widget {
             if ( is_array($value) ) {
                 $value = json_encode($value);
             }
-
+			if (empty($value)) {
+				$value = '';
+			}
             $content = str_replace( '{{ ' . $key . ' }}', $value, $content );
         }
 

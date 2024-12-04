@@ -42,8 +42,6 @@ const useSettingsData = () => {
       },
     });
 
-  console.log(query.data);
-
   return {
     settings: query.data,
     saveSettings,

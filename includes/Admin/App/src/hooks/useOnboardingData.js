@@ -1,4 +1,3 @@
-import { create } from "zustand";
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
@@ -114,7 +113,11 @@ const steps = [
         },
       ],
       beforeSubmit: async (data) => {
-        data.recaptchaToken = useOnboardingStore.getState().recaptchaToken;
+        if ( !data.recaptchaToken ) {
+          console.log("missing recaptchatoken, cancel submit");
+          return false;
+        }
+        console.log("found recaptcha token ", data.recaptchaToken)
         console.log("confirm email step");
         console.log(data);
         await confirmEmail({ data });

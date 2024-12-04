@@ -1,18 +1,42 @@
+// document.addEventListener("DOMContentLoaded", function () {
+//     new SimplybookWidget({
+//         "widget_type": "iframe",
+//         "url": "https://{{ server }}",
+//         "theme": "{{ template }}",
+//         "theme_settings": {{ themeparams }},
+//         "timeline": "{{ timeline_type }}",
+//         "datepicker": "{{ datepicker_type }}",
+//         "is_rtl": {{ is_rtl }},
+//         "app_config": {
+//             "clear_session": {{ clear_session }},
+//             "allow_switch_to_ada": {{ allow_switch_to_ada }},
+//             "predefined":{{ predefined }}
+//         },
+//         "container_id": "sbw_z0hg2i"
+//     });
+// });
 document.addEventListener("DOMContentLoaded", function () {
     new SimplybookWidget({
         "widget_type": "iframe",
-        "url": "https://{{ server }}",
-        "theme": "{{ template }}",
-        "theme_settings": {{ themeparams }},
-        "timeline": "{{ timeline_type }}",
-        "datepicker": "{{ datepicker_type }}",
-        "is_rtl": {{ is_rtl }},
-        "app_config": {
-            "clear_session": {{ clear_session }},
-            "allow_switch_to_ada": {{ allow_switch_to_ada }},
-            "predefined":{{ predefined }}
+        "url": "https://{{ company_login }}.simplybook.me", // Replace with your SimplyBook URL
+        "theme": "modern", // Replace with your preferred theme, e.g., "default", "modern"
+        "theme_settings": {
+            "timeline_hide_unavailable": 1, // Hide unavailable time slots
+            "timeline_show_end_time": 0, // Show end time on the timeline
+            "datepicker_hide_weekdays": [0, 6], // Hide Sundays and Saturdays
+            "is_rtl": 0, // Not right-to-left
+            "primary_color": "#4CAF50", // Custom theme color
+            "hide_past_days": true // Hide past days on the date picker
         },
-        "container_id": "sbw_z0hg2i"
+        "timeline": "modern", // Choose the timeline layout (e.g., "default", "modern")
+        "datepicker": "inline", // Choose datepicker style ("inline" or "default")
+        "is_rtl": false, // Set to true for RTL languages
+        "app_config": {
+            "clear_session": false, // Keep session active
+            "allow_switch_to_ada": true, // Enable accessibility features
+            "predefined": null // Set to null or predefined options
+        },
+        "container_id": "sbw_z0hg2i" // Match with the container ID
     });
 });
 

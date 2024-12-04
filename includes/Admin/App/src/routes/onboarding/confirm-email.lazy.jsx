@@ -64,6 +64,7 @@ export const Route = createLazyFileRoute(path)({
                 <OnboardingStep
                     path={path}
                     title={__("Confirm your e-mail address", "simplybook")}
+                    customHtml={<div id="recaptcha_container" ref={recaptchaContainerRef}></div>    }
                     subtitle={__("Type in the code from the e-mail you received.", "simplybook")}
                     bottomText={__(
                         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
@@ -75,8 +76,7 @@ export const Route = createLazyFileRoute(path)({
                         </div>
                     }
                 />
-                {/* Render the reCAPTCHA */}
-                <div id="recaptcha_container" ref={recaptchaContainerRef}></div>
+
             </>
         );
     },

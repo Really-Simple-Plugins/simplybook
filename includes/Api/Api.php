@@ -26,7 +26,7 @@ class Api
 	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
     {
-		$this->get_services();
+		//$this->get_services();
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
@@ -63,18 +63,25 @@ class Api
 		return $this->endpoint . $path;
 	}
 
+	public function get_login_link(){
+		$company_login = $this->get_company_login();
+		$response = $this->api_call("company/$company_login/create-login-link", [], 'POST');
+		error_log(print_r($response,true));
+	}
+
 	/**
 	 * Get headers for an API call
 	 * @param bool $include_token // optional, default false
 	 * @return array
 	 */
-	protected function get_headers( bool $include_token = false ): array {
+	protected function get_headers( bool $include_token = false, $token_type = 'common' ): array {
+		$token_type = in_array($token_type, ['common', 'company']) ? $token_type : 'common';
 		$headers = array(
 			'Content-Type'  => 'application/json',
 		);
 
 		if ( $include_token ) {
-			$headers['X-Token'] = $this->get_token();
+			$headers['X-Token'] = $this->get_token($token_type);
 			$headers[ 'X-Company-Login' ] = $this->get_company_login();
 		}
 
@@ -253,10 +260,6 @@ class Api
 		update_option('simplybook_callback_url', $random_string, false );
 		update_option('simplybook_callback_url_expires', time() + 10 * MINUTE_IN_SECONDS, false );
 		return $random_string;
-
-
-
-
 	}
 
 	/**
@@ -265,7 +268,7 @@ class Api
 	 *
 	 * @throws \Random\RandomException
 	 */
-	protected function get_company_login(): string {
+	public function get_company_login(): string {
 		$login = get_option('simplybook_company_login', '');
 		if ( !empty($login) ) {
 			return $login;
@@ -551,6 +554,8 @@ class Api
 	 */
 	protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array {
 		error_log( "api call for $path" );
+	//with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
+	//with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
 		$apiStatus = get_option( 'api_status' );
 		//get part of $path after last /
 		$path_type = substr( $path, strrpos( $path, '/' ) + 1 );
@@ -560,16 +565,21 @@ class Api
 			//return $cache[ $type ] ?? [];
 		}
 
+		//for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
+		$token_type = str_contains( $path, 'admin' ) ? 'company' : 'common';
 		if ( $type === 'POST' ) {
 			$response_body = wp_remote_post( $this->endpoint( $path ), array(
-				'headers'   => $this->get_headers( true ),
+				'headers'   => $this->get_headers( true, $token_type ),
 				'timeout'   => 15,
 				'sslverify' => true,
 				'body'      => json_encode( $data ),
 			) );
 		} else {
 			$url = add_query_arg($data, $this->endpoint( $path ));
-			$response_body = wp_remote_get($url, $this->get_headers( true ) );
+			$response_body = wp_remote_get($url, $this->get_headers( true, $token_type ) );
+			$response_body = wp_remote_get($url, $this->get_headers( true, $token_type ) );
+			error_log("GET response body");
+			error_log(print_r($response_body, true));
 		}
 
 		$response_code = wp_remote_retrieve_response_code( $response_body );

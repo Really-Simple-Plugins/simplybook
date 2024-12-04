@@ -13,6 +13,7 @@ const OnboardingStep = ({
   bottomText,
   primaryButton = { label: __("Next", "simplybook") },
   secondaryButton = null,
+    customHtml = null,
 }) => {
   const {
     getURLForStep,
@@ -22,6 +23,7 @@ const OnboardingStep = ({
     data,
     defaultData,
     isLastStep,
+    recaptchaToken,
   } = useOnboardingData();
   const navigate = useNavigate();
 
@@ -39,6 +41,8 @@ const OnboardingStep = ({
 
   const onSubmit = async (formData, buttonType = "primary") => {
     let updatedFormData = { ...formData };
+    //add the auto generated recaptcha token to our data
+    updatedFormData.recaptchaToken = recaptchaToken;
 
     if (buttonType === "primary" && primaryButton.modifyData) {
       updatedFormData = primaryButton.modifyData(updatedFormData);
@@ -47,7 +51,15 @@ const OnboardingStep = ({
     }
 
     if (currentStep.beforeSubmit) {
-      currentStep.beforeSubmit(updatedFormData);
+      try {
+        const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
+        if (shouldContinue === false) {
+          return; // Cancel submission only if beforeSubmit explicitly returns false
+        }
+      } catch (error) {
+        console.error('Submission cancelled:', error);
+        return; // Cancel submission if beforeSubmit throws an error
+      }
     }
 
     updateData(updatedFormData);
@@ -77,20 +89,21 @@ const OnboardingStep = ({
         <div className={"flex flex-col"}>
           <form>
             {currentStep.fields.map((field) => (
-              <FormField setting={field} key={field.id} control={control} />
+                <FormField setting={field} key={field.id} control={control}/>
             ))}
+            {customHtml}
             <ButtonField
-              btnVariant="primary"
-              label={primaryButton.label}
-              context={bottomText}
-              onClick={handleSubmit((data) => onSubmit(data, "primary"))}
+                btnVariant="primary"
+                label={primaryButton.label}
+                context={bottomText}
+                onClick={handleSubmit((data) => onSubmit(data, "primary"))}
             />
             {secondaryButton && (
-              <ButtonField
-                btnVariant="tertiary"
-                label={secondaryButton.label}
-                onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
-              />
+                <ButtonField
+                    btnVariant="tertiary"
+                    label={secondaryButton.label}
+                    onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
+                />
             )}
           </form>
         </div>
