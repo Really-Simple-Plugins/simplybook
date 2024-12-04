@@ -41,11 +41,12 @@ export const Route = createLazyFileRoute(path)({
 
             document.body.appendChild(script);
         }
+
         useEffect(() => {
             if ( !recaptchaRendered ) {
                 console.log("setup recaptcha");
-                setupRecaptcha();
                 setRecaptchaRendered(true);
+                setupRecaptcha();
             }
 
             // Cleanup function to remove the script and callback when the component unmounts

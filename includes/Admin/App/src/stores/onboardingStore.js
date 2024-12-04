@@ -130,6 +130,7 @@ const useOnboardingStore = create((set) => {
         },
       ],
       beforeSubmit: (data) => {
+        console.log("submit widget step");
         console.log(data);
       },
     },
@@ -138,6 +139,7 @@ const useOnboardingStore = create((set) => {
       path: "/onboarding/implementation",
       fields: [],
       beforeSubmit: (data) => {
+        console.log("submit implementation step")
         console.log(data);
       },
     },

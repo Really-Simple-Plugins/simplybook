@@ -15,7 +15,6 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
  */
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
   ({ type = "text", className, ...props }, ref) => {
-    console.log("textinput props ", props);
     return (
       <input
         ref={ref}
