@@ -26,7 +26,7 @@ class Api
 	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
     {
-//		$this->get_services();
+		$this->get_services();
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
