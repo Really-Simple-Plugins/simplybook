@@ -5,6 +5,9 @@ import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
 import ButtonInput from "../Inputs/ButtonInput";
 import { Fragment } from "react";
+import Icon from "../Common/Icon";
+
+// @TODO: Split up into multiple components? 
 
 const Bookings = () => {
   const FeaturedBlocks = [
@@ -49,17 +52,17 @@ const Bookings = () => {
   return (
     <Block className={"col-span-3 row-span-2"}>
       <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
-      <BlockContent className={"p-0"}>
-        <div className={"bg-tertiary-light flex flex-col"}>
+      <BlockContent className={"px-0 py-0"}>
+        <div className={"flex flex-col bg-tertiary-light"}>
           <div className={"flex flex-row justify-between gap-4 px-4"}>
             {FeaturedBlocks.map((block, index) => (
               <div
                 key={index}
                 className={
-                  "hover:border-tertiary my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:shadow-lg"
+                  "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg hover:cursor-pointer"
                 }
               >
-                <div className={"text-2xl font-bold"}>{block.icon}</div>
+                <Icon name={block.icon} size={"2x"} />
                 <div className={"my-2 text-2xl font-extrabold"}>
                   {block.value}
                 </div>
@@ -69,18 +72,20 @@ const Bookings = () => {
           </div>
         </div>
         <div>
-          <div className={"grid auto-rows-max grid-cols-4 gap-2 p-2"}>
-            {DataList.map((block, index) => (
-              <Fragment key={index}>
-                <div className={"text-2xl font-bold"}>{block.icon}</div>
-                <div className={"text-sm"}>{block.title}</div>
-                <div className={"ml-auto text-2xl font-bold"}>
-                  {block.uplift}
+          {DataList.map((block, index) => (
+            <Fragment key={index}>
+              <div className={"grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50"}>
+                <div className="flex items-center justify-center">
+                  <Icon name={block.icon} />
                 </div>
-                <div className={"text-2xl font-bold"}>{block.value}</div>
-              </Fragment>
-            ))}
-          </div>
+                <div className={"text-sm"}>{block.title}</div>
+                <div className={"text-green-500 text-l font-bold"}>
+                  {block.uplift}%
+                </div>
+                <div className={"font-bold"}>{block.value}</div>
+              </div>
+            </Fragment>
+          ))}
         </div>
       </BlockContent>
       <BlockFooter>

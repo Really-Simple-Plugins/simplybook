@@ -1,6 +1,8 @@
-const BlockFooter = ({ children }) => {
+import clsx from "clsx";
+
+const BlockFooter = ({ children, className = "" }) => {
   return (
-    <div className="flex items-center justify-between px-5 py-4">
+    <div className={clsx(className, "flex items-center justify-between px-5 py-4")}>
       {children}
     </div>
   );

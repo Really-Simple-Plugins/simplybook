@@ -20,13 +20,13 @@ const useSettingsData = () => {
     select: (data) => [...data], // create a new array so dependencies are updated
   });
 
-    const getValue = (id) => query.data.find((field) => field.id === id)?.value;
-    const setValue = (id, value) => {
-        const field = query.data.find((field) => field.id === id);
-        if (field) {
-          field.value = value;
-        }
-      };
+  const getValue = (id) => query.data.find((field) => field.id === id)?.value;
+  const setValue = (id, value) => {
+    const field = query.data.find((field) => field.id === id);
+    if (field) {
+      field.value = value;
+    }
+  };
   // Update Mutation for settings data with destructured values
   const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
     useMutation({
@@ -41,6 +41,8 @@ const useSettingsData = () => {
         queryClient.invalidateQueries(["settings_fields"]);
       },
     });
+
+  console.log(query.data);
 
   return {
     settings: query.data,

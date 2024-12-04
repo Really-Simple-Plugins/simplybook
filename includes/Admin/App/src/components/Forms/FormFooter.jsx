@@ -2,26 +2,40 @@ import FormScrollProgressLine from "./FormScrollProgressLine";
 import ButtonInput from "../Inputs/ButtonInput";
 import { __ } from "@wordpress/i18n";
 import { useFormState } from "react-hook-form";
+
 function FormFooter({ onSubmit, control }) {
-  const { isDirty, isSubmitting, isValidating, isValid, dirtyFields } =
-    useFormState({
-      control,
-    });
+  const { isDirty, isSubmitting, isValidating, isValid } = useFormState({
+    control,
+  });
+
+  const formStates = [
+    { condition: isSubmitting, message: __("Saving...", "simplybook"), color: "blue" },
+    { condition: isValidating, message: __("Validating...", "simplybook"), color: "blue" },
+    { condition: !isValid, message: __("Form contains errors", "simplybook"), color: "red" },
+    { condition: isDirty, message: __("You have unsaved changes", "simplybook"), color: "amber" },
+  ];
+
+  const currentState = formStates.find(state => state.condition);
 
   return (
-    <div className="sticky z-10 rounded-b-md bg-gray-50 shadow-md">
+    <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
       <FormScrollProgressLine />
-      <div className="flex flex-row justify-end p-5">
-        {isDirty && <p>{__("You have unsaved changes", "simplybook")}</p>}
-        {isSubmitting && <p>{__("Saving...", "simplybook")}</p>}
-        <ButtonInput onClick={onSubmit} disabled={isSubmitting}>
+      <div className="flex flex-row justify-end gap-2 items-center p-5">
+        {currentState && (
+          <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
+            {currentState.message}
+          </p>
+        )}
+        <ButtonInput 
+          onClick={onSubmit} 
+          disabled={isSubmitting || isValidating}
+        >
           {__("Save", "simplybook")}
         </ButtonInput>
       </div>
-      dirtyFields: {JSON.stringify(dirtyFields)}
     </div>
   );
 }
 
-FormFooter.displayName = 'FormFooter';
+FormFooter.displayName = "FormFooter";
 export default FormFooter;

@@ -3,14 +3,14 @@ import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import {useEffect, useRef, useState} from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
-import useOnboardingStore from "../../stores/onboardingStore";
+import useOnboardingData from "../../hooks/useOnboardingData";
 const path = "/onboarding/confirm-email";
 
 export const Route = createLazyFileRoute(path)({
     component: () => {
         const {
             setRecaptchaToken,
-        } = useOnboardingStore();
+        } = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
         const setupRecaptcha = async () => {
