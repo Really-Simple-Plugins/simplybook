@@ -23,7 +23,6 @@ class CompanyRegistration extends RestApi {
 		if ( empty( $callback_url ) ) {
 			return;
 		}
-		error_log("call back url: company_registration/".$callback_url);
 		register_rest_route(
 			'simplybook/v1',
 			'company_registration/'.$callback_url,
@@ -33,25 +32,6 @@ class CompanyRegistration extends RestApi {
 				'permission_callback' => '__return_true',
 			)
 		);
-	}
-
-	/**
-	 * Get the temporary callback URL. Return empty string if the URL is expired
-	 *
-	 * @return string
-	 */
-	protected function get_callback_url(): string {
-		$callback_url = get_option('simplybook_callback_url', '' );
-		$expires = get_option('simplybook_callback_url_expires' );
-		if ( $expires > time() ) {
-			error_log("return callback url ".$callback_url);
-			return $callback_url;
-		}
-
-		error_log("the callback url is expired, delete the option");
-		//expired URL
-		delete_option('simplybook_callback_url');
-		return '';
 	}
 
 	/**
@@ -66,9 +46,10 @@ class CompanyRegistration extends RestApi {
 		error_log("Company Registration API POST response on the callback URL");
 		error_log(print_r($data,true));
 		$success = (bool) $data['success'];
-		$token  = (bool) $data['token'];
 		if ( $success ) {
-			$this->update_option( 'company_token', $token );
+			$this->api->update_token( sanitize_text_field($data['token']), 'company' );
+			$this->api->update_token( sanitize_text_field($data['refresh_token']), 'company', true );
+			$this->cleanup_callback_url();
 		} else {
 			$error = $data['error'] ?? false;
 			if ( $error && isset($error['message']) ){

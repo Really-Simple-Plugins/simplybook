@@ -1,5 +1,7 @@
 <?php
 namespace Simplybook\Traits;
+use function SimplyBook\simplybook_is_logged_in_rest;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -23,8 +25,38 @@ trait Helper {
         if ( defined( 'WP_CLI' ) && WP_CLI ){
             return true;
         }
+
+		if ( simplybook_is_logged_in_rest() ) {
+			return true;
+		}
+
+
         return current_user_can( 'simplybook_manage' );
     }
+
+	/**
+	 * Get the temporary callback URL. Return empty string if the URL is expired
+	 *
+	 * @return string
+	 */
+	public function get_callback_url(): string {
+		$callback_url = get_option('simplybook_callback_url', '' );
+		$expires = get_option('simplybook_callback_url_expires' );
+		if ( $expires > time() ) {
+			error_log("return callback url ".$callback_url);
+			return $callback_url;
+		}
+
+		error_log("the callback url is expired, delete the option");
+		//expired URL
+		delete_option('simplybook_callback_url');
+		return '';
+	}
+
+	public function cleanup_callback_url() {
+		delete_option('simplybook_callback_url' );
+		delete_option('simplybook_callback_url_expires' );
+	}
 
 	/**
 	 * Encrypt data

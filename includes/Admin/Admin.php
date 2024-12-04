@@ -4,9 +4,9 @@ namespace Simplybook\Admin;
 
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
+use Simplybook\Admin\RestApi\CompanyRegistration;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Settings;
-use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Upgrades\Upgrades;
 
@@ -24,6 +24,7 @@ class Admin {
         ( new Capability() );
         ( new Onboarding() );
         ( new Settings() );
+		( new CompanyRegistration() );
 
         $this->app = new App();
 

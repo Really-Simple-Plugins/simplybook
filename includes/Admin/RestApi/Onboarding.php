@@ -166,9 +166,8 @@ class Onboarding extends RestApi {
 		error_log("email confirmation response");
 		error_log(print_r($data, true));
 
-		update_option('simplybook_confirmation_code', (int) $data['confirmation-code']);
-		update_option('simplybook_recaptcha_token', sanitize_text_field( $data['recaptchaToken']) );
-
+		$this->api->confirm_email((int) $data['confirmation-code'], sanitize_text_field( $data['recaptchaToken']));
+		error_log("email confirmation completed");
 		return $this->response([
 			'message' => __('Success', 'simplybook'),
 		]);

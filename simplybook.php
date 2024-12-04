@@ -77,6 +77,13 @@ if ( ! function_exists( 'simplybook_is_logged_in_rest' ) ) {
             return false;
         }
 
+	    //if and the callback url is still active, we need to allow access so the simplybook callback can execute
+	    $expires = get_option('simplybook_callback_url_expires' );
+	    $callback_url = get_option('simplybook_callback_url', '' );
+	    if ( $expires > time() && !empty( $callback_url ) && strpos( $_SERVER['REQUEST_URI'], 'company_registration/'.$callback_url ) !== false ) {
+		    return true;
+	    }
+
         return is_user_logged_in() && current_user_can('simplybook_manage');
     }
 }

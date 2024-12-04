@@ -4,7 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Simplybook\Admin\RestApi\CompanyRegistration;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -88,31 +87,33 @@ class Api
 	 * get a token
 	 *
 	 * @param string $token
-	 * @param bool $is_refresh
+	 * @param string $type //common or company
+	 * @param bool $refresh
+	 *
 	 * @return void
 	 */
 
-	private function update_token( string $token, bool $is_refresh = false ): void {
-		$name = 'simplybook_token';
-		if ($is_refresh){
-			$name .= '_refresh';
+	public function update_token( string $token, string $type = 'common', bool $refresh = false ): void {
+		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+		if ( $refresh ) {
+			$type = $type . '_refresh';
 		}
 		$token = $this->sanitize_token( $token );
-		update_option($name, $this->encrypt_string($token) );
+		update_option("simplybook_token_$type", $this->encrypt_string($token) );
 	}
 
 	/**
 	 * Get a token
-	 * @param bool $is_refresh
-	 *
+	 * @param string $type //common or company
+	 * @param bool $refresh
 	 * @return string
 	 */
-	private function get_token( bool $is_refresh = false) : string {
-		$name = 'simplybook_token';
-		if ($is_refresh){
-			$name .= '_refresh';
+	public function get_token( string $type = 'common', bool $refresh = false ) : string {
+		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+		if ( $refresh ) {
+			$type = $type . '_refresh';
 		}
-		$token = get_option($name, '');
+		$token = get_option("simplybook_token_$type", '');
 		return $this->decrypt_string($token);
 	}
 
@@ -149,7 +150,7 @@ class Api
 				$expiration = time() + $request->expires_in;
 				error_log("set expiration to ".$expiration);
 				$this->update_token( $request->token );
-				$this->update_token( $request->refresh_token, true );
+				$this->update_token( $request->refresh_token, 'common', true );
 				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 				$this->update_option( 'domain', $request->domain );
 			} else {
@@ -168,7 +169,7 @@ class Api
 	 */
 	public function refresh_token(): void {
 		//check if we have a token
-		$refresh_token = $this->get_token(true);
+		$refresh_token = $this->get_token('common', true );
 		error_log("refresh token". $refresh_token);
 		if ( empty($refresh_token) ) {
 			error_log("MISSING REFRESH TOKEN, GET COMMON TOKEN");
@@ -205,7 +206,7 @@ class Api
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
 				$this->update_token( $request->token );
-				$this->update_token( $request->refresh_token, true );
+				$this->update_token( $request->refresh_token, 'common', true );
 				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 			} else {
 				update_option('simplybook_token_error', true, false);
@@ -250,8 +251,12 @@ class Api
 		//create temporary callback url, with a lifetime of 5 minutes. This is just for the registration process.
 		$random_string = wp_generate_password( 32, false );
 		update_option('simplybook_callback_url', $random_string, false );
-		update_option('simplybook_callback_url_expires', time() + 5 * MINUTE_IN_SECONDS, false );
+		update_option('simplybook_callback_url_expires', time() + 10 * MINUTE_IN_SECONDS, false );
 		return $random_string;
+
+
+
+
 	}
 
 	/**
@@ -280,7 +285,7 @@ class Api
 	 * @return bool
 	 */
 	protected function token_is_valid(): bool {
-		$refresh_token = $this->get_token(true);
+		$refresh_token = $this->get_token('common', true );
 		$expires = get_option('simplybook_refresh_token_expiration',0);
 		if ( !$refresh_token || !$expires ) {
 			return false;
@@ -447,35 +452,35 @@ class Api
 	/**
 	 * Registers a company with the API
 	 *
-	 * @return void
+	 * @return bool
 	 */
-	public function confirm(){
+	public function confirm_email( $email_code, $recaptcha_token ){
 		if ( !$this->user_can_manage() ) {
-			return;
+			return false;
 		}
 
 		//check if the company registration was completed already
 		if ( !$this->company_registration_complete() ) {
 			$this->log("Company registration not completed yet");
-			return;
+			return false;
 		}
 
 		error_log("confirming email with body:");
 		error_log(print_r(				[
 			'company_login' => $this->get_company_login(),
-			'confirmation_code' => get_option('simplybook_confirmation_code' ),
-			'recaptcha' => get_option('simplybook_recaptcha_token' ),
+			'confirmation_code' => $email_code,
+			'recaptcha' => $recaptcha_token,
 		], true));
 
-		$request = wp_remote_post( $this->endpoint( 'confirm' ), array(
+		$request = wp_remote_post( $this->endpoint( 'company/confirm' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
 			'sslverify' => true,
 			'body' => json_encode(
 				[
 					'company_login' => $this->get_company_login(),
-					'confirmation_code' => get_option('simplybook_confirmation_code' ),
-					'recaptcha' => get_option('simplybook_recaptcha_token' ),
+					'confirmation_code' => $email_code,
+					'recaptcha' => $recaptcha_token,
 				]
 			),
 		) );
@@ -485,21 +490,18 @@ class Api
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-			if ( $request->success ) {
+			if ( isset($request->success) ) {
+				error_log("email confirmation success, please wait for the callback.");
 				delete_option('simplybook_email_confirm_error' );
-
-				$this->update_option( 'company_id', (int) $request->company_id );
+				return true;
 			} else {
-				if ( str_contains( $request->message, 'Token Expired')) {
-					//invalid token, refresh.
-					$this->refresh_token();
-				}
-				$this->log("Error during company registration: ".$request->message);
+				$this->log("Error during email confirmation: ".$request->message);
 				update_option('simplybook_email_confirm_error', $request->message, false);
 			}
 		} else {
 			update_option('simplybook_email_confirm_error', true, false);
 		}
+		return false;
 	}
 
 	/**
@@ -731,7 +733,7 @@ class Api
         $token = $this->sanitize_token( $response['token'] ?? '' );
         $refresh_token = $this->sanitize_token( $response['refresh_token'] ?? '' );
 		$this->update_token( $token );
-		$this->update_token( $refresh_token, true );
+		$this->update_token( $refresh_token, 'common', true );
 		update_option('simplybook_refresh_token_expiration', time() + 3600);
     }
 
@@ -773,10 +775,10 @@ class Api
         } else if ( isset($_GET['token']) && isset($_GET['refresh_token']) ) {
             $this->update_token(  sanitize_text_field($_GET['token']) );
             $this->update_option( 'company', $this->sanitize_token($_GET['company']) );
-            $this->update_token( $this->sanitize_token($_GET['refresh_token']), true );
+            $this->update_token( $this->sanitize_token($_GET['refresh_token']), 'common', true );
             $this->update_option( 'domain', sanitize_text_field($_GET['domain']) );
             $this->update_option( 'auth_datetime', time() );
-            $this->update_option( 'is_auth', true );
+            $this->update_option( 'is_auth', 'refresh' );
 
             return $authData;
         } else {
