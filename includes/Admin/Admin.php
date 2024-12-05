@@ -6,6 +6,7 @@ use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\CompanyRegistration;
 use Simplybook\Admin\RestApi\Onboarding;
+use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Traits\Helper;
 use Simplybook\Upgrades\Upgrades;
@@ -23,6 +24,7 @@ class Admin {
         ( new Upgrades() );
         ( new Capability() );
         ( new Onboarding() );
+        ( new Services() );
         ( new Settings() );
 		( new CompanyRegistration() );
 

@@ -16,13 +16,7 @@ class Services extends RestApi {
 	use Save;
 
 	public function __construct() {
-		//call parent constructor
 		parent::__construct();
-
-		//instantiate of not already
-		if ( !$this->api ) {
-			$this->api = new Api();
-		}
 	}
 
 	public function register_rest_route(): void
@@ -41,12 +35,13 @@ class Services extends RestApi {
 	}
 
 	public function services($request){
-		if( !$this->api->is_authorized() ){
-			return array();
-		}
-		$services = $this->api->auth->getServices();
+		$services = $this->api->get_services();
+		error_log(print_r("services array in rest api",true));
+		error_log(print_r($services,true));
 		$services = array_values($services);
-		return $services;
+		return $this->response([
+			'services' => $services,
+		]);
 	}
 }
 

@@ -2,6 +2,7 @@ import { Controller } from "react-hook-form";
 import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
+import ServicesField from "../Fields/ServicesField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
 import { memo, useEffect, useState } from "react";
 import { __ } from "@wordpress/i18n";
@@ -12,6 +13,7 @@ const fieldComponents = {
   api: TextField,
   hidden: HiddenField,
   checkbox: CheckboxField,
+  services: ServicesField,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {

@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Random\RandomException;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -117,10 +118,16 @@ class Api
 	 */
 	public function get_token( string $type = 'common', bool $refresh = false ) : string {
 		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+		$company_token = get_option("simplybook_token_company", '');
+		if (!empty($company_token)) {
+			$type = 'company';
+		}
+
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
 		$token = get_option("simplybook_token_$type", '');
+
 		return $this->decrypt_string($token);
 	}
 
@@ -280,6 +287,18 @@ class Api
 		$login = 'rsp'.$random_int;
 		update_option('simplybook_company_login', $login, false );
 		return $login;
+	}
+
+	/**
+	 * Get the server URL
+	 *
+	 * @return string
+	 * @throws RandomException
+	 */
+	public function get_server(): string {
+		$domain = $this->get_option('domain');
+		$login = $this->get_company_login();
+		return "https://$login.$domain";
 	}
 
 	/**
@@ -534,6 +553,10 @@ class Api
 	 * @return array
 	 */
 	public function get_services(): array {
+		if( !$this->is_authorized() ){
+			error_log("not authorized for services");
+			return array();
+		}
 		$services = get_transient('simplybook_services');
 		//if ( !$services ) {
 			$services = $this->api_call('admin/services', [], 'GET');

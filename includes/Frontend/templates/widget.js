@@ -18,7 +18,7 @@
 document.addEventListener("DOMContentLoaded", function () {
     new SimplybookWidget({
         "widget_type": "iframe",
-        "url": "https://{{ company_login }}.simplybook.me", // Replace with your SimplyBook URL
+        "url": "{{ server }}", // Replace with your SimplyBook URL
         "theme": "modern", // Replace with your preferred theme, e.g., "default", "modern"
         "theme_settings": {
             "timeline_hide_unavailable": 1, // Hide unavailable time slots

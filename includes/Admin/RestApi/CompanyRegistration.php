@@ -49,6 +49,9 @@ class CompanyRegistration extends RestApi {
 		if ( $success ) {
 			$this->api->update_token( sanitize_text_field($data['token']), 'company' );
 			$this->api->update_token( sanitize_text_field($data['refresh_token']), 'company', true );
+			$this->update_option('domain', sanitize_text_field($data['domain']));
+			$this->update_option( 'company_id', (int) $data['company_id'] );
+
 			$this->cleanup_callback_url();
 		} else {
 			$error = $data['error'] ?? false;

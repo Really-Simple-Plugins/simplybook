@@ -34,6 +34,8 @@ trait Helper {
         return current_user_can( 'simplybook_manage' );
     }
 
+
+
 	/**
 	 * Get the temporary callback URL. Return empty string if the URL is expired
 	 *

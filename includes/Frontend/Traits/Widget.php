@@ -76,7 +76,7 @@ trait Widget {
         $data = [];
 
         $widget_settings = $this->get_widget_settings();
-	    $widget_settings['company_login'] = $api->get_company_login();
+	    $widget_settings['server'] = $api->get_server();
         if ( !$widget_settings ) {
             $widget_settings = array();
         }

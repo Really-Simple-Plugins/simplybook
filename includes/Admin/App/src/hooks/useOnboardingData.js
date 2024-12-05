@@ -67,7 +67,7 @@ const steps = [
         },
         {
           id: "services",
-          type: "text",
+          type: "services",
           label: "Services",
         },
         {
