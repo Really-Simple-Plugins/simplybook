@@ -4,7 +4,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Random\RandomException;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -66,7 +65,7 @@ class Api
 
 	public function get_login_link(){
 		$company_login = $this->get_company_login();
-		$response = $this->api_call("company/$company_login/create-login-link", [], 'POST');
+		$response = $this->api_call("simplybook/company/$company_login/create-login-link", [], 'POST');
 		error_log(print_r($response,true));
 	}
 
@@ -143,7 +142,7 @@ class Api
 			return;
 		}
 
-		$request = wp_remote_post( $this->endpoint( 'auth/token' ), array(
+		$request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
 			'headers' => $this->get_headers(),
 			'timeout' => 15,
 			'sslverify' => true,
@@ -197,7 +196,7 @@ class Api
 		}
 
 		error_log("refreshing token");
-		$request = wp_remote_post( $this->endpoint( 'auth/refresh-token' ), array(
+		$request = wp_remote_post( $this->endpoint( 'simplybook/auth/refresh-token' ), array(
 			'headers' => $this->get_headers(true),
 			'timeout' => 15,
 			'sslverify' => true,
@@ -273,7 +272,6 @@ class Api
 	 * Get company login and generate one if it does not exist
 	 * @return string
 	 *
-	 * @throws \Random\RandomException
 	 */
 	public function get_company_login(): string {
 		$login = get_option('simplybook_company_login', '');
@@ -293,7 +291,6 @@ class Api
 	 * Get the server URL
 	 *
 	 * @return string
-	 * @throws RandomException
 	 */
 	public function get_server(): string {
 		$domain = $this->get_option('domain');
@@ -397,9 +394,8 @@ class Api
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
 		}
-		error_log("callback url");
-		error_log(get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration"));
-		$request = wp_remote_post( $this->endpoint( 'company' ), array(
+
+		$request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
 			'sslverify' => true,
@@ -494,7 +490,7 @@ class Api
 			'recaptcha' => $recaptcha_token,
 		], true));
 
-		$request = wp_remote_post( $this->endpoint( 'company/confirm' ), array(
+		$request = wp_remote_post( $this->endpoint( 'simplybook/company/confirm' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
 			'sslverify' => true,
@@ -553,8 +549,8 @@ class Api
 	 * @return array
 	 */
 	public function get_services(): array {
-		if( !$this->is_authorized() ){
-			error_log("not authorized for services");
+		if( !$this->token_is_valid() ){
+			$this->refresh_token();
 			return array();
 		}
 		$services = get_transient('simplybook_services');
@@ -566,6 +562,16 @@ class Api
 		return $services;
 	}
 
+	public function get_login_url(){
+		$mainSite =  $this->get_option('domain');;
+		$callback_url = sanitize_url((empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
+
+		$url = $mainSite . '/oauth/ologin/?' . http_build_query(array(
+				'redirect_uri' => $callback_url,
+			));
+		return $url;
+	}
+
 	/**
 	 * Do an API request to simplybook
 	 *
@@ -575,6 +581,7 @@ class Api
 	 *
 	 * @return array
 	 */
+
 	protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array {
 		error_log( "api call for $path" );
 	//with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
@@ -599,7 +606,7 @@ class Api
 			) );
 		} else {
 			$url = add_query_arg($data, $this->endpoint( $path ));
-			$response_body = wp_remote_get($url, $this->get_headers( true, $token_type ) );
+			error_log("GET url: ".$url);
 			$response_body = wp_remote_get($url, $this->get_headers( true, $token_type ) );
 			error_log("GET response body");
 			error_log(print_r($response_body, true));

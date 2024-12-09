@@ -49,7 +49,6 @@ trait Helper {
 			return $callback_url;
 		}
 
-		error_log("the callback url is expired, delete the option");
 		//expired URL
 		delete_option('simplybook_callback_url');
 		return '';

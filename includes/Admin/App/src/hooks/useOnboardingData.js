@@ -66,9 +66,9 @@ const steps = [
           label: __("Business category", "simplybook"),
         },
         {
-          id: "services",
-          type: "services",
-          label: "Services",
+          id: "service",
+          type: "text",
+          label: __("Services", 'simplybook'),
         },
         {
           id: "address",
