@@ -2,10 +2,18 @@ import React from "react";
 import { Link } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
 import Icon from "./Icon";
+import getLoginUrl from "../../api/endpoints/getLoginUrl";
 import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
 
 const Header = () => {
+  const loginTo = async (page) => {
+    const loginUrl = await getLoginUrl();
+    //open a new tab with the login url
+    window.open(loginUrl, "_blank");
+    //focus on the new tab
+    window.focus();
+  }
   const linkClassName =
     "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
 
@@ -21,22 +29,20 @@ const Header = () => {
           <Link to="/" className={linkClassName}>
             {__("Dashboard", "simplybook")}
           </Link>
-          <a
-            href="https://simplybook.me"
-            target={"_blank"}
+          <Link
             className={linkClassName}
+            onClick={ (e) => loginTo('clients') }
           >
             {__("Clients", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2"/>
-          </a>
-          <a
-            href="https://simplybook.me"
-            target={"_blank"}
-            className={linkClassName}
+          </Link>
+          <Link
+              className={linkClassName}
+              onClick={ (e) => loginTo('Calendar') }
           >
             {__("Calendar", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2" />
-          </a>
+          </Link>
           <Link to="/settings/general" className={linkClassName}>
             Settings
           </Link>

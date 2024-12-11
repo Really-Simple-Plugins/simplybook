@@ -63,10 +63,16 @@ class Api
 		return $this->endpoint . $path;
 	}
 
-	public function get_login_link(){
-		$company_login = $this->get_company_login();
-		$response = $this->api_call("simplybook/company/$company_login/create-login-link", [], 'POST');
+	/**
+	 * Get a direct login to simplybook.me
+	 *
+	 * @return string
+	 */
+	public function get_login_url(): string {
+		return 'https://simplybook.me';
+		$response = $this->api_call("/admin/auth/create-login-hash", [], 'POST');
 		error_log(print_r($response,true));
+
 	}
 
 	/**
@@ -560,16 +566,6 @@ class Api
 		//}
 
 		return $services;
-	}
-
-	public function get_login_url(){
-		$mainSite =  $this->get_option('domain');;
-		$callback_url = sanitize_url((empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
-
-		$url = $mainSite . '/oauth/ologin/?' . http_build_query(array(
-				'redirect_uri' => $callback_url,
-			));
-		return $url;
 	}
 
 	/**

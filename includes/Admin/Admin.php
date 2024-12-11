@@ -5,6 +5,7 @@ namespace Simplybook\Admin;
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\CompanyRegistration;
+use Simplybook\Admin\RestApi\LoginUrl;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
@@ -24,6 +25,7 @@ class Admin {
         ( new Upgrades() );
         ( new Capability() );
         ( new Onboarding() );
+        ( new LoginUrl() );
         ( new Services() );
         ( new Settings() );
 		( new CompanyRegistration() );
