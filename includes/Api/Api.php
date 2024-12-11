@@ -69,10 +69,10 @@ class Api
 	 * @return string
 	 */
 	public function get_login_url(): string {
-		return 'https://simplybook.me';
-		$response = $this->api_call("/admin/auth/create-login-hash", [], 'POST');
-		error_log(print_r($response,true));
 
+		$response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
+		error_log(print_r($response,true));
+		return 'https://simplybook.me';
 	}
 
 	/**
@@ -160,8 +160,8 @@ class Api
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-			error_log("common token response");
-			error_log(print_r($request,true));
+			error_log("retrieve token response" );
+			error_log( print_r($request,true) );
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
 				error_log("setting token ".$request->token);
@@ -589,6 +589,16 @@ class Api
 		if ( $apiStatus && $apiStatus['status'] === 'error' && $apiStatus['time'] > time() - HOUR_IN_SECONDS ) {
 			$cache = get_option( 'simplybook_persistent_cache' );
 			//return $cache[ $type ] ?? [];
+		}
+
+		if ( !$this->token_is_valid() ) {
+			//try to refresh
+			$this->refresh_token();
+			//still not valid
+			if ( !$this->token_is_valid() ) {
+				$this->log("Token not valid, cannot make API call");
+				return [];
+			}
 		}
 
 		//for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.

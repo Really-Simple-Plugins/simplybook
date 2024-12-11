@@ -7,7 +7,9 @@ import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
 
 const Header = () => {
-  const loginTo = async (page) => {
+  const loginTo = async (e, page) => {
+    e.preventDefault();
+    console.log("get login url for ", page);
     const loginUrl = await getLoginUrl();
     //open a new tab with the login url
     window.open(loginUrl, "_blank");
@@ -29,20 +31,22 @@ const Header = () => {
           <Link to="/" className={linkClassName}>
             {__("Dashboard", "simplybook")}
           </Link>
-          <Link
+          <a
+            href="#"
             className={linkClassName}
-            onClick={ (e) => loginTo('clients') }
+            onClick={ (e) => loginTo(e, 'clients') }
           >
             {__("Clients", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2"/>
-          </Link>
-          <Link
+          </a>
+          <a
+              href="#"
               className={linkClassName}
-              onClick={ (e) => loginTo('Calendar') }
+              onClick={ (e) => loginTo(e, 'Calendar') }
           >
             {__("Calendar", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2" />
-          </Link>
+          </a>
           <Link to="/settings/general" className={linkClassName}>
             Settings
           </Link>
