@@ -27,32 +27,19 @@ class Api
     public function __construct()
     {
 		//$this->get_services();
-
-	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
-	    error_log("common token: ".$this->get_token('common'));
-	    error_log("common refresh token: ".$this->get_token('common'));
-
-	    error_log("admin token: ".$this->get_token('company'));
-	    error_log("admin refresh token: ".$this->get_token('company'));
 		if ( !$this->get_token('common') ) {
 			$this->get_common_token();
 		} else {
 			if ( !$this->token_is_valid('common') ) {
-				error_log("common token expired, refresh");
 				$this->refresh_token();
 			}
 
 			if ( !empty($this->get_token('company') ) && !$this->token_is_valid('company') ) {
-				error_log("company token expired, refresh");
 				$this->refresh_token('company');
 			}
 
 		}
-
-
-
-//		add_action('init', array($this, 'register_company'));
 	}
 
 	/**
@@ -61,7 +48,8 @@ class Api
 	 * @return bool
 	 */
 	public function company_registration_complete(): bool {
-		if ( !$this->get_option('company_id') ) {
+		//check if the callback has been completed, resulting in a company/admin token.
+		if ( !$this->get_token('company') ) {
 			return false;
 		}
 		return true;

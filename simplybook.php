@@ -113,7 +113,7 @@ if ( ! function_exists( __NAMESPACE__ . '\burst_activation' ) ) {
      */
     function simplybook_activation(): void
     {
-		error_log("activation");
+		error_log("Add activation option and run hook");
         update_option( 'simplybook_run_activation', true, false );
         do_action( 'simplybook_activation' );
     }

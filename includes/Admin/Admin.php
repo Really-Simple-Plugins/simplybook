@@ -9,6 +9,7 @@ use Simplybook\Admin\RestApi\LoginUrl;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Upgrades\Upgrades;
 
@@ -32,8 +33,8 @@ class Admin {
 
         $this->app = new App();
 
-		// Add action to register the admin menu
 		add_action( 'admin_init', array( $this, 'maybe_run_activation' ) );
+		add_action( 'admin_init', array( $this, 'maybe_redirect_to_onboarding' ) );
 
 		$plugin = SIMPLYBOOK_PLUGIN;
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
@@ -45,10 +46,10 @@ class Admin {
 	 * @return void
 	 */
 	public function maybe_run_activation(): void {
+		error_log("check activation option");
 		if ( ! get_option( 'simplybook_run_activation' ) ) {
 			return;
 		}
-		error_log("add cap0");
 		Capability::add_capability( 'simplybook_manage' );
 		delete_option( 'simplybook_run_activation' );
 		do_action( 'simplybook_activation' );
@@ -56,16 +57,30 @@ class Admin {
 		// Flush rewrite rules to ensure the new routes are available
 		add_action( 'shutdown', 'flush_rewrite_rules' );
 		// Redirect to onboarding
-		//check if company registration complete. If not, redirect to onboarding
-//		$api = new API();
-//		if ( !$api->company_registration_complete() ) {
-		//add redirect on a hook to ensure that the flush rewrite has been completed first
+		error_log("add onboarding hook");
+		set_transient('simplybook_onboarding_redirect', true, 5 * MINUTE_IN_SECONDS);
 		add_action('shutdown', array($this, 'redirect_to_onboarding'), 20);
-//		}
 	}
 
-	public function redirect_to_onboarding(): void {
-		wp_safe_redirect( admin_url( 'admin.php?page=simplybook-onboarding' ) );
+	public function maybe_redirect_to_onboarding(): void {
+
+		if ( isset($_GET['page']) && $_GET['page'] === 'simplybook') {
+			return;
+		}
+
+		if (!get_transient('simplybook_onboarding_redirect')) {
+			return;
+		}
+
+		$api = new Api();
+		if ( $api->company_registration_complete() ) {
+			return;
+		}
+
+		//this is not the simplybook page, redirect.
+		error_log("do redirect");
+		delete_transient('simplybook_onboarding_redirect');
+		wp_safe_redirect( admin_url( 'admin.php?page=simplybook#onboarding/create-your-account' ) );
 		exit;
 	}
 

@@ -22,7 +22,7 @@ const Header = () => {
 
     //if we don't have the login url and direct url yet, get it.
     //the login url is only used the first time. Afterwards we assume the user is already logged in and use the direct url to prevent too many hash generated errors.
-    
+
     if ( !alreadyLoggedIn ) {
       const loginData = await getLoginUrl();
       setLoginUrl(loginData.login_url);
