@@ -47,6 +47,8 @@ class CompanyRegistration extends RestApi {
 		error_log(print_r($data,true));
 		$success = (bool) $data['success'];
 		if ( $success ) {
+			error_log("updating company token: ".$data['token']);
+			error_log("updating company refresh_token: ".$data['refresh_token']);
 			$this->api->update_token( sanitize_text_field($data['token']), 'company' );
 			$this->api->update_token( sanitize_text_field($data['refresh_token']), 'company', true );
 			update_option('simplybook_refresh_company_token_expiration', time() + 3600 );

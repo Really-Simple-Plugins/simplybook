@@ -30,6 +30,11 @@ class Api
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
+	    error_log("common token: ".$this->get_token('common'));
+	    error_log("common refresh token: ".$this->get_token('common'));
+
+	    error_log("admin token: ".$this->get_token('company'));
+	    error_log("admin refresh token: ".$this->get_token('company'));
 		if ( !$this->get_token('common') ) {
 			$this->get_common_token();
 		} else {
@@ -42,6 +47,7 @@ class Api
 				error_log("company token expired, refresh");
 				$this->refresh_token('company');
 			}
+
 		}
 
 
@@ -135,11 +141,6 @@ class Api
 	 */
 	public function get_token( string $type = 'common', bool $refresh = false ) : string {
 		$type = in_array($type, ['common', 'company']) ? $type : 'common';
-		$company_token = get_option("simplybook_token_company", '');
-		if (!empty($company_token)) {
-			$type = 'company';
-		}
-
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
@@ -217,15 +218,28 @@ class Api
 		}
 
 		error_log("refreshing $type token");
-		$path = $type === 'common' ? 'simplybook/auth/refresh-token' : 'admin/auth/refresh-token';
+		//https://user-api-v2.wp.simplybook.ovh/admin/auth/refresh-token
+
+		$data = array(
+			'refresh_token' => $refresh_token,
+		);
+		if ( $type === 'company' ){
+			$path = 'admin/auth/refresh-token';
+			$headers = $this->get_headers(false );
+			$data['company'] = $this->get_company_login();
+		} else {
+			$path = 'simplybook/auth/refresh-token';
+			$headers = $this->get_headers(true );
+		}
+		error_log("using body");
+		error_log(print_r($data,true));
 		$request = wp_remote_post( $this->endpoint( $path ), array(
-			'headers' => $this->get_headers(true),
+			'headers' => $headers,
 			'timeout' => 15,
 			'sslverify' => true,
 			'body' => json_encode(
-				array(
-					'refresh_token' => $refresh_token,
-				)),
+				$data
+			),
 		) );
 
 		if ( ! is_wp_error( $request ) ) {
@@ -240,9 +254,12 @@ class Api
 			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
-				$this->update_token( $request->token );
+				error_log("updating $type token: $request->token");
+				error_log("updating $type refresh_token: $request->refresh_token");
+				$this->update_token( $request->token, $type );
 				$this->update_token( $request->refresh_token, $type, true );
-				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
+				$expires_option = $type === 'common' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
+				update_option($expires_option, time() + $request->expires_in);
 			} else {
 				update_option('simplybook_token_error', true, false);
 			}
@@ -329,7 +346,7 @@ class Api
 		$refresh_token = $this->get_token($type, true );
 		$type = in_array($type, ['common', 'company']) ? $type : 'common';
 		if ( $type === 'company' ) {
-			$expires = time()+3600;
+			$expires = get_option( 'simplybook_refresh_company_token_expiration', 0 );
 		} else {
 			$expires = get_option( 'simplybook_refresh_token_expiration', 0 );
 		}
