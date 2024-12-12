@@ -7,14 +7,31 @@ import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
 
 const Header = () => {
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState(false);
   const loginTo = async (e, page) => {
     e.preventDefault();
     console.log("get login url for ", page);
-    const loginUrl = await getLoginUrl();
+    //some pages in simplybook:
+    //client: /client
+    //services: /management/#services
+    //providers: /management/#providers
+    //calendar: /index/index
+    //dashboard: /dashboard/new
+
+    let loginUrl = '';
+    if ( alreadyLoggedIn ) {
+      loginUrl = await getLoginUrl('url');
+      loginUrl += '/' + page;
+    } else {
+      loginUrl = await getLoginUrl('login_url');
+      loginUrl += '?back_url=/' + page + '/';
+    }
+
     //open a new tab with the login url
     window.open(loginUrl, "_blank");
     //focus on the new tab
     window.focus();
+    setAlreadyLoggedIn(true);
   }
   const linkClassName =
     "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
@@ -34,7 +51,7 @@ const Header = () => {
           <a
             href="#"
             className={linkClassName}
-            onClick={ (e) => loginTo(e, 'clients') }
+            onClick={ (e) => loginTo(e, 'client') }
           >
             {__("Clients", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2"/>
@@ -42,7 +59,7 @@ const Header = () => {
           <a
               href="#"
               className={linkClassName}
-              onClick={ (e) => loginTo(e, 'Calendar') }
+              onClick={ (e) => loginTo(e, 'index/index') }
           >
             {__("Calendar", "simplybook")}
             <Icon name="square-arrow-up-right" className="px-2" />

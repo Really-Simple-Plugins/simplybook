@@ -21,7 +21,7 @@ class Api
     ];
 	protected $api_url = 'https://user-api-v2.simplybook.me/';
 
-	protected $endpoint = 'https://user-api-v2.wp.simplybook.ovh/simplybook/';
+	protected $endpoint = 'https://user-api-v2.wp.simplybook.ovh/';
 
 	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
@@ -30,12 +30,21 @@ class Api
 
 	    //if a token has never been set before, we load it.
 	    //if we have a token, check if it needs to be refreshed
-		if ( !$this->get_token() ) {
+		if ( !$this->get_token('common') ) {
 			$this->get_common_token();
-		} else if ( !$this->token_is_valid() ) {
-			error_log("token expired, refresh");
-			$this->refresh_token();
+		} else {
+			if ( !$this->token_is_valid('common') ) {
+				error_log("common token expired, refresh");
+				$this->refresh_token();
+			}
+
+			if ( !empty($this->get_token('company') ) && !$this->token_is_valid('company') ) {
+				error_log("company token expired, refresh");
+				$this->refresh_token('company');
+			}
 		}
+
+
 
 //		add_action('init', array($this, 'register_company'));
 	}
@@ -72,6 +81,9 @@ class Api
 
 		$response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
 		error_log(print_r($response,true));
+		if (isset($response['login_url'])) {
+			return esc_url_raw($response['login_url']);
+		}
 		return 'https://simplybook.me';
 	}
 
@@ -147,7 +159,7 @@ class Api
 			error_log("we have a valid token");
 			return;
 		}
-
+		error_log("request to ".'simplybook/auth/token');
 		$request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
 			'headers' => $this->get_headers(),
 			'timeout' => 15,
@@ -186,23 +198,27 @@ class Api
 	 *
 	 * @return void
 	 */
-	public function refresh_token(): void {
+	public function refresh_token($type = 'common'): void {
 		//check if we have a token
-		$refresh_token = $this->get_token('common', true );
+		$refresh_token = $this->get_token($type, true );
+		if (!$refresh_token) {
+			return;
+		}
 		error_log("refresh token". $refresh_token);
 		if ( empty($refresh_token) ) {
-			error_log("MISSING REFRESH TOKEN, GET COMMON TOKEN");
+			error_log("MISSING REFRESH TOKEN, GET $type TOKEN");
 			$this->get_common_token();
 			return;
 		}
 
-		if ( $this->token_is_valid() ) {
-			error_log("no need to refresh, refresh token is already valid ");
+		if ( $this->token_is_valid($type) ) {
+			error_log("no need to refresh, refresh token of type $type is already valid ");
 			return;
 		}
 
-		error_log("refreshing token");
-		$request = wp_remote_post( $this->endpoint( 'simplybook/auth/refresh-token' ), array(
+		error_log("refreshing $type token");
+		$path = $type === 'common' ? 'simplybook/auth/refresh-token' : 'admin/auth/refresh-token';
+		$request = wp_remote_post( $this->endpoint( $path ), array(
 			'headers' => $this->get_headers(true),
 			'timeout' => 15,
 			'sslverify' => true,
@@ -215,17 +231,17 @@ class Api
 		if ( ! is_wp_error( $request ) ) {
 			$response_code = wp_remote_retrieve_response_code( $request );
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-			if ( $response_code === 401 ) {
-				error_log("unauthorized, get fresh common token");
+			if ( $response_code === 401 && $type==='common' ) {
+				error_log("unauthorized, get fresh $type token");
 				$this->get_common_token();
 				return;
 			}
-			error_log(print_r("refresh token response",true));
+			error_log(print_r("refresh token response for type $type",true));
 			error_log(print_r($request,true));
 			if ( isset($request->token) ) {
 				delete_option('simplybook_token_error' );
 				$this->update_token( $request->token );
-				$this->update_token( $request->refresh_token, 'common', true );
+				$this->update_token( $request->refresh_token, $type, true );
 				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 			} else {
 				update_option('simplybook_token_error', true, false);
@@ -309,9 +325,15 @@ class Api
 	 *
 	 * @return bool
 	 */
-	protected function token_is_valid(): bool {
-		$refresh_token = $this->get_token('common', true );
-		$expires = get_option('simplybook_refresh_token_expiration',0);
+	protected function token_is_valid( $type = 'common' ): bool {
+		$refresh_token = $this->get_token($type, true );
+		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+		if ( $type === 'company' ) {
+			$expires = time()+3600;
+		} else {
+			$expires = get_option( 'simplybook_refresh_token_expiration', 0 );
+		}
+
 		if ( !$refresh_token || !$expires ) {
 			return false;
 		}
@@ -330,6 +352,7 @@ class Api
 	protected function clear_tokens(): void {
 		delete_option('simplybook_token_refresh');
 		delete_option('simplybook_refresh_token_expiration');
+		delete_option('simplybook_refresh_company_token_expiration');
 		delete_option('simplybook_token');
 	}
 
@@ -340,8 +363,8 @@ class Api
 	 */
 	public function is_authorized(): bool {
 		//check if we have a token
-		if ( !$this->token_is_valid() ) {
-			$this->refresh_token();
+		if ( !$this->token_is_valid('company') ) {
+			$this->refresh_token('company');
 		}
 
 		//check if we have a company
@@ -555,8 +578,8 @@ class Api
 	 * @return array
 	 */
 	public function get_services(): array {
-		if( !$this->token_is_valid() ){
-			$this->refresh_token();
+		if( !$this->token_is_valid('company') ){
+			$this->refresh_admin_token();
 			return array();
 		}
 		$services = get_transient('simplybook_services');
@@ -591,18 +614,19 @@ class Api
 			//return $cache[ $type ] ?? [];
 		}
 
-		if ( !$this->token_is_valid() ) {
+		//for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
+		$token_type = str_contains( $path, 'admin' ) ? 'company' : 'common';
+
+		if ( !$this->token_is_valid($token_type) ) {
 			//try to refresh
-			$this->refresh_token();
+			$this->refresh_token($token_type);
 			//still not valid
-			if ( !$this->token_is_valid() ) {
+			if ( !$this->token_is_valid($token_type) ) {
 				$this->log("Token not valid, cannot make API call");
 				return [];
 			}
 		}
 
-		//for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
-		$token_type = str_contains( $path, 'admin' ) ? 'company' : 'common';
 		if ( $type === 'POST' ) {
 			$response_body = wp_remote_post( $this->endpoint( $path ), array(
 				'headers'   => $this->get_headers( true, $token_type ),
@@ -649,7 +673,7 @@ class Api
 			if ( $attempt===1 &&  str_contains( $message, 'Token Expired')) {
 				error_log("refresh expired token, attempt $attempt");
 				//invalid token, refresh.
-				$this->refresh_token();
+				$this->refresh_token($token_type);
 				$this->api_call( $path, $data, $type, $attempt + 1 );
 			}
 			$this->log("Error during $path_type retrieval: ".$message);

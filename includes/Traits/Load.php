@@ -189,7 +189,7 @@ trait Load {
 	 */
 	public function fields_and_values( $load_values = true ): array
 	{
-		$fields = include( SIMPLYBOOK_PATH . 'includes/Config/fields.php' );
+		$fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
 		$fields = apply_filters('simplybook_fields', $fields);
 
 		error_log('fields_and_values load_values: ' . $load_values);

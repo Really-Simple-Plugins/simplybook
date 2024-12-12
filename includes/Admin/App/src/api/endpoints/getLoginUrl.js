@@ -2,16 +2,17 @@ import request from "../requests/request";
 
 /**
  * Update an onboarding step
- * @return {Promise<void>}
+ * @return {Promise<string>}
  */
-const getLoginUrl = async () => {
+const getLoginUrl = async (type) => {
     const res = await request("get_login_url", "POST");
     if (!res || !res.data.url) {
         console.log("no login url found")
-        return [];
+        return '';
     }
     console.log("get login url response ", res);
-    return res.data.url;
+    // res.data.url if type === 'url', res.data.login_url if type = 'login_url'
+    return type === 'url' ? res.data.url : res.data.login_url;
 };
 
 export default getLoginUrl;

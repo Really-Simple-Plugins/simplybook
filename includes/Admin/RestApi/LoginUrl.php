@@ -38,8 +38,10 @@ class LoginUrl extends RestApi {
 		$url = $this->api->get_login_url();
 		error_log(print_r("URL from rest api",true));
 		error_log(print_r($url,true));
+		$domain = $this->get_option('domain');
 		return $this->response([
-			'url' => $url,
+			'login_url' => $url,
+			'url' => $domain,
 		]);
 	}
 }
