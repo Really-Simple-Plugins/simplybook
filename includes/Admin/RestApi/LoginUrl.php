@@ -36,14 +36,11 @@ class LoginUrl extends RestApi {
 
 	public function get_login_url($request): WP_REST_Response {
 		$login_url = $this->api->get_login_url();
-		error_log(print_r("URL from rest api",true));
-		error_log(print_r($login_url,true));
 		$domain = $this->get_option('domain');
 		$company_login = $this->api->get_company_login();
-		$url = "https://$company_login.$domain";
 		return $this->response([
 			'login_url' => $login_url,
-			'url' => $url,
+			'url' => "https://$company_login.secure.$domain",
 		]);
 	}
 }

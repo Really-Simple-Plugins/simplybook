@@ -259,7 +259,8 @@ class Api
 				$this->update_token( $request->token, $type );
 				$this->update_token( $request->refresh_token, $type, true );
 				$expires_option = $type === 'common' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
-				update_option($expires_option, time() + $request->expires_in);
+				$expires = $request->expires_in ?? 3600;
+				update_option($expires_option, time() + $expires);
 			} else {
 				update_option('simplybook_token_error', true, false);
 			}

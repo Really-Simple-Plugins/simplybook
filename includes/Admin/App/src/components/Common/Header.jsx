@@ -8,6 +8,8 @@ import ButtonInput from "../Inputs/ButtonInput";
 
 const Header = () => {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState(false);
+  const [loginUrl, setLoginUrl] = React.useState('');
+  const [directUrl, setDirectUrl] = React.useState('');
   const loginTo = async (e, page) => {
     e.preventDefault();
     console.log("get login url for ", page);
@@ -18,18 +20,24 @@ const Header = () => {
     //calendar: /index/index
     //dashboard: /dashboard/new
 
-    let loginUrl = '';
+    //if we don't have the login url and direct url yet, get it.
+    //the login url is only used the first time. Afterwards we assume the user is already logged in and use the direct url to prevent too many hash generated errors.
+    
+    if ( !alreadyLoggedIn ) {
+      const loginData = await getLoginUrl();
+      setLoginUrl(loginData.login_url);
+      setDirectUrl(loginData.url);
+    }
+
+    let finalUrl = loginUrl;
     if ( alreadyLoggedIn ) {
-      loginUrl = await getLoginUrl('url');
-      loginUrl += '/' + page;
+      finalUrl += '/' + page;
     } else {
-      loginUrl = await getLoginUrl('login_url');
-      loginUrl += '?back_url=/' + page + '/';
+      finalUrl += '?back_url=/' + page + '/';
     }
 
     //open a new tab with the login url
-    window.open(loginUrl, "_blank");
-    //focus on the new tab
+    window.open(finalUrl, "_blank");
     window.focus();
     setAlreadyLoggedIn(true);
   }
