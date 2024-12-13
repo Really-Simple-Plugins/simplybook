@@ -24,7 +24,7 @@ const TanStackRouterDevtools = React.lazy(() =>
 
 export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
-    if (!simplybook.isOnboardingCompleted) {
+    if (!simplybook.is_onboarding_completed) {
       redirect({
         to: "/onboarding/create-your-account",
       });

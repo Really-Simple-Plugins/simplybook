@@ -1,6 +1,7 @@
 <?php
 
 namespace Simplybook\Admin\App;
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 
@@ -221,7 +222,7 @@ class App {
 
 	private function onboarding_completed(): bool {
 		// TODO: check if all onboarding fields are set, or use a seperate option for completing the onboarding
-
-		return false;
+        $api = new Api();
+        return $api->company_registration_complete();
 	}
 }

@@ -5,11 +5,15 @@ import Icon from "./Icon";
 import getLoginUrl from "../../api/endpoints/getLoginUrl";
 import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
+import useOnboardingData from "../../hooks/useOnboardingData";
 
 const Header = () => {
   const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState(false);
   const [loginUrl, setLoginUrl] = React.useState('');
   const [directUrl, setDirectUrl] = React.useState('');
+  const {
+    isOnboardingCompleted,
+  } = useOnboardingData();
   const loginTo = async (e, page) => {
     e.preventDefault();
     console.log("get login url for ", page);
@@ -31,7 +35,7 @@ const Header = () => {
 
     let finalUrl = loginUrl;
     if ( alreadyLoggedIn ) {
-      finalUrl += '/' + page;
+      finalUrl = directUrl + '/' + page;
     } else {
       finalUrl += '?back_url=/' + page + '/';
     }
@@ -44,6 +48,7 @@ const Header = () => {
   const linkClassName =
     "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
 
+  let externalLinkClass = isOnboardingCompleted ? '' : 'pointer-events-none opacity-50 cursor-not-allowed';
   return (
     <div className="bg-white">
       <div className="mx-auto flex max-w-screen-2xl items-center px-5">
@@ -58,7 +63,7 @@ const Header = () => {
           </Link>
           <a
             href="#"
-            className={linkClassName}
+            className={linkClassName+" "+externalLinkClass}
             onClick={ (e) => loginTo(e, 'client') }
           >
             {__("Clients", "simplybook")}
@@ -66,7 +71,7 @@ const Header = () => {
           </a>
           <a
               href="#"
-              className={linkClassName}
+             className={linkClassName+" "+externalLinkClass}
               onClick={ (e) => loginTo(e, 'index/index') }
           >
             {__("Calendar", "simplybook")}
