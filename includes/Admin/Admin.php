@@ -9,8 +9,9 @@ use Simplybook\Admin\RestApi\LoginUrl;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
-use Simplybook\Api\Api;
+use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
 use Simplybook\Traits\Helper;
+use Simplybook\Traits\Save;
 use Simplybook\Upgrades\Upgrades;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Admin {
 	use Helper;
-
+	use Save;
 	protected App $app;
 
 	public function __construct() {
@@ -30,10 +31,12 @@ class Admin {
         ( new Services() );
         ( new Settings() );
 		( new CompanyRegistration() );
+		( new WaitForRegistrationCallback() );
 
         $this->app = new App();
 
 		add_action( 'admin_init', array( $this, 'maybe_run_activation' ) );
+		add_action( 'admin_init', array( $this, 'maybe_redirect_to_dashboard' ) );
 		$plugin = SIMPLYBOOK_PLUGIN;
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 	}
@@ -52,34 +55,41 @@ class Admin {
 		delete_option( 'simplybook_run_activation' );
 		do_action( 'simplybook_activation' );
 
+		$this->setup_defaults();
+
 		// Flush rewrite rules to ensure the new routes are available
 		add_action( 'shutdown', 'flush_rewrite_rules' );
 		// Redirect to onboarding
 		error_log("add onboarding hook");
+		set_transient('simplybook_dashboard_redirect', true, 5 * MINUTE_IN_SECONDS );
 	}
 
-//  removing this, already handled in react
-//	public function maybe_redirect_to_onboarding(): void {
-//
-//		if ( isset($_GET['page']) && $_GET['page'] === 'simplybook') {
-//			return;
-//		}
-//
-//		if (!get_transient('simplybook_onboarding_redirect')) {
-//			return;
-//		}
-//
-//		$api = new Api();
-//		if ( $api->company_registration_complete() ) {
-//			return;
-//		}
-//
-//		//this is not the simplybook page, redirect.
-//		error_log("do redirect");
-//		delete_transient('simplybook_onboarding_redirect');
-//		wp_safe_redirect( admin_url( 'admin.php?page=simplybook#onboarding/create-your-account' ) );
-//		exit;
-//	}
+	private function setup_defaults(){
+//		$this->update_option('email', ');
+	}
+
+	/**
+	 * Redirect to simplybook dashboard page on activation.
+	 * React side will handle redirect to onboarding
+	 *
+	 * @return void
+	 */
+	public function maybe_redirect_to_dashboard(): void {
+
+		if ( isset($_GET['page']) && $_GET['page'] === 'simplybook') {
+			return;
+		}
+
+		if (!get_transient('simplybook_dashboard_redirect')) {
+			return;
+		}
+
+		//this is not the simplybook page, redirect.
+		error_log("do redirect");
+		delete_transient('simplybook_dashboard_redirect');
+		wp_safe_redirect( admin_url( 'admin.php?page=simplybook' ) );
+		exit;
+	}
 
 	/**
 	 * Add settings and support link to the plugin page

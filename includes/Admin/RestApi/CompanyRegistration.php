@@ -23,6 +23,7 @@ class CompanyRegistration extends RestApi {
 		if ( empty( $callback_url ) ) {
 			return;
 		}
+
 		register_rest_route(
 			'simplybook/v1',
 			'company_registration/'.$callback_url,

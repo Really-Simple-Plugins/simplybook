@@ -26,8 +26,6 @@ export const Route = createRootRoute({
   beforeLoad: async ({ location }) => {
     console.log(location)
     if ( !simplybook.is_onboarding_completed && location.pathname !== '/onboarding/create-your-account' ) {
-      console.log("should redirect")
-      console.log("should redirect");
       return redirect({
         to: "/onboarding/create-your-account",
       });

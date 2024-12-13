@@ -121,6 +121,7 @@ const steps = [
         console.log("confirm email step");
         console.log(data);
         await confirmEmail({ data });
+        waitForRegistrationCallback();
       },
     },
     {
@@ -197,7 +198,7 @@ const useOnboardingData = () => {
     recaptchaToken: query.data?.recaptchaToken || "",
     setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
     onboardingCompleted: simplybook.is_onboarding_completed,
-    setOnboardingcompleted: (value) => updateData({ onboardingCompleted: value }),
+    setOnboardingCompleted: (value) => updateData({ onboardingCompleted: value }),
   };
 };
 
