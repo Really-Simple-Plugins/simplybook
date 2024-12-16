@@ -121,7 +121,6 @@ const steps = [
         console.log("confirm email step");
         console.log(data);
         await confirmEmail({ data });
-        waitForRegistrationCallback();
       },
     },
     {

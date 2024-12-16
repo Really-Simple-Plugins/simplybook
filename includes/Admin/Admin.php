@@ -47,7 +47,6 @@ class Admin {
 	 * @return void
 	 */
 	public function maybe_run_activation(): void {
-		error_log("check activation option");
 		if ( ! get_option( 'simplybook_run_activation' ) ) {
 			return;
 		}
