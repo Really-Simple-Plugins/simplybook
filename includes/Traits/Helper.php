@@ -59,6 +59,15 @@ trait Helper {
 		delete_option('simplybook_callback_url_expires' );
 	}
 
+	public function sanitize_country( $country ): string {
+		$country = strtoupper(trim($country));
+		if (preg_match('/^[a-z]{2}$/i', $country)) {
+			return $country;
+		} else {
+			return '';
+		}
+	}
+
 	/**
 	 * Encrypt data
 	 * @param $string

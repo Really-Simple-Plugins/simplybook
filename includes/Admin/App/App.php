@@ -196,6 +196,24 @@ class App {
 	}
 
 	/**
+     * Get the first name of the current user, with fallbacks
+     *
+	 * @return string
+	 */
+    private function get_first_name(): string {
+        $user = wp_get_current_user();
+        if ( !empty($user->first_name) ) {
+            return ucfirst($user->first_name);
+        }
+
+        if ( !empty($user->user_nicename) ) {
+		    return ucfirst($user->user_nicename);
+	    }
+
+        return ucfirst($user->display_name);
+    }
+
+	/**
 	 * Localize the script with the translations
 	 *
 	 * @param $js_data
@@ -206,16 +224,17 @@ class App {
 		return apply_filters(
 			'simplybook_localize_script',
 			[
-				'nonce'             => wp_create_nonce( 'simplybook_nonce' ),
-                'ajax_url'          => admin_url( 'admin-ajax.php' ),
-                'site_url'          => get_rest_url(),
-				'json_translations' => $js_data['json_translations'],
-				'settings_menu'     => $this->menus(),
-                'settings_fields'   => $this->fields( true ),
+				'nonce'                   => wp_create_nonce( 'simplybook_nonce' ),
+				'ajax_url'                => admin_url( 'admin-ajax.php' ),
+				'site_url'                => get_rest_url(),
+				'json_translations'       => $js_data['json_translations'],
+				'settings_menu'           => $this->menus(),
+				'settings_fields'         => $this->fields( true ),
 				'is_onboarding_completed' => $this->onboarding_completed(),
-                'company_data'      => [
-                        'email' => $this->get_option('email'),
-                ]
+				'first_name'              => $this->get_first_name(),
+				'company_data'            => [
+					'email' => $this->get_option( 'email' ),
+				]
 			]
 		);
 	}

@@ -61,14 +61,25 @@ const steps = [
           label: "Company name",
         },
         {
-          id: "business-category",
-          type: "text",
+          id: "category",
+          type: "select",
           label: __("Business category", "simplybook"),
+          options: [
+            { value: 3, label: __("Beauty and wellness", "simplybook") },
+            { value: 43, label: __("Sport and fitness", "simplybook") },
+            { value: 5, label: __("Personal meetings and services", "simplybook") },
+            { value: 1, label: __("Medical", "simplybook") },
+            { value: 4, label: __("Events and entertainment", "simplybook") },
+            { value: 6, label: __("Education", "simplybook") },
+            { value: 75, label: __("Retailers", "simplybook") },
+            { value: 7, label: __("Officials", "simplybook") },
+            { value: 8, label: __("Other category", "simplybook") },
+          ],
         },
         {
           id: "service",
           type: "text",
-          label: __("Services", 'simplybook'),
+          label: __("What service do you provide?", 'simplybook'),
         },
         {
           id: "address",
@@ -92,8 +103,13 @@ const steps = [
         },
         {
           id: "country",
-          type: "text",
+          type: "select",
           label: __("Country", "simplybook"),
+          options: [
+            { value: 'NL', label: __("Netherlands", "simplybook") },
+            { value: 'DE', label: __("Germany", "simplybook") },
+            { value: 'BE', label: __("Belgium", "simplybook") },
+          ],
         },
       ],
       beforeSubmit: async (data) => {

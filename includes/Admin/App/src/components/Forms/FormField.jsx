@@ -2,7 +2,7 @@ import { Controller } from "react-hook-form";
 import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
-import ServicesField from "../Fields/ServicesField";
+import SelectField from "../Fields/SelectField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
 import { memo, useEffect, useState } from "react";
 import { __ } from "@wordpress/i18n";
@@ -13,7 +13,7 @@ const fieldComponents = {
   api: TextField,
   hidden: HiddenField,
   checkbox: CheckboxField,
-  services: ServicesField,
+  select: SelectField,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {
@@ -53,7 +53,7 @@ const FormField = memo(({ setting, control, ...props }) => {
     ...(setting.maxLength && { maxLength: setting.maxLength }),
     ...(setting.validate && { validate: setting.validate }),
   };
-
+  console.log("setting", setting);
   return (
     <ErrorBoundary>
       <Controller

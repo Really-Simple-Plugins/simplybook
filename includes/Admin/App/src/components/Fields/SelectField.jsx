@@ -13,20 +13,10 @@ import getServices from "../../api/endpoints/getServices";
  * @param {object} props
  * @return {JSX.Element}
  */
-const ServicesField = forwardRef(
-    ({ field, fieldState, label, help, context, className, ...props }, ref) => {
+const SelectField = forwardRef(
+    ({ field, fieldState, label, help, context, className, options, ...props }, ref) => {
         const inputId = props.id || field.name;
-        const [services, setServices] = useState([]);
-        const loadServices = async () => {
-            const services = await getServices();
-            console.log("loaded services", services);
-            setServices(services);
-        }
-        useEffect(() => {
-            if (services.length === 0) {
-                loadServices();
-            }
-        }, []);
+
         return (
             <FieldWrapper
                 label={label}
@@ -39,7 +29,7 @@ const ServicesField = forwardRef(
             >
                 <SelectInput
                     id={inputId}
-                    options={services}
+                    options={options}
                     aria-invalid={!!fieldState?.error?.message}
                     {...field}
                     {...props}
@@ -49,5 +39,5 @@ const ServicesField = forwardRef(
     },
 );
 
-ServicesField.displayName = "ServicesField";
-export default ServicesField;
+SelectField.displayName = "SelectField";
+export default SelectField;

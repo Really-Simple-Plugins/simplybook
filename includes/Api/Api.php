@@ -50,6 +50,11 @@ class Api
 	public function company_registration_complete(): bool {
 		//check if the callback has been completed, resulting in a company/admin token.
 		if ( !$this->get_token('company') ) {
+			$company_registration_start_time = get_option('simplybook_company_registration_start_time', 0);
+			if ( $company_registration_start_time > time() - HOUR_IN_SECONDS ) {
+				//the registration has not completed in one hour. Clear the company login so we can try with a fresh one.
+				$this->delete_company_login();
+			}
 			return false;
 		}
 		return true;
@@ -316,6 +321,15 @@ class Api
 	}
 
 	/**
+	 * Clear the company login, used when the company registration is never completed, possibly when the callback has failed.
+	 *
+	 * @return void
+	 */
+	public function delete_company_login(): void {
+		delete_option('simplybook_company_login');
+	}
+
+	/**
 	 * Get the server URL
 	 *
 	 * @return string
@@ -410,25 +424,20 @@ class Api
 		$phone = sanitize_text_field( $this->get_option('phone') );
 		$city = sanitize_text_field( $this->get_option('city') );
 		$address = sanitize_text_field( $this->get_option('address') );
+		$country = $this->sanitize_country( $this->get_option('country') );
 		//no spaces allowed in zip
 		$zip = (string) $this->get_option('zip');
 		$zip = sanitize_text_field( str_replace(' ', '', trim( $zip ) ) );
 
-		//use some defaults for testing purposes
-		$company_name = "really simple plugins";
-		$description = "plugins dev";
-		$phone = '1234567890';
-		$city = 'Groningen';
-		$address = 'Kalmarweg 14-5';
-		$email = "rogierlankhorst@gmail.com";
 		$company_login = $this->get_company_login();
 		error_log("company login $company_login");
-		$zip = "12345";
-		if ( empty($email) || empty($phone) || empty($company_name) || empty($description) || empty($city) || empty($address) || empty($zip) ) {
+		if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($description) || empty($city) || empty($address) || empty($zip) ) {
 			$this->log("Missing fields for company registration");
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
 		}
+
+		$coordinates = $this->get_coordinates($address, $zip, $city, $country);
 
 		$request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
 			'headers' => $this->get_headers( true ),
@@ -444,10 +453,10 @@ class Api
 					'city' => $city,
 					'address1' => $address,
 					'zip' => $zip,
-					"lat" => "",
-				    "lng" => "",
+					"lat" => $coordinates['lat'],
+				    "lng" => $coordinates['lng'],
 				    "timezone" => $this->get_timezone_string(),
-				    "country_id" => "NL",
+				    "country_id" => $country,
 				    "password" => $random_password,
 				    "retype_password" => $random_password,
 					'categories' => [$category],
@@ -467,6 +476,7 @@ class Api
 				update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
 				update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
 				$this->update_option( 'company_id', (int) $request->company_id );
+				update_option("simplybook_company_registration_start_time", time(), false);
 				//successful registered
 				return true;
 			} else {
@@ -500,6 +510,44 @@ class Api
 
 		//not successful registered
 		return false;
+	}
+
+	/**
+	 * Get lat and long coordinates for an address from openstreetmap.
+	 *
+	 * @param string $address
+	 * @param string $zip
+	 * @param string $city
+	 * @param string $country
+	 *
+	 * @return array
+	 */
+	private function get_coordinates( string $address, string $zip, string $city, string $country ){
+		$address = urlencode("$address, $zip $city, $country");
+		$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json";
+
+		$response = wp_remote_get($url);
+		if ( is_wp_error( $response ) ) {
+			$this->log("Error during address lookup: ".$response->get_error_message());
+			return [
+				'lat' => 0,
+				'lng' => 0,
+			];
+		}
+		$data = wp_remote_retrieve_body($response);
+		$data = json_decode($data, true);
+		if (!empty($data)) {
+			$lat = $data[0]['lat'];
+			$lng = $data[0]['lon'];
+			return [
+				'lat' => $lat,
+				'lng' => $lng,
+			];
+		}
+		return [
+			'lat' => 0,
+			'lng' => 0,
+		];
 	}
 
 	/**
