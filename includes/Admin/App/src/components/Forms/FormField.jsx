@@ -31,7 +31,6 @@ const FormField = memo(({ setting, control, ...props }) => {
       </div>
     );
   }
-
   const validationRules = {
     ...(setting.required && {
       required: {
@@ -53,7 +52,7 @@ const FormField = memo(({ setting, control, ...props }) => {
     ...(setting.maxLength && { maxLength: setting.maxLength }),
     ...(setting.validate && { validate: setting.validate }),
   };
-  console.log("setting", setting);
+
   return (
     <ErrorBoundary>
       <Controller

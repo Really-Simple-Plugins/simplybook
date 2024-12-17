@@ -133,13 +133,11 @@ class Onboarding extends RestApi {
         //de api registration
         $this->update_option('email', sanitize_email( $data['email']) );
         $this->update_option('category', (int) ( $data['category'] ));
-        $this->update_option('company_name', sanitize_text_field($data['company-name']) );
-		//get a description using the wordpress get_bloginfo function
-        $description = get_bloginfo('description');
-        $this->update_option('description', sanitize_text_field($description) );
+        $this->update_option('company_name', sanitize_text_field($data['company_name']) );
         $this->update_option('phone',  sanitize_text_field($data['phone']) );
         $this->update_option('city',  sanitize_text_field($data['city']) );
         $this->update_option('address', sanitize_text_field($data['address']) );
+        $this->update_option('service', sanitize_text_field($data['service']) );
         $this->update_option('country', $this->sanitize_country($data['country']) );
 	    //no spaces allowed in zip
 	    $zip = sanitize_text_field( str_replace(' ', '', trim( $data['zip'] ) ) );

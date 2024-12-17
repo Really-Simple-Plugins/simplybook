@@ -28,9 +28,11 @@ const SelectField = forwardRef(
                 required={props.required}
             >
                 <SelectInput
+                    value={ field.value }
                     id={inputId}
                     options={options}
                     aria-invalid={!!fieldState?.error?.message}
+                    field={field}
                     {...field}
                     {...props}
                 />

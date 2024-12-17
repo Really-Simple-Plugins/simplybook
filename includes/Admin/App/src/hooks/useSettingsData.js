@@ -33,8 +33,7 @@ const useSettingsData = () => {
       mutationFn: async (data) => {
         // Simulate async operation (e.g., API call to save settings)
         await new Promise((resolve) => setTimeout(resolve, 1000));
-        // Optionally return data or a result
-        return data; // Or any other meaningful result
+        return data;
       },
       onSuccess: () => {
         // Invalidate cache by specific query key for updated data

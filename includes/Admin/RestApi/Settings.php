@@ -22,8 +22,8 @@ class Settings extends RestApi {
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'save' ),
-                'permission_callback' => function () {
-                    return $this->user_can_manage();
+                'permission_callback' => function ( $request ) {
+	                return $this->validate_request( $request );
                 },
             )
         );
@@ -51,19 +51,9 @@ class Settings extends RestApi {
     public function save($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
         $data = $ajax_data ?: $request->get_json_params();
-        $validated_response = $this->validate_request( $data );
-        if ( is_wp_error( $validated_response ) ) {
-            return $validated_response;
-        }
-
-        if ( ! $this->user_can_manage() ) {
-            return new WP_Error( 'rest_forbidden', 'You do not have permission to perform this action.', [ 'status' => 403 ] );
-        }
-
         // get the nonce
         $nonce  = $data['nonce'];
         $fields = $data['fields'];
-
         if ( ! wp_verify_nonce( $nonce, 'simplybook_nonce' ) ) {
             return new WP_Error( 'rest_invalid_nonce', 'The provided nonce is not valid.', [ 'status' => 400 ] );
         }
@@ -81,15 +71,16 @@ class Settings extends RestApi {
     }
 
     /**
-     * Register a user with email addres with Simplybookme
+     * Get the fields array
      *
      * @param $request
      * @param mixed $ajax_data
-     * @return WP_Error|WP_REST_Response
+     * @return WP_REST_Response
      */
     public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
 		$this->log('get fields');
+		error_log("get fields");
 
         $data = $ajax_data ?: $request->get_json_params();
 	    $this->log($data);
@@ -97,7 +88,7 @@ class Settings extends RestApi {
 		$with_values = $data['withValues'] === 1;
 		$this->log('with_values');
 		$this->log($data['withValues']);
-        $fields = $this->fields_and_values(true);
+        $fields = $this->fields($with_values);
 		error_log(print_r($fields, true));
         return $this->response( $fields );
     }

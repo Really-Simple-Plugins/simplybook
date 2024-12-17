@@ -17,7 +17,6 @@ const steps = [
           type: "text",
           label: __("Email", "simplybook"),
           required: true,
-          value: "", //simplybook.company_data.email,
           validation: {
             regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
             message: __("Please enter a valid email address", "simplybook"),
@@ -56,7 +55,7 @@ const steps = [
       path: "/onboarding/information-check",
       fields: [
         {
-          id: "company-name",
+          id: "company_name",
           type: "text",
           label: "Company name",
         },
@@ -82,14 +81,14 @@ const steps = [
           label: __("What service do you provide?", 'simplybook'),
         },
         {
-          id: "address",
-          type: "text",
-          label: __("Address", "simplybook"),
-        },
-        {
           id: "phone",
           type: "text",
           label: __("Phone", "simplybook"),
+        },
+        {
+          id: "address",
+          type: "text",
+          label: __("Address", "simplybook"),
         },
         {
           id: "zip",

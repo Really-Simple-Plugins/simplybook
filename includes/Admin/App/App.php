@@ -232,9 +232,6 @@ class App {
 				'settings_fields'         => $this->fields( true ),
 				'is_onboarding_completed' => $this->onboarding_completed(),
 				'first_name'              => $this->get_first_name(),
-				'company_data'            => [
-					'email' => $this->get_option( 'email' ),
-				]
 			]
 		);
 	}

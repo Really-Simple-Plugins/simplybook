@@ -63,8 +63,37 @@ class Admin {
 		set_transient('simplybook_dashboard_redirect', true, 5 * MINUTE_IN_SECONDS );
 	}
 
-	private function setup_defaults(){
-//		$this->update_option('email', ');
+	/**
+	 * Set up some defaults
+	 *
+	 * @return void
+	 */
+
+	private function setup_defaults(): void {
+		error_log("setup defaults");
+		$user = wp_get_current_user();
+		if ( empty($this->get_option('email') ) ) {
+			$this->update_option( 'email', sanitize_email( $user->user_email ) );
+		}
+		if ( empty($this->get_option('company_name') ) ) {
+			$this->update_option( 'company_name', get_bloginfo( 'name' ) );
+		}
+		if ( empty($this->get_option('country') ) ) {
+			$this->update_option( 'country', $this->get_country_by_locale() );
+		}
+	}
+
+
+
+	/**
+	 * Get the country based on the locale
+	 *
+	 * @return string
+	 */
+	private function get_country_by_locale(): string {
+		$locale = get_locale();
+		$locale = explode('_', $locale);
+		return strtoupper( $locale[1] );
 	}
 
 	/**

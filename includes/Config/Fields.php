@@ -5,8 +5,6 @@
 return $fields = [
     [
         'id'       => 'review_notice_shown',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
         'type'     => 'hidden',
         'label'    => '',
         'disabled' => false,
@@ -14,8 +12,6 @@ return $fields = [
     ],
     [
         'id'       => 'tour_shown_once',
-        'menu_id'  => 'general',
-        'group_id' => 'general',
         'type'     => 'hidden',
         'label'    => '',
         'default'  => false,
@@ -23,12 +19,12 @@ return $fields = [
     [
         'id'       => 'company_name',
         'type'     => 'api',
-        'default'  => false,
+        'default'  => '',
     ],
 	[
 		'id'       => 'domain',
 		'type'     => 'api',
-		'default'  => false,
+		'default'  => '',
 	],
 	[
         'id'       => 'company_id',
@@ -43,7 +39,7 @@ return $fields = [
 	[
 		'id'       => 'email',
 		'type'     => 'text',
-		'default'  => false,
+		'default'  => '',
 	],
 	[
 		'id'       => 'tips-and-tricks',
@@ -53,90 +49,39 @@ return $fields = [
 	[
 		'id'       => 'phone',
 		'type'     => 'text',
-		'default'  => false,
+		'default'  => '',
 	],
 	[
 		'id'       => 'address',
 		'type'     => 'text',
-		'default'  => false,
-	],
-	[
-		'id'       => 'expires',
-		'type'     => 'api',
-		'default'  => false,
-	],
-	[
-		'id'       => 'company_login',
-		'type'     => 'api',
-		'default'  => false,
+		'default'  => '',
 	],
 	[
 		'id'       => 'zip',
 		'type'     => 'text',
-		'default'  => false,
+		'default'  => '',
 	],
 	[
 		'id'       => 'category',
 		'type'     => 'text',
-		'default'  => false,
+		'default'  => 0,
 	],
 	[
 		'id'       => 'city',
 		'type'     => 'text',
-		'default'  => false,
+		'default'  => '',
 	],
-    [
-        'id'       => 'company',
-        'type'     => 'api',
-        'label'    => '',
-        'default'  => '',
-    ],
-    [
-        'id'       => 'description',
-        'type'     => 'api',
-        'label'    => '',
-        'default'  => '',
-    ],
 	[
-        'id'       => 'login',
-        'type'     => 'api',
-        'label'    => '',
-        'default'  => is_admin() && is_user_logged_in() ? get_option( 'admin_email' ) : '',
-    ],
-    [
-        'id'       => 'require2fa',
-        'type'     => 'api',
-        'default'  => false,
-    ],
-    [
-        'id'       => 'allowed2fa_providers',
-        'type'     => 'api',
-        'default'  => [],
-    ],
-    [
-        'id'       => 'auth_session_id',
-        'type'     => 'api',
-    ],
-    [
-        'id'       => 'auth_datetime',
-        'type'     => 'api',
-    ],
-    [
-        'id'       => 'is_auth',
-        'type'     => 'api',
-    ],
-    [
-        'id'       => 'id',
-        'type'     => 'api',
-    ],
-    [
-        'id'       => 'is_refreshed',
-        'type'     => 'api',
-    ],
-    [
-        'id'       => 'refresh_time',
-        'type'     => 'api',
-    ],
+		'id'       => 'country',
+		'type'     => 'text',
+		'default'  => '',
+	],
+	[
+		'id'       => 'service',
+		'type'     => 'text',
+		'label'    => __("Service", 'simplybook'),
+		'default'  => '',
+	],
     [
         'id'       => 'template',
         'menu_id'  => 'design',

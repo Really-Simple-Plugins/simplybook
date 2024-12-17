@@ -1,5 +1,7 @@
 <?php
 namespace Simplybook\Traits;
+use Simplybook\Api\Api;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -113,17 +115,13 @@ trait Load {
     public function get_api_data(): array
     {
 		error_log('get_api_data');
-        $fields = $this->get_fields_by_attribute( 'type', 'api' );
-        $data = [];
-        foreach ( $fields as $field ) {
-            $data[ $field['id'] ] = $this->get_option( $field['id'] );
-        }
-
-        if ( empty($data['token']) || empty($data['company']) || empty($data['refresh_token']) || empty( $data['domain']) ) {
-            return [];
-        }
-
-        return $data;
+		$api = new API();
+		return [
+			'token' => $api->get_token(),
+			'company' => $api->get_company_login(),
+			'refresh_token' => $api->get_token('public', true),
+			'domain' => $this->get_option('domain'),
+		];
     }
 
     /**
@@ -148,10 +146,12 @@ trait Load {
 
     /**
      * Get fields array for the settings
+     *
      * @param bool $load_values
+     *
      * @return array
      */
-    public function fields( $load_values = false ): array
+    public function fields( bool $load_values = false ): array
     {
         $fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
         $fields = apply_filters('simplybook_fields', $fields);
@@ -183,46 +183,8 @@ trait Load {
     }
 
 	/**
-	 * Get fields array for the settings
-	 * @param bool $load_values
-	 * @return array
-	 */
-	public function fields_and_values( $load_values = true ): array
-	{
-		$fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
-		$fields = apply_filters('simplybook_fields', $fields);
+	 * Get menu array for the settings
 
-		error_log('fields_and_values load_values: ' . $load_values);
-		foreach ( $fields as $key => $field ) {
-			$field = wp_parse_args( $field, [
-				'id' => false,
-				'menu_id' => 'general',
-				'group_id' => 'general',
-				'type' => 'text',
-				'visible' => true,
-				'disabled' => false,
-				'default' => false,
-				'encrypt' => false,
-				'label' => '',
-			] );
-
-			//only preload field values for logged in admins
-			if ( $load_values && $this->user_can_manage() ) {
-				$value          = $this->get_option( $field['id'], $field['default'] );
-				$field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
-			}
-			$fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
-		}
-
-		$fields = apply_filters( 'simplybook_fields_values', $fields );
-
-		return array_values( $fields );
-	}
-
-
-	/**
-	 * Get fields array for the settings
-	 * @param bool $load_values
 	 * @return array
 	 */
 	public function menus(): array

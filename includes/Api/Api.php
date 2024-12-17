@@ -28,15 +28,15 @@ class Api
     {
 		//$this->get_services();
 	    //if we have a token, check if it needs to be refreshed
-		if ( !$this->get_token('common') ) {
-			$this->get_common_token();
+		if ( !$this->get_token('public') ) {
+			$this->get_public_token();
 		} else {
-			if ( !$this->token_is_valid('common') ) {
+			if ( !$this->token_is_valid('public') ) {
 				$this->refresh_token();
 			}
 
-			if ( !empty($this->get_token('company') ) && !$this->token_is_valid('company') ) {
-				$this->refresh_token('company');
+			if ( !empty($this->get_token('admin') ) && !$this->token_is_valid('admin') ) {
+				$this->refresh_token('admin');
 			}
 
 		}
@@ -49,7 +49,7 @@ class Api
 	 */
 	public function company_registration_complete(): bool {
 		//check if the callback has been completed, resulting in a company/admin token.
-		if ( !$this->get_token('company') ) {
+		if ( !$this->get_token('admin') ) {
 			$company_registration_start_time = get_option('simplybook_company_registration_start_time', 0);
 			if ( $company_registration_start_time > time() - HOUR_IN_SECONDS ) {
 				//the registration has not completed in one hour. Clear the company login so we can try with a fresh one.
@@ -91,8 +91,8 @@ class Api
 	 * @param bool $include_token // optional, default false
 	 * @return array
 	 */
-	protected function get_headers( bool $include_token = false, $token_type = 'common' ): array {
-		$token_type = in_array($token_type, ['common', 'company']) ? $token_type : 'common';
+	protected function get_headers( bool $include_token = false, $token_type = 'public' ): array {
+		$token_type = in_array($token_type, ['public', 'admin']) ? $token_type : 'public';
 		$headers = array(
 			'Content-Type'  => 'application/json',
 		);
@@ -111,14 +111,14 @@ class Api
 	 * get a token
 	 *
 	 * @param string $token
-	 * @param string $type //common or company
+	 * @param string $type //public or admin
 	 * @param bool $refresh
 	 *
 	 * @return void
 	 */
 
-	public function update_token( string $token, string $type = 'common', bool $refresh = false ): void {
-		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+	public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
+		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
@@ -128,12 +128,12 @@ class Api
 
 	/**
 	 * Get a token
-	 * @param string $type //common or company
+	 * @param string $type //public or admin
 	 * @param bool $refresh
 	 * @return string
 	 */
-	public function get_token( string $type = 'common', bool $refresh = false ) : string {
-		$type = in_array($type, ['common', 'company']) ? $type : 'common';
+	public function get_token( string $type = 'public', bool $refresh = false ) : string {
+		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
@@ -143,12 +143,12 @@ class Api
 	}
 
 	/**
-	 * Get common token
+	 * Get public token
 	 *
 	 * @return void
 	 */
-	public function get_common_token(): void {
-		error_log("GET COMMON TOKEN");
+	public function get_public_token(): void {
+		error_log("GET PUBLIC TOKEN");
 		if ( $this->token_is_valid() ) {
 			error_log("we have a valid token");
 			return;
@@ -175,7 +175,7 @@ class Api
 				$expiration = time() + $request->expires_in;
 				error_log("set expiration to ".$expiration);
 				$this->update_token( $request->token );
-				$this->update_token( $request->refresh_token, 'common', true );
+				$this->update_token( $request->refresh_token, 'public', true );
 				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 				$this->update_option( 'domain', $request->domain );
 			} else {
@@ -192,7 +192,7 @@ class Api
 	 *
 	 * @return void
 	 */
-	public function refresh_token($type = 'common'): void {
+	public function refresh_token($type = 'public'): void {
 		//check if we have a token
 		$refresh_token = $this->get_token($type, true );
 		if (!$refresh_token) {
@@ -201,7 +201,7 @@ class Api
 		error_log("refresh token". $refresh_token);
 		if ( empty($refresh_token) ) {
 			error_log("MISSING REFRESH TOKEN, GET $type TOKEN");
-			$this->get_common_token();
+			$this->get_public_token();
 			return;
 		}
 
@@ -216,7 +216,7 @@ class Api
 		$data = array(
 			'refresh_token' => $refresh_token,
 		);
-		if ( $type === 'company' ){
+		if ( $type === 'admin' ){
 			$path = 'admin/auth/refresh-token';
 			$headers = $this->get_headers(false );
 			$data['company'] = $this->get_company_login();
@@ -238,9 +238,9 @@ class Api
 		if ( ! is_wp_error( $request ) ) {
 			$response_code = wp_remote_retrieve_response_code( $request );
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
-			if ( $response_code === 401 && $type==='common' ) {
+			if ( $response_code === 401 && $type==='public' ) {
 				error_log("unauthorized, get fresh $type token");
-				$this->get_common_token();
+				$this->get_public_token();
 				return;
 			}
 			error_log(print_r("refresh token response for type $type",true));
@@ -251,7 +251,7 @@ class Api
 				error_log("updating $type refresh_token: $request->refresh_token");
 				$this->update_token( $request->token, $type );
 				$this->update_token( $request->refresh_token, $type, true );
-				$expires_option = $type === 'common' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
+				$expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
 				$expires = $request->expires_in ?? 3600;
 				update_option($expires_option, time() + $expires);
 			} else {
@@ -345,10 +345,10 @@ class Api
 	 *
 	 * @return bool
 	 */
-	protected function token_is_valid( $type = 'common' ): bool {
+	protected function token_is_valid( $type = 'public' ): bool {
 		$refresh_token = $this->get_token($type, true );
-		$type = in_array($type, ['common', 'company']) ? $type : 'common';
-		if ( $type === 'company' ) {
+		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
+		if ( $type === 'admin' ) {
 			$expires = get_option( 'simplybook_refresh_company_token_expiration', 0 );
 		} else {
 			$expires = get_option( 'simplybook_refresh_token_expiration', 0 );
@@ -383,8 +383,8 @@ class Api
 	 */
 	public function is_authorized(): bool {
 		//check if we have a token
-		if ( !$this->token_is_valid('company') ) {
-			$this->refresh_token('company');
+		if ( !$this->token_is_valid('admin') ) {
+			$this->refresh_token('admin');
 		}
 
 		//check if we have a company
@@ -406,7 +406,7 @@ class Api
 
 		//check if we have a token
 		if ( !$this->token_is_valid() ) {
-			$this->get_common_token();
+			$this->get_public_token();
 		}
 
 		if ( get_transient('simply_book_attempt_count') >2 ) {
@@ -420,10 +420,12 @@ class Api
 		$category =  $category < 1 ? 8 : $category; //default other category
 		$random_password = wp_generate_password( 24, false );
 		$company_name = sanitize_text_field( $this->get_option('company_name') );
-		$description = sanitize_text_field( $this->get_option('description') );
+		//get a description using the WordPress get_bloginfo function
+		$description = $this->get_description();
 		$phone = sanitize_text_field( $this->get_option('phone') );
 		$city = sanitize_text_field( $this->get_option('city') );
 		$address = sanitize_text_field( $this->get_option('address') );
+		$service = sanitize_text_field( $this->get_option('service') );
 		$country = $this->sanitize_country( $this->get_option('country') );
 		//no spaces allowed in zip
 		$zip = (string) $this->get_option('zip');
@@ -431,7 +433,7 @@ class Api
 
 		$company_login = $this->get_company_login();
 		error_log("company login $company_login");
-		if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($description) || empty($city) || empty($address) || empty($zip) ) {
+		if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
 			$this->log("Missing fields for company registration");
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
 			return false;
@@ -439,6 +441,7 @@ class Api
 
 		$coordinates = $this->get_coordinates($address, $zip, $city, $country);
 
+		$provider = $this->get_user_full_name();
 		$request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
 			'headers' => $this->get_headers( true ),
 			'timeout' => 15,
@@ -461,6 +464,9 @@ class Api
 				    "retype_password" => $random_password,
 					'categories' => [$category],
 					'lang' => $this->get_locale(),
+					'providers'=>[$provider],
+					'services'=>[$service],
+					'dismiss_onboarding' => true,
 					'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
 				]
 			),
@@ -510,6 +516,42 @@ class Api
 
 		//not successful registered
 		return false;
+	}
+
+	/**
+	 * Get user full name to set as the default provider
+	 *
+	 * @return string
+	 */
+	private function get_user_full_name(): string {
+		$user = wp_get_current_user();
+		$first_name = $user->first_name;
+		$last_name = $user->last_name;
+		if ( !empty($first_name) && !empty($last_name) ) {
+			return $first_name . ' ' . $last_name;
+		}
+
+		if ( !empty($user->user_nicename)) {
+			return $user->user_nicename;
+		}
+		return $user->display_name;
+	}
+
+	/**
+	 * Get the description for the company, with fallbacks.
+	 * @return string
+	 */
+	private function get_description() : string {
+		$description = get_bloginfo('description');
+		if ( empty( $description) ) {
+			$description = get_bloginfo('name');
+		}
+
+		if ( empty( $description) ) {
+			$description = get_site_url();
+		}
+
+		return $description;
 	}
 
 	/**
@@ -632,7 +674,7 @@ class Api
 	 * @return array
 	 */
 	public function get_services(): array {
-		if( !$this->token_is_valid('company') ){
+		if( !$this->token_is_valid('admin') ){
 			$this->refresh_admin_token();
 			return array();
 		}
@@ -669,7 +711,7 @@ class Api
 		}
 
 		//for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
-		$token_type = str_contains( $path, 'admin' ) ? 'company' : 'common';
+		$token_type = str_contains( $path, 'admin' ) ? 'admin' : 'public';
 
 		if ( !$this->token_is_valid($token_type) ) {
 			//try to refresh
@@ -750,65 +792,6 @@ class Api
 	 * Below old api functions
 	 */
 
-	/*POST https://user-api-v2.simplybook.me/admin/auth/refresh-token
-	Content-Type: application/json
-
-	{
-	"company": "<insert your company login>",
-	"refresh_token": "<insert refresh_token from auth step>"
-	}*/
-	public function refreshToken()
-	{
-		$authData = $this->getAuthData();
-		if (!$authData) {
-			return false;
-		}
-
-		$url = $this->_getApiUrl() . 'admin/auth/refresh-token';
-		$args = array(
-			'body' => json_encode(array(
-				'company' => $authData['company'],
-				'refresh_token' => $authData['refresh_token'],
-			)),
-			'headers' => array(
-				'Content-Type' => 'application/json',
-			),
-		);
-		$response = wp_remote_post($url, $args);
-		$result = wp_remote_retrieve_body($response);
-
-		if (is_wp_error($response)) {
-			$this->_log(json_encode($response));
-			return false;
-		}
-
-		$result = json_decode($result, true);
-
-		if (!$result || !isset($result['token']) || !$result['token']) {
-			$this->_log('Logout after Refresh token because incorrect data received');
-			return false;
-		}
-
-		$authData = array_merge($authData, $result, array(
-			'is_refreshed' => true,
-			'refresh_time' => time(),
-		));
-
-		foreach ( $authData as $key => $value ) {
-			$this->update_option($key, $value);
-		}
-
-		$this->update_option('auth_datetime', time());
-		$this->update_option('is_auth', true);
-
-		return true;
-	}
-
-    public function auth()
-    {
-        $url = $this->getAuthUrl();
-        $this->_redirect($url);
-    }
 
     public function checkApiConnection(){
         $response = wp_remote_get($this->endpoint('admin'));
@@ -823,234 +806,6 @@ class Api
         }
         return false;
     }
-
-    protected function _redirect($url, $params = array())
-    {
-        $params['exit'] = true;
-        header('Location: ' . $url);
-        exit;
-    }
-
-    public function authenticate(){
-        $url = $this->_getApiUrl() . 'admin/auth/';
-        error_log("authenticating...");
-        $response = $this->makeApiCall( $url, null, 'POST', array(
-            'company' => $this->get_option('company'),//rsptest1
-            'login' => $this->get_option('login'),//rogier@really-simple-ssl.com
-            'password' => 'h!cPOnq2cpPfPUPh$sMVdLB&8^MX$48V',
-        ));
-//        [token] => 069cdc05d7a9c4ae018dbc704a431051411dc43c8926ba790fddb6957274b540
-//        [company] => rsptest1
-//        [login] => rogier@really-simple-ssl.com
-//        [refresh_token] => 1cda23311f155dd38f2e3c040abb8cc8ba81250dbd77280a60d42e71dfbd0539
-//        [domain] => simplybook.me
-//        [require2fa] =>
-//    [allowed2fa_providers] => Array
-//        (
-//        )
-//
-//        [auth_session_id] =>
-//    [id] =>
-        if ( !$response ) {
-            return false;
-        }
-        $token = $this->sanitize_token( $response['token'] ?? '' );
-        $refresh_token = $this->sanitize_token( $response['refresh_token'] ?? '' );
-		$this->update_token( $token );
-		$this->update_token( $refresh_token, 'common', true );
-		update_option('simplybook_refresh_token_expiration', time() + 3600);
-    }
-
-
-    public function isAuthorized(): bool
-    {
-        $authData = $this->getAuthData();
-        $authDatetime = $this->get_option('auth_datetime');
-        $isAuth = $this->get_option('is_auth');
-
-        if ( $isAuth && $authDatetime ) {
-            if ( $authData && !isset($authData['is_refreshed']) ) {
-                return $this->refreshToken();
-            }
-
-            $authDatetime = (int)$authDatetime;
-            $now = time();
-            $diff = $now - $authDatetime;
-
-            if ( $diff > 3.5 *  HOUR_IN_SECONDS ) { // 3.5 hours
-                return $this->refreshToken();
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    public function getAuthHashData(){
-        $url = $this->_getApiUrl() . '/admin/auth/create-login-hash';
-        return $this->makeApiCall($url, null, 'POST');
-    }
-
-    public function getAuthData()
-    {
-        $authData = $this->get_api_data();
-        if ( !empty($authData) ) {
-            return $authData;
-        } else if ( isset($_GET['token']) && isset($_GET['refresh_token']) ) {
-            $this->update_token(  sanitize_text_field($_GET['token']) );
-            $this->update_option( 'company', $this->sanitize_token($_GET['company']) );
-            $this->update_token( $this->sanitize_token($_GET['refresh_token']), 'common', true );
-            $this->update_option( 'domain', sanitize_text_field($_GET['domain']) );
-            $this->update_option( 'auth_datetime', time() );
-            $this->update_option( 'is_auth', 'refresh' );
-
-            return $authData;
-        } else {
-            return false;
-        }
-    }
-
-    protected function _getCallbackUrl()
-    {
-        return sanitize_url((empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]");
-    }
-
-    public function getMainSiteUrl()
-    {
-        $domain = $this->getDomain();
-        $mainSite = 'https://' . $domain;
-
-        if (strpos($domain, 'em.') !== false) {
-            $mainSite = 'https://' . 'simplybook.' . $domain;
-        }
-        return $mainSite;
-    }
-
-    public function getCompanyUrl($admin = true){
-        $login = $this->getAuthData()['company'];
-        $domain = $this->getAuthData()['domain'];
-        $isCustomDomain = false;
-
-        //check if domain ends with .simplybook.(me|it|asia|net|org) its not custom domain
-        if(!preg_match('/simplybook\.(me|it|asia|net|org|ovh)$/i', $domain)){
-            $isCustomDomain = true;
-        }
-
-        if($admin){
-            if($isCustomDomain) {
-                $domain = 'simplybook.me';
-            }
-            return "https://{$login}.secure.{$domain}";
-        } else {
-            $publicUrl = $this->get_option('public_url');
-            if($publicUrl){
-                return 'https://' . $publicUrl;
-            } else {
-                return "https://{$login}.{$domain}";
-            }
-        }
-
-    }
-
-    public function getAuthUrl()
-    {
-        $mainSite = $this->getMainSiteUrl();
-
-        $url = $mainSite . '/oauth/ologin/?' . http_build_query(array(
-                'redirect_uri' => $this->_getCallbackUrl(),
-            ));
-        return $url;
-    }
-
-    public function getAdminUrl(){
-        return $this->getCompanyUrl(true);
-    }
-
-
-    protected function _checkAddParamToUrl($url, $param, $value){
-        if (strpos($url, $param . '=') === false) {
-            $url .= '&' . $param . '=' . $value;
-        } else {
-            $url = preg_replace('/' . $param . '=[^&]+/', $param . '=' . $value, $url);
-        }
-        return $url;
-    }
-
-    public function getRegisterUrl(){
-        $callbackUrl = $this->_getCallbackUrl();
-
-        $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'sbpage', 'login');
-        $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, 'm', 'confirm');
-        $callbackUrl = $this->_checkAddParamToUrl($callbackUrl, '_wpnonce', wp_create_nonce('simplybook_nonce'));
-
-        $wpLanguage = get_locale();
-
-        $simplybookAvailableLanguages = $this->_avLanguages;
-
-        $iso2lang = substr($wpLanguage, 0, 2);
-        if(!in_array($iso2lang, $simplybookAvailableLanguages)){
-            $iso2lang = 'en';
-        }
-
-        $extendifyPartnerId = defined('EXTENDIFY_PARTNER_ID') ? EXTENDIFY_PARTNER_ID : null;
-
-        $params = array(
-            'redirect_uri' => get_site_url() . "/?p=-1&sbcburl=" . urlencode(base64_encode($callbackUrl)),
-            'ref' => 'wpplugin',
-        );
-
-        if($extendifyPartnerId){
-            $params['epid'] = $extendifyPartnerId;
-        }
-
-        $url = $this->getMainSiteUrl() . "/{$iso2lang}/default/registration/type/wordpress/?" . http_build_query($params);
-
-        return $url;
-    }
-
-    public function getCallbackUrl()
-    {
-        return $this->_getCallbackUrl();
-    }
-
-    protected function _getApiUrl()
-    {
-        $domain = $this->getDomain();
-		return $this->api_url;
-        return 'https://user-api-v2.' . $domain . '/';
-    }
-
-    /**
-     * @return array
-     */
-    protected function get_headers_old(): array
-    {
-        if ( !$this->isAuthorized() ) {
-            return [];
-        }
-
-        return array(
-            'headers' => array(
-                'Content-Type' => 'application/json',
-                'X-Company-Login' => $this->get_option('company'),
-                'X-Token' => $this->get_token(),
-            ),
-        );
-    }
-
-	/**
-	 * Clear cache
-	 *
-	 * @return void
-	 */
-    protected function _clearCache(): void {
-        $cachedKeys = get_option('simplybook_cache_keys', [] );
-        foreach ($cachedKeys as $key => $time) {
-            delete_transient($key);
-        }
-        update_option('simplybook_cache_keys', []);
-    }
-
 
     //GET https://user-api-v2.simplybook.me/admin/providers?filter[search]=mike&filter[service_id]=1
     //Content-Type: application/json
@@ -1160,76 +915,5 @@ class Api
 
         //success, or last fail was an hour ago, try again.
         return true;
-    }
-
-    /**
-     * @param $url
-     * @param $cacheKey
-     * @return array
-     */
-    protected function makeApiCall($url, $cacheKey = null, $type = "GET", $params = [] ): array
-    {
-        $apiStatus = get_option('api_status');
-        if ( $apiStatus && $apiStatus['status'] === 'error' && $apiStatus['time'] > time() - 60 * HOUR_IN_SECONDS && $cacheKey) {
-            $longCacheData = get_transient($cacheKey . '_long'); //return long cache
-            return $longCacheData ? ($longCacheData['data'] ?? $longCacheData) : [];
-        }
-
-        if( !$params || !count($params) ){
-            $params = array(
-                'page' => 1,
-                'on_page' => 100,
-            );
-        }
-
-        $args = $this->get_headers_old();
-        if ( empty($args) ) {
-            return [];
-        }
-
-        $response = false;
-        if( $type == "POST" ){
-            $args['body'] = json_encode($params);
-            $response = wp_remote_post($url, $args);
-        } else if ( $type == "GET" ) {
-            $url = add_query_arg($params, $url);
-            $response = wp_remote_get($url, $args);
-        }
-
-        //check if response is 200 success
-        $response_code = wp_remote_retrieve_response_code($response);
-        $result = wp_remote_retrieve_body($response);
-        $result = json_decode($result, true);
-
-        if ( is_wp_error($response) || $response_code != 200 ) {
-            $msg = $resultArr['message'] ?? $response['response']['message'];
-            $errorMsg = 'Curl error: ' . $msg . ' Http code:' . $response_code . ' Response body: ' . $result;
-            update_option('api_status', array(
-                'status' => 'error',
-                'error' => $errorMsg,
-                'time' => time(),
-            ));
-
-            $this->_log($errorMsg);
-            return [];
-        }
-
-        if( $cacheKey ) {
-            //store used key for clearing purposes
-            $stored_keys = get_option('simplybook_cache_keys', []);
-            if ( !in_array($cacheKey, $stored_keys) ) {
-                $stored_keys[] = $cacheKey;
-                update_option('simplybook_cache_keys', $stored_keys );
-            }
-            set_transient($cacheKey, $result, 30 * HOUR_IN_SECONDS);
-            //save current data to long cache
-            set_transient($cacheKey . '_long', $result, 0); //never expire
-        }
-
-        update_option('api_status', array(
-            'status' => 'success',
-            'time' => time(),
-        ));
-        return $result['data'] ?? $result;
     }
 }
