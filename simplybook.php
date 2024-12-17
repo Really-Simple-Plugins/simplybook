@@ -81,7 +81,7 @@ if ( ! function_exists( 'simplybook_is_logged_in_rest' ) ) {
 	    $expires = get_option('simplybook_callback_url_expires' );
 	    $callback_url = get_option('simplybook_callback_url', '' );
 	    if ( $expires > time() && !empty( $callback_url ) && strpos( $_SERVER['REQUEST_URI'], 'company_registration/'.$callback_url ) !== false ) {
-		    return true;
+			return true;
 	    }
 
         return is_user_logged_in() && current_user_can('simplybook_manage');
@@ -98,7 +98,7 @@ if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
     function simplybook_init(): void
     {
         if ( simplybook_has_admin_access() ){
-            ( new Admin() );
+			( new Admin() );
         }
         ( new Frontend() );
     }

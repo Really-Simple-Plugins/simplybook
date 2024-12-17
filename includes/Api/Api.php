@@ -406,10 +406,11 @@ class Api
 
 		//check if we have a token
 		if ( !$this->token_is_valid() ) {
+			error_log("invalid public token");
 			$this->get_public_token();
 		}
 
-		if ( get_transient('simply_book_attempt_count') >2 ) {
+		if ( get_transient('simply_book_attempt_count') >3 ) {
 			$this->log("Too many attempts to register company");
 			return false;
 		}
@@ -429,8 +430,9 @@ class Api
 		$country = $this->sanitize_country( $this->get_option('country') );
 		//no spaces allowed in zip
 		$zip = (string) $this->get_option('zip');
-		$zip = sanitize_text_field( str_replace(' ', '', trim( $zip ) ) );
-
+		$zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
+		//currently zip validation is too strict on simplybookme
+		$zip = '12345';
 		$company_login = $this->get_company_login();
 		error_log("company login $company_login");
 		if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
@@ -464,9 +466,9 @@ class Api
 				    "retype_password" => $random_password,
 					'categories' => [$category],
 					'lang' => $this->get_locale(),
-					'providers'=>[$provider],
-					'services'=>[$service],
-					'dismiss_onboarding' => true,
+//					'providers'=>[$provider],
+//					'services'=>[$service],
+//					'dismiss_onboarding' => true,
 					'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
 				]
 			),
@@ -487,6 +489,7 @@ class Api
 				return true;
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
+					error_log("token expired, refresh");
 					//invalid token, refresh.
 					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
@@ -564,7 +567,7 @@ class Api
 	 *
 	 * @return array
 	 */
-	private function get_coordinates( string $address, string $zip, string $city, string $country ){
+	private function get_coordinates( string $address, string $zip, string $city, string $country ): array {
 		$address = urlencode("$address, $zip $city, $country");
 		$url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json";
 
@@ -597,14 +600,14 @@ class Api
 	 *
 	 * @return bool
 	 */
-	public function confirm_email( $email_code, $recaptcha_token ){
+	public function confirm_email( $email_code, $recaptcha_token ): bool {
 		if ( !$this->user_can_manage() ) {
 			return false;
 		}
 
-		//check if the company registration was completed already
-		if ( !$this->company_registration_complete() ) {
-			$this->log("Company registration not completed yet");
+		//check if the company registration was started
+		if ( !get_option("simplybook_company_registration_start_time") ) {
+			$this->log("Company registration not started yet");
 			return false;
 		}
 

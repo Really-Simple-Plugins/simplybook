@@ -65,22 +65,26 @@ class Admin {
 
 	/**
 	 * Set up some defaults
+	 * User does not have the capability yet, so bypass the default update_option method.
 	 *
 	 * @return void
 	 */
 
 	private function setup_defaults(): void {
-		error_log("setup defaults");
+
 		$user = wp_get_current_user();
+		$options = get_option('simplybook_options', []);
 		if ( empty($this->get_option('email') ) ) {
-			$this->update_option( 'email', sanitize_email( $user->user_email ) );
+			$options['email'] = sanitize_email( $user->user_email );
 		}
 		if ( empty($this->get_option('company_name') ) ) {
-			$this->update_option( 'company_name', get_bloginfo( 'name' ) );
+			$options['company_name'] = get_bloginfo( 'name' );
+
 		}
 		if ( empty($this->get_option('country') ) ) {
-			$this->update_option( 'country', $this->get_country_by_locale() );
+			$options['country'] = $this->get_country_by_locale();
 		}
+		update_option('simplybook_options', $options);
 	}
 
 
@@ -92,7 +96,9 @@ class Admin {
 	 */
 	private function get_country_by_locale(): string {
 		$locale = get_locale();
+		error_log("detected locale ".$locale);
 		$locale = explode('_', $locale);
+		error_log("language ".$locale[1]);
 		return strtoupper( $locale[1] );
 	}
 

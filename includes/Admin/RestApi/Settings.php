@@ -79,9 +79,6 @@ class Settings extends RestApi {
      */
     public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
-		$this->log('get fields');
-		error_log("get fields");
-
         $data = $ajax_data ?: $request->get_json_params();
 	    $this->log($data);
 
@@ -89,7 +86,6 @@ class Settings extends RestApi {
 		$this->log('with_values');
 		$this->log($data['withValues']);
         $fields = $this->fields($with_values);
-		error_log(print_r($fields, true));
         return $this->response( $fields );
     }
 

@@ -84,6 +84,10 @@ const steps = [
           id: "phone",
           type: "text",
           label: __("Phone", "simplybook"),
+          validation: {
+            regex: "^\\+?[0-9\\s\\-().]+$",
+            message: __("Please enter a valid phone number", "simplybook"),
+          },
         },
         {
           id: "address",
@@ -108,6 +112,7 @@ const steps = [
             { value: 'NL', label: __("Netherlands", "simplybook") },
             { value: 'DE', label: __("Germany", "simplybook") },
             { value: 'BE', label: __("Belgium", "simplybook") },
+            { value: 'US', label: __("United States", "simplybook") },
           ],
         },
       ],

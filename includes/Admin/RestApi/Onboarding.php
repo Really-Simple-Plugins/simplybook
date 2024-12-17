@@ -140,7 +140,7 @@ class Onboarding extends RestApi {
         $this->update_option('service', sanitize_text_field($data['service']) );
         $this->update_option('country', $this->sanitize_country($data['country']) );
 	    //no spaces allowed in zip
-	    $zip = sanitize_text_field( str_replace(' ', '', trim( $data['zip'] ) ) );
+	    $zip = sanitize_text_field( trim( $data['zip'] ) );
         $this->update_option('zip', $zip );
 		$this->api->register_company();
         return $this->response([
