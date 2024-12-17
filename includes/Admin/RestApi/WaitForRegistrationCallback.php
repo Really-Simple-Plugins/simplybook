@@ -43,7 +43,7 @@ class WaitForRegistrationCallback extends RestApi {
 	 */
 	public function check_registration_callback_status($request): WP_REST_Response {
 		$completed  = (int) get_option('simplybook_refresh_company_token_expiration')>0;
-		error_log("registration callback has been completed");
+		error_log("registration callback has been completed: $completed");
 		return $this->response([
 			'status' => $completed ? 'completed' : 'pending',
 		]);
