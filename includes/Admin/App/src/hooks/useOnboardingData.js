@@ -6,7 +6,6 @@ import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
 
-
 const steps = [
     {
       id: 1,

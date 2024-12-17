@@ -48,6 +48,7 @@ class Api
 	 * @return bool
 	 */
 	public function company_registration_complete(): bool {
+
 		//check if the callback has been completed, resulting in a company/admin token.
 		if ( !$this->get_token('admin') ) {
 			$company_registration_start_time = get_option('simplybook_company_registration_start_time', 0);

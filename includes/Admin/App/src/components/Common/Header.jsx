@@ -12,8 +12,9 @@ const Header = () => {
   const [loginUrl, setLoginUrl] = React.useState('');
   const [directUrl, setDirectUrl] = React.useState('');
   const {
-    isOnboardingCompleted,
+    onboardingCompleted,
   } = useOnboardingData();
+  console.log("isOnboardingCompleted", onboardingCompleted);
   const loginTo = async (e, page) => {
     e.preventDefault();
     console.log("get login url for ", page);
@@ -48,7 +49,7 @@ const Header = () => {
   const linkClassName =
     "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
 
-  let externalLinkClass = isOnboardingCompleted ? '' : 'pointer-events-none opacity-50 cursor-not-allowed';
+  let externalLinkClass = onboardingCompleted ? '' : 'pointer-events-none opacity-50 cursor-not-allowed';
   return (
     <div className="bg-white">
       <div className="mx-auto flex max-w-screen-2xl items-center px-5">
