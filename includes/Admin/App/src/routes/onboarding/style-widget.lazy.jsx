@@ -11,33 +11,25 @@ const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
     component: () => {
         const { widgetScript } = useWidgetData();
-
+        const runInlineScript = ( script ) => {
+            let targetObj = document.createElement("script");
+            targetObj.innerHTML = script;
+            try {
+                document.head.appendChild(targetObj);
+            } catch(exception) {
+                throw "Something went wrong " + exception + " while loading "+script;
+            }
+        }
 
         const recaptchaContainerRef = useRef(null);
         const setupPreview = async () => {
-            // //get sitekey first, loading script has to wait.
-            // let siteKey = await getRecaptchaSiteKey();
-
             const script = document.createElement("script");
             script.src = "https://simplybook.me/v2/widget/widget.js";
             script.async = true;
             script.defer = true;
             script.onload = () => {
                 console.log("Script loaded successfully!");
-                // Code to execute after the script has fully loaded
-                // Define the callback function globally to ensure it's accessible by reCAPTCHA
-                window.onloadRecaptchaCallback = () => {
-                    if ( window.grecaptcha && recaptchaContainerRef.current) {
-                        console.log("rendering recaptcha with sitekey", siteKey);
-                        window.grecaptcha.render(recaptchaContainerRef.current, {
-                            sitekey: siteKey,
-                            callback: (recaptchaToken) => {
-                                console.log("resulting recaptchaToken", recaptchaToken);
-                                setRecaptchaToken(recaptchaToken);
-                            },
-                        });
-                    }
-                };
+                runInlineScript(widgetScript);
             };
 
             document.body.appendChild(script);
@@ -46,7 +38,6 @@ export const Route = createLazyFileRoute(path)({
         useEffect(() => {
             console.log("setup preview");
             setupPreview();
-
 
             // Cleanup function to remove the script and callback when the component unmounts
             return () => {
