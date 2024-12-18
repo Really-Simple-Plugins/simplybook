@@ -6,7 +6,7 @@ import SelectField from "../Fields/SelectField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
 import { memo, useEffect, useState } from "react";
 import { __ } from "@wordpress/i18n";
-import useSettingsData from "../../hooks/useSettingsData";
+import ColorPicker from "../Inputs/ColorPicker";
 
 const fieldComponents = {
   text: TextField,
@@ -14,6 +14,7 @@ const fieldComponents = {
   hidden: HiddenField,
   checkbox: CheckboxField,
   select: SelectField,
+  colorpicker: ColorPicker,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {

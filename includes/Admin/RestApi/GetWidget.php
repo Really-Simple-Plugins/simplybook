@@ -2,6 +2,7 @@
 namespace Simplybook\Admin\RestApi;
 
 use Simplybook\Api\Api;
+use Simplybook\Frontend\Traits\Widget;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use WP_Error;
@@ -11,9 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class WaitForRegistrationCallback extends RestApi {
+class GetWidget extends RestApi {
 	use Helper;
 	use Save;
+	use Widget;
 
 	public function __construct() {
 		parent::__construct();
@@ -23,10 +25,10 @@ class WaitForRegistrationCallback extends RestApi {
 	{
 		register_rest_route(
 			'simplybook/v1',
-			'check_registration_callback_status',
+			'get_widget',
 			array(
 				'methods' => 'POST',
-				'callback' => array( $this, 'check_registration_callback_status' ),
+				'callback' => array( $this, 'get_widget_javascript' ),
 				'permission_callback' => function ( $request ) {
 					return $this->validate_request( $request );
 				},
@@ -35,16 +37,19 @@ class WaitForRegistrationCallback extends RestApi {
 	}
 
 	/**
-	 * Check if the registration callback has been completed
-	 *
+	 * Get widget javascript
 	 * @param $request
 	 *
 	 * @return WP_REST_Response
 	 */
-	public function check_registration_callback_status($request): WP_REST_Response {
-		$completed  = (int) get_option('simplybook_refresh_company_token_expiration')>0;
+	public function get_widget_javascript($request): WP_REST_Response {
 		return $this->response([
-			'status' => $completed ? 'completed' : 'pending',
+			'widget' => $this->get_widget(),
 		]);
 	}
 }
+
+
+
+
+

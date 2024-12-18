@@ -350,7 +350,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+/* harmony import */ var _Inputs_ColorPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Inputs/ColorPicker */ "./src/components/Inputs/ColorPicker.tsx");
 
 
 
@@ -366,7 +366,8 @@ const fieldComponents = {
   api: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"],
   hidden: _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__["default"],
   checkbox: _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__["default"],
-  select: _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"]
+  select: _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"],
+  colorpicker: _Inputs_ColorPicker__WEBPACK_IMPORTED_MODULE_7__["default"]
 };
 const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   setting,
@@ -1012,6 +1013,55 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
 });
 CheckboxInput.displayName = "CheckboxInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CheckboxInput);
+
+/***/ }),
+
+/***/ "./src/components/Inputs/ColorPicker.tsx":
+/*!***********************************************!*\
+  !*** ./src/components/Inputs/ColorPicker.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-color */ "./node_modules/react-color/es/index.js");
+
+
+
+/**
+ * Styled color picker component
+ * @param props - Props for the color picker
+ * @returns {JSX.Element} The rendered color picker element
+ */
+var ColorPicker = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
+  var _b = _a.colorValue,
+    colorValue = _b === void 0 ? "#ffffff" : _b,
+    onChangeComplete = _a.onChangeComplete;
+  var _c = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(colorValue),
+    color = _c[0],
+    setColor = _c[1];
+  var handleChange = function (color) {
+    setColor(color.hex);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    ref: ref,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_color__WEBPACK_IMPORTED_MODULE_2__.ChromePicker, {
+      color: color,
+      onChange: handleChange,
+      onChangeComplete: function (color) {
+        return onChangeComplete === null || onChangeComplete === void 0 ? void 0 : onChangeComplete(color.hex);
+      },
+      disableAlpha: true
+    })
+  });
+});
+ColorPicker.displayName = "ColorPicker";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ColorPicker);
 
 /***/ }),
 

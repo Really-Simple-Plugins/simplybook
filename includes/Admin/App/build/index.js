@@ -493,7 +493,7 @@ var SettingsLazyRoute = SettingsLazyImport.update({
     return _routes_root__WEBPACK_IMPORTED_MODULE_0__.Route;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("vendors-node_modules_fortawesome_react-fontawesome_index_es_js-node_modules_fortawesome_free--f00d69"), __webpack_require__.e("src_routes_settings_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/settings.lazy */ "./src/routes/settings.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("vendors-node_modules_fortawesome_react-fontawesome_index_es_js-node_modules_fortawesome_free--f00d69"), __webpack_require__.e("src_routes_settings_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/settings.lazy */ "./src/routes/settings.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -523,7 +523,7 @@ var SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
     return SettingsLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/settings/$settingsId.lazy */ "./src/routes/settings/$settingsId.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/settings/$settingsId.lazy */ "./src/routes/settings/$settingsId.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -533,7 +533,7 @@ var OnboardingTipsAndTricksLazyRoute = OnboardingTipsAndTricksLazyImport.update(
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_tips-and-tricks_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/tips-and-tricks.lazy */ "./src/routes/onboarding/tips-and-tricks.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_tips-and-tricks_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/tips-and-tricks.lazy */ "./src/routes/onboarding/tips-and-tricks.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -543,7 +543,7 @@ var OnboardingStyleWidgetLazyRoute = OnboardingStyleWidgetLazyImport.update({
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_style-widget_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/style-widget.lazy */ "./src/routes/onboarding/style-widget.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_style-widget_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/style-widget.lazy */ "./src/routes/onboarding/style-widget.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -553,7 +553,7 @@ var OnboardingInformationCheckLazyRoute = OnboardingInformationCheckLazyImport.u
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_information-check_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/information-check.lazy */ "./src/routes/onboarding/information-check.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_information-check_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/information-check.lazy */ "./src/routes/onboarding/information-check.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -563,7 +563,7 @@ var OnboardingImplementationLazyRoute = OnboardingImplementationLazyImport.updat
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_implementation_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/implementation.lazy */ "./src/routes/onboarding/implementation.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_implementation_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/implementation.lazy */ "./src/routes/onboarding/implementation.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -573,7 +573,7 @@ var OnboardingCreateYourAccountLazyRoute = OnboardingCreateYourAccountLazyImport
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_create-your-account_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/create-your-account.lazy */ "./src/routes/onboarding/create-your-account.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_create-your-account_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/create-your-account.lazy */ "./src/routes/onboarding/create-your-account.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -583,7 +583,7 @@ var OnboardingConfirmEmailLazyRoute = OnboardingConfirmEmailLazyImport.update({
     return OnboardingLazyRoute;
   }
 }).lazy(function () {
-  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_radix-ui_react-label_dist_index_mjs-node_modules_radix-ui_react-select_d-a490ca"), __webpack_require__.e("src_routes_onboarding_confirm-email_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/confirm-email.lazy */ "./src/routes/onboarding/confirm-email.lazy.jsx")).then(function (d) {
+  return Promise.all(/*! import() */[__webpack_require__.e("vendors-node_modules_react-color_es_index_js-node_modules_radix-ui_react-label_dist_index_mjs-33160c"), __webpack_require__.e("src_routes_onboarding_confirm-email_lazy_jsx")]).then(__webpack_require__.bind(__webpack_require__, /*! ./routes/onboarding/confirm-email.lazy */ "./src/routes/onboarding/confirm-email.lazy.jsx")).then(function (d) {
     return d.Route;
   });
 });
@@ -10980,13 +10980,16 @@ function invariant(condition, message) {
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = __webpack_module_cache__[moduleId] = {
-/******/ 			// no module.id needed
-/******/ 			// no module.loaded needed
+/******/ 			id: moduleId,
+/******/ 			loaded: false,
 /******/ 			exports: {}
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
 /******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 	
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
@@ -11155,6 +11158,15 @@ function invariant(condition, message) {
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/node module decorator */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 			module.paths = [];
+/******/ 			if (!module.children) module.children = [];
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	(() => {
 /******/ 		var scriptUrl;
@@ -11277,7 +11289,7 @@ function invariant(condition, message) {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry needs to be wrapped in an IIFE because it needs to be in strict mode.
 (() => {
 "use strict";
 /*!**********************!*\

@@ -630,7 +630,7 @@ const steps = [{
   path: "/onboarding/style-widget",
   fields: [{
     id: "widget-color-simple",
-    type: "text"
+    type: "colorpicker"
   }],
   beforeSubmit: data => {
     console.log("submit widget step");

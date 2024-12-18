@@ -148,7 +148,7 @@ const steps = [
       fields: [
         {
           id: "widget-color-simple",
-          type: "text",
+          type: "colorpicker",
         },
       ],
       beforeSubmit: (data) => {

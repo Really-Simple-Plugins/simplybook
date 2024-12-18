@@ -33,8 +33,9 @@
     "@tanstack/router-devtools": "^1.62.1",
     "@tanstack/router-plugin": "^1.62.0",
     "@types/react": "^18.3.11",
+    "@types/react-color": "^3.0.13",
     "@types/react-dom": "^18.3.0",
-    "@wordpress/scripts": "^27.9.0",
+    "@wordpress/scripts": "^30.7.0",
     "autoprefixer": "^10.4.20",
     "browser-sync": "^3.0.2",
     "css-loader": "^7.1.2",
@@ -66,6 +67,7 @@
     "@tanstack/react-router": "^1.62.1",
     "@wordpress/api-fetch": "^7.11.0",
     "clsx": "^2.1.1",
+    "react-color": "^2.19.3",
     "react-hook-form": "^7.53.1",
     "zustand": "^5.0.1"
   }

@@ -31,6 +31,37 @@ const getServices = async () => {
 
 /***/ }),
 
+/***/ "./src/api/endpoints/getWidget.js":
+/*!****************************************!*\
+  !*** ./src/api/endpoints/getWidget.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
+
+
+/**
+ * Update an onboarding step
+ * @return {Promise<string>}
+ */
+const getWidget = async () => {
+  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_widget", "POST");
+  console.log(res);
+  if (!res || !res.data.widget) {
+    return {
+      'widget': ''
+    };
+  }
+  return res.data.widget;
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getWidget);
+
+/***/ }),
+
 /***/ "./src/api/endpoints/onBoarding/confirmEmail.js":
 /*!******************************************************!*\
   !*** ./src/api/endpoints/onBoarding/confirmEmail.js ***!
@@ -468,7 +499,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+/* harmony import */ var _Inputs_ColorPicker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Inputs/ColorPicker */ "./src/components/Inputs/ColorPicker.tsx");
 
 
 
@@ -484,7 +515,8 @@ const fieldComponents = {
   api: _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"],
   hidden: _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__["default"],
   checkbox: _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__["default"],
-  select: _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"]
+  select: _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"],
+  colorpicker: _Inputs_ColorPicker__WEBPACK_IMPORTED_MODULE_7__["default"]
 };
 const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   setting,
@@ -872,7 +904,7 @@ const steps = [{
   path: "/onboarding/style-widget",
   fields: [{
     id: "widget-color-simple",
-    type: "text"
+    type: "colorpicker"
   }],
   beforeSubmit: data => {
     console.log("submit widget step");
@@ -963,17 +995,83 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
 /* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/request */ "./src/api/requests/request.js");
 /* harmony import */ var _useOnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_2__);
 
  // Ensure this is the correct path to the request utility
+
 
 const useWaitForRegistrationCallback = () => {
   const {
     setOnboardingCompleted
   } = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
+  const [pollingEnabled, setPollingEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
+  const [count, setCount] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(0);
 
+  // Use Query for polling logic
+  const {
+    data,
+    refetch,
+    isFetching
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)({
+    queryKey: ["registration_callback_status"],
+    queryFn: async () => {
+      setCount(count + 1);
+      const res = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("check_registration_callback_status", "POST", {
+        data: {
+          status: "waiting"
+        }
+      });
+      if (res.data.status === 'completed') {
+        setPollingEnabled(false);
+        setOnboardingCompleted(true);
+      }
+      if (count > 20) {
+        setPollingEnabled(false);
+      }
+      return res.data;
+    },
+    enabled: pollingEnabled,
+    // Control polling via state
+    refetchInterval: queryData => {
+      return pollingEnabled ? 2000 : false;
+    },
+    onError: error => {
+      setPollingEnabled(false); // Optionally stop polling on error
+    }
+  });
+  return {
+    startPolling: () => setPollingEnabled(true),
+    isFetching,
+    data
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useWaitForRegistrationCallback);
+
+/***/ }),
+
+/***/ "./src/hooks/useWidgetData.js":
+/*!************************************!*\
+  !*** ./src/hooks/useWidgetData.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_endpoints_getWidget__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getWidget */ "./src/api/endpoints/getWidget.js");
+
+
+
+const useWidgetData = () => {
+  const [widgetScript, setWidgetScript] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   // Use Query for polling logic
   const {
     data,
@@ -982,37 +1080,24 @@ const useWaitForRegistrationCallback = () => {
   } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
     queryKey: ["registration_callback_status"],
     queryFn: async () => {
-      const res = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("check_registration_callback_status", "POST", {
-        data: {
-          status: "waiting"
-        }
-      });
-      console.log("Polling response", res.data.status);
-      return res.data;
+      let script = await (0,_api_endpoints_getWidget__WEBPACK_IMPORTED_MODULE_1__["default"])();
+      setWidgetScript(script);
     },
-    enabled: false,
-    // Initially disabled, starts only when manually triggered
+    enabled: true,
     refetchInterval: queryData => {
-      // Stops polling if the status is 'completed', otherwise refetch every 5 seconds
-      return queryData?.status === "completed" ? false : 1000;
-    },
-    onSuccess: data => {
-      if (data.status === "completed") {
-        console.log("Registration complete, unlocking onboarding links!");
-        setOnboardingCompleted(true);
-      }
+      return false;
     },
     onError: error => {
-      console.error("Error while polling registration status:", error);
+      console.log("error in script retrieval for widget", error);
     }
   });
   return {
-    startPolling: refetch,
+    widgetScript,
     isFetching,
     data
   };
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useWaitForRegistrationCallback);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useWidgetData);
 
 /***/ }),
 
@@ -1028,11 +1113,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/fileRoute.js");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Onboarding/OnboardingStep */ "./src/components/Onboarding/OnboardingStep.jsx");
 /* harmony import */ var _hooks_useWaitForRegistrationCallback__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/useWaitForRegistrationCallback */ "./src/hooks/useWaitForRegistrationCallback.js");
+/* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+/* harmony import */ var _hooks_useWidgetData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/useWidgetData */ "./src/hooks/useWidgetData.js");
+
+
+
 
 
 
@@ -1040,23 +1131,60 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const path = "/onboarding/style-widget";
-const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyFileRoute)(path)({
+const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyFileRoute)(path)({
   component: () => {
     const {
-      startPolling,
-      isFetching,
-      data
-    } = (0,_hooks_useWaitForRegistrationCallback__WEBPACK_IMPORTED_MODULE_3__["default"])();
+      widgetScript
+    } = (0,_hooks_useWidgetData__WEBPACK_IMPORTED_MODULE_6__["default"])();
+    const recaptchaContainerRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+    const setupPreview = async () => {
+      // //get sitekey first, loading script has to wait.
+      // let siteKey = await getRecaptchaSiteKey();
+
+      const script = document.createElement("script");
+      script.src = "https://simplybook.me/v2/widget/widget.js";
+      script.async = true;
+      script.defer = true;
+      script.onload = () => {
+        console.log("Script loaded successfully!");
+        // Code to execute after the script has fully loaded
+        // Define the callback function globally to ensure it's accessible by reCAPTCHA
+        window.onloadRecaptchaCallback = () => {
+          if (window.grecaptcha && recaptchaContainerRef.current) {
+            console.log("rendering recaptcha with sitekey", siteKey);
+            window.grecaptcha.render(recaptchaContainerRef.current, {
+              sitekey: siteKey,
+              callback: recaptchaToken => {
+                console.log("resulting recaptchaToken", recaptchaToken);
+                setRecaptchaToken(recaptchaToken);
+              }
+            });
+          }
+        };
+      };
+      document.body.appendChild(script);
+    };
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-      console.log("Starting registration callback polling...");
-      startPolling(); // Manually start the polling
-    }, [startPolling]);
+      console.log("setup preview");
+      setupPreview();
+
+      // Cleanup function to remove the script and callback when the component unmounts
+      return () => {
+        delete window.onloadRecaptchaCallback;
+        const existingScript = document.querySelector('script[src="https://www.google.com/recaptcha/api.js"]');
+        if (existingScript) {
+          document.body.removeChild(existingScript);
+        }
+      };
+    }, []);
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
       path: path,
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Alpha Bedum Beauty & Welness", "simplybook"),
+      title: companyName,
       subtitle: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("What's your style?", "simplybook"),
       buttonLabel: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Next Step: Finish", "simplybook"),
-      rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, "right")
+      rightColumn: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+        id: "sbw_z0hg2i"
+      }))
     }));
   }
 });
@@ -1279,6 +1407,55 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
 });
 CheckboxInput.displayName = "CheckboxInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CheckboxInput);
+
+/***/ }),
+
+/***/ "./src/components/Inputs/ColorPicker.tsx":
+/*!***********************************************!*\
+  !*** ./src/components/Inputs/ColorPicker.tsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_color__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-color */ "./node_modules/react-color/es/index.js");
+
+
+
+/**
+ * Styled color picker component
+ * @param props - Props for the color picker
+ * @returns {JSX.Element} The rendered color picker element
+ */
+var ColorPicker = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, ref) {
+  var _b = _a.colorValue,
+    colorValue = _b === void 0 ? "#ffffff" : _b,
+    onChangeComplete = _a.onChangeComplete;
+  var _c = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(colorValue),
+    color = _c[0],
+    setColor = _c[1];
+  var handleChange = function (color) {
+    setColor(color.hex);
+  };
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    ref: ref,
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_color__WEBPACK_IMPORTED_MODULE_2__.ChromePicker, {
+      color: color,
+      onChange: handleChange,
+      onChangeComplete: function (color) {
+        return onChangeComplete === null || onChangeComplete === void 0 ? void 0 : onChangeComplete(color.hex);
+      },
+      disableAlpha: true
+    })
+  });
+});
+ColorPicker.displayName = "ColorPicker";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ColorPicker);
 
 /***/ }),
 
