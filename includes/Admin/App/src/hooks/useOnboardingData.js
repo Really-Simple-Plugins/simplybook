@@ -190,7 +190,11 @@ const useOnboardingData = () => {
   // Query for managing onboarding data
   const query = useQuery({
     queryKey: ["onboarding_data"],
-    initialData: { ...initialData, ...prefilledData },
+    initialData: {
+      ...initialData,
+      ...prefilledData,
+      onboardingCompleted: simplybook.is_onboarding_completed
+    },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -216,7 +220,10 @@ const useOnboardingData = () => {
     recaptchaToken: query.data?.recaptchaToken || "",
     setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
     onboardingCompleted: simplybook.is_onboarding_completed,
-    setOnboardingCompleted: (value) => updateData({ onboardingCompleted: value }),
+    setOnboardingCompleted: (value) => {
+      console.log("set onboardingCompleted to ", value);
+      updateData({ onboardingCompleted: value })
+    },
   };
 };
 

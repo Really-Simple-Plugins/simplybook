@@ -15,7 +15,9 @@
 //         "container_id": "sbw_z0hg2i"
 //     });
 // });
+console.log("running simplybook script");
 document.addEventListener("DOMContentLoaded", function () {
+    console.log("Fired our event listener, instantiating Simplybook widget");
     new SimplybookWidget({
         "widget_type": "iframe",
         "url": "{{ server }}", // Replace with your SimplyBook URL

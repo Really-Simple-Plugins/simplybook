@@ -19,7 +19,7 @@ const useWaitForRegistrationCallback = () => {
             console.log("check registration callback status", res);
 
             if (res.data.status==='completed'){
-                console.log("disable");
+                console.log("disable polling and set onboarding completed");
                 setPollingEnabled(false);
                 setOnboardingCompleted(true);
             }

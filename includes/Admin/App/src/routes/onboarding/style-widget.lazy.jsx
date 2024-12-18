@@ -14,16 +14,22 @@ export const Route = createLazyFileRoute(path)({
         const { widgetScript } = useWidgetData();
         const { getValue } = useSettingsData();
         const [companyName, setCompanyName] = useState("");
-        const [widgetLoaded, setWidgetLoaded] = useState(false);
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();
 
         const runInlineScript = ( script ) => {
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
+            script = script.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
             targetObj.innerHTML = script;
             try {
                 document.head.appendChild(targetObj);
+                // domContentLoaded already has fired, so we replace it with our custom event and fire that.
+                // this way we don't inadvertently trigger any other scripts that are listening for domContentLoaded
+
+                const customEvent = new Event("customDOMContentLoaded");
+                // Dispatch custom event
+                document.dispatchEvent(customEvent);
             } catch(exception) {
                 throw "Something went wrong " + exception + " while loading "+script;
             }
@@ -50,11 +56,13 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
-            if (widgetScript.length === 0) {
+            console.log("onboardingCompleted", onboardingCompleted);
+            if (widgetScript.length === 0 ) {
+                console.log("No script or onboarding not completed, return");
                 return;
             }
 
-            console.log("We have a script, setup preview");
+            console.log("We have a script and onboarding is completed, setup preview");
             setupPreview();
 
             // Cleanup function to remove the script and callback when the component unmounts
@@ -69,7 +77,7 @@ export const Route = createLazyFileRoute(path)({
                 //     document.body.removeChild(inlineScript);
                 // }
             };
-        }, [widgetScript]);
+        }, [widgetScript, onboardingCompleted]);
 
         return (
             <>
@@ -79,9 +87,9 @@ export const Route = createLazyFileRoute(path)({
                     subtitle={__("What's your style?", "simplybook")}
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
-                        <div>
+                        <div className="h-full">
                             widget here
-                            <div id="sbw_z0hg2i"></div>
+                            <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
 
                     }
