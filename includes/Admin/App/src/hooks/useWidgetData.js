@@ -6,11 +6,11 @@ const useWidgetData = () => {
     const [widgetScript, setWidgetScript] = useState('');
     // Use Query for polling logic
     const { data, refetch, isFetching } = useQuery({
-        queryKey: ["registration_callback_status"],
+        queryKey: ["widget_script"],
         queryFn: async () => {
             let script = await getWidget();
-
             setWidgetScript(script);
+            return script;
         },
         enabled: true,
         refetchInterval: (queryData) => {
