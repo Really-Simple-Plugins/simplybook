@@ -90,6 +90,7 @@ function Settings() {
 
       <FormFooter
         onSubmit={handleSubmit((formData) => {
+          console.log("save settings", formData);
           saveSettings(formData).then(() => {
             reset(currentFormDefaultValues);
           });

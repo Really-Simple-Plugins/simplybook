@@ -5,8 +5,8 @@ import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
-
 const steps = [
+
     {
       id: 1,
       path: "/onboarding/create-your-account",
@@ -147,13 +147,24 @@ const steps = [
       path: "/onboarding/style-widget",
       fields: [
         {
-          id: "widget-color-simple",
+          id: "booking_nav_bg_color",
           type: "colorpicker",
+          label: __("Background", "simplybook"),
+          default: "#DD3649",
+          inline_group: 'widget',
+        },
+        {
+          id: "body_bg_color",
+          type: "colorpicker",
+          label: __("Body background", "simplybook"),
+          default: "#DD3649",
+          inline_group: 'widget',
         },
       ],
-      beforeSubmit: (data) => {
+      beforeSubmit: async (data) => {
         console.log("submit widget step");
         console.log(data);
+
       },
     },
     {

@@ -8,7 +8,7 @@ interface SelectOption {
 }
 
 interface SelectInputProps {
-    field: {value: string};
+    setting: {value: string};
     value: string;
     onChange: (value: string) => void;
     options?: SelectOption[];
@@ -21,7 +21,7 @@ interface SelectInputProps {
  * @returns {JSX.Element} The rendered select component
  */
 const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
-  ({ value, onChange, options = [], field, ...props }, ref) => {
+  ({ value, onChange, options = [], setting, ...props }, ref) => {
     return (
       <Select.Root value={value} onValueChange={(value) => onChange(value)}>
         <Select.Trigger

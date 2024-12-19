@@ -15,9 +15,8 @@ import useSettingsData from "../../hooks/useSettingsData";
  * @return {JSX.Element}
  */
 const TextField = forwardRef(
-  ({ field, fieldState, label, help, context, className, ...props }, ref) => {
-    const inputId = props.id || field.name;
-
+  ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
+    const inputId = setting.id;
     return (
       <FieldWrapper
         label={label}
@@ -32,7 +31,6 @@ const TextField = forwardRef(
           id={inputId}
           type="text"
           aria-invalid={!!fieldState?.error?.message}
-          {...field}
           {...props}
         />
       </FieldWrapper>

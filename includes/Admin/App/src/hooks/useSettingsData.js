@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import getSettingsFields from "../api/endpoints/getSettingsFields";
-
+import saveSettingsFields from "../api/endpoints/saveSettings";
 /**
  * Custom hook for managing settings data using Tanstack Query.
  * This hook provides functions to fetch and update settings.
@@ -22,6 +22,7 @@ const useSettingsData = () => {
 
   const getValue = (id) => query.data.find((field) => field.id === id)?.value;
   const setValue = (id, value) => {
+    console.log("save value for ", id, value);
     const field = query.data.find((field) => field.id === id);
     if (field) {
       field.value = value;
@@ -32,7 +33,7 @@ const useSettingsData = () => {
     useMutation({
       mutationFn: async (data) => {
         // Simulate async operation (e.g., API call to save settings)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await saveSettingsFields(data);
         return data;
       },
       onSuccess: () => {

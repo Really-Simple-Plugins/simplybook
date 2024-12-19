@@ -14,8 +14,8 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @return {JSX.Element}
  */
 const CheckboxField = forwardRef(
-    ({ field, fieldState, label, help, context, className, ...props }, ref) => {
-        const inputId = props.id || field.name;
+    ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
+        const inputId = setting.id;
         return (
             <FieldWrapper
                 label={label}
@@ -27,7 +27,6 @@ const CheckboxField = forwardRef(
                 required={props.required}
             >
                 <CheckboxInput
-                    {...field}
                     id={inputId}
                     type="checkbox"
                     aria-invalid={!!fieldState?.error?.message}

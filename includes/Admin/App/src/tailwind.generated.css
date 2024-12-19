@@ -532,6 +532,9 @@ video {
     max-width: 1536px;
   }
 }
+#simplybook_app .pointer-events-none {
+  pointer-events: none;
+}
 #simplybook_app .visible {
   visibility: visible;
 }
@@ -541,8 +544,17 @@ video {
 #simplybook_app .fixed {
   position: fixed;
 }
+#simplybook_app .absolute {
+  position: absolute;
+}
+#simplybook_app .relative {
+  position: relative;
+}
 #simplybook_app .sticky {
   position: sticky;
+}
+#simplybook_app .inset-0 {
+  inset: 0px;
 }
 #simplybook_app .bottom-0 {
   bottom: 0px;
@@ -620,6 +632,9 @@ video {
 #simplybook_app .ml-auto {
   margin-left: auto;
 }
+#simplybook_app .mr-2 {
+  margin-right: 0.5rem;
+}
 #simplybook_app .mt-2 {
   margin-top: 0.5rem;
 }
@@ -634,6 +649,9 @@ video {
 }
 #simplybook_app .flex {
   display: flex;
+}
+#simplybook_app .inline-flex {
+  display: inline-flex;
 }
 #simplybook_app .grid {
   display: grid;
@@ -688,6 +706,12 @@ video {
 }
 #simplybook_app .w-full {
   width: 100%;
+}
+#simplybook_app .min-w-5 {
+  min-width: 1.25rem;
+}
+#simplybook_app .min-w-\[140px\] {
+  min-width: 140px;
 }
 #simplybook_app .max-w-7xl {
   max-width: 80rem;
@@ -785,6 +809,9 @@ video {
 #simplybook_app .gap-24 {
   gap: 6rem;
 }
+#simplybook_app .gap-3\.5 {
+  gap: 0.875rem;
+}
 #simplybook_app .gap-4 {
   gap: 1rem;
 }
@@ -843,6 +870,10 @@ video {
 #simplybook_app .border-gray-300 {
   --tw-border-opacity: 1;
   border-color: rgb(209 213 219 / var(--tw-border-opacity));
+}
+#simplybook_app .border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }
 #simplybook_app .border-tertiary {
   --tw-border-opacity: 1;
@@ -910,6 +941,9 @@ video {
   --tw-bg-opacity: 1;
   background-color: rgb(250 204 21 / var(--tw-bg-opacity));
 }
+#simplybook_app .p-1\.5 {
+  padding: 0.375rem;
+}
 #simplybook_app .p-2 {
   padding: 0.5rem;
 }
@@ -918,6 +952,9 @@ video {
 }
 #simplybook_app .p-5 {
   padding: 1.25rem;
+}
+#simplybook_app .p-\[5px\] {
+  padding: 5px;
 }
 #simplybook_app .px-0 {
   padding-left: 0px;

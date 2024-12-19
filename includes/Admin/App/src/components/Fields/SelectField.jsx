@@ -14,8 +14,8 @@ import getServices from "../../api/endpoints/getServices";
  * @return {JSX.Element}
  */
 const SelectField = forwardRef(
-    ({ field, fieldState, label, help, context, className, options, ...props }, ref) => {
-        const inputId = props.id || field.name;
+    ({ setting, fieldState, label, help, context, className, options, ...props }, ref) => {
+        const inputId = setting.id;
 
         return (
             <FieldWrapper
@@ -28,12 +28,11 @@ const SelectField = forwardRef(
                 required={props.required}
             >
                 <SelectInput
-                    value={ field.value }
+                    value={ setting.value }
                     id={inputId}
                     options={options}
                     aria-invalid={!!fieldState?.error?.message}
-                    field={field}
-                    {...field}
+                    setting={setting}
                     {...props}
                 />
             </FieldWrapper>

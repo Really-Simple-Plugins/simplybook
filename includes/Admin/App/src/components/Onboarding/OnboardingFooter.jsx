@@ -1,3 +1,4 @@
+import {__} from '@wordpress/i18n';
 const OnboardingFooter = () => {
   const items = [
     {
@@ -28,7 +29,7 @@ const OnboardingFooter = () => {
       <div className="mx-auto max-w-screen-md items-center">
         <div className="mb-8 text-center">
           <h2 className="text-2xl font-bold">
-            What can you do with SimplyBook.me?
+            {__("What can you do with SimplyBook.me?", "simplybook")}
           </h2>
         </div>
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 md:grid-cols-3">

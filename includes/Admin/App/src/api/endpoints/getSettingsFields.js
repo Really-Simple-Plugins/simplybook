@@ -6,7 +6,7 @@ import request from "../requests/request";
  * @return {Promise<void>}
  */
 const getSettingsFields = async ({ withValues = true }) => {
-  const res = await request("settings/get_fields", "POST", { withValues });
+  const res = await request("settings/get", "POST", { withValues });
 
   return res.data;
 };

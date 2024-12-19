@@ -178,7 +178,7 @@ trait Save {
 		update_option('simplybook_options', $options);
 	}
 
-    public function update_options( $fields ) {
+    public function update_options( $fields ): void {
         foreach ( $fields as $field ) {
 			$this->update_option( $field['id'], $field['value'] );
         }
@@ -203,6 +203,8 @@ trait Save {
             case 'text':
             case 'textarea':
                 return sanitize_text_field( $value );
+	        case 'colorpicker':
+		        return sanitize_hex_color( $value );
             case 'email':
                 return sanitize_email( $value );
             case 'url':

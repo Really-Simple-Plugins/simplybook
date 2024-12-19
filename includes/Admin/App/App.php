@@ -221,7 +221,7 @@ class App {
 	 * @return array
 	 */
 	private function localized_settings( $js_data ): array {
-		return apply_filters(
+        return apply_filters(
 			'simplybook_localize_script',
 			[
 				'nonce'                   => wp_create_nonce( 'simplybook_nonce' ),

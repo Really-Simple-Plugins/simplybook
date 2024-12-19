@@ -4,6 +4,7 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import FormField from "../Forms/FormField";
 import ButtonField from "../Fields/ButtonField";
 import { __ } from "@wordpress/i18n";
+import useSettingsData from "../../hooks/useSettingsData";
 
 const OnboardingStep = ({
   path,
@@ -26,7 +27,7 @@ const OnboardingStep = ({
     recaptchaToken,
   } = useOnboardingData();
   const navigate = useNavigate();
-
+  const {saveSettings} = useSettingsData();
   const {
     handleSubmit,
     control,
@@ -61,8 +62,9 @@ const OnboardingStep = ({
         return; // Cancel submission if beforeSubmit throws an error
       }
     }
-
-    updateData(updatedFormData);
+    console.log("updatedFormData", updatedFormData);
+    await updateData(updatedFormData);
+    await saveSettings(updatedFormData);
 
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });

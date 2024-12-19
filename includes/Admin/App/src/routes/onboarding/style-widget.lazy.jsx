@@ -88,7 +88,6 @@ export const Route = createLazyFileRoute(path)({
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
                         <div className="h-full">
-                            widget here
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
 

@@ -4,9 +4,9 @@ import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
 import SelectField from "../Fields/SelectField";
 import ErrorBoundary from "../../components/Common/ErrorBoundary";
-import { memo, useEffect, useState } from "react";
+import { memo } from "react";
 import { __ } from "@wordpress/i18n";
-import ColorPicker from "../Inputs/ColorPicker";
+import ColorPickerField from "../Fields/ColorPickerField";
 
 const fieldComponents = {
   text: TextField,
@@ -14,7 +14,7 @@ const fieldComponents = {
   hidden: HiddenField,
   checkbox: CheckboxField,
   select: SelectField,
-  colorpicker: ColorPicker,
+  colorpicker: ColorPickerField,
 };
 
 const FormField = memo(({ setting, control, ...props }) => {
@@ -63,7 +63,8 @@ const FormField = memo(({ setting, control, ...props }) => {
         defaultValue={setting.value || setting.default}
         render={({ field, fieldState }) => (
           <FieldComponent
-            field={field}
+              className={setting.inline_group ? 'inline-flex' : ''}
+            setting={setting}
             fieldState={fieldState}
             required={setting.required}
             label={setting.label || setting.id}
@@ -72,6 +73,7 @@ const FormField = memo(({ setting, control, ...props }) => {
             help={setting.help}
             options={setting.options}
             {...props}
+            {...field}
           />
         )}
       />

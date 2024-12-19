@@ -14,14 +14,14 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @return {JSX.Element}
  */
 const ButtonField = forwardRef(
-  ({ field, label, help, context, className, ...props }, ref) => {
+  ({ setting, label, help, context, className, ...props }, ref) => {
     return (
       <FieldWrapper
         help={help}
         context={context}
         className={className}
       >
-        <ButtonInput {...field} {...props}>
+        <ButtonInput {...props}>
           {label}
         </ButtonInput>
       </FieldWrapper>

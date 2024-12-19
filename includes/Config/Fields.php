@@ -174,14 +174,14 @@ return $fields = [
     ],
     [
         'id'       => 'booking_nav_bg_color',
+        'label'     => __( "Background", 'simplybook' ),
         'menu_id'  => 'design',
         'group_id' => 'palettes',
         'type'     => 'text',
-        'label'    => '',
         'disabled' => false,
         'default'  => '#DD3649',
         'widget_field'  => 'themeparams',
-
+	    'inline_group'    => 'widget',
     ],
     [
         'id'       => 'body_bg_color',
@@ -192,7 +192,7 @@ return $fields = [
         'disabled' => false,
         'default'  => '#F2F2F2',
         'widget_field'  => 'themeparams',
-
+        'inline_group'    => 'widget',
     ],
     [
         'id'       => 'dark_font_color',

@@ -30,7 +30,7 @@ class Settings extends RestApi {
 
         register_rest_route(
             'simplybook/v1/settings',
-            'get_fields',
+            'get',
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'get' ),
@@ -52,16 +52,19 @@ class Settings extends RestApi {
     {
         $data = $ajax_data ?: $request->get_json_params();
         // get the nonce
-        $nonce  = $data['nonce'];
-        $fields = $data['fields'];
-        if ( ! wp_verify_nonce( $nonce, 'simplybook_nonce' ) ) {
-            return new WP_Error( 'rest_invalid_nonce', 'The provided nonce is not valid.', [ 'status' => 400 ] );
-        }
+		unset($data['nonce']);
+        $fields = $data;
+		error_log("saving settings");
+		error_log(print_r($data, true));
+		//convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
+	    $fields = array_map(function($key, $value) {
+		    return ['id' => $key, 'value' => $value];
+	    }, array_keys($fields), $fields);
 
         $this->update_options( $fields );
 
         $data = [
-            'fields'          => $this->fields( true ),
+            'data' => $this->fields( true ),
         ];
         if ( ob_get_length() ) {
             ob_clean();
