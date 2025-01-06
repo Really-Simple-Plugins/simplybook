@@ -27,14 +27,14 @@ document.addEventListener("DOMContentLoaded", function () {
             // Colors
             "primary_color": "{{ primary_color }}",          // Main theme color
             "secondary_color": "{{ secondary_color }}",        // Secondary accent color
-            "btn_color_1": "#your_color_code",            // Button background color
-            "btn_color_2": "#your_color_code",            // Hover or active button color
-            "sb_busy": "#your_color_code",                // Busy time slots
-            "sb_available": "#your_color_code",           // Available time slots
+            "btn_color_1": "#DD3649",            // Button background color
+            "btn_color_2": "#DD3649",            // Hover or active button color
+            "sb_busy": "#DD3649",                // Busy time slots
+            "sb_available": "#DD3649",           // Available time slots
             "sb_selected": "{{ sb_selected }}",            // Selected time slot color
-            "sb_base_color": "#your_color_code",          // Base color for timeline and inputs
-            "sb_hover": "#your_color_code",               // Hover color for elements
-            "sb_company_label_color": "#your_color_code", // Company label text color
+            "sb_base_color": "#DD3649",          // Base color for timeline and inputs
+            "sb_hover": "#DD3649",               // Hover color for elements
+            "sb_company_label_color": "#DD3649", // Company label text color
             "booking_nav_bg_color": "{{ booking_nav_bg_color }}",   // Navigation background color
             "body_bg_color": "{{ body_bg_color }}",          // Main background color
             "dark_font_color": "{{ dark_font_color }}",        // Dark text color
