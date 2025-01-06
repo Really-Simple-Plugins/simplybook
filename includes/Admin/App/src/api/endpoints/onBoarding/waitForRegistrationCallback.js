@@ -17,13 +17,10 @@ const waitForRegistrationCallback = async () => {
     };
     while (timeElapsed < 300) {
         const res = await request("onboarding/check_registration_callback_status", "POST", { data });
-        console.log("waitForRegistrationCallback response", res);
         if (res.data.status === "completed") {
-            console.log("registration complete, unlock the links!")
             setOnboardingCompleted(true);
             return;
         }
-        console.log("not complete yet, try again in 5 seconds")
         await new Promise((resolve) => setTimeout(resolve, 5000));
         timeElapsed += 5;
     }

@@ -1,10 +1,10 @@
 import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 import useOnboardingData from "../../hooks/useOnboardingData";
-import FormField from "../Forms/FormField";
 import ButtonField from "../Fields/ButtonField";
 import { __ } from "@wordpress/i18n";
 import useSettingsData from "../../hooks/useSettingsData";
+import FormFieldWrapper from "../Forms/FormFieldWrapper";
 
 const OnboardingStep = ({
   path,
@@ -64,7 +64,7 @@ const OnboardingStep = ({
     }
     console.log("updatedFormData", updatedFormData);
     await updateData(updatedFormData);
-    await saveSettings(updatedFormData);
+
 
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
@@ -90,9 +90,7 @@ const OnboardingStep = ({
         </div>
         <div className={"flex flex-col"}>
           <form>
-            {currentStep.fields.map((field) => (
-                <FormField setting={field} key={field.id} control={control}/>
-            ))}
+            <FormFieldWrapper fields={currentStep.fields} control={control} />
             {customHtml}
             <ButtonField
                 btnVariant="primary"

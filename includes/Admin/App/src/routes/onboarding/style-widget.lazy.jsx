@@ -57,7 +57,7 @@ export const Route = createLazyFileRoute(path)({
 
         useEffect(() => {
             console.log("onboardingCompleted", onboardingCompleted);
-            if (widgetScript.length === 0 ) {
+            if (widgetScript.length === 0 || !onboardingCompleted ) {
                 console.log("No script or onboarding not completed, return");
                 return;
             }

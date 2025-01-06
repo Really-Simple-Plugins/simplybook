@@ -56,10 +56,17 @@ class Settings extends RestApi {
         $fields = $data;
 		error_log("saving settings");
 		error_log(print_r($data, true));
-		//convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
-	    $fields = array_map(function($key, $value) {
-		    return ['id' => $key, 'value' => $value];
-	    }, array_keys($fields), $fields);
+		if (count($fields) === 0) {
+			return $this->response( ['error' => 'No data to save'] );
+		}
+
+		//check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
+	    if ( !isset($fields[0]['id']) ) {
+		    //convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
+		    $fields = array_map(function($key, $value) {
+			    return ['id' => $key, 'value' => $value];
+		    }, array_keys($fields), $fields);
+	    }
 
         $this->update_options( $fields );
 

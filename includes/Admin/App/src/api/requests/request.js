@@ -23,7 +23,6 @@ const request = async (path, method = "POST", data = {}) => {
   if ( method === 'GET') {
     console.log("the request method is not adjusted for GET requests yet. ");
   }
-  console.log("request : ", args);
   // if (method === 'POST') {
   //
   // } else {

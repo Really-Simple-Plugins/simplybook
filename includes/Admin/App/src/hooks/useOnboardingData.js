@@ -152,6 +152,7 @@ const steps = [
           label: __("Background", "simplybook"),
           default: "#DD3649",
           inline_group: 'widget',
+          save_on_change : true,
         },
         {
           id: "body_bg_color",
@@ -159,6 +160,7 @@ const steps = [
           label: __("Body background", "simplybook"),
           default: "#DD3649",
           inline_group: 'widget',
+          save_on_change : true,
         },
       ],
       beforeSubmit: async (data) => {

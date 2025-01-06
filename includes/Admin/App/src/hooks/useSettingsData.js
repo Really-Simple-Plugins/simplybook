@@ -22,7 +22,7 @@ const useSettingsData = () => {
 
   const getValue = (id) => query.data.find((field) => field.id === id)?.value;
   const setValue = (id, value) => {
-    console.log("save value for ", id, value);
+    console.log("updating value for ", id, value);
     const field = query.data.find((field) => field.id === id);
     if (field) {
       field.value = value;
@@ -33,7 +33,9 @@ const useSettingsData = () => {
     useMutation({
       mutationFn: async (data) => {
         // Simulate async operation (e.g., API call to save settings)
+        console.log("saving....");
         await saveSettingsFields(data);
+        console.log("saved!")
         return data;
       },
       onSuccess: () => {

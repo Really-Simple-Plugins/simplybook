@@ -14,7 +14,6 @@ const Header = () => {
   const {
     onboardingCompleted,
   } = useOnboardingData();
-  console.log("isOnboardingCompleted", onboardingCompleted);
   const loginTo = async (e, page) => {
     e.preventDefault();
     console.log("get login url for ", page);

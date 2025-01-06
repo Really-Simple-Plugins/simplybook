@@ -27,7 +27,6 @@ const Progress = () => {
 
   const displayedTasks = showAll ? tasks : getRemainingTasks();
   const completionPercentage = getCompletionPercentage();
-  console.log(completionPercentage);
 
   if (tasks.length === 0) {
     return (

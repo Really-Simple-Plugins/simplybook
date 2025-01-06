@@ -99,7 +99,8 @@ trait Widget {
         }
 
         $widget_settings = wp_parse_args($post_settings, $widget_settings);
-
+		error_log(print_r("widget_settings", true));
+		error_log(print_r($widget_settings, true));
        $script = $this->load_template('widget.js', $widget_settings);
        return $script;
     }
