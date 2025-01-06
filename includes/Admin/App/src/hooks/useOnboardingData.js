@@ -147,9 +147,17 @@ const steps = [
       path: "/onboarding/style-widget",
       fields: [
         {
-          id: "booking_nav_bg_color",
+          id: "primary_color",
           type: "colorpicker",
-          label: __("Background", "simplybook"),
+          label: __("Primary color", "simplybook"),
+          default: "#DD3649",
+          inline_group: 'widget',
+          save_on_change : true,
+        },
+        {
+          id: "secondary_color",
+          type: "colorpicker",
+          label: __("Secondary", "simplybook"),
           default: "#DD3649",
           inline_group: 'widget',
           save_on_change : true,
@@ -157,11 +165,12 @@ const steps = [
         {
           id: "body_bg_color",
           type: "colorpicker",
-          label: __("Body background", "simplybook"),
+          label: __("Active", "simplybook"),
           default: "#DD3649",
           inline_group: 'widget',
           save_on_change : true,
         },
+
       ],
       beforeSubmit: async (data) => {
         console.log("submit widget step");

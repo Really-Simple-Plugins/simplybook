@@ -159,7 +159,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 'as_slots',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
     ],
     [
         'id'       => 'display_item_mode',
@@ -169,8 +169,19 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 'block',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
+    ],
+    [
+        'id'       => 'primary_color',
+        'label'     => __( "Primay color", 'simplybook' ),
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
+        'type'     => 'text',
+        'disabled' => false,
+        'default'  => '#DD3649',
+        'widget_field'  => '/',
+	    'inline_group'    => 'widget',
     ],
     [
         'id'       => 'booking_nav_bg_color',
@@ -180,7 +191,7 @@ return $fields = [
         'type'     => 'text',
         'disabled' => false,
         'default'  => '#DD3649',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 	    'inline_group'    => 'widget',
     ],
     [
@@ -188,10 +199,21 @@ return $fields = [
         'menu_id'  => 'design',
         'group_id' => 'palettes',
         'type'     => 'text',
-        'label'    => '',
+        'label'    => __('Body background color', 'simplybook' ),
         'disabled' => false,
         'default'  => '#F2F2F2',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
+        'inline_group'    => 'widget',
+    ],
+	[
+        'id'       => 'sb_selected',
+        'menu_id'  => 'design',
+        'group_id' => 'palettes',
+        'type'     => 'text',
+        'label'    => __('Selected color', 'simplybook' ),
+        'disabled' => false,
+        'default'  => '#F2F2F2',
+        'widget_field'  => '/',
         'inline_group'    => 'widget',
     ],
     [
@@ -199,11 +221,10 @@ return $fields = [
         'menu_id'  => 'design',
         'group_id' => 'palettes',
         'type'     => 'text',
-        'label'    => '',
+        'label'    => __('Dark font color', 'simplybook' ),
         'disabled' => false,
         'default'  => '#474747',
-        'widget_field'  => 'themeparams',
-
+        'widget_field'  => '/',
     ],
     [
         'id'       => 'light_font_color',
@@ -213,7 +234,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#F5FCFF',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -224,7 +245,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#DD3649',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -235,7 +256,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#FFFFFF',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -246,7 +267,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#c7b3b3',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -257,7 +278,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#D6EBFF',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -268,7 +289,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => '#DD3649',
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -279,7 +300,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 0,
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -290,7 +311,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 1,
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -301,7 +322,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 0,
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
 
     ],
     [
@@ -312,7 +333,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 1,
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
     ],
     [
         'id'       => 'show_sidebar',
@@ -322,7 +343,7 @@ return $fields = [
         'label'    => '',
         'disabled' => false,
         'default'  => 1,
-        'widget_field'  => 'themeparams',
+        'widget_field'  => '/',
     ],
     [
         'id'       => 'predefined',

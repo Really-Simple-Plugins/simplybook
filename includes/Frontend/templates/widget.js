@@ -23,25 +23,33 @@ document.addEventListener("DOMContentLoaded", function () {
         "url": "{{ server }}", // Replace with your SimplyBook URL
         "theme": "modern", // Replace with your preferred theme, e.g., "default", "modern"
         "theme_settings": {
-            // "datepicker_hide_weekdays": [0, 6], // Hide Sundays and Saturdays
-            "is_rtl": 0, // Not right-to-left
-            "primary_color": "#4CAF50", // Custom theme color
-            "timeline_modern_display": "as_slots",
-            "display_item_mode": "block",
-            "booking_nav_bg_color": "{{ booking_nav_bg_color }}",
-            "body_bg_color": "{{ body_bg_color }}",
-            "dark_font_color": "#474747",
-            "light_font_color": "#F5FCFF",
-            "btn_color_1": "#DD3649",
-            "sb_company_label_color": "#FFFFFF",
-            "sb_busy": "#c7b3b3",
-            "sb_available": "#D6EBFF",
-            "sb_base_color": "#DD3649",
-            "timeline_show_end_time": "0",
-            "timeline_hide_unavailable": "1",
-            "hide_past_days": "0",
-            "hide_img_mode": "1",
-            "show_sidebar": "1"
+            "is_rtl": "{{ is_rtl }}", // Not right-to-left
+            // Colors
+            "primary_color": "{{ primary_color }}",          // Main theme color
+            "secondary_color": "{{ secondary_color }}",        // Secondary accent color
+            "btn_color_1": "#your_color_code",            // Button background color
+            "btn_color_2": "#your_color_code",            // Hover or active button color
+            "sb_busy": "#your_color_code",                // Busy time slots
+            "sb_available": "#your_color_code",           // Available time slots
+            "sb_selected": "{{ sb_selected }}",            // Selected time slot color
+            "sb_base_color": "#your_color_code",          // Base color for timeline and inputs
+            "sb_hover": "#your_color_code",               // Hover color for elements
+            "sb_company_label_color": "#your_color_code", // Company label text color
+            "booking_nav_bg_color": "{{ booking_nav_bg_color }}",   // Navigation background color
+            "body_bg_color": "{{ body_bg_color }}",          // Main background color
+            "dark_font_color": "{{ dark_font_color }}",        // Dark text color
+            "light_font_color": "{{ light_font_color }}",       // Light text color
+
+            // Layout & Display
+            "timeline_modern_display": "as_slots",        // Display timeline as slots or continuous
+            "display_item_mode": "block",                  // Options: "block", "list"
+            "timeline_show_end_time": "1",                // Show end time in the timeline
+            "timeline_hide_unavailable": "1",             // Hide unavailable time slots
+            "hide_past_days": "1",                        // Hide dates in the past
+            "hide_img_mode": "0",                         // Hide images (1: yes, 0: no)
+            "show_sidebar": "0",                          // Hide the sidebar
+           // "datepicker_hide_weekdays": [0, 6],           // Hide specific weekdays (Sunday: 0, Saturday: 6)
+            "datepicker_start_weekday": 1,                // Set start day of the week (Monday: 1)
         },
         "timeline": "modern", // Choose the timeline layout (e.g., "default", "modern")
         "datepicker": "inline", // Choose datepicker style ("inline" or "default")
