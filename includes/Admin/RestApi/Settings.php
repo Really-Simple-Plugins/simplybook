@@ -54,8 +54,7 @@ class Settings extends RestApi {
         // get the nonce
 		unset($data['nonce']);
         $fields = $data;
-		error_log("saving settings");
-		error_log(print_r($data, true));
+
 		if (count($fields) === 0) {
 			return $this->response( ['error' => 'No data to save'] );
 		}
@@ -68,11 +67,18 @@ class Settings extends RestApi {
 		    }, array_keys($fields), $fields);
 	    }
 
+		//filter out all fields where the 'value' key is not set
+        $fields = array_filter($fields, function($field) {
+			return isset($field['value']);
+		    }
+		);
+
         $this->update_options( $fields );
 
         $data = [
             'data' => $this->fields( true ),
         ];
+
         if ( ob_get_length() ) {
             ob_clean();
         }

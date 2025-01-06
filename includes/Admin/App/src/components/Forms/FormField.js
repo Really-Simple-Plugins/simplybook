@@ -55,16 +55,11 @@ const FormField = memo(({ setting, control, ...props } ) => {
     ...(setting.validate && { validate: setting.validate }),
   };
 
-  const handleSaveOnChange = (fieldValue) => {
+  const handleSaveOnChange = async (fieldValue) => {
     console.log("handleSaveOnChange", setting.id, fieldValue, setting.save_on_change);
-    if (setting.save_on_change) {
-      const formData = {
-        ...settings,
-        [setting.id]: fieldValue,
-      };
-      console.log("saving on change", formData);
-      saveSettings(formData);
-    }
+    setValue(setting.id, fieldValue);
+    console.log("saving formdata", settings);
+    await saveSettings(settings);
   };
 
   return (
@@ -81,13 +76,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
                   return;
                 }
                 if (setting.save_on_change) {
-                  //find the entry in settings where id = setting.id and update the value
-
-                  setValue(setting.id, field.value);
-
-                  //convert formData to id => value array
-                  console.log("saving formdata", settings);
-                  saveSettings(settings);
+                  handleSaveOnChange(field.value);
                 }
             }, [field.value]);
 
