@@ -10,6 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @Rogier maybe move to Admin?
  */
 trait Load {
+	public $fields = [];
+	public $values_loaded = false;
 
     /**
      * Get a field by ID
@@ -151,10 +153,30 @@ trait Load {
      *
      * @return array
      */
-    public function fields( bool $load_values = false ): array
+    public function fields( bool $load_values = false, bool $force_reload = false ): array
     {
-        $fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
-        $fields = apply_filters('simplybook_fields', $fields);
+		$reload_fields = false;
+		if ( $load_values && !$this->values_loaded ) {
+			$reload_fields = true;
+		}
+
+		if ( count($this->fields) === 0 ) {
+			$reload_fields = true;
+		}
+
+		if ( $force_reload ) {
+			$reload_fields = true;
+		}
+
+		if ( !$reload_fields ) {
+			return $this->fields;
+		}
+
+		$fields = $this->fields;
+	    if ( count($this->fields) === 0 ) {
+		    $fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
+		    $fields = apply_filters( 'simplybook_fields', $fields );
+	    }
 
         foreach ( $fields as $key => $field ) {
             $field = wp_parse_args( $field, [
@@ -178,8 +200,9 @@ trait Load {
         }
 
         $fields = apply_filters( 'simplybook_fields_values', $fields );
+		$this->fields = array_values( $fields );
 
-        return array_values( $fields );
+        return $this->fields;
     }
 
 	/**

@@ -11,8 +11,8 @@ const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
 
     component: () => {
-        const { widgetScript } = useWidgetData();
-        const { getValue } = useSettingsData();
+        const { widgetScript, isFetching, invalidateWidgetScript } = useWidgetData();
+        const { getValue, settings, isSavingSettings } = useSettingsData();
         const [companyName, setCompanyName] = useState("");
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();
@@ -40,19 +40,53 @@ export const Route = createLazyFileRoute(path)({
         }, [onboardingCompleted]);
 
         useEffect(() => {
+            console.log("Settings changed useEffect in style-widget", settings, isSavingSettings);
+            if ( isSavingSettings ){
+                console.log("Saving settings, wait until saved");
+                return;
+            }
+            console.log("Settings changed, invalidate widget script and reload preview");
+            invalidateWidgetScript();
+            setupPreview();
+        }, [settings, isSavingSettings]);
+
+        useEffect(() => {
             setCompanyName(getValue("company_name"));
         }, [getValue("company_name")]);
 
         const setupPreview = async () => {
+            //clear existing scripts
+            clearInlineScript();
             const script = document.createElement("script");
             script.id = "simplybook-src-script";
             script.src = "https://simplybook.me/v2/widget/widget.js";
-            script.onload = () => {
+            script.onload = async () => {
                 console.log("Script loaded successfully!");
+                //wait until widgetScript is loaded
+                console.log("widgetScript isFetching", isFetching);
+                // Wait for widgetScript to be set
+                await new Promise((resolve) => {
+                    const checkWidgetScript = () => {
+                        if (widgetScript.length > 0) {
+                            resolve();
+                        } else {
+                            setTimeout(checkWidgetScript, 100);
+                        }
+                    };
+                    checkWidgetScript();
+                });
                 runInlineScript(widgetScript);
             };
 
-            document.body.appendChild(script);
+            document.head.appendChild(script);
+        }
+
+        const clearInlineScript = () => {
+            const inlineScript = document.head.querySelector('#simplybook-inline-script');
+            if (inlineScript) {
+                console.log("removing inline script");
+                document.head.removeChild(inlineScript);
+            }
         }
 
         useEffect(() => {
@@ -67,15 +101,12 @@ export const Route = createLazyFileRoute(path)({
 
             // Cleanup function to remove the script and callback when the component unmounts
             return () => {
-                const existingScript = document.querySelector('script[src="https://simplybook.me/v2/widget/widget.js"]');
-                const inlineScript = document.querySelector('#simplybook-inline-script');
-                console.log("inlineScript",inlineScript);
-                // if (existingScript) {
-                //     document.body.removeChild(existingScript);
-                // }
-                // if (inlineScript) {
-                //     document.body.removeChild(inlineScript);
-                // }
+                const srcScript = document.head.querySelector('#simplybook-src-script');
+                if (srcScript) {
+                    console.log("removing existing script");
+                    document.head.removeChild(srcScript);
+                }
+                clearInlineScript();
             };
         }, [widgetScript, onboardingCompleted]);
 

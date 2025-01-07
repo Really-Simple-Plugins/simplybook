@@ -35,12 +35,12 @@ const useSettingsData = () => {
         // Simulate async operation (e.g., API call to save settings)
         console.log("saving....");
         await saveSettingsFields(data);
-        console.log("saved!")
+        console.log("saved!, reloaded data ", data)
         return data;
       },
       onSuccess: () => {
         // Invalidate cache by specific query key for updated data
-        queryClient.invalidateQueries(["settings_fields"]);
+        //queryClient.invalidateQueries(["settings_fields"]);
       },
     });
 

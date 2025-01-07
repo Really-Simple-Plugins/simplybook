@@ -3,6 +3,8 @@ import {useState} from "react";
 import getWidget from "../api/endpoints/getWidget";
 
 const useWidgetData = () => {
+    const queryClient = useQueryClient();
+
     const [widgetScript, setWidgetScript] = useState('');
     // Use Query for polling logic
     const { data, refetch, isFetching } = useQuery({
@@ -20,11 +22,14 @@ const useWidgetData = () => {
             console.log("error in script retrieval for widget", error);
         },
     });
-
+    const invalidateWidgetScript = () => {
+        queryClient.invalidateQueries(["widget_script"]);
+    };
     return {
         widgetScript,
         isFetching,
-        data
+        data,
+        invalidateWidgetScript
     };
 };
 export default useWidgetData;

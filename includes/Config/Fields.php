@@ -1,11 +1,12 @@
 <?php
 defined( 'ABSPATH' ) or die( );
 
+$fields = [];
 foreach ( glob( __DIR__ . '/Fields/*.php' ) as $file ) {
-	include $file;
+	$fields = array_merge( $fields, include $file );
 }
 
-return $fields = [
+return array_merge( $fields, [
     [
         'id'       => 'review_notice_shown',
         'menu_id'  => 'general',
@@ -134,6 +135,6 @@ return $fields = [
         'disabled' => false,
         'default'  => false,
         'widget_field'  => '/',
-    ],
+    ]
 
-];
+]);

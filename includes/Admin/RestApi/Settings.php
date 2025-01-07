@@ -76,7 +76,7 @@ class Settings extends RestApi {
         $this->update_options( $fields );
 
         $data = [
-            'data' => $this->fields( true ),
+            'data' => $this->fields( true, true ),
         ];
 
         if ( ob_get_length() ) {
