@@ -3,6 +3,7 @@ import HiddenInput from "../Inputs/HiddenInput";
 
 /**
  * TextField component
+ * @param {object} setting
  * @param {object} field - Provided by react-hook-form's Controller
  * @param {object} fieldState - Contains validation state
  * @param {string} label
@@ -13,13 +14,11 @@ import HiddenInput from "../Inputs/HiddenInput";
  * @return {JSX.Element}
  */
 const HiddenField = forwardRef(
-    ({ field, fieldState, label, help, context, className, ...props }, ref) => {
-        const inputId = props.id || field.name;
-
+    ({ setting, field, fieldState, label, help, context, className, ...props }, ref) => {
         return (
                 <HiddenInput
                     {...field}
-                    id={inputId}
+                    id={setting.id}
                     type="hidden"
                     aria-invalid={!!fieldState?.error?.message}
                     {...props}

@@ -163,14 +163,13 @@ const steps = [
           save_on_change : true,
         },
         {
-          id: "body_bg_color",
+          id: "sb_selected",
           type: "colorpicker",
           label: __("Active", "simplybook"),
           default: "#DD3649",
           inline_group: 'widget',
           save_on_change : true,
         },
-
       ],
       beforeSubmit: async (data) => {
         console.log("submit widget step");

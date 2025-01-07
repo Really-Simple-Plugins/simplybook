@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
 import Icon from "./Icon";
@@ -6,11 +5,12 @@ import getLoginUrl from "../../api/endpoints/getLoginUrl";
 import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
+import {useState} from "react";
 
 const Header = () => {
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = React.useState(false);
-  const [loginUrl, setLoginUrl] = React.useState('');
-  const [directUrl, setDirectUrl] = React.useState('');
+  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
+  const [loginUrl, setLoginUrl] = useState('');
+  const [directUrl, setDirectUrl] = useState('');
   const {
     onboardingCompleted,
   } = useOnboardingData();
@@ -27,18 +27,32 @@ const Header = () => {
     //if we don't have the login url and direct url yet, get it.
     //the login url is only used the first time. Afterwards we assume the user is already logged in and use the direct url to prevent too many hash generated errors.
 
+    let tempLoginUrl = '';
+    let tempDirectUrl = '';
+
     if ( !alreadyLoggedIn ) {
+      console.log("not logged in yet, getting login url");
       const loginData = await getLoginUrl();
-      setLoginUrl(loginData.login_url);
-      setDirectUrl(loginData.url);
+      console.log("received login data", loginData);
+      tempDirectUrl = loginData.url;
+      tempLoginUrl = loginData.login_url;
+      setLoginUrl(tempLoginUrl);
+      setDirectUrl(tempDirectUrl);
+    } else {
+        tempLoginUrl = loginUrl;
+        tempDirectUrl = directUrl;
     }
 
-    let finalUrl = loginUrl;
+    let finalUrl = '';
     if ( alreadyLoggedIn ) {
-      finalUrl = directUrl + '/' + page;
+      console.log("already logged in, using direct url");
+      finalUrl = tempDirectUrl + '/' + page;
     } else {
-      finalUrl += '?back_url=/' + page + '/';
+        console.log("not logged in yet, using login url");
+      finalUrl += tempLoginUrl + '?back_url=/' + page + '/';
     }
+
+    console.log("final url " ,finalUrl);
 
     //open a new tab with the login url
     window.open(finalUrl, "_blank");

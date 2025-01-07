@@ -1,0 +1,129 @@
+<?php
+defined( 'ABSPATH' ) or die( );
+
+add_filter( 'simplybook_fields', function( $fields ) {
+	return array_merge( $fields,
+		[
+			[
+				'id'       => 'primary_color',
+				'label'     => __( "Primay color", 'simplybook' ),
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'disabled' => false,
+				'default'  => '#DD3649',
+				'widget_field'  => '/',
+				'inline_group'    => 'widget',
+			],
+			[
+				'id'       => 'booking_nav_bg_color',
+				'label'     => __( "Background", 'simplybook' ),
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'disabled' => false,
+				'default'  => '#DD3649',
+				'widget_field'  => '/',
+				'inline_group'    => 'widget',
+			],
+			[
+				'id'       => 'body_bg_color',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => __('Body background color', 'simplybook' ),
+				'disabled' => false,
+				'default'  => '#F2F2F2',
+				'widget_field'  => '/',
+				'inline_group'    => 'widget',
+			],
+			[
+				'id'       => 'sb_selected',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => __('Selected color', 'simplybook' ),
+				'disabled' => false,
+				'default'  => '#F2F2F2',
+				'widget_field'  => '/',
+				'inline_group'    => 'widget',
+			],
+			[
+				'id'       => 'dark_font_color',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => __('Dark font color', 'simplybook' ),
+				'disabled' => false,
+				'default'  => '#474747',
+				'widget_field'  => '/',
+			],
+			[
+				'id'       => 'light_font_color',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#F5FCFF',
+				'widget_field'  => '/',
+
+			],
+			[
+				'id'       => 'btn_color_1',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#DD3649',
+				'widget_field'  => '/',
+
+			],
+			[
+				'id'       => 'sb_company_label_color',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#FFFFFF',
+				'widget_field'  => '/',
+
+			],
+			[
+				'id'       => 'sb_busy',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#c7b3b3',
+				'widget_field'  => '/',
+
+			],
+			[
+				'id'       => 'sb_available',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#D6EBFF',
+				'widget_field'  => '/',
+
+			],
+			[
+				'id'       => 'sb_base_color',
+				'menu_id'  => 'design',
+				'group_id' => 'palettes',
+				'type'     => 'colorpicker',
+				'label'    => '',
+				'disabled' => false,
+				'default'  => '#DD3649',
+				'widget_field'  => '/',
+
+			],
+		]
+	);
+}, 300 );
