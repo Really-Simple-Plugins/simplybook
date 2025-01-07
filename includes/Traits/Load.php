@@ -153,7 +153,7 @@ trait Load {
      *
      * @return array
      */
-    public function fields( bool $load_values = false, bool $force_reload = false ): array
+    public function fields( bool $load_values = false ): array
     {
 		$reload_fields = false;
 		if ( $load_values && !$this->values_loaded ) {
@@ -161,10 +161,6 @@ trait Load {
 		}
 
 		if ( count($this->fields) === 0 ) {
-			$reload_fields = true;
-		}
-
-		if ( $force_reload ) {
 			$reload_fields = true;
 		}
 

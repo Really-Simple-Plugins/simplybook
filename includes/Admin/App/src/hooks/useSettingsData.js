@@ -22,7 +22,6 @@ const useSettingsData = () => {
 
   const getValue = (id) => query.data.find((field) => field.id === id)?.value;
   const setValue = (id, value) => {
-    console.log("updating value for ", id, value);
     const field = query.data.find((field) => field.id === id);
     if (field) {
       field.value = value;
@@ -32,15 +31,14 @@ const useSettingsData = () => {
   const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
     useMutation({
       mutationFn: async (data) => {
-        // Simulate async operation (e.g., API call to save settings)
         console.log("saving....");
-        await saveSettingsFields(data);
-        console.log("saved!, reloaded data ", data)
-        return data;
+        let settings = await saveSettingsFields(data);
+        console.log("saved!, reloaded data ", settings)
+        return settings;
       },
-      onSuccess: () => {
-        // Invalidate cache by specific query key for updated data
-        //queryClient.invalidateQueries(["settings_fields"]);
+      onSuccess: (data) => {
+        queryClient.invalidateQueries(["settings_fields"]);
+        queryClient.setQueryData(["settings_fields"], data);
       },
     });
 

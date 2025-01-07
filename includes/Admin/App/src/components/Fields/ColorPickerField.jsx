@@ -16,8 +16,8 @@ import * as Popover from '@radix-ui/react-popover';
  */
 const ColorPickerField = forwardRef(
     ({ setting, fieldState, label, help, context, className, onChange, defaultValue, ...props }, ref) => {
-        const [color, setColor] = useState(setting.default);
-
+        const defaultColor = setting.value || setting.default;
+        const [color, setColor] = useState(defaultColor);
         useEffect(() => {
             if (props.value !== color) {
                 setColor(props.value);
@@ -26,7 +26,6 @@ const ColorPickerField = forwardRef(
 
         const ColorPickerElement = ({label}) => {
             const handleColorChange = (color, event) => {
-                console.log("update color in colorpickerfield", color);
                 setColor(color);
                 onChange(color);
             }

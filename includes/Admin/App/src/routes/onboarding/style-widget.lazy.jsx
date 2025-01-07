@@ -16,8 +16,9 @@ export const Route = createLazyFileRoute(path)({
         const [companyName, setCompanyName] = useState("");
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();
+        const [isLoadingScript, setIsLoadingScript] = useState(false);
 
-        const runInlineScript = ( script ) => {
+        const runInlineScript = async ( script ) => {
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
             script = script.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
@@ -26,7 +27,7 @@ export const Route = createLazyFileRoute(path)({
                 document.head.appendChild(targetObj);
                 // domContentLoaded already has fired, so we replace it with our custom event and fire that.
                 // this way we don't inadvertently trigger any other scripts that are listening for domContentLoaded
-
+                console.log("firing custom domContentLoaded event");
                 const customEvent = new Event("customDOMContentLoaded");
                 // Dispatch custom event
                 document.dispatchEvent(customEvent);
@@ -40,45 +41,45 @@ export const Route = createLazyFileRoute(path)({
         }, [onboardingCompleted]);
 
         useEffect(() => {
-            console.log("Settings changed useEffect in style-widget", settings, isSavingSettings);
-            if ( isSavingSettings ){
-                console.log("Saving settings, wait until saved");
-                return;
-            }
-            console.log("Settings changed, invalidate widget script and reload preview");
-            invalidateWidgetScript();
-            setupPreview();
-        }, [settings, isSavingSettings]);
-
-        useEffect(() => {
             setCompanyName(getValue("company_name"));
         }, [getValue("company_name")]);
 
         const setupPreview = async () => {
+            if (isLoadingScript) {
+                console.log("Script already loading, return");
+                return;
+            }
+            setIsLoadingScript(true);
             //clear existing scripts
             clearInlineScript();
-            const script = document.createElement("script");
-            script.id = "simplybook-src-script";
-            script.src = "https://simplybook.me/v2/widget/widget.js";
-            script.onload = async () => {
-                console.log("Script loaded successfully!");
-                //wait until widgetScript is loaded
-                console.log("widgetScript isFetching", isFetching);
-                // Wait for widgetScript to be set
-                await new Promise((resolve) => {
-                    const checkWidgetScript = () => {
-                        if (widgetScript.length > 0) {
-                            resolve();
-                        } else {
-                            setTimeout(checkWidgetScript, 100);
-                        }
-                    };
-                    checkWidgetScript();
-                });
-                runInlineScript(widgetScript);
-            };
-
-            document.head.appendChild(script);
+            let script = document.head.querySelector('#simplybook-src-script');
+            if ( script ) {
+                console.log("Script already loaded, run inline script");
+                await runInlineScript(widgetScript);
+                setIsLoadingScript(false);
+            } else {
+                console.log("Script not loaded, load it now");
+                script = document.createElement("script");
+                script.id = "simplybook-src-script";
+                script.src = "https://simplybook.me/v2/widget/widget.js";
+                script.onload = async () => {
+                    console.log("Script loaded successfully!");
+                    // Wait for widgetScript to be set
+                    await new Promise((resolve) => {
+                        const checkWidgetScript = () => {
+                            if (widgetScript.length > 0) {
+                                resolve();
+                            } else {
+                                setTimeout(checkWidgetScript, 100);
+                            }
+                        };
+                        checkWidgetScript();
+                    });
+                    await runInlineScript(widgetScript);
+                    setIsLoadingScript(false);
+                };
+                document.head.appendChild(script);
+            }
         }
 
         const clearInlineScript = () => {
@@ -90,9 +91,20 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
-            console.log("onboardingCompleted", onboardingCompleted);
+            console.log("useeffect for preview setup",
+                "onboardingcompleted", onboardingCompleted,
+                "isSavingSettings", isSavingSettings,
+                "widgetScript.length", widgetScript.length
+                );
+
+
             if (widgetScript.length === 0 || !onboardingCompleted ) {
                 console.log("No script or onboarding not completed, return");
+                return;
+            }
+
+            if ( isSavingSettings ){
+                console.log("Saving settings, wait until saved");
                 return;
             }
 
@@ -101,6 +113,7 @@ export const Route = createLazyFileRoute(path)({
 
             // Cleanup function to remove the script and callback when the component unmounts
             return () => {
+                console.log("cleanup function");
                 const srcScript = document.head.querySelector('#simplybook-src-script');
                 if (srcScript) {
                     console.log("removing existing script");
@@ -108,7 +121,7 @@ export const Route = createLazyFileRoute(path)({
                 }
                 clearInlineScript();
             };
-        }, [widgetScript, onboardingCompleted]);
+        }, [widgetScript, onboardingCompleted, settings, isSavingSettings]);
 
         return (
             <>

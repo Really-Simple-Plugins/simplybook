@@ -151,6 +151,10 @@ const steps = [
         default: "#DD3649",
         inline_group: "widget",
         save_on_change: true,
+        mapping: [
+          "btn_color_1",
+          "sb_busy",
+        ],
       },
       {
         id: "secondary_color",
@@ -159,13 +163,26 @@ const steps = [
         default: "#DD3649",
         inline_group: "widget",
         save_on_change: true,
+        mapping: [
+          "btn_color_2",
+          "sb_available",
+          "sb_base_color",
+        ],
       },
       {
         id: "sb_selected",
         type: "colorpicker",
         label: __("Active", "simplybook"),
         default: "#DD3649",
-        inline_group: "widget",
+        inline_group: "widget2",
+        save_on_change: true,
+      },
+      {
+        id: "body_bg_color",
+        type: "colorpicker",
+        label: __("Background color", "simplybook"),
+        default: "#fff",
+        inline_group: "widget2",
         save_on_change: true,
       },
     ],

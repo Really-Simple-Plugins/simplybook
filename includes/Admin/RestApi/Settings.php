@@ -59,6 +59,9 @@ class Settings extends RestApi {
 			return $this->response( ['error' => 'No data to save'] );
 		}
 
+		error_log("data to save");
+		error_log(print_r($data, true));
+
 		//check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
 	    if ( !isset($fields[0]['id']) ) {
 		    //convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
@@ -72,18 +75,17 @@ class Settings extends RestApi {
 			return isset($field['value']);
 		    }
 		);
-
+	    error_log("fields to save");
+	    error_log(print_r($fields,true));
         $this->update_options( $fields );
 
-        $data = [
-            'data' => $this->fields( true, true ),
-        ];
+        $fields = $this->fields( true );
 
         if ( ob_get_length() ) {
             ob_clean();
         }
 
-        return $this->response( $data );
+        return $this->response( $fields );
     }
 
     /**
@@ -96,12 +98,11 @@ class Settings extends RestApi {
     public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
         $data = $ajax_data ?: $request->get_json_params();
-	    $this->log($data);
-
 		$with_values = $data['withValues'] === 1;
-		$this->log('with_values');
-		$this->log($data['withValues']);
         $fields = $this->fields($with_values);
+	    if ( ob_get_length() ) {
+		    ob_clean();
+	    }
         return $this->response( $fields );
     }
 
