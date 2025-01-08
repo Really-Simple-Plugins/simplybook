@@ -1,13 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
   faCircle,
-  faSquareArrowUpRight
+  faSquareArrowUpRight,
+    faSpinner,
 
  } from "@fortawesome/free-solid-svg-icons";
 
 // Map your icons to keys for easy referencing
 const iconMap = {
   "square-arrow-up-right": faSquareArrowUpRight,
+  "spinner": faSpinner,
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

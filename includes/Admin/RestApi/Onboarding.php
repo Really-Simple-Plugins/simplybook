@@ -108,12 +108,9 @@ class Onboarding extends RestApi {
     {
 	    $data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
 	    $data = $data['data'] ?? [];
-        //de api registration
         $this->update_option('tips-and-tricks', (bool) ( $data['tips-and-tricks'] ));
 
-        return $this->response([
-            'message' => __('Success', 'simplybook'),
-        ]);
+        return $this->response();
     }
 
 
@@ -142,10 +139,8 @@ class Onboarding extends RestApi {
 	    //no spaces allowed in zip
 	    $zip = sanitize_text_field( trim( $data['zip'] ) );
         $this->update_option('zip', $zip );
-		$this->api->register_company();
-        return $this->response([
-            'message' => __('Success', 'simplybook'),
-        ]);
+		$response = $this->api->register_company();
+        return $this->response( [], $response->status, $response->message );
     }
 
 	/**
@@ -158,7 +153,6 @@ class Onboarding extends RestApi {
 		]);
 	}
 
-
 	public function confirm_email($request, $ajax_data = [] ): WP_REST_Response
 	{
 		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
@@ -166,10 +160,8 @@ class Onboarding extends RestApi {
 		error_log("email confirmation response");
 		error_log(print_r($data, true));
 
-		$this->api->confirm_email((int) $data['confirmation-code'], sanitize_text_field( $data['recaptchaToken']));
+		$response = $this->api->confirm_email((int) $data['confirmation-code'], sanitize_text_field( $data['recaptchaToken']));
 		error_log("email confirmation completed");
-		return $this->response([
-			'message' => __('Success', 'simplybook'),
-		]);
+		return $this->response([], $response->status, $response->message);
 	}
 }

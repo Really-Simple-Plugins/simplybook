@@ -647,6 +647,9 @@ video {
 #simplybook_app .inline-block {
   display: inline-block;
 }
+#simplybook_app .inline {
+  display: inline;
+}
 #simplybook_app .flex {
   display: flex;
 }
@@ -832,6 +835,9 @@ video {
 #simplybook_app .overflow-x-scroll {
   overflow-x: scroll;
 }
+#simplybook_app .rounded {
+  border-radius: 0.25rem;
+}
 #simplybook_app .rounded-full {
   border-radius: 9999px;
 }
@@ -875,6 +881,10 @@ video {
   --tw-border-opacity: 1;
   border-color: rgb(156 163 175 / var(--tw-border-opacity));
 }
+#simplybook_app .border-red-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(248 113 113 / var(--tw-border-opacity));
+}
 #simplybook_app .border-tertiary {
   --tw-border-opacity: 1;
   border-color: rgb(12 48 82 / var(--tw-border-opacity));
@@ -905,6 +915,10 @@ video {
 #simplybook_app .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity));
+}
+#simplybook_app .bg-red-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(254 226 226 / var(--tw-bg-opacity));
 }
 #simplybook_app .bg-red-800 {
   --tw-bg-opacity: 1;
@@ -1112,6 +1126,10 @@ video {
   --tw-text-opacity: 1;
   color: rgb(220 38 38 / var(--tw-text-opacity));
 }
+#simplybook_app .text-red-700 {
+  --tw-text-opacity: 1;
+  color: rgb(185 28 28 / var(--tw-text-opacity));
+}
 #simplybook_app .text-tertiary {
   --tw-text-opacity: 1;
   color: rgb(12 48 82 / var(--tw-text-opacity));
@@ -1275,6 +1293,12 @@ video {
 #simplybook_app .disabled\:bg-gray-200:disabled {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+@media (min-width: 640px) {
+
+  #simplybook_app .sm\:inline {
+    display: inline;
+  }
 }
 @media (min-width: 768px) {
 

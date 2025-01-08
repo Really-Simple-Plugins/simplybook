@@ -4,15 +4,24 @@ import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import {useEffect, useRef, useState} from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
 import useOnboardingData from "../../hooks/useOnboardingData";
+import useSettingsData from "../../hooks/useSettingsData";
 const path = "/onboarding/confirm-email";
 
 export const Route = createLazyFileRoute(path)({
+
     component: () => {
+        const { getValue, settings } = useSettingsData();
+
         const {
             setRecaptchaToken,
         } = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
+
+        useEffect(() => {
+            let token = getValue('confirmation-code');
+            console.log("token 1 ",token);
+        }, [ settings ] );
         const setupRecaptcha = async () => {
             //get sitekey first, loading script has to wait.
             let siteKey = await getRecaptchaSiteKey();
@@ -28,6 +37,7 @@ export const Route = createLazyFileRoute(path)({
                 window.onloadRecaptchaCallback = () => {
                     if (window.grecaptcha && recaptchaContainerRef.current) {
                         console.log("rendering recaptcha with sitekey", siteKey);
+
                         window.grecaptcha.render(recaptchaContainerRef.current, {
                             sitekey: siteKey,
                             callback: (recaptchaToken) => {
@@ -64,7 +74,7 @@ export const Route = createLazyFileRoute(path)({
                 <OnboardingStep
                     path={path}
                     title={__("Confirm your e-mail address", "simplybook")}
-                    customHtml={<div id="recaptcha_container" ref={recaptchaContainerRef}></div>    }
+                    customHtml={<div id="recaptcha_container" className="mt-4" ref={recaptchaContainerRef}></div>    }
                     subtitle={__("Type in the code from the e-mail you received.", "simplybook")}
                     bottomText={__(
                         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",

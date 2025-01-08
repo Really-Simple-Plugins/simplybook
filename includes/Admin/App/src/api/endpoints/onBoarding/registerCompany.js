@@ -7,8 +7,7 @@ import request from "../../requests/request";
  */
 const registerCompany = async ({ data = true }) => {
     console.log("calling registerCompany api", data);
-    const res = await request("onboarding/company_registration", "POST", { data });
-    return res.data;
+    return await request("onboarding/company_registration", "POST", { data });
 };
 
 export default registerCompany;

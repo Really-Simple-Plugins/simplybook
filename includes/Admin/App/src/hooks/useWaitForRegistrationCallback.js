@@ -12,6 +12,7 @@ const useWaitForRegistrationCallback = () => {
     const { data, refetch, isFetching } = useQuery({
         queryKey: ["registration_callback_status"],
         queryFn: async () => {
+            console.log("Polling for registration callback status");
             setCount(count + 1);
             const res = await request("check_registration_callback_status", "POST", {
                 data: { status: "waiting" },
@@ -21,9 +22,11 @@ const useWaitForRegistrationCallback = () => {
                 console.log("disable polling and set onboarding completed");
                 setPollingEnabled(false);
                 setOnboardingCompleted(true);
+            } else {
+                console.log("still waiting for completion")
             }
 
-            if (count > 20){
+            if (count > 100 ){
                 setPollingEnabled(false);
             }
             return res.data;

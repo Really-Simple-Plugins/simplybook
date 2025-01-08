@@ -6,28 +6,28 @@ import {useEffect, useRef, useState} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
+import Icon from "../../components/Common/Icon";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
 
     component: () => {
-        const { widgetScript, isFetching, invalidateWidgetScript } = useWidgetData();
+        const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { getValue, settings, isSavingSettings } = useSettingsData();
         const [companyName, setCompanyName] = useState("");
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
 
-        const runInlineScript = async ( script ) => {
+        const runInlineScript = async (  ) => {
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
-            script = script.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
+            let script = widgetScript.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
             targetObj.innerHTML = script;
             try {
                 document.head.appendChild(targetObj);
                 // domContentLoaded already has fired, so we replace it with our custom event and fire that.
                 // this way we don't inadvertently trigger any other scripts that are listening for domContentLoaded
-                console.log("firing custom domContentLoaded event");
                 const customEvent = new Event("customDOMContentLoaded");
                 // Dispatch custom event
                 document.dispatchEvent(customEvent);
@@ -38,7 +38,7 @@ export const Route = createLazyFileRoute(path)({
 
         useEffect(() => {
             startPolling();
-        }, [onboardingCompleted]);
+        }, [onboardingCompleted ]);
 
         useEffect(() => {
             setCompanyName(getValue("company_name"));
@@ -50,12 +50,13 @@ export const Route = createLazyFileRoute(path)({
                 return;
             }
             setIsLoadingScript(true);
+
             //clear existing scripts
             clearInlineScript();
             let script = document.head.querySelector('#simplybook-src-script');
             if ( script ) {
                 console.log("Script already loaded, run inline script");
-                await runInlineScript(widgetScript);
+                await runInlineScript();
                 setIsLoadingScript(false);
             } else {
                 console.log("Script not loaded, load it now");
@@ -63,19 +64,8 @@ export const Route = createLazyFileRoute(path)({
                 script.id = "simplybook-src-script";
                 script.src = "https://simplybook.me/v2/widget/widget.js";
                 script.onload = async () => {
-                    console.log("Script loaded successfully!");
-                    // Wait for widgetScript to be set
-                    await new Promise((resolve) => {
-                        const checkWidgetScript = () => {
-                            if (widgetScript.length > 0) {
-                                resolve();
-                            } else {
-                                setTimeout(checkWidgetScript, 100);
-                            }
-                        };
-                        checkWidgetScript();
-                    });
-                    await runInlineScript(widgetScript);
+                    console.log("src Script loaded successfully!");
+                    await runInlineScript();
                     setIsLoadingScript(false);
                 };
                 document.head.appendChild(script);
@@ -97,14 +87,13 @@ export const Route = createLazyFileRoute(path)({
                 "widgetScript.length", widgetScript.length
                 );
 
-
-            if (widgetScript.length === 0 || !onboardingCompleted ) {
-                console.log("No script or onboarding not completed, return");
+            if ( !onboardingCompleted ) {
+                console.log("Onboarding not completed, return");
                 return;
             }
 
-            if ( isSavingSettings ){
-                console.log("Saving settings, wait until saved");
+            if (widgetScript.length === 0 ) {
+                console.log("No script, return");
                 return;
             }
 
@@ -121,8 +110,24 @@ export const Route = createLazyFileRoute(path)({
                 }
                 clearInlineScript();
             };
-        }, [widgetScript, onboardingCompleted, settings, isSavingSettings]);
+        }, [widgetScript, onboardingCompleted]);
 
+
+        //if settings are changed, refetch the widget script
+        useEffect(() => {
+            if (!onboardingCompleted ) {
+                console.log("onboarding not completed, return");
+                return;
+            }
+
+            if ( isSavingSettings ){
+                console.log("Saving settings, wait until saved");
+                return;
+            }
+            invalidateAndRefetchWidgetScript();
+        }, [settings, onboardingCompleted, isSavingSettings]);
+
+        console.log(" rerender of onboardingCompleted style widget:", onboardingCompleted);
         return (
             <>
                 <OnboardingStep
@@ -133,8 +138,11 @@ export const Route = createLazyFileRoute(path)({
                     rightColumn={
                         <div className="h-full">
                             <div className="h-full" id="sbw_z0hg2i"></div>
+                            {!onboardingCompleted && <div>
+                                <Icon name="spinner" />
+                                <p>Please wait while your registration is being processed. This can take a few minutes.</p>
+                            </div>}
                         </div>
-
                     }
                 />
             </>

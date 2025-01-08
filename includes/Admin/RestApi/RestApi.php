@@ -45,10 +45,11 @@ class RestApi {
      * Standardized response format
      * @param mixed $data - Data to return
      * @param string $status - If this action has completed successfully
+     * @param string $message - Message to return
      * @param int $code - HTTP status code
      * @return WP_REST_Response
      */
-    protected function response(mixed $data = [], string $status = 'success', int $code = 200): WP_REST_Response
+    protected function response(mixed $data = [], string $status = 'success', string $message = '', int $code = 200): WP_REST_Response
     {
         if ( ob_get_length() ) {
             ob_clean();
@@ -56,7 +57,8 @@ class RestApi {
 
         return new WP_REST_Response(
             [
-                'status'  => $status,
+				'message' => $message,
+                'status'  => $status ? 'success' : 'error',
                 'data'    => $data,
                 'request_success' => true, //can be used to check if the response in react actually contains this array.
             ],

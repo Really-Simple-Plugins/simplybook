@@ -4,6 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Simplybook\Api\ApiResponse\ApiResponse;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -344,9 +345,11 @@ class Api
 	/**
 	 * Check if we have a valid token
 	 *
+	 * @param string $type
+	 *
 	 * @return bool
 	 */
-	protected function token_is_valid( $type = 'public' ): bool {
+	protected function token_is_valid( string $type = 'public' ): bool {
 		$refresh_token = $this->get_token($type, true );
 		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
 		if ( $type === 'admin' ) {
@@ -398,11 +401,11 @@ class Api
 	/**
 	 * Registers a company with the API
 	 *
-	 * @return bool
+	 * @return ApiResponse
 	 */
-	public function register_company(): bool {
+	public function register_company(): ApiResponse {
 		if ( !$this->user_can_manage() ) {
-			return false;
+			return new ApiResponse( false, __('You are not authorized to do this.', 'simplybook') );
 		}
 
 		//check if we have a token
@@ -413,7 +416,7 @@ class Api
 
 		if ( get_transient('simply_book_attempt_count') >3 ) {
 			$this->log("Too many attempts to register company");
-			return false;
+			return new ApiResponse( false, __('Too many attempts, please try again later.', 'simplybook') );
 		}
 
 		$email = sanitize_email( $this->get_option('email') );
@@ -422,6 +425,7 @@ class Api
 		$category =  $category < 1 ? 8 : $category; //default other category
 		$random_password = wp_generate_password( 24, false );
 		$company_name = sanitize_text_field( $this->get_option('company_name') );
+		//strip off
 		//get a description using the WordPress get_bloginfo function
 		$description = $this->get_description();
 		$phone = sanitize_text_field( $this->get_option('phone') );
@@ -439,7 +443,7 @@ class Api
 		if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
 			$this->log("Missing fields for company registration");
 			$this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
-			return false;
+			return new ApiResponse( false, __('Missing fields for company registration. Please fill out all fields.', 'simplybook') );
 		}
 
 		$coordinates = $this->get_coordinates($address, $zip, $city, $country);
@@ -487,7 +491,8 @@ class Api
 				$this->update_option( 'company_id', (int) $request->company_id );
 				update_option("simplybook_company_registration_start_time", time(), false);
 				//successful registered
-				return true;
+				return new ApiResponse( true );
+
 			} else {
 				if ( str_contains( $request->message, 'Token Expired')) {
 					error_log("token expired, refresh");
@@ -505,21 +510,30 @@ class Api
 					$this->register_company();
 				}
 
+				if ( isset($request->data->name) &&
+				     in_array('The field contains illegal words', $request->data->name)
+				) {
+					error_log("company name contains illegal words, go one step back and report issue");
+					return new ApiResponse( false, __('The company name contains illegal words. Please change the company name.', 'simplybook') );
+				}
+
 				if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
-					error_log("company login already exists, and we should already have a company token");
-					//@todo if company token does not exist, delete company_login and register new.
-					return true;
+					error_log("company login already exists");
+					//company login already exists. We will be assuming for now that the user is here by accident.
+					//we return a success and exit.
+					//@todo update existing data instead of just returning.
+					return new ApiResponse( true );
 				}
 
 				$this->log("Error during company registration: ".$request->message);
 				update_option('simplybook_company_registration_error', $request->message, false);
+				return new ApiResponse( false, $request->message );
 			}
+
 		} else {
 			update_option('simplybook_company_registration_error', true, false);
+			return new ApiResponse( false, __('Error during company registration. Please try again later.', 'simplybook') );
 		}
-
-		//not successful registered
-		return false;
 	}
 
 	/**
@@ -599,17 +613,20 @@ class Api
 	/**
 	 * Registers a company with the API
 	 *
-	 * @return bool
+	 * @param int $email_code
+	 * @param string $recaptcha_token
+	 *
+	 * @return ApiResponse
 	 */
-	public function confirm_email( $email_code, $recaptcha_token ): bool {
+	public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponse {
 		if ( !$this->user_can_manage() ) {
-			return false;
+			return new ApiResponse( false, __('You are not authorized to do this.', 'simplybook') );
 		}
 
 		//check if the company registration was started
 		if ( !get_option("simplybook_company_registration_start_time") ) {
 			$this->log("Company registration not started yet");
-			return false;
+			return new ApiResponse( false, __('Complete the previous, company registration step first.', 'simplybook') );
 		}
 
 		error_log("confirming email with body:");
@@ -640,15 +657,16 @@ class Api
 			if ( isset($request->success) ) {
 				error_log("email confirmation success, please wait for the callback.");
 				delete_option('simplybook_email_confirm_error' );
-				return true;
+				return new ApiResponse( true, __('Email successfully confirmed.', 'simplybook') );
 			} else {
 				$this->log("Error during email confirmation: ".$request->message);
 				update_option('simplybook_email_confirm_error', $request->message, false);
+				return new ApiResponse( false, $request->message);
 			}
 		} else {
 			update_option('simplybook_email_confirm_error', true, false);
 		}
-		return false;
+		return new ApiResponse( false, __('Error during email confirmation. Please try again later.', 'simplybook') );
 	}
 
 	/**
