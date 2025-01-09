@@ -11,6 +11,7 @@ type ButtonInputProps = {
   };
   btnVariant?: "primary" | "secondary" | "tertiary";
   disabled?: boolean;
+  showLoader?: boolean;
   size?: "sm" | "md" | "lg";
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -24,6 +25,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
   link,
   btnVariant = "secondary",
   disabled = false,
+ showLoader = false,
   size = "md",
   ...props
 }) => {
@@ -44,7 +46,6 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
       'opacity-50 cursor-not-allowed': disabled
     }
   );
-
   if (link) {
     return (
       <Link

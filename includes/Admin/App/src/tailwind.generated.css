@@ -671,6 +671,9 @@ video {
 #simplybook_app .h-20 {
   height: 5rem;
 }
+#simplybook_app .h-4 {
+  height: 1rem;
+}
 #simplybook_app .h-5 {
   height: 1.25rem;
 }
@@ -831,6 +834,9 @@ video {
   --tw-space-y-reverse: 0;
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
+}
+#simplybook_app .overflow-hidden {
+  overflow: hidden;
 }
 #simplybook_app .overflow-x-scroll {
   overflow-x: scroll;
@@ -1184,6 +1190,9 @@ video {
   transition-property: all;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+}
+#simplybook_app .duration-100 {
+  transition-duration: 100ms;
 }
 #simplybook_app .duration-200 {
   transition-duration: 200ms;

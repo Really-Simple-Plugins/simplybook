@@ -12,6 +12,7 @@ const useWidgetData = () => {
     });
 
     const invalidateAndRefetchWidgetScript = async () => {
+        console.log("invalidate and refetch widget script");
         queryClient.invalidateQueries(["widget_script"]);
         await query.refetch();
     };

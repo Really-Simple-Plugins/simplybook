@@ -7,6 +7,7 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
 import Icon from "../../components/Common/Icon";
+import ProgressBar from "../../components/Common/ProgressBar";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
@@ -23,6 +24,7 @@ export const Route = createLazyFileRoute(path)({
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
             let script = widgetScript.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
+            console.log("updated script: ", script);
             targetObj.innerHTML = script;
             try {
                 document.head.appendChild(targetObj);
@@ -31,6 +33,8 @@ export const Route = createLazyFileRoute(path)({
                 const customEvent = new Event("customDOMContentLoaded");
                 // Dispatch custom event
                 document.dispatchEvent(customEvent);
+                // Remove the event listener after it has fired
+                document.removeEventListener("DOMContentLoaded", instantiateSimplybookWidget);
             } catch(exception) {
                 throw "Something went wrong " + exception + " while loading "+script;
             }
@@ -41,7 +45,10 @@ export const Route = createLazyFileRoute(path)({
         }, [onboardingCompleted ]);
 
         useEffect(() => {
-            setCompanyName(getValue("company_name"));
+            let companyName = getValue("company_name");
+            if ( companyName && companyName.length>0 ) {
+                setCompanyName(companyName);
+            }
         }, [getValue("company_name")]);
 
         const setupPreview = async () => {
@@ -125,7 +132,7 @@ export const Route = createLazyFileRoute(path)({
                 return;
             }
             invalidateAndRefetchWidgetScript();
-        }, [settings, onboardingCompleted, isSavingSettings]);
+        }, [isSavingSettings, onboardingCompleted]);
 
         console.log(" rerender of onboardingCompleted style widget:", onboardingCompleted);
         return (
@@ -137,11 +144,12 @@ export const Route = createLazyFileRoute(path)({
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
                         <div className="h-full">
-                            <div className="h-full" id="sbw_z0hg2i"></div>
                             {!onboardingCompleted && <div>
-                                <Icon name="spinner" />
-                                <p>Please wait while your registration is being processed. This can take a few minutes.</p>
+                                <ProgressBar/>
+                                <p>Please wait while your registration is being processed. This can take a few
+                                    minutes.</p>
                             </div>}
+                            <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
                     }
                 />

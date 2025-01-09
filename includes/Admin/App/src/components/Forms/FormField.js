@@ -35,10 +35,9 @@ const FormField = memo(({ setting, control, ...props } ) => {
   }
   const validationRules = {
     ...(setting.required && {
-      required: {
-        value: true,
-        message:
-          setting.requiredMessage || __("This field is required", "simplybook"),
+      validate: {
+        required: (value) =>
+            !!value || __("This field is required", "simplybook"), // This works for both checkboxes and non-checkboxes
       },
     }),
     ...(setting.validation?.regex && {
@@ -69,13 +68,17 @@ const FormField = memo(({ setting, control, ...props } ) => {
     await saveSettings(settings);
   };
 
+  let defaultValue = setting.value || setting.default;
+  if (setting.type === "checkbox") {
+      defaultValue = defaultValue === "1";
+  }
   return (
     <ErrorBoundary>
       <Controller
           name={setting.id}
           control={control}
           rules={validationRules}
-          defaultValue={setting.value || setting.default}
+          defaultValue={defaultValue}
           render={({ field, fieldState }) => {
             useEffect(() => {
               let curValue = getValue(setting.id);

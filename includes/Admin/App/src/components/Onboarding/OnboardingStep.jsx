@@ -5,7 +5,7 @@ import ButtonField from "../Fields/ButtonField";
 import { __ } from "@wordpress/i18n";
 import useSettingsData from "../../hooks/useSettingsData";
 import FormFieldWrapper from "../Forms/FormFieldWrapper";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import Error from "../Errors/Error";
 const OnboardingStep = ({
   path,
@@ -43,6 +43,7 @@ const OnboardingStep = ({
   });
 
   const currentStep = getCurrentStep(path);
+  const [disabled, setDisabled] = useState(false);
 
   // Update confirmation code in onboarding data. Otherwise the recaptcha code clears the confirmation code
   const formData = watch();
@@ -50,8 +51,20 @@ const OnboardingStep = ({
     updateData({'confirmation-code': formData['confirmation-code']});
   }, [formData['confirmation-code']]);
 
+  //onload of this component, check completed step simplybook.completed_step and navigate to the next step if it's above 0
+    useEffect(() => {
+      let currentStep = getCurrentStepId(path);
+      let completedStepNext = parseInt(simplybook.completed_step) + 1 ;
+      if ( completedStepNext > 1 && completedStepNext > currentStep) {
+        console.log("has completed step, navigate to next step ", completedStepNext);
+        console.log(getURLForStep(completedStepNext));
+        navigate({ to: getURLForStep(completedStepNext) });
+      }
+    }, []);
+
   const onSubmit = async (formData, buttonType = "primary") => {
     setApiError(null);
+    setDisabled(true);
     let updatedFormData = { ...formData };
     //add the auto generated recaptcha token to our data
     updatedFormData.recaptchaToken = recaptchaToken;
@@ -75,6 +88,7 @@ const OnboardingStep = ({
     }
     await updateData(updatedFormData);
 
+    setDisabled(false);
 
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
@@ -112,14 +126,17 @@ const OnboardingStep = ({
             <FormFieldWrapper fields={currentStep.fields} control={control}/>
             {customHtml}
             <ButtonField
+                showLoader={disabled}
                 btnVariant="primary"
                 label={primaryButton.label}
                 context={bottomText}
+                disabled={disabled}
                 onClick={handleSubmit((data) => onSubmit(data, "primary"))}
             />
             {secondaryButton && (
                 <ButtonField
                     btnVariant="tertiary"
+                    disabled={disabled}
                     label={secondaryButton.label}
                     onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
                 />

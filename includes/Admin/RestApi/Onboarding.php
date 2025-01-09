@@ -87,14 +87,17 @@ class Onboarding extends RestApi {
      */
     public function register_email($request, $ajax_data = [] ): WP_REST_Response
     {
+		sleep ( 1 );
 		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
 		$data = $data['data'] ?? [];
-	    $this->update_option('email', sanitize_email( $data['email'] ) );
-	    $this->update_option('terms-and-conditions', (bool) $data['terms-and-conditions'] );
-
-        return $this->response([
-            'message' => __('Email registered successfully', 'simplybook'),
-        ]);
+		error_log(print_r($data, true));
+		$terms_and_conditions = (bool) $data['terms-and-conditions'];
+		$email = sanitize_email( $data['email'] );
+	    $this->update_option('email', $email );
+	    $this->update_option('terms-and-conditions',  $terms_and_conditions);
+		$success = is_email( $email ) && $terms_and_conditions;
+		$message = $success ? '' : __('Please enter a valid email address and accept the terms and conditions', 'simplybook');
+        return $this->response([], $success, $message );
     }
 
     /**
@@ -109,7 +112,6 @@ class Onboarding extends RestApi {
 	    $data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
 	    $data = $data['data'] ?? [];
         $this->update_option('tips-and-tricks', (bool) ( $data['tips-and-tricks'] ));
-
         return $this->response();
     }
 
@@ -140,7 +142,11 @@ class Onboarding extends RestApi {
 	    $zip = sanitize_text_field( trim( $data['zip'] ) );
         $this->update_option('zip', $zip );
 		$response = $this->api->register_company();
-        return $this->response( [], $response->status, $response->message );
+
+		//store step, to start with on return of user.
+	    $step = ( $response->success ) ? 3 : 1;
+	    update_option("simplybook_completed_step", $step, false );
+        return $this->response( [], $response->success, $response->message );
     }
 
 	/**
@@ -161,7 +167,9 @@ class Onboarding extends RestApi {
 		error_log(print_r($data, true));
 
 		$response = $this->api->confirm_email((int) $data['confirmation-code'], sanitize_text_field( $data['recaptchaToken']));
+		$step = ( $response->success ) ? 4 : 3;
+		update_option("simplybook_completed_step", $step, false );
 		error_log("email confirmation completed");
-		return $this->response([], $response->status, $response->message);
+		return $this->response([], $response->success, $response->message);
 	}
 }

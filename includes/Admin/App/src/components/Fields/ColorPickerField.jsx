@@ -26,8 +26,8 @@ const ColorPickerField = forwardRef(
 
         const ColorPickerElement = ({label}) => {
             const handleColorChange = (color, event) => {
-                setColor(color);
-                onChange(color);
+                // setColor(color);
+                // onChange(color);
             }
 
             return (

@@ -232,6 +232,7 @@ class App {
 				'settings_fields'         => $this->fields( true ),
 				'is_onboarding_completed' => $this->onboarding_completed(),
 				'first_name'              => $this->get_first_name(),
+                'completed_step'          => get_option( 'simplybook_completed_step', 0 ),
 			]
 		);
 	}

@@ -24,6 +24,7 @@ const useOnboardingData = () => {
           },
         },
         {
+          required: true,
           id: "terms-and-conditions",
           type: "checkbox",
           label: __("I agree to the terms and conditions", "simplybook"),
@@ -31,7 +32,12 @@ const useOnboardingData = () => {
       ],
       beforeSubmit: async (data) => {
         console.log("submit email step");
-        await registerEmail({ data });
+        let response = await registerEmail({ data });
+        if (response.status !== 'success'){
+          console.log("setting api error to ", response.message)
+          setApiError(response.message);
+          return false;
+        }
         console.log(data);
       },
     },

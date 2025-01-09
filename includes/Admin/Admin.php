@@ -61,7 +61,6 @@ class Admin {
 		// Flush rewrite rules to ensure the new routes are available
 		add_action( 'shutdown', 'flush_rewrite_rules' );
 		// Redirect to onboarding
-		error_log("add onboarding hook");
 		set_transient('simplybook_dashboard_redirect', true, 5 * MINUTE_IN_SECONDS );
 	}
 
@@ -98,9 +97,7 @@ class Admin {
 	 */
 	private function get_country_by_locale(): string {
 		$locale = get_locale();
-		error_log("detected locale ".$locale);
 		$locale = explode('_', $locale);
-		error_log("language ".$locale[1]);
 		return strtoupper( $locale[1] );
 	}
 

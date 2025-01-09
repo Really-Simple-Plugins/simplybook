@@ -36,7 +36,7 @@ trait Load {
      * @param $default
      * @return false|mixed
      */
-    public function get_option(string $key, $default = null)
+    public function get_option(string $key)
     {
         global $simplybook_cache;
         if ( !empty($simplybook_cache) ) {
@@ -47,15 +47,16 @@ trait Load {
         }
 
         $value = $options[$key] ?? false;
-        if ( $value === false ) {
-            $value = $default;
-        }
 
         $field = $this->get_field_by_id($key);
         if ( !$field ) {
             error_log("field $key not found");
-            return $default;
+            return false;
         }
+
+	    if ( $value === false ) {
+		    $value = $field['default'] ?? false;
+	    }
 
         if ( $field['encrypt'] ) {
             $value = $this->decrypt_string($value);
