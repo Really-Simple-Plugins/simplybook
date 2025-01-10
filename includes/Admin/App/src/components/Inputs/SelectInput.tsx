@@ -1,6 +1,7 @@
 import React from "react";
 import * as Select from "@radix-ui/react-select";
 import { clsx as classnames } from "clsx";
+import Icon from "../Common/Icon";
 
 interface SelectOption {
   value: string;
@@ -29,12 +30,12 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
           className="flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring"
         >
           <Select.Value placeholder="Select an option…" />
-          <Select.Icon className="ml-2">v</Select.Icon>
+          <Select.Icon className="ml-2"><Icon name={"chevron-down"} /></Select.Icon>
         </Select.Trigger>
         <Select.Portal>
           <Select.Content className="rounded-md border border-gray-300 bg-white shadow-lg">
             <Select.ScrollUpButton className="flex items-center justify-center p-2">
-              {/*<ChevronUpIcon />*/}
+                <Icon name={"chevron-up"} />
             </Select.ScrollUpButton>
             <Select.Viewport className="p-2">
               {options.map((option) => (
@@ -44,7 +45,7 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
               ))}
             </Select.Viewport>
             <Select.ScrollDownButton className="flex items-center justify-center p-2">
-              v
+              <Icon name={"chevron-down"} />
             </Select.ScrollDownButton>
           </Select.Content>
         </Select.Portal>
@@ -78,7 +79,9 @@ const SelectItem = React.forwardRef<HTMLDivElement, SelectItemProps>(
         {...props}
       >
         <Select.ItemText>{children}</Select.ItemText>
-        <Select.ItemIndicator className="ml-2">v</Select.ItemIndicator>
+        <Select.ItemIndicator className="ml-2">
+            <Icon name="check" /> {/**Indicates a selected item **/}
+        </Select.ItemIndicator>
       </Select.Item>
     );
   },

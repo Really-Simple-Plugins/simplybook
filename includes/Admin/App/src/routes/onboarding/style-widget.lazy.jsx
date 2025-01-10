@@ -146,8 +146,7 @@ export const Route = createLazyFileRoute(path)({
                         <div className="h-full">
                             {!onboardingCompleted && <div>
                                 <ProgressBar/>
-                                <p>Please wait while your registration is being processed. This can take a few
-                                    minutes.</p>
+                                <p>{__("Please wait while your registration is being processed. This will take approximately 30 seconds.","simplybook")}</p>
                             </div>}
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>

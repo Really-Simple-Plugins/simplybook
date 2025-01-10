@@ -2,6 +2,9 @@
 module.exports = {
   mode: "jit",
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
+  plugins: [
+    require('@tailwindcss/aspect-ratio'),
+  ],
   theme: {
     extend: {
       colors: {
@@ -30,6 +33,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
   important: "#simplybook_app",
 };

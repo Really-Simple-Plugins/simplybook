@@ -499,7 +499,7 @@ class Api
 					//invalid token, refresh.
 					set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
 					$this->refresh_token();
-					$this->register_company();
+					return $this->register_company();
 				}
 				error_log(print_r($request->data, true));
 				if ( isset($request->data->company_login) &&
@@ -507,7 +507,7 @@ class Api
 				) {
 					error_log("company login contains illegal words, generate new one");
 					delete_option('simplybook_company_login');
-					$this->register_company();
+					return $this->register_company();
 				}
 
 				if ( isset($request->data->name) &&
