@@ -1,5 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  safelist: [
+    'rounded-md',
+    'border',
+    'border-gray-300',
+    'bg-white',
+    'shadow-lg',
+  ],
   mode: "jit",
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   plugins: [

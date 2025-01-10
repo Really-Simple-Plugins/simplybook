@@ -582,6 +582,9 @@ video {
 #simplybook_app .z-10 {
   z-index: 10;
 }
+#simplybook_app .z-50 {
+  z-index: 50;
+}
 #simplybook_app .col-span-3 {
   grid-column: span 3 / span 3;
 }
