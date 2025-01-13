@@ -31,10 +31,7 @@ const useSettingsData = () => {
   const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
     useMutation({
       mutationFn: async (data) => {
-        console.log("saving....");
-        let settings = await saveSettingsFields(data);
-        console.log("saved!, reloaded data ", settings)
-        return settings;
+        return await saveSettingsFields(data);
       },
       onSuccess: (data) => {
         queryClient.invalidateQueries(["settings_fields"]);

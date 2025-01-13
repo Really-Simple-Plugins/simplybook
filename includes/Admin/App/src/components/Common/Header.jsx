@@ -1,68 +1,14 @@
 import { Link } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
-import Icon from "./Icon";
-import getLoginUrl from "../../api/endpoints/getLoginUrl";
+import LoginLink from "./LoginLink";
 import { __ } from "@wordpress/i18n";
 import ButtonInput from "../Inputs/ButtonInput";
-import useOnboardingData from "../../hooks/useOnboardingData";
-import {useState} from "react";
 
 const Header = () => {
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
-  const [loginUrl, setLoginUrl] = useState('');
-  const [directUrl, setDirectUrl] = useState('');
-  const {
-    onboardingCompleted,
-  } = useOnboardingData();
-  const loginTo = async (e, page) => {
-    e.preventDefault();
-    console.log("get login url for ", page);
-    //some pages in simplybook:
-    //client: /client
-    //services: /management/#services
-    //providers: /management/#providers
-    //calendar: /index/index
-    //dashboard: /dashboard/new
 
-    //if we don't have the login url and direct url yet, get it.
-    //the login url is only used the first time. Afterwards we assume the user is already logged in and use the direct url to prevent too many hash generated errors.
-
-    let tempLoginUrl = '';
-    let tempDirectUrl = '';
-
-    if ( !alreadyLoggedIn ) {
-      console.log("not logged in yet, getting login url");
-      const loginData = await getLoginUrl();
-      console.log("received login data", loginData);
-      tempDirectUrl = loginData.url;
-      tempLoginUrl = loginData.login_url;
-      setLoginUrl(tempLoginUrl);
-      setDirectUrl(tempDirectUrl);
-    } else {
-        tempLoginUrl = loginUrl;
-        tempDirectUrl = directUrl;
-    }
-
-    let finalUrl = '';
-    if ( alreadyLoggedIn ) {
-      console.log("already logged in, using direct url");
-      finalUrl = tempDirectUrl + '/' + page;
-    } else {
-        console.log("not logged in yet, using login url");
-      finalUrl += tempLoginUrl + '?back_url=/' + page + '/';
-    }
-
-    console.log("final url " ,finalUrl);
-
-    //open a new tab with the login url
-    window.open(finalUrl, "_blank");
-    window.focus();
-    setAlreadyLoggedIn(true);
-  }
   const linkClassName =
     "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
 
-  let externalLinkClass = onboardingCompleted ? '' : 'pointer-events-none opacity-50 cursor-not-allowed';
   return (
     <div className="bg-white">
       <div className="mx-auto flex max-w-screen-2xl items-center px-5">
@@ -72,36 +18,13 @@ const Header = () => {
           </Link>
         </div>
         <div className="flex items-center">
-          <Link to="/" className={linkClassName}>
-            {__("Dashboard", "simplybook")}
-          </Link>
-          <a
-            href="#"
-            className={linkClassName+" "+externalLinkClass}
-            onClick={ (e) => loginTo(e, 'client') }
-          >
-            {__("Clients", "simplybook")}
-            <Icon name="square-arrow-up-right" className="px-2"/>
-          </a>
-          <a
-              href="#"
-             className={linkClassName+" "+externalLinkClass}
-              onClick={ (e) => loginTo(e, 'index/index') }
-          >
-            {__("Calendar", "simplybook")}
-            <Icon name="square-arrow-up-right" className="px-2" />
-          </a>
-          <Link to="/settings/general" className={linkClassName}>
-            Settings
-          </Link>
+          <Link to="/" className={linkClassName}>{__("Dashboard", "simplybook")}</Link>
+          <LoginLink className={linkClassName} title={__('Clients', 'simplybook')} page="client" />
+          <LoginLink className={linkClassName} title={__('Calendar', 'simplybook')} page="index/index" />
+          <Link to="/settings/general" className={linkClassName}>{__("Settings",'simplybook')}</Link>
         </div>
         <div className="float-right ml-auto flex items-center gap-6 px-4">
-          <ButtonInput
-            link={{ to: "https://simplybook.me" }}
-            btnVariant="tertiary"
-          >
-            {__("Upgrade", "simplybook")}
-          </ButtonInput>
+          <LoginLink className={linkClassName} isButton={true} btnVariant="tertiary" title={__('Upgrade', 'simplybook')} page="payment-widget" />
         </div>
       </div>
     </div>

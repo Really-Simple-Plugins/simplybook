@@ -29,7 +29,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
   size = "md",
   ...props
 }) => {
-  const className = clsx(
+  let className = clsx(
     // Base styles
     "rounded-full transition-all duration-200",
     {
@@ -43,9 +43,14 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
       'py-3 px-8 text-lg font-semibold': size === 'lg'
     },
     {
-      'opacity-50 cursor-not-allowed': disabled
+     'opacity-50 cursor-not-allowed': disabled
     }
   );
+
+  //if props.className is not empty, replace className with props.className
+  if (props.className) {
+    className = props.className;
+  }
   if (link) {
     return (
       <Link

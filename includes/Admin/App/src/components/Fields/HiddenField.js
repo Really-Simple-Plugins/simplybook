@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import HiddenInput from "../Inputs/HiddenInput";
 
 /**
- * TextField component
+ * HiddenField component
  * @param {object} setting
  * @param {object} field - Provided by react-hook-form's Controller
  * @param {object} fieldState - Contains validation state

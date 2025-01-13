@@ -1,12 +1,30 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
+import useSettingsData from "../../hooks/useSettingsData";
+import {useEffect, useState} from "react";
 
 const path = "/onboarding/implementation";
 
 export const Route = createLazyFileRoute(path)({
+
   component: () => {
-    return (
+      const { getValue, settings, isSavingSettings } = useSettingsData();
+      const [ implementationMethod, setImplementationMethod ] = useState(getValue("implementation"));
+
+      useEffect(() => {
+          if ( isSavingSettings ){
+              return;
+          }
+
+            let implementation = getValue("implementation");
+            console.log("Implementation current value: ", implementation);
+            //if (implementation !== implementation) ) {
+                setImplementationMethod(implementation);
+            //}
+      }, [settings, isSavingSettings]);
+
+      return (
       <OnboardingStep
         path={path}
         title={__("Implementation", "simplybook")}
@@ -21,13 +39,12 @@ export const Route = createLazyFileRoute(path)({
         }}
         rightColumn={
             <div className="relative w-full aspect-w-16 aspect-h-9">
-                <iframe
-                    className="absolute inset-0 w-full h-full"
-                    src="https://www.youtube.com/embed/qgMn9dKJAt4"
-                    title="How to get started with SimplyBook.me"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                ></iframe>
+                {implementationMethod === "manual" && <>
+                {implementationMethod} manual!
+                </>}
+                {implementationMethod === "generated" && <>
+                    generate! {implementationMethod}
+                </>}
             </div>
         }
       />

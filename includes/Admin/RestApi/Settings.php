@@ -98,7 +98,7 @@ class Settings extends RestApi {
     public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
         $data = $ajax_data ?: $request->get_json_params();
-		$with_values = $data['withValues'] === 1;
+		$with_values = (int) $data['withValues'] === 1;
         $fields = $this->fields($with_values);
 	    if ( ob_get_length() ) {
 		    ob_clean();

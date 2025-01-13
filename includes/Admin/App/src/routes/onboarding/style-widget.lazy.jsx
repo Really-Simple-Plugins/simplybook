@@ -6,7 +6,6 @@ import {useEffect, useRef, useState} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
-import Icon from "../../components/Common/Icon";
 import ProgressBar from "../../components/Common/ProgressBar";
 
 const path = "/onboarding/style-widget";
@@ -14,7 +13,7 @@ export const Route = createLazyFileRoute(path)({
 
     component: () => {
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
-        const { getValue, settings, isSavingSettings } = useSettingsData();
+        const { getValue, isSavingSettings } = useSettingsData();
         const [companyName, setCompanyName] = useState("");
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();

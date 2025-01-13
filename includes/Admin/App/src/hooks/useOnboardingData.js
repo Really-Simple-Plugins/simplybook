@@ -214,12 +214,29 @@ const useOnboardingData = () => {
       path: "/onboarding/implementation",
       fields: [
         {
-          id: "primary_color",
-          type: "colorpicker",
-          label: __("Primary color", "simplybook"),
-          default: "#DD3649",
-          inline_group: "widget",
+          id: "implementation",
+          type: "implementation",
+          label: '',
+          default: "generated",
           save_on_change: true,
+          options: [
+            {
+              value: "generated",
+              label: __("Generated", 'simplybook'),
+              description: __("Generate pages.", 'simplybook'),
+            },
+            {
+              value: "manual",
+              label: __("Shortcode", 'simplybook'),
+              description: __("Do it yourself", 'simplybook'),
+            },
+            {
+              value: "templates",
+              label: __("Templates", 'simplybook'),
+              description: __("Premium", 'simplybook'),
+              is_premium: true,
+            },
+          ],
         },
       ],
       beforeSubmit: async (data) => {
