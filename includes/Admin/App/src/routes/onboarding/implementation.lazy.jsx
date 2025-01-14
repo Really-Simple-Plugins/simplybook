@@ -3,6 +3,8 @@ import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
 import {useEffect, useState} from "react";
+import TextInput from "../../components/Inputs/TextInput";
+import Icon from "../../components/Common/Icon";
 
 const path = "/onboarding/implementation";
 
@@ -18,11 +20,13 @@ export const Route = createLazyFileRoute(path)({
             setImplementationMethod(implementation);
       }, [settings]);
 
+      let url = getValue("url");
+
       return (
       <OnboardingStep
         path={path}
-        title={__("Implementation", "simplybook")}
-        subtitle={__("Choose how to implement SimplyBook.me", "simplybook")}
+        company
+        title={__("Implement SimplyBook.me", "simplybook")}
         primaryButton={{
           label: __("Continue Configuration", "simplybook"),
           navigateTo: "/settings/general",
@@ -32,16 +36,42 @@ export const Route = createLazyFileRoute(path)({
           navigateTo: "/",
         }}
         rightColumn={
-            <div className="relative w-full aspect-w-16 aspect-h-9">
-                {implementationMethod === "manual" && <>
-                {implementationMethod} manual!
-                </>}
-                {implementationMethod === "generated" && <>
-                    generate! {implementationMethod}
-                </>}
-            </div>
-        }
-      />
-    );
-  },
-});
+            <div className="relative w-full">
+                {implementationMethod === "manual" &&
+                    <div className={"my-6 text-center"}>
+                        <h1 className={"text-3xl font-semibold text-black"}>{__("Implementation", "simplybook")}</h1>
+                        <h2 className={"text-2xl text-gray-500 m-4"}>
+                            {__("Use the below shortcode in a page to show the widget.", "simplybook")}
+                        </h2>
+                        <TextInput className="p-4 mb-8" clickToSelect={true} value="[simplybook_widget]"/>
+                        <div className="text-lg text-gray-600">
+                            <Icon name="info" color="green" className="mr-2"/>
+                            {__("Using shortcodes", "simplybook")}
+                            &nbsp;<a className="" href="https://simplybook.me" target="_blank"
+                                     rel="noreferrer">{__("Read more", "simplybook")}</a>
+                        </div>
+                    </div>
+                }
+                {implementationMethod === "generated" &&
+                    <div className={"my-6 text-center"}>
+                        <h1 className={"text-3xl font-semibold text-black"}>{__("Implementation", "simplybook")}</h1>
+                        <h2 className={"text-2xl text-gray-500 m-4"}>
+                            {__("SimplyBook.me will generate the following pages automatically.", "simplybook")}
+                        </h2>
+                        <TextInput className="p-4 mb-8" value={simplybook.site_url + __('calendar', 'simplybook')}/>
+                        <TextInput className="p-4 mb-8" value={simplybook.site_url + __('mybooking', 'simplybook')}/>
+                        <div className="text-lg text-gray-600">
+                            <Icon name="info" color="green" className="mr-2"/>
+                            {__("Generating pages for SimplyBook.me", "simplybook")}
+                            &nbsp;<a className="" href="https://simplybook.me" target="_blank"
+                                     rel="noreferrer">{__("Read more", "simplybook")}</a>
+                    </div>
+                </div>
+
+                }
+                </div>
+                }
+                />
+                );
+                },
+                });

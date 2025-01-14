@@ -226,7 +226,8 @@ class App {
 			[
 				'nonce'                   => wp_create_nonce( 'simplybook_nonce' ),
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
-				'site_url'                => get_rest_url(),
+				'rest_url'                => get_rest_url(),
+				'site_url'                => site_url(),
 				'json_translations'       => $js_data['json_translations'],
 				'settings_menu'           => $this->menus(),
 				'settings_fields'         => $this->fields( true ),

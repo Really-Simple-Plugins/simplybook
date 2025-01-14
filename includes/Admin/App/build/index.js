@@ -25,7 +25,7 @@ const NONCE = simplybook.nonce;
 const API_BASE_PATH = "simplybook/v1/";
 
 // URLs for the site and AJAX endpoint
-const SITE_URL = getSiteUrl("site_url");
+const SITE_URL = getSiteUrl("rest_url");
 const AJAX_URL = getSiteUrl("ajax_url");
 
 // Text domain for SimplyBook translations

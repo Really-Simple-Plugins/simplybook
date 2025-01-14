@@ -13,8 +13,7 @@ export const Route = createLazyFileRoute(path)({
 
     component: () => {
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
-        const { getValue, isSavingSettings } = useSettingsData();
-        const [companyName, setCompanyName] = useState("");
+        const { isSavingSettings } = useSettingsData();
         const {onboardingCompleted} = useOnboardingData();
         const { startPolling } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
@@ -42,13 +41,6 @@ export const Route = createLazyFileRoute(path)({
         useEffect(() => {
             startPolling();
         }, [onboardingCompleted ]);
-
-        useEffect(() => {
-            let companyName = getValue("company_name");
-            if ( companyName && companyName.length>0 ) {
-                setCompanyName(companyName);
-            }
-        }, [getValue("company_name")]);
 
         const setupPreview = async () => {
             if (isLoadingScript) {
@@ -138,8 +130,7 @@ export const Route = createLazyFileRoute(path)({
             <>
                 <OnboardingStep
                     path={path}
-                    title={companyName}
-                    subtitle={__("What's your style?", "simplybook")}
+                    title={__("What's your style?", "simplybook")}
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
                         <div className="h-full">

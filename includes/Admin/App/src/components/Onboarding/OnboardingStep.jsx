@@ -41,7 +41,8 @@ const OnboardingStep = ({
     values: data,
     mode: "onBlur",
   });
-
+  const { getValue } = useSettingsData();
+  const [companyName, setCompanyName] = useState("");
   const currentStep = getCurrentStep(path);
   const [disabled, setDisabled] = useState(false);
 
@@ -108,10 +109,18 @@ const OnboardingStep = ({
     }
   };
 
+  useEffect(() => {
+    let companyName = getValue("company_name");
+    if ( companyName && companyName.length>0 ) {
+      setCompanyName(companyName);
+    }
+  }, [getValue("company_name")]);
+
   return (
     <>
       <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
         <div className={"my-6 text-center"}>
+          {companyName.length>0 && <h1 className={"text-2xl text-gray-500 mb-4"}>{companyName}</h1>}
           <h1 className={"text-3xl font-semibold text-black"}>{title}</h1>
           {subtitle && (
               <h2 className={"mt-2 text-base font-light text-black"}>
