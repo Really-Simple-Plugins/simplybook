@@ -69,6 +69,40 @@ trait Helper {
 	}
 
 	/**
+	 * Create a page
+	 *
+	 * @param string $title
+	 * @param string $content
+	 *
+	 * @return int
+	 */
+	public function create_page( string $title, string $content): int {
+		if ( !$this->user_can_manage() ) {
+			return -1;
+		}
+
+		$title = sanitize_text_field($title);
+
+		$content = wp_kses_post($content);
+		$page = array(
+			'post_title'   => $title,
+			'post_type'    => "page",
+			'post_content' => $content,
+			'post_status'  => 'publish',
+		);
+		error_log("create page $title");
+		error_log(print_r($page, true));
+
+		// Insert the post into the database
+		$page_id = wp_insert_post( $page );
+		if ( is_wp_error( $page_id ) ) {
+			return -1;
+		}
+		do_action( 'simplybook_create_page', $page_id, $title, $content );
+		return $page_id;
+	}
+
+	/**
 	 * Encrypt data
 	 * @param $string
 	 * @return string

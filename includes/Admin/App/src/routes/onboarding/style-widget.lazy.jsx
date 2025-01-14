@@ -135,8 +135,7 @@ export const Route = createLazyFileRoute(path)({
                     rightColumn={
                         <div className="h-full">
                             {!onboardingCompleted && <div>
-                                <ProgressBar/>
-                                <p>{__("Please wait while your registration is being processed. This will take approximately 30 seconds.","simplybook")}</p>
+                                <ProgressBar />
                             </div>}
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>

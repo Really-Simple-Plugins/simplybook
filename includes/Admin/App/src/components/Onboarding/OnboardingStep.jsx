@@ -94,6 +94,7 @@ const OnboardingStep = ({
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
     } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
+      console.log("Navigating to ", secondaryButton.navigateTo);
       navigate({ to: secondaryButton.navigateTo });
     } else if (isLastStep(path)) {
       navigate({ to: "/" });

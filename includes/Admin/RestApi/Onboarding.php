@@ -76,6 +76,30 @@ class Onboarding extends RestApi {
 			    },
 		    )
 	    );
+
+	    register_rest_route(
+		    'simplybook/v1',
+		    'onboarding/is_page_title_available',
+		    array(
+			    'methods' => 'POST',
+			    'callback' => array( $this, 'is_page_title_available' ),
+			    'permission_callback' => function ( $request ) {
+				    return $this->validate_request( $request );
+			    },
+		    )
+	    );
+
+		register_rest_route(
+		    'simplybook/v1',
+		    'onboarding/generate_pages',
+		    array(
+			    'methods' => 'POST',
+			    'callback' => array( $this, 'generate_pages' ),
+			    'permission_callback' => function ( $request ) {
+				    return $this->validate_request( $request );
+			    },
+		    )
+	    );
     }
 
     /**
@@ -171,5 +195,67 @@ class Onboarding extends RestApi {
 		update_option("simplybook_completed_step", $step, false );
 		error_log("email confirmation completed");
 		return $this->response([], $response->success, $response->message);
+	}
+
+	/**
+	 * Generate default shortcode pages
+	 * @param $request
+	 * @param $ajax_data
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function is_page_title_available($request, $ajax_data = [] ): WP_REST_Response
+	{
+		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+		$data = $data['data'] ?? [];
+		$title = $this->convert_url_to_title(sanitize_text_field($data['title']));
+		error_log("check $title");
+		$args = array(
+			'post_type'  => 'page',
+			'title'      => sanitize_text_field($title),
+			'post_status' => 'publish',
+		);
+
+		$posts = get_posts($args);
+		error_log(print_r($posts, true));
+		return $this->response([], empty($posts), '');
+	}
+
+	/**
+	 * Generate default shortcode pages
+	 * @param $request
+	 * @param $ajax_data
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function generate_pages($request, $ajax_data = [] ): WP_REST_Response
+	{
+		$data = !empty($ajax_data) ? $ajax_data : $request->get_json_params();
+		$data = $data['data'] ?? [];
+		$calendar_pagename = $this->convert_url_to_title($data['calendarPageName']);
+		$booking_pagename = $this->convert_url_to_title($data['bookingPageName']);
+
+		$success_calendar = $this->create_page($calendar_pagename, '[simplybook-widget]');
+		$success_booking = $this->create_page($booking_pagename, '[simplybook-widget]');
+		error_log("page generation completed");
+		return $this->response([], $success_calendar!==-1 && $success_booking!==-1, '');
+	}
+
+	/**
+	 * convert a URL to a title
+	 *
+	 * @param string $url
+	 *
+	 * @return string
+	 */
+	private function convert_url_to_title($url): string {
+
+		//strip off the page url from the pagename
+		$site_url = trailingslashit( get_site_url());
+		$title = str_replace($site_url, '', $url);
+		$title = str_replace('-', ' ', $title);
+
+		//enforce first letter uppercase
+		return ucfirst($title);
 	}
 }

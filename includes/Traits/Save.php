@@ -197,7 +197,6 @@ trait Save {
     public function sanitize_field( $value, $type ) {
         switch ( $type ) {
             case 'checkbox':
-            case 'hidden':
             case 'number':
             return (int) $value;
             case 'select':
@@ -210,7 +209,8 @@ trait Save {
                 return sanitize_email( $value );
             case 'url':
                 return esc_url_raw( $value );
-            default:
+	        case 'hidden':
+	        default:
                 return sanitize_text_field( $value );
         }
     }

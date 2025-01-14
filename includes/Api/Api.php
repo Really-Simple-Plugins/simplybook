@@ -774,7 +774,7 @@ class Api
 			error_log("request success for $path_type");
 			error_log(print_r($response,true));
 			//update the persistent cache
-			$cache = get_option('simplybook_persistent_cache');
+			$cache = get_option('simplybook_persistent_cache', []);
 			$cache[ $path_type ] = $response;
 			update_option('simplybook_persistent_cache', $cache, false);
 			return $response;

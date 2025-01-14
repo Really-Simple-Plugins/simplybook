@@ -21,7 +21,6 @@ class CompanyRegistration extends RestApi {
 	{
 		$callback_url = $this->get_callback_url();
 		if ( empty( $callback_url ) ) {
-			error_log("empty callback url, not loading route");
 			return;
 		}
 		error_log("has callback url, load route company_registration/".$callback_url);

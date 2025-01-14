@@ -7,6 +7,7 @@ import {
     faChevronUp,
     faCheck,
     faInfoCircle,
+    faTimes,
  } from "@fortawesome/free-solid-svg-icons";
 
 // Map your icons to keys for easy referencing
@@ -17,6 +18,7 @@ const iconMap = {
   "chevron-up": faChevronUp,
   "check": faCheck,
   "info": faInfoCircle,
+  "times": faTimes,
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

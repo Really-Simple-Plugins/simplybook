@@ -59,9 +59,6 @@ class Settings extends RestApi {
 			return $this->response( ['error' => 'No data to save'] );
 		}
 
-		error_log("data to save");
-		error_log(print_r($data, true));
-
 		//check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
 	    if ( !isset($fields[0]['id']) ) {
 		    //convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
@@ -75,10 +72,8 @@ class Settings extends RestApi {
 			return isset($field['value']);
 		    }
 		);
-	    error_log("fields to save");
-	    error_log(print_r($fields,true));
-        $this->update_options( $fields );
 
+        $this->update_options( $fields );
         $fields = $this->fields( true );
 
         if ( ob_get_length() ) {

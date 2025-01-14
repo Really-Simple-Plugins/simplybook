@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+import debounce from "lodash.debounce"; // You can use lodash's debounce function
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
@@ -6,8 +8,12 @@ import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
 import {useState} from "react";
+import generatePages from "../api/endpoints/onBoarding/generatePages";
+import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
 
 const useOnboardingData = () => {
+  const { getValue } = useSettingsData();
+
   const steps = [
     {
       id: 1,
@@ -240,12 +246,19 @@ const useOnboardingData = () => {
         },
       ],
       beforeSubmit: async (data) => {
-        console.log("submit implementation step");
-        console.log(data);
+        if (getValue("implementation")==='generated') {
+          console.log("submit implementation step ", bookingPageName, calendarPageName);
+          const data = { bookingPageName:bookingPageName, calendarPageName:calendarPageName };
+          let response = await generatePages({data});
+          if (response.status !== 'success'){
+            return false;
+          }
+        }
       },
     },
   ];
-
+  const [bookingPageName, setBookingPageName] = useState(simplybook.site_url + '/' + __('my-booking', 'simplybook'));
+  const [calendarPageName, setCalendarPageName] = useState(simplybook.site_url + '/' + __('calendar', 'simplybook'));
   const [apiError, setApiError] = useState("");
   const queryClient = useQueryClient();
   const { settings } = useSettingsData();
@@ -265,13 +278,14 @@ const useOnboardingData = () => {
       prefilledData[setting.id] = setting.value;
     }
   });
-
   const query = useQuery({
     queryKey: ["onboarding_data"],
     initialData: {
       ...initialData,
       ...prefilledData,
       onboardingCompleted: simplybook.is_onboarding_completed, // Include onboardingCompleted
+      calendarPageNameAvailable: true,
+      bookingPageNameAvailable: true,
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -287,10 +301,8 @@ const useOnboardingData = () => {
     },
   });
 
-  // Mutation for updating onboardingCompleted
   const { mutate: updateOnboardingCompleted } = useMutation({
     mutationFn: async (completed) => {
-      // Simulate API update call if needed, otherwise update the cache directly
       queryClient.setQueryData(["onboarding_data"], (oldData) => ({
         ...oldData,
         onboardingCompleted: completed,
@@ -300,6 +312,57 @@ const useOnboardingData = () => {
       queryClient.invalidateQueries(["onboarding_data"]);
     },
   });
+
+  const { mutate: updateCalendarPageNameAvailable } = useMutation({
+    mutationFn: async () => {
+      // Verify if the page title is available
+      const response = await isPageTitleAvailable({ data: { title: calendarPageName } });
+      const isAvailable = response.status === 'success';
+
+      // Update the query data with the new page name and availability status
+      queryClient.setQueryData(["onboarding_data"], (oldData) => ({
+        ...oldData,
+        calendarPageNameAvailable: isAvailable,
+      }));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["onboarding_data"]);
+    },
+  });
+  const { mutate: updateBookingPageNameAvailable } = useMutation({
+    mutationFn: async () => {
+      const response = await isPageTitleAvailable({ data: { title: bookingPageName } });
+      const isAvailable = response.status === 'success';
+      // Simulate API update call if needed, otherwise update the cache directly
+      queryClient.setQueryData(["onboarding_data"], (oldData) => ({
+        ...oldData,
+        bookingPageNameAvailable: isAvailable,
+      }));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(["onboarding_data"]);
+    },
+  });
+
+  const debouncedSetBookingPageName = useCallback(
+      debounce((pageName) => updateBookingPageNameAvailable(pageName), 500), // 500ms delay
+      []
+  );
+
+  const handleBookingPageNameChange = (pageName) => {
+    setBookingPageName(pageName);
+    debouncedSetBookingPageName(pageName);
+  };
+
+  const debouncedSetCalendarPageName = useCallback(
+      debounce((pageName) => updateCalendarPageNameAvailable(pageName), 500), // 500ms delay
+      []
+  );
+
+  const handleCalendarPageNameChange = (pageName) => {
+    setCalendarPageName(pageName);
+    debouncedSetCalendarPageName(pageName);
+  };
 
   return {
     steps,
@@ -314,6 +377,12 @@ const useOnboardingData = () => {
     setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
     onboardingCompleted: query.data?.onboardingCompleted || false, // Use query data
     setOnboardingCompleted: (value) => updateOnboardingCompleted(value), // Use mutation
+    setBookingPageName: (pageName) => handleBookingPageNameChange(pageName),
+    setCalendarPageName: (pageName) => handleCalendarPageNameChange(pageName),
+    bookingPageName,
+    calendarPageName,
+    calendarPageNameAvailable: query.data?.calendarPageNameAvailable,
+    bookingPageNameAvailable: query.data?.bookingPageNameAvailable,
     apiError,
     setApiError,
   };
