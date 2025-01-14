@@ -13,16 +13,10 @@ export const Route = createLazyFileRoute(path)({
       const [ implementationMethod, setImplementationMethod ] = useState(getValue("implementation"));
 
       useEffect(() => {
-          if ( isSavingSettings ){
-              return;
-          }
-
             let implementation = getValue("implementation");
             console.log("Implementation current value: ", implementation);
-            //if (implementation !== implementation) ) {
-                setImplementationMethod(implementation);
-            //}
-      }, [settings, isSavingSettings]);
+            setImplementationMethod(implementation);
+      }, [settings]);
 
       return (
       <OnboardingStep

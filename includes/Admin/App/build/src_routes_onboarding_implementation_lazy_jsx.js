@@ -1546,15 +1546,10 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_4__.createLazyF
     } = (0,_hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_3__["default"])();
     const [implementationMethod, setImplementationMethod] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(getValue("implementation"));
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-      if (isSavingSettings) {
-        return;
-      }
       let implementation = getValue("implementation");
       console.log("Implementation current value: ", implementation);
-      //if (implementation !== implementation) ) {
       setImplementationMethod(implementation);
-      //}
-    }, [settings, isSavingSettings]);
+    }, [settings]);
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_2__["default"], {
       path: path,
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Implementation", "simplybook"),
