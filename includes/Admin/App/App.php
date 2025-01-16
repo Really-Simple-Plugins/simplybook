@@ -228,6 +228,7 @@ class App {
 				'ajax_url'                => admin_url( 'admin-ajax.php' ),
 				'rest_url'                => get_rest_url(),
 				'site_url'                => site_url(),
+                'debug'                   => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
 				'json_translations'       => $js_data['json_translations'],
 				'settings_menu'           => $this->menus(),
 				'settings_fields'         => $this->fields( true ),
@@ -239,7 +240,7 @@ class App {
 	}
 
 	private function onboarding_completed(): bool {
-		// TODO: check if all onboarding fields are set, or use a seperate option for completing the onboarding
+		// TODO: check if all onboarding fields are set, or use a separate option for completing the onboarding
         $api = new Api();
         return $api->company_registration_complete();
 	}

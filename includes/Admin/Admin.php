@@ -11,6 +11,7 @@ use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
+use Simplybook\Admin\RestApi\Dashboard;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use Simplybook\Upgrades\Upgrades;
@@ -34,6 +35,7 @@ class Admin {
 		( new CompanyRegistration() );
 		( new WaitForRegistrationCallback() );
 		( new GetWidget() );
+		( new Dashboard() );
 
         $this->app = new App();
 

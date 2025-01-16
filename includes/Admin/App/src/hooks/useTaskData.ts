@@ -1,16 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-
+import { Task } from "../types/Task";
 // Types can be moved to a separate types file
-interface Task {
-  id: number;
-  text: string;
-  status: "open" | "urgent" | "premium" | "completed" | "dismissed";
-  type: "required" | "optional";
-  action?: {
-    text: string;
-    link: string;
-  };
-}
+
 
 // TODO: Create these API endpoints
 const taskApi = {

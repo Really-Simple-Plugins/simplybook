@@ -49,8 +49,9 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
 
   //if props.className is not empty, replace className with props.className
   if (props.className) {
-    className = props.className;
+   // className += ' '+props.className;
   }
+  console.log("button classes ", className)
   if (link) {
     return (
       <Link
@@ -68,7 +69,6 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
       onClick={onClick}
       className={className}
       disabled={disabled}
-      {...props}
     >
       {children}
     </button>

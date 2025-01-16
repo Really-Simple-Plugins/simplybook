@@ -11,7 +11,7 @@ const Header = () => {
   } = useOnboardingData();
 
   useEffect(() => {
-    if ( !onboardingCompleted && location && window.location.pathname.indexOf('onboarding/') === -1) {
+    if ( !onboardingCompleted && location && window.location.pathname.indexOf('onboarding/') === -1 && !simplybook.debug ) {
         window.location.href = window.location.href.replace(/page=simplybook.*/, 'page=simplybook#/onboarding/create-your-account');
     }
   }, [onboardingCompleted] );
@@ -34,7 +34,7 @@ const Header = () => {
           <Link to="/settings/general" className={linkClassName}>{__("Settings",'simplybook')}</Link>
         </div>
         <div className="float-right ml-auto flex items-center gap-6 px-4">
-          <LoginLink className={linkClassName} isButton={true} btnVariant="tertiary" title={__('Upgrade', 'simplybook')} page="payment-widget" />
+          <LoginLink className={linkClassName} isButton={true} btnVariant="tertiary" title={__('Upgrade', 'simplybook')} page="r/payment-widget" />
         </div>
       </div>
     </div>

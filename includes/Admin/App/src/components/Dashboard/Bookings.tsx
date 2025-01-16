@@ -4,49 +4,58 @@ import { __ } from "@wordpress/i18n";
 import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
 import ButtonInput from "../Inputs/ButtonInput";
-import { Fragment } from "react";
+import {Fragment, useEffect} from "react";
 import Icon from "../Common/Icon";
+import useDashboardData from "../../hooks/useDashboardData";
+import LoginLink from "../Common/LoginLink";
 
 // @TODO: Split up into multiple components? 
 
 const Bookings = () => {
+  const {
+    dashboardData,
+    refetchData,
+  } = useDashboardData();
+
+  useEffect(() => {
+    refetchData();
+  }, [refetchData] );
+
   const FeaturedBlocks = [
     {
       title: __("Today", "simplybook"),
-      value: "0",
-      icon: "people",
+      value: dashboardData.bookings_count_day,
+      icon: "user-group",
     },
     {
       title: __("This Month", "simplybook"),
-      value: "0",
-      icon: "people",
+      value: dashboardData.bookings_count_month,
+      icon: "user-group",
     },
   ];
 
   const DataList = [
     {
-      title: __("Most Popular Provider", "simplybook"),
-      value: "0",
-      uplift: "0",
-      icon: "winner",
+      title: dashboardData.most_popular_provider.name,
+      percentage: dashboardData.most_popular_provider.percentage,
+      icon: "trophy",
     },
     {
-      title: __("Make-Up", "simplybook"),
-      value: "0",
-      uplift: "0",
+      title: dashboardData.most_popular_service.name,
+      percentage: dashboardData.most_popular_service.percentage,
       icon: "eye",
     },
     {
       title: __("Facebook", "simplybook"),
       value: "0",
       uplift: "0",
-      icon: "horn",
+      icon: "bullhorn",
     },
     {
       title: __("Booking per Visit", "simplybook"),
       value: "0",
       uplift: "0",
-      icon: "time",
+      icon: "clock",
     },
   ];
   return (
@@ -80,21 +89,19 @@ const Bookings = () => {
                 </div>
                 <div className={"text-sm"}>{block.title}</div>
                 <div className={"text-green-500 text-l font-bold"}>
-                  {block.uplift}%
+                  {block.uplift && <>{block.uplift}%</>}
                 </div>
-                <div className={"font-bold"}>{block.value}</div>
+                <div className={"font-bold"}>
+                  {block.percentage && <>{block.percentage}%</>}
+                  {block.value && <>{block.value}</>}
+                </div>
               </div>
             </Fragment>
           ))}
         </div>
       </BlockContent>
       <BlockFooter>
-        <ButtonInput
-          btnVariant={"secondary"}
-          title={__("View All", "simplybook")}
-        >
-          {__("View Bookings", "simplybook")}
-        </ButtonInput>
+        <LoginLink className="" isButton={true} btnVariant="secondary" title={__('View Bookings', 'simplybook')} page="r/payment-widget" />
       </BlockFooter>
     </Block>
   );

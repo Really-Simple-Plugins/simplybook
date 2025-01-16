@@ -50,7 +50,7 @@ const LoginLink = ({ title, className, page, isButton = false, btnVariant, ...pr
     if (isButton) {
         return (
             <ButtonInput
-                disabled={false}
+                disabled={!onboardingCompleted}
                 label={title}
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
