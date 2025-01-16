@@ -5,6 +5,7 @@ namespace Simplybook\Admin;
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\CompanyRegistration;
+use Simplybook\Admin\RestApi\GetTasks;
 use Simplybook\Admin\RestApi\GetWidget;
 use Simplybook\Admin\RestApi\LoginUrl;
 use Simplybook\Admin\RestApi\Onboarding;
@@ -36,6 +37,7 @@ class Admin {
 		( new WaitForRegistrationCallback() );
 		( new GetWidget() );
 		( new Dashboard() );
+		( new GetTasks() );
 
         $this->app = new App();
 
