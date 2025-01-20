@@ -870,6 +870,9 @@ video {
   margin-top: calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));
   margin-bottom: calc(0.5rem * var(--tw-space-y-reverse));
 }
+#simplybook_app .self-center {
+  align-self: center;
+}
 #simplybook_app .overflow-hidden {
   overflow: hidden;
 }

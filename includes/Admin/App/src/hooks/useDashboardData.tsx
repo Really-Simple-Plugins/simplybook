@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import getDashboardData from "../api/endpoints/Dashboard/getDashboardData";
 import { DashboardData } from "../types/DashboardData";
 
@@ -9,6 +9,7 @@ import { DashboardData } from "../types/DashboardData";
  * @returns {Object} - An object containing dashboard data
  */
 const useDashboardData = () => {
+
     const queryClient = useQueryClient();
 
     // Query for fetching settings from server
@@ -33,7 +34,6 @@ const useDashboardData = () => {
         dashboardData: query.data || defaultData,
         refetchData: query.refetch,
         invalidateSettings: () => {
-            // Correct way to call invalidateQueries
             queryClient.invalidateQueries({ queryKey: ["dashboard_data"] });
         },
     };

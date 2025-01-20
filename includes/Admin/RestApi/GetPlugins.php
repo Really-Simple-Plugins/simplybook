@@ -1,0 +1,55 @@
+<?php
+/**
+ * Note: these are not wordpress plugins, but simplybook plugins, with information if they're activated or not.
+ *
+ *
+ */
+namespace Simplybook\Admin\RestApi;
+use Simplybook\Traits\Helper;
+use Simplybook\Traits\Save;
+use WP_REST_Response;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+class GetTasks extends RestApi {
+	use Helper;
+	use Save;
+
+	public function __construct() {
+		parent::__construct();
+	}
+
+	public function register_rest_route(): void
+	{
+		register_rest_route(
+			'simplybook/v1',
+			'get_plugins',
+			array(
+				'methods' => 'POST',
+				'callback' => array( $this, 'get_plugins' ),
+				'permission_callback' => function ( $request ) {
+					return $this->validate_request( $request );
+				},
+			)
+		);
+	}
+
+	/**
+	 * Get a list of simplybook plugins
+	 *
+	 * @param $request
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_plugins($request): WP_REST_Response {
+		$plugins = $this->api->get_plugins();
+		return $this->response($plugins);
+	}
+}
+
+
+
+
+

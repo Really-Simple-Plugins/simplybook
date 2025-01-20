@@ -235,8 +235,8 @@ class Onboarding extends RestApi {
 		$calendar_pagename = $this->convert_url_to_title($data['calendarPageName']);
 		$booking_pagename = $this->convert_url_to_title($data['bookingPageName']);
 
-		$success_calendar = $this->create_page($calendar_pagename, '[simplybook-widget]');
-		$success_booking = $this->create_page($booking_pagename, '[simplybook-widget]');
+		$success_calendar = $this->create_page($calendar_pagename, '[simplybook_widget]');
+		$success_booking = $this->create_page($booking_pagename, '[simplybook_widget]');
 		error_log("page generation completed");
 		return $this->response([], $success_calendar!==-1 && $success_booking!==-1, '');
 	}

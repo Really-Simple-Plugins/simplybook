@@ -246,7 +246,7 @@ const useOnboardingData = () => {
         },
       ],
       beforeSubmit: async (data) => {
-        if (getValue("implementation")==='generated') {
+        if (getValue("implementation")!=='manual') {
           console.log("submit implementation step ", bookingPageName, calendarPageName);
           const data = { bookingPageName:bookingPageName, calendarPageName:calendarPageName };
           let response = await generatePages({data});

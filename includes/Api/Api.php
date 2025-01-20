@@ -707,7 +707,7 @@ class Api
 		) );
 
 		error_log("email confirmation response");
-		error_log(print_r($request,true));
+		error_log( print_r($request,true) );
 
 		if ( ! is_wp_error( $request ) ) {
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
@@ -754,14 +754,139 @@ class Api
 	 */
 
 	public function get_services(): array {
-
-		//$services = get_transient('simplybook_services');
-		//if ( !$services ) {
-			$services = $this->api_call('admin/services', [], 'GET');
-			set_transient('simplybook_services', $services, WEEK_IN_SECONDS);
-		//}
+		$services = $this->api_call('admin/services', [], 'GET');
 
 		return $services;
+	}
+
+	/**
+	 * Get list of plugins with is_active and is_turned_on information
+	 * @return array
+	 */
+	public function get_plugins(): array {
+		if ( !$this->company_registration_complete() ){
+			return [];
+		}
+//		paid_events
+		//memberships
+		//sms
+		$array = [
+			"event_field",
+			"status",
+			"paid_events",
+			"description",
+			"event_category",
+			"news",
+			"google_analytics",
+			"facebookImage",
+			"google_calendar_export",
+			"user_license",
+			"promo",
+			"custom_css",
+			"advanced_notification",
+			"multiple_booking",
+			"group_booking",
+			"any_unit",
+			"location",
+			"secure",
+			"contact_widget",
+			"api",
+			"financial_dashboard",
+			"limit_bookings",
+			"approve_booking",
+			"back_to_site",
+			"data_security",
+			"unit_colors",
+			"recap",
+			"counter",
+			"hipaa",
+			"fixed_time",
+			"cancelation_policy",
+			"gallery",
+			"flexible_template",
+			"smtp",
+			"client_login",
+			"membership",
+			"custom_domain",
+			"enterprise",
+			"client_soap",
+			"sms",
+			"classes",
+			"import_clients",
+			"social_gallery",
+			"paid_attributes",
+			"product",
+			"google_authenticator",
+			"facebook_bot",
+			"voice_booking",
+			"client_soap_crypt",
+			"promotion",
+			"google_translate",
+			"strict_password",
+			"google_tag_manager",
+			"pos",
+			"static_page",
+			"package",
+			"zapier",
+			"google_business",
+			"line_bot",
+			"facebook_business",
+			"deposit_paid_events",
+			"kiosk",
+			"reschedule_booking",
+			"slots_count",
+			"resources",
+			"tickets",
+			"client_field",
+			"online_meeting",
+			"saml",
+			"waiting_list",
+			"pwa",
+			"external_booking_validator",
+			"tickets_qr_code",
+			"vaccination",
+			"custom_email",
+			"tracking",
+			"medical_test",
+			"cloud_storage",
+			"telegram_notifications",
+			"bonus_system",
+			"line_liff",
+			"look_busy",
+			"google_reviews",
+			"booking_restriction",
+			"time_before_service",
+			"tips",
+			"tags",
+			"campaign",
+			"react_widget",
+			"classpass"
+		];
+
+
+
+		$plugins = $this->api_call('admin/plugins', [], 'GET');
+
+		return $plugins;
+	}
+
+	/**
+	 * Check if a specific plugin is active
+	 *
+	 * @param string $plugin
+	 *
+	 * @return bool
+	 */
+
+	public function is_plugin_active( string $plugin ): bool {
+		$plugins = $this->get_plugins();
+		//check if the plugin with id = $plugin has is_active = true
+		foreach ( $plugins as $p ) {
+			if ( $p['id'] === $plugin && $p['is_active'] ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -777,8 +902,8 @@ class Api
 
 	protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array {
 		error_log( "api call for $path" );
-	//with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
-	//with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
+		//with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
+		//with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
 		$apiStatus = get_option( 'api_status' );
 		//get part of $path after last /
 		$path_type = substr( $path, strrpos( $path, '/' ) + 1 );

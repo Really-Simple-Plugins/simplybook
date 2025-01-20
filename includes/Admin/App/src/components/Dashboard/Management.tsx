@@ -4,8 +4,8 @@ import { __ } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import { Fragment } from "react";
-import ButtonInput from "../Inputs/ButtonInput";
-
+import Plugin from "./Management/Plugin";
+import Manage from "./Management/Manage";
 
 // @TODO: Split up into multiple components? 
 
@@ -29,22 +29,28 @@ const DataList = [
     btnVariant: "primary",
   },
   {
-    title: __("Directory Listing", "simplybook"),
+    title: __("SMS Gateway", "simplybook"),
     link: "https://simplybook.me/directory",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
+    isPlugin:true,
+    key: "sms",
   },
   {
     title: __("Membership", "simplybook"),
     link: "https://simplybook.me/membership",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
+    isPlugin:true,
+    key: "memberships"
   },
   {
-    title: __("White Label", "simplybook"),
+    title: __("Paid Events", "simplybook"),
     link: "https://simplybook.me/white-label",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
+    isPlugin:true,
+    key: "paid_events",
   },
 ];
 
@@ -59,14 +65,13 @@ const Management = () => {
       <BlockContent className={"px-0 py-0"}>
         <div>
           {DataList.map((block, index) => (
-            <Fragment key={index}>
-              <div className={"grid grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50"}>
-                <div className={"text-sm"}>{block.title}</div>
-                <div className={"flex justify-end"}>
-                <ButtonInput link={{ to: block.link }} size={"sm"} btnVariant={"tertiary"}>{block.buttonText}</ButtonInput>
-                </div>
-              </div>
-            </Fragment>
+              <Fragment key={index}>
+                {block.isPlugin ? (
+                    <Plugin title={block.title} link={block.link} key={block.key}/>
+                ) : (
+                    <Manage title={block.title} link={block.link} buttonText={block.buttonText} />
+                )}
+              </Fragment>
           ))}
         </div>
       </BlockContent>

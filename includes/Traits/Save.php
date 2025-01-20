@@ -180,7 +180,6 @@ trait Save {
 
     public function update_options( $fields ): void {
         foreach ( $fields as $field ) {
-			error_log("saving field ".$field['id']." with value ".$field['value']);
 			$this->update_option( $field['id'], $field['value'] );
         }
 

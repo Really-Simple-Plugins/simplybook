@@ -22,7 +22,7 @@ interface SelectInputProps {
  * @todo: tailwind css classes don't seem to work, added inline styles until this is figured out.
  */
 const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
-    ({ value, onChange, options = [], setting, ...props }, ref) => {
+    ({ value, onChange, options = [], setting }, ref) => {
         return (
             <Select.Root value={value} onValueChange={(value) => onChange(value)} >
                 <Select.Trigger
