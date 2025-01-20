@@ -1,7 +1,7 @@
 import { forwardRef } from "react";
 import ButtonInput from "../Inputs/ButtonInput";
 import FieldWrapper from "../Forms/FieldWrapper";
-
+import Icon from "../Common/Icon";
 /**
  * TextField component
  * @param {object} field - Provided by react-hook-form's Controller
@@ -17,11 +17,14 @@ const ButtonField = forwardRef(
   ({ setting, label, help, context, className, ...props }, ref) => {
     return (
       <FieldWrapper
+        label=""
         help={help}
         context={context}
         className={className}
+        inputId=""
       >
         <ButtonInput {...props}>
+            {props.showLoader && <Icon color="white" name="spinner" size="1x" className="mr-2" />}
           {label}
         </ButtonInput>
       </FieldWrapper>

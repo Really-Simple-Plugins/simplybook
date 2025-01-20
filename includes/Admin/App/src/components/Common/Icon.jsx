@@ -41,26 +41,17 @@ const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) 
     icon = faCircle;
   }
 
-  if (props.spin) {
-      return (
-          <>
-          <FontAwesomeIcon
-              icon={icon}
-              size={size}
-              spin
-              className={className}
-              style={{
-                  color,
-                  animationDuration: `${1}s`,
-              }}
-              {...props}
-          /></>
-      )
-
-  }
-
-
-  return <FontAwesomeIcon icon={icon} style={{color}} size={size} className={className} {...props} />;
+  return <FontAwesomeIcon
+        icon={icon}
+        size={size}
+        spin={name === 'spinner'}
+        className={className}
+        style={{
+            color,
+            ...(name === 'spinner' && { animationDuration: '2s' }),
+        }}
+        {...props}
+    />
 };
 
 export default Icon;
