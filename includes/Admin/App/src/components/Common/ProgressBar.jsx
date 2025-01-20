@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import useOnboardingData from "../../hooks/useOnboardingData";
 import { __ } from '@wordpress/i18n';
+import Icon from './Icon';
 const ProgressBar = () => {
     const [progress, setProgress] = useState(0);
     const {onboardingCompleted} = useOnboardingData();

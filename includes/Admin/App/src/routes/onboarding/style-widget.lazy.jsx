@@ -7,6 +7,7 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
 import ProgressBar from "../../components/Common/ProgressBar";
+import CalendarLoading from "../../components/Common/CalendarLoading";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
@@ -136,6 +137,7 @@ export const Route = createLazyFileRoute(path)({
                         <div className="h-full">
                             {!onboardingCompleted && <div>
                                 <ProgressBar />
+                                <CalendarLoading />
                             </div>}
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
