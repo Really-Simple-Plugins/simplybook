@@ -1,7 +1,7 @@
 <?php
+defined( 'ABSPATH' ) or die( );
 
-
-$this->countries = array
+return array
 (
 	'AF' => __( 'Afghanistan' , 'simplybook' ),
 	'AX' => __( 'Aland Islands' , 'simplybook' ),

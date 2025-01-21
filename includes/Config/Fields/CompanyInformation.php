@@ -17,6 +17,10 @@ return [
 		'group_id' => 'general',
 		'type'     => 'text',
 		'label'    => __('Email', 'simplybook'),
+		'validation' => [
+			'regex' => "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
+            'message'=> __("Please enter a valid email address", "simplybook"),
+          ],
 		'default'  => '',
 	],
 	[
@@ -47,8 +51,10 @@ return [
 		'id'       => 'category',
 		'menu_id'  => 'general',
 		'group_id' => 'general',
-		'type'     => 'text',
+		'type'     => 'select',
 		'label'    => __('Category', 'simplybook'),
+		'options' => require_once( SIMPLYBOOK_PATH . 'includes/Config/Categories.php' ),
+
 		'default'  => 0,
 	],
 	[
@@ -64,10 +70,7 @@ return [
 		'menu_id'  => 'general',
 		'group_id' => 'general',
 		'type'     => 'select',
-		'options' => [
-			'DE' => 'Germany',
-			'US' => 'United States',
-		],
+		'options' => require_once( SIMPLYBOOK_PATH . 'includes/Config/Countries.php' ),
 		'label'    => __('Country', 'simplybook'),
 		'default'  => '',
 	],
