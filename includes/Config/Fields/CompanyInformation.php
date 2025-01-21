@@ -63,7 +63,11 @@ return [
 		'id'       => 'country',
 		'menu_id'  => 'general',
 		'group_id' => 'general',
-		'type'     => 'text',
+		'type'     => 'select',
+		'options' => [
+			'DE' => 'Germany',
+			'US' => 'United States',
+		],
 		'label'    => __('Country', 'simplybook'),
 		'default'  => '',
 	],

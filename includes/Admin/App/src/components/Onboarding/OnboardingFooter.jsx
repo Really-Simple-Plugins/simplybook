@@ -1,26 +1,28 @@
 import {__} from '@wordpress/i18n';
 const OnboardingFooter = () => {
+  let placeholder = simplybook.plugin_url + "/assets/img/placeholder.jpg";
+
   const items = [
     {
       id: 1,
       title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       description:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-      image: "https://via.placeholder.com/150",
+      image: placeholder,
     },
     {
       id: 2,
       title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       description:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-      image: "https://via.placeholder.com/150",
+      image: placeholder,
     },
     {
       id: 3,
       title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
       description:
         "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-      image: "https://via.placeholder.com/150",
+      image: placeholder,
     },
   ];
 

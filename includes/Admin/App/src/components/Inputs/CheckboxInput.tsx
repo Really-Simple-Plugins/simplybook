@@ -13,16 +13,9 @@ interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
  */
 const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
     ({ type = "checkbox", label, className, checked, value, onChange, ...props }, ref) => {
-        const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-            console.log('CheckboxInput handleChange', e.target.checked);
-            // Call onChange to propagate the event to the Controller
-            if (onChange) {
-                onChange(e);
-            }
-        };
 
         return (
-            <>
+            <label className="relative inline-flex items-center cursor-pointer">
                 <input
                     type="checkbox"
                     checked={checked}
@@ -31,12 +24,12 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                     {...props}
                 />
                 <div
-                    className="w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
+                    className="w-8 h-4 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all"
                 ></div>
-                <span className={` ${className || ""}`}>
+                <span className={`ml-2 font-medium text-black text-md ${className || ""}`}>
                     {label}
               </span>
-                </>
+            </label>
         );
     }
 );

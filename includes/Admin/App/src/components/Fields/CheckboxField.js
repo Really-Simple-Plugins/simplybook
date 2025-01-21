@@ -18,7 +18,7 @@ const CheckboxField = forwardRef(
         const inputId = setting.id;
         return (
             <FieldWrapper
-                label=""
+                label={''}
                 help={help}
                 error={fieldState?.error?.message}
                 context={context}

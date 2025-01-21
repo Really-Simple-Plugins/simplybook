@@ -575,7 +575,8 @@ const iconMap = {
   "user-group": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faUserGroup,
   "eye": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faEye,
   "bullhorn": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faBullhorn,
-  "clock": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faClock
+  "clock": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faClock,
+  "circle": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faCircle
 };
 const Icon = ({
   name,
@@ -733,7 +734,7 @@ const CheckboxField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
 }, ref) => {
   const inputId = setting.id;
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_2__["default"], {
-    label: "",
+    label: '',
     help: help,
     error: fieldState?.error?.message,
     context: context,
@@ -2118,7 +2119,7 @@ var FieldWrapper = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
     children = _a.children;
   var wrapperClasses = ["flex w-full flex-col", className, "pt-4"].filter(Boolean).join(" ");
   var contentClasses = ["flex w-full flex-col", reverseLabel ? "flex-col-reverse" : ""].filter(Boolean).join(" ");
-  var flexClass = type === 'checkbox' ? " relative inline-flex items-center cursor-pointer " : '';
+  console.log("inputId", inputId, label);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: wrapperClasses,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -2126,7 +2127,7 @@ var FieldWrapper = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
       children: [type === 'checkbox' && children, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
         className: "flex items-center justify-between",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_3__.Root, {
-          className: "cursor-pointer pb-1 font-medium text-black text-md " + flexClass,
+          className: "cursor-pointer pb-1 font-medium text-black text-md ",
           htmlFor: inputId,
           children: [label, required && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
             className: "ml-1 text-gray-500 font-normal text-xs",
@@ -2136,7 +2137,7 @@ var FieldWrapper = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
           className: "pb-1 text-xs font-light text-gray-600",
           children: help
         })]
-      }), type === 'checkbox' && children]
+      }), type !== 'checkbox' && children]
     }), error && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
       className: "mt-2 text-xs font-light text-red-600",
       role: "alert",
@@ -2269,23 +2270,17 @@ var CheckboxInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (
     value = _a.value,
     onChange = _a.onChange,
     props = __rest(_a, ["type", "label", "className", "checked", "value", "onChange"]);
-  var handleChange = function (e) {
-    console.log('CheckboxInput handleChange', e.target.checked);
-    // Call onChange to propagate the event to the Controller
-    if (onChange) {
-      onChange(e);
-    }
-  };
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("label", {
+    className: "relative inline-flex items-center cursor-pointer",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("input", __assign({
       type: "checkbox",
       checked: checked,
       onChange: onChange,
       className: "sr-only peer"
     }, props)), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-      className: "w-11 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-5 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"
+      className: "w-8 h-4 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all"
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
-      className: " ".concat(className || ""),
+      className: "ml-2 font-medium text-black text-md ".concat(className || ""),
       children: label
     })]
   });
@@ -2508,11 +2503,16 @@ var SelectInput = react__WEBPACK_IMPORTED_MODULE_1___default().forwardRef(functi
     _b = _a.options,
     options = _b === void 0 ? [] : _b,
     setting = _a.setting;
+  // Normalize options if it's an object
+  var normalizedOptions = Array.isArray(options) ? options : Object.keys(options).map(function (key) {
+    return {
+      value: key,
+      label: options[key]
+    };
+  });
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Root, {
     value: value,
-    onValueChange: function (value) {
-      return onChange(value);
-    },
+    onValueChange: onChange,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Trigger, {
       ref: ref,
       className: "flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring",
@@ -2527,35 +2527,32 @@ var SelectInput = react__WEBPACK_IMPORTED_MODULE_1___default().forwardRef(functi
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Portal, {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Content, {
         style: {
-          width: '100%',
-          // Full width
-          borderRadius: '0.375rem',
-          borderWidth: '1px',
-          borderColor: '#D1D5DB',
-          backgroundColor: 'white',
+          width: "100%",
+          borderRadius: "0.375rem",
+          borderWidth: "1px",
+          borderColor: "#D1D5DB",
+          backgroundColor: "white",
           zIndex: 50,
-          boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-          transitionProperty: 'all',
-          transitionTimingFunction: 'ease-in-out',
-          transitionDuration: '200ms'
+          boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+          transitionProperty: "all",
+          transitionTimingFunction: "ease-in-out",
+          transitionDuration: "200ms"
         },
         className: "rounded-md border border-gray-300 bg-white z-50 shadow-lg transition ease-in-out duration-200",
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.ScrollUpButton, {
           className: "flex items-center justify-center p-2",
           style: {
-            display: 'flex',
-            alignItems: 'center',
-            // Vertically centers the content
-            justifyContent: 'center',
-            // Optionally centers horizontally if needed
-            margin: '0.5rem' // Adjust the margin for spacing
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0.5rem"
           },
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
             name: "chevron-up"
           })
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Viewport, {
           className: "p-2 bg-white",
-          children: options.map(function (option) {
+          children: normalizedOptions.map(function (option) {
             return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(SelectItem, {
               value: option.value,
               children: option.label
@@ -2564,12 +2561,10 @@ var SelectInput = react__WEBPACK_IMPORTED_MODULE_1___default().forwardRef(functi
         }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.ScrollDownButton, {
           className: "flex items-center justify-center p-2",
           style: {
-            display: 'flex',
-            alignItems: 'center',
-            // Vertically centers the content
-            justifyContent: 'center',
-            // Optionally centers horizontally if needed
-            margin: '0.5rem' // Adjust the margin for spacing
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0.5rem"
           },
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
             name: "chevron-down"
@@ -2591,26 +2586,26 @@ var SelectItem = react__WEBPACK_IMPORTED_MODULE_1___default().forwardRef(functio
     props = __rest(_a, ["children", "className"]);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.Item, __assign({
     ref: ref,
-    className: "flex cursor-pointer items-center justify-between bg-white shadow-lg rounded-md p-2 hover:bg-gray-100 focus:bg-gray-200 " + className,
+    className: "flex cursor-pointer items-center justify-between bg-white shadow-lg rounded-md p-2 hover:bg-gray-100 focus:bg-gray-200 ".concat(className),
     style: {
-      display: 'flex',
-      cursor: 'pointer',
-      alignItems: 'center',
-      justifyContent: 'space-between',
-      backgroundColor: 'white',
-      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      borderRadius: '0.375rem',
-      padding: '0.5rem',
-      width: '100%' // Full width
+      display: "flex",
+      cursor: "pointer",
+      alignItems: "center",
+      justifyContent: "space-between",
+      backgroundColor: "white",
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      borderRadius: "0.375rem",
+      padding: "0.5rem",
+      width: "100%"
     }
   }, props, {
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.ItemText, {
       children: children
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.ItemIndicator, {
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_radix_ui_react_select__WEBPACK_IMPORTED_MODULE_3__.ItemIndicator, {
       className: "ml-2",
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_2__["default"], {
         name: "check"
-      }), " "]
+      })
     })]
   }));
 });

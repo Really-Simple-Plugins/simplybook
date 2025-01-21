@@ -8,12 +8,12 @@ interface PluginProps {
     key:string,
 }
 const Plugin: FC<PluginProps> = ({ title, link, key }) => {
-    const {isPluginActive, plugins, refetchData} = useManagementData();
+    const {isPluginActive, plugins = [], refetchData} = useManagementData();
     const [active, setActive] = useState(true);
 
     useEffect(() => {
         setActive(isPluginActive(key));
-    },[isPluginActive(key)]);
+    }, [isPluginActive, key]);
 
 
     useEffect(() => {

@@ -692,7 +692,8 @@ const iconMap = {
   "user-group": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faUserGroup,
   "eye": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faEye,
   "bullhorn": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faBullhorn,
-  "clock": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faClock
+  "clock": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faClock,
+  "circle": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faCircle
 };
 const Icon = ({
   name,
@@ -2020,14 +2021,15 @@ var Plugin = function (_a) {
     key = _a.key;
   var _b = (0,_hooks_useManagementData__WEBPACK_IMPORTED_MODULE_2__["default"])(),
     isPluginActive = _b.isPluginActive,
-    plugins = _b.plugins,
+    _c = _b.plugins,
+    plugins = _c === void 0 ? [] : _c,
     refetchData = _b.refetchData;
-  var _c = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true),
-    active = _c[0],
-    setActive = _c[1];
+  var _d = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(true),
+    active = _d[0],
+    setActive = _d[1];
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     setActive(isPluginActive(key));
-  }, [isPluginActive(key)]);
+  }, [isPluginActive, key]);
   (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
     if (plugins.length === 0) {
       refetchData();

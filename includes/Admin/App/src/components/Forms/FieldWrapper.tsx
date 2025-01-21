@@ -37,14 +37,14 @@ const FieldWrapper = memo(({
     "flex w-full flex-col",
     reverseLabel ? "flex-col-reverse" : ""
   ].filter(Boolean).join(" ");
-  let flexClass= type==='checkbox' ? " relative inline-flex items-center cursor-pointer " : '';
+console.log("inputId",inputId, label);
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>
         {type==='checkbox' && children}
         <div className="flex items-center justify-between">
         <Label.Root
-          className={"cursor-pointer pb-1 font-medium text-black text-md "+flexClass}
+          className={"cursor-pointer pb-1 font-medium text-black text-md "}
           htmlFor={inputId}
         >
           {label}
@@ -56,7 +56,7 @@ const FieldWrapper = memo(({
           <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
         )}
         </div>
-        {type==='checkbox' && children}
+        {type!=='checkbox' && children}
       </div>
       
       {error && (

@@ -29,6 +29,7 @@ const iconMap = {
     "eye": faEye,
     "bullhorn": faBullhorn,
     "clock": faClock,
+    "circle": faCircle,
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

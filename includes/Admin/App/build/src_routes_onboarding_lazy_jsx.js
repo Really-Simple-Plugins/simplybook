@@ -66,21 +66,22 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const OnboardingFooter = () => {
+  let placeholder = simplybook.plugin_url + "/assets/img/placeholder.jpg";
   const items = [{
     id: 1,
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-    image: "https://via.placeholder.com/150"
+    image: placeholder
   }, {
     id: 2,
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-    image: "https://via.placeholder.com/150"
+    image: placeholder
   }, {
     id: 3,
     title: "Lorem ipsum dolor sit amet, consectetur adipiscing elit",
     description: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-    image: "https://via.placeholder.com/150"
+    image: placeholder
   }];
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "bg-blue-50 py-10"
