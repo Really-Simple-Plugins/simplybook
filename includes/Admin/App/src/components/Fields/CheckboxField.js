@@ -18,15 +18,17 @@ const CheckboxField = forwardRef(
         const inputId = setting.id;
         return (
             <FieldWrapper
-                label={label}
+                label=""
                 help={help}
                 error={fieldState?.error?.message}
                 context={context}
                 className={className}
                 inputId={inputId}
                 required={props.required}
+                type="checkbox"
             >
                 <CheckboxInput
+                    label={label}
                     id={inputId}
                     type="checkbox"
                     aria-invalid={!!fieldState?.error?.message}

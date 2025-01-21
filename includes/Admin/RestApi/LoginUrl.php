@@ -38,6 +38,12 @@ class LoginUrl extends RestApi {
 		$login_url = $this->api->get_login_url();
 		$domain = $this->get_option('domain');
 		$company_login = $this->api->get_company_login();
+
+		//if the login url returns empty, it's probably a too many attempts issue, we're probably already
+		//logged in so we just return the url the user can use to go to the dashboard directly.
+		if (empty($login_url)) {
+			$login_url = "https://$company_login.secure.$domain";
+		}
 		return $this->response([
 			'login_url' => $login_url,
 			'url' => "https://$company_login.secure.$domain",

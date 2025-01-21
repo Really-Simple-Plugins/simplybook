@@ -3,7 +3,6 @@ import BlockHeading from "../Blocks/BlockHeading";
 import { __ } from "@wordpress/i18n";
 import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
-import ButtonInput from "../Inputs/ButtonInput";
 import {Fragment, useEffect} from "react";
 import Icon from "../Common/Icon";
 import useDashboardData from "../../hooks/useDashboardData";
@@ -101,7 +100,7 @@ const Bookings = () => {
         </div>
       </BlockContent>
       <BlockFooter>
-        <LoginLink className="" isButton={true} btnVariant="secondary" title={__('View Bookings', 'simplybook')} page="r/payment-widget" />
+        <LoginLink className="" isButton={true} btnVariant="secondary" page="r/payment-widget" >{__('View Bookings', 'simplybook')}</LoginLink>
       </BlockFooter>
     </Block>
   );

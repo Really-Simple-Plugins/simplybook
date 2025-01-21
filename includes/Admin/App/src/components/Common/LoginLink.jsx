@@ -4,7 +4,7 @@ import getLoginUrl from "../../api/endpoints/getLoginUrl";
 import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
 
-const LoginLink = ({ title, className, page, isButton = false, btnVariant, ...props }) => {
+const LoginLink = ({ className, page, isButton = false, btnVariant, children }) => {
     const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
     const [loginUrl, setLoginUrl] = useState("");
     const [directUrl, setDirectUrl] = useState("");
@@ -51,12 +51,12 @@ const LoginLink = ({ title, className, page, isButton = false, btnVariant, ...pr
         return (
             <ButtonInput
                 disabled={!onboardingCompleted}
-                label={title}
+                label={children}
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
                 btnVariant={btnVariant}
             >
-                {title}
+                {children}
             </ButtonInput>
         );
     }
@@ -67,7 +67,7 @@ const LoginLink = ({ title, className, page, isButton = false, btnVariant, ...pr
             className={`${className} ${externalLinkClass}`}
             onClick={(e) => loginTo(e, page)}
         >
-            {title}
+            {children}
             <Icon name="square-arrow-up-right" className="px-2" />
         </a>
     );

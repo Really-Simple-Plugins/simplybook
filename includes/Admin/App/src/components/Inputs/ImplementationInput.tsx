@@ -50,7 +50,7 @@ const ImplementationInput: React.FC<ImplementationInputProps> = ({
                     )}
                     {option.is_premium && (
                         <span className="absolute -top-3 -right-5 cursor-pointer">
-                            <LoginLink className={"cursor-pointer"} isButton={true} btnVariant='premium' title={__('Premium', 'simplybook')} page="client" />
+                            <LoginLink className={"cursor-pointer"} isButton={true} btnVariant='premium' page="client" >{__('Premium', 'simplybook')}</LoginLink>
                         </span>
                     )}
                 </button>

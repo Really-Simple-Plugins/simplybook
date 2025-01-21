@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class GetTasks extends RestApi {
+class GetPlugins extends RestApi {
 	use Helper;
 	use Save;
 

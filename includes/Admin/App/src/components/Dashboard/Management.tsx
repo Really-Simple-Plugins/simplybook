@@ -30,7 +30,7 @@ const DataList = [
   },
   {
     title: __("SMS Gateway", "simplybook"),
-    link: "https://simplybook.me/directory",
+    link: "management/#plugins/sms",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
@@ -38,7 +38,7 @@ const DataList = [
   },
   {
     title: __("Membership", "simplybook"),
-    link: "https://simplybook.me/membership",
+    link: "management/#plugins/membership",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
@@ -46,7 +46,7 @@ const DataList = [
   },
   {
     title: __("Paid Events", "simplybook"),
-    link: "https://simplybook.me/white-label",
+    link: "management/#plugins/paid_events",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,

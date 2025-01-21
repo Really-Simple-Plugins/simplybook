@@ -29,12 +29,12 @@ const Header = () => {
         </div>
         <div className="flex items-center">
           <Link to="/" className={linkClassName}>{__("Dashboard", "simplybook")}</Link>
-          <LoginLink className={linkClassName} title={__('Clients', 'simplybook')} page="client" />
-          <LoginLink className={linkClassName} title={__('Calendar', 'simplybook')} page="index/index" />
+          <LoginLink className={linkClassName} page="client">{__('Clients', 'simplybook')}</LoginLink>
+          <LoginLink className={linkClassName} page="index/index" >{__('Calendar', 'simplybook')}</LoginLink>
           <Link to="/settings/general" className={linkClassName}>{__("Settings",'simplybook')}</Link>
         </div>
         <div className="float-right ml-auto flex items-center gap-6 px-4">
-          <LoginLink className={linkClassName} isButton={true} btnVariant="tertiary" title={__('Upgrade', 'simplybook')} page="r/payment-widget" />
+          <LoginLink className={linkClassName} isButton={true} btnVariant="tertiary" page="r/payment-widget" >{__('Upgrade', 'simplybook')}</LoginLink>
         </div>
       </div>
     </div>

@@ -12,6 +12,7 @@ interface FieldWrapperProps {
   inputId: string;
   required?: boolean;
   children: React.ReactNode;
+    type?: string;
 }
 
 const FieldWrapper = memo(({
@@ -23,6 +24,7 @@ const FieldWrapper = memo(({
   className = "",
   inputId,
   required = false,
+    type="text",
   children,
 }: FieldWrapperProps) => {
   const wrapperClasses = [
@@ -35,13 +37,14 @@ const FieldWrapper = memo(({
     "flex w-full flex-col",
     reverseLabel ? "flex-col-reverse" : ""
   ].filter(Boolean).join(" ");
-
+  let flexClass= type==='checkbox' ? " relative inline-flex items-center cursor-pointer " : '';
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>
+        {type==='checkbox' && children}
         <div className="flex items-center justify-between">
         <Label.Root
-          className="cursor-pointer pb-1 font-medium text-black text-md"
+          className={"cursor-pointer pb-1 font-medium text-black text-md "+flexClass}
           htmlFor={inputId}
         >
           {label}
@@ -53,7 +56,7 @@ const FieldWrapper = memo(({
           <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
         )}
         </div>
-        {children}
+        {type==='checkbox' && children}
       </div>
       
       {error && (

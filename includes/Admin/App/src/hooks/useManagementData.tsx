@@ -25,6 +25,7 @@ const useManagementData = () => {
 
     return {
         isPluginActive,
+        refetchData: query.refetch,
         plugins: query.data,
     };
 };
