@@ -57,8 +57,6 @@ const OnboardingStep = ({
       let currentStep = getCurrentStepId(path);
       let completedStepNext = parseInt(simplybook.completed_step) + 1 ;
       if ( completedStepNext > 1 && completedStepNext > currentStep) {
-        console.log("has completed step, navigate to next step ", completedStepNext);
-        console.log(getURLForStep(completedStepNext));
         navigate({ to: getURLForStep(completedStepNext) });
       }
     }, []);
@@ -94,7 +92,6 @@ const OnboardingStep = ({
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
     } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
-      console.log("Navigating to ", secondaryButton.navigateTo);
       navigate({ to: secondaryButton.navigateTo });
     } else if (isLastStep(path)) {
       navigate({ to: "/" });

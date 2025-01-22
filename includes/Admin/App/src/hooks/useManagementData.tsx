@@ -20,7 +20,7 @@ const useManagementData = () => {
         select: (data) => [...data], // create a new array so dependencies are updated
     });
     const isPluginActive = (id: string) => {
-        return query.data.some((plugin) => plugin.key === id && plugin.is_active);
+        return query.data.some((plugin) => plugin.key === id && plugin.is_turned_on);
     }
 
     return {

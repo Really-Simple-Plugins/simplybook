@@ -20,7 +20,6 @@ export const Route = createLazyFileRoute(path)({
 
         useEffect(() => {
             let token = getValue('confirmation-code');
-            console.log("token 1 ",token);
         }, [ settings ] );
         const setupRecaptcha = async () => {
             //get sitekey first, loading script has to wait.

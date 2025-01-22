@@ -227,8 +227,7 @@ trait Load {
 				];
 			}
 
-			//only preload menu values for logged in admins
-			$menus[ $key ] = apply_filters( 'simplybook_menu', $menu, $menu['id'] );
+			$menus[ $key ] = apply_filters( 'simplybook_menu_item', $menu, $menu['id'] );
 		}
 
 		$menus = apply_filters( 'simplybook_menus_values', $menus );

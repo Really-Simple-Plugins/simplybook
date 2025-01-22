@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Icon from "./Icon";
 import getLoginUrl from "../../api/endpoints/getLoginUrl";
 import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
+import useLoginData from "../../hooks/useLoginData";
 
 const LoginLink = ({ className, page, isButton = false, btnVariant, children }) => {
-    const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
+    const {alreadyLoggedIn, setAlreadyLoggedIn} = useLoginData();
     const [loginUrl, setLoginUrl] = useState("");
     const [directUrl, setDirectUrl] = useState("");
     const { onboardingCompleted } = useOnboardingData();

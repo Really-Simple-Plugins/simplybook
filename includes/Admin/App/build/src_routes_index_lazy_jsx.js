@@ -742,6 +742,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/endpoints/getLoginUrl */ "./src/api/endpoints/getLoginUrl.js");
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
 /* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _hooks_useLoginData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useLoginData */ "./src/hooks/useLoginData.tsx");
+
 
 
 
@@ -755,7 +757,10 @@ const LoginLink = ({
   btnVariant,
   children
 }) => {
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    alreadyLoggedIn,
+    setAlreadyLoggedIn
+  } = (0,_hooks_useLoginData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [loginUrl, setLoginUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [directUrl, setDirectUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const {
@@ -1897,14 +1902,14 @@ var DataList = [{
   btnVariant: "primary"
 }, {
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("SMS Gateway", "simplybook"),
-  link: "management/#plugins/sms",
+  link: "v2/management/#plugins/sms",
   buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"),
   btnVariant: "primary",
   isPlugin: true,
   key: "sms"
 }, {
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Membership", "simplybook"),
-  link: "management/#plugins/membership",
+  link: "v2/management/#plugins/membership",
   buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"),
   btnVariant: "primary",
   isPlugin: true,
@@ -2382,7 +2387,6 @@ var ButtonInput = function (_a) {
   if (className.length > 0) {
     localClassName = localClassName + ' ' + className;
   }
-  console.log("button classes ", localClassName);
   if (link) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
       to: link.to,
@@ -2584,6 +2588,32 @@ var useDashboardData = function () {
 
 /***/ }),
 
+/***/ "./src/hooks/useLoginData.tsx":
+/*!************************************!*\
+  !*** ./src/hooks/useLoginData.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+var useLoginData = function () {
+  var _a = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    alreadyLoggedIn = _a[0],
+    setAlreadyLoggedIn = _a[1];
+  return {
+    alreadyLoggedIn: alreadyLoggedIn,
+    setAlreadyLoggedIn: setAlreadyLoggedIn
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useLoginData);
+
+/***/ }),
+
 /***/ "./src/hooks/useManagementData.tsx":
 /*!*****************************************!*\
   !*** ./src/hooks/useManagementData.tsx ***!
@@ -2632,7 +2662,7 @@ var useManagementData = function () {
   });
   var isPluginActive = function (id) {
     return query.data.some(function (plugin) {
-      return plugin.key === id && plugin.is_active;
+      return plugin.key === id && plugin.is_turned_on;
     });
   };
   return {

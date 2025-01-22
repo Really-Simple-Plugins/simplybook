@@ -65,7 +65,7 @@ function Settings() {
   });
 
   useBlocker({
-    blockerFn: () => window.confirm("Are you sure you want to leave?"),
+    blockerFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
     condition: isDirty,
   });
 
@@ -90,7 +90,6 @@ function Settings() {
 
       <FormFooter
         onSubmit={handleSubmit((formData) => {
-          console.log("save settings", formData);
           saveSettings(formData).then(() => {
             reset(currentFormDefaultValues);
           });

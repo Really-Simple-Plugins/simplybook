@@ -54,8 +54,12 @@ return $menus = [
 			'title'    => __( 'Schedule', 'simplybook' ),
 		],
 		[
+			'id'       => 'providers',
+			'title'    => __( 'Providers', 'simplybook' ),
+		],
+		[
 			'id'       => 'bookings',
 			'title'    => __( 'Bookings', 'simplybook' ),
-			'url'      => 'https://simplybook.me/admin/bookings',
+			'url'      => '/index/index',
 		],
 	];

@@ -51,7 +51,6 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
   if (className.length>0) {
     localClassName = localClassName + ' ' + className;
   }
-  console.log("button classes ", localClassName)
   if (link) {
     return (
       <Link

@@ -57,7 +57,6 @@ const FormField = memo(({ setting, control, ...props } ) => {
   };
 
   const handleSaveOnChange = async (fieldValue) => {
-    console.log("handleSaveOnChange", setting.id, fieldValue, setting.save_on_change);
     setValue(setting.id, fieldValue);
     if (setting.mapping){
       //mapping is an array of id's, [id1, id2, id3]
@@ -66,7 +65,6 @@ const FormField = memo(({ setting, control, ...props } ) => {
             setValue(id, fieldValue);
         });
     }
-    console.log("saving formdata", settings);
     await saveSettings(settings);
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
 import Icon from "../Common/Icon";
+import LoginLink from "../Common/LoginLink";
 
 const menuItemClassName =
   "py-2 px-5 border-l-4 text-black border-transparent [&.active]:border-tertiary hover:border-gray-500 hover:bg-gray-100 focus:outline-none";
@@ -14,6 +15,12 @@ const SettingsMenuItem = React.memo(({ item }) => {
   ) : (
     ""
   );
+
+  if ( isExternalLink ) {
+    return (
+        <LoginLink className={menuItemClassName} page={to} >{item.title}</LoginLink>
+    )
+  }
 
   return (
     <Link to={to} className={menuItemClassName} target={target}>

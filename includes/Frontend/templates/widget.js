@@ -31,7 +31,7 @@ function instantiateSimplybookWidget() {
         },
         "timeline": "modern",
         "datepicker": "inline",
-        "is_rtl": false,
+        "is_rtl": "{{ is_rtl }}",
         "app_config": {
             "clear_session": false,
             "allow_switch_to_ada": true,

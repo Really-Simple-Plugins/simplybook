@@ -30,7 +30,7 @@ const DataList = [
   },
   {
     title: __("SMS Gateway", "simplybook"),
-    link: "management/#plugins/sms",
+    link: "v2/management/#plugins/sms",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
@@ -38,7 +38,7 @@ const DataList = [
   },
   {
     title: __("Membership", "simplybook"),
-    link: "management/#plugins/membership",
+    link: "v2/management/#plugins/membership",
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,

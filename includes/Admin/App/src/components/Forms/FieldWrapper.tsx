@@ -37,7 +37,6 @@ const FieldWrapper = memo(({
     "flex w-full flex-col",
     reverseLabel ? "flex-col-reverse" : ""
   ].filter(Boolean).join(" ");
-console.log("inputId",inputId, label);
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>

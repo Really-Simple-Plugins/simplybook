@@ -657,6 +657,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../api/endpoints/getLoginUrl */ "./src/api/endpoints/getLoginUrl.js");
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
 /* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _hooks_useLoginData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useLoginData */ "./src/hooks/useLoginData.tsx");
+
 
 
 
@@ -670,7 +672,10 @@ const LoginLink = ({
   btnVariant,
   children
 }) => {
-  const [alreadyLoggedIn, setAlreadyLoggedIn] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const {
+    alreadyLoggedIn,
+    setAlreadyLoggedIn
+  } = (0,_hooks_useLoginData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   const [loginUrl, setLoginUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [directUrl, setDirectUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const {
@@ -1364,7 +1369,6 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     })
   };
   const handleSaveOnChange = async fieldValue => {
-    console.log("handleSaveOnChange", setting.id, fieldValue, setting.save_on_change);
     setValue(setting.id, fieldValue);
     if (setting.mapping) {
       //mapping is an array of id's, [id1, id2, id3]
@@ -1373,7 +1377,6 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
         setValue(id, fieldValue);
       });
     }
-    console.log("saving formdata", settings);
     await saveSettings(settings);
   };
   let defaultValue = setting.value || setting.default;
@@ -1565,8 +1568,6 @@ const OnboardingStep = ({
     let currentStep = getCurrentStepId(path);
     let completedStepNext = parseInt(simplybook.completed_step) + 1;
     if (completedStepNext > 1 && completedStepNext > currentStep) {
-      console.log("has completed step, navigate to next step ", completedStepNext);
-      console.log(getURLForStep(completedStepNext));
       navigate({
         to: getURLForStep(completedStepNext)
       });
@@ -1603,7 +1604,6 @@ const OnboardingStep = ({
         to: primaryButton.navigateTo
       });
     } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
-      console.log("Navigating to ", secondaryButton.navigateTo);
       navigate({
         to: secondaryButton.navigateTo
       });
@@ -2480,7 +2480,6 @@ var FieldWrapper = (0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(function (_a) {
     children = _a.children;
   var wrapperClasses = ["flex w-full flex-col", className, "pt-4"].filter(Boolean).join(" ");
   var contentClasses = ["flex w-full flex-col", reverseLabel ? "flex-col-reverse" : ""].filter(Boolean).join(" ");
-  console.log("inputId", inputId, label);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: wrapperClasses,
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
@@ -2564,7 +2563,6 @@ var ButtonInput = function (_a) {
   if (className.length > 0) {
     localClassName = localClassName + ' ' + className;
   }
-  console.log("button classes ", localClassName);
   if (link) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_2__.Link, {
       to: link.to,
@@ -3049,6 +3047,32 @@ var TextInput = (0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(function (_a, 
 });
 TextInput.displayName = "TextInput";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TextInput);
+
+/***/ }),
+
+/***/ "./src/hooks/useLoginData.tsx":
+/*!************************************!*\
+  !*** ./src/hooks/useLoginData.tsx ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+var useLoginData = function () {
+  var _a = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false),
+    alreadyLoggedIn = _a[0],
+    setAlreadyLoggedIn = _a[1];
+  return {
+    alreadyLoggedIn: alreadyLoggedIn,
+    setAlreadyLoggedIn: setAlreadyLoggedIn
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useLoginData);
 
 /***/ })
 

@@ -78,14 +78,9 @@ class Api
 	 * @return string
 	 */
 	public function get_login_url(): string {
-		$url = get_transient('simplybook_login_url');
-		if ( $url ) {
-			return $url;
-		}
-
+		//we can't cache this url, because it expires after use.
 		$response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
 		if (isset($response['login_url'])) {
-			set_transient('simplybook_login_url', $response['login_url'], HOUR_IN_SECONDS);
 			return esc_url_raw($response['login_url']);
 		}
 		return '';
