@@ -14,6 +14,7 @@ use Simplybook\Admin\RestApi\Services;
 use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
 use Simplybook\Admin\RestApi\Dashboard;
+use Simplybook\Admin\Tasks\Tasks;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use Simplybook\Upgrades\Upgrades;
@@ -47,6 +48,21 @@ class Admin {
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_dashboard' ) );
 		$plugin = SIMPLYBOOK_PLUGIN;
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
+
+		add_action( 'simplybook_daily', array($this, 'update_tasks') );
+	}
+
+
+	/**
+	 * On a daily basis, update the task options
+	 *
+	 * @return void
+	 */
+	public function update_tasks() {
+		$tasks = new Tasks();
+		$tasks_data = $tasks->get_raw_tasks();
+
+
 	}
 
 	/**
@@ -92,6 +108,9 @@ class Admin {
 			$options['country'] = $this->get_country_by_locale();
 		}
 		update_option('simplybook_options', $options);
+
+		$tasks = new Tasks();
+		$tasks->add_initial_tasks();
 	}
 
 

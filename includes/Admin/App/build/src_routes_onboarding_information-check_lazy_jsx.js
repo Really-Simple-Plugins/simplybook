@@ -578,6 +578,7 @@ const LoginLink = ({
   className,
   page,
   isButton = false,
+  size = "md",
   btnVariant,
   children
 }) => {
@@ -622,7 +623,8 @@ const LoginLink = ({
       label: children,
       onClick: e => loginTo(e, page),
       className: combinedClassName,
-      btnVariant: btnVariant
+      btnVariant: btnVariant,
+      size: size
     }, children);
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {

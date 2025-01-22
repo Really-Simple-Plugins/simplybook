@@ -12,13 +12,13 @@ import Manage from "./Management/Manage";
 const DataList = [
   {
     title: __("Providers", "simplybook"),
-    link: "/providers",
+    link: "/settings/providers",
     buttonText: __("View", "simplybook"),
     btnVariant: "primary",
   },
   {
     title: __("Services", "simplybook"),
-    link: "/services",
+    link: "/settings/services",
     buttonText: __("View", "simplybook"),
     btnVariant: "primary",
   },

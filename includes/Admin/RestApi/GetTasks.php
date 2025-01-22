@@ -1,5 +1,6 @@
 <?php
 namespace Simplybook\Admin\RestApi;
+use Simplybook\Admin\Tasks\Tasks;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use WP_REST_Response;
@@ -32,16 +33,8 @@ class GetTasks extends RestApi {
 	}
 
 	public function get_tasks($request): WP_REST_Response {
-		return $this->response([
-			'id' => 1,
-			'text' => 'This is a task',
-			'status' => 'open', // "open" | "urgent" | "premium" | "completed" | "dismissed"
-			'type' => 'required', // "required" | "optional"
-			'action' => [
-				'text' => 'do something',
-				'link' => 'settings/link',
-			],
-		]);
+		$tasks = new Tasks();
+		return $this->response($tasks->get_tasks());
 	}
 }
 

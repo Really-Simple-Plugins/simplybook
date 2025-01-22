@@ -1,76 +1,31 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/Task";
-// Types can be moved to a separate types file
-
-
-// TODO: Create these API endpoints
-const taskApi = {
-  getTasks: async () => {
-    // Temporary: Return initial tasks until API is implemented
-    return initialTasks;
-  },
-  updateTaskStatus: async (taskId: number, status: Task["status"]) => {
-    // TODO: Implement API call to update task status
-    return { taskId, status };
-  },
-};
-
-const initialTasks: Task[] = [
-  {
-    id: 1,
-    text: "Complete your account setup",
-    status: "urgent",
-    type: "required",
-    action: {
-      text: "Complete Setup",
-      link: "/setup",
-    },
-  },
-  {
-    id: 2,
-    text: "Add your first service",
-    status: "open",
-    type: "required",
-    action: {
-      text: "Add Service",
-      link: "/services/new",
-    },
-  },
-  { id: 3, text: "Set your business hours", status: "open", type: "required" },
-  {
-    id: 4,
-    text: "Configure email notifications",
-    status: "premium",
-    type: "optional",
-  },
-  {
-    id: 5,
-    text: "Customize your booking widget",
-    status: "premium",
-    type: "optional",
-  },
-];
+import getTasks from "../api/endpoints/Dashboard/getTasks";
+import updateTaskStatus from "../api/endpoints/Dashboard/getTasks";
+import { TaskData } from "../types/TaskData";
 
 const useTaskData = () => {
   const queryClient = useQueryClient();
 
   // Query for fetching tasks
-  const { data: tasks = [] } = useQuery({
+  const { data: tasks = [], isLoading, isError } = useQuery({
     queryKey: ["tasks"],
-    queryFn: taskApi.getTasks,
-    initialData: initialTasks,
+    queryFn: getTasks,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   // Mutation for updating task status
   const { mutate: updateTaskStatus } = useMutation({
-    mutationFn: ({
-      taskId,
-      status,
-    }: {
+    mutationFn: async ({
+                         taskId,
+                         status,
+                       }: {
       taskId: number;
       status: Task["status"];
-    }) => taskApi.updateTaskStatus(taskId, status),
+    }): Promise<TaskData> => {
+      // @ts-ignore
+      return updateTaskStatus(taskId, status);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
@@ -86,14 +41,14 @@ const useTaskData = () => {
 
   const getRemainingTasks = () => {
     return tasks.filter((task) =>
-      ["open", "urgent", "premium"].includes(task.status),
+        ["open", "urgent", "premium"].includes(task.status),
     );
   };
 
   const getCompletionPercentage = () => {
     const total = tasks.length;
     const completed = tasks.filter(
-      (task) => task.status === "dismissed" || task.status === "completed",
+        (task) => task.status === "dismissed" || task.status === "completed",
     ).length;
     const actualPercentage = Math.round((completed / total) * 80);
     return 20 + actualPercentage;
@@ -101,6 +56,8 @@ const useTaskData = () => {
 
   return {
     tasks,
+    isLoading,
+    isError,
     dismissTask,
     completeTask,
     getRemainingTasks,

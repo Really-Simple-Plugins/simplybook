@@ -5,7 +5,7 @@ import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
-const LoginLink = ({ className, page, isButton = false, btnVariant, children }) => {
+const LoginLink = ({ className, page, isButton = false, size="md", btnVariant, children }) => {
     const {alreadyLoggedIn, setAlreadyLoggedIn} = useLoginData();
     const [loginUrl, setLoginUrl] = useState("");
     const [directUrl, setDirectUrl] = useState("");
@@ -56,6 +56,7 @@ const LoginLink = ({ className, page, isButton = false, btnVariant, children }) 
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
                 btnVariant={btnVariant}
+                size={size}
             >
                 {children}
             </ButtonInput>

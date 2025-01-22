@@ -754,6 +754,7 @@ const LoginLink = ({
   className,
   page,
   isButton = false,
+  size = "md",
   btnVariant,
   children
 }) => {
@@ -798,7 +799,8 @@ const LoginLink = ({
       label: children,
       onClick: e => loginTo(e, page),
       className: combinedClassName,
-      btnVariant: btnVariant
+      btnVariant: btnVariant,
+      size: size
     }, children);
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
@@ -1682,6 +1684,157 @@ var getPlugins = function () {
 
 /***/ }),
 
+/***/ "./src/api/endpoints/Dashboard/getTasks.tsx":
+/*!**************************************************!*\
+  !*** ./src/api/endpoints/Dashboard/getTasks.tsx ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+var __generator = undefined && undefined.__generator || function (thisArg, body) {
+  var _ = {
+      label: 0,
+      sent: function () {
+        if (t[0] & 1) throw t[1];
+        return t[1];
+      },
+      trys: [],
+      ops: []
+    },
+    f,
+    y,
+    t,
+    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+    while (g && (g = 0, op[0] && (_ = 0)), _) try {
+      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+      if (y = 0, t) op = [op[0] & 2, t.value];
+      switch (op[0]) {
+        case 0:
+        case 1:
+          t = op;
+          break;
+        case 4:
+          _.label++;
+          return {
+            value: op[1],
+            done: false
+          };
+        case 5:
+          _.label++;
+          y = op[1];
+          op = [0];
+          continue;
+        case 7:
+          op = _.ops.pop();
+          _.trys.pop();
+          continue;
+        default:
+          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            _ = 0;
+            continue;
+          }
+          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+            _.label = op[1];
+            break;
+          }
+          if (op[0] === 6 && _.label < t[1]) {
+            _.label = t[1];
+            t = op;
+            break;
+          }
+          if (t && _.label < t[2]) {
+            _.label = t[2];
+            _.ops.push(op);
+            break;
+          }
+          if (t[2]) _.ops.pop();
+          _.trys.pop();
+          continue;
+      }
+      op = body.call(thisArg, _);
+    } catch (e) {
+      op = [6, e];
+      y = 0;
+    } finally {
+      f = t = 0;
+    }
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
+/**
+ * Get the bookings count
+ * @return {Promise<TaskData>}
+ */
+var getTasks = function () {
+  return __awaiter(void 0, void 0, void 0, function () {
+    var response;
+    return __generator(this, function (_a) {
+      switch (_a.label) {
+        case 0:
+          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_tasks", "POST")];
+        case 1:
+          response = _a.sent();
+          console.log("getTasks response", response);
+          // @ts-ignore
+          if (!response || !response.data) {
+            return [2 /*return*/, []];
+          }
+          // @ts-ignore
+          return [2 /*return*/, response.data];
+      }
+    });
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getTasks);
+
+/***/ }),
+
 /***/ "./src/components/Blocks/Block.tsx":
 /*!*****************************************!*\
   !*** ./src/components/Blocks/Block.tsx ***!
@@ -1887,12 +2040,12 @@ __webpack_require__.r(__webpack_exports__);
 // @TODO: Split up into multiple components? 
 var DataList = [{
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Providers", "simplybook"),
-  link: "/providers",
+  link: "/settings/providers",
   buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "simplybook"),
   btnVariant: "primary"
 }, {
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Services", "simplybook"),
-  link: "/services",
+  link: "/settings/services",
   buttonText: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View", "simplybook"),
   btnVariant: "primary"
 }, {
@@ -2052,8 +2205,9 @@ var Plugin = function (_a) {
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "flex justify-end",
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_LoginLink__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          className: "",
           btnVariant: "tertiary",
-          className: "py-0 px-2 text-xs",
+          size: "sm",
           isButton: true,
           page: link,
           children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook")
@@ -2685,9 +2839,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_endpoints_Dashboard_getTasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getTasks */ "./src/api/endpoints/Dashboard/getTasks.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -2800,79 +2955,30 @@ var __generator = undefined && undefined.__generator || function (thisArg, body)
   }
 };
 
-// Types can be moved to a separate types file
-// TODO: Create these API endpoints
-var taskApi = {
-  getTasks: function () {
-    return __awaiter(void 0, void 0, void 0, function () {
-      return __generator(this, function (_a) {
-        // Temporary: Return initial tasks until API is implemented
-        return [2 /*return*/, initialTasks];
-      });
-    });
-  },
-  updateTaskStatus: function (taskId, status) {
-    return __awaiter(void 0, void 0, void 0, function () {
-      return __generator(this, function (_a) {
-        // TODO: Implement API call to update task status
-        return [2 /*return*/, {
-          taskId: taskId,
-          status: status
-        }];
-      });
-    });
-  }
-};
-var initialTasks = [{
-  id: 1,
-  text: "Complete your account setup",
-  status: "urgent",
-  type: "required",
-  action: {
-    text: "Complete Setup",
-    link: "/setup"
-  }
-}, {
-  id: 2,
-  text: "Add your first service",
-  status: "open",
-  type: "required",
-  action: {
-    text: "Add Service",
-    link: "/services/new"
-  }
-}, {
-  id: 3,
-  text: "Set your business hours",
-  status: "open",
-  type: "required"
-}, {
-  id: 4,
-  text: "Configure email notifications",
-  status: "premium",
-  type: "optional"
-}, {
-  id: 5,
-  text: "Customize your booking widget",
-  status: "premium",
-  type: "optional"
-}];
+
 var useTaskData = function () {
-  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_0__.useQueryClient)();
+  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
   // Query for fetching tasks
-  var _a = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
+  var _a = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
       queryKey: ["tasks"],
-      queryFn: taskApi.getTasks,
-      initialData: initialTasks,
+      queryFn: _api_endpoints_Dashboard_getTasks__WEBPACK_IMPORTED_MODULE_0__["default"],
       staleTime: 1000 * 60 * 5 // 5 minutes
-    }).data,
-    tasks = _a === void 0 ? [] : _a;
+    }),
+    _b = _a.data,
+    tasks = _b === void 0 ? [] : _b,
+    isLoading = _a.isLoading,
+    isError = _a.isError;
   // Mutation for updating task status
-  var updateTaskStatus = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useMutation)({
+  var updateTaskStatus = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
     mutationFn: function (_a) {
-      var taskId = _a.taskId,
-        status = _a.status;
-      return taskApi.updateTaskStatus(taskId, status);
+      return __awaiter(void 0, [_a], void 0, function (_b) {
+        var taskId = _b.taskId,
+          status = _b.status;
+        return __generator(this, function (_c) {
+          // @ts-ignore
+          return [2 /*return*/, updateTaskStatus(taskId, status)];
+        });
+      });
     },
     onSuccess: function () {
       queryClient.invalidateQueries({
@@ -2907,6 +3013,8 @@ var useTaskData = function () {
   };
   return {
     tasks: tasks,
+    isLoading: isLoading,
+    isError: isError,
     dismissTask: dismissTask,
     completeTask: completeTask,
     getRemainingTasks: getRemainingTasks,
