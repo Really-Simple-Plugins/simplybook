@@ -42,13 +42,21 @@ class Tasks {
 	public function get_tasks(): array {
 		$tasks = $this->get_raw_tasks();
 
+		$completed_tasks = [];
 		foreach ($tasks as $key => $task) {
-			if ( !get_option('simplybook_task_' . $task['id'], false)) {
-				$task[$key]['status'] = 'completed';
+			if ( isset($task['condition']) && !get_option('simplybook_task_' . $task['id'], false)) {
+				//we want to have these completed ones at the end so remove them here, and store in separate aray
+				unset($tasks[$key]);
+				$task['status'] = 'completed';
+				//as its completed, we can remove any action
+				unset($task['action']);
+				$completed_tasks[] = $task;
 			}
 		}
 
-		error_log(print_r($tasks, true));
+		//add completed tasks to end of array
+		$tasks = array_merge($tasks, $completed_tasks);
+
 
 		return $tasks;
 	}
