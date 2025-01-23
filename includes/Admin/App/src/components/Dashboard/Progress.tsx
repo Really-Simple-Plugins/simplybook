@@ -27,7 +27,7 @@ const Progress = () => {
 
   const displayedTasks = showAll ? tasks : getRemainingTasks();
   const completionPercentage = getCompletionPercentage();
-
+  const remainingTasks = getRemainingTasks();
   if (tasks.length === 0) {
     return (
       <Block className="col-span-6 row-span-2">
@@ -58,7 +58,7 @@ const Progress = () => {
               onClick={() => setShowAll(false)}
               className={`text-sm ${!showAll ? 'text-tertiary font-semibold' : 'text-gray-500'}`}
             >
-              {__("Remaining tasks", "simplybook")} ({getRemainingTasks().length})
+              {__("Remaining tasks", "simplybook")} ({remainingTasks.length})
             </button>
           </div>
         } 
@@ -78,9 +78,10 @@ const Progress = () => {
            {completionPercentage}%
           </span>
           <span className="text-base">
-          {sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", getRemainingTasks().length, "simplybook"), getRemainingTasks().length)}
-            </span>
-          </div>
+            {remainingTasks.length === 0 && __("You're all set! Great job!", "simplybook")}
+            {remainingTasks.length>0 && sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", remainingTasks.length, "simplybook"), remainingTasks.length)}
+          </span>
+        </div>
 
         <div className="grid gap-1">
         

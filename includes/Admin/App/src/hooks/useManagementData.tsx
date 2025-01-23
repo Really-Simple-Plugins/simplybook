@@ -7,9 +7,6 @@ import getPlugins from "../api/endpoints/Dashboard/getPlugins";
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
 const useManagementData = () => {
-    const queryClient = useQueryClient();
-
-    // Query for fetching settings from server
     const query = useQuery({
         queryKey: ["manage_data"],
         queryFn: () => getPlugins(),
@@ -17,7 +14,7 @@ const useManagementData = () => {
         // @ts-ignore
         initialData: [],
         retry: 0,
-        select: (data) => [...data], // create a new array so dependencies are updated
+        select: (data) => [...data],
     });
     const isPluginActive = (id: string) => {
         return query.data.some((plugin) => plugin.key === id && plugin.is_turned_on);

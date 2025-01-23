@@ -2503,6 +2503,7 @@ var Progress = function () {
     getCompletionPercentage = _b.getCompletionPercentage;
   var displayedTasks = showAll ? tasks : getRemainingTasks();
   var completionPercentage = getCompletionPercentage();
+  var remainingTasks = getRemainingTasks();
   if (tasks.length === 0) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_2__["default"], {
       className: "col-span-6 row-span-2",
@@ -2538,7 +2539,7 @@ var Progress = function () {
             return setShowAll(false);
           },
           className: "text-sm ".concat(!showAll ? 'text-tertiary font-semibold' : 'text-gray-500'),
-          children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Remaining tasks", "simplybook"), " (", getRemainingTasks().length, ")"]
+          children: [(0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Remaining tasks", "simplybook"), " (", remainingTasks.length, ")"]
         })]
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_6__["default"], {
@@ -2559,9 +2560,9 @@ var Progress = function () {
         children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
           className: "font-bold text-3xl",
           children: [completionPercentage, "%"]
-        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("span", {
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("span", {
           className: "text-base",
-          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__._n)("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", getRemainingTasks().length, "simplybook"), getRemainingTasks().length)
+          children: [remainingTasks.length === 0 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("You're all set! Great job!", "simplybook"), remainingTasks.length > 0 && (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__._n)("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", remainingTasks.length, "simplybook"), remainingTasks.length)]
         })]
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "grid gap-1",
@@ -2935,8 +2936,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
 /* harmony import */ var _api_endpoints_Dashboard_getPlugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getPlugins */ "./src/api/endpoints/Dashboard/getPlugins.tsx");
 var __spreadArray = undefined && undefined.__spreadArray || function (to, from, pack) {
   if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
@@ -2956,9 +2956,7 @@ var __spreadArray = undefined && undefined.__spreadArray || function (to, from, 
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
 var useManagementData = function () {
-  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
-  // Query for fetching settings from server
-  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
     queryKey: ["manage_data"],
     queryFn: function () {
       return (0,_api_endpoints_Dashboard_getPlugins__WEBPACK_IMPORTED_MODULE_0__["default"])();
@@ -2969,7 +2967,7 @@ var useManagementData = function () {
     retry: 0,
     select: function (data) {
       return __spreadArray([], data, true);
-    } // create a new array so dependencies are updated
+    }
   });
   var isPluginActive = function (id) {
     return query.data.some(function (plugin) {

@@ -755,9 +755,8 @@ class Api
 	 */
 
 	public function get_services(): array {
-		$services = $this->api_call('admin/services', [], 'GET');
-
-		return $services;
+		$response = $this->api_call('admin/services', [], 'GET');
+		return $response['data'] ?? [];
 	}
 
 	/**

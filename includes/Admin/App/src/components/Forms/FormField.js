@@ -8,6 +8,7 @@ import {memo, useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import ColorPickerField from "../Fields/ColorPickerField";
 import ImplementationField from "../Fields/ImplementationField";
+import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 
 const fieldComponents = {
@@ -18,6 +19,7 @@ const fieldComponents = {
   select: SelectField,
   colorpicker: ColorPickerField,
   implementation: ImplementationField,
+  list:ListField,
 };
 
 const FormField = memo(({ setting, control, ...props } ) => {

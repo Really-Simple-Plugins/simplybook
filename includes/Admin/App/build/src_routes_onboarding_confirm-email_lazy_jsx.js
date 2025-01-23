@@ -99,12 +99,12 @@ __webpack_require__.r(__webpack_exports__);
  */
 const getServices = async () => {
   const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("services", "POST");
-  if (!res || !res.data.services) {
+  if (!res || !res.data) {
     console.log("no services found");
     return [];
   }
   console.log("getServices response ", res);
-  return res.data.services;
+  return res.data;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getServices);
 
@@ -920,10 +920,10 @@ ColorPickerField.displayName = "ColorPickerField";
 
 /***/ }),
 
-/***/ "./src/components/Fields/HiddenField.js":
-/*!**********************************************!*\
-  !*** ./src/components/Fields/HiddenField.js ***!
-  \**********************************************/
+/***/ "./src/components/Fields/HiddenField.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Fields/HiddenField.jsx ***!
+  \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -1016,6 +1016,131 @@ const ImplementationField = ({
   }));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ImplementationField);
+
+/***/ }),
+
+/***/ "./src/components/Fields/ListField.jsx":
+/*!*********************************************!*\
+  !*** ./src/components/Fields/ListField.jsx ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _hooks_useServicesData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../hooks/useServicesData */ "./src/hooks/useServicesData.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _ListItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ListItem */ "./src/components/Fields/ListItem.js");
+
+
+
+
+
+
+/**
+ * HiddenField component
+ * @param {object} setting
+ * @param {object} field - Provided by react-hook-form's Controller
+ * @param {object} fieldState - Contains validation state
+ * @param {string} label
+ * @param {string} help
+ * @param {string} context
+ * @param {string} className
+ * @param {object} props
+ * @return {JSX.Element}
+ */
+const ListField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
+  setting,
+  field,
+  fieldState,
+  label,
+  help,
+  context,
+  className,
+  ...props
+}, ref) => {
+  const {
+    services
+  } = (0,_hooks_useServicesData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+  const [listArray, setListArray] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const sourceData = {
+    services: services
+  };
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    setListArray(sourceData[setting.source]);
+  }, [sourceData[setting.source]]);
+  if (!listArray) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading, please wait a few seconds..."));
+  }
+  console.log('listArray for ', setting.source, listArray);
+  if (!Array.isArray(listArray)) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No items found for %s"), setting.label));
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "w-full"
+  }, listArray.map(item => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ListItem__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    id: item.id,
+    name: item.name
+  })));
+});
+ListField.displayName = 'ListField';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ListField);
+
+/***/ }),
+
+/***/ "./src/components/Fields/ListItem.js":
+/*!*******************************************!*\
+  !*** ./src/components/Fields/ListItem.js ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+
+
+
+/**
+ * HiddenField component
+ * @param {string} id
+ * @param {string} name
+
+ */
+const ListItem = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
+  id,
+  name,
+  ...props
+}, ref) => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "w-full flex items-center justify-between px-4 py-3 bg-white shadow-md"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex items-center space-x-3"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "font-medium"
+  }, id), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, name)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "flex items-center"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("button", {
+    className: "px-3 py-1 text-blue-500 hover:text-blue-600 focus:outline-none"
+  }, "Edit Service Provider"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "ml-4 relative"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("label", {
+    className: "sr-only"
+  }, "Toggle Service Provider"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "w-10 h-5 bg-gray-400 rounded-full shadow-inner"
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "absolute inset-y-0 left-0 w-5 h-5 bg-white rounded-full shadow transform transition-transform duration-300 ease-in-out translate-x-0"
+  })))));
+});
+ListItem.displayName = 'ListItem';
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ListItem);
 
 /***/ }),
 
@@ -1157,9 +1282,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
-/* harmony import */ var _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/HiddenField */ "./src/components/Fields/HiddenField.js");
+/* harmony import */ var _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/HiddenField */ "./src/components/Fields/HiddenField.jsx");
 /* harmony import */ var _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Fields/CheckboxField */ "./src/components/Fields/CheckboxField.js");
 /* harmony import */ var _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Fields/SelectField */ "./src/components/Fields/SelectField.jsx");
 /* harmony import */ var _components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../components/Common/ErrorBoundary */ "./src/components/Common/ErrorBoundary.jsx");
@@ -1167,7 +1292,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _Fields_ColorPickerField__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Fields/ColorPickerField */ "./src/components/Fields/ColorPickerField.jsx");
 /* harmony import */ var _Fields_ImplementationField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Fields/ImplementationField */ "./src/components/Fields/ImplementationField.js");
-/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+/* harmony import */ var _Fields_ListField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Fields/ListField */ "./src/components/Fields/ListField.jsx");
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
 
 
 
@@ -1187,7 +1314,8 @@ const fieldComponents = {
   checkbox: _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_3__["default"],
   select: _Fields_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"],
   colorpicker: _Fields_ColorPickerField__WEBPACK_IMPORTED_MODULE_7__["default"],
-  implementation: _Fields_ImplementationField__WEBPACK_IMPORTED_MODULE_8__["default"]
+  implementation: _Fields_ImplementationField__WEBPACK_IMPORTED_MODULE_8__["default"],
+  list: _Fields_ListField__WEBPACK_IMPORTED_MODULE_9__["default"]
 };
 const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   setting,
@@ -1206,7 +1334,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
     setValue,
     getValue,
     settings
-  } = (0,_hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_9__["default"])();
+  } = (0,_hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
   if (!FieldComponent) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
       className: "w-full"
@@ -1255,7 +1383,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_0__.memo)(({
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1";
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_10__.Controller, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_5__["default"], null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
     name: setting.id,
     control: control,
     rules: validationRules,
@@ -1969,6 +2097,63 @@ const useOnboardingData = () => {
   };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOnboardingData);
+
+/***/ }),
+
+/***/ "./src/hooks/useServicesData.js":
+/*!**************************************!*\
+  !*** ./src/hooks/useServicesData.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_endpoints_getServices__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getServices */ "./src/api/endpoints/getServices.js");
+
+
+/**
+ * Custom hook for managing settings data using Tanstack Query.
+ * This hook provides functions to fetch and update settings.
+ *
+ * @returns {Object} - An object containing settings data, update function, and status flags.
+ */
+const useServicesData = () => {
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+
+  // Query for fetching settings from server
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+    queryKey: ["services"],
+    queryFn: () => (0,_api_endpoints_getServices__WEBPACK_IMPORTED_MODULE_0__["default"])(),
+    staleTime: 1000 * 60 * 5,
+    // 5 minutes
+    retry: 0,
+    select: data => [...data]
+  });
+
+  // Update Mutation for settings data with destructured values
+  const {
+    mutateAsync: saveSettings,
+    isLoading: isSavingSettings
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
+    mutationFn: async data => {
+      return await saveSettingsFields(data);
+    },
+    onSuccess: data => {
+      queryClient.invalidateQueries(["services"]);
+      queryClient.setQueryData(["services"], data);
+    }
+  });
+  return {
+    services: query.data,
+    invalidateSettings: () => queryClient.invalidateQueries(["services"])
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useServicesData);
 
 /***/ }),
 

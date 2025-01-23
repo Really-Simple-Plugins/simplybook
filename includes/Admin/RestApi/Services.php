@@ -34,14 +34,20 @@ class Services extends RestApi {
 		);
 	}
 
-	public function services($request){
-		$services = $this->api->get_services();
+	/**
+	 * Get services
+	 *
+	 * @param $request
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function services($request): WP_REST_Response {
+		$services = [
+			['id'=>1,'name'=>'test'],
+		];//$this->api->get_services();
 		error_log(print_r("services array in rest api",true));
 		error_log(print_r($services,true));
-		$services = array_values($services);
-		return $this->response([
-			'services' => $services,
-		]);
+		return $this->response($services);
 	}
 }
 
