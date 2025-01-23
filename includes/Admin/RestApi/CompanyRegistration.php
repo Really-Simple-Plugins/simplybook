@@ -1,5 +1,6 @@
 <?php
 namespace Simplybook\Admin\RestApi;
+use Simplybook\Admin\Tasks\Tasks;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 
@@ -58,6 +59,9 @@ class CompanyRegistration extends RestApi {
 			$this->update_option( 'company_id', (int) $data['company_id'] );
 
 			$this->cleanup_callback_url();
+			$tasks = new Tasks();
+			$tasks->validate_tasks();
+
 		} else {
 			$error = $data['error'] ?? false;
 			if ( $error && isset($error['message']) ){

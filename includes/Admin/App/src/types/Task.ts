@@ -1,5 +1,5 @@
 export interface Task {
-    id: number;
+    id: string;
     text: string;
     status: "open" | "urgent" | "premium" | "completed" | "dismissed";
     type: "required" | "optional";

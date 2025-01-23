@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/Task";
 import getTasks from "../api/endpoints/Dashboard/getTasks";
-import updateTaskStatus from "../api/endpoints/Dashboard/getTasks";
+import dismissTaskApi from "../api/endpoints/Dashboard/dismissTaskApi";
 import { TaskData } from "../types/TaskData";
 
 const useTaskData = () => {
@@ -15,29 +15,15 @@ const useTaskData = () => {
   });
 
   // Mutation for updating task status
-  const { mutate: updateTaskStatus } = useMutation({
-    mutationFn: async ({
-                         taskId,
-                         status,
-                       }: {
-      taskId: number;
-      status: Task["status"];
-    }): Promise<TaskData> => {
-      // @ts-ignore
-      return updateTaskStatus(taskId, status);
+  const { mutate: dismissTask } = useMutation({
+    mutationFn: async ( taskId:string ): Promise<TaskData> => {
+      console.log("dismissing task ", taskId);
+      return dismissTaskApi(taskId);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
-
-  const dismissTask = (id: number) => {
-    updateTaskStatus({ taskId: id, status: "dismissed" });
-  };
-
-  const completeTask = (id: number) => {
-    updateTaskStatus({ taskId: id, status: "completed" });
-  };
 
   const getRemainingTasks = () => {
     return tasks.filter((task) =>
@@ -59,7 +45,6 @@ const useTaskData = () => {
     isLoading,
     isError,
     dismissTask,
-    completeTask,
     getRemainingTasks,
     getCompletionPercentage,
   };

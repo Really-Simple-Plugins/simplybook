@@ -6,12 +6,13 @@
  * ]
  * status: open, completed, premium
  */
+
 return [
 	[
 		'id' => 'add_service',
 		'condition' => [
 			'type' => 'serverside',
-			'function' => 'has_services',
+			'function' => '(new \Simplybook\Api\Api())->has_services()',
 		],
 		'text' => 'Add your first service',
 		'status' => 'open',
@@ -57,7 +58,7 @@ return [
 			'type' => 'activation',
 		],
 		'text' => 'This task gets added on activation',
-		'status' => 'premium',
+		'status' => 'open',
 		'type' => 'optional',
 	],
 ];

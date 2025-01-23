@@ -20,11 +20,10 @@ class Api
     protected $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
     ];
-	protected $api_url = 'https://user-api-v2.simplybook.me/';
 
-	protected $endpoint = 'https://user-api-v2.wp.simplybook.ovh/';
+	protected string $endpoint = 'https://user-api-v2.wp.simplybook.ovh/';
 
-	protected $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
+	protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
     {
 		//$this->get_services();
@@ -88,10 +87,13 @@ class Api
 
 	/**
 	 * Get headers for an API call
+	 *
 	 * @param bool $include_token // optional, default false
+	 * @param string $token_type
+	 *
 	 * @return array
 	 */
-	protected function get_headers( bool $include_token = false, $token_type = 'public' ): array {
+	protected function get_headers( bool $include_token = false, string $token_type = 'public' ): array {
 		$token_type = in_array($token_type, ['public', 'admin']) ? $token_type : 'public';
 		$headers = array(
 			'Content-Type'  => 'application/json',
@@ -756,6 +758,16 @@ class Api
 		$services = $this->api_call('admin/services', [], 'GET');
 
 		return $services;
+	}
+
+	/**
+	 * If any services are registered
+	 *
+	 * @return bool
+	 */
+	public function has_services(): bool {
+		$services = $this->get_services();
+		return !empty($services);
 	}
 
 	/**

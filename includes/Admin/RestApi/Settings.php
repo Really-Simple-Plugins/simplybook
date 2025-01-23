@@ -50,10 +50,8 @@ class Settings extends RestApi {
      */
     public function save($request, $ajax_data = false ): WP_Error|WP_REST_Response
     {
-        $data = $ajax_data ?: $request->get_json_params();
-        // get the nonce
-		unset($data['nonce']);
-        $fields = $data;
+	    $fields = $ajax_data ?: $request->get_json_params();
+		unset($fields['nonce']);
 
 		if (count($fields) === 0) {
 			return $this->response( ['error' => 'No data to save'] );

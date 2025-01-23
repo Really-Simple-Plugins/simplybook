@@ -22,7 +22,7 @@ const getStatusStyles = (status: string) => {
 };
 
 const Progress = () => {
-  const [showAll, setShowAll] = useState(true);
+  const [showAll, setShowAll] = useState(false);
   const { tasks, dismissTask, getRemainingTasks, getCompletionPercentage } = useTaskData();
 
   const displayedTasks = showAll ? tasks : getRemainingTasks();

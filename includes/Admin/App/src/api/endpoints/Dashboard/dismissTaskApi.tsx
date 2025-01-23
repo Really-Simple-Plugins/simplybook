@@ -1,26 +1,26 @@
 import request from "../../requests/request";
 import {TaskData} from "../../../types/TaskData";
+import {Task} from "../../../types/Task";
 
 /**
  * Update the task status
  * @param {string} taskId
- * @param {string} status
  *
  * @return {Promise<TaskData>}
  */
-const updateTaskStatus = async (taskId: string, status: string): Promise<TaskData> => {
-    const data = { taskId, status };
-    const response = await request("update_task_status", "POST", data );
-    console.log("getTasks response", response);
+const dismissTaskApi = async (taskId: string): Promise<TaskData> => {
+    const data = { taskId };
+    const response = await request("dismiss_task", "POST", data );
+    console.log("dismissing task", response);
 
     // @ts-ignore
     if (!response || !response.data) {
         //return empty TaskData
-        return []
+        return [] as Task[];
     }
 
     // @ts-ignore
     return response.data as Task[];
 };
 
-export default updateTaskStatus;
+export default dismissTaskApi;
