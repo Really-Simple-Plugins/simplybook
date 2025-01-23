@@ -1,8 +1,18 @@
 <?php
+/**
+ * condition: [
+ *          type: serverside, clientside, activation (if task should be added on activation)
+ *          function returning a boolean, or __true__, if always true
+ * ]
+ * status: open, completed, premium
+ */
 return [
 	[
 		'id' => 'add_service',
-		'is_initial_task' => true,
+		'condition' => [
+			'type' => 'serverside',
+			'function' => 'has_services',
+		],
 		'text' => 'Add your first service',
 		'status' => 'open',
 		'type' => 'required',
@@ -10,26 +20,43 @@ return [
 			'text' => 'Add Service',
 			'link' => '/services/new',
 		],
-		'condition' => 'has_services'
 	],
 	[
 		'id' => 'set_schedule',
-		'is_initial_task' => true,
+		'condition' => [
+			'type' => 'serverside',
+			'function' => 'has_schedule',
+		],
 		'text' => 'Set your business hours',
 		'status' => 'open',
 		'type' => 'required',
 	],
 	[
 		'id' => 'configure_email',
-		'is_initial_task' => true,
+		'condition' => [
+			'type' => 'serverside',
+			'function' => 'has_schedule',
+		],
 		'text' => 'Configure email notifications',
 		'status' => 'premium',
 		'type' => 'optional',
 	],
 	[
 		'id' => 'customize_widget',
-		'is_initial_task' => true,
+		'condition' => [
+			'type' => 'serverside',
+			'function' => 'has_schedule',
+		],
 		'text' => 'Customize your booking widget',
+		'status' => 'premium',
+		'type' => 'optional',
+	],
+	[
+		'id' => 'task_on_activation',
+		'condition' => [
+			'type' => 'activation',
+		],
+		'text' => 'This task gets added on activation',
 		'status' => 'premium',
 		'type' => 'optional',
 	],

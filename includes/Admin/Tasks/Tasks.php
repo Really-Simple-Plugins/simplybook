@@ -4,6 +4,13 @@ namespace Simplybook\Admin\Tasks;
 use Simplybook\Traits\Helper;
 
 defined( 'ABSPATH' ) or die( '' );
+/**
+ * Class Tasks
+ * Task get added on activation, or on a server condition. If clientside condition is necessary is to be determined yet. 
+ *
+ *
+ * @package Simplybook\Admin\Tasks
+ */
 
 class Tasks {
 	use Helper;
@@ -19,7 +26,7 @@ class Tasks {
 	public function add_initial_tasks(): void {
 		$tasks = $this->get_raw_tasks();
 		foreach ( $tasks as $task ) {
-			if ( isset($task['is_initial_task']) && $task['is_initial_task']) {
+			if ( isset($task['condition']['type']) && $task['condition']['type'] === 'activation' ) {
 				update_option( 'simplybook_task_' . $task['id'], true, false );
 			}
 		}
@@ -44,7 +51,8 @@ class Tasks {
 
 		$completed_tasks = [];
 		foreach ($tasks as $key => $task) {
-			if ( isset($task['condition']) && !get_option('simplybook_task_' . $task['id'], false)) {
+			$has_condition = isset($task['condition']['type']) && $task['condition']['type']==='serverside';
+			if ( $has_condition && !get_option('simplybook_task_' . $task['id'], false)) {
 				//we want to have these completed ones at the end so remove them here, and store in separate aray
 				unset($tasks[$key]);
 				$task['status'] = 'completed';
