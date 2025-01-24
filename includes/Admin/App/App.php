@@ -221,6 +221,7 @@ class App {
 	 * @return array
 	 */
 	private function localized_settings( $js_data ): array {
+        error_log("loading localized settings");
         return apply_filters(
 			'simplybook_localize_script',
 			[
@@ -231,7 +232,7 @@ class App {
 				'plugin_url'              => SIMPLYBOOK_URL . 'includes/',
                 'debug'                   => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
 				'json_translations'       => $js_data['json_translations'],
-				'settings_menu'           => $this->menus(),
+				'settings_menu'           => $this->menu(),
 				'settings_fields'         => $this->fields( true ),
 				'is_onboarding_completed' => $this->onboarding_completed(),
 				'first_name'              => $this->get_first_name(),

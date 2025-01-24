@@ -40,11 +40,19 @@ const ListField = forwardRef(
             );
         }
 
+        const premiumItem = {
+            id: "upgrade",
+            name: __("Want more services?"),
+            picture_preview: "",
+        };
+
         return (
             <div className="w-full">
                 {listArray.map((item) => (
-                    <ListItem id={item.id} name={item.name} />
+                    <ListItem upgrade={false} key={item.id} label={label} link={setting.link} item={item} />
                 ))}
+                <ListItem upgrade={true} label={label} link="r/payment-widget" item={premiumItem} />
+
             </div>
         );
     },

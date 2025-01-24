@@ -13,6 +13,7 @@ import {
     faEye,
     faBullhorn,
     faClock,
+    faShoppingCart,
  } from "@fortawesome/free-solid-svg-icons";
 
 // Map your icons to keys for easy referencing
@@ -30,6 +31,7 @@ const iconMap = {
     "bullhorn": faBullhorn,
     "clock": faClock,
     "circle": faCircle,
+    "cart": faShoppingCart,
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

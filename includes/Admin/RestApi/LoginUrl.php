@@ -46,7 +46,8 @@ class LoginUrl extends RestApi {
 		}
 		return $this->response([
 			'login_url' => $login_url,
-			'url' => "https://$company_login.secure.$domain",
+			'url' => "https://$company_login.secure.$domain/v2",
+			'domain' => "https://$company_login.secure.$domain/",
 		]);
 	}
 }

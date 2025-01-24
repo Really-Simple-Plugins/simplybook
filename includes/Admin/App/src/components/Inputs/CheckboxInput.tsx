@@ -1,7 +1,6 @@
 import React, {forwardRef, InputHTMLAttributes, useEffect, useState} from "react";
 
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
-  type?: string;
   label: string;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -12,8 +11,9 @@ interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
  * @returns {JSX.Element} The rendered input element
  */
 const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
-    ({ type = "checkbox", label, className, checked, value, onChange, ...props }, ref) => {
+    ({ label, className, checked, value, onChange, ...props }, ref) => {
 
+        let top = !label || label.length === 0 ? "0.5" : "1";
         return (
             <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -24,7 +24,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                     {...props}
                 />
                 <div
-                    className="w-8 h-4 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all"
+                    className={"w-8 h-4 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-"+top+" after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all"}
                 ></div>
                 <span className={`ml-2 font-medium text-black text-md ${className || ""}`}>
                     {label}

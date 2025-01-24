@@ -44,7 +44,9 @@ class Services extends RestApi {
 	public function services($request): WP_REST_Response {
 		$services = [
 			['id'=>1,'name'=>'test'],
-		];//$this->api->get_services();
+			['id'=>2,'name'=>'Autobanden'],
+		];
+		$services = $this->api->get_services();
 		error_log(print_r("services array in rest api",true));
 		error_log(print_r($services,true));
 		return $this->response($services);

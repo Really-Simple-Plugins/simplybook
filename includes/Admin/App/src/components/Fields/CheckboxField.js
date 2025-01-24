@@ -30,7 +30,6 @@ const CheckboxField = forwardRef(
                 <CheckboxInput
                     label={label}
                     id={inputId}
-                    type="checkbox"
                     aria-invalid={!!fieldState?.error?.message}
                     {...props}
                 />

@@ -6,6 +6,8 @@ module.exports = {
     'border-gray-300',
     'bg-white',
     'shadow-lg',
+      'after:top-1',//used in checkboxinput in dymamic css, not detected by tailwind
+      'after:top-0.5',//used in checkboxinput in dymamic css, not detected by tailwind
   ],
   mode: "jit",
   content: ["./src/**/*.{js,jsx,ts,tsx}"],

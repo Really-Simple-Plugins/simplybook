@@ -672,6 +672,9 @@ video {
 #simplybook_app .ml-2 {
   margin-left: 0.5rem;
 }
+#simplybook_app .ml-4 {
+  margin-left: 1rem;
+}
 #simplybook_app .ml-auto {
   margin-left: auto;
 }
@@ -905,6 +908,11 @@ video {
 }
 #simplybook_app .gap-8 {
   gap: 2rem;
+}
+#simplybook_app :is(.space-x-3 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.75rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 #simplybook_app :is(.space-y-2 > :not([hidden]) ~ :not([hidden])) {
   --tw-space-y-reverse: 0;
@@ -1303,6 +1311,10 @@ video {
 #simplybook_app .after\:left-0\.5::after {
   content: var(--tw-content);
   left: 0.125rem;
+}
+#simplybook_app .after\:top-0\.5::after {
+  content: var(--tw-content);
+  top: 0.125rem;
 }
 #simplybook_app .after\:top-1::after {
   content: var(--tw-content);

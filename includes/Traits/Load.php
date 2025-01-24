@@ -207,7 +207,7 @@ trait Load {
 
 	 * @return array
 	 */
-	public function menus(): array
+	public function menu(): array
 	{
 		$menus = include( SIMPLYBOOK_PATH . 'includes/Config/Menus.php' );
 		$menus = apply_filters('simplybook_menu', $menus);

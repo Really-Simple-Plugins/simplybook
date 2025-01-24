@@ -1,8 +1,8 @@
 import request from "../requests/request";
-
+import {LoginData} from "../../types/LoginData";
 /**
  * Update an onboarding step
- * @return {Promise<string>}
+ * @return {Promise<LoginData>}
  */
 const getLoginUrl = async () => {
     const res = await request("get_login_url", "POST");
