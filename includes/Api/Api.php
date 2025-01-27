@@ -522,6 +522,12 @@ class Api
 		return 0;
 	}
 
+	public function reset_registration(){
+		$this->delete_company_login();
+		$this->clear_tokens();
+		delete_option('simplybook_completed_step');
+	}
+
 	/**
 	 * Registers a company with the API
 	 *

@@ -15,6 +15,7 @@ use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
 use Simplybook\Admin\RestApi\Dashboard;
 use Simplybook\Admin\Tasks\Tasks;
+use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
 use Simplybook\Upgrades\Upgrades;
@@ -50,8 +51,19 @@ class Admin {
 		add_filter( "plugin_action_links_$plugin", array( $this, 'plugin_settings_link' ) );
 
 		add_action( 'simplybook_daily', array($this, 'update_tasks') );
+
+		add_action('admin_init', array($this, 'maybe_reset_registration'));
 	}
 
+	/**
+	 * Reset registration
+	 */
+	public function maybe_reset_registration(): void {
+		if (isset($_GET['reset_registration']) && $_GET['reset_registration'] === 'true'){
+			$api = new Api();
+			$api->reset_registration();
+		}
+	}
 
 	/**
 	 * On a daily basis, update the task options

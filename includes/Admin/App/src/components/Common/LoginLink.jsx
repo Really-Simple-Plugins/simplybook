@@ -11,8 +11,11 @@ const LoginLink = ({ className, page, isButton = false, size="md", btnVariant, c
     const loginTo = async (e, page ) => {
         e.preventDefault();
         console.log("Get login URL for", page);
-        if (!fetched) {
+        if ( !fetched ) {
+            console.log("not fetched yet");
             await fetchLinkData();
+        } else {
+            console.log("already fetched");
         }
         const finalUrl = alreadyLoggedIn
             ? `${directUrl}/${page}`

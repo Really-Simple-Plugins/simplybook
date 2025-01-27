@@ -9,7 +9,8 @@ const getLoginUrl = async () => {
     if (!res || !res.data.url) {
         return {
             'url':'',
-            'login_url':''
+            'login_url':'',
+            'domain':'',
         };
     }
     return res.data;
