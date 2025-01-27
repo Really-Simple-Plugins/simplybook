@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import {forwardRef, useState} from "react";
 import CheckboxInput from "../Inputs/CheckboxInput";
 import {__, sprintf } from "@wordpress/i18n";
 import Icon from "../Common/Icon";
@@ -12,22 +12,28 @@ import useLoginData from "../../hooks/useLoginData";
  */
 const ListItem = forwardRef(
     ({ upgrade, link, item, label, ...props }, ref) => {
+        const [visible, setVisible] = useState(item.is_visible);
         const onChange = (e) => {
-            console.log('onChange', e.target.checked, "for id ", id);
+            console.log('onChange', e.target.checked, "for id ", item.id);
+            setVisible(e.target.checked);
         };
-        const { domain } = useLoginData();
-
+        const { domain, fetched } = useLoginData();
+        const hasPicture = fetched && item.picture_preview && item.picture_preview.length > 0;
         const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label) : __("Edit", "simplybook");
         return (
             <>
                 <div className="w-full flex items-center justify-between px-4 py-5 bg-gray-100 mb-4">
                     <div className="flex items-center space-x-3">
                         <div>
-                            {item.picture_preview && item.picture_preview.length > 0 &&
-                                <img className="w-15 h-15 max-w-[60px] max-h-[60px]" src={domain + item.picture_preview}
+                            { hasPicture &&
+                                <img className="w-15 h-15 max-w-[40px] max-h-[40px]" src={domain + item.picture_preview}
                                      alt={item.picture_preview} />
                             }
-                            {!item.picture_preview && <Icon name="cart"/> }
+                            {!hasPicture &&
+                                <div className="min-w-[40px] min-h-[40px] flex items-center justify-center">
+                                    <Icon name="cart"/>
+                                </div>
+                            }
                         </div>
                         <div className="font-bold">{item.name}</div>
                         <LoginLink page={link}>
@@ -40,7 +46,8 @@ const ListItem = forwardRef(
                             {!upgrade &&
                                 <CheckboxInput
                                     label={""}
-                                    id={id}
+                                    id={item.id}
+                                    checked={visible}
                                     onChange={onChange}
                                 />
                             }

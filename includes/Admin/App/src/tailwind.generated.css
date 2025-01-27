@@ -750,6 +750,12 @@ video {
 #simplybook_app .max-h-48 {
   max-height: 12rem;
 }
+#simplybook_app .max-h-\[40px\] {
+  max-height: 40px;
+}
+#simplybook_app .min-h-\[40px\] {
+  min-height: 40px;
+}
 #simplybook_app .min-h-full {
   min-height: 100%;
 }
@@ -789,8 +795,14 @@ video {
 #simplybook_app .min-w-\[140px\] {
   min-width: 140px;
 }
+#simplybook_app .min-w-\[40px\] {
+  min-width: 40px;
+}
 #simplybook_app .max-w-7xl {
   max-width: 80rem;
+}
+#simplybook_app .max-w-\[40px\] {
+  max-width: 40px;
 }
 #simplybook_app .max-w-md {
   max-width: 28rem;

@@ -5,13 +5,15 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
 const LoginLink = ({ className, page, isButton = false, size="md", btnVariant, children }) => {
-    const { alreadyLoggedIn, setAlreadyLoggedIn, directUrl, loginUrl } = useLoginData();
+    const { alreadyLoggedIn, setAlreadyLoggedIn, directUrl, loginUrl, fetched, fetchLinkData } = useLoginData();
     const { onboardingCompleted } = useOnboardingData();
 
     const loginTo = async (e, page ) => {
         e.preventDefault();
         console.log("Get login URL for", page);
-
+        if (!fetched) {
+            await fetchLinkData();
+        }
         const finalUrl = alreadyLoggedIn
             ? `${directUrl}/${page}`
             : `${loginUrl}?back_url=/${page}/`;

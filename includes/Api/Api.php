@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Simplybook\Api\ApiResponse\ApiResponse;
+use Simplybook\Api\JsonRpcClient\JsonRpcClient;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -39,6 +40,41 @@ class Api
 				$this->refresh_token('admin');
 			}
 		}
+
+//		$recently_loaded = get_transient('simplybook_recently_loaded');
+//		if ( !$recently_loaded ) {
+//			$this->getBookingStats();
+//			set_transient('simplybook_recently_loaded', true, MINUTE_IN_SECONDS);
+//		}
+	}
+
+	public function getBookingStats(){
+
+		$this->get_user_token();
+		//$headers = $this->get_headers(true, 'user');
+		//$client = new JsonRpcClient($this->endpoint . '/admin/', $headers );
+		$client = new JsonRpcClient('http://user-api.simplybook.me' . '/admin/', array(
+			'headers' => array(
+				'X-Company-Login: ' . $this->get_company_login(),
+				'X-User-Token: ' . $this->get_token('user'),
+			)
+		));
+		$stats = $client->getBookingStats('week');
+		error_log(print_r('stats', true));
+		error_log(print_r($stats, true));
+
+	}
+
+	public function get_user_token(){
+		$loginClient = new JsonRpcClient($this->endpoint . 'login/' );
+		$pw = $this->decrypt_string(get_option('simplybook_user_token'));
+		$token = $loginClient->getUserToken($this->get_company_login(), sanitize_email( $this->get_option('email') ), $pw);
+		error_log(print_r('user token', true));
+		error_log(print_r($token, true));
+		if ( $token ) {
+			$this->update_token($token, 'user');
+		}
+
 	}
 
 	/**
@@ -78,6 +114,21 @@ class Api
 	 */
 	public function get_login_url(): string {
 		//we can't cache this url, because it expires after use.
+		//but we want to prevent using it too much, limit request to three times per hour
+		$login_url_request_count = get_transient('simplybook_login_url_request_count');
+		if ( !$login_url_request_count ) {
+			$login_url_request_count = 0;
+		}
+
+		$login_url_first_request_time = get_transient('simplybook_login_url_first_request_time');
+		if ( $login_url_request_count>3 && $login_url_first_request_time > time() - HOUR_IN_SECONDS ) {
+			return '';
+		}
+
+		set_transient('simplybook_login_url_request_count', $login_url_request_count + 1, HOUR_IN_SECONDS);
+		if ( $login_url_request_count===1 ) {
+			set_transient('simplybook_login_url_first_request_time', time(), HOUR_IN_SECONDS);
+		}
 		$response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
 		if (isset($response['login_url'])) {
 			return esc_url_raw($response['login_url']);
@@ -100,8 +151,23 @@ class Api
 		);
 
 		if ( $include_token ) {
-			$headers['X-Token'] = $this->get_token($token_type);
-			$headers[ 'X-Company-Login' ] = $this->get_company_login();
+			$token = $this->get_token($token_type);
+			if ( empty($token) ) {
+				switch ($token_type) {
+					case 'public':
+						$this->get_public_token();
+						break;
+					case 'admin':
+						$this->refresh_token('admin');
+						break;
+					case 'user':
+						$this->get_user_token();
+						break;
+				}
+				$token = $this->get_token($token_type);
+			}
+			$headers['X-Token'] = $token;
+			$headers['X-Company-Login' ] = $this->get_company_login();
 		}
 
 		error_log("used headers:");
@@ -120,7 +186,7 @@ class Api
 	 */
 
 	public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
-		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
+		$type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
@@ -135,7 +201,7 @@ class Api
 	 * @return string
 	 */
 	public function get_token( string $type = 'public', bool $refresh = false ) : string {
-		$type = in_array($type, ['public', 'admin']) ? $type : 'public';
+		$type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
 		if ( $refresh ) {
 			$type = $type . '_refresh';
 		}
@@ -482,6 +548,7 @@ class Api
 		$category = (int) $this->get_option('category');
 		$category =  $category < 1 ? 8 : $category; //default other category
 		$random_password = wp_generate_password( 24, false );
+		update_option('simplybook_user_token', $this->encrypt_string($random_password), false );
 		$company_name = sanitize_text_field( $this->get_option('company_name') );
 		//strip off
 		//get a description using the WordPress get_bloginfo function
@@ -529,6 +596,8 @@ class Api
 				    "retype_password" => $random_password,
 					'categories' => [$category],
 					'lang' => $this->get_locale(),
+					//add a query arg so we can redirect to the correct page when user ends up on this link.
+					'widget_notification_url' => add_query_arg(['simplybook' => true],get_site_url()),
 //					'providers'=>[$provider],
 //					'services'=>[$service],
 //					'dismiss_onboarding' => true,
