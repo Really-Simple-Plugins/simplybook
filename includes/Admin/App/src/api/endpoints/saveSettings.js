@@ -8,6 +8,7 @@ import request from "../requests/request";
 const saveSettingsFields = async ( data ) => {
     console.log("saving settings", data);
     const res = await request("settings/save", "POST", data);
+    console.log("save settings fields response", res.data);
     return res.data;
 };
 

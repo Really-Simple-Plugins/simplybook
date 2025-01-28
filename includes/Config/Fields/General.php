@@ -4,16 +4,6 @@ defined( 'ABSPATH' ) or die();
 
 return [
 	[
-		'id'       => 'clear_session',
-		'menu_id'  => 'general',
-		'group_id' => 'general',
-		'type'     => 'checkbox',
-		'label'    => __('Clear session', 'simplybook'),
-		'disabled' => false,
-		'default'  => false,
-		'widget_field'  => '/',
-	],
-	[
 		'id'       => 'domain',
 		'menu_id'  => 'general',
 		'group_id' => 'general',

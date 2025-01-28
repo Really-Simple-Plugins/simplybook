@@ -28,7 +28,7 @@ function FormFooter({ onSubmit, control }) {
         )}
         <ButtonInput 
           onClick={onSubmit} 
-          disabled={isSubmitting || isValidating}
+          disabled={!isDirty || isSubmitting || isValidating}
         >
           {__("Save", "simplybook")}
         </ButtonInput>

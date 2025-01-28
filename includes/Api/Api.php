@@ -603,7 +603,7 @@ class Api
 					'categories' => [$category],
 					'lang' => $this->get_locale(),
 					//add a query arg so we can redirect to the correct page when user ends up on this link.
-					'widget_notification_url' => add_query_arg(['simplybook' => true],get_site_url()),
+					'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
 //					'providers'=>[$provider],
 //					'services'=>[$service],
 //					'dismiss_onboarding' => true,
@@ -659,8 +659,15 @@ class Api
 				}
 
 				$this->log("Error during company registration: ".$request->message);
-				update_option('simplybook_company_registration_error', $request->message, false);
-				return new ApiResponse( false, $request->message );
+				//get first property of $request->data
+				$error = '';
+				$fields        = get_object_vars( $request->data );
+				if ( $fields && is_array($fields) ) {
+					$error_messages = reset( $fields );
+					$error = $error_messages[0] ?? '';
+				}
+
+				return new ApiResponse( false, $request->message.' '.$error );
 			}
 
 		} else {
@@ -831,6 +838,17 @@ class Api
 
 	public function get_services(): array {
 		$response = $this->api_call('admin/services', [], 'GET');
+		return $response['data'] ?? [];
+	}
+
+	/**
+	 * Get list of Simplybook providers
+	 *
+	 * @return array
+	 */
+
+	public function get_providers(): array {
+		$response = $this->api_call('admin/providers', [], 'GET');
 		return $response['data'] ?? [];
 	}
 

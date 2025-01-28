@@ -78,9 +78,11 @@ const OnboardingStep = ({
       try {
         const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
         if (shouldContinue === false) {
+          setDisabled(false);
           return; // Cancel submission only if beforeSubmit explicitly returns false
         }
       } catch (error) {
+        setDisabled(false);
         console.error('Submission cancelled:', error);
         return; // Cancel submission if beforeSubmit throws an error
       }

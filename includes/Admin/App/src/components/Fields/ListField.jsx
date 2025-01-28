@@ -1,8 +1,8 @@
 import {forwardRef, useEffect, useState} from "react";
-import TextField from "./TextField";
 import useServicesData from "../../hooks/useServicesData";
 import {__, sprintf } from "@wordpress/i18n";
 import ListItem from "./ListItem";
+import useProviderData from "../../hooks/useProviderData";
 /**
  * HiddenField component
  * @param {object} setting
@@ -18,12 +18,15 @@ import ListItem from "./ListItem";
 const ListField = forwardRef(
     ({ setting, field, fieldState, label, help, context, className, ...props }, ref) => {
         const {services} = useServicesData();
+        const {providers} = useProviderData();
         const [listArray, setListArray] = useState([]);
         const sourceData = {
             services: services,
+            providers: providers,
         };
 
         useEffect(() => {
+            console.log("loading listArray for ", setting.source);
             setListArray(sourceData[setting.source]);
         }, [sourceData[setting.source]]);
 

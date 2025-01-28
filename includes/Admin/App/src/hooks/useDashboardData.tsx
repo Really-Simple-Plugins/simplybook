@@ -33,9 +33,6 @@ const useDashboardData = () => {
     return {
         dashboardData: query.data || defaultData,
         refetchData: query.refetch,
-        invalidateSettings: () => {
-            queryClient.invalidateQueries({ queryKey: ["dashboard_data"] });
-        },
     };
 };
 

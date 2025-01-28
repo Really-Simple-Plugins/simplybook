@@ -67,7 +67,7 @@ class Settings extends RestApi {
 
 		//filter out all fields where the 'value' key is not set
         $fields = array_filter($fields, function($field) {
-			return isset($field['value']);
+				return isset($field['value']);
 		    }
 		);
 

@@ -11,6 +11,7 @@ use Simplybook\Admin\RestApi\GetWidget;
 use Simplybook\Admin\RestApi\LoginUrl;
 use Simplybook\Admin\RestApi\Onboarding;
 use Simplybook\Admin\RestApi\Services;
+use Simplybook\Admin\RestApi\Providers;
 use Simplybook\Admin\RestApi\Settings;
 use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
 use Simplybook\Admin\RestApi\Dashboard;
@@ -35,6 +36,7 @@ class Admin {
         ( new Onboarding() );
         ( new LoginUrl() );
         ( new Services() );
+        ( new Providers() );
         ( new Settings() );
 		( new CompanyRegistration() );
 		( new WaitForRegistrationCallback() );

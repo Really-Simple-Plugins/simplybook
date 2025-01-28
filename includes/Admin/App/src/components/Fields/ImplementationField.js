@@ -7,6 +7,7 @@ const ImplementationField = ({ options, value, onChange, ...props }) => {
 
     const handleChange = async (value) => {
         await setValue(props.setting.id, value);
+        console.log("invalidate Settings from implementation");
         await invalidateSettings();
         onChange(value);
 

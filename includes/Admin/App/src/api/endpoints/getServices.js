@@ -2,7 +2,7 @@ import request from "../requests/request";
 
 /**
  * Update an onboarding step
- * @return {Promise<void>}
+ * @return {Promise<array>}
  */
 const getServices = async () => {
     const res = await request("services", "POST");

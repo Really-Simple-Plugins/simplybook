@@ -1,6 +1,7 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import getSettingsFields from "../api/endpoints/getSettingsFields";
 import saveSettingsFields from "../api/endpoints/saveSettings";
+
 /**
  * Custom hook for managing settings data using Tanstack Query.
  * This hook provides functions to fetch and update settings.
@@ -10,34 +11,52 @@ import saveSettingsFields from "../api/endpoints/saveSettings";
 const useSettingsData = () => {
   const queryClient = useQueryClient();
 
-  // Query for fetching settings from server
+  const transformData = (data) => {
+    //find all items with type===checkbox, and ensure that the value is a boolean
+    return data.map((field) => {
+      if (field.type === "checkbox") {
+        field.value = !!field.value;
+      }
+      return field;
+    });
+  }
+
   const query = useQuery({
     queryKey: ["settings_fields"],
     queryFn: () => getSettingsFields({ withValues: true }),
     staleTime: 1000 * 60 * 5, // 5 minutes
-    initialData: window.simplybook && window.simplybook.settings_fields,
+    initialData: transformData(window.simplybook && window.simplybook.settings_fields),
     retry: 0,
-    select: (data) => [...data], // create a new array so dependencies are updated
+    select: (data) => data ? [...data] : [],
   });
 
-  const getValue = (id) => query.data.find((field) => field.id === id)?.value;
+  const getValue = (id) => {
+    return query.data.find((field) => field.id === id)?.value;
+  }
   const setValue = (id, value) => {
-    const field = query.data.find((field) => field.id === id);
-    if (field) {
-      field.value = value;
-    }
+    queryClient.setQueryData(["settings_fields"], (oldData) => {
+      return oldData.map((field) =>
+          field.id === id ? { ...field, value } : field
+      );
+    });
   };
+
   // Update Mutation for settings data with destructured values
   const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
-    useMutation({
+    useMutation(
+        {
       mutationFn: async (data) => {
-        return await saveSettingsFields(data);
+        console.log("saving data", data);
+        let settings = await saveSettingsFields(data);
+        return transformData(settings);
       },
-      onSuccess: (data) => {
-        queryClient.invalidateQueries(["settings_fields"]);
-        queryClient.setQueryData(["settings_fields"], data);
-      },
+      onSuccess: async (data) => {
+        queryClient.setQueryData(["settings_fields"], (oldData) => {
+          return data ? [...data] : [];
+        });
+        },
     });
+
 
   return {
     settings: query.data,

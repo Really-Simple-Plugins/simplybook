@@ -1,4 +1,4 @@
-import { Controller } from "react-hook-form";
+import {Controller, useFormState} from "react-hook-form";
 import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
@@ -59,21 +59,23 @@ const FormField = memo(({ setting, control, ...props } ) => {
   };
 
   const handleSaveOnChange = async (fieldValue) => {
+    console.log("handleSaveOnChange", setting.id, fieldValue);
     setValue(setting.id, fieldValue);
     if (setting.mapping){
       //mapping is an array of id's, [id1, id2, id3]
       //loop through the mapping array, and for each id, update it with the same value
-        setting.mapping.forEach((id) => {
-            setValue(id, fieldValue);
-        });
+      setting.mapping.forEach((id) => {
+        setValue(id, fieldValue);
+      });
     }
     await saveSettings(settings);
   };
 
   let defaultValue = setting.value || setting.default;
   if (setting.type === "checkbox") {
-      defaultValue = defaultValue === "1";
+    defaultValue = defaultValue === "1" || defaultValue === true || defaultValue===1;
   }
+
   return (
     <ErrorBoundary>
       <Controller
@@ -83,6 +85,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
           defaultValue={defaultValue}
           render={({ field, fieldState }) => {
             useEffect(() => {
+
               let curValue = getValue(setting.id);
               if ( curValue === field.value ) {
                 return;
@@ -94,6 +97,11 @@ const FormField = memo(({ setting, control, ...props } ) => {
                 handleSaveOnChange(field.value);
               }
             }, [field.value]);
+            // Add your console logs here for debugging
+            console.log("control: ", control);
+            console.log("field: ", field);
+            console.log("Form isDirty: ", control._formState.isDirty);
+            console.log("Default Value: ", defaultValue, "Current Value: ", field.value);
 
             return (
                 <FieldComponent
