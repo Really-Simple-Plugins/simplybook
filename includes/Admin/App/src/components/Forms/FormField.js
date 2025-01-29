@@ -97,12 +97,6 @@ const FormField = memo(({ setting, control, ...props } ) => {
                 handleSaveOnChange(field.value);
               }
             }, [field.value]);
-            // Add your console logs here for debugging
-            console.log("control: ", control);
-            console.log("field: ", field);
-            console.log("Form isDirty: ", control._formState.isDirty);
-            console.log("Default Value: ", defaultValue, "Current Value: ", field.value);
-
             return (
                 <FieldComponent
                     className={setting.inline_group ? "inline-flex" : ""}

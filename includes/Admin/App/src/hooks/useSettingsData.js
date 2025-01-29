@@ -54,6 +54,7 @@ const useSettingsData = () => {
         queryClient.setQueryData(["settings_fields"], (oldData) => {
           return data ? [...data] : [];
         });
+        queryClient.invalidateQueries(["settings_fields"]);
         },
     });
 

@@ -12,6 +12,9 @@ module.exports = {
   resolve: {
     ...defaultConfig.resolve,
     extensions: [".ts", ".tsx", ".js", ".jsx"], // Add .ts and .tsx extensions
+    alias: {
+      'chalk': false // Prevent Webpack from bundling chalk
+    }
   },
   module: {
     ...defaultConfig.module,
@@ -20,6 +23,10 @@ module.exports = {
       ...defaultConfig.module.rules.filter(
         (rule) => !String(rule.test).includes("\\.css$"),
       ),
+      {
+        test: /\.cjs$/,
+        type: 'javascript/auto'
+      },
       // Add TypeScript loader
       {
         test: /\.tsx?$/, // Match .ts and .tsx files
