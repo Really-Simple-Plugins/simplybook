@@ -69,8 +69,9 @@
     "@tanstack/react-router": "^1.62.1",
     "@wordpress/api-fetch": "^7.11.0",
     "ajv": "^8.17.1",
-    "chalk": "^5.4.1",
+    "chalk": "^4.1.2",
     "clsx": "^2.1.1",
+    "node-fetch": "^2.7.0",
     "react-color": "^2.19.3",
     "react-hook-form": "^7.53.1",
     "zustand": "^5.0.1"
