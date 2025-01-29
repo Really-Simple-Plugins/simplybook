@@ -1,10 +1,10 @@
-import {forwardRef, useEffect, useState} from "react";
+import { forwardRef, useEffect, useState } from "react";
 import ColorPicker from "../Inputs/ColorPicker";
 import FieldWrapper from "../Forms/FieldWrapper";
 import * as Popover from '@radix-ui/react-popover';
 
 /**
- * TextField component
+ * ColorPickerField component
  * @param {object} field - Provided by react-hook-form's Controller
  * @param {object} fieldState - Contains validation state
  * @param {string} label
@@ -15,7 +15,7 @@ import * as Popover from '@radix-ui/react-popover';
  * @return {JSX.Element}
  */
 const ColorPickerField = forwardRef(
-    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, ...props }, ref) => {
+    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, pauseRerenders, ...props }, ref) => {
         const defaultColor = setting.value || setting.default;
         const [color, setColor] = useState(defaultColor);
         useEffect(() => {
@@ -24,17 +24,19 @@ const ColorPickerField = forwardRef(
             }
         }, [props.value]);
 
-        const ColorPickerElement = ({label}) => {
+        const ColorPickerElement = ({ label }) => {
             const handleColorChange = (color, event) => {
                 setColor(color);
                 onChange(color);
             }
 
             return (
-                <Popover.Root>
-                    <Popover.Trigger className='p-[5px] mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-sm'>
-                        <div className="cursor-pointer min-w-5 flex p-1.5 gap-3.5 items-center" >
-                            <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{backgroundColor: color}}></div>
+                <Popover.Root onOpenChange={(open) => {console.log("changing popover open status ", open );pauseRerenders(open)}} >
+                    <Popover.Trigger
+                        className='p-[5px] mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-sm'
+                    >
+                        <div className="cursor-pointer min-w-5 flex p-1.5 gap-3.5 items-center">
+                            <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{ backgroundColor: color }}></div>
                             {label}
                         </div>
                     </Popover.Trigger>
@@ -58,7 +60,7 @@ const ColorPickerField = forwardRef(
                 required={props.required}
             >
                 <div className="">
-                    <ColorPickerElement setting={setting} label={label}/>
+                    <ColorPickerElement setting={setting} label={label} />
                 </div>
             </FieldWrapper>
         );

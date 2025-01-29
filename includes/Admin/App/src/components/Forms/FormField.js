@@ -10,6 +10,7 @@ import ColorPickerField from "../Fields/ColorPickerField";
 import ImplementationField from "../Fields/ImplementationField";
 import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
+import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
 
 const fieldComponents = {
   text: TextField,
@@ -23,6 +24,8 @@ const fieldComponents = {
 };
 
 const FormField = memo(({ setting, control, ...props } ) => {
+  const {pauseRerenders, paused} = useWaitForRegistrationCallback();
+  console.log("paused in formfield", paused);
   if (setting.visible === false) {
     return (
       <input type="hidden" defaultValue={setting.value || setting.default} />
@@ -110,6 +113,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
                     context={setting.context}
                     help={setting.help}
                     options={setting.options}
+                    pauseRerenders={pauseRerenders}
                     {...props}
                     {...field}
                 />

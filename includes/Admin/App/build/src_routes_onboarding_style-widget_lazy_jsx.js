@@ -1047,7 +1047,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /**
- * TextField component
+ * ColorPickerField component
  * @param {object} field - Provided by react-hook-form's Controller
  * @param {object} fieldState - Contains validation state
  * @param {string} label
@@ -1067,6 +1067,7 @@ const ColorPickerField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   className,
   onChange,
   defaultValue,
+  pauseRerenders,
   ...props
 }, ref) => {
   const defaultColor = setting.value || setting.default;
@@ -1084,6 +1085,10 @@ const ColorPickerField = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
       onChange(color);
     };
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_4__.Root, {
+      onOpenChange: open => {
+        console.log("changing popover open status ", open);
+        pauseRerenders(open);
+      },
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_radix_ui_react_popover__WEBPACK_IMPORTED_MODULE_4__.Trigger, {
         className: "p-[5px] mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-sm",
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
@@ -1569,7 +1574,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
 /* harmony import */ var _Fields_HiddenField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Fields/HiddenField */ "./src/components/Fields/HiddenField.jsx");
 /* harmony import */ var _Fields_CheckboxField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Fields/CheckboxField */ "./src/components/Fields/CheckboxField.js");
@@ -1583,8 +1588,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Fields_ImplementationField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Fields/ImplementationField */ "./src/components/Fields/ImplementationField.js");
 /* harmony import */ var _Fields_ListField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Fields/ListField */ "./src/components/Fields/ListField.jsx");
 /* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__);
+/* harmony import */ var _hooks_useWaitForRegistrationCallback__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../hooks/useWaitForRegistrationCallback */ "./src/hooks/useWaitForRegistrationCallback.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__);
+
 
 
 
@@ -1613,8 +1620,13 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
   control,
   ...props
 }) => {
+  const {
+    pauseRerenders,
+    paused
+  } = (0,_hooks_useWaitForRegistrationCallback__WEBPACK_IMPORTED_MODULE_11__["default"])();
+  console.log("paused in formfield", paused);
   if (setting.visible === false) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)("input", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("input", {
       type: "hidden",
       defaultValue: setting.value || setting.default
     });
@@ -1627,7 +1639,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
     settings
   } = (0,_hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_10__["default"])();
   if (!FieldComponent) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsxs)("div", {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
       className: "w-full",
       children: ["Unknown field type: ", setting.type, " ", setting.id]
     });
@@ -1677,8 +1689,8 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue === 1;
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(react_hook_form__WEBPACK_IMPORTED_MODULE_12__.Controller, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_components_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(react_hook_form__WEBPACK_IMPORTED_MODULE_13__.Controller, {
       name: setting.id,
       control: control,
       rules: validationRules,
@@ -1700,7 +1712,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
             handleSaveOnChange(field.value);
           }
         }, [field.value]);
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_11__.jsx)(FieldComponent, {
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(FieldComponent, {
           className: setting.inline_group ? "inline-flex" : "",
           setting: setting,
           fieldState: fieldState,
@@ -1710,6 +1722,7 @@ const FormField = (0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
           context: setting.context,
           help: setting.help,
           options: setting.options,
+          pauseRerenders: pauseRerenders,
           ...props,
           ...field
         });
@@ -2539,6 +2552,10 @@ const useSettingsData = () => {
     return query.data.find(field => field.id === id)?.value;
   };
   const setValue = (id, value) => {
+    const field = query.data.find(field => field.id === id);
+    if (field) {
+      field.value = value;
+    }
     queryClient.setQueryData(["settings_fields"], oldData => {
       return oldData.map(field => field.id === id ? {
         ...field,
@@ -2602,6 +2619,8 @@ const useWaitForRegistrationCallback = () => {
   } = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])();
   const [pollingEnabled, setPollingEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(true);
   const [count, setCount] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(0);
+  const [paused, setPaused] = (0,react__WEBPACK_IMPORTED_MODULE_2__.useState)(false);
+  const previousDataRef = (0,react__WEBPACK_IMPORTED_MODULE_2__.useRef)(null);
 
   // Use Query for polling logic
   const {
@@ -2611,6 +2630,10 @@ const useWaitForRegistrationCallback = () => {
   } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)({
     queryKey: ["registration_callback_status"],
     queryFn: async () => {
+      console.log("paused status in query fetch", paused);
+      if (paused) {
+        return;
+      }
       console.log("Polling for registration callback status");
       setCount(count + 1);
       const res = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("check_registration_callback_status", "POST", {
@@ -2618,6 +2641,15 @@ const useWaitForRegistrationCallback = () => {
           status: "waiting"
         }
       });
+
+      // Check if the data has changed
+      if (JSON.stringify(res.data) === JSON.stringify(previousDataRef.current)) {
+        console.log("No change in data, skipping update");
+        return previousDataRef.current;
+      }
+
+      // Update previous data reference
+      previousDataRef.current = res.data;
       if (res.data.status === 'completed') {
         console.log("disable polling and set onboarding completed");
         setPollingEnabled(false);
@@ -2633,13 +2665,19 @@ const useWaitForRegistrationCallback = () => {
     enabled: pollingEnabled,
     // Control polling via state
     refetchInterval: queryData => {
-      return pollingEnabled ? 2000 : false;
+      return pollingEnabled && !paused ? 2000 : false;
     },
     onError: error => {
       setPollingEnabled(false); // Optionally stop polling on error
     }
   });
+  const pauseRerenders = paused => {
+    console.log("we are pausing rerenders", paused);
+    setPaused(paused);
+  };
   return {
+    paused,
+    pauseRerenders,
     startPolling: () => setPollingEnabled(true),
     isFetching,
     data
@@ -2737,7 +2775,8 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazy
       onboardingCompleted
     } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__["default"])();
     const {
-      startPolling
+      startPolling,
+      paused
     } = (0,_hooks_useWaitForRegistrationCallback__WEBPACK_IMPORTED_MODULE_2__["default"])();
     const [isLoadingScript, setIsLoadingScript] = (0,react__WEBPACK_IMPORTED_MODULE_3__.useState)(false);
     const runInlineScript = async () => {
@@ -2760,6 +2799,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazy
       }
     };
     (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+      console.log("onboardingcompleted UseEffect ");
       startPolling();
     }, [onboardingCompleted]);
     const setupPreview = async () => {
@@ -2823,6 +2863,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazy
 
     //if settings are changed, refetch the widget script
     (0,react__WEBPACK_IMPORTED_MODULE_3__.useEffect)(() => {
+      console.log("isSavingSettings, onboardingcompleted UseEffect ");
       if (!onboardingCompleted) {
         console.log("onboarding not completed, return");
         return;
@@ -2833,7 +2874,10 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazy
       }
       invalidateAndRefetchWidgetScript();
     }, [isSavingSettings, onboardingCompleted]);
-    console.log(" rerender of onboardingCompleted style widget:", onboardingCompleted);
+    if (paused || isSavingSettings) {
+      return null;
+    }
+    console.log(" rerender of onboardingCompleted style widget, onboardingCompleted:", onboardingCompleted);
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.Fragment, {
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_components_Onboarding_OnboardingStep__WEBPACK_IMPORTED_MODULE_1__["default"], {
         path: path,

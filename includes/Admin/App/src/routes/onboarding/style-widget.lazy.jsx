@@ -16,7 +16,7 @@ export const Route = createLazyFileRoute(path)({
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { isSavingSettings } = useSettingsData();
         const {onboardingCompleted} = useOnboardingData();
-        const { startPolling } = useWaitForRegistrationCallback();
+        const { startPolling, paused } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
 
         const runInlineScript = async (  ) => {
@@ -40,6 +40,7 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
+            console.log("onboardingcompleted UseEffect ")
             startPolling();
         }, [onboardingCompleted ]);
 
@@ -114,6 +115,8 @@ export const Route = createLazyFileRoute(path)({
 
         //if settings are changed, refetch the widget script
         useEffect(() => {
+            console.log("isSavingSettings, onboardingcompleted UseEffect ")
+
             if (!onboardingCompleted ) {
                 console.log("onboarding not completed, return");
                 return;
@@ -126,7 +129,10 @@ export const Route = createLazyFileRoute(path)({
             invalidateAndRefetchWidgetScript();
         }, [isSavingSettings, onboardingCompleted]);
 
-        console.log(" rerender of onboardingCompleted style widget:", onboardingCompleted);
+        if (paused || isSavingSettings) {
+            return null;
+        }
+        console.log(" rerender of onboardingCompleted style widget, onboardingCompleted:", onboardingCompleted);
         return (
             <>
                 <OnboardingStep
