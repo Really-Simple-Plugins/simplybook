@@ -61,6 +61,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
   const handleSaveOnChange = async (fieldValue) => {
     console.log("handleSaveOnChange", setting.id, fieldValue);
     setValue(setting.id, fieldValue);
+    console.log("new settings array ", settings);
     if (setting.mapping){
       //mapping is an array of id's, [id1, id2, id3]
       //loop through the mapping array, and for each id, update it with the same value
@@ -94,6 +95,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
               //save on change currently only in use in the wizard, so we can prevent saving of empty values
               //which would not be ideal in the settings pages.
               if (setting.save_on_change && field.value.length>0 ) {
+                console.log("saving field on change", setting.id, field.value);
                 handleSaveOnChange(field.value);
               }
             }, [field.value]);
