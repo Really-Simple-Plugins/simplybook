@@ -5,7 +5,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Simplybook\Api\ApiResponse\ApiResponse;
-use Simplybook\Api\JsonRpcClient\JsonRpcClient;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Load;
 use Simplybook\Traits\Save;
@@ -50,32 +49,31 @@ class Api
 
 	public function getBookingStats(){
 
-		$this->get_user_token();
-		//$headers = $this->get_headers(true, 'user');
-		//$client = new JsonRpcClient($this->endpoint . '/admin/', $headers );
-		$client = new JsonRpcClient('http://user-api.simplybook.me' . '/admin/', array(
-			'headers' => array(
-				'X-Company-Login: ' . $this->get_company_login(),
-				'X-User-Token: ' . $this->get_token('user'),
-			)
-		));
-		$stats = $client->getBookingStats('week');
-		error_log(print_r('stats', true));
-		error_log(print_r($stats, true));
+//		$this->get_user_token();
+//		//$headers = $this->get_headers(true, 'user');
+//		//$client = new JsonRpcClient($this->endpoint . '/admin/', $headers );
+//		$client = new JsonRpcClient('http://user-api.simplybook.me' . '/admin/', array(
+//			'headers' => array(
+//				'X-Company-Login: ' . $this->get_company_login(),
+//				'X-User-Token: ' . $this->get_token('user'),
+//			)
+//		));
+//		$stats = $client->getBookingStats('week');
+//		error_log(print_r('stats', true));
+//		error_log(print_r($stats, true));
 
 	}
 
-	public function get_user_token(){
-		$loginClient = new JsonRpcClient($this->endpoint . 'login/' );
-		$pw = $this->decrypt_string(get_option('simplybook_user_token'));
-		$token = $loginClient->getUserToken($this->get_company_login(), sanitize_email( $this->get_option('email') ), $pw);
-		error_log(print_r('user token', true));
-		error_log(print_r($token, true));
-		if ( $token ) {
-			$this->update_token($token, 'user');
-		}
-
-	}
+//	public function get_user_token(){
+//		$loginClient = new JsonRpcClient($this->endpoint . 'login/' );
+//		$pw = $this->decrypt_string(get_option('simplybook_user_token'));
+//		$token = $loginClient->getUserToken($this->get_company_login(), sanitize_email( $this->get_option('email') ), $pw);
+//		error_log(print_r('user token', true));
+//		error_log(print_r($token, true));
+//		if ( $token ) {
+//			$this->update_token($token, 'user');
+//		}
+//	}
 
 	/**
 	 * Check if we have a company_id, which shows we have a registered company
@@ -554,7 +552,6 @@ class Api
 		$category = (int) $this->get_option('category');
 		$category =  $category < 1 ? 8 : $category; //default other category
 		$random_password = wp_generate_password( 24, false );
-		update_option('simplybook_user_token', $this->encrypt_string($random_password), false );
 		$company_name = sanitize_text_field( $this->get_option('company_name') );
 		//strip off
 		//get a description using the WordPress get_bloginfo function

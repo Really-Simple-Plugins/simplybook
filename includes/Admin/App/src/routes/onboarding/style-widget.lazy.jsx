@@ -2,7 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useState, useCallback } from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
@@ -11,15 +11,14 @@ import CalendarLoading from "../../components/Common/CalendarLoading";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
-
-    component: () => {
+    component: React.memo(() => {
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { isSavingSettings } = useSettingsData();
-        const {onboardingCompleted} = useOnboardingData();
+        const { onboardingCompleted } = useOnboardingData();
         const { startPolling, paused } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
-
-        const runInlineScript = async (  ) => {
+        const [prevOnboardingCompleted , setPreviousOnboardingCompleted] = useState(true);
+        const runInlineScript = useCallback(async () => {
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
             let script = widgetScript.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
@@ -27,34 +26,37 @@ export const Route = createLazyFileRoute(path)({
             targetObj.innerHTML = script;
             try {
                 document.head.appendChild(targetObj);
-                // domContentLoaded already has fired, so we replace it with our custom event and fire that.
-                // this way we don't inadvertently trigger any other scripts that are listening for domContentLoaded
                 const customEvent = new Event("customDOMContentLoaded");
-                // Dispatch custom event
                 document.dispatchEvent(customEvent);
-                // Remove the event listener after it has fired
                 document.removeEventListener("DOMContentLoaded", instantiateSimplybookWidget);
-            } catch(exception) {
-                throw "Something went wrong " + exception + " while loading "+script;
+            } catch (exception) {
+                throw "Something went wrong " + exception + " while loading " + script;
             }
+        }, [widgetScript]);
+
+        if (paused){
+            return null;
         }
 
         useEffect(() => {
-            console.log("onboardingcompleted UseEffect ")
-            startPolling();
-        }, [onboardingCompleted ]);
+            if (prevOnboardingCompleted===onboardingCompleted) {
+                return;
+            }
 
-        const setupPreview = async () => {
+            startPolling();
+
+        }, [onboardingCompleted]);
+
+        const setupPreview = useCallback(async () => {
             if (isLoadingScript) {
                 console.log("Script already loading, return");
                 return;
             }
             setIsLoadingScript(true);
 
-            //clear existing scripts
             clearInlineScript();
             let script = document.head.querySelector('#simplybook-src-script');
-            if ( script ) {
+            if (script) {
                 console.log("Script already loaded, run inline script");
                 await runInlineScript();
                 setIsLoadingScript(false);
@@ -70,29 +72,29 @@ export const Route = createLazyFileRoute(path)({
                 };
                 document.head.appendChild(script);
             }
-        }
+        }, [isLoadingScript, runInlineScript]);
 
-        const clearInlineScript = () => {
+        const clearInlineScript = useCallback(() => {
             const inlineScript = document.head.querySelector('#simplybook-inline-script');
             if (inlineScript) {
                 console.log("removing inline script");
                 document.head.removeChild(inlineScript);
             }
-        }
+        }, []);
 
         useEffect(() => {
             console.log("useeffect for preview setup",
                 "onboardingcompleted", onboardingCompleted,
                 "isSavingSettings", isSavingSettings,
                 "widgetScript.length", widgetScript.length
-                );
+            );
 
-            if ( !onboardingCompleted ) {
+            if (!onboardingCompleted) {
                 console.log("Onboarding not completed, return");
                 return;
             }
 
-            if (widgetScript.length === 0 ) {
+            if (widgetScript.length === 0) {
                 console.log("No script, return");
                 return;
             }
@@ -100,7 +102,6 @@ export const Route = createLazyFileRoute(path)({
             console.log("We have a script and onboarding is completed, setup preview");
             setupPreview();
 
-            // Cleanup function to remove the script and callback when the component unmounts
             return () => {
                 console.log("cleanup function");
                 const srcScript = document.head.querySelector('#simplybook-src-script');
@@ -110,29 +111,37 @@ export const Route = createLazyFileRoute(path)({
                 }
                 clearInlineScript();
             };
-        }, [widgetScript, onboardingCompleted]);
+        }, [widgetScript, onboardingCompleted, setupPreview, clearInlineScript]);
 
-
-        //if settings are changed, refetch the widget script
         useEffect(() => {
-            console.log("isSavingSettings, onboardingcompleted UseEffect ")
+            if (prevOnboardingCompleted===onboardingCompleted) {
+                return;
+            }
 
-            if (!onboardingCompleted ) {
+            console.log("isSavingSettings, onboardingcompleted UseEffect ",
+                isSavingSettings,
+                onboardingCompleted,
+                );
+
+            if (!onboardingCompleted) {
                 console.log("onboarding not completed, return");
                 return;
             }
 
-            if ( isSavingSettings ){
+            if (isSavingSettings) {
                 console.log("Saving settings, wait until saved");
                 return;
             }
+            console.log("invalidate and refetch widget script");
             invalidateAndRefetchWidgetScript();
-        }, [isSavingSettings, onboardingCompleted]);
+        }, [isSavingSettings, onboardingCompleted, invalidateAndRefetchWidgetScript]);
 
-        if (paused || isSavingSettings) {
-            return null;
-        }
-        console.log(" rerender of onboardingCompleted style widget, onboardingCompleted:", onboardingCompleted);
+        useEffect(() => {
+            if (onboardingCompleted !== prevOnboardingCompleted) {
+                setPreviousOnboardingCompleted(onboardingCompleted);
+            }
+        },[onboardingCompleted] );
+
         return (
             <>
                 <OnboardingStep
@@ -151,5 +160,5 @@ export const Route = createLazyFileRoute(path)({
                 />
             </>
         );
-    },
+    }),
 });

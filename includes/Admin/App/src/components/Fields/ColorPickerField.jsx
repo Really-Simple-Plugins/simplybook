@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from "react";
 import ColorPicker from "../Inputs/ColorPicker";
 import FieldWrapper from "../Forms/FieldWrapper";
 import * as Popover from '@radix-ui/react-popover';
+import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
 
 /**
  * ColorPickerField component
@@ -15,14 +16,24 @@ import * as Popover from '@radix-ui/react-popover';
  * @return {JSX.Element}
  */
 const ColorPickerField = forwardRef(
-    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, pauseRerenders, ...props }, ref) => {
+    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, ...props }, ref) => {
         const defaultColor = setting.value || setting.default;
+        const {isPolling } = useWaitForRegistrationCallback();
+        const [popoverOpen, setPopoverOpen] = useState(false);
+
         const [color, setColor] = useState(defaultColor);
         useEffect(() => {
             if (props.value !== color) {
                 setColor(props.value);
             }
         }, [props.value]);
+
+        const handlePopoverOpenChange = (open) => {
+            // Prevent Popover from closing if `isPolling` is true
+            if (!isPolling) {
+                setPopoverOpen(open);
+            }
+        };
 
         const ColorPickerElement = ({ label }) => {
             const handleColorChange = (color, event) => {
@@ -31,7 +42,7 @@ const ColorPickerField = forwardRef(
             }
 
             return (
-                <Popover.Root onOpenChange={(open) => {console.log("changing popover open status ", open );pauseRerenders(open)}} >
+                <Popover.Root open={popoverOpen} onOpenChange={handlePopoverOpenChange}>
                     <Popover.Trigger
                         className='p-[5px] mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-sm'
                     >
