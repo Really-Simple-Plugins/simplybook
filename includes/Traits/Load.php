@@ -91,7 +91,6 @@ trait Load {
      */
     public function get_widget_settings(): array
     {
-		error_log('get_widget_settings');
         $fields = $this->get_fields_by_attribute( 'widget_field', true );
         $widget_fields = [];
         foreach ( $fields as $field ) {

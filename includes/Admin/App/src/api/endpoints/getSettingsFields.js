@@ -7,8 +7,6 @@ import request from "../requests/request";
  */
 const getSettingsFields = async ({ withValues = true }) => {
   const res = await request("settings/get", "POST", { withValues });
-  console.log("getSettingsFields from api ", res);
-
   return res.data;
 };
 

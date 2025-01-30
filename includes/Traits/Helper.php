@@ -45,7 +45,6 @@ trait Helper {
 		$callback_url = get_option('simplybook_callback_url', '' );
 		$expires = get_option('simplybook_callback_url_expires' );
 		if ( $expires > time() ) {
-			error_log("return callback url ".$callback_url);
 			return $callback_url;
 		}
 

@@ -34,7 +34,7 @@ const DataList = [
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
-    key: "sms",
+    id: "sms",
   },
   {
     title: __("Membership", "simplybook"),
@@ -42,7 +42,7 @@ const DataList = [
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
-    key: "memberships"
+    id: "memberships"
   },
   {
     title: __("Paid Events", "simplybook"),
@@ -50,7 +50,7 @@ const DataList = [
     buttonText: __("Upgrade", "simplybook"),
     btnVariant: "primary",
     isPlugin:true,
-    key: "paid_events",
+    id: "paid_events",
   },
 ];
 
@@ -67,7 +67,7 @@ const Management = () => {
           {DataList.map((block, index) => (
               <Fragment key={index}>
                 {block.isPlugin ? (
-                    <Plugin title={block.title} link={block.link} key={block.key}/>
+                    <Plugin title={block.title} link={block.link} id={block.id}/>
                 ) : (
                     <Manage title={block.title} link={block.link} buttonText={block.buttonText} />
                 )}

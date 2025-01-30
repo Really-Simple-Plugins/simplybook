@@ -17,6 +17,7 @@ const LoginLink = ({ className, page, isButton = false, size="md", btnVariant, c
         } else {
             console.log("already fetched");
         }
+        console.log("Already logged in", alreadyLoggedIn);
         const finalUrl = alreadyLoggedIn
             ? `${directUrl}/${page}`
             : `${loginUrl}?back_url=/${page}/`;

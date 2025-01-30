@@ -111,26 +111,34 @@ class Api
 	 * @return string
 	 */
 	public function get_login_url(): string {
+		if ( !$this->company_registration_complete() ) {
+			return '';
+		}
 		//we can't cache this url, because it expires after use.
-		//but we want to prevent using it too much, limit request to three times per hour
+		//but we want to prevent using it too much, limit request to once per 20 minutes, which is the max of three times/hour.
 		$login_url_request_count = get_transient('simplybook_login_url_request_count');
 		if ( !$login_url_request_count ) {
 			$login_url_request_count = 0;
 		}
 
 		$login_url_first_request_time = get_transient('simplybook_login_url_first_request_time');
-		if ( $login_url_request_count>3 && $login_url_first_request_time > time() - HOUR_IN_SECONDS ) {
+		$expiration = HOUR_IN_SECONDS;
+		if ( $login_url_request_count>=3 ) {
 			return '';
 		}
 
-		set_transient('simplybook_login_url_request_count', $login_url_request_count + 1, HOUR_IN_SECONDS);
+		$time_passed_since_first_request = time() - $login_url_first_request_time;
+		$remaining_expiration = $expiration - $time_passed_since_first_request;
+		set_transient('simplybook_login_url_request_count', $login_url_request_count + 1, $remaining_expiration);
 		if ( $login_url_request_count===1 ) {
-			set_transient('simplybook_login_url_first_request_time', time(), HOUR_IN_SECONDS);
+			set_transient('simplybook_login_url_first_request_time', time(), $remaining_expiration);
 		}
+
 		$response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
 		if (isset($response['login_url'])) {
 			return esc_url_raw($response['login_url']);
 		}
+
 		return '';
 	}
 

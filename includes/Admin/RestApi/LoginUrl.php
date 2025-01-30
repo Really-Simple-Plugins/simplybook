@@ -35,6 +35,7 @@ class LoginUrl extends RestApi {
 	}
 
 	public function get_login_url($request): WP_REST_Response {
+		error_log("retrieving login URL");
 		$login_url = $this->api->get_login_url();
 		$domain = $this->get_option('domain');
 		$company_login = $this->api->get_company_login();

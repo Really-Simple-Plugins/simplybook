@@ -1,49 +1,41 @@
-import {useEffect, useState} from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import getLoginUrl from "../api/endpoints/getLoginUrl";
-import {LoginData} from "../types/LoginData";
+import { LoginData } from "../types/LoginData";
+import useOnboardingData from "./useOnboardingData";
+
 const defaultLoginData: LoginData = {
     url: '',
     login_url: '',
-    domain: '' // Add any other required properties here
+    domain: '', // Add any other required properties here
 };
 
-import useOnboardingData from "./useOnboardingData";
 const useLoginData = () => {
     const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
-    const [fetched, setFetched] = useState(false);
     const { onboardingCompleted } = useOnboardingData();
 
     const query = useQuery<LoginData>({
         queryKey: ["login_data"],
         queryFn: async () => {
-            if ( !onboardingCompleted ) {
-                console.log("not completed yet, returning default/empty login data");
-                return defaultLoginData;
-            }
             const response = await getLoginUrl();
-            console.log("getloginurl response", response);
-            setFetched(true);
+            console.log("getLoginUrl response", response);
             return response;
         },
-        staleTime: 1000 * 60 * 5, // 5 minutes
+        staleTime: 1000 * 60 * 60,
         retry: 0,
+        enabled: true,
+        initialData: defaultLoginData,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
     });
 
-    useEffect(() => {
-        if (onboardingCompleted && !fetched) {
-            query.refetch();
-            setFetched(true);
-        }
-    }, [onboardingCompleted, fetched, query]);
-
     return {
-        fetched,
-        fetchLoginData: query.refetch,
+        loginUrlFetched: query.isFetched,
         directUrl: query.data?.url,
         loginUrl: query.data?.login_url,
         domain: query.data?.domain,
-        alreadyLoggedIn: alreadyLoggedIn,
+        alreadyLoggedIn,
         setAlreadyLoggedIn,
     };
 };

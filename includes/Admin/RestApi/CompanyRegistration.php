@@ -24,8 +24,6 @@ class CompanyRegistration extends RestApi {
 		if ( empty( $callback_url ) ) {
 			return;
 		}
-		error_log("has callback url, load route company_registration/".$callback_url);
-
 		register_rest_route(
 			'simplybook/v1',
 			'company_registration/'.$callback_url,

@@ -17,8 +17,8 @@ const ListItem = forwardRef(
             console.log('onChange', e.target.checked, "for id ", item.id);
             setVisible(e.target.checked);
         };
-        const { domain, fetched } = useLoginData();
-        const hasPicture = fetched && item.picture_preview && item.picture_preview.length > 0;
+        // const { domain, loginUrlFetched } = useLoginData();
+        const hasPicture = false;//loginUrlFetched && item.picture_preview && item.picture_preview.length > 0;
         const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label) : __("Edit", "simplybook");
         return (
             <>

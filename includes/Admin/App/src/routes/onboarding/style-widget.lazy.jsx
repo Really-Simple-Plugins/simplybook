@@ -49,7 +49,6 @@ export const Route = createLazyFileRoute(path)({
 
         const setupPreview = useCallback(async () => {
             if (isLoadingScript) {
-                console.log("Script already loading, return");
                 return;
             }
             setIsLoadingScript(true);
@@ -90,23 +89,18 @@ export const Route = createLazyFileRoute(path)({
             );
 
             if (!onboardingCompleted) {
-                console.log("Onboarding not completed, return");
                 return;
             }
 
             if (widgetScript.length === 0) {
-                console.log("No script, return");
                 return;
             }
 
-            console.log("We have a script and onboarding is completed, setup preview");
             setupPreview();
 
             return () => {
-                console.log("cleanup function");
                 const srcScript = document.head.querySelector('#simplybook-src-script');
                 if (srcScript) {
-                    console.log("removing existing script");
                     document.head.removeChild(srcScript);
                 }
                 clearInlineScript();
@@ -124,14 +118,13 @@ export const Route = createLazyFileRoute(path)({
                 );
 
             if (!onboardingCompleted) {
-                console.log("onboarding not completed, return");
                 return;
             }
 
             if (isSavingSettings) {
-                console.log("Saving settings, wait until saved");
                 return;
             }
+
             console.log("invalidate and refetch widget script");
             invalidateAndRefetchWidgetScript();
         }, [isSavingSettings, onboardingCompleted, invalidateAndRefetchWidgetScript]);

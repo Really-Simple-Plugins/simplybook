@@ -5,15 +5,15 @@ import LoginLink from "../../Common/LoginLink";
 interface PluginProps {
     title: string;
     link: string;
-    key:string,
+    id:string,
 }
-const Plugin: FC<PluginProps> = ({ title, link, key }) => {
+const Plugin: FC<PluginProps> = ({ title, link, id }) => {
     const {isPluginActive, plugins = [], refetchData} = useManagementData();
     const [active, setActive] = useState(true);
 
     useEffect(() => {
-        setActive(isPluginActive(key));
-    }, [isPluginActive, key]);
+        setActive(isPluginActive(id));
+    }, [isPluginActive, id]);
 
 
     useEffect(() => {
