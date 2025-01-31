@@ -30,6 +30,8 @@ const useLoginData = () => {
         refetchOnWindowFocus: false,
     });
 
+
+
     return {
         loginUrlFetched: query.isFetched,
         directUrl: query.data?.url,
