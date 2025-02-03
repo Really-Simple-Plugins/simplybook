@@ -5,6 +5,7 @@ import request from "../requests/request";
  * @return {Promise<string>}
  */
 const getWidget = async () => {
+    console.log("loading widget");
     const res = await request("get_widget", "POST");
     console.log(res);
     if (!res || !res.data.widget ) {

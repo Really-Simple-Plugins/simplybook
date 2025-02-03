@@ -9,6 +9,7 @@ const useWidgetData = () => {
         staleTime: 1000 * 60 * 5, // 5 minutes
         initialData: '',
         retry: 0,
+        enabled: false,
     });
 
     const invalidateAndRefetchWidgetScript = async () => {

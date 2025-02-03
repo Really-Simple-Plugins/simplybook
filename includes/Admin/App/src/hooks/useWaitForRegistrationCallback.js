@@ -9,7 +9,13 @@ const useWaitForRegistrationCallback = () => {
     const [ count, setCount ] = useState(0);
     const { data, refetch, isFetching } = useQuery({
         queryKey: ["registration_callback_status"],
+        initialData: { status: "waiting" },
         queryFn: async () => {
+            if (!pollingEnabled) {
+                console.log("Polling disabled");
+                return {data: { status: "waiting" }};
+            }
+
             setCount(count + 1);
             const res = await request("check_registration_callback_status", "POST", {
                 data: { status: "waiting" },
@@ -25,7 +31,7 @@ const useWaitForRegistrationCallback = () => {
             }
             return res.data;
         },
-        enabled: pollingEnabled,
+        enabled: true,
         refetchInterval: (queryData) => {
             return pollingEnabled ? 3000 : false;
         },
@@ -36,8 +42,8 @@ const useWaitForRegistrationCallback = () => {
 
     return {
         startPolling: () => setPollingEnabled(true),
-        isPolling: isFetching,
-        data
+        pollingEnabled,
+        isPolling: isFetching
     };
 };
 export default useWaitForRegistrationCallback;

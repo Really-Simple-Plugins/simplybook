@@ -15,7 +15,7 @@ export const Route = createLazyFileRoute(path)({
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { isSavingSettings } = useSettingsData();
         const { onboardingCompleted } = useOnboardingData();
-        const { startPolling } = useWaitForRegistrationCallback();
+        const { startPolling, pollingEnabled, isPolling } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
         const runInlineScript = async () => {
             let targetObj = document.createElement("script");
@@ -34,10 +34,11 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
-            if (!onboardingCompleted) {
+            if ( pollingEnabled ) {
+                console.log("polling already enabled, exit");
                 return;
             }
-
+            console.log("start polling");
             startPolling();
 
         }, [onboardingCompleted]);
@@ -117,7 +118,7 @@ export const Route = createLazyFileRoute(path)({
             }
 
             console.log("invalidate and refetch widget script");
-            invalidateAndRefetchWidgetScript();
+            //invalidateAndRefetchWidgetScript();
         }, [isSavingSettings, onboardingCompleted]);
 
         return (
@@ -128,10 +129,11 @@ export const Route = createLazyFileRoute(path)({
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
                         <div className="h-full">
-                            {!onboardingCompleted && <div>
-                                <ProgressBar />
-                                <CalendarLoading />
-                            </div>}
+                            {/*{!onboardingCompleted && <div>*/}
+                            {/*    Not completed*/}
+                            {/*    /!*<ProgressBar />*!/*/}
+                            {/*    /!*<CalendarLoading />*!/*/}
+                            {/*</div>}*/}
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
                     }
