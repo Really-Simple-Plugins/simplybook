@@ -5,28 +5,35 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
 const LoginLink = ({ className, page, isButton = false, size="md", btnVariant, children }) => {
-    const { alreadyLoggedIn, setAlreadyLoggedIn, directUrl, loginUrl, fetched, fetchLinkData } = useLoginData();
+    const { alreadyLoggedIn, setAlreadyLoggedIn, directUrl, loginUrl, loginUrlFetched, fetchLinkData } = useLoginData();
     const { onboardingCompleted } = useOnboardingData();
 
     const loginTo = async (e, page ) => {
         e.preventDefault();
+        let link = alreadyLoggedIn ? directUrl : loginUrl;
         console.log("Get login URL for", page);
-        if ( !fetched ) {
+        if ( !loginUrlFetched ) {
             console.log("not fetched yet");
-            await fetchLinkData();
+            const loginData = await fetchLinkData();
+            console.log("logindata response after promise", loginData);
+            link = alreadyLoggedIn ? loginData.url : loginData.login_url;
+
         } else {
             console.log("already fetched");
         }
+
         console.log("Already logged in", alreadyLoggedIn);
+        console.log("all data ", link);
         const finalUrl = alreadyLoggedIn
-            ? `${directUrl}/${page}`
-            : `${loginUrl}?back_url=/${page}/`;
+            ? `${link}/${page}`
+            : `${link}?back_url=/${page}/`;
 
         console.log("Final URL", finalUrl);
         setAlreadyLoggedIn(true);
         // Open a new tab with the login URL
         window.open(finalUrl, "_blank");
         window.focus();
+
     };
 
     // Apply conditional classes

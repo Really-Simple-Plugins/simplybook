@@ -41,18 +41,23 @@ const ColorPickerField = forwardRef(
                 onChange(color);
             }
 
+            let disabledClass = setting.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
             return (
-                <Popover.Root open={popoverOpen} onOpenChange={handlePopoverOpenChange}>
+                <Popover.Root
+                    open={popoverOpen} onOpenChange={handlePopoverOpenChange}
+                >
                     <Popover.Trigger
                         className='p-[5px] mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-sm'
                     >
-                        <div className="cursor-pointer min-w-5 flex p-1.5 gap-3.5 items-center">
+                        <div className={disabledClass+" min-w-5 flex p-1.5 gap-3.5 items-center"}>
                             <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{ backgroundColor: color }}></div>
                             {label}
                         </div>
                     </Popover.Trigger>
-                    <Popover.Portal>
-                        <Popover.Content>
+                    <Popover.Portal
+
+                    >
+                        <Popover.Content >
                             <ColorPicker colorValue={color} onChangeComplete={handleColorChange} />
                         </Popover.Content>
                     </Popover.Portal>

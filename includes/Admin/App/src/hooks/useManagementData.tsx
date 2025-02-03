@@ -17,7 +17,7 @@ const useManagementData = () => {
         select: (data) => [...data],
     });
     const isPluginActive = (id: string) => {
-        return query.data.some((plugin) => plugin.key === id && plugin.is_turned_on);
+        return query.data.some((plugin) => plugin.id === id && plugin.is_turned_on);
     }
 
     return {

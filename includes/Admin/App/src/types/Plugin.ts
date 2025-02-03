@@ -1,5 +1,5 @@
 export interface Plugin {
     is_turned_on: boolean;
-    key: string;
+    id: string;
     is_active: boolean;
 }

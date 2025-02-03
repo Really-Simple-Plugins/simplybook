@@ -49,13 +49,11 @@ const OnboardingStep = ({
   // Update confirmation code in onboarding data. Otherwise the recaptcha code clears the confirmation code
   const formData = watch();
   useEffect(() => {
-    console.log("useeffect confirmation-code")
     updateData({'confirmation-code': formData['confirmation-code']});
   }, [formData['confirmation-code']]);
 
   //onload of this component, check completed step simplybook.completed_step and navigate to the next step if it's above 0
     useEffect(() => {
-      console.log("useeffect navigate onboardingstep")
       let currentStep = getCurrentStepId(path);
       let completedStepNext = parseInt(simplybook.completed_step) + 1 ;
       if ( completedStepNext > 1 && completedStepNext > currentStep) {
@@ -112,7 +110,6 @@ const OnboardingStep = ({
   };
 
   useEffect(() => {
-    console.log("useeffect company_name")
     let companyName = getValue("company_name");
     if ( companyName && companyName.length>0 ) {
       setCompanyName(companyName);

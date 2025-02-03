@@ -30,9 +30,9 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
         // Normalize options if it's an object
         const normalizedOptions: SelectOption[] = Array.isArray(options)
             ? options
-            : Object.keys(options).map((key) => ({
-                value: key,
-                label: options[key],
+            : Object.keys(options).map((index) => ({
+                value: index,
+                label: options[index],
             }));
 
         return (

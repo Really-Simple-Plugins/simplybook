@@ -40,10 +40,10 @@ class App {
 
 	public function simplybook_app() {
 		?>
-        <script
-                crossOrigin="anonymous"
-                src="//unpkg.com/react-scan/dist/auto.global.js"
-        /></script>
+<!--        <script-->
+<!--                crossOrigin="anonymous"-->
+<!--                src="//unpkg.com/react-scan/dist/auto.global.js"-->
+<!--        /></script>-->
         <style>
             .toplevel_page_simplybook #wpcontent {
                 padding-left: 0;

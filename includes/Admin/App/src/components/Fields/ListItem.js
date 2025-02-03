@@ -3,7 +3,7 @@ import CheckboxInput from "../Inputs/CheckboxInput";
 import {__, sprintf } from "@wordpress/i18n";
 import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
-import useLoginData from "../../hooks/useLoginData";
+// import useLoginData from "../../hooks/useLoginData";
 /**
  * HiddenField component
  * @param {string} id

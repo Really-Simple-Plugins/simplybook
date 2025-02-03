@@ -13,7 +13,7 @@ const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
     component: () => {
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
-        const { isSavingSettings } = useSettingsData();
+        const { isSavingSettings, settings } = useSettingsData();
         const { onboardingCompleted } = useOnboardingData();
         const { startPolling, pollingEnabled, isPolling } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
@@ -104,22 +104,24 @@ export const Route = createLazyFileRoute(path)({
         }, [widgetScript, onboardingCompleted]);
 
         useEffect(() => {
-            console.log("isSavingSettings, onboardingcompleted UseEffect ",
+            console.log("settings, isSavingSettings, onboardingcompleted UseEffect ",
                 isSavingSettings,
                 onboardingCompleted,
                 );
 
-            if (!onboardingCompleted) {
+            if ( !onboardingCompleted ) {
+                console.log("onboarding not completed, do not reload script");
                 return;
             }
 
-            if (isSavingSettings) {
+            if ( isSavingSettings ) {
+                console.log("saving settings, do not reload script");
                 return;
             }
 
             console.log("invalidate and refetch widget script");
-            //invalidateAndRefetchWidgetScript();
-        }, [isSavingSettings, onboardingCompleted]);
+            invalidateAndRefetchWidgetScript();
+        }, [isSavingSettings, onboardingCompleted, settings ]);
 
         return (
             <>
@@ -129,11 +131,11 @@ export const Route = createLazyFileRoute(path)({
                     buttonLabel={__("Next Step: Finish", "simplybook")}
                     rightColumn={
                         <div className="h-full">
-                            {/*{!onboardingCompleted && <div>*/}
-                            {/*    Not completed*/}
-                            {/*    /!*<ProgressBar />*!/*/}
-                            {/*    /!*<CalendarLoading />*!/*/}
-                            {/*</div>}*/}
+                            {!onboardingCompleted && <div>
+                                Not completed
+                                <ProgressBar />
+                                <CalendarLoading />
+                            </div>}
                             <div className="h-full" id="sbw_z0hg2i"></div>
                         </div>
                     }

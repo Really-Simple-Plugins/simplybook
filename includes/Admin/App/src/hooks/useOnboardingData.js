@@ -13,7 +13,7 @@ import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailab
 
 const useOnboardingData = () => {
   const { getValue } = useSettingsData();
-
+  const [localOnboardingCompleted, setLocalOnboardingCompleted] = useState(false);
   const steps = [
     {
       id: 1,
@@ -174,14 +174,16 @@ const useOnboardingData = () => {
         {
           id: "sb_base_color",
           type: "colorpicker",
-          label: __("Primary color", "simplybook"),
+          label: __("Primary", "simplybook"),
           default: "#DD3649",
           inline_group: "widget",
           save_on_change: true,
           mapping: [
             "btn_color_1",
             "sb_company_label_color",
+            "booking_nav_bg_color",
           ],
+          // disabled: !localOnboardingCompleted,
         },
         {
           id: "sb_busy",
@@ -190,6 +192,7 @@ const useOnboardingData = () => {
           default: "#DD3649",
           inline_group: "widget",
           save_on_change: true,
+          // disabled: !localOnboardingCompleted,
         },
         {
           id: "sb_available",
@@ -198,6 +201,7 @@ const useOnboardingData = () => {
           default: "#DD3649",
           inline_group: "widget",
           save_on_change: true,
+          // disabled: !localOnboardingCompleted,
         },
       ],
     },
@@ -293,6 +297,7 @@ const useOnboardingData = () => {
         ...oldData,
         onboardingCompleted: completed,
       }));
+      setLocalOnboardingCompleted(completed);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["onboarding_data"]);
