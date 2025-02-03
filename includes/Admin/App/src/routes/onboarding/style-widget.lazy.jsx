@@ -11,7 +11,7 @@ import CalendarLoading from "../../components/Common/CalendarLoading";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
-    component: React.memo(() => {
+    component: () => {
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { isSavingSettings } = useSettingsData();
         const { onboardingCompleted } = useOnboardingData();
@@ -138,5 +138,5 @@ export const Route = createLazyFileRoute(path)({
                 />
             </>
         );
-    }),
+    },
 });

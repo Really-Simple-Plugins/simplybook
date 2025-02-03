@@ -2737,7 +2737,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const path = "/onboarding/style-widget";
 const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazyFileRoute)(path)({
-  component: React.memo(() => {
+  component: () => {
     const {
       widgetScript,
       invalidateAndRefetchWidgetScript
@@ -2848,7 +2848,7 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_10__.createLazy
         })
       })
     });
-  })
+  }
 });
 
 /***/ }),
