@@ -2,7 +2,7 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
 import useWidgetData from "../../hooks/useWidgetData";
@@ -15,10 +15,9 @@ export const Route = createLazyFileRoute(path)({
         const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
         const { isSavingSettings } = useSettingsData();
         const { onboardingCompleted } = useOnboardingData();
-        const { startPolling, paused } = useWaitForRegistrationCallback();
+        const { startPolling } = useWaitForRegistrationCallback();
         const [isLoadingScript, setIsLoadingScript] = useState(false);
-        const [prevOnboardingCompleted , setPreviousOnboardingCompleted] = useState(true);
-        const runInlineScript = useCallback(async () => {
+        const runInlineScript = async () => {
             let targetObj = document.createElement("script");
             targetObj.id = "simplybook-inline-script";
             let script = widgetScript.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
@@ -32,14 +31,10 @@ export const Route = createLazyFileRoute(path)({
             } catch (exception) {
                 throw "Something went wrong " + exception + " while loading " + script;
             }
-        }, [widgetScript]);
-
-        if (paused){
-            return null;
         }
 
         useEffect(() => {
-            if (prevOnboardingCompleted===onboardingCompleted) {
+            if (!onboardingCompleted) {
                 return;
             }
 
@@ -47,7 +42,7 @@ export const Route = createLazyFileRoute(path)({
 
         }, [onboardingCompleted]);
 
-        const setupPreview = useCallback(async () => {
+        const setupPreview = async () => {
             if (isLoadingScript) {
                 return;
             }
@@ -71,15 +66,15 @@ export const Route = createLazyFileRoute(path)({
                 };
                 document.head.appendChild(script);
             }
-        }, [isLoadingScript, runInlineScript]);
+        }
 
-        const clearInlineScript = useCallback(() => {
+        const clearInlineScript =() => {
             const inlineScript = document.head.querySelector('#simplybook-inline-script');
             if (inlineScript) {
                 console.log("removing inline script");
                 document.head.removeChild(inlineScript);
             }
-        }, []);
+        };
 
         useEffect(() => {
             console.log("useeffect for preview setup",
@@ -105,13 +100,9 @@ export const Route = createLazyFileRoute(path)({
                 }
                 clearInlineScript();
             };
-        }, [widgetScript, onboardingCompleted, setupPreview, clearInlineScript]);
+        }, [widgetScript, onboardingCompleted]);
 
         useEffect(() => {
-            if (prevOnboardingCompleted===onboardingCompleted) {
-                return;
-            }
-
             console.log("isSavingSettings, onboardingcompleted UseEffect ",
                 isSavingSettings,
                 onboardingCompleted,
@@ -127,13 +118,7 @@ export const Route = createLazyFileRoute(path)({
 
             console.log("invalidate and refetch widget script");
             invalidateAndRefetchWidgetScript();
-        }, [isSavingSettings, onboardingCompleted, invalidateAndRefetchWidgetScript]);
-
-        useEffect(() => {
-            if (onboardingCompleted !== prevOnboardingCompleted) {
-                setPreviousOnboardingCompleted(onboardingCompleted);
-            }
-        },[onboardingCompleted] );
+        }, [isSavingSettings, onboardingCompleted]);
 
         return (
             <>
