@@ -132,7 +132,6 @@ export const Route = createLazyFileRoute(path)({
                     rightColumn={
                         <div className="h-full">
                             {!onboardingCompleted && <div>
-                                Not completed
                                 <ProgressBar />
                                 <CalendarLoading />
                             </div>}
