@@ -3,7 +3,6 @@ import useServicesData from "../../hooks/useServicesData";
 import {__, sprintf } from "@wordpress/i18n";
 import ListItem from "./ListItem";
 import useProviderData from "../../hooks/useProviderData";
-import useLoginData from "../../hooks/useLoginData";
 /**
  * HiddenField component
  * @param {object} setting

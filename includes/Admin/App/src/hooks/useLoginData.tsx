@@ -36,7 +36,6 @@ const useLoginData = () => {
         refetchOnWindowFocus: false,
     });
 
-
     const fetchAndInvalidate = async () => {
         let response = await query.refetch();
         queryClient.setQueryData(["login_data"], response.data);
@@ -47,6 +46,7 @@ const useLoginData = () => {
     return {
         loginData: query.data,
         loginUrlFetched: query.isFetched,
+        loginUrlIsFetching: query.isFetching,
         directUrl: query.data?.url,
         loginUrl: query.data?.login_url,
         domain: query.data?.domain,
