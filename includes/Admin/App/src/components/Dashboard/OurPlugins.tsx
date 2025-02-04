@@ -5,26 +5,11 @@ import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import { Link } from "@tanstack/react-router";
 import Icon from "../Common/Icon";
-
-const pluginsData = [
-  {
-    url: "https://wordpress.org/plugins/really-simple-ssl/",
-    name: "Really Simple Security",
-    tagline: "Lightweight plugin. Heavyweight security features.",
-  },
-  {
-    url: "https://wordpress.org/plugins/complianz/",
-    name: "Complianz",
-    tagline: "Cookie Consent Management as it should be",
-  },
-  {
-    url: "https://wordpress.org/plugins/burst-statistics/",
-    name: "Burst Statistics",
-    tagline: "Privacy-friendly Analytics made Simple",
-  },
-];
+import useOtherPluginsData from "../../hooks/useOtherPluginsData";
 
 const OurPlugins = () => {
+    const {plugins, fetched} = useOtherPluginsData();
+    console.log("OurPlugins", plugins);
   return (
     <Block className={"col-span-6 row-span-1 bg-transparent shadow-none"}>
       <BlockHeading
@@ -33,13 +18,14 @@ const OurPlugins = () => {
       />
       {/* align list in middle of block */}
       <BlockContent className={"flex flex-col items-center"}>
-        {pluginsData.map((plugin) => (
+        {// @ts-ignore
+            fetched && plugins.map((plugin) => (
           <div key={plugin.url} className={"flex items-center gap-2 text-sm w-full py-2 "}>
             <Icon name={"circle"} className={"text-green-500"} />
             <Link to={plugin.url}>
-              {__(plugin.name, "simplybook")} - {__(plugin.tagline, "simplybook")}
+              {plugin.title}
             </Link>
-            <div className={"text-sm ml-auto"}>{__("Install", "simplybook")}</div>
+            <div className={"text-sm ml-auto"}>{plugin.action}</div>
           </div>
         ))}
       </BlockContent>

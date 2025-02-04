@@ -10,7 +10,6 @@ const getLoginUrl = async () => {
         return {
             'url':'',
             'login_url':'',
-            'domain':'',
         };
     }
     return res.data;

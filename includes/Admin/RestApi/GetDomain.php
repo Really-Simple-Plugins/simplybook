@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-class LoginUrl extends RestApi {
+class GetDomain extends RestApi {
 	use Helper;
 	use Save;
 
@@ -21,10 +21,10 @@ class LoginUrl extends RestApi {
 	{
 		register_rest_route(
 			'simplybook/v1',
-			'get_login_url',
+			'get_domain',
 			array(
 				'methods' => 'POST',
-				'callback' => array( $this, 'get_login_url' ),
+				'callback' => array( $this, 'get_domain' ),
 				'permission_callback' => function ( $request ) {
 					return $this->validate_request( $request );
 				},
@@ -32,20 +32,17 @@ class LoginUrl extends RestApi {
 		);
 	}
 
-	public function get_login_url($request): WP_REST_Response {
-		error_log("retrieving login URL");
-		$login_url = $this->api->get_login_url();
+	/**
+	 * @param $request
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function get_domain($request): WP_REST_Response {
+		error_log("retrieving domain");
 		$domain = $this->get_option('domain');
 		$company_login = $this->api->get_company_login();
-
-		//if the login url returns empty, it's probably a too many attempts issue, we're probably already
-		//logged in so we just return the url the user can use to go to the dashboard directly.
-		if (empty($login_url)) {
-			$login_url = "https://$company_login.secure.$domain";
-		}
 		return $this->response([
-			'login_url' => $login_url,
-			'url' => "https://$company_login.secure.$domain/v2",
+			'domain' => "https://$company_login.secure.$domain/",
 		]);
 	}
 }

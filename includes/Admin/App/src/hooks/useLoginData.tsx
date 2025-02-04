@@ -7,12 +7,10 @@ import useOnboardingData from "./useOnboardingData";
 const defaultLoginData: LoginData = {
     url: '',
     login_url: '',
-    domain: '',
 };
 
 const useLoginData = () => {
     const queryClient = useQueryClient();
-
     const [alreadyLoggedIn, setAlreadyLoggedIn] = useState(false);
     const { onboardingCompleted } = useOnboardingData();
 
@@ -49,7 +47,6 @@ const useLoginData = () => {
         loginUrlIsFetching: query.isFetching,
         directUrl: query.data?.url,
         loginUrl: query.data?.login_url,
-        domain: query.data?.domain,
         alreadyLoggedIn,
         setAlreadyLoggedIn,
         fetchLinkData:fetchAndInvalidate,

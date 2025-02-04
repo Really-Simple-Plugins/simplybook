@@ -5,6 +5,7 @@ namespace Simplybook\Admin;
 use Simplybook\Admin\App\App;
 use Simplybook\Admin\Capability\Capability;
 use Simplybook\Admin\RestApi\CompanyRegistration;
+use Simplybook\Admin\RestApi\GetDomain;
 use Simplybook\Admin\RestApi\GetTasks;
 use Simplybook\Admin\RestApi\GetPlugins;
 use Simplybook\Admin\RestApi\GetWidget;
@@ -44,6 +45,7 @@ class Admin {
 		( new Dashboard() );
 		( new GetTasks() );
 		( new GetPlugins() );
+		( new GetDomain() );
 
         $this->app = new App();
 

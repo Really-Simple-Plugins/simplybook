@@ -1,10 +1,9 @@
 <?php
 namespace Simplybook\Admin\RestApi;
 
-use Simplybook\Api\Api;
+use Simplybook\Admin\Installer\Installer;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
-use WP_Error;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,6 +31,80 @@ class Dashboard extends RestApi {
 				},
 			)
 		);
+
+		register_rest_route(
+			'simplybook/v1',
+			'other_plugins_data',
+			array(
+				'methods' => 'POST',
+				'callback' => array( $this, 'other_plugins_data' ),
+				'permission_callback' => function ( $request ) {
+					return $this->validate_request( $request );
+				},
+			)
+		);
+	}
+
+
+	/**
+	 * Get plugin data for other plugin section
+	 *
+	 * @param $request
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function other_plugins_data($request): WP_REST_Response {
+		$plugins = array(
+			[
+				'slug' => 'really-simple-ssl',
+				'constant_free' => 'rsssl_version',
+				'constant_premium' => 'rsssl_pro',
+				'wordpress_url' => 'https://wordpress.org/plugins/really-simple-ssl/',
+				'upgrade_url' => 'https://really-simple-ssl.com/pro?src=cmplz-plugin',
+				'title' => "Really Simple Security - ".__("Lightweight plugin. Heavyweight security features.", "simplybook" ),
+			],
+			[
+				'slug' => 'complianz-gdpr',
+				'constant_free' => 'cmplz_version',
+				'create' => admin_url('admin.php?page=complianz'),
+				'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
+				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
+				'title' => 'Complianz GDPR/CCPA',
+			],
+			[
+				'slug' => 'complianz-terms-conditions',
+				'constant_free' => 'cmplz_tc_version',
+				'create' => admin_url('admin.php?page=terms-conditions'),
+				'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
+				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
+				'title' => 'Complianz - '. __("Terms & Conditions", "simplybook"),
+			],
+		);
+
+		foreach ( $plugins as $index => $plugin ){
+			$installer = new Installer($plugin['slug']);
+			$plugins[ $index ]['url'] = $plugin['wordpress_url'];
+
+			if ( isset($plugin['constant_premium']) && defined($plugin['constant_premium']) ) {
+				$plugins[ $index ]['action'] = 'installed';
+			} else if ( !$installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
+				$plugins[$index]['action'] = 'download';
+			} else if ( $installer->plugin_is_downloaded() && !$installer->plugin_is_activated() ) {
+				$plugins[ $index ]['action'] = 'activate';
+			} else {
+				//free is active, but not premium.
+				$plugins[$index]['url'] = $plugin['upgrade_url'];
+				if (isset($plugin['constant_premium']) ) {
+					$plugins[$index]['action'] = 'upgrade-to-premium';
+				} else {
+					$plugins[ $index ]['action'] = 'installed';
+				}
+			}
+		}
+
+		return $this->response([
+			'plugins' => $plugins
+		]);
 	}
 
 	/**

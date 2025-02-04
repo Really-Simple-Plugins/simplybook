@@ -1,7 +1,7 @@
 import request from "../../requests/request";
 import {Plugins} from "../../../types/Plugins";
 /**
- * Get the bookings count
+ * Get the plugins data
  * @return {Promise<Plugins>}
  */
 const getPlugins = async (): Promise<Plugins> => {
@@ -14,7 +14,7 @@ const getPlugins = async (): Promise<Plugins> => {
     }
 
     // @ts-ignore
-    return response.data as Task[];
+    return response.data as Plugins;
 };
 
 export default getPlugins;

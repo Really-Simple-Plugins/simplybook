@@ -3,7 +3,7 @@ import CheckboxInput from "../Inputs/CheckboxInput";
 import {__, sprintf } from "@wordpress/i18n";
 import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
-import useLoginData from "../../hooks/useLoginData";
+import useDomainData from "../../hooks/useDomainData";
 /**
  * HiddenField component
  * @param {string} id
@@ -17,15 +17,9 @@ const ListItem = forwardRef(
             console.log('onChange', e.target.checked, "for id ", item.id);
             setVisible(e.target.checked);
         };
-        const { domain, loginUrlFetched, loginUrlIsFetching, fetchLinkData } = useLoginData();
-        const hasPicture = loginUrlFetched && item.picture_preview && item.picture_preview.length > 0;
+        const { domain, domainFetched } = useDomainData();
+        const hasPicture = domainFetched && item.picture_preview && item.picture_preview.length > 0;
         const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label) : __("Edit", "simplybook");
-
-        useEffect(() => {
-            if ( !loginUrlFetched && !loginUrlIsFetching ) {
-                fetchLinkData();
-            }
-        }, []);
 
         return (
             <>
