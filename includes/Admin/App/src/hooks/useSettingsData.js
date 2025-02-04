@@ -69,7 +69,7 @@ const useSettingsData = () => {
     saveSettings,
     getValue,
     setValue,
-    isSavingSettings: query.isLoading,
+    isSavingSettings: query.isLoading || query.fetchStatus === "fetching",
     invalidateSettings: () =>
       queryClient.invalidateQueries(["settings_fields"]),
   };

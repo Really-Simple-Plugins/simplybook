@@ -2,11 +2,15 @@ import FormScrollProgressLine from "./FormScrollProgressLine";
 import ButtonInput from "../Inputs/ButtonInput";
 import { __ } from "@wordpress/i18n";
 import { useFormState } from "react-hook-form";
+import Icon from "../Common/Icon";
+import useSettingsData from "../../hooks/useSettingsData";
 
 function FormFooter({ onSubmit, control }) {
   const { isDirty, isSubmitting, isValidating, isValid } = useFormState({
     control,
   });
+
+  const { isSavingSettings } = useSettingsData();
 
   const formStates = [
     { condition: isSubmitting, message: __("Saving...", "simplybook"), color: "blue" },
@@ -16,7 +20,6 @@ function FormFooter({ onSubmit, control }) {
   ];
 
   const currentState = formStates.find(state => state.condition);
-
   return (
     <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
       <FormScrollProgressLine />
@@ -28,9 +31,10 @@ function FormFooter({ onSubmit, control }) {
         )}
         <ButtonInput 
           onClick={onSubmit} 
-          disabled={!isDirty || isSubmitting || isValidating}
+          disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
         >
           {__("Save", "simplybook")}
+          {isSubmitting || isSavingSettings && <Icon className="ml-4" name="spinner" color="white"/>}
         </ButtonInput>
       </div>
     </div>

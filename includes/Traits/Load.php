@@ -1,14 +1,11 @@
 <?php
 namespace Simplybook\Traits;
-use Simplybook\Api\Api;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-/**
- * @Rogier maybe move to Admin?
- */
+
 trait Load {
 	public $fields = [];
 	public $values_loaded = false;
@@ -107,23 +104,6 @@ trait Load {
         }
 
         return $widget_fields;
-    }
-
-    /**
-     * Get the widget settings
-     *
-     * @return array
-     */
-    public function get_api_data(): array
-    {
-		error_log('get_api_data');
-		$api = new API();
-		return [
-			'token' => $api->get_token(),
-			'company' => $api->get_company_login(),
-			'refresh_token' => $api->get_token('public', true),
-			'domain' => $this->get_option('domain'),
-		];
     }
 
     /**

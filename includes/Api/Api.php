@@ -404,17 +404,6 @@ class Api
 	}
 
 	/**
-	 * Get the server URL
-	 *
-	 * @return string
-	 */
-	public function get_server(): string {
-		$domain = $this->get_option('domain');
-		$login = $this->get_company_login();
-		return "https://$login.$domain";
-	}
-
-	/**
 	 * Check if we have a valid token
 	 *
 	 * @param string $type

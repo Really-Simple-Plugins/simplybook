@@ -35,7 +35,7 @@ function instantiateSimplybookWidget() {
         "app_config": {
             "clear_session": false,
             "allow_switch_to_ada": true,
-            "predefined": null
+            "predefined": []
         },
         "container_id": "sbw_z0hg2i"
     });

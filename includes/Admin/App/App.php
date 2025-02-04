@@ -39,6 +39,7 @@ class App {
 	}
 
 	public function simplybook_app() {
+        //for a smooth loading experience, some styles ware loaded inline here.
 		?>
 <!--        <script-->
 <!--                crossOrigin="anonymous"-->

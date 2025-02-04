@@ -1,11 +1,9 @@
 <?php
 namespace Simplybook\Admin\RestApi;
 
-use Simplybook\Api\Api;
 use Simplybook\Frontend\Traits\Widget;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
-use WP_Error;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {

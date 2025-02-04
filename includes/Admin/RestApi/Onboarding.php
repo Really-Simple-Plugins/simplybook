@@ -1,10 +1,8 @@
 <?php
 namespace Simplybook\Admin\RestApi;
 
-use Simplybook\Api\Api;
 use Simplybook\Traits\Helper;
 use Simplybook\Traits\Save;
-use WP_Error;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -236,7 +234,7 @@ class Onboarding extends RestApi {
 		$booking_pagename = $this->convert_url_to_title($data['bookingPageName']);
 
 		$success_calendar = $this->create_page($calendar_pagename, '[simplybook_widget]');
-		$success_booking = $this->create_page($booking_pagename, '[simplybook_widget]');
+		$success_booking = $this->create_page($booking_pagename, '[simplybook_booking_button]');
 		error_log("page generation completed");
 		return $this->response([], $success_calendar!==-1 && $success_booking!==-1, '');
 	}
