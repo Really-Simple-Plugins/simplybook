@@ -63,6 +63,10 @@ const useOtherPluginsData = () => {
 
     const runPluginAction = useMutation({
         mutationFn: async ({ slug, action, e }: { slug: string; action: string; e?: React.MouseEvent<HTMLAnchorElement, MouseEvent> }) => {
+            if ( action === 'installed' || action === 'upgrade-to-premium' ) {
+                return;
+            }
+
             if (e) e.preventDefault();
             let data: any = {};
             data.slug = slug;

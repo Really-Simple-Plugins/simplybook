@@ -11,6 +11,7 @@ import React from "react";
 const OurPlugins = () => {
     const {plugins, fetched, runPluginAction, pluginActionNice} = useOtherPluginsData();
     console.log("OurPlugins", plugins);
+
   return (
     <Block className={"col-span-6 row-span-1 bg-transparent shadow-none"}>
       <BlockHeading
@@ -27,7 +28,7 @@ const OurPlugins = () => {
                         {plugin.title}
                     </Link>
                     <div className={"text-sm ml-auto"}>
-                        <a href="#" onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
+                        <a target="_blank" href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url} onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
                             slug: plugin.slug,
                             action: plugin.action,
                             e

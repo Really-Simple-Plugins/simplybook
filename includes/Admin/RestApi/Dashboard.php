@@ -95,25 +95,27 @@ class Dashboard extends RestApi {
 				'constant_free' => 'rsssl_version',
 				'constant_premium' => 'rsssl_pro',
 				'wordpress_url' => 'https://wordpress.org/plugins/really-simple-ssl/',
-				'upgrade_url' => 'https://really-simple-ssl.com/pro?src=cmplz-plugin',
+				'upgrade_url' => 'https://really-simple-ssl.com/pro?src=simplybook-plugin',
 				'title' => "Really Simple Security - ".__("Lightweight plugin. Heavyweight security features.", "simplybook" ),
 				'color' => '#f4bf3e'
 			],
 			[
 				'slug' => 'complianz-gdpr',
 				'constant_free' => 'cmplz_version',
+				'constant_premium' => 'cmplz_premium',
 				'create' => admin_url('admin.php?page=complianz'),
 				'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
-				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
+				'upgrade_url' => 'https://complianz.io?src=simplybook-plugin',
 				'title' => 'Complianz GDPR/CCPA',
 				'color' => '#009fff'
 			],
 			[
 				'slug' => 'complianz-terms-conditions',
 				'constant_free' => 'cmplz_tc_version',
+				'constant_premium' => 'cmplz_premium',
 				'create' => admin_url('admin.php?page=terms-conditions'),
 				'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
-				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
+				'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
 				'title' => 'Complianz - '. __("Terms & Conditions", "simplybook"),
 				'color' => '#000000'
 			],
