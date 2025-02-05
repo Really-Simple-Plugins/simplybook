@@ -43,17 +43,49 @@ class Dashboard extends RestApi {
 				},
 			)
 		);
+
+
+		register_rest_route(
+			'simplybook/v1',
+			'do_plugin_action',
+			array(
+				'methods' => 'POST',
+				'callback' => array( $this, 'do_plugin_action' ),
+				'permission_callback' => function ( $request ) {
+					return $this->validate_request( $request );
+				},
+			)
+		);
 	}
 
+	public function do_plugin_action($request): WP_REST_Response {
+		$slug = $request->get_param('slug');
+		$action = $request->get_param('action');
+		$installer = new Installer($slug);
+
+		if ( $action==='download' ) {
+			$installer->download_plugin();
+		} else if ( $action === 'activate' ) {
+			$installer->activate_plugin();
+		}
+		$plugins = $this->get_plugins_data();
+
+		//get the plugin with slug $slug
+		$plugin = array_filter($plugins, function($plugin) use ($slug){
+			return $plugin['slug'] === $slug;
+		});
+
+		return $this->response([
+			'plugin' => $plugin
+		]);
+	}
 
 	/**
 	 * Get plugin data for other plugin section
 	 *
-	 * @param $request
-	 *
-	 * @return WP_REST_Response
+	 * @return array
 	 */
-	public function other_plugins_data($request): WP_REST_Response {
+	private function get_plugins_data( ) {
 		$plugins = array(
 			[
 				'slug' => 'really-simple-ssl',
@@ -101,7 +133,19 @@ class Dashboard extends RestApi {
 				}
 			}
 		}
+		return $plugins;
+	}
 
+	/**
+	 * Get plugin data for other plugin section
+	 *
+	 * @param $request
+	 *
+	 * @return WP_REST_Response
+	 */
+	public function other_plugins_data($request): WP_REST_Response {
+
+		$plugins = $this->get_plugins_data();
 		return $this->response([
 			'plugins' => $plugins
 		]);

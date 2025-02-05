@@ -74,6 +74,7 @@
     "clsx": "^2.1.1",
     "node-fetch": "^2.7.0",
     "react-color": "^2.19.3",
+    "react-compiler-runtime": "^19.0.0-beta-714736e-20250131",
     "react-hook-form": "^7.53.1",
     "zustand": "^5.0.1"
   }

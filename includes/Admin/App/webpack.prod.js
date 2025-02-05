@@ -1,6 +1,9 @@
 const defaultConfig = require("@wordpress/scripts/config/webpack.config");
 const { TanStackRouterWebpack } = require("@tanstack/router-plugin/webpack");
 const path = require("path");
+const ReactCompilerConfig = {
+  target: '18' // '17' | '18' | '19'
+};
 
 module.exports = {
   ...defaultConfig,
@@ -61,6 +64,7 @@ module.exports = {
   plugins: [
     ...defaultConfig.plugins,
     TanStackRouterWebpack(), // Add TanStackRouterWebpack plugin
+    ['babel-plugin-react-compiler', ReactCompilerConfig],
   ],
   optimization: {
     ...defaultConfig.optimization,
