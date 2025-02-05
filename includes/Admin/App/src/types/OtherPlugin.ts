@@ -4,4 +4,5 @@ export interface OtherPlugin {
     action: string;
     slug: string;
     actionNiceName: string;
+    color:string,
 }

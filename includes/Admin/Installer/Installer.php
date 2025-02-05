@@ -93,20 +93,20 @@ class Installer {
 		if ( !current_user_can('install_plugins') ) {
 			return false;
 		}
-		if ( get_transient("rsssl_plugin_download_active")!==$this->slug ) {
-			set_transient("rsssl_plugin_download_active", $this->slug,MINUTE_IN_SECONDS );
+		if ( get_transient("rsp_plugin_download_active")!==$this->slug ) {
+			set_transient("rsp_plugin_download_active", $this->slug,MINUTE_IN_SECONDS );
 			$info          = $this->get_plugin_info();
 			$download_link = esc_url_raw( $info->versions['trunk'] );
 			require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
 			require_once ABSPATH . 'wp-admin/includes/file.php';
 			include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-			$skin     = new WP_Ajax_Upgrader_Skin();
-			$upgrader = new Plugin_Upgrader( $skin );
+			$skin     = new \WP_Ajax_Upgrader_Skin();
+			$upgrader = new \Plugin_Upgrader( $skin );
 			$result = $upgrader->install( $download_link );
-			if (is_wp_error($result)){
+			if ( is_wp_error($result) ){
 				return false;
 			}
-			delete_transient("rsssl_plugin_download_active");
+			delete_transient("rsp_plugin_download_active");
 		}
 		return true;
 	}
@@ -137,15 +137,17 @@ class Installer {
 
 	/**
 	 * Get plugin info
-	 * @return array
+	 * @return object | array
 	 */
-	public function get_plugin_info(): array {
+	public function get_plugin_info() {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		$plugin_info = get_transient('cmplz_'.$this->slug . '_plugin_info');
+		$plugin_info = get_transient('simplybook_'.$this->slug . '_plugin_info');
 		if ( empty($plugin_info) ) {
 			$plugin_info = plugins_api('plugin_information', array('slug' => $this->slug));
 			if ( !is_wp_error($plugin_info) ) {
-				set_transient('cmplz_'.$this->slug . '_plugin_info', $plugin_info, WEEK_IN_SECONDS);
+				set_transient('simplybook_'.$this->slug . '_plugin_info', $plugin_info, WEEK_IN_SECONDS);
+			} else {
+				$plugin_info = [];
 			}
 		}
 		return $plugin_info;

@@ -21,6 +21,7 @@ const doPluginAction = async (slug:string, action:string ): Promise<OtherPlugin>
             action: "...",
             actionNiceName: "...",
             slug: "...",
+            color: "black",
         };
     }
 

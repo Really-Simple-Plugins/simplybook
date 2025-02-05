@@ -176,8 +176,6 @@ class Api
 			$headers['X-Company-Login' ] = $this->get_company_login();
 		}
 
-		error_log("used headers:");
-		error_log(print_r($headers,true));
 		return $headers;
 	}
 
@@ -272,19 +270,16 @@ class Api
 		if (!$refresh_token) {
 			return;
 		}
-		error_log("refresh token". $refresh_token);
+
 		if ( empty($refresh_token) ) {
-			error_log("MISSING REFRESH TOKEN, GET $type TOKEN");
 			$this->get_public_token();
 			return;
 		}
 
 		if ( $this->token_is_valid($type) ) {
-			error_log("no need to refresh, refresh token of type $type is already valid ");
 			return;
 		}
 
-		error_log("refreshing $type token");
 		//https://user-api-v2.wp.simplybook.ovh/admin/auth/refresh-token
 
 		$data = array(
@@ -298,8 +293,7 @@ class Api
 			$path = 'simplybook/auth/refresh-token';
 			$headers = $this->get_headers(true );
 		}
-		error_log("using body");
-		error_log(print_r($data,true));
+
 		$request = wp_remote_post( $this->endpoint( $path ), array(
 			'headers' => $headers,
 			'timeout' => 15,

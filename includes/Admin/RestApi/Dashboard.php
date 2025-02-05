@@ -61,6 +61,7 @@ class Dashboard extends RestApi {
 	public function do_plugin_action($request): WP_REST_Response {
 		$slug = $request->get_param('slug');
 		$action = $request->get_param('action');
+		error_log("do plugin action for $slug and $action");
 		$installer = new Installer($slug);
 
 		if ( $action==='download' ) {
@@ -74,6 +75,8 @@ class Dashboard extends RestApi {
 		$plugin = array_filter($plugins, function($plugin) use ($slug){
 			return $plugin['slug'] === $slug;
 		});
+		//get the first element
+		$plugin = reset($plugin);
 
 		return $this->response([
 			'plugin' => $plugin
@@ -94,6 +97,7 @@ class Dashboard extends RestApi {
 				'wordpress_url' => 'https://wordpress.org/plugins/really-simple-ssl/',
 				'upgrade_url' => 'https://really-simple-ssl.com/pro?src=cmplz-plugin',
 				'title' => "Really Simple Security - ".__("Lightweight plugin. Heavyweight security features.", "simplybook" ),
+				'color' => '#f4bf3e'
 			],
 			[
 				'slug' => 'complianz-gdpr',
@@ -102,6 +106,7 @@ class Dashboard extends RestApi {
 				'wordpress_url' => 'https://wordpress.org/plugins/complianz-gdpr/',
 				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
 				'title' => 'Complianz GDPR/CCPA',
+				'color' => '#009fff'
 			],
 			[
 				'slug' => 'complianz-terms-conditions',
@@ -110,6 +115,7 @@ class Dashboard extends RestApi {
 				'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 				'upgrade_url' => 'https://complianz.io?src=cmplz-plugin',
 				'title' => 'Complianz - '. __("Terms & Conditions", "simplybook"),
+				'color' => '#000000'
 			],
 		);
 
