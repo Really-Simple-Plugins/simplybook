@@ -10,7 +10,7 @@ class Installer {
 	private string $slug = '';
 	public string $action;
 	public function __construct($slug) {
-		if (!function_exists('is_plugin_active')) {
+		if ( !function_exists('is_plugin_active') ) {
 			include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 		}
 		if ( !current_user_can('install_plugins') ) return;
@@ -141,11 +141,11 @@ class Installer {
 	 */
 	public function get_plugin_info() {
 		require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
-		$plugin_info = get_transient('simplybook_'.$this->slug . '_plugin_info');
+		$plugin_info = get_transient('rsp_'.$this->slug . '_plugin_info');
 		if ( empty($plugin_info) ) {
 			$plugin_info = plugins_api('plugin_information', array('slug' => $this->slug));
 			if ( !is_wp_error($plugin_info) ) {
-				set_transient('simplybook_'.$this->slug . '_plugin_info', $plugin_info, WEEK_IN_SECONDS);
+				set_transient('rsp_'.$this->slug . '_plugin_info', $plugin_info, WEEK_IN_SECONDS);
 			} else {
 				$plugin_info = [];
 			}

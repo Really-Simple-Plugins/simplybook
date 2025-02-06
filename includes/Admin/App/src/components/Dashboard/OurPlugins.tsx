@@ -28,13 +28,18 @@ const OurPlugins = () => {
                         {plugin.title}
                     </Link>
                     <div className={"text-sm ml-auto"}>
-                        <a target="_blank" href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url} onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
-                            slug: plugin.slug,
-                            action: plugin.action,
-                            e
-                        })}>
-                            {pluginActionNice(plugin.action)}
-                        </a>
+                        {plugin.action === 'installed' && pluginActionNice(plugin.action)}
+                        {plugin.action !== 'installed' && <>
+                            <a target="_blank" href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url}
+                               onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
+                                   slug: plugin.slug,
+                                   action: plugin.action,
+                                   e
+                               })}>
+                                {pluginActionNice(plugin.action)}
+                            </a>
+                        </>
+                        }
                     </div>
                 </div>
             ))}

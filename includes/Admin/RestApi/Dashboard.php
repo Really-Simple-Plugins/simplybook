@@ -63,12 +63,7 @@ class Dashboard extends RestApi {
 		$action = $request->get_param('action');
 		error_log("do plugin action for $slug and $action");
 		$installer = new Installer($slug);
-
-		if ( $action==='download' ) {
-			$installer->download_plugin();
-		} else if ( $action === 'activate' ) {
-			$installer->activate_plugin();
-		}
+		$installer->install($action);
 		$plugins = $this->get_plugins_data();
 
 		//get the plugin with slug $slug
@@ -88,7 +83,7 @@ class Dashboard extends RestApi {
 	 *
 	 * @return array
 	 */
-	private function get_plugins_data( ) {
+	private function get_plugins_data( ): array {
 		$plugins = array(
 			[
 				'slug' => 'really-simple-ssl',
@@ -112,7 +107,6 @@ class Dashboard extends RestApi {
 			[
 				'slug' => 'complianz-terms-conditions',
 				'constant_free' => 'cmplz_tc_version',
-				'constant_premium' => 'cmplz_premium',
 				'create' => admin_url('admin.php?page=terms-conditions'),
 				'wordpress_url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
 				'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
@@ -263,8 +257,3 @@ class Dashboard extends RestApi {
 		]);
 	}
 }
-
-
-
-
-
