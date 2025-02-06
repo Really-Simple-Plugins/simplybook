@@ -52,7 +52,6 @@ class GetTasks extends RestApi {
 	public function dismiss_task($request): WP_REST_Response {
 		$data = $request->get_json_params();
 		$tasks = new Tasks();
-		error_log(print_r($data,true));
 		$tasks->dismiss_task(sanitize_title($data['taskId']));
 		return $this->response();
 	}

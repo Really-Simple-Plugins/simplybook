@@ -36,7 +36,14 @@ class Tasks {
 		$tasks = $this->get_raw_tasks();
 		foreach ( $tasks as $task ) {
 			if ( isset($task['condition']['type']) && $task['condition']['type'] === 'serverside' ) {
-				if ( $this->validate_function( $task['condition']['function'] ) ) {
+				$invert = str_contains( $task['condition']['function'], '!' );
+				$function = $invert ? substr( $task['condition']['function'], 1 ) : $task['condition']['function'];
+				$is_valid = $this->validate_function( $function );
+
+				if ( $invert ) {
+					$is_valid = !$is_valid;
+				}
+				if ( $is_valid ) {
 					$this->dismiss_task($task['id']);
 				} else {
 					$this->add_task($task['id']);
