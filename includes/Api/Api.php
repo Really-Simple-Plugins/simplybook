@@ -220,12 +220,9 @@ class Api
 	 * @return void
 	 */
 	public function get_public_token(): void {
-		error_log("GET PUBLIC TOKEN");
 		if ( $this->token_is_valid() ) {
-			error_log("we have a valid token");
 			return;
 		}
-		error_log("request to ".'simplybook/auth/token');
 		$request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
 			'headers' => $this->get_headers(),
 			'timeout' => 15,
@@ -251,12 +248,10 @@ class Api
 				update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
 				$this->update_option( 'domain', $request->domain );
 			} else {
-				error_log("token not set in object");
-				update_option('simplybook_token_error', true, false);
+				$this->log("Error during token retrieval");
 			}
 		} else {
-			update_option('simplybook_token_error', true, false);
-		}
+			$this->log("Error during token retrieval: ".$request->get_error_message());		}
 	}
 
 	/**
@@ -323,10 +318,10 @@ class Api
 				$expires = $request->expires_in ?? 3600;
 				update_option($expires_option, time() + $expires);
 			} else {
-				update_option('simplybook_token_error', true, false);
+				$this->log("Error during token refresh");
 			}
 		} else {
-			update_option('simplybook_token_error', true, false);
+			$this->log("Error during token refresh: ".$request->get_error_message());
 		}
 	}
 
@@ -659,8 +654,9 @@ class Api
 			}
 
 		} else {
-			update_option('simplybook_company_registration_error', true, false);
-			return new ApiResponse( false, __('Error during company registration. Please try again later.', 'simplybook') );
+			//retrieve the wp_error message
+			$this->log("Error during company registration: ".$request->get_error_message());
+			return new ApiResponse( false, __('Error during company registration.', 'simplybook')." ".$request->get_error_message() );
 		}
 	}
 
@@ -784,17 +780,14 @@ class Api
 			$request = json_decode( wp_remote_retrieve_body( $request ) );
 			if ( isset($request->success) ) {
 				error_log("email confirmation success, please wait for the callback.");
-				delete_option('simplybook_email_confirm_error' );
 				return new ApiResponse( true, __('Email successfully confirmed.', 'simplybook') );
 			} else {
 				$this->log("Error during email confirmation: ".$request->message);
-				update_option('simplybook_email_confirm_error', $request->message, false);
 				return new ApiResponse( false, $request->message);
 			}
 		} else {
-			update_option('simplybook_email_confirm_error', true, false);
+			return new ApiResponse( false, __('Error email confirmation.', 'simplybook')." ".$request->get_error_message() );
 		}
-		return new ApiResponse( false, __('Error during email confirmation. Please try again later.', 'simplybook') );
 	}
 
 	/**
@@ -1073,7 +1066,6 @@ class Api
 				$this->api_call( $path, $data, $type, $attempt + 1 );
 			}
 			$this->log("Error during $path_type retrieval: ".$message);
-			update_option("simplybook_{$path_type}_error", $message, false);
 			$msg = "response code: $response_code, response body: ".print_r($response_body,true);
 
 			update_option('api_status', array(

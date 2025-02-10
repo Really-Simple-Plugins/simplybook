@@ -16,7 +16,7 @@ const AppLoading = () => {
       </div>
 
       <div className="mx-auto flex max-w-screen-2xl">
-        <div className="m-5 grid min-h-full w-full grid-cols-12 grid-rows-5 gap-5">
+        <div className="m-5 grid min-h-full w-full grid-cols-12 gap-5">
           <div className="col-span-6 row-span-2 bg-white shadow-md rounded-xl p-5">
             <div className="h-6 w-1/2 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
             <div className="h-6 w-4/5 px-5 py-2 bg-gray-200 rounded-md mb-5 animate-pulse"></div>
