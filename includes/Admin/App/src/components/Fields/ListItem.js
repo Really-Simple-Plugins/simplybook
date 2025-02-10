@@ -12,7 +12,7 @@ import useDomainData from "../../hooks/useDomainData";
  */
 const ListItem = forwardRef(
     ({ upgrade, link, item, label, ...props }, ref) => {
-        const [visible, setVisible] = useState(item.is_visible);
+        const [visible, setVisible] = useState(!!item?.is_visible || false);
         const onChange = (e) => {
             console.log('onChange', e.target.checked, "for id ", item.id);
             setVisible(e.target.checked);
@@ -49,7 +49,7 @@ const ListItem = forwardRef(
                                     label={""}
                                     id={item.id}
                                     checked={visible}
-                                    onChange={onChange}
+                                    onChange={(e) => onChange(e)}
                                 />
                             }
                             {upgrade && <>

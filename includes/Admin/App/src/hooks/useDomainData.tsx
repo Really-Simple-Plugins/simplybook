@@ -18,7 +18,7 @@ const useDomainData = () => {
         },
         staleTime: 1000 * 60 * 60,
         retry: 0,
-        enabled: onboardingCompleted,
+        enabled: !!onboardingCompleted,
     });
 
 

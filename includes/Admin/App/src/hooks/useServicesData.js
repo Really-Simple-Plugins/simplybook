@@ -16,6 +16,7 @@ const useServicesData = () => {
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 0,
         select: (data) => [...data],
+
     });
 
 

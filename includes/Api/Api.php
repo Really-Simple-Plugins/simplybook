@@ -818,6 +818,9 @@ class Api
 	 */
 
 	public function get_services(): array {
+		if ( !$this->company_registration_complete() ){
+			return [];
+		}
 		$response = $this->api_call('admin/services', [], 'GET');
 		return $response['data'] ?? [];
 	}
@@ -829,6 +832,9 @@ class Api
 	 */
 
 	public function get_providers(): array {
+		if ( !$this->company_registration_complete() ){
+			return [];
+		}
 		$response = $this->api_call('admin/providers', [], 'GET');
 		return $response['data'] ?? [];
 	}

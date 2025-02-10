@@ -13,7 +13,6 @@ import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailab
 
 const useOnboardingData = () => {
   const { getValue } = useSettingsData();
-  const [localOnboardingCompleted, setLocalOnboardingCompleted] = useState(false);
   const steps = [
     {
       id: 1,
@@ -297,7 +296,6 @@ const useOnboardingData = () => {
         ...oldData,
         onboardingCompleted: completed,
       }));
-      setLocalOnboardingCompleted(completed);
     },
     onSuccess: () => {
       queryClient.invalidateQueries(["onboarding_data"]);

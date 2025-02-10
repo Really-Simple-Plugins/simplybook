@@ -52,7 +52,7 @@ const ListField = forwardRef(
         return (
             <div className="w-full">
                 {listArray.map((item) => (
-                    <ListItem upgrade={false} key={item.id} label={label} link={setting.link} item={item} />
+                    <ListItem upgrade={false} key={item.id+item.source} label={label} link={setting.link} item={item} />
                 ))}
                 <ListItem upgrade={true} label={label} link="r/payment-widget" item={premiumItem} />
 

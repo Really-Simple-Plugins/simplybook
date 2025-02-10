@@ -33,7 +33,7 @@ const useWaitForRegistrationCallback = () => {
             }
             return res.data;
         },
-        enabled: pollingEnabled,
+        enabled: !!pollingEnabled,
         refetchInterval: (queryData) => {
             return pollingEnabled ? 3000 : false;
         },
