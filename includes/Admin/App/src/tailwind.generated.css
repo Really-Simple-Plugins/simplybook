@@ -864,9 +864,6 @@ video {
 #simplybook_app .grid-cols-\[auto_1fr_auto_auto\] {
   grid-template-columns: auto 1fr auto auto;
 }
-#simplybook_app .grid-rows-5 {
-  grid-template-rows: repeat(5, minmax(0, 1fr));
-}
 #simplybook_app .flex-row {
   flex-direction: row;
 }
@@ -939,6 +936,9 @@ video {
 }
 #simplybook_app .overflow-x-scroll {
   overflow-x: scroll;
+}
+#simplybook_app .whitespace-nowrap {
+  white-space: nowrap;
 }
 #simplybook_app .rounded {
   border-radius: 0.25rem;

@@ -77,7 +77,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue===1;
   }
-
+console.log("form field");
   return (
     <ErrorBoundary>
       <Controller

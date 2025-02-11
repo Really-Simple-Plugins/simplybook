@@ -2,7 +2,7 @@ import { memo } from "react";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
 import BlockContent from "../Blocks/BlockContent";
-import FormField from "../Forms/FormField";
+import FormFieldWrapper from "../Forms/FormFieldWrapper";
 
 const SettingsGroupBlock = memo(
   ({ group, currentGroupFields, control, isLastGroup }) => {
@@ -13,9 +13,7 @@ const SettingsGroupBlock = memo(
         <BlockHeading title={group.title} />
         <BlockContent>
           <div className="flex flex-wrap">
-            {currentGroupFields.map((field) => (
-              <FormField setting={field} key={field.id} control={control} />
-            ))}
+              <FormFieldWrapper fields={currentGroupFields} control={control}/>
           </div>
         </BlockContent>
       </Block>
