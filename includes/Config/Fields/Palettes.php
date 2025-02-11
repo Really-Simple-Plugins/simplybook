@@ -3,6 +3,39 @@ defined( 'ABSPATH' ) or die( );
 return
 	[
 		[
+			'id'       => 'palette',
+			'menu_id'  => 'design',
+			'group_id' => 'palettes',
+			'type'     => 'palettes',
+			'label'    => __( 'Palettes', 'simplybook' ),
+			'disabled' => false,
+			'default'  => 'persian',
+			'options'  => [
+				[
+					'id' => 'persian',
+					'label' => __( 'Persian', 'simplybook' ),
+					'colors' => [ '#2E1A47', '#FFFFFF', '#333333', '#B07D50', '#FFFFFF' ],
+				],
+				[
+					'id' => 'france',
+					'label' => __( 'France', 'simplybook' ),
+					'colors' => [ '#2E5BB6', '#FFFFFF', '#0D1635', '#D04950', '#FFFFFF' ],
+				],
+				[
+					'id' => 'bee',
+					'label' => __( 'Bee', 'simplybook' ),
+					'colors' => [ '#D9A441', '#FFFFFF', '#333333', '#333333', '#FFFFFF' ],
+				],
+				[
+					'id' => 'custom',
+					'label' => __( 'Custom', 'simplybook' ),
+					'colors' => [ '#D9A441', '#FFFFFF', '#333333', '#333333', '#FFFFFF' ],
+				],
+			],
+
+			'widget_field'  => '/',
+		],
+		[
 			'id'       => 'sb_base_color',
 			'menu_id'  => 'design',
 			'group_id' => 'palettes',

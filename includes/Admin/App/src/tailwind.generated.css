@@ -762,6 +762,9 @@ video {
 #simplybook_app .w-1\/2 {
   width: 50%;
 }
+#simplybook_app .w-14 {
+  width: 3.5rem;
+}
 #simplybook_app .w-20 {
   width: 5rem;
 }
@@ -773,6 +776,9 @@ video {
 }
 #simplybook_app .w-40 {
   width: 10rem;
+}
+#simplybook_app .w-5 {
+  width: 1.25rem;
 }
 #simplybook_app .w-5\/6 {
   width: 83.333333%;
@@ -918,6 +924,11 @@ video {
 #simplybook_app .gap-8 {
   gap: 2rem;
 }
+#simplybook_app :is(.space-x-2 > :not([hidden]) ~ :not([hidden])) {
+  --tw-space-x-reverse: 0;
+  margin-right: calc(0.5rem * var(--tw-space-x-reverse));
+  margin-left: calc(0.5rem * calc(1 - var(--tw-space-x-reverse)));
+}
 #simplybook_app :is(.space-x-3 > :not([hidden]) ~ :not([hidden])) {
   --tw-space-x-reverse: 0;
   margin-right: calc(0.75rem * var(--tw-space-x-reverse));
@@ -1011,6 +1022,41 @@ video {
 }
 #simplybook_app .border-transparent {
   border-color: transparent;
+}
+#simplybook_app .bg-\[\"\+color\+\"\] {
+  background-color: "+color+";
+}
+#simplybook_app .bg-\[\#0D1635\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(13 22 53 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#2E1A47\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(46 26 71 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#2E5BB6\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(46 91 182 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#333333\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(51 51 51 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#B07D50\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(176 125 80 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#D04950\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(208 73 80 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#D9A441\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(217 164 65 / var(--tw-bg-opacity, 1));
+}
+#simplybook_app .bg-\[\#FFFFFF\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 #simplybook_app .bg-blue-50 {
   --tw-bg-opacity: 1;
@@ -1155,6 +1201,9 @@ video {
 #simplybook_app .pb-2 {
   padding-bottom: 0.5rem;
 }
+#simplybook_app .pb-4 {
+  padding-bottom: 1rem;
+}
 #simplybook_app .pt-4 {
   padding-top: 1rem;
 }
@@ -1240,6 +1289,10 @@ video {
 #simplybook_app .text-green-500 {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity, 1));
+}
+#simplybook_app .text-indigo-600 {
+  --tw-text-opacity: 1;
+  color: rgb(79 70 229 / var(--tw-text-opacity, 1));
 }
 #simplybook_app .text-red-600 {
   --tw-text-opacity: 1;

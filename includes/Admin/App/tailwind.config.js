@@ -1,6 +1,14 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   safelist: [
+    "bg-[#2E1A47]",
+    "bg-[#FFFFFF]",
+    "bg-[#333333]",
+    "bg-[#B07D50]",
+    "bg-[#2E5BB6]",
+    "bg-[#0D1635]",
+    "bg-[#D04950]",
+    "bg-[#D9A441]",//used in the palettes, dynamically
     'rounded-md',
     'border',
     'border-gray-300',

@@ -18,8 +18,6 @@ const FormFieldWrapper = ({ fields, control }) => {
         return groups;
     }, {})
 
-    console.log('groupedFields', groupedFields);
-
     return (
         <>
             {/* Fields without inline_group */}

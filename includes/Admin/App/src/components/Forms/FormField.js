@@ -10,7 +10,7 @@ import ColorPickerField from "../Fields/ColorPickerField";
 import ImplementationField from "../Fields/ImplementationField";
 import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
-import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
+import PalettesField from "../Fields/PalettesField";
 
 const fieldComponents = {
   text: TextField,
@@ -21,6 +21,7 @@ const fieldComponents = {
   colorpicker: ColorPickerField,
   implementation: ImplementationField,
   list:ListField,
+  palettes: PalettesField,
 };
 
 const FormField = memo(({ setting, control, ...props } ) => {
@@ -34,7 +35,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
   if (!FieldComponent) {
     return (
       <div className="w-full">
-        Unknown field type: {setting.type} {setting.id}
+        Unknown field type:{setting.type}, id:{setting.id}
       </div>
     );
   }
@@ -60,9 +61,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
   };
 
   const handleSaveOnChange = async (fieldValue) => {
-    console.log("handleSaveOnChange", setting.id, fieldValue);
     setValue(setting.id, fieldValue);
-    console.log("new settings array ", settings);
     if (setting.mapping){
       //mapping is an array of id's, [id1, id2, id3]
       //loop through the mapping array, and for each id, update it with the same value
@@ -77,7 +76,6 @@ const FormField = memo(({ setting, control, ...props } ) => {
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue===1;
   }
-console.log("form field");
   return (
     <ErrorBoundary>
       <Controller
