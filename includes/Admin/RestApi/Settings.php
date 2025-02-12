@@ -46,9 +46,9 @@ class Settings extends RestApi {
      *
      * @param $request
      * @param $ajax_data
-     * @return WP_Error|WP_REST_Response
+     * @return WP_REST_Response
      */
-    public function save($request, $ajax_data = false ): WP_Error|WP_REST_Response
+    public function save($request, $ajax_data = false ): WP_REST_Response
     {
 	    $fields = $ajax_data ?: $request->get_json_params();
 		unset($fields['nonce']);
@@ -88,7 +88,7 @@ class Settings extends RestApi {
      * @param mixed $ajax_data
      * @return WP_REST_Response
      */
-    public function get($request, $ajax_data = false ): WP_Error|WP_REST_Response
+    public function get($request, $ajax_data = false ): WP_REST_Response
     {
         $data = $ajax_data ?: $request->get_json_params();
 		$with_values = (int) $data['withValues'] === 1;

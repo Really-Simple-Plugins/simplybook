@@ -15,7 +15,7 @@ trait Save {
      * @deprecated
      * @param $key
      * @param $default
-     * @return false|mixed
+     * @return mixed
      */
     public function get_config_obsolete($key, $default = null)
     {
@@ -112,9 +112,9 @@ trait Save {
      * Decryption method for old options
      *
      * @param string $encryptedString
-     * @return bool|string
+     * @return string
      */
-    public function decryptString_obsolete(string $encryptedString): bool|string
+    public function decryptString_obsolete(string $encryptedString): string
     {
         $key = '7*w$9pumLw5koJc#JT6';
         $data = base64_decode($encryptedString);

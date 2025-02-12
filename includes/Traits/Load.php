@@ -13,9 +13,9 @@ trait Load {
     /**
      * Get a field by ID
      * @param string $id
-     * @return mixed
+     * @return array
      */
-    public function get_field_by_id(string $id ): mixed
+    public function get_field_by_id(string $id ): array
     {
         $fields = $this->fields();
         foreach ( $fields as $field ) {
@@ -23,7 +23,7 @@ trait Load {
                 return $field;
             }
         }
-        return false;
+        return [];
     }
 
     /**
@@ -31,7 +31,7 @@ trait Load {
      *
      * @param string $key
      * @param $default
-     * @return false|mixed
+     * @return mixed
      */
     public function get_option(string $key)
     {
@@ -68,9 +68,9 @@ trait Load {
     /**
      * Decrypt a string
      * @param $encrypted_string
-     * @return bool|string
+     * @return string
      */
-    public function decrypt_string($encrypted_string): bool|string
+    public function decrypt_string($encrypted_string): string
     {
         $key = '7*w$9pumLw5koJc#JT6';
         $data = base64_decode($encrypted_string);
