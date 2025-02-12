@@ -1,9 +1,7 @@
-import React, { forwardRef, useEffect, useState } from "react";
-import TextInput from "../Inputs/TextInput";
+import React, { forwardRef, useRef, useState, useEffect } from "react";
 import FieldWrapper from "../Forms/FieldWrapper";
-import useSettingsData from "../../hooks/useSettingsData";
 import PaletteInput from "../Inputs/PaletteInput";
-import FormField from "../Forms/FormField";
+import Calendar from "../Common/Calendar";
 
 /**
  * PalettesField component
@@ -19,14 +17,28 @@ import FormField from "../Forms/FormField";
 const PalettesField = forwardRef(
     ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
         const inputId = setting.id;
-        console.log(fieldState, props);
+        const [showPreview, setShowPreview] = useState(false);
+        const previewRef = useRef(null);
+        useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (previewRef.current && !previewRef.current.contains(event.target)) {
+                    setShowPreview && setShowPreview(false);
+                }
+            };
+
+            document.addEventListener("mousedown", handleClickOutside);
+            return () => {
+                document.removeEventListener("mousedown", handleClickOutside);
+            };
+        }, [setShowPreview]);
+
         return (
             <FieldWrapper
                 label={label}
                 help={help}
                 error={fieldState?.error?.message}
                 context={context}
-                className={className}
+                className={className+" relative"}
                 inputId={inputId}
                 required={props.required}
             >
@@ -38,10 +50,12 @@ const PalettesField = forwardRef(
                         colors={option.colors}
                         onChange={props?.onChange}
                         value={props?.value}
+                        setShowPreview={setShowPreview}
                     />
                     ))}
-                {
-            }
+                { showPreview &&
+                        <div ref={previewRef} style={{ right: '-200px' }} className="absolute top-0"><Calendar /></div>
+                }
             </FieldWrapper>
         );
     },

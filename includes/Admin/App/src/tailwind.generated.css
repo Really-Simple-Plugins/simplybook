@@ -596,6 +596,9 @@ video {
 #simplybook_app .start-0 {
   inset-inline-start: 0px;
 }
+#simplybook_app .top-0 {
+  top: 0px;
+}
 #simplybook_app .z-10 {
   z-index: 10;
 }
@@ -773,9 +776,6 @@ video {
 }
 #simplybook_app .w-40 {
   width: 10rem;
-}
-#simplybook_app .w-5 {
-  width: 1.25rem;
 }
 #simplybook_app .w-5\/6 {
   width: 83.333333%;
@@ -1020,38 +1020,6 @@ video {
 #simplybook_app .border-transparent {
   border-color: transparent;
 }
-#simplybook_app .bg-\[\#0D1635\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(13 22 53 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#2E1A47\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(46 26 71 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#2E5BB6\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(46 91 182 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#333333\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(51 51 51 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#B07D50\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(176 125 80 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#D04950\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(208 73 80 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#D9A441\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(217 164 65 / var(--tw-bg-opacity, 1));
-}
-#simplybook_app .bg-\[\#FFFFFF\] {
-  --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
-}
 #simplybook_app .bg-blue-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1));
@@ -1112,6 +1080,9 @@ video {
 }
 #simplybook_app .p-2 {
   padding: 0.5rem;
+}
+#simplybook_app .p-3 {
+  padding: 0.75rem;
 }
 #simplybook_app .p-4 {
   padding: 1rem;
@@ -1283,10 +1254,6 @@ video {
 #simplybook_app .text-green-500 {
   --tw-text-opacity: 1;
   color: rgb(34 197 94 / var(--tw-text-opacity, 1));
-}
-#simplybook_app .text-indigo-600 {
-  --tw-text-opacity: 1;
-  color: rgb(79 70 229 / var(--tw-text-opacity, 1));
 }
 #simplybook_app .text-red-600 {
   --tw-text-opacity: 1;
