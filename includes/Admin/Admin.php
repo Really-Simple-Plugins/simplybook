@@ -118,10 +118,12 @@ class Admin {
 		}
 		if ( empty($this->get_option('company_name') ) ) {
 			$options['company_name'] = get_bloginfo( 'name' );
-
 		}
 		if ( empty($this->get_option('country') ) ) {
 			$options['country'] = $this->get_country_by_locale();
+		}
+		if ( empty($this->get_option('palette') ) ) {
+			$options['palette'] = 'custom';
 		}
 		update_option('simplybook_options', $options);
 

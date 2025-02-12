@@ -1,6 +1,7 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {__} from "@wordpress/i18n";
 import * as Label from "@radix-ui/react-label";
+import useSettingsData from "../../hooks/useSettingsData";
 
 type PaletteInputProps = {
     id?: string;
@@ -14,14 +15,52 @@ type PaletteInputProps = {
  * Styled button component
  */
 const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange, value }) => {
+    const [actualColors, setActualColors] = React.useState(colors);
+    //
+    // @ts-ignore
+    const { getValue, setValue, settings } = useSettingsData();
+
     const handleChange = () => {
         console.log(id);
         console.log(id)
         if (onChange && id ) {
             onChange(id);
+            //also update all colors
+
+
+            if (id!=='custom' && Array.isArray(colors)) {
+                let colorMapping = [
+                    'sb_base_color',
+                    'booking_nav_bg_color',
+                    'btn_color_1',
+                    'body_bg_color',
+                    'light_font_color',
+                    'dark_font_color'
+                ]
+                colorMapping.forEach((color, index) => {
+                    if (colors.hasOwnProperty(index)) {
+                        setValue(color, colors[index]);
+                    }
+                });
+            }
+
         }
     }
-    console.log("value " ,value);
+
+    useEffect(() => {
+        if (id==='custom'){
+            let customColors: React.SetStateAction<string[]> = [];
+            customColors.push(getValue('sb_base_color'));
+            customColors.push(getValue('btn_color_1'));
+            customColors.push(getValue('body_bg_color'));
+            customColors.push(getValue('light_font_color'));
+            customColors.push(getValue('dark_font_color'));
+
+            setActualColors(customColors);
+        }
+    }, [settings, colors, value]);
+    console.log("value " ,value, actualColors);
+
     return (
         <div onClick={(e) => handleChange()} className={"cursor-pointer"}>
             <p className={"pb-1 font-medium text-black text-md "}>
@@ -29,8 +68,8 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
             </p>
             <div className="flex space-x-2 pb-4">
                 <div className="border border-gray-300 p-2 gap-2 flex">
-                    {colors?.map((color, index) => (
-                        <div key={index} className={"w-20 h-6 bg-[" + color + "] border border-gray-300"}></div>
+                    {actualColors?.map((color, index) => (
+                        <div key={index} style={{ backgroundColor: color }} className={"w-20 h-6 border border-gray-300"}></div>
                     ))}
                 </div>
                 <div className="flex items-center space-x-2 text-indigo-600 cursor-pointer">

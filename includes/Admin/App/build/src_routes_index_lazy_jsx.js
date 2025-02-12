@@ -1552,6 +1552,7 @@ const useSettingsData = () => {
   let t3;
   if ($[4] !== query.data || $[5] !== queryClient) {
     t3 = (id_0, value) => {
+      console.log("setting value", id_0, value);
       const field_2 = query.data.find(field_1 => field_1.id === id_0);
       if (field_2) {
         field_2.value = value;

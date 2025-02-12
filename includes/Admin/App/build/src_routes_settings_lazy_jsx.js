@@ -3821,6 +3821,7 @@ const useSettingsData = () => {
   let t3;
   if ($[4] !== query.data || $[5] !== queryClient) {
     t3 = (id_0, value) => {
+      console.log("setting value", id_0, value);
       const field_2 = query.data.find(field_1 => field_1.id === id_0);
       if (field_2) {
         field_2.value = value;
@@ -4744,6 +4745,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
+
+
 
 /**
  * Styled button component
@@ -4754,14 +4760,43 @@ var PaletteInput = function (_a) {
     colors = _a.colors,
     onChange = _a.onChange,
     value = _a.value;
+  var _b = react__WEBPACK_IMPORTED_MODULE_1___default().useState(colors),
+    actualColors = _b[0],
+    setActualColors = _b[1];
+  //
+  // @ts-ignore
+  var _c = (0,_hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_2__["default"])(),
+    getValue = _c.getValue,
+    setValue = _c.setValue,
+    settings = _c.settings;
   var handleChange = function () {
     console.log(id);
     console.log(id);
     if (onChange && id) {
       onChange(id);
+      //also update all colors
+      if (id !== 'custom' && Array.isArray(colors)) {
+        var colorMapping = ['sb_base_color', 'booking_nav_bg_color', 'btn_color_1', 'body_bg_color', 'light_font_color', 'dark_font_color'];
+        colorMapping.forEach(function (color, index) {
+          if (colors.hasOwnProperty(index)) {
+            setValue(color, colors[index]);
+          }
+        });
+      }
     }
   };
-  console.log("value ", value);
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(function () {
+    if (id === 'custom') {
+      var customColors = [];
+      customColors.push(getValue('sb_base_color'));
+      customColors.push(getValue('btn_color_1'));
+      customColors.push(getValue('body_bg_color'));
+      customColors.push(getValue('light_font_color'));
+      customColors.push(getValue('dark_font_color'));
+      setActualColors(customColors);
+    }
+  }, [settings, colors, value]);
+  console.log("value ", value, actualColors);
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     onClick: function (e) {
       return handleChange();
@@ -4774,9 +4809,12 @@ var PaletteInput = function (_a) {
       className: "flex space-x-2 pb-4",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         className: "border border-gray-300 p-2 gap-2 flex",
-        children: colors === null || colors === void 0 ? void 0 : colors.map(function (color, index) {
+        children: actualColors === null || actualColors === void 0 ? void 0 : actualColors.map(function (color, index) {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-            className: "w-20 h-6 bg-[" + color + "] border border-gray-300"
+            style: {
+              backgroundColor: color
+            },
+            className: "w-20 h-6 border border-gray-300"
           }, index);
         })
       }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
