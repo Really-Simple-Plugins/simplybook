@@ -105,7 +105,7 @@ if ( !function_exists( __NAMESPACE__ . '\simplybook_init' ) ) {
     add_action( 'plugins_loaded', __NAMESPACE__ . '\simplybook_init', 9 );
 }
 
-if ( ! function_exists( __NAMESPACE__ . '\burst_activation' ) ) {
+if ( ! function_exists( __NAMESPACE__ . '\simplybook_activation' ) ) {
     /**
      * Run hooks on activation
      * @hook register_activation_hook

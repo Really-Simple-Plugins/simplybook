@@ -30,7 +30,7 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
             <div className="flex space-x-2 pb-4">
                 <div className="border border-gray-300 p-2 gap-2 flex">
                     {colors?.map((color, index) => (
-                        <div key={index} className={"w-14 h-4 bg-[" + color + "] border border-gray-300"}></div>
+                        <div key={index} className={"w-20 h-6 bg-[" + color + "] border border-gray-300"}></div>
                     ))}
                 </div>
                 <div className="flex items-center space-x-2 text-indigo-600 cursor-pointer">
