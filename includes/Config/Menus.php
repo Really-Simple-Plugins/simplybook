@@ -39,6 +39,10 @@ return $menus = [
 					'id'    => 'palettes',
 					'title' => __( 'Palettes', 'simplybook' ),
 				],
+				[
+					'id'    => 'colors',
+					'title' => __( 'Colors', 'simplybook' ),
+				],
 			],
 		],
 		[

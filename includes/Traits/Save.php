@@ -84,34 +84,6 @@ trait Save {
         }
     }
 
-	/**
-	 * When the palette is updated, update the colors
-	 * @return void
-	 */
-	public function update_colors_from_palette(){
-		$palette = $this->get_option('palette');
-		$field = $this->get_field_by_id('palette');
-		$colors = $field['options'];
-		$palette = array_filter($colors, function($item) use ($palette) {
-			return $item['id'] === $palette;
-		});
-		$palette = array_shift($palette);
-		$colors = $palette['colors'];
-		//color mapping:
-		$color_mapping = [
-			'sb_base_color' => $colors[0],
-			'booking_nav_bg_color' => $colors[0],
-			'btn_color_1' => $colors[1],
-			'body_bg_color' => $colors[2],
-			'light_font_color' => $colors[3],
-			'dark_font_color' => $colors[4],
-		];
-		foreach ($color_mapping as $key => $value) {
-			$this->update_option($key, $value);
-		}
-	}
-
-
     /**
      * Decryption method for old options
      *
@@ -159,10 +131,6 @@ trait Save {
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);
-
-		if ( $key === 'palette' ) {
-			$this->update_colors_from_palette();
-		}
     }
 
 	/**

@@ -34,12 +34,6 @@ const useSettingsData = () => {
     return query.data.find((field) => field.id === id)?.value;
   }
   const setValue = (id, value) => {
-    console.log("setting value", id, value);
-    const field = query.data.find((field) => field.id === id);
-    if (field) {
-      field.value = value;
-    }
-
     queryClient.setQueryData(["settings_fields"], (oldData) => {
       return oldData.map((field) =>
           field.id === id ? { ...field, value } : field

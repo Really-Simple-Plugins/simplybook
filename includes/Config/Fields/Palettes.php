@@ -48,7 +48,7 @@ return
 		[
 			'id'       => 'sb_base_color',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Base color', 'simplybook' ),
 			'disabled' => false,
@@ -59,7 +59,7 @@ return
 		[
 			'id'       => 'btn_color_1',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Button color 1', 'simplybook' ),
 			'disabled' => false,
@@ -71,7 +71,7 @@ return
 		[
 			'id'       => 'sb_company_label_color',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Company label color', 'simplybook' ),
 			'disabled' => false,
@@ -83,7 +83,7 @@ return
 			'id'       => 'booking_nav_bg_color',
 			'label'     => __( "Background", 'simplybook' ),
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'disabled' => false,
 			'default'  => '#DD3649',
@@ -93,7 +93,7 @@ return
 		[
 			'id'       => 'body_bg_color',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Body background color', 'simplybook' ),
 			'disabled' => false,
@@ -104,7 +104,7 @@ return
 		[
 			'id'       => 'btn_color_2',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Button color 2', 'simplybook' ),
 			'disabled' => false,
@@ -116,7 +116,7 @@ return
 		[
 			'id'       => 'sb_busy',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Busy color', 'simplybook' ),
 			'disabled' => false,
@@ -128,7 +128,7 @@ return
 		[
 			'id'       => 'sb_available',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Available color', 'simplybook' ),
 			'disabled' => false,
@@ -141,7 +141,7 @@ return
 		[
 			'id'       => 'sb_selected',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Selected color', 'simplybook' ),
 			'disabled' => false,
@@ -152,7 +152,7 @@ return
 		[
 			'id'       => 'dark_font_color',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Dark font color', 'simplybook' ),
 			'disabled' => false,
@@ -164,7 +164,7 @@ return
 		[
 			'id'       => 'light_font_color',
 			'menu_id'  => 'design',
-			'group_id' => 'palettes',
+			'group_id' => 'colors',
 			'type'     => 'colorpicker',
 			'label'    => __( 'Light font color', 'simplybook' ),
 			'disabled' => false,

@@ -18,7 +18,7 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
     const [actualColors, setActualColors] = React.useState(colors);
     //
     // @ts-ignore
-    const { getValue, setValue, settings } = useSettingsData();
+    const { getValue, setValue, settings, saveSettings, invalidateSettings } = useSettingsData();
 
     const handleChange = () => {
         console.log(id);
@@ -42,12 +42,14 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
                         setValue(color, colors[index]);
                     }
                 });
+                console.log(settings);
             }
 
         }
     }
 
     useEffect(() => {
+        //when custom, we load the custom colors in this palette.
         if (id==='custom'){
             let customColors: React.SetStateAction<string[]> = [];
             customColors.push(getValue('sb_base_color'));
@@ -55,11 +57,10 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
             customColors.push(getValue('body_bg_color'));
             customColors.push(getValue('light_font_color'));
             customColors.push(getValue('dark_font_color'));
-
             setActualColors(customColors);
         }
     }, [settings, colors, value]);
-    console.log("value " ,value, actualColors);
+    console.log("id " ,id, actualColors);
 
     return (
         <div onClick={(e) => handleChange()} className={"cursor-pointer"}>
