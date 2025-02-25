@@ -33,6 +33,8 @@ class Plugin
         register_deactivation_hook(App::env('base_file'), [$this, 'deactivation']);
         register_uninstall_hook(App::env('base_file'), 'Simplybook\Plugin::uninstall');
 
+        $this->registerConstants();
+
         add_action('plugins_loaded', [$this, 'init'], 1);
     }
 
@@ -41,6 +43,8 @@ class Plugin
      */
     public function activation()
     {
+        update_option('simplybook_run_activation', true, false);
+        do_action('simplybook_activation');
     }
 
     /**
@@ -66,6 +70,33 @@ class Plugin
         $this->registerFeatures(); // 2
         $this->registerControllers(); // 3
         add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
+    }
+
+    /**
+     * Register plugin constants
+     * @deprecated 3.0.0
+     */
+    private function registerConstants()
+    {
+        /**
+         * @deprecated 3.0.0 Use App::env('version') instead
+         */
+        define( 'SIMPLYBOOK_VERSION', '3.0.0' );
+
+        /**
+         * @deprecated 3.0.0 Use App::env('path') instead
+         */
+        define( 'SIMPLYBOOK_PATH', plugin_dir_path( dirname(__FILE__) ) );
+
+        /**
+         * @deprecated 3.0.0 Use App::env('url') instead
+         */
+        define( 'SIMPLYBOOK_URL', plugin_dir_url( dirname(__FILE__) ) );
+
+        /**
+         * @deprecated 3.0.0 Use App::env('base_file') instead
+         */
+        define( 'SIMPLYBOOK_PLUGIN', plugin_basename(dirname(__FILE__, 2)). '/' . plugin_basename(dirname(__DIR__)) . '.php' );
     }
 
     /**
