@@ -124,6 +124,7 @@ class Plugin
     {
         $this->controllerManager->registerControllers([
             new App\AdminController(),
+            new App\FrontendController(),
         ]);
     }
 

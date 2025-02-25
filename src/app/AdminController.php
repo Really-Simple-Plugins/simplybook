@@ -2,7 +2,6 @@
 namespace Simplybook\App;
 
 use Simplybook_old\Admin\Admin;
-use Simplybook_old\Frontend\Frontend;
 use Simplybook\Traits\HasAllowlistControl;
 use Simplybook\Interfaces\ControllerInterface;
 
@@ -15,7 +14,6 @@ class AdminController implements ControllerInterface
         if ($this->adminAccessAllowed()) {
             ( new Admin() );
         }
-        ( new Frontend() );
     }
 
     public function addAdminMenu()
