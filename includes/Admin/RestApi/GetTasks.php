@@ -1,8 +1,8 @@
 <?php
-namespace Simplybook\Admin\RestApi;
-use Simplybook\Admin\Tasks\Tasks;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
+namespace Simplybook_old\Admin\RestApi;
+use Simplybook_old\Admin\Tasks\Tasks;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -56,8 +56,3 @@ class GetTasks extends RestApi {
 		return $this->response();
 	}
 }
-
-
-
-
-

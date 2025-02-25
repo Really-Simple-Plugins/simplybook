@@ -1,8 +1,8 @@
 <?php
-namespace Simplybook\Frontend\Blocks;
-use Simplybook\Api\InternalApi;
-use Simplybook\Frontend\Traits\Widget;
-use Simplybook\Traits\Helper;
+namespace Simplybook_old\Frontend\Blocks;
+use Simplybook_old\Api\InternalApi;
+use Simplybook_old\Frontend\Traits\Widget;
+use Simplybook_old\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -155,9 +155,3 @@ class Blocks {
     }
 
 }
-
-
-
-
-
-

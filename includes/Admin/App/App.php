@@ -1,9 +1,9 @@
 <?php
 
-namespace Simplybook\Admin\App;
-use Simplybook\Api\Api;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Load;
+namespace Simplybook_old\Admin\App;
+use Simplybook_old\Api\Api;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Load;
 
 class App {
     use Load;

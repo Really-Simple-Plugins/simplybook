@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Admin\Tasks;
+namespace Simplybook_old\Admin\Tasks;
 
-use Simplybook\Traits\Helper;
+use Simplybook_old\Traits\Helper;
 
 defined( 'ABSPATH' ) or die( '' );
 /**
@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) or die( '' );
  * Task get added on activation, or on a server condition. If clientside condition is necessary is to be determined yet.
  *
  *
- * @package Simplybook\Admin\Tasks
+ * @package Simplybook_old\Admin\Tasks
  */
 
 class Tasks {
@@ -72,7 +72,7 @@ class Tasks {
 			return $function();
 		}
 
-		//e.g. (new \Simplybook\Api\Api())->has_services()
+		//e.g. (new \Simplybook_old\Api\Api())->has_services()
 		if ( preg_match('/\(new (.+)\)\-\>(.+)\(\)/', $function, $matches) ) {
 			$class = $matches[1];
 			$method = $matches[2];

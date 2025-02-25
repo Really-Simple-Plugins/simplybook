@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Traits;
+namespace Simplybook_old\Traits;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

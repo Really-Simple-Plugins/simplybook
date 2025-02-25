@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Admin\Capability;
+namespace Simplybook_old\Admin\Capability;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

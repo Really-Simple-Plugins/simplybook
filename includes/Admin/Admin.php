@@ -1,26 +1,26 @@
 <?php
 
-namespace Simplybook\Admin;
+namespace Simplybook_old\Admin;
 
-use Simplybook\Admin\App\App;
-use Simplybook\Admin\Capability\Capability;
-use Simplybook\Admin\RestApi\CompanyRegistration;
-use Simplybook\Admin\RestApi\GetDomain;
-use Simplybook\Admin\RestApi\GetTasks;
-use Simplybook\Admin\RestApi\GetPlugins;
-use Simplybook\Admin\RestApi\GetWidget;
-use Simplybook\Admin\RestApi\LoginUrl;
-use Simplybook\Admin\RestApi\Onboarding;
-use Simplybook\Admin\RestApi\Services;
-use Simplybook\Admin\RestApi\Providers;
-use Simplybook\Admin\RestApi\Settings;
-use Simplybook\Admin\RestApi\WaitForRegistrationCallback;
-use Simplybook\Admin\RestApi\Dashboard;
-use Simplybook\Admin\Tasks\Tasks;
-use Simplybook\Api\Api;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
-use Simplybook\Upgrades\Upgrades;
+use Simplybook_old\Admin\App\App;
+use Simplybook_old\Admin\Capability\Capability;
+use Simplybook_old\Admin\RestApi\CompanyRegistration;
+use Simplybook_old\Admin\RestApi\GetDomain;
+use Simplybook_old\Admin\RestApi\GetTasks;
+use Simplybook_old\Admin\RestApi\GetPlugins;
+use Simplybook_old\Admin\RestApi\GetWidget;
+use Simplybook_old\Admin\RestApi\LoginUrl;
+use Simplybook_old\Admin\RestApi\Onboarding;
+use Simplybook_old\Admin\RestApi\Services;
+use Simplybook_old\Admin\RestApi\Providers;
+use Simplybook_old\Admin\RestApi\Settings;
+use Simplybook_old\Admin\RestApi\WaitForRegistrationCallback;
+use Simplybook_old\Admin\RestApi\Dashboard;
+use Simplybook_old\Admin\Tasks\Tasks;
+use Simplybook_old\Api\Api;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Upgrades\Upgrades;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

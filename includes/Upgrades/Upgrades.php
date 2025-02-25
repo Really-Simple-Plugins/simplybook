@@ -1,9 +1,9 @@
 <?php
-namespace Simplybook\Upgrades;
+namespace Simplybook_old\Upgrades;
 
-use Simplybook\Admin\Capability\Capability;
-use Simplybook\Traits\Save;
-use function Simplybook\simplybook_has_admin_access;
+use Simplybook_old\Admin\Capability\Capability;
+use Simplybook_old\Traits\Save;
+use function Simplybook_old\simplybook_has_admin_access;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

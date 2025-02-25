@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Frontend;
-use Simplybook\Frontend\Blocks\Blocks;
-use Simplybook\Frontend\Shortcodes\Shortcodes;
+namespace Simplybook_old\Frontend;
+use Simplybook_old\Frontend\Blocks\Blocks;
+use Simplybook_old\Frontend\Shortcodes\Shortcodes;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

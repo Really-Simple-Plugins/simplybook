@@ -1,13 +1,13 @@
 <?php
-namespace Simplybook\Api;
+namespace Simplybook_old\Api;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Simplybook\Api\ApiResponse\ApiResponse;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Load;
-use Simplybook\Traits\Save;
+use Simplybook_old\Api\ApiResponse\ApiResponse;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Load;
+use Simplybook_old\Traits\Save;
 
 
 class Api

@@ -12,7 +12,7 @@ return [
 		'id' => 'add_service',
 		'condition' => [
 			'type' => 'serverside',
-			'function' => '(new \Simplybook\Api\Api())->company_registration_complete()',
+			'function' => '(new \Simplybook_old\Api\Api())->company_registration_complete()',
 		],
 		'text' => __('Complete the onboarding to get started!','simplybook'),
 		'status' => 'open',
@@ -26,7 +26,7 @@ return [
 		'id' => 'add_service',
 		'condition' => [
 			'type' => 'serverside',
-			'function' => '(new \Simplybook\Api\Api())->has_services()',
+			'function' => '(new \Simplybook_old\Api\Api())->has_services()',
 		],
 		'text' => __('Add your first service','simplybook'),
 		'status' => 'open',

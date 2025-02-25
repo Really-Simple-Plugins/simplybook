@@ -1,8 +1,8 @@
 <?php
-namespace Simplybook\Admin\RestApi;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
-use Simplybook\Traits\Load;
+namespace Simplybook_old\Admin\RestApi;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Load;
 use WP_Error;
 use WP_REST_Response;
 

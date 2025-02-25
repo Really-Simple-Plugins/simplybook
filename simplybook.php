@@ -17,7 +17,7 @@
     License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-namespace Simplybook;
+namespace Simplybook_old;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,8 +36,8 @@ if ( !file_exists(__DIR__ . '/vendor/autoload.php')) {
 // composer autoload
 require_once __DIR__ . '/vendor/autoload.php';
 
-use Simplybook\Frontend\Frontend;
-use Simplybook\Admin\Admin;
+use Simplybook_old\Frontend\Frontend;
+use Simplybook_old\Admin\Admin;
 $simplybook_cache = [];
 
 if ( ! function_exists( 'simplybook_has_admin_access' ) ) {

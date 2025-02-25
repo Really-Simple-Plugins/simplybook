@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Admin\Cron;
+namespace Simplybook_old\Admin\Cron;
 
-use Simplybook\Traits\Helper;
+use Simplybook_old\Traits\Helper;
 
 defined( 'ABSPATH' ) or die( '' );
 
@@ -31,18 +31,3 @@ class Cron {
 		}
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

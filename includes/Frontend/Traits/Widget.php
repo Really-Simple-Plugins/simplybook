@@ -1,6 +1,6 @@
 <?php
-namespace Simplybook\Frontend\Traits;
-use Simplybook\Traits\Load;
+namespace Simplybook_old\Frontend\Traits;
+use Simplybook_old\Traits\Load;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Api\ApiResponse;
+namespace Simplybook_old\Api\ApiResponse;
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }

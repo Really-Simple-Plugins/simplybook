@@ -1,6 +1,6 @@
 <?php
-namespace Simplybook\Frontend\Shortcodes;
-use Simplybook\Frontend\Traits\Widget;
+namespace Simplybook_old\Frontend\Shortcodes;
+use Simplybook_old\Frontend\Traits\Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

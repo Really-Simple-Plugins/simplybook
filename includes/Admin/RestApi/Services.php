@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Admin\RestApi;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
+namespace Simplybook_old\Admin\RestApi;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -49,8 +49,3 @@ class Services extends RestApi {
 		return $this->response($services);
 	}
 }
-
-
-
-
-

@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Admin\Installer;
+namespace Simplybook_old\Admin\Installer;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
@@ -153,5 +153,3 @@ class Installer {
 		return $plugin_info;
 	}
 }
-
-

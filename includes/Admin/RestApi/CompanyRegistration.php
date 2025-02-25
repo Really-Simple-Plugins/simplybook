@@ -1,8 +1,8 @@
 <?php
-namespace Simplybook\Admin\RestApi;
-use Simplybook\Admin\Tasks\Tasks;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
+namespace Simplybook_old\Admin\RestApi;
+use Simplybook_old\Admin\Tasks\Tasks;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

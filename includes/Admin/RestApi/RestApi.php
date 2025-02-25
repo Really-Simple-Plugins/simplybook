@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Admin\RestApi;
-use Simplybook\Api\Api;
-use Simplybook\Traits\Helper;
+namespace Simplybook_old\Admin\RestApi;
+use Simplybook_old\Api\Api;
+use Simplybook_old\Traits\Helper;
 use WP_REST_Request;
 use WP_REST_Response;
 

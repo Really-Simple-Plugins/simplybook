@@ -1,9 +1,9 @@
 <?php
-namespace Simplybook\Admin\RestApi;
+namespace Simplybook_old\Admin\RestApi;
 
-use Simplybook\Frontend\Traits\Widget;
-use Simplybook\Traits\Helper;
-use Simplybook\Traits\Save;
+use Simplybook_old\Frontend\Traits\Widget;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Traits\Save;
 use WP_REST_Response;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -46,8 +46,3 @@ class GetWidget extends RestApi {
 		]);
 	}
 }
-
-
-
-
-
