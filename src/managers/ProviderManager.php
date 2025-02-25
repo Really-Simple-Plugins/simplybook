@@ -1,6 +1,6 @@
-<?php namespace Simplybook\Managers;
+<?php namespace SimplyBook\Managers;
 
-use Simplybook\Interfaces\ProviderInterface;
+use SimplyBook\Interfaces\ProviderInterface;
 
 class ProviderManager
 {

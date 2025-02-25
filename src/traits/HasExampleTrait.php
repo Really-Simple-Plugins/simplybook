@@ -1,4 +1,4 @@
-<?php namespace Simplybook\Traits;
+<?php namespace SimplyBook\Traits;
 
 trait HasExampleTrait
 {

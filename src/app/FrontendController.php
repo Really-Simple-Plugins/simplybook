@@ -1,9 +1,8 @@
 <?php
-namespace Simplybook\App;
+namespace SimplyBook\App;
 
 use Simplybook_old\Frontend\Frontend;
-use Simplybook\Traits\HasAllowlistControl;
-use Simplybook\Interfaces\ControllerInterface;
+use SimplyBook\Interfaces\ControllerInterface;
 
 class FrontendController implements ControllerInterface
 {

@@ -1,7 +1,7 @@
 <?php
-namespace Simplybook\Features\Pro\ExampleProFeature;
+namespace SimplyBook\Features\Pro\ExampleProFeature;
 
-use Simplybook\Interfaces\FeatureInterface;
+use SimplyBook\Interfaces\FeatureInterface;
 
 class ExampleProFeatureController implements FeatureInterface
 {

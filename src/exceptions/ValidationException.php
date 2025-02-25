@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Exceptions;
+namespace SimplyBook\Exceptions;
 
 /**
  * Used to throw validation exceptions. Properties are public to allow for easy

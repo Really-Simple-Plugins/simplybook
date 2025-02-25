@@ -1,6 +1,6 @@
-<?php namespace Simplybook\Managers;
+<?php namespace SimplyBook\Managers;
 
-use Simplybook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\EndpointInterface;
 
 class EndpointManager
 {

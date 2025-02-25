@@ -1,4 +1,4 @@
-<?php namespace Simplybook\Interfaces;
+<?php namespace SimplyBook\Interfaces;
 
 interface ProviderInterface
 {

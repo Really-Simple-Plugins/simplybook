@@ -1,4 +1,4 @@
-<?php namespace Simplybook\Builders;
+<?php namespace SimplyBook\Builders;
 
 /**
  * Class ExampleBuilder

@@ -26,6 +26,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use AdminController instead
+ */
 class Admin {
 	use Helper;
 	use Save;

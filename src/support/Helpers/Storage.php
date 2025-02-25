@@ -1,4 +1,4 @@
-<?php namespace Simplybook\Helpers;
+<?php namespace SimplyBook\Helpers;
 
 use Adbar\Dot;
 

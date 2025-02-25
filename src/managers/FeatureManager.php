@@ -1,8 +1,8 @@
-<?php namespace Simplybook\Managers;
+<?php namespace SimplyBook\Managers;
 
-use Simplybook\App;
-use Simplybook\Plugin;
-use Simplybook\Interfaces\FeatureInterface;
+use SimplyBook\App;
+use SimplyBook\Plugin;
+use SimplyBook\Interfaces\FeatureInterface;
 
 class FeatureManager
 {

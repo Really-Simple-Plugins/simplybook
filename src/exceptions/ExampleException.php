@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Exceptions;
+namespace SimplyBook\Exceptions;
 
 class ExampleException extends \Exception
 {

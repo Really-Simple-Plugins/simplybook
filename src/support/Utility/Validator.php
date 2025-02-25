@@ -1,6 +1,6 @@
-<?php namespace Simplybook\Utility;
+<?php namespace SimplyBook\Utility;
 
-use Simplybook\Exceptions\ValidationException;
+use SimplyBook\Exceptions\ValidationException;
 
 /**
  * Though Helpers and Utils are often used interchangeably, utility classes are

@@ -1,10 +1,10 @@
 <?php
-namespace Simplybook;
+namespace SimplyBook;
 
-use Simplybook\Managers\FeatureManager;
-use Simplybook\Managers\EndpointManager;
-use Simplybook\Managers\ProviderManager;
-use Simplybook\Managers\ControllerManager;
+use SimplyBook\Managers\FeatureManager;
+use SimplyBook\Managers\EndpointManager;
+use SimplyBook\Managers\ProviderManager;
+use SimplyBook\Managers\ControllerManager;
 
 class Plugin
 {
@@ -31,7 +31,7 @@ class Plugin
     {
         register_activation_hook(App::env('base_file'), [$this, 'activation']);
         register_deactivation_hook(App::env('base_file'), [$this, 'deactivation']);
-        register_uninstall_hook(App::env('base_file'), 'Simplybook\Plugin::uninstall');
+        register_uninstall_hook(App::env('base_file'), 'SimplyBook\Plugin::uninstall');
 
         $this->registerConstants();
 

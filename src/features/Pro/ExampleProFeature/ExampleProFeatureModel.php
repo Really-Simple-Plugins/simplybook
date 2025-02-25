@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Features\Pro\ExampleProFeature;
+namespace SimplyBook\Features\Pro\ExampleProFeature;
 
 class ExampleProFeatureModel
 {

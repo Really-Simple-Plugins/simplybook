@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook;
+namespace SimplyBook;
 
 use Adbar\Dot;
 

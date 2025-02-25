@@ -1,6 +1,6 @@
-<?php namespace Simplybook\Http\Endpoints;
+<?php namespace SimplyBook\Http\Endpoints;
 
-use Simplybook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\EndpointInterface;
 
 class ExampleEndpoint implements EndpointInterface
 {

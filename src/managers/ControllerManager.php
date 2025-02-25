@@ -1,6 +1,6 @@
-<?php namespace Simplybook\Managers;
+<?php namespace SimplyBook\Managers;
 
-use Simplybook\Interfaces\ControllerInterface;
+use SimplyBook\Interfaces\ControllerInterface;
 
 class ControllerManager
 {

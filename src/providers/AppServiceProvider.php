@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook\Providers;
+namespace SimplyBook\Providers;
 
 class AppServiceProvider extends Provider
 {
