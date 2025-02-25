@@ -1,7 +1,57 @@
 {
+  "name": "really-simple-plugins/simplybookme",
+  "description": "Online booking system plugin for service businesses that lets your customers schedule appointments and pay for your services on your Wordpress site.",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "homepage": "https://simplybook.me/",
+  "authors": [
+    {
+      "name": "Really Simple Plugins",
+      "email": "beheer@really-simple-plugins.com",
+      "homepage": "https://really-simple-plugins.com/",
+      "role": "Organisation"
+    }
+  ],
+  "require": {
+    "php": ">=7.4, <=8.3",
+    "adbario/php-dot-notation": "*",
+    "automattic/jetpack-autoloader": "^5"
+  },
   "autoload": {
     "psr-4": {
-      "Simplybook\\": "includes/"
+      "Simplybook_old\\": "includes/",
+      "SimplyBook\\App\\": "src/app",
+      "SimplyBook\\Http\\": "src/http",
+      "SimplyBook\\Traits\\": "src/traits",
+      "SimplyBook\\Managers\\": "src/managers",
+      "SimplyBook\\Providers\\": "src/providers",
+      "SimplyBook\\Interfaces\\": "src/interfaces",
+      "SimplyBook\\Exceptions\\": "src/exceptions",
+      "SimplyBook\\Helpers\\": "src/support/Helpers",
+      "SimplyBook\\Utility\\": "src/support/Utility",
+      "SimplyBook\\Builders\\": "src/support/Builders"
+    },
+    "files": [
+      "src/App.php",
+      "src/Plugin.php"
+    ]
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true,
+    "platform": {
+      "php": "7.4"
+    },
+    "allow-plugins": {
+      "automattic/jetpack-autoloader": true
     }
+  },
+  "scripts": {
+    "pre-update-cmd": [
+    ],
+    "post-install-cmd": [
+    ],
+    "post-update-cmd": [
+    ]
   }
 }
