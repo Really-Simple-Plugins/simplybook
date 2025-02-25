@@ -1,0 +1,25 @@
+<?php namespace Simplybook\Managers;
+
+use Simplybook\Interfaces\EndpointInterface;
+
+class EndpointManager
+{
+    /**
+     * Register a single endpoint as long as it implements the EndpointInterface
+     */
+    public function registerEndpoints(array $endpoints)
+    {
+        // Reject all given endpoints when they do not implement the
+        // EndpointInterface
+        $endpoints = array_filter($endpoints, function ($endpoint) {
+            return $endpoint instanceof EndpointInterface;
+        });
+
+        // Serve each provider
+        foreach ($endpoints as $endpoint) {
+            $endpoint->registerRoutes();
+        }
+
+        do_action('rsp_endpoints_loaded');
+    }
+}
