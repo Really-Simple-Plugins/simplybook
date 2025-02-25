@@ -3,7 +3,6 @@ namespace Simplybook_old\Upgrades;
 
 use Simplybook_old\Admin\Capability\Capability;
 use Simplybook_old\Traits\Save;
-use function Simplybook_old\simplybook_has_admin_access;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
