@@ -1,6 +1,5 @@
 <?php
 namespace Simplybook_old\Traits;
-use function Simplybook_old\simplybook_is_logged_in_rest;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
