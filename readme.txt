@@ -1,5 +1,6 @@
 === SimplyBook.me - Online Booking System ===
-Contributors: simplybook
+Contributors: simplybook, reallysimpleplugins
+Contributors: simplybook, wimbraam, RogierLankhorst, hesseldejong
 Donate link: https://simplybook.me/
 Tags: Booking System, Scheduling system, Appointment System, Bookings, Appointment Plugin
 Requires at least: 6.0
@@ -113,6 +114,14 @@ SimplyBook.me appointment booking and online scheduling is fully translated to:
 
 == Changelog ==
 
+= 2.3 =
+* Fixed some bugs
+* Added new dashboard banner
+
+= 2.2 =
+* Fixed some not critical bugs
+* Added demo widget page
+
 = 2.1 =
 * Fixed some not critical bugs
 * Added check system requirements page
@@ -134,4 +143,3 @@ SimplyBook.me appointment booking and online scheduling is fully translated to:
 
 = 1.0 =
 * First version of plugin
-
