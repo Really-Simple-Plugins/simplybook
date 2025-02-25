@@ -33,7 +33,8 @@
     },
     "files": [
       "src/App.php",
-      "src/Plugin.php"
+      "src/Plugin.php",
+      "helpers.php"
     ]
   },
   "config": {
