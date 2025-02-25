@@ -2,7 +2,7 @@
 
 namespace Simplybook_old\Admin;
 
-use Simplybook_old\Admin\App\App;
+use Simplybook_old\Admin\App\App_old;
 use Simplybook_old\Admin\Capability\Capability;
 use Simplybook_old\Admin\RestApi\CompanyRegistration;
 use Simplybook_old\Admin\RestApi\GetDomain;
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Admin {
 	use Helper;
 	use Save;
-	protected App $app;
+	protected App_old $app;
 
 	public function __construct() {
         ( new Upgrades() );
@@ -47,7 +47,7 @@ class Admin {
 		( new GetPlugins() );
 		( new GetDomain() );
 
-        $this->app = new App();
+        $this->app = new App_old();
 
 		add_action( 'admin_init', array( $this, 'maybe_run_activation' ) );
 		add_action( 'admin_init', array( $this, 'maybe_redirect_to_dashboard' ) );

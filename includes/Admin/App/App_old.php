@@ -5,7 +5,7 @@ use Simplybook_old\Api\Api;
 use Simplybook_old\Traits\Helper;
 use Simplybook_old\Traits\Load;
 
-class App {
+class App_old {
     use Load;
     use Helper;
 	public function __construct() {
