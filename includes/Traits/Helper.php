@@ -14,6 +14,7 @@ trait Helper {
     /**
      * Check manage capability
      *
+     * @deprecated 3.0.0 Use HasAllowlistControl::adminAccessAllowed() instead
      * @return bool
      */
     public function user_can_manage(): bool {

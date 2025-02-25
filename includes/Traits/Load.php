@@ -5,7 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-
+/**
+ * todo
+ * Give proper name and make it follow Single Responsibility Principle
+ */
 trait Load {
 	public $fields = [];
 	public $values_loaded = false;

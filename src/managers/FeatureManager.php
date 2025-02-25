@@ -20,7 +20,7 @@ class FeatureManager
             $needsPro = ($settings['pro'] ?? false);
 
             // Check if the feature should be loaded
-            if (!$enabled || !$inScope || ($needsPro && !App::env('pro'))) {
+            if (!$enabled || !$inScope || ($needsPro && !App::env('plugin.pro'))) {
                 continue;
             }
 
@@ -59,7 +59,7 @@ class FeatureManager
             $instance->register();
         };
 
-        do_action('rsp_features_loaded');
+        do_action('simplybook_features_loaded');
     }
 
     /**
@@ -68,7 +68,7 @@ class FeatureManager
      */
     private function getFeaturePath(string $featureName, bool $needsPro): string
     {
-        return App::env('path') . '/src/features/' . ($needsPro ? 'Pro/' : '') . $featureName . '/';
+        return App::env('plugin.path') . '/src/features/' . ($needsPro ? 'Pro/' : '') . $featureName . '/';
     }
 
     /**

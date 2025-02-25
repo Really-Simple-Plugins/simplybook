@@ -19,6 +19,6 @@ class ProviderManager
             $provider->serve();
         }
 
-        do_action('rsp_providers_loaded');
+        do_action('simplybook_providers_loaded');
     }
 }

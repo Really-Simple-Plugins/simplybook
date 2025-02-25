@@ -62,4 +62,31 @@ trait HasAllowlistControl
 
         return is_user_logged_in() && current_user_can('simplybook_manage');
     }
+
+    /**
+     * Check if the current user has the capability to manage the plugin.
+     * This is the case when:
+     * - The user is logged in and has the 'simplybook_manage' capability
+     * - This is a REST API request and the user is logged in
+     * - This is a WPCLI request
+     *
+     * @internal This replaces Helper::user_can_manage()
+     */
+    public function userCanManage(): bool
+    {
+        // During activation, we need to allow access
+        if (get_option('simplybook_run_activation')) {
+            return true;
+        }
+
+        if (defined('WP_CLI') && WP_CLI) {
+            return true;
+        }
+
+        if ($this->restRequestIsAllowed()) {
+            return true;
+        }
+
+        return current_user_can('simplybook_manage');
+    }
 }

@@ -7,6 +7,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use FrontendController instead
+ */
 class Frontend {
     protected array $cache = array();
 

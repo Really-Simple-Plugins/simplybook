@@ -20,6 +20,6 @@ class EndpointManager
             $endpoint->registerRoutes();
         }
 
-        do_action('rsp_endpoints_loaded');
+        do_action('simplybook_endpoints_loaded');
     }
 }

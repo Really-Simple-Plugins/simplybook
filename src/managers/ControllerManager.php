@@ -20,6 +20,6 @@ class ControllerManager
             $controller->register();
         }
 
-        do_action('rsp_controllers_loaded');
+        do_action('simplybook_controllers_loaded');
     }
 }
