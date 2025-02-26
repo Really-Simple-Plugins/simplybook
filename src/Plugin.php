@@ -35,7 +35,11 @@ class Plugin
 
         $this->registerConstants();
 
-        add_action('plugins_loaded', [$this, 'init'], 1);
+        add_action('plugins_loaded', [$this, 'registerProviders']);
+        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']);
+        add_action('simplybook_features_loaded', [$this, 'registerControllers']);
+        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']);
+        add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
     }
 
     /**
@@ -68,17 +72,6 @@ class Plugin
     }
 
     /**
-     * Add plugin actions
-     */
-    public function init()
-    {
-        $this->registerProviders(); // 1
-        $this->registerFeatures(); // 2
-        $this->registerControllers(); // 3
-        add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
-    }
-
-    /**
      * Register plugin constants
      * @deprecated 3.0.0
      */
@@ -106,7 +99,11 @@ class Plugin
     }
 
     /**
-     * Register Plugin providers
+     * Register Plugin providers. First step in the booting process of the
+     * plugin. Is hooked into plugins_loaded to make sure we only boot the
+     * plugin after all other plugins are loaded. This plugin depends on the
+     * providerManager to fire the simplybook_providers_loaded action.
+     * @uses do_action simplybook_providers_loaded
      */
     public function registerProviders()
     {
@@ -116,7 +113,9 @@ class Plugin
     }
 
     /**
-     * Register Plugin features
+     * Register Plugin features. Hooked into simplybook_providers_loaded to make
+     * sure providers are already available to the whole app.
+     * @uses do_action simplybook_features_loaded
      */
     public function registerFeatures()
     {
@@ -124,7 +123,9 @@ class Plugin
     }
 
     /**
-     * Register controllers
+     * Register controllers. Hooked into simplybook_features_loaded to make sure
+     * features are available to the controllers.
+     * @uses do_action simplybook_controllers_loaded
      */
     public function registerControllers()
     {
@@ -141,11 +142,32 @@ class Plugin
 
     /**
      * Register Plugin endpoints
+     * @uses do_action simplybook_endpoints_loaded
      */
     public function registerPluginEndpoints()
     {
         $this->endpointManager->registerEndpoints([
             new Http\Endpoints\ExampleEndpoint(),
         ]);
+    }
+
+    /**
+     * Fire an action when the plugin is upgraded from one version to another.
+     * Hooked into simplybook_controllers_loaded to make sure controllers can
+     * hook into simplybook_plugin_version_upgrade
+     * @uses do_action simplybook_plugin_version_upgrade
+     */
+    public function checkForUpgrades(): void
+    {
+        // todo - in includes/Upgrades/Upgrades.php there was a check ong adminAccessAllowed. Is this even needed? Ifso, add it here.
+
+        $previousVersion = (string) get_option('simplybook_current_version', false);
+        if ($previousVersion && version_compare($previousVersion, App::env('plugin.version'), '==')) {
+            return; // Nothing to do
+        }
+
+        // Action can be used by controllers to hook into the upgrade process
+        do_action('simplybook_plugin_version_upgrade', $previousVersion, App::env('plugin.version'));
+        update_option('simplybook_current_version', App::env('plugin.version'), false);
     }
 }

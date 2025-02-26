@@ -1,16 +1,18 @@
 <?php
 namespace SimplyBook\App;
 
-use Simplybook_old\Traits\Load;
+use Simplybook_old\Traits\Save;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class SettingsController implements ControllerInterface
 {
-    use Load;
+    // todo
+    use Save;
 
     public function register()
     {
         add_action('simplybook_activation', [$this, 'handlePluginActivation']);
+        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
     }
 
     /**
@@ -19,6 +21,18 @@ class SettingsController implements ControllerInterface
     public function handlePluginActivation(): void
     {
         $this->setupDefaults();
+    }
+
+    /**
+     * Handle plugin upgrades
+     */
+    public function handlePluginUpgrade(string $previousVersion, string $newVersion): void
+    {
+        // If someone upgrades from legacy version we need to upgrade the
+        // existing options
+        if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
+            $this->upgrade_options(); // todo - this comes from the old Save trait still
+        }
     }
 
     /**
