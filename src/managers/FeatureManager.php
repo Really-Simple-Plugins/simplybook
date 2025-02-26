@@ -11,6 +11,7 @@ class FeatureManager
      * method automatically loads all classes from the features directory and
      * injects the Service and Repository classes into the Controller class if
      * they exist.
+     * @uses do_action simplybook_features_loaded
      */
     public function registerFeatures(array $features)
     {

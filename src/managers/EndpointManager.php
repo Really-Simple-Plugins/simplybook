@@ -6,6 +6,7 @@ class EndpointManager
 {
     /**
      * Register a single endpoint as long as it implements the EndpointInterface
+     * @uses do_action simplybook_endpoints_loaded
      */
     public function registerEndpoints(array $endpoints)
     {

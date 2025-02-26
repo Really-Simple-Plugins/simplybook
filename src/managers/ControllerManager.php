@@ -6,7 +6,8 @@ class ControllerManager
 {
     /**
      * Register a single controller as long as it implements the
-     * ControllerInterface
+     * ControllerInterface.
+     * @uses do_action simplybook_controllers_loaded
      */
     public function registerControllers(array $controllers)
     {

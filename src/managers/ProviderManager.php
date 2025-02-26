@@ -6,6 +6,7 @@ class ProviderManager
 {
     /**
      * Register a providers as long as it implements the ProviderInterface
+     * @uses do_action simplybook_providers_loaded
      */
     public function registerProviders(array $providers)
     {
