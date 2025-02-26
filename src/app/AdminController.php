@@ -44,7 +44,7 @@ class AdminController implements ControllerInterface
         ( new GetTasks() );
         ( new GetPlugins() );
         ( new GetDomain() );
-        new App_old();
+//        new App_old();
 
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);

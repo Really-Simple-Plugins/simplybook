@@ -87,22 +87,22 @@ class Plugin
         /**
          * @deprecated 3.0.0 Use App::env('plugin.version') instead
          */
-        define( 'SIMPLYBOOK_VERSION', '3.0.0' );
+        define('SIMPLYBOOK_VERSION', '3.0.0');
 
         /**
          * @deprecated 3.0.0 Use App::env('plugin.path') instead
          */
-        define( 'SIMPLYBOOK_PATH', plugin_dir_path( dirname(__FILE__) ) );
+        define('SIMPLYBOOK_PATH', plugin_dir_path(dirname(__FILE__)));
 
         /**
          * @deprecated 3.0.0 Use App::env('plugin.url') instead
          */
-        define( 'SIMPLYBOOK_URL', plugin_dir_url( dirname(__FILE__) ) );
+        define('SIMPLYBOOK_URL', plugin_dir_url(dirname(__FILE__)));
 
         /**
          * @deprecated 3.0.0 Use App::env('plugin.base_file') instead
          */
-        define( 'SIMPLYBOOK_PLUGIN', plugin_basename(dirname(__FILE__, 2)). '/' . plugin_basename(dirname(__DIR__)) . '.php' );
+        define('SIMPLYBOOK_PLUGIN', plugin_basename(dirname(__FILE__, 2)). '/' . plugin_basename(dirname(__DIR__)) . '.php');
     }
 
     /**
@@ -129,6 +129,7 @@ class Plugin
     public function registerControllers()
     {
         $this->controllerManager->registerControllers([
+            new App\DashboardController(),
             new App\AdminController(),
             new App\SettingsController(),
             new App\FrontendController(),

@@ -89,7 +89,8 @@ final class App
     }
 
     /**
-     * Return a config file as a Dot instance
+     * Return a config file as a Dot instance. If path is a directory, it will
+     * merge all the files in the directory.
      * @throws \InvalidArgumentException
      */
     private static function dotFromPath(string $path): Dot
@@ -98,6 +99,16 @@ final class App
             throw new \InvalidArgumentException("Unloadable configuration file {$path} provided.");
         }
 
-        return new Dot(require $path);
+        $data = [];
+
+        if (is_dir($path)) {
+            foreach (glob($path . '/*.php') as $file) {
+                $data = array_merge($data, require $file);
+            }
+        } else {
+            $data = require $path;
+        }
+
+        return new Dot($data);
     }
 }
