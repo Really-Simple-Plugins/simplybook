@@ -8,6 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated 3.0.0 Instead use hook simplybook_plugin_version_upgrade.
+ * @see \SimplyBook\Plugin::checkForUpgrades
+ */
 class Upgrades {
     use Save;
     public function __construct() {
