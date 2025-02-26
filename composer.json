@@ -29,7 +29,8 @@
       "SimplyBook\\Exceptions\\": "src/exceptions",
       "SimplyBook\\Helpers\\": "src/support/Helpers",
       "SimplyBook\\Utility\\": "src/support/Utility",
-      "SimplyBook\\Builders\\": "src/support/Builders"
+      "SimplyBook\\Builders\\": "src/support/Builders",
+      "SimplyBook\\App\\Services\\": "src/app/services"
     },
     "files": [
       "src/App.php",

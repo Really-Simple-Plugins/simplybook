@@ -5,6 +5,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use CapabilityController instead
+ * @see \SimplyBook\App\CapabilityController
+ */
 class Capability {
     public function __construct() {
         add_action( 'wp_initialize_site', array( $this, 'add_role_to_subsite'), 10, 1 );

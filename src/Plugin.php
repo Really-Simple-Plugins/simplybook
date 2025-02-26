@@ -134,7 +134,9 @@ class Plugin
             new App\AdminController(),
             new App\SettingsController(),
             new App\FrontendController(),
-            new App\CapabilityController(),
+            new App\CapabilityController(
+                new App\Services\CapabilityService()
+            ),
             new App\TaskController(),
             new App\ApiController(),
         ]);

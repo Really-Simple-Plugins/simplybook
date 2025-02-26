@@ -2,7 +2,6 @@
 namespace SimplyBook\App;
 
 use SimplyBook\App;
-use Simplybook_old\Upgrades\Upgrades;
 use SimplyBook\Traits\HasAllowlistControl;
 use Simplybook_old\Admin\RestApi\LoginUrl;
 use Simplybook_old\Admin\RestApi\Services;
@@ -15,7 +14,6 @@ use Simplybook_old\Admin\RestApi\GetDomain;
 use Simplybook_old\Admin\RestApi\Onboarding;
 use Simplybook_old\Admin\RestApi\GetPlugins;
 use SimplyBook\Interfaces\ControllerInterface;
-use Simplybook_old\Admin\Capability\Capability;
 use Simplybook_old\Admin\RestApi\CompanyRegistration;
 use Simplybook_old\Admin\RestApi\WaitForRegistrationCallback;
 
@@ -29,7 +27,6 @@ class AdminController implements ControllerInterface
             return;
         }
 
-        ( new Capability() );
         ( new Onboarding() );
         ( new LoginUrl() );
         ( new Services() );
