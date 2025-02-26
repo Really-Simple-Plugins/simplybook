@@ -5,6 +5,9 @@ use Simplybook_old\Api\Api;
 use Simplybook_old\Traits\Helper;
 use Simplybook_old\Traits\Load;
 
+/**
+ * @deprecated 3.0.0 Use DashboardController instead
+ */
 class App_old {
     use Load;
     use Helper;
