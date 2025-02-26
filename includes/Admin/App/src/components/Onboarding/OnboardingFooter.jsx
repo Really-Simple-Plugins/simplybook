@@ -1,6 +1,6 @@
-import {__} from '@wordpress/i18n';
+import { __ } from "@wordpress/i18n";
 const OnboardingFooter = () => {
-  let placeholder = simplybook.plugin_url + "/assets/img/placeholder.jpg";
+  let placeholder = simplybook.assets_url + "/img/placeholder.jpg";
 
   const items = [
     {
@@ -52,6 +52,6 @@ const OnboardingFooter = () => {
   );
 };
 
-OnboardingFooter.displayName = 'OnboardingFooter';
+OnboardingFooter.displayName = "OnboardingFooter";
 
 export default OnboardingFooter;
