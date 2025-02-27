@@ -115,7 +115,6 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        // Enqueue the Tailwind CSS file
         wp_enqueue_style(
             'simplybook-tailwind',
             App::env('plugin.react_url') . '/src/tailwind.generated.css',

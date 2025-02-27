@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use OnboardingController instead {@see \SimplyBook\App\OnboardingController}
+ */
 class Onboarding extends RestApi {
     use Helper;
     use Save;

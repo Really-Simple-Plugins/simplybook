@@ -23,5 +23,9 @@ return [
     ],
     'simplybook' => [
         'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
-    ]
+    ],
+    'http' => [
+        'version' => 'v1',
+        'namespace' => 'simplybook',
+    ],
 ];

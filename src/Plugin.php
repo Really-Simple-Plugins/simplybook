@@ -139,6 +139,9 @@ class Plugin
             ),
             new App\TaskController(),
             new App\ApiController(),
+            new App\OnboardingController(
+                new App\Services\OnboardingService()
+            ),
         ]);
     }
 
@@ -148,9 +151,7 @@ class Plugin
      */
     public function registerPluginEndpoints()
     {
-        $this->endpointManager->registerEndpoints([
-            new Http\Endpoints\ExampleEndpoint(),
-        ]);
+        $this->endpointManager->registerEndpoints();
     }
 
     /**

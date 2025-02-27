@@ -21,7 +21,6 @@
     "psr-4": {
       "Simplybook_old\\": "includes/",
       "SimplyBook\\App\\": "src/app",
-      "SimplyBook\\Http\\": "src/http",
       "SimplyBook\\Traits\\": "src/traits",
       "SimplyBook\\Managers\\": "src/managers",
       "SimplyBook\\Providers\\": "src/providers",
