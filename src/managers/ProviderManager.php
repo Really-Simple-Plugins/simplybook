@@ -17,7 +17,7 @@ class ProviderManager
 
         // Serve each provider
         foreach ($providers as $provider) {
-            $provider->serve();
+            $provider->provide();
         }
 
         do_action('simplybook_providers_loaded');

@@ -16,7 +16,7 @@ class Provider implements ProviderInterface
      * Method will be called by the ProviderManager to serve the provided
      * services.
      */
-    public function serve(): void
+    public function provide(): void
     {
         foreach ($this->provides as $provide) {
             $method = 'provide' . ucfirst($provide);
