@@ -2,7 +2,7 @@
 
 use SimplyBook\Interfaces\ControllerInterface;
 
-class ControllerManager
+final class ControllerManager
 {
     /**
      * Register a single controller as long as it implements the

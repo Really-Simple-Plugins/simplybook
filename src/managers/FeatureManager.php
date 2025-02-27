@@ -4,7 +4,7 @@ use SimplyBook\App;
 use SimplyBook\Plugin;
 use SimplyBook\Interfaces\FeatureInterface;
 
-class FeatureManager
+final class FeatureManager
 {
     /**
      * Register and load all features from the src/features directory. This

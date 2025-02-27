@@ -2,7 +2,7 @@
 
 use SimplyBook\Interfaces\ProviderInterface;
 
-class ProviderManager
+final class ProviderManager
 {
     /**
      * Register a providers as long as it implements the ProviderInterface
