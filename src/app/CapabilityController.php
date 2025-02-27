@@ -30,7 +30,7 @@ class CapabilityController implements ControllerInterface
 
     public function handlePluginActivation(): void
     {
-        $this->service->addCapability('simplybook_manage');
+        $this->service->addSiteCapability('simplybook_manage');
     }
 
     /**
@@ -40,7 +40,7 @@ class CapabilityController implements ControllerInterface
     {
         // If someone upgrades from legacy version we need to add the capability
         if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
-            $this->service->addCapability('simplybook_manage');
+            $this->service->addSiteCapability('simplybook_manage');
         }
     }
 
@@ -50,7 +50,7 @@ class CapabilityController implements ControllerInterface
     public function addCapabilityToNewSubsite(\WP_Site $newSite, array $args): void
     {
         switch_to_blog($newSite->blog_id);
-        $this->service->addCapability('simplybook_manage', false);
+        $this->service->addSiteCapability('simplybook_manage', false);
         restore_current_blog();
     }
 }
