@@ -39,22 +39,7 @@ class AdminController implements ControllerInterface
         ( new GetPlugins() );
         ( new GetDomain() );
 
-        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
-    }
-
-    /**
-     * Redirect to simplybook dashboard page on activation. React side will
-     * handle redirect to onboarding
-     */
-    public function maybeRedirectToDashboard(): void
-    {
-        if (App::provide('request')->getString('page') === 'simplybook') {
-            return;
-        }
-
-        wp_safe_redirect(App::env('plugin.admin_url'));
-        exit;
     }
 
     /**

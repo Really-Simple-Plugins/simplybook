@@ -26,7 +26,22 @@ class DashboardController implements ControllerInterface
             return;
         }
 
+        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
+    }
+
+    /**
+     * Redirect to simplybook dashboard page on activation. React side will
+     * handle redirect to onboarding
+     */
+    public function maybeRedirectToDashboard(): void
+    {
+        if (App::provide('request')->getString('page') === 'simplybook') {
+            return;
+        }
+
+        wp_safe_redirect(App::env('plugin.admin_url'));
+        exit;
     }
 
     /**
