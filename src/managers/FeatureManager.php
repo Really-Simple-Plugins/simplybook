@@ -94,6 +94,12 @@ final class FeatureManager
         return array_map(function ($dependency) use ($featureNamespace) {
             $fullClassName = $featureNamespace . $dependency;
 
+            // if $dependency starts with a backslash, it's a fully qualified
+            // class name and we can instantiate it directly
+            if ($dependency[0] === '\\') {
+                $fullClassName = $dependency;
+            }
+
             if (!class_exists($fullClassName)) {
                 throw new \LogicException("Dependency {$fullClassName} does not exist.");
             }

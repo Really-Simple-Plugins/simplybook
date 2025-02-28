@@ -1,9 +1,10 @@
-<?php namespace SimplyBook\App\Services;
+<?php namespace SimplyBook\Features\Onboarding;
 
 use Simplybook_old\Traits\Save;
 use Simplybook_old\Traits\Helper;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\App\Services\HttpService;
 
 class OnboardingService extends HttpService
 {

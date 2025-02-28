@@ -39,6 +39,8 @@ class Plugin
         add_action('simplybook_providers_loaded', [$this, 'registerFeatures']);
         add_action('simplybook_features_loaded', [$this, 'registerControllers']);
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']);
+
+
         add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
     }
 
@@ -139,10 +141,10 @@ class Plugin
             ),
             new App\TaskController(),
             new App\ApiController(),
-            new App\OnboardingController(
-                new App\Services\OnboardingService(),
-                new \Simplybook_old\Api\Api(),
-            ),
+//            new App\OnboardingController(
+//                new App\Services\OnboardingService(),
+//                new \Simplybook_old\Api\Api(),
+//            ),
         ]);
     }
 
@@ -163,6 +165,9 @@ class Plugin
      */
     public function checkForUpgrades(): void
     {
+//        echo '<pre>';
+//        var_dump(apply_filters('simplybook_rest_routes', []));
+//        exit();
         // todo - in includes/Upgrades/Upgrades.php there was a check ong adminAccessAllowed. Is this even needed? Ifso, add it here.
 
         $previousVersion = (string) get_option('simplybook_current_version', false);

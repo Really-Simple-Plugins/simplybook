@@ -1,16 +1,15 @@
 <?php
-namespace SimplyBook\App;
+namespace SimplyBook\Features\Onboarding;
 
 use Simplybook_old\Api\Api;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
-use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\App\Services\OnboardingService;
+use SimplyBook\Interfaces\FeatureInterface;
 
 // todo - If we get more controllers like this, maybe move to a Http namespace?
 // todo - maybe this is a Feature?
-class OnboardingController implements ControllerInterface
+class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
     private Api $api;
@@ -34,6 +33,10 @@ class OnboardingController implements ControllerInterface
     public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+
+        echo '<pre>';
+        var_dump($storage);
+        exit();
 
         $companyBuilder = (new CompanyBuilder())->buildFromArray(
             $storage->all()
