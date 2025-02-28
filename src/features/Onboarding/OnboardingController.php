@@ -7,14 +7,12 @@ use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Interfaces\FeatureInterface;
 
-// todo - If we get more controllers like this, maybe move to a Http namespace?
-// todo - maybe this is a Feature?
 class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
     private Api $api;
 
-    // todo - refactor legacy API (NL14RSP2-6)
+    // todo - refactor legacy Api (NL14RSP2-6)
     public function __construct(OnboardingService $service, Api $legacyApi)
     {
         $this->service = $service;
@@ -33,10 +31,6 @@ class OnboardingController implements FeatureInterface
     public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        echo '<pre>';
-        var_dump($storage);
-        exit();
 
         $companyBuilder = (new CompanyBuilder())->buildFromArray(
             $storage->all()

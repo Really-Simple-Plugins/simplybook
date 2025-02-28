@@ -40,7 +40,6 @@ class Plugin
         add_action('simplybook_features_loaded', [$this, 'registerControllers']);
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']);
 
-
         add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
     }
 
