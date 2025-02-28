@@ -25,6 +25,49 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
+     * Add onboarding routes to the existing routes of our plugin
+     */
+    public function addRoutes(array $routes): array
+    {
+        $routes['onboarding/register_email'] = [
+            'methods' => 'POST',
+            'callback' => [$this->service, 'storeEmailAddress'],
+        ];
+
+        $routes['onboarding/tips_and_tricks'] = [
+            'methods' => 'POST',
+            'callback' => [$this->service, 'storeTipsAndTricksChoice'],
+        ];
+
+        $routes['onboarding/company_registration'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'registerCompanyAtSimplyBook'],
+        ];
+
+        $routes['onboarding/get_recaptcha_sitekey'] = [
+            'methods' => 'POST',
+            'callback' => [$this->service, 'getRecaptchaSitekey'],
+        ];
+
+        $routes['onboarding/confirm_email'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'confirmEmailWithSimplyBook'],
+        ];
+
+        $routes['onboarding/is_page_title_available'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'checkIfPageTitleIsAvailable'],
+        ];
+
+        $routes['onboarding/generate_pages'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'generateDefaultPages'],
+        ];
+
+        return $routes;
+    }
+
+    /**
      * Store company data in the options and register the company at
      * SimplyBook.me
      */
@@ -100,48 +143,5 @@ class OnboardingController implements FeatureInterface
             'calendar_page_id' => $calendarPageID,
             'booking_page_id' => $bookingPageID,
         ], $pagesCreatedSuccessfully);
-    }
-
-    /**
-     * Add onboarding routes to the existing routes of our plugin
-     */
-    public function addRoutes(array $routes): array
-    {
-        $routes['onboarding/register_email'] = [
-            'methods' => 'POST',
-            'callback' => [$this->service, 'storeEmailAddress'],
-        ];
-
-        $routes['onboarding/tips_and_tricks'] = [
-            'methods' => 'POST',
-            'callback' => [$this->service, 'storeTipsAndTricksChoice'],
-        ];
-
-        $routes['onboarding/company_registration'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'registerCompanyAtSimplyBook'],
-        ];
-
-        $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'POST',
-            'callback' => [$this->service, 'getRecaptchaSitekey'],
-        ];
-
-        $routes['onboarding/confirm_email'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'confirmEmailWithSimplyBook'],
-        ];
-
-        $routes['onboarding/is_page_title_available'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'checkIfPageTitleIsAvailable'],
-        ];
-
-        $routes['onboarding/generate_pages'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'generateDefaultPages'],
-        ];
-
-        return $routes;
     }
 }
