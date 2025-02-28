@@ -518,6 +518,11 @@ class Api
 	 * @return ApiResponse
 	 */
 	public function register_company(): ApiResponse {
+
+        echo '<pre>';
+        var_dump($this->endpoint( 'simplybook/company' )); // https://user-api-v2.wp.simplybook.ovh/simplybook/company
+        exit();
+
 		if ( !$this->user_can_manage() ) {
 			return new ApiResponse( false, __('You are not authorized to do this.', 'simplybook') );
 		}

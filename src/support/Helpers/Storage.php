@@ -23,18 +23,20 @@ class Storage extends Dot
      * Returns the sanitized string of the parameter value.
      * @uses sanitize_text_field()
      */
-    public function getString(string $key, string $default = ''): string
+    public function getString(string $key, string $default = '', bool $trim = false): string
     {
-        return sanitize_text_field($this->get($key, $default));
+        $value = sanitize_text_field($this->get($key, $default));
+        return $trim ? trim($value) : $value;
     }
 
     /**
      * Returns the sanitized string of the parameter value.
      * @uses sanitize_textarea_field()
      */
-    public function getTextarea(string $key, string $default = ''): string
+    public function getTextarea(string $key, string $default = '', bool $trim = false): string
     {
-        return sanitize_textarea_field($this->get($key, $default));
+        $value = sanitize_textarea_field($this->get($key, $default));
+        return $trim ? trim($value) : $value;
     }
 
     /**
@@ -134,6 +136,21 @@ class Storage extends Dot
     public function getBoolean(string $key, $default = false): bool
     {
         return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
+    }
+
+    /**
+     * Returns the parameter value validated as a 2 character country code. If
+     * the preg_match for exactly two alphabetic characters fails, the default
+     * value is returned.
+     */
+    public function getCountryCode(string $key, string $default = ''): string
+    {
+        $country = strtoupper(trim($this->get($key, $default)));
+        if (preg_match('/^[a-z]{2}$/i', $country)) {
+            return $country;
+        }
+
+        return $default;
     }
 
     /**

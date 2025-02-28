@@ -23,4 +23,5 @@ class StringUtility
         // Enforce first letter uppercase
         return ucfirst($title);
     }
+
 }

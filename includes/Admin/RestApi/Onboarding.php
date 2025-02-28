@@ -32,7 +32,7 @@ class Onboarding extends RestApi {
 
         register_rest_route(
             'simplybook/v1',
-            'onboarding/tipstricks',
+            'onboarding/tips_and_tricks',
             array(
                 'methods' => 'POST',
                 'callback' => array( $this, 'tipstricks' ),

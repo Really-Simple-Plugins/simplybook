@@ -11,7 +11,6 @@ use Simplybook_old\Admin\RestApi\Providers;
 use Simplybook_old\Admin\RestApi\GetWidget;
 use Simplybook_old\Admin\RestApi\Dashboard;
 use Simplybook_old\Admin\RestApi\GetDomain;
-use Simplybook_old\Admin\RestApi\Onboarding;
 use Simplybook_old\Admin\RestApi\GetPlugins;
 use SimplyBook\Interfaces\ControllerInterface;
 use Simplybook_old\Admin\RestApi\CompanyRegistration;
@@ -28,7 +27,6 @@ class AdminController implements ControllerInterface
         }
 
         // todo - START - refactor one by one
-        ( new Onboarding() );
         ( new LoginUrl() );
         ( new Services() );
         ( new Providers() );

@@ -135,12 +135,13 @@ class Plugin
             new App\SettingsController(),
             new App\FrontendController(),
             new App\CapabilityController(
-                new App\Services\CapabilityService()
+                new App\Services\CapabilityService(),
             ),
             new App\TaskController(),
             new App\ApiController(),
             new App\OnboardingController(
-                new App\Services\OnboardingService()
+                new App\Services\OnboardingService(),
+                new \Simplybook_old\Api\Api(),
             ),
         ]);
     }

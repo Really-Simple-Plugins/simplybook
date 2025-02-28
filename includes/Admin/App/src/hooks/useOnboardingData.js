@@ -7,7 +7,7 @@ import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
-import {useState} from "react";
+import { useState } from "react";
 import generatePages from "../api/endpoints/onBoarding/generatePages";
 import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
 
@@ -38,8 +38,8 @@ const useOnboardingData = () => {
       beforeSubmit: async (data) => {
         console.log("submit email step");
         let response = await registerEmail({ data });
-        if (response.status !== 'success'){
-          console.log("setting api error to ", response.message)
+        if (response.status !== "success") {
+          console.log("setting api error to ", response.message);
           setApiError(response.message);
           return false;
         }
@@ -76,7 +76,10 @@ const useOnboardingData = () => {
           options: [
             { value: "3", label: __("Beauty and wellness", "simplybook") },
             { value: "43", label: __("Sport and fitness", "simplybook") },
-            { value: "5", label: __("Personal meetings and services", "simplybook") },
+            {
+              value: "5",
+              label: __("Personal meetings and services", "simplybook"),
+            },
             { value: "1", label: __("Medical", "simplybook") },
             { value: "4", label: __("Events and entertainment", "simplybook") },
             { value: "6", label: __("Education", "simplybook") },
@@ -130,9 +133,9 @@ const useOnboardingData = () => {
         console.log("submit information check step");
         console.log(data);
         let response = await registerCompany({ data });
-        console.log("registercompany response ", response );
-        if (response.status !== 'success'){
-          console.log("setting api error to ", response.message)
+        console.log("registercompany response ", response);
+        if (response.status !== "success") {
+          console.log("setting api error to ", response.message);
           setApiError(response.message);
           return false;
         }
@@ -158,8 +161,8 @@ const useOnboardingData = () => {
         console.log("confirm email step");
         console.log(data);
         let response = await confirmEmail({ data });
-        if (response.status !== 'success'){
-          console.log("setting api error to ", response.message)
+        if (response.status !== "success") {
+          console.log("setting api error to ", response.message);
           setApiError(response.message);
           return false;
         }
@@ -211,43 +214,54 @@ const useOnboardingData = () => {
         {
           id: "implementation",
           type: "implementation",
-          label: '',
+          label: "",
           default: "generated",
           save_on_change: true,
           options: [
             {
               value: "generated",
-              label: __("Generated", 'simplybook'),
-              description: __("Generate pages.", 'simplybook'),
+              label: __("Generated", "simplybook"),
+              description: __("Generate pages.", "simplybook"),
             },
             {
               value: "manual",
-              label: __("Shortcode", 'simplybook'),
-              description: __("Do it yourself", 'simplybook'),
+              label: __("Shortcode", "simplybook"),
+              description: __("Do it yourself", "simplybook"),
             },
             {
               value: "templates",
-              label: __("Templates", 'simplybook'),
-              description: __("Premium", 'simplybook'),
+              label: __("Templates", "simplybook"),
+              description: __("Premium", "simplybook"),
               is_premium: true,
             },
           ],
         },
       ],
       beforeSubmit: async (data) => {
-        if (getValue("implementation")!=='manual') {
-          console.log("submit implementation step ", bookingPageName, calendarPageName);
-          const data = { bookingPageName:bookingPageName, calendarPageName:calendarPageName };
-          let response = await generatePages({data});
-          if (response.status !== 'success'){
+        if (getValue("implementation") !== "manual") {
+          console.log(
+            "submit implementation step ",
+            bookingPageUrl,
+            calendarPageUrl,
+          );
+          const data = {
+            bookingPageUrl: bookingPageUrl,
+            calendarPageUrl: calendarPageUrl,
+          };
+          let response = await generatePages({ data });
+          if (response.status !== "success") {
             return false;
           }
         }
       },
     },
   ];
-  const [bookingPageName, setBookingPageName] = useState(simplybook.site_url + '/' + __('my-booking', 'simplybook'));
-  const [calendarPageName, setCalendarPageName] = useState(simplybook.site_url + '/' + __('calendar', 'simplybook'));
+  const [bookingPageUrl, setBookingPageUrl] = useState(
+    simplybook.site_url + "/" + __("my-booking", "simplybook"),
+  );
+  const [calendarPageUrl, setCalendarPageUrl] = useState(
+    simplybook.site_url + "/" + __("calendar", "simplybook"),
+  );
   const [apiError, setApiError] = useState("");
   const queryClient = useQueryClient();
   const { settings } = useSettingsData();
@@ -304,9 +318,11 @@ const useOnboardingData = () => {
 
   const { mutate: updateCalendarPageNameAvailable } = useMutation({
     mutationFn: async () => {
-      // Verify if the page title is available
-      const response = await isPageTitleAvailable({ data: { title: calendarPageName } });
-      const isAvailable = response.status === 'success';
+      // Verify if the page title is available based on URL
+      const response = await isPageTitleAvailable({
+        data: { url: calendarPageUrl },
+      });
+      const isAvailable = response.status === "success";
 
       // Update the query data with the new page name and availability status
       queryClient.setQueryData(["onboarding_data"], (oldData) => ({
@@ -320,8 +336,11 @@ const useOnboardingData = () => {
   });
   const { mutate: updateBookingPageNameAvailable } = useMutation({
     mutationFn: async () => {
-      const response = await isPageTitleAvailable({ data: { title: bookingPageName } });
-      const isAvailable = response.status === 'success';
+      // Verify if the page title is available based on URL
+      const response = await isPageTitleAvailable({
+        data: { url: bookingPageUrl },
+      });
+      const isAvailable = response.status === "success";
       // Simulate API update call if needed, otherwise update the cache directly
       queryClient.setQueryData(["onboarding_data"], (oldData) => ({
         ...oldData,
@@ -334,22 +353,22 @@ const useOnboardingData = () => {
   });
 
   const debouncedSetBookingPageName = useCallback(
-      debounce((pageName) => updateBookingPageNameAvailable(pageName), 500), // 500ms delay
-      []
+    debounce((pageName) => updateBookingPageNameAvailable(pageName), 500), // 500ms delay
+    [],
   );
 
   const handleBookingPageNameChange = (pageName) => {
-    setBookingPageName(pageName);
+    setBookingPageUrl(pageName);
     debouncedSetBookingPageName(pageName);
   };
 
   const debouncedSetCalendarPageName = useCallback(
-      debounce((pageName) => updateCalendarPageNameAvailable(pageName), 500), // 500ms delay
-      []
+    debounce((pageName) => updateCalendarPageNameAvailable(pageName), 500), // 500ms delay
+    [],
   );
 
   const handleCalendarPageNameChange = (pageName) => {
-    setCalendarPageName(pageName);
+    setCalendarPageUrl(pageName);
     debouncedSetCalendarPageName(pageName);
   };
 
@@ -361,15 +380,16 @@ const useOnboardingData = () => {
     getCurrentStepId: (path) => steps.find((step) => step.path === path)?.id,
     getCurrentStep: (path) => steps.find((step) => step.path === path),
     getURLForStep: (step) => steps[step - 1]?.path,
-    isLastStep: (path) => steps.length === steps.find((step) => step.path === path)?.id,
+    isLastStep: (path) =>
+      steps.length === steps.find((step) => step.path === path)?.id,
     recaptchaToken: query.data?.recaptchaToken || "",
     setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
     onboardingCompleted: query.data?.onboardingCompleted || false, // Use query data
     setOnboardingCompleted: (value) => updateOnboardingCompleted(value), // Use mutation
     setBookingPageName: (pageName) => handleBookingPageNameChange(pageName),
     setCalendarPageName: (pageName) => handleCalendarPageNameChange(pageName),
-    bookingPageName,
-    calendarPageName,
+    bookingPageName: bookingPageUrl,
+    calendarPageName: calendarPageUrl,
     calendarPageNameAvailable: query.data?.calendarPageNameAvailable,
     bookingPageNameAvailable: query.data?.bookingPageNameAvailable,
     apiError,

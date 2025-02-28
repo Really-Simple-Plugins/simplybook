@@ -117,6 +117,9 @@ trait Save {
         //$pass = '7*w$9pumLw5koJc#JT6';
         $options = get_option('simplybook_options', []);
         //sanitize the value
+
+        //todo - parsing all fields like this for each save is quite heavy just to know the type
+        // todo - also this is redundant when used as in the OnboardingService
         $field = $this->get_field_by_id($key);
 
         //don't save if not found
@@ -125,7 +128,10 @@ trait Save {
             return;
         }
 
+        // todo - usage of sanitize_field is redundant when used as in the OnboardingService
         $value = $this->sanitize_field($value, $field['type']);
+
+        // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
         if ( $field['encrypt'] ) {
             $value = $this->encrypt_string($value);
         }
