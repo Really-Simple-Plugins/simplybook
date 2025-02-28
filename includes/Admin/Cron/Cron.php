@@ -5,6 +5,9 @@ use Simplybook_old\Traits\Helper;
 
 defined( 'ABSPATH' ) or die( '' );
 
+/**
+ * @deprecated 3.0.0 use ScheduleController instead {@see \SimplyBook\App\ScheduleController}
+ */
 class Cron {
 	use Helper;
 	public function __construct() {

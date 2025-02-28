@@ -140,6 +140,7 @@ class Plugin
             ),
             new App\TaskController(),
             new App\ApiController(),
+            new App\ScheduleController(),
         ]);
     }
 
