@@ -3,7 +3,6 @@ namespace SimplyBook\App;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
-use Simplybook_old\Admin\RestApi\LoginUrl;
 use Simplybook_old\Admin\RestApi\Services;
 use Simplybook_old\Admin\RestApi\Settings;
 use Simplybook_old\Admin\RestApi\GetTasks;
@@ -27,7 +26,6 @@ class AdminController implements ControllerInterface
         }
 
         // todo - START - refactor one by one
-        ( new LoginUrl() );
         ( new Services() );
         ( new Providers() );
         ( new Settings() );
