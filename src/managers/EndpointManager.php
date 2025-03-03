@@ -58,7 +58,7 @@ final class EndpointManager
             $callback = $data['callback'] ?? null;
             $permissionCallback = $data['permission_callback'] ?? [$this, 'defaultPermissionCallback'];
 
-            register_rest_route($this->namespace, "/{$version}/{$route}", [
+            register_rest_route($this->namespace . '/' . $version, $route, [
                 'methods' => $methods,
                 'callback' => $callback,
                 'permission_callback' => $permissionCallback,
