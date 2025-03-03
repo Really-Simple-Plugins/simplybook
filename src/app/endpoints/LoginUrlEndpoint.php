@@ -27,7 +27,7 @@ class LoginUrlEndpoint implements EndpointInterface
     public function registerArguments(): array
     {
         return [
-            'methods' => 'POST',
+            'methods' => 'GET',
             'callback' => [$this, 'callback'],
         ];
     }
