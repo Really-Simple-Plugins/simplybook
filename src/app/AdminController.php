@@ -9,7 +9,6 @@ use Simplybook_old\Admin\RestApi\Dashboard;
 use Simplybook_old\Admin\RestApi\GetDomain;
 use Simplybook_old\Admin\RestApi\GetPlugins;
 use SimplyBook\Interfaces\ControllerInterface;
-use Simplybook_old\Admin\RestApi\WaitForRegistrationCallback;
 
 class AdminController implements ControllerInterface
 {
@@ -22,7 +21,6 @@ class AdminController implements ControllerInterface
         }
 
         // todo - START - refactor one by one
-        ( new WaitForRegistrationCallback() );
         ( new GetWidget() );
         ( new Dashboard() );
         ( new GetTasks() );

@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\WaitForRegistrationEndpoint} instead
+ */
 class WaitForRegistrationCallback extends RestApi {
 	use Helper;
 	use Save;
