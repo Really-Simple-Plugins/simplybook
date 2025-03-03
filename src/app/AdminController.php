@@ -4,7 +4,6 @@ namespace SimplyBook\App;
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
 use Simplybook_old\Admin\RestApi\GetTasks;
-use Simplybook_old\Admin\RestApi\GetWidget;
 use Simplybook_old\Admin\RestApi\Dashboard;
 use Simplybook_old\Admin\RestApi\GetDomain;
 use Simplybook_old\Admin\RestApi\GetPlugins;
@@ -21,7 +20,6 @@ class AdminController implements ControllerInterface
         }
 
         // todo - START - refactor one by one
-        ( new GetWidget() );
         ( new Dashboard() );
         ( new GetTasks() );
         ( new GetPlugins() );
