@@ -143,6 +143,11 @@ class Plugin
         ]);
     }
 
+    /**
+     * Register the plugins REST API endpoint instances. Hooked into
+     * rest_api_init to make sure the REST API is available.
+     * @uses do_action simplybook_endpoints_loaded
+     */
     public function registerEndpoints()
     {
         $this->endpointManager->registerEndpoints([
