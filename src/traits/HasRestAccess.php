@@ -10,11 +10,11 @@ trait HasRestAccess
      * If the data is coming from an AJAX request, its data will be prioritized
      * over the request's JSON parameters.
      *
-     * @param string $param - The default param the search all the parameters
-     * in the request is 'data' as this is often used as the main key. Set it to
-     * an empty string to retrieve all the parameters from the top-level.
+     * @param string $param - The param to search all the parameters in the
+     * request. The key 'data' is often used as the main key. In that case set
+     * $param to 'data' to retrieve the parameters from that level.
      */
-    public function retrieveHttpParameters(\WP_REST_Request $request, array $ajaxData = [], string $param = 'data'): array
+    public function retrieveHttpParameters(\WP_REST_Request $request, array $ajaxData = [], string $param = ''): array
     {
         if (!empty($param)) {
             return $ajaxData[$param] ?? $request->get_param($param);
@@ -28,7 +28,7 @@ trait HasRestAccess
      * @uses \SimplyBook\Helpers\Storage
      * @uses HasRestAccess::retrieveHttpParameters
      */
-    public function retrieveHttpStorage(\WP_REST_Request $request, array $ajaxData = [], string $param = 'data'): Storage
+    public function retrieveHttpStorage(\WP_REST_Request $request, array $ajaxData = [], string $param = ''): Storage
     {
         return new Storage(
             $this->retrieveHttpParameters($request, $ajaxData, $param)

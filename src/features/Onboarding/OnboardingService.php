@@ -28,7 +28,7 @@ class OnboardingService
     {
         sleep(1);
 
-        $storage = $this->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
@@ -48,7 +48,7 @@ class OnboardingService
      */
     public function storeTipsAndTricksChoice(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
         $adminWantsTipsAndTricks = $storage->getBoolean('tips-and-tricks');
 
         // todo - refactor update_option

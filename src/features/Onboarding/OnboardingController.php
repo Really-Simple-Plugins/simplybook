@@ -73,7 +73,7 @@ class OnboardingController implements FeatureInterface
      */
     public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $companyBuilder = (new CompanyBuilder())->buildFromArray(
             $storage->all()
@@ -97,7 +97,7 @@ class OnboardingController implements FeatureInterface
      */
     public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $response = $this->api->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
 
@@ -113,7 +113,7 @@ class OnboardingController implements FeatureInterface
      */
     public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
         $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
 
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
@@ -124,7 +124,7 @@ class OnboardingController implements FeatureInterface
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
         $bookingPageName = StringUtility::convertUrlToTitle($storage->getUrl('bookingPageUrl'));
