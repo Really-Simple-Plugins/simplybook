@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\TaskEndpoints} instead.
+ */
 class GetTasks extends RestApi {
 	use Helper;
 	use Save;

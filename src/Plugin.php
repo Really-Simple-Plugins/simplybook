@@ -156,6 +156,7 @@ class Plugin
             new App\Endpoints\ProvidersEndpoint(),
             new App\Endpoints\SettingEndpoints(),
             new App\Endpoints\WidgetEndpoint(),
+            new App\Endpoints\TaskEndpoints(),
             new App\Endpoints\CompanyRegistrationEndpoint(),
             new App\Endpoints\WaitForRegistrationEndpoint(),
         ]);
