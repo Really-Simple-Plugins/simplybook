@@ -50,6 +50,15 @@ class Storage extends Dot
     }
 
     /**
+     * Returns the parameter value as a slug.
+     * @uses sanitize_title
+     */
+    public function getTitle(string $key, string $default = ''): string
+    {
+        return sanitize_title($this->get($key, $default));
+    }
+
+    /**
      * Sanitizes content for allowed HTML tags for post content.
      * @uses wp_kses_post()
      */
