@@ -20,7 +20,6 @@
   "autoload": {
     "psr-4": {
       "Simplybook_old\\": "includes/",
-      "SimplyBook\\App\\": "src/app",
       "SimplyBook\\Traits\\": "src/traits",
       "SimplyBook\\Managers\\": "src/managers",
       "SimplyBook\\Providers\\": "src/providers",
@@ -29,7 +28,10 @@
       "SimplyBook\\Helpers\\": "src/support/Helpers",
       "SimplyBook\\Utility\\": "src/support/Utility",
       "SimplyBook\\Builders\\": "src/support/Builders",
-      "SimplyBook\\App\\Services\\": "src/app/services"
+      "SimplyBook\\App\\": "src/app",
+      "SimplyBook\\App\\Http\\": "src/app/http",
+      "SimplyBook\\App\\Services\\": "src/app/services",
+      "SimplyBook\\App\\Endpoints\\": "src/app/endpoints"
     },
     "files": [
       "src/App.php",

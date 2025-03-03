@@ -2,7 +2,7 @@
 namespace SimplyBook\Providers;
 
 use SimplyBook\Helpers\Request;
-use Simplybook\App\Http\ApiClient;
+use SimplyBook\App\Http\ApiClient;
 
 class AppServiceProvider extends Provider
 {

@@ -11,7 +11,7 @@ use Simplybook_old\Traits\Load;
 use Simplybook_old\Traits\Save;
 
 /**
- * @todo Refactor this to a proper Client
+ * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
  */
 class ApiClient
 {
@@ -370,7 +370,6 @@ class ApiClient
     /**
      * Get company login and generate one if it does not exist
      * @return string
-     *
      */
     public function get_company_login(): string {
         $login = get_option('simplybook_company_login', '');
