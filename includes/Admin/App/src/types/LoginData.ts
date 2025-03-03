@@ -1,4 +1,4 @@
 export interface LoginData {
-    url: string;
-    login_url: string;
+  direct_url: string;
+  login_url: string;
 }
