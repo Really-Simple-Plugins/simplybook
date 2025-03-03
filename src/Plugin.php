@@ -155,6 +155,7 @@ class Plugin
             new App\Endpoints\ServicesEndpoint(),
             new App\Endpoints\ProvidersEndpoint(),
             new App\Endpoints\SettingEndpoints(),
+            new App\Endpoints\CompanyRegistrationEndpoint(),
         ]);
     }
 
