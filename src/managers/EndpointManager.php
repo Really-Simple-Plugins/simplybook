@@ -4,6 +4,7 @@ use SimplyBook\App;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\MultiEndpointInterface;
 
 final class EndpointManager
 {
@@ -21,20 +22,25 @@ final class EndpointManager
 
     /**
      * Register a single endpoint as long as it implements the
-     * EndpointInterface.
+     * EndpointInterface or MultiEndpointInterface.
      * @uses do_action simplybook_endpoints_loaded
      */
     public function registerEndpoints(array $endpoints)
     {
-        // Reject all given providers when they do not implement the ProviderInterface
-        $endpoints = array_filter($endpoints, function ($endpoint) {
-            return $endpoint instanceof EndpointInterface;
-        });
-
-        // Register each endpoint
         $routes = [];
         foreach ($endpoints as $endpoint) {
-            $routes[$endpoint->registerRoute()] = $endpoint->registerArguments();
+            if ($endpoint instanceof EndpointInterface) {
+                $routes[$endpoint->registerRoute()] = $endpoint->registerArguments();
+            }
+
+            if ($endpoint instanceof MultiEndpointInterface) {
+                $multiEndpointRoutes = $endpoint->registerRoutes();
+                foreach ($multiEndpointRoutes as $route => $arguments) {
+                    $routes[$route] = $arguments;
+                }
+            }
+
+            // Skip endpoints not implementing any interface
         }
 
         $this->registerRoutes($routes);
