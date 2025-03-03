@@ -3,13 +3,21 @@ namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class ServicesEndpoint implements EndpointInterface
+class ServicesEndpoint implements SingleEndpointInterface
 {
     use HasRestAccess;
 
     const ROUTE = 'services';
+
+    /**
+     * Always enabled
+     */
+    public function enabled(): bool
+    {
+        return true;
+    }
 
     /**
      * @inheritDoc

@@ -4,14 +4,22 @@ namespace SimplyBook\App\Endpoints;
 use SimplyBook\App;
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class LoginUrlEndpoint implements EndpointInterface
+class LoginUrlEndpoint implements SingleEndpointInterface
 {
     use Save; // todo
     use HasRestAccess;
 
     const ROUTE = 'get_login_url';
+
+    /**
+     * Always enabled
+     */
+    public function enabled(): bool
+    {
+        return true;
+    }
 
     /**
      * @inheritDoc

@@ -3,7 +3,7 @@
 use SimplyBook\App;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Interfaces\EndpointInterface;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 final class EndpointManager
@@ -11,6 +11,7 @@ final class EndpointManager
     use HasNonces;
     use HasAllowlistControl;
 
+    private array $routes;
     private string $version;
     private string $namespace;
 
@@ -29,22 +30,48 @@ final class EndpointManager
     {
         $routes = [];
         foreach ($endpoints as $endpoint) {
-            if ($endpoint instanceof EndpointInterface) {
-                $routes[$endpoint->registerRoute()] = $endpoint->registerArguments();
+            if ($endpoint instanceof SingleEndpointInterface) {
+                $this->registerSingleEndpointRoute($endpoint);
             }
 
             if ($endpoint instanceof MultiEndpointInterface) {
-                $routeEndpoints = $endpoint->registerRoutes();
-                foreach ($routeEndpoints as $route => $arguments) {
-                    $routes[$route] = $arguments;
-                }
+                $this->registerMultiEndpointRoute($endpoint);
             }
 
             // Skip endpoints not implementing any interface
         }
 
-        $this->registerRoutes($routes);
+        $this->registerWordPressRestRoutes($routes);
         do_action('simplybook_endpoints_loaded');
+    }
+
+    /**
+     * Register a plugin route for and endpoint instance that implements the
+     * {@see SingleEndpointInterface}
+     */
+    private function registerSingleEndpointRoute(SingleEndpointInterface $endpoint): void
+    {
+        if ($endpoint->enabled() === false) {
+            return;
+        }
+
+        $this->routes[$endpoint->registerRoute()] = $endpoint->registerArguments();
+    }
+
+    /**
+     * Register plugin routes for an endpoint instance that implements the
+     * {@see MultiEndpointInterface}
+     */
+    private function registerMultiEndpointRoute(MultiEndpointInterface $endpoint): void
+    {
+        if ($endpoint->enabled() === false) {
+            return;
+        }
+
+        $routeEndpoints = $endpoint->registerRoutes();
+        foreach ($routeEndpoints as $route => $arguments) {
+            $this->routes[$route] = $arguments;
+        }
     }
 
     /**
@@ -54,9 +81,9 @@ final class EndpointManager
      * hook into the simplybook_rest_routes filter to add its own routes.
      * @uses apply_filters simplybook_rest_routes
      */
-    public function registerRoutes(array $routes): void
+    public function registerWordPressRestRoutes(array $routes): void
     {
-        $routes = $this->getPluginRoutes($routes);
+        $routes = $this->getPluginRestRoutes($routes);
 
         foreach ($routes as $route => $data) {
             $version = ($data['version'] ?? $this->version);
@@ -75,7 +102,7 @@ final class EndpointManager
      * Get the plugins REST routes
      * @uses apply_filters simplybook_rest_routes
      */
-    private function getPluginRoutes(array $routes): array
+    private function getPluginRestRoutes(array $routes): array
     {
         /**
          * Filter: simplybook_rest_routes

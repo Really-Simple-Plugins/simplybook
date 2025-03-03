@@ -13,6 +13,14 @@ class SettingEndpoints implements MultiEndpointInterface
     const ROUTE = 'settings';
 
     /**
+     * Always enabled
+     */
+    public function enabled(): bool
+    {
+        return true;
+    }
+
+    /**
      * @inheritDoc
      */
     public function registerRoutes(): array
