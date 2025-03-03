@@ -13,6 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\RemotePluginsEndpoint} instead.
+ */
 class GetPlugins extends RestApi {
 	use Helper;
 	use Save;
