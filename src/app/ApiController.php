@@ -2,13 +2,12 @@
 namespace SimplyBook\App;
 
 use SimplyBook\App;
-use Simplybook_old\Api\Api;
 use SimplyBook\Interfaces\ControllerInterface;
 
 /**
  * todo
- * Is this a ApiFeature? Where we can add the Api class as a ApiService
- * dependency via the constructor?
+ * Does this still need a refactor? Its not really a literal ApiController s
+ * maybe a rename is all that is needed
  */
 class ApiController implements ControllerInterface
 {
@@ -23,7 +22,6 @@ class ApiController implements ControllerInterface
             return;
         }
 
-        $api = new Api();
-        $api->reset_registration();
+        App::provide('client')->reset_registration();
     }
 }

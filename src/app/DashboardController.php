@@ -8,7 +8,6 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 
 // todo
-use Simplybook_old\Api\Api;
 use Simplybook_old\Traits\Load;
 use Simplybook_old\Traits\Helper;
 
@@ -237,10 +236,8 @@ class DashboardController implements ControllerInterface
         );
     }
 
-    // todo fix Api instance usage.
     private function onboarding_completed(): bool {
         // TODO: check if all onboarding fields are set, or use a separate option for completing the onboarding
-        $api = new Api();
-        return $api->company_registration_complete();
+        return App::provide('client')->company_registration_complete();
     }
 }

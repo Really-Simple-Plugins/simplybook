@@ -2,11 +2,13 @@
 namespace SimplyBook\Providers;
 
 use SimplyBook\Helpers\Request;
+use Simplybook\App\Http\ApiClient;
 
 class AppServiceProvider extends Provider
 {
     protected array $provides = [
         'request',
+        'client',
     ];
 
     /**
@@ -16,5 +18,14 @@ class AppServiceProvider extends Provider
     public function provideRequest(): Request
     {
         return Request::fromGlobal();
+    }
+
+    /**
+     * Provides the API client for the application to use
+     * @example App::provide('client')
+     */
+    public function provideClient(): ApiClient
+    {
+        return new ApiClient();
     }
 }

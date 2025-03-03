@@ -10,6 +10,10 @@ use Simplybook_old\Traits\Load;
 use Simplybook_old\Traits\Save;
 
 
+/**
+ * @deprecated 3.0.0 Use SimplyBook\App\Http\ApiClient instead:
+ * {@see \SimplyBook\App\Http\ApiClient}
+ */
 class Api
 {
     use Load;
