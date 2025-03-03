@@ -41,7 +41,7 @@ final class EndpointManager
             // Skip endpoints not implementing any interface
         }
 
-        $this->registerWordPressRestRoutes($routes);
+        $this->registerWordPressRestRoutes();
         do_action('simplybook_endpoints_loaded');
     }
 
@@ -81,9 +81,9 @@ final class EndpointManager
      * hook into the simplybook_rest_routes filter to add its own routes.
      * @uses apply_filters simplybook_rest_routes
      */
-    public function registerWordPressRestRoutes(array $routes): void
+    public function registerWordPressRestRoutes(): void
     {
-        $routes = $this->getPluginRestRoutes($routes);
+        $routes = $this->getPluginRestRoutes();
 
         foreach ($routes as $route => $data) {
             $version = ($data['version'] ?? $this->version);
@@ -102,7 +102,7 @@ final class EndpointManager
      * Get the plugins REST routes
      * @uses apply_filters simplybook_rest_routes
      */
-    private function getPluginRestRoutes(array $routes): array
+    private function getPluginRestRoutes(): array
     {
         /**
          * Filter: simplybook_rest_routes
@@ -119,7 +119,7 @@ final class EndpointManager
          *      ]
          * ]
          */
-        return apply_filters('simplybook_rest_routes', $routes);
+        return apply_filters('simplybook_rest_routes', $this->routes);
     }
 
     /**
