@@ -4,7 +4,6 @@ namespace SimplyBook\App;
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
 use Simplybook_old\Admin\RestApi\Dashboard;
-use Simplybook_old\Admin\RestApi\GetDomain;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class AdminController implements ControllerInterface
@@ -19,7 +18,6 @@ class AdminController implements ControllerInterface
 
         // todo - START - refactor one by one
         ( new Dashboard() );
-        ( new GetDomain() );
 
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
     }

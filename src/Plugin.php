@@ -157,6 +157,7 @@ class Plugin
             new App\Endpoints\SettingEndpoints(),
             new App\Endpoints\WidgetEndpoint(),
             new App\Endpoints\TaskEndpoints(),
+            new App\Endpoints\DomainEndpoint(),
             new App\Endpoints\RemotePluginsEndpoint(),
             new App\Endpoints\CompanyRegistrationEndpoint(),
             new App\Endpoints\WaitForRegistrationEndpoint(),
