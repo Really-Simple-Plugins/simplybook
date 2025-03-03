@@ -8,6 +8,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use ServicesEndpoint instead:
+ * {@see \SimplyBook\App\Endpoints\ServicesEndpoint}
+ */
 class Services extends RestApi {
 	use Helper;
 	use Save;
