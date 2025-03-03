@@ -36,6 +36,7 @@ class ServicesEndpoint implements EndpointInterface
      *      ['id'=>1,'name'=>'test'],
      *      ['id'=>2,'name'=>'Autobanden wissel'],
      * ];
+     * @see https://simplybook.me/en/api/developer-api/tab/rest_api#method_GET_/admin/services
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
