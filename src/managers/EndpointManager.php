@@ -34,8 +34,8 @@ final class EndpointManager
             }
 
             if ($endpoint instanceof MultiEndpointInterface) {
-                $multiEndpointRoutes = $endpoint->registerRoutes();
-                foreach ($multiEndpointRoutes as $route => $arguments) {
+                $routeEndpoints = $endpoint->registerRoutes();
+                foreach ($routeEndpoints as $route => $arguments) {
                     $routes[$route] = $arguments;
                 }
             }
@@ -59,16 +59,15 @@ final class EndpointManager
         $routes = $this->getPluginRoutes($routes);
 
         foreach ($routes as $route => $data) {
-            $version = $data['version'] ?? $this->version;
-            $methods = $data['methods'] ?? 'GET';
-            $callback = $data['callback'] ?? null;
-            $permissionCallback = $data['permission_callback'] ?? [$this, 'defaultPermissionCallback'];
+            $version = ($data['version'] ?? $this->version);
 
-            register_rest_route($this->namespace . '/' . $version, $route, [
-                'methods' => $methods,
-                'callback' => $callback,
-                'permission_callback' => $permissionCallback,
-            ]);
+            $arguments = [
+                'methods' => ($data['methods'] ?? 'GET'),
+                'callback' => ($data['callback'] ?? null),
+                'permission_callback' => ($data['permission_callback'] ?? [$this, 'defaultPermissionCallback']),
+            ];
+
+            register_rest_route($this->namespace . '/' . $version, $route, $arguments);
         }
     }
 

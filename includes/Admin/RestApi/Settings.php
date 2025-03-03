@@ -10,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use SettingEndpoints instead:
+ * {@see \SimplyBook\App\Endpoints\SettingEndpoints}
+ */
 class Settings extends RestApi {
     use Helper;
     use Save;

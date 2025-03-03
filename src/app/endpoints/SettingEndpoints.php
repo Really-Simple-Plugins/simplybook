@@ -1,0 +1,75 @@
+<?php
+namespace SimplyBook\App\Endpoints;
+
+use Simplybook_old\Traits\Save;
+use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Interfaces\MultiEndpointInterface;
+
+class SettingEndpoints implements MultiEndpointInterface
+{
+    use Save;
+    use HasRestAccess;
+
+    const ROUTE = 'settings';
+
+    /**
+     * @inheritDoc
+     */
+    public function registerRoutes(): array
+    {
+        return [
+            self::ROUTE . '/save' => [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'saveSettingsCallback'],
+            ],
+            self::ROUTE . '/get' => [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'getSettingsCallback'],
+            ],
+        ];
+    }
+
+    /**
+     * Process the request to save the settings. Method will also make sure the
+     * settings are saved in the correct format. Settings are skipped for saving
+     * if the 'value' key is not set.
+     */
+    public function saveSettingsCallback(\WP_REST_Request $request, $ajax_data = false): \WP_REST_Response
+    {
+        $fields = $this->retrieveHttpParameters($request, $ajax_data, '');
+        unset($fields['nonce']);
+
+        if (count($fields) === 0) {
+            return $this->sendHttpResponse(['error' => 'No data to save']);
+        }
+
+        //check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
+        if (!isset($fields[0]['id'])) {
+            //convert [id => value, format to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
+            $fields = array_map(function($key, $value) {
+                return ['id' => $key, 'value' => $value];
+            }, array_keys($fields), $fields);
+        }
+
+        //filter out all fields where the 'value' key is not set
+        $fields = array_filter($fields, function($field) {
+            return isset($field['value']);
+        });
+
+        $this->update_options($fields);
+        $fields = $this->fields(true);
+        return $this->sendHttpResponse($fields);
+    }
+
+    /**
+     * Return the fields array. Values of the fields are included when requested
+     */
+    public function getSettingsCallback(\WP_REST_Request $request, $ajax_data = false): \WP_REST_Response
+    {
+        $storage = $this->retrieveHttpStorage($request, $ajax_data, '');
+        $getSettingsWithValues = ($storage->getInt('withValues') === 1);
+
+        $fields = $this->fields($getSettingsWithValues);
+        return $this->sendHttpResponse($fields);
+    }
+}

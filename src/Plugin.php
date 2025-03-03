@@ -154,6 +154,7 @@ class Plugin
             new App\Endpoints\LoginUrlEndpoint(),
             new App\Endpoints\ServicesEndpoint(),
             new App\Endpoints\ProvidersEndpoint(),
+            new App\Endpoints\SettingEndpoints(),
         ]);
     }
 
