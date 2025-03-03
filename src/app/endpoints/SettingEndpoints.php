@@ -74,7 +74,7 @@ class SettingEndpoints implements MultiEndpointInterface
      */
     public function getSettingsCallback(\WP_REST_Request $request, $ajax_data = false): \WP_REST_Response
     {
-        $storage = $this->retrieveHttpStorage($request, $ajax_data, '');
+        $storage = $this->retrieveHttpStorage($request, $ajax_data);
         $getSettingsWithValues = ($storage->getInt('withValues') === 1);
 
         $fields = $this->fields($getSettingsWithValues);

@@ -66,7 +66,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     public function callback(\WP_REST_Request $request): void
     {
         $client = App::provide('client');
-        $storage = $this->retrieveHttpStorage($request, [], '');
+        $storage = $this->retrieveHttpStorage($request);
         $data = $request->get_json_params();
 
         if ($storage->getBoolean('success') === false) {
