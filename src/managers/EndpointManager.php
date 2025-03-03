@@ -3,6 +3,7 @@
 use SimplyBook\App;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Interfaces\EndpointInterface;
 
 final class EndpointManager
 {
@@ -19,11 +20,37 @@ final class EndpointManager
     }
 
     /**
-     * Register the routes of the plugin
+     * Register a single endpoint as long as it implements the
+     * EndpointInterface.
+     * @uses do_action simplybook_endpoints_loaded
      */
-    public function registerEndpoints(): void
+    public function registerEndpoints(array $endpoints)
     {
-        $routes = $this->getPluginRoutes();
+        // Reject all given providers when they do not implement the ProviderInterface
+        $endpoints = array_filter($endpoints, function ($endpoint) {
+            return $endpoint instanceof EndpointInterface;
+        });
+
+        // Register each endpoint
+        $routes = [];
+        foreach ($endpoints as $endpoint) {
+            $routes[$endpoint->registerRoute()] = $endpoint->registerArguments();
+        }
+
+        $this->registerRoutes($routes);
+        do_action('simplybook_endpoints_loaded');
+    }
+
+    /**
+     * This method provides a way to register custom REST routes via the
+     * simplybook_rest_routes filter. A controller of feature should be
+     * instantiated before this manager is called and the controller should
+     * hook into the simplybook_rest_routes filter to add its own routes.
+     * @uses apply_filters simplybook_rest_routes
+     */
+    public function registerRoutes(array $routes): void
+    {
+        $routes = $this->getPluginRoutes($routes);
 
         foreach ($routes as $route => $data) {
             $version = $data['version'] ?? $this->version;
@@ -37,15 +64,13 @@ final class EndpointManager
                 'permission_callback' => $permissionCallback,
             ]);
         }
-
-        do_action('simplybook_endpoints_loaded');
     }
 
     /**
      * Get the plugins REST routes
      * @uses apply_filters simplybook_rest_routes
      */
-    private function getPluginRoutes(): array
+    private function getPluginRoutes(array $routes): array
     {
         /**
          * Filter: simplybook_rest_routes
@@ -62,7 +87,7 @@ final class EndpointManager
          *      ]
          * ]
          */
-        return apply_filters('simplybook_rest_routes', []);
+        return apply_filters('simplybook_rest_routes', $routes);
     }
 
     /**

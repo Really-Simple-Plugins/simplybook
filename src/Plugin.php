@@ -2,15 +2,15 @@
 namespace SimplyBook;
 
 use SimplyBook\Managers\FeatureManager;
-use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ProviderManager;
+use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
 
 class Plugin
 {
     private FeatureManager $featureManager;
-    private EndpointManager $endpointManager;
     private ProviderManager $providerManager;
+    private EndpointManager $endpointManager;
     private ControllerManager $controllerManager;
 
     /**
@@ -19,9 +19,9 @@ class Plugin
     public function __construct()
     {
         $this->featureManager = new FeatureManager();
-        $this->endpointManager = new EndpointManager();
         $this->providerManager = new ProviderManager();
         $this->controllerManager = new ControllerManager();
+        $this->endpointManager = new EndpointManager();
     }
 
     /**
@@ -35,12 +35,11 @@ class Plugin
 
         $this->registerConstants();
 
-        add_action('plugins_loaded', [$this, 'registerProviders']);
-        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']);
-        add_action('simplybook_features_loaded', [$this, 'registerControllers']);
-        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']);
-
-        add_action('rest_api_init', [$this, 'registerPluginEndpoints'], 30);
+        add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
+        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when controllers need them
+        add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
+        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure controllers can hook into the upgrade process
+        add_action('rest_api_init', [$this, 'registerEndpoints']);
     }
 
     /**
@@ -144,13 +143,11 @@ class Plugin
         ]);
     }
 
-    /**
-     * Register Plugin endpoints
-     * @uses do_action simplybook_endpoints_loaded
-     */
-    public function registerPluginEndpoints()
+    public function registerEndpoints()
     {
-        $this->endpointManager->registerEndpoints();
+        $this->endpointManager->registerEndpoints([
+            new App\Endpoints\LoginUrlEndpoint(),
+        ]);
     }
 
     /**
