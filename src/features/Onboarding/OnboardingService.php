@@ -4,12 +4,13 @@ use Simplybook_old\Traits\Save;
 use Simplybook_old\Traits\Helper;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
-use SimplyBook\App\Services\HttpService;
+use SimplyBook\Traits\HasRestAccess;
 
-class OnboardingService extends HttpService
+class OnboardingService
 {
     use Helper;
     use Save;
+    use HasRestAccess;
 
     /**
      * Store the onboarding step in the general options without autoload

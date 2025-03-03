@@ -1,8 +1,8 @@
-<?php namespace SimplyBook\App\Services;
+<?php namespace SimplyBook\Traits;
 
 use SimplyBook\Helpers\Storage;
 
-class HttpService
+trait HasRestAccess
 {
     /**
      * Retrieve the parameters from the request.
