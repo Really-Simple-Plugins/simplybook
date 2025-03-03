@@ -2,13 +2,11 @@
 namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\App;
-use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\EndpointInterface;
 
 class ServicesEndpoint implements EndpointInterface
 {
-    use Save; // todo
     use HasRestAccess;
 
     const ROUTE = 'services';
