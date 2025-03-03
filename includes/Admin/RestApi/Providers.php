@@ -9,6 +9,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated 3.0.0 Use ProvidersEndpoint instead:
+ * {@see \SimplyBook\App\Endpoints\ProvidersEndpoint}
+ */
 class Providers extends RestApi {
 	use Helper;
 	use Save;
@@ -23,7 +27,7 @@ class Providers extends RestApi {
 			'simplybook/v1',
 			'providers',
 			array(
-				'methods' => 'POST',
+				'methods' => 'GET',
 				'callback' => array( $this, 'providers' ),
 				'permission_callback' => function ( $request ) {
 					return $this->validate_request( $request );

@@ -5,7 +5,6 @@ use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
 use Simplybook_old\Admin\RestApi\Settings;
 use Simplybook_old\Admin\RestApi\GetTasks;
-use Simplybook_old\Admin\RestApi\Providers;
 use Simplybook_old\Admin\RestApi\GetWidget;
 use Simplybook_old\Admin\RestApi\Dashboard;
 use Simplybook_old\Admin\RestApi\GetDomain;
@@ -25,7 +24,6 @@ class AdminController implements ControllerInterface
         }
 
         // todo - START - refactor one by one
-        ( new Providers() );
         ( new Settings() );
         ( new CompanyRegistration() );
         ( new WaitForRegistrationCallback() );

@@ -153,6 +153,7 @@ class Plugin
         $this->endpointManager->registerEndpoints([
             new App\Endpoints\LoginUrlEndpoint(),
             new App\Endpoints\ServicesEndpoint(),
+            new App\Endpoints\ProvidersEndpoint(),
         ]);
     }
 
