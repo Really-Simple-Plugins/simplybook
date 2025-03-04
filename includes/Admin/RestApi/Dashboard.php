@@ -10,6 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated Use {@see \SimplyBook\App\Endpoints\DashboardDataEndpoint}
+ * and {@see \SimplyBook\App\Endpoints\OtherPluginsDataEndpoint} instead
+ */
 class Dashboard extends RestApi {
 	use Helper;
 	use Save;
@@ -21,9 +25,6 @@ class Dashboard extends RestApi {
     // todo - add singular endpoint classes for each endpoint
 	public function register_rest_route(): void
 	{
-        /**
-         * @deprecated Use {@see \SimplyBook\App\Endpoints\DashboardDataEndpoint} instead
-         */
 		register_rest_route(
 			'simplybook/v1',
 			'get_dashboard_data',

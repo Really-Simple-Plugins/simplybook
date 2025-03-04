@@ -3,7 +3,6 @@ namespace SimplyBook\App;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
-use Simplybook_old\Admin\RestApi\Dashboard;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class AdminController implements ControllerInterface
@@ -15,9 +14,6 @@ class AdminController implements ControllerInterface
         if ($this->adminAccessAllowed() === false) {
             return;
         }
-
-        // todo - START - refactor one by one
-        ( new Dashboard() );
 
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
     }

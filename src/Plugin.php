@@ -5,6 +5,7 @@ use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
+use SimplyBook\App\Services\RelatedPluginService;
 
 class Plugin
 {
@@ -162,8 +163,8 @@ class Plugin
             new App\Endpoints\DashboardDataEndpoint(),
             new App\Endpoints\CompanyRegistrationEndpoint(),
             new App\Endpoints\WaitForRegistrationEndpoint(),
-            new App\Endpoints\OtherPluginEndpoints(
-                new App\Services\OtherPluginService(),
+            new App\Endpoints\RelatedPluginEndpoints(
+                new App\Services\RelatedPluginService(),
             ),
         ]);
     }

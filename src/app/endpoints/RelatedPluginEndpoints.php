@@ -2,22 +2,23 @@
 namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\App;
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use Simplybook_old\Admin\Installer\Installer;
-use SimplyBook\App\Services\OtherPluginService;
+use SimplyBook\App\Services\RelatedPluginService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
-class OtherPluginEndpoints implements MultiEndpointInterface
+class RelatedPluginEndpoints implements MultiEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
 
     const ROUTE = 'other_plugins_data';
 
-    private OtherPluginService $service;
+    private RelatedPluginService $service;
 
-    public function __construct(OtherPluginService $service)
+    public function __construct(RelatedPluginService $service)
     {
         $this->service = $service;
     }
@@ -64,20 +65,15 @@ class OtherPluginEndpoints implements MultiEndpointInterface
     public function doRelatedPluginAction(\WP_REST_Request $request): \WP_REST_Response
     {
         $storage = $this->retrieveHttpStorage($request);
-        $slug = $storage->getString('slug');
-        $action = $storage->getString('action');
 
-        $installer = new Installer($slug);
-        $installer->install($action);
+        $slug = $storage->getString('slug', 'really-simple-ssl');
+        $action = $storage->getString('action', 'download');
 
-        $plugins = $this->buildRelatedPluginData();
+        $plugins = $this->buildRelatedPluginData($slug);
+        $plugin = reset($plugins);
 
-        //get the plugin with slug $slug
-        $plugin = array_filter($plugins, function($plugin) use ($slug){
-            return $plugin['slug'] === $slug;
-        });
-        //get the first element
-        $plugin = reset($plugin);
+        $this->service->setPluginConfig($plugin);
+        $this->service->executeAction($action);
 
         return $this->sendHttpResponse([
             'plugin' => $plugin
@@ -87,33 +83,23 @@ class OtherPluginEndpoints implements MultiEndpointInterface
     /**
      * Get related plugins from the related config and manipulate the array
      * with the Installer class.
+     * @param string $targetPluginSlug Can be used to filter the plugins array
+     * for a specific plugin entry based on the slug key.
      */
-    public function buildRelatedPluginData(): array
+    public function buildRelatedPluginData(string $targetPluginSlug = ''): array
     {
         $plugins = App::related('plugins');
 
-        foreach ($plugins as $index => $plugin) {
-            $installer = new Installer($plugin['slug']);
+        if (!empty($targetPluginSlug)) {
+            $plugins = array_filter($plugins, function($plugin) use ($targetPluginSlug){
+                return isset($plugin['slug']) && ($plugin['slug'] === $targetPluginSlug);
+            });
+        }
 
+        foreach ($plugins as $index => $plugin) {
             $this->service->setPluginConfig($plugin);
             $plugins[$index]['url'] = $this->service->getPluginUrl();
             $plugins[$index]['action'] = $this->service->getAvailablePluginAction();
-
-            if (isset($plugin['constant_premium']) && defined($plugin['constant_premium'])) {
-                $plugins[$index]['action'] = 'installed';
-            } elseif (!$installer->plugin_is_downloaded() && !$installer->plugin_is_activated()) {
-                $plugins[$index]['action'] = 'download';
-            } elseif ($installer->plugin_is_downloaded() && !$installer->plugin_is_activated()) {
-                $plugins[$index]['action'] = 'activate';
-            } else { // free is active, but not premium.
-                //
-                $plugins[$index]['url'] = $plugin['upgrade_url'];
-                if (isset($plugin['constant_premium']) && defined($plugin['constant_premium'])) {
-                    $plugins[$index]['action'] = 'upgrade-to-premium';
-                } else {
-                    $plugins[$index]['action'] = 'installed';
-                }
-            }
         }
 
         return $plugins;

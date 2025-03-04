@@ -20,7 +20,8 @@ trait HasRestAccess
             return $ajaxData[$param] ?? $request->get_param($param);
         }
 
-        return $ajaxData ?: $request->get_json_params();
+        $httpParameters = $ajaxData ?: $request->get_json_params();
+        return $httpParameters ?: [];
     }
 
     /**
