@@ -34,6 +34,7 @@ class OtherPluginService
 
         // todo: upgrade-to-premium
         // todo: installed
+        /* @see \SimplyBook\App\Endpoints\OtherPluginEndpoints::buildRelatedPluginData} */
 
         return 'unknown';
     }
