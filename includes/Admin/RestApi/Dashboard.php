@@ -18,8 +18,12 @@ class Dashboard extends RestApi {
 		parent::__construct();
 	}
 
+    // todo - add singular endpoint classes for each endpoint
 	public function register_rest_route(): void
 	{
+        /**
+         * @deprecated Use {@see \SimplyBook\App\Endpoints\DashboardDataEndpoint} instead
+         */
 		register_rest_route(
 			'simplybook/v1',
 			'get_dashboard_data',

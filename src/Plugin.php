@@ -159,8 +159,12 @@ class Plugin
             new App\Endpoints\TaskEndpoints(),
             new App\Endpoints\DomainEndpoint(),
             new App\Endpoints\RemotePluginsEndpoint(),
+            new App\Endpoints\DashboardDataEndpoint(),
             new App\Endpoints\CompanyRegistrationEndpoint(),
             new App\Endpoints\WaitForRegistrationEndpoint(),
+            new App\Endpoints\OtherPluginEndpoints(
+                new App\Services\OtherPluginService(),
+            ),
         ]);
     }
 
