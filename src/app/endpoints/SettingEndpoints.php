@@ -33,7 +33,7 @@ class SettingEndpoints implements MultiEndpointInterface
                 'callback' => [$this, 'saveSettingsCallback'],
             ],
             self::ROUTE . '/get' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getSettingsCallback'],
             ],
         ];

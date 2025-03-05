@@ -37,7 +37,7 @@ class DomainEndpoint implements SingleEndpointInterface
     public function registerArguments(): array
     {
         return [
-        'methods' => \WP_REST_Server::READABLE,
+            'methods' => \WP_REST_Server::CREATABLE,
             'callback' => [$this, 'callback'],
         ];
     }

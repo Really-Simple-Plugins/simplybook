@@ -35,7 +35,7 @@ class ProvidersEndpoint implements SingleEndpointInterface
     public function registerArguments(): array
     {
         return [
-            'methods' => 'GET',
+            'methods' => \WP_REST_Server::READABLE,
             'callback' => [$this, 'callback'],
         ];
     }

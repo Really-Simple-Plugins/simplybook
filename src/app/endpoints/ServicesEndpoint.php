@@ -35,7 +35,7 @@ class ServicesEndpoint implements SingleEndpointInterface
     public function registerArguments(): array
     {
         return [
-            'methods' => 'GET',
+            'methods' => \WP_REST_Server::CREATABLE,
             'callback' => [$this, 'callback'],
         ];
     }
