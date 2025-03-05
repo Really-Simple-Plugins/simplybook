@@ -9,6 +9,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated Use {@see \SimplyBook\Managers\EndpointManager} instead.
+ */
 class RestApi {
     use Helper;
 	public $api = null;
