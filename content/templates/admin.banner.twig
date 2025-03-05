@@ -1,0 +1,38 @@
+
+{% if is_auth %}
+
+{% else %}
+    <div class="fade notice notice-info is-dismissible simplybook-me-pl-container">
+        <div class="container">
+            <div class="banner-header">
+                <div class="dashicons dashicons-simplybook" aria-hidden="true"><br></div>
+                {{ not_auth_header }}
+            </div>
+            <div class="banner-body">
+                {{ not_auth_message }}
+            </div>
+
+            <div class="banner-buttons">
+                <a rel="noopener noreferrer" href="/wp-admin/admin.php?page=simplybook-integration" class="button button-primary">
+                    <span class="dashicons dashicons-calendar"></span>
+                    {{ button_1_text }}
+                </a>
+                <a rel="noopener noreferrer" href="?simplybook_me_stop_promotions=1" class="button-dismiss" id="simplybook-me-dismiss-banner">
+                    <span class="dashicons dashicons-no-alt"></span>
+                    {{ button_2_text}}
+                </a>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            //on click dismiss banner - show promt to confirm
+            document.getElementById('simplybook-me-dismiss-banner').addEventListener('click', function (e) {
+                if (!confirm('{{ dismiss_confirm }}')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+{% endif %}

@@ -1,0 +1,118 @@
+.notice-info.simplybook-me-pl-container {
+  border-left: 4px solid #0B3052;
+}
+.notice-info.simplybook-me-pl-container .container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 10px 0;
+}
+.notice-info.simplybook-me-pl-container .dashicons {
+  margin-right: 5px;
+}
+.notice-info.simplybook-me-pl-container .banner-header {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0B3052;
+}
+@media screen and (max-width: 767px) {
+  .notice-info.simplybook-me-pl-container .banner-header {
+    text-align: center;
+  }
+}
+.notice-info.simplybook-me-pl-container .banner-header .dashicons-simplybook {
+  position: relative;
+  top: 0.2em;
+  display: inline-block;
+  font-size: 28px;
+  margin: 0;
+  width: auto;
+  height: auto;
+  color: #06ADEF;
+  padding: unset;
+}
+.notice-info.simplybook-me-pl-container .banner-body {
+  display: flex;
+  color: #788291;
+  font-size: 14px;
+  line-height: 1.5;
+}
+.notice-info.simplybook-me-pl-container .review-image img {
+  margin-top: 0.5em;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+}
+@media screen and (max-width: 767px) {
+  .notice-info.simplybook-me-pl-container .banner-buttons {
+    justify-content: center;
+  }
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px 6px;
+  min-height: 34px;
+  height: 34px;
+  border-radius: 3px;
+  padding: 2px 12px;
+  text-decoration: none;
+  line-height: 1.5;
+  font-weight: normal;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button .dashicons,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss .dashicons {
+  margin: 0;
+  padding: 0;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss {
+  border: 1px solid #d5e0f0;
+  color: #788291;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss .dashicons {
+  color: #FF3259;
+  margin-right: -2px;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:hover,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:focus,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:active {
+  background-color: #F1F6FF;
+  border: 1px solid #FF3259;
+  color: #788291;
+}
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:hover .dashicons,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:focus .dashicons,
+.notice-info.simplybook-me-pl-container .banner-buttons .button-dismiss:active .dashicons {
+  color: #FF3259;
+}
+@font-face {
+  font-family: 'simplybook-icon';
+  src: url('../fonts/simplybook-icon.eot');
+  src: url('../fonts/simplybook-icon.eot?#iefix') format('embedded-opentype'), url('../fonts/simplybook-icon.woff') format('woff'), url('../fonts/simplybook-icon.ttf') format('truetype'), url('../fonts/simplybook-icon.svg#simplybook-icon') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+[class*='dashicons-simplybook']:before {
+  display: inline-block !important;
+  font-family: 'simplybook-icon', serif !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  line-height: 1 !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+.dashicons-simplybook:before {
+  content: '\0041' !important;
+}
+/*# sourceMappingURL=simplybook.banner.css.map */
