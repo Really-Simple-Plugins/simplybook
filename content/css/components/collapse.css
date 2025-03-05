@@ -1,0 +1,43 @@
+.collapse-toggler[aria-expanded="true"] .show-all {
+  display: none;
+}
+.collapse-toggler[aria-expanded="true"] .hide-all {
+  display: block;
+}
+.collapse-toggler[aria-expanded="true"] span {
+  line-height: 0.8;
+}
+.collapse-toggler[aria-expanded="true"] .fa-chevron-down {
+  transform: rotate(180deg);
+  transition: all 0.25s ease-out;
+}
+.collapse-toggler[aria-expanded="false"] .show-all {
+  display: block;
+}
+.collapse-toggler[aria-expanded="false"] .hide-all {
+  display: none;
+}
+.collapse-toggler[aria-expanded="false"] .fa-chevron-down {
+  transform: rotate(0deg);
+  transition: all 0.25s ease-out;
+}
+.collapse {
+  height: 0;
+  display: none;
+  overflow: hidden;
+  transition: height 0.35s ease;
+}
+.collapse.show {
+  display: block;
+  height: auto;
+  /* This will be dynamically set by JavaScript */
+}
+.collapse-body {
+  padding: 18px 0;
+}
+.collapsing {
+  overflow: hidden;
+  height: 0;
+  transition: height 0.35s ease;
+}
+/*# sourceMappingURL=collapse.css.map */

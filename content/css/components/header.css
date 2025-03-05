@@ -1,0 +1,40 @@
+.wp-sb--welcome-page_header .wp-sb--row {
+  justify-content: space-between;
+}
+@media screen and (max-width: 600px) {
+  .wp-sb--welcome-page_header .wp-sb--row {
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+.wp-sb--welcome-page_header .wp-sb--row .logo {
+  width: 155px;
+  height: 25px;
+}
+@media screen and (max-width: 600px) {
+  .wp-sb--welcome-page_header .wp-sb--row .col-sign-up {
+    margin-left: auto;
+    margin-right: 0;
+  }
+}
+.wp-sb--welcome-page_header .wp-sb--row .sign-in-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+  flex: 1;
+}
+.wp-sb--welcome-page_header .wp-sb--row .sign-in-row .btn {
+  padding-left: 16px;
+  padding-right: 16px;
+  font-size: 14px;
+}
+.wp-sb--welcome-page_header .wp-sb--row .col-login_row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px 10px;
+  flex-wrap: wrap;
+}
+/*# sourceMappingURL=header.css.map */

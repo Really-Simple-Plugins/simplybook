@@ -3,8 +3,8 @@ Contributors: simplybook
 Donate link: https://simplybook.me/
 Tags: Booking System, Scheduling system, Appointment System, Bookings, Appointment Plugin
 Requires at least: 6.0
-Tested up to: 6.6.2
-Stable tag: 2.2
+Tested up to: 6.7.1
+Stable tag: 2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -111,6 +111,10 @@ SimplyBook.me appointment booking and online scheduling is fully translated to:
 7. Plugin config (in admin panel)
 
 == Changelog ==
+
+= 2.3 =
+* Fixed some bugs
+* Added new dashboard banner
 
 = 2.2 =
 * Fixed some not critical bugs

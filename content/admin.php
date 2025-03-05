@@ -9,9 +9,11 @@ include SimplybookMePl_PLUGIN_DIR . 'content/class/global.functions.php';
 include SimplybookMePl_PLUGIN_DIR . 'content/class/Api.php';
 
 $twig = simplybookMePl_initTwig();
-$nonLoginPages = array('auth', 'register', 'check');
-$page = isset($_GET['sbpage']) ? sanitize_text_field($_GET['sbpage']) : 'main';
+$nonLoginPages = array('auth', 'register', 'check', 'banner');
 
+if(!$page) {
+    $page = isset($_GET['sbpage']) ? sanitize_text_field($_GET['sbpage']) : 'main';
+}
 
 $auth = new SimplybookMePl_Api();
 $isAuthorized = $auth->isAuthorized();
@@ -67,6 +69,10 @@ if(!current_user_can( 'edit_posts' )){
             $cPage = new SimplybookMePl_AdminCheckPage($twig);
             break;
 
+        case 'banner':
+            include_once SimplybookMePl_PLUGIN_DIR . 'content/admin.banner.php';
+            $cPage = new SimplybookMePl_AdminBannerPage($twig);
+            break;
 
         case 'sbredirect':
             include_once SimplybookMePl_PLUGIN_DIR . 'content/admin.sbredirect.php';
