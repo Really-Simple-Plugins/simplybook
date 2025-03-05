@@ -29,9 +29,45 @@
     {% set js_code %}
     document.addEventListener("DOMContentLoaded", function () {
         var container = document.getElementById("sbw_z0hg2i");
-        container.innerHTML = '<div class="alert alert-danger">' +
-                    '<strong>Warning!</strong> Please setup plugin settings.'+
+/*        // container.innerHTML = '<div class="alert alert-danger">' +
+        //             '<strong>Warning!</strong> Please setup plugin settings.'+
+        //     '</div>';*/
+
+        var alertContainer = document.createElement('div');
+        alertContainer.classList.add('alert-container');
+        container.parentNode.insertBefore(alertContainer, container);
+
+        alertContainer.innerHTML = '<div class="alert alert-danger" style="color: #721c24;background-color: #f8d7da;border-color: #f5c6cb; padding: 20px; border-radius: 5px;">' +
+                    '<strong>{{ __("Notice:") }}</strong> {{ __("This is a demo SimplyBook.me widget. Configure the plugin settings to display your customized widget <a href=\"%url%\">here</a>.")|replace({'%url%': "/wp-admin/admin.php?page=simplybook-integration"  })|raw() }}'+
             '</div>';
+
+        new SimplybookWidget({
+            "widget_type": "iframe",
+            "url": "https:\/\/demowidgetwpplugin.simplybook.it",
+            "theme": "bookingtroll",
+            "theme_settings": {
+                "timeline_hide_unavailable": "1",
+                "hide_past_days": "0",
+                "timeline_show_end_time": "0",
+                "timeline_modern_display": "as_slots",
+                "sb_base_color": "#1f3f68",
+                "display_item_mode": "block",
+                "body_bg_color": "#ffffff",
+                "sb_review_image": "",
+                "dark_font_color": "#0f1926",
+                "light_font_color": "#ffffff",
+                "btn_color_1": "#385e8e",
+                "sb_company_label_color": "#19375e",
+                "hide_img_mode": "0",
+                "sb_busy": "#c7b3b3",
+                "sb_available": "#cbdffa"
+            },
+            "timeline": "modern",
+            "datepicker": "top_calendar",
+            "is_rtl": false,
+            "app_config": {"clear_session": 0, "allow_switch_to_ada": 0, "predefined": []},
+            "container_id": "sbw_z0hg2i"
+        });
 
     });
     {% endset %}

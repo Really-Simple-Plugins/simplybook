@@ -20,6 +20,7 @@ if (!class_exists('SimplybookMePl_AdminAuthPage')) {
             if ($isAuthorized) {
                 simplybookMePl_redirectToAdminPage('main');
             }
+
         }
 
         protected function confirmAction()
@@ -110,6 +111,8 @@ if (!class_exists('SimplybookMePl_AdminAuthPage')) {
                 //'register_url' => $this->auth->getMainSiteUrl() . "/default/registration/?ref=wpplugin",
                 'register_url' => simplybookMePl_makeUrl('register'),
                 'is_auth' => $this->auth->isAuthorized(),
+                'widget_page_url' => $this->createPageWithWidget(),
+                'widget_page_edit_url' => $this->createPageWithWidget(true),
                 '_wpnonce' => SimplybookMePl_NonceProtect::getNonce(),
             );
 
@@ -124,6 +127,10 @@ if (!class_exists('SimplybookMePl_AdminAuthPage')) {
              */
             echo str_replace('%amp%', '&', wp_kses($this->twig->render('admin.auth.twig', $data), simplybookMePl_getAllowedHtmlEntities()));
 
+        }
+
+        public function deleteWidgetPageAction(){
+            return $this->deleteWidgetPage();
         }
 
     }

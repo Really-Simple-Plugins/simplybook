@@ -10,8 +10,8 @@
     Contributors: simplybook
     Requires at least: 6.0
     Tested up to: 6.6.2
-    Stable tag: 2.1
-    Version: 2.1
+    Stable tag: 2.2
+    Version: 2.2
     Requires PHP: 7.4
     Text Domain: simplybook
     Domain Path: /languages
