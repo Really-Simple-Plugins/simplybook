@@ -9,9 +9,9 @@
     Author URI: https://simplybook.me/
     Contributors: simplybook
     Requires at least: 6.0
-    Tested up to: 6.6.2
-    Stable tag: 2.2
-    Version: 2.2
+    Tested up to: 6.7.1
+    Stable tag: 2.3
+    Version: 2.3
     Requires PHP: 7.4
     Text Domain: simplybook
     Domain Path: /languages
@@ -74,13 +74,15 @@ if (!class_exists('SimplybookMePl_Main')) {
             add_action('wp_ajax_sb_preview_widget', array($this, 'previewWidget'));
             add_action('wp_ajax_nopriv_sb_preview_widget', array($this, 'previewWidget'));
 
-            //add_action( 'admin_init', array($this, 'addHeader') );
+            add_action( 'admin_init', array($this, 'onAdminRequestInit') );
             add_action('admin_head', array($this, 'onAdminHead'));
             add_action( 'init', array($this, 'onWpInit') );
 
             add_action( 'rest_api_init', array($this, 'registerApiRoutes') );
 
             add_action( 'enqueue_block_editor_assets', array($this, 'onBlockEditorAssets') );
+
+            add_action( 'admin_notices', array( $this, 'dashboardBanner' ) );
 
             //$this->addHeader();
 
@@ -181,9 +183,16 @@ if (!class_exists('SimplybookMePl_Main')) {
             wp_register_style('simplybookMePl_dashboard_icon', plugins_url(SimplybookMePl_PLUGIN_NAME . '/content/css/simplybook-fonts.css'));
             wp_enqueue_style('simplybookMePl_dashboard_icon');
 
+            $menuItem = "SimplyBook integration";
+
+            if(!get_option('simplybookMePl_is_auth_ne')) {
+                $menuItem .= '&nbsp;&nbsp;<span class="update-plugins count-1"><span class="update-count">1</span></span>';
+            }
+
+
             add_menu_page(
                 'SimplyBook integration',
-                'SimplyBook integration',
+                $menuItem,
                 'manage_options',
                 'simplybook-integration',
                 array($this, 'sbAdminPage'),
@@ -194,7 +203,7 @@ if (!class_exists('SimplybookMePl_Main')) {
 
         public function sbAdminPage(){
             try {
-                require_once SimplybookMePl_CONTENT_DIR . 'admin.php';
+                require SimplybookMePl_CONTENT_DIR . 'admin.php';
             } catch (SimplybookMePl_Exception $e) {
                 echo wp_kses_post("<div class='error'><p>" . $e->getMessage() . "</p></div>");
             }
@@ -269,6 +278,27 @@ if (!class_exists('SimplybookMePl_Main')) {
                 'html' => $content,
             ));
             wp_die();
+        }
+
+
+        public function dashboardBanner(){
+            try {
+                //update_option('simplybookMePl_stop_promotions', 0);
+                if (get_option('simplybookMePl_stop_promotions')) {
+                    return;
+                }
+                $page = 'banner';
+                require_once SimplybookMePl_CONTENT_DIR . 'admin.php';
+            } catch (SimplybookMePl_Exception $e) {
+                echo wp_kses_post("<div class='error'><p>" . $e->getMessage() . "</p></div>");
+            }
+        }
+
+        public function onAdminRequestInit()
+        {
+            if (isset($_REQUEST['simplybook_me_stop_promotions'])) {
+                update_option('simplybookMePl_stop_promotions', 1);
+            }
         }
 
         public function registerBlockType() {
