@@ -1,5 +1,5 @@
 <?php
-namespace SimplyBook\App\Endpoints;
+namespace SimplyBook\App\Http\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasRestAccess;

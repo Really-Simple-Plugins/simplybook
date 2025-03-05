@@ -5,7 +5,6 @@ use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
-use SimplyBook\App\Services\RelatedPluginService;
 
 class Plugin
 {
@@ -152,18 +151,18 @@ class Plugin
     public function registerEndpoints()
     {
         $this->endpointManager->registerEndpoints([
-            new App\Endpoints\LoginUrlEndpoint(),
-            new App\Endpoints\ServicesEndpoint(),
-            new App\Endpoints\ProvidersEndpoint(),
-            new App\Endpoints\SettingEndpoints(),
-            new App\Endpoints\WidgetEndpoint(),
-            new App\Endpoints\TaskEndpoints(),
-            new App\Endpoints\DomainEndpoint(),
-            new App\Endpoints\RemotePluginsEndpoint(),
-            new App\Endpoints\DashboardDataEndpoint(),
-            new App\Endpoints\CompanyRegistrationEndpoint(),
-            new App\Endpoints\WaitForRegistrationEndpoint(),
-            new App\Endpoints\RelatedPluginEndpoints(
+            new App\Http\Endpoints\LoginUrlEndpoint(),
+            new App\Http\Endpoints\ServicesEndpoint(),
+            new App\Http\Endpoints\ProvidersEndpoint(),
+            new App\Http\Endpoints\SettingEndpoints(),
+            new App\Http\Endpoints\WidgetEndpoint(),
+            new App\Http\Endpoints\TaskEndpoints(),
+            new App\Http\Endpoints\DomainEndpoint(),
+            new App\Http\Endpoints\RemotePluginsEndpoint(),
+            new App\Http\Endpoints\DashboardDataEndpoint(),
+            new App\Http\Endpoints\CompanyRegistrationEndpoint(),
+            new App\Http\Endpoints\WaitForRegistrationEndpoint(),
+            new App\Http\Endpoints\RelatedPluginEndpoints(
                 new App\Services\RelatedPluginService(),
             ),
         ]);

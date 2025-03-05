@@ -1,17 +1,17 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
 
-use Simplybook_old\Frontend\Traits\Widget;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Frontend\Traits\Widget;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\WidgetEndpoint} instead
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\WidgetEndpoint} instead
  */
 class GetWidget extends RestApi {
 	use Helper;

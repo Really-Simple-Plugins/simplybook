@@ -1,19 +1,16 @@
 <?php
-namespace SimplyBook\App\Endpoints;
+namespace SimplyBook\App\Http\Endpoints;
 
-use SimplyBook\App;
-use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class DomainEndpoint implements SingleEndpointInterface
+class WaitForRegistrationEndpoint implements SingleEndpointInterface
 {
-    use Save;
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_domain';
+    const ROUTE = 'check_registration_callback_status';
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -43,14 +40,13 @@ class DomainEndpoint implements SingleEndpointInterface
     }
 
     /**
-     * Return the company login domain in the WP_REST_Response.
+     * Check if the registration callback has been completed
      */
-    public function callback(\WP_REST_Request $request): \WP_REST_Response {
-        $domain = $this->get_option('domain');
-        $companyLoginPath = App::provide('client')->get_company_login();
-
+    public function check_registration_callback_status(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $completed  = (get_option('simplybook_refresh_company_token_expiration') > 0);
         return $this->sendHttpResponse([
-            'domain' => "https://$companyLoginPath.secure.$domain/",
+            'status' => ($completed ? 'completed' : 'pending'),
         ]);
     }
 }

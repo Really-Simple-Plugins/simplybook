@@ -1,17 +1,17 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
 
-use Simplybook_old\Admin\Installer\Installer;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Admin\Installer\Installer;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * @deprecated Use {@see \SimplyBook\App\Endpoints\DashboardDataEndpoint}
+ * @deprecated Use {@see \SimplyBook\App\Http\Endpoints\DashboardDataEndpoint}
  * and {@see \SimplyBook\App\Endpoints\OtherPluginsDataEndpoint} instead
  */
 class Dashboard extends RestApi {

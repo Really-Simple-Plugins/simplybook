@@ -1,18 +1,19 @@
 <?php
-namespace SimplyBook\App\Endpoints;
+namespace SimplyBook\App\Http\Endpoints;
 
+use SimplyBook\App;
+use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
-use Simplybook_old\Frontend\Traits\Widget;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class WidgetEndpoint implements SingleEndpointInterface
+class DomainEndpoint implements SingleEndpointInterface
 {
-    use Widget;
+    use Save;
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_widget';
+    const ROUTE = 'get_domain';
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -42,12 +43,14 @@ class WidgetEndpoint implements SingleEndpointInterface
     }
 
     /**
-     * Get and return widget javascript in the HTTP Response
+     * Return the company login domain in the WP_REST_Response.
      */
-    public function callback(\WP_REST_Request $request): \WP_REST_Response
-    {
+    public function callback(\WP_REST_Request $request): \WP_REST_Response {
+        $domain = $this->get_option('domain');
+        $companyLoginPath = App::provide('client')->get_company_login();
+
         return $this->sendHttpResponse([
-            'widget' => $this->get_widget(),
+            'domain' => "https://$companyLoginPath.secure.$domain/",
         ]);
     }
 }

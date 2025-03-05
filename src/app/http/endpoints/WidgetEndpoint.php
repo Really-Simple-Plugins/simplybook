@@ -1,16 +1,18 @@
 <?php
-namespace SimplyBook\App\Endpoints;
+namespace SimplyBook\App\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
+use Simplybook_old\Frontend\Traits\Widget;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class WaitForRegistrationEndpoint implements SingleEndpointInterface
+class WidgetEndpoint implements SingleEndpointInterface
 {
+    use Widget;
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'check_registration_callback_status';
+    const ROUTE = 'get_widget';
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -40,13 +42,12 @@ class WaitForRegistrationEndpoint implements SingleEndpointInterface
     }
 
     /**
-     * Check if the registration callback has been completed
+     * Get and return widget javascript in the HTTP Response
      */
-    public function check_registration_callback_status(\WP_REST_Request $request): \WP_REST_Response
+    public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $completed  = (get_option('simplybook_refresh_company_token_expiration') > 0);
         return $this->sendHttpResponse([
-            'status' => ($completed ? 'completed' : 'pending'),
+            'widget' => $this->get_widget(),
         ]);
     }
 }

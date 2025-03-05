@@ -1,9 +1,9 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
 
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use SimplyBook\App\Endpoints\LoginUrlEndpoint instead:
- * {@see \SimplyBook\App\Endpoints\LoginUrlEndpoint}
+ * {@see \SimplyBook\App\Http\Endpoints\LoginUrlEndpoint}
  */
 class LoginUrl extends RestApi {
 	use Helper;

@@ -1,16 +1,16 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
-use Simplybook_old\Admin\Tasks\Tasks;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Admin\Tasks\Tasks;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\TaskEndpoints} instead.
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\TaskEndpoints} instead.
  */
 class GetTasks extends RestApi {
 	use Helper;

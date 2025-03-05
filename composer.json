@@ -31,7 +31,8 @@
       "SimplyBook\\App\\": "src/app",
       "SimplyBook\\App\\Http\\": "src/app/http",
       "SimplyBook\\App\\Services\\": "src/app/services",
-      "SimplyBook\\App\\Endpoints\\": "src/app/endpoints"
+      "SimplyBook\\App\\Http\\DTO\\": "src/app/http/dto",
+      "SimplyBook\\App\\Http\\Endpoints\\": "src/app/http/endpoints"
     },
     "files": [
       "src/App.php",

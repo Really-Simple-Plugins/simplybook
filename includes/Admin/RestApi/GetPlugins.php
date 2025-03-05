@@ -5,16 +5,16 @@
  *
  */
 namespace Simplybook_old\Admin\RestApi;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Endpoints\RemotePluginsEndpoint} instead.
+ * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\RemotePluginsEndpoint} instead.
  */
 class GetPlugins extends RestApi {
 	use Helper;

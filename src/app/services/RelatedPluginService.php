@@ -22,7 +22,7 @@ class RelatedPluginService
 
     /**
      * Use this method as the default way to set the plugin config. For an
-     * example see {@see \SimplyBook\App\Endpoints\RelatedPluginEndpoints}
+     * example see {@see \SimplyBook\App\Http\endpoints\RelatedPluginEndpoints}
      */
     public function setPluginConfig(array $pluginConfig)
     {

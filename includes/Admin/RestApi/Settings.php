@@ -1,10 +1,8 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
-use Simplybook_old\Traits\Load;
-use WP_Error;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -12,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use SettingEndpoints instead:
- * {@see \SimplyBook\App\Endpoints\SettingEndpoints}
+ * {@see \SimplyBook\App\Http\Endpoints\SettingEndpoints}
  */
 class Settings extends RestApi {
     use Helper;

@@ -1,8 +1,8 @@
 <?php
 namespace Simplybook_old\Admin\RestApi;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Traits\Save;
 use WP_REST_Response;
+use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use ServicesEndpoint instead:
- * {@see \SimplyBook\App\Endpoints\ServicesEndpoint}
+ * {@see \SimplyBook\App\Http\Endpoints\ServicesEndpoint}
  */
 class Services extends RestApi {
 	use Helper;
