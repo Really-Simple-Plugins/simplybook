@@ -1,6 +1,10 @@
 <?php
 if ( ! defined( 'ABSPATH' ) ) exit;
 
+/**
+ * @deprecated Use helpers.php instead.
+ */
+
 
 
 
