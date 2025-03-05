@@ -30,7 +30,7 @@
                 <p class="wp-sb--p wp-sb--p_secondary">{{ __("SimplyBook.me is an appointment scheduling software that allows you to manage your bookings and reservations.")|raw() }}</p>
             </div>
             <div class="wp-sb--col col-login">
-                <p class="wp-sb--p wp-sb--p_secondary wp-sb--p_small">{{ 'You are logged in to SimplyBook:'|replace({'%login%': auth_data.company })|raw() }}</p>
+                <p class="wp-sb--p wp-sb--p_secondary wp-sb--p_small">{{ __('You are logged in to SimplyBook:')|replace({'%login%': auth_data.company })|raw() }}</p>
                 <div class="col-login_row">
                     <span class="--color-neutral-dark">{{ auth_data.company }}</span> <a id="sb-logout" class="link" href="{{ makeUrl({'m': 'logout', 'amp_symbol': '%amp%'}) }}">{{ __("Logout")|raw() }}</a>
                 </div>

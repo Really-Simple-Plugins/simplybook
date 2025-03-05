@@ -57,6 +57,29 @@
                     <p class="wp-sb--p wp-sb--p_small wp-sb--p_secondary">{{ __("By continuing, Wordpress will share your name, email, company name and domain with SimplyBook.me") }}</p>
                     <br>
                     <p class="wp-sb--p wp-sb--p_small wp-sb--p_secondary">{{ __("We’re committed to your privacy. SimplyBook.me uses the information you provide to us to contact you about our relevant content, products, and services. You may unsubscribe from these communications at any time. For more information, check out our privacy Policy") }}</p>
+
+                    {% if widget_page_url %}
+                        <br><br><br>
+                        <div class="wp-sb--form-group">
+                            <label for="sb-server wp-sb--label">{{ __("Your page with booking widget is ready by the following link:") }}</label>
+                            <div class="wp-sb--copy-line">
+                                <div class="wp-sb--copy-txt">{{ widget_page_url|replace({'&':'%amp%'}) }}</div>
+                                <a href="{{ widget_page_url|replace({'&':'%amp%'}) }}" target="_blank" class="btn btn--no-text btn--secondary-outline" type="button" >
+                                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                </a>
+                                <a href="{{ widget_page_edit_url|replace({'&':'%amp%'}) }}" target="_blank" class="btn btn--no-text btn--secondary-outline" type="button" >
+                                    <i class="fa-regular fa-pen-to-square"></i>
+                                </a>
+
+                                <button class="btn btn--no-text btn--secondary-outline btn--danger" type="button" id="sb-delete-page">
+                                    <i class="fa-regular fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                    {% endif %}
+
+
                 </div>
 
                 <div class="wp-sb--col wp-sb--col_picture">
@@ -150,7 +173,9 @@
 
 
 <script type="application/javascript">
+(function(){
     try {
+        var _this = this;
         localStorage.removeItem('apiData');
         localStorage.removeItem('apiDataExpiry');
         localStorage.removeItem('cachedLogin');
@@ -183,10 +208,29 @@
                     setServerF(server);
                 }
             });
+
+            jQuery(document).on('click', '#sb-delete-page', function () {
+                var confirm = window.confirm("{{ __('Are you sure you want to delete default page with the widget? This action cannot be undone, and you will need to create a new page with the plugin widget.')}}");
+                if(confirm) {
+                    jQuery.ajax({
+                        url: "{{ makeUrl({ 'm': 'delete-widget-page', 'amp_symbol': '%amp%'}) }}",
+                        type: 'POST',
+                        data: {
+                            _wpnonce: "{{ _wpnonce|escape }}",
+                        },
+                        success: function(response) {
+                            window.location.reload();
+                        },
+                    });
+                }
+            });
+
+
         });
 
 
     } catch (e) {
         console.log(e);
     }
+})();
 </script>
