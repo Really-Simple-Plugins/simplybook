@@ -2,8 +2,8 @@
 
 use SimplyBook\App;
 
-trait HasViews {
-
+trait HasViews
+{
     /**
      * Method for returning the desired view
      */
