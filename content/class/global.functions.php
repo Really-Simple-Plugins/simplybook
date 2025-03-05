@@ -15,6 +15,12 @@ if(!function_exists('simplybookMePl_setConfig')){
         $pass = '7*w$9pumLw5koJc#JT6';
         $key = 'simplybookMePl_' . $key;
 
+        if(is_null($value)){
+            delete_option($key);
+            unset($cache[$key]);
+            return;
+        }
+
         if (is_array($value) || is_bool($value) || is_object($value)) {
             $value = serialize($value);
         }

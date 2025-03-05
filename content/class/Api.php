@@ -100,6 +100,7 @@ if (!class_exists('SimplybookMePl_Api')) {
             simplybookMePl_setConfig('auth_data', $authData);
             simplybookMePl_setConfig('auth_datetime', time());
             simplybookMePl_setConfig('is_auth', true);
+            update_option('simplybookMePl_is_auth_ne', 1); //add unencrypted flag to add menu badge
 
             return true;
         }
@@ -107,7 +108,7 @@ if (!class_exists('SimplybookMePl_Api')) {
         public function logout()
         {
             $this->_log(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS));
-            $clearKeys = array('auth_data', 'is_auth', 'auth_datetime', 'widget_settings', 'api_status', 'widget_page_deleted');
+            $clearKeys = array('auth_data', 'is_auth', 'auth_datetime', 'widget_settings', 'api_status', 'widget_page_deleted', 'stop_promotions', 'is_auth_ne');
 
             foreach ($clearKeys as $key) {
                 simplybookMePl_setConfig($key, null);
@@ -185,6 +186,7 @@ if (!class_exists('SimplybookMePl_Api')) {
             simplybookMePl_setConfig('auth_data', $authData);
             simplybookMePl_setConfig('auth_datetime', time());
             simplybookMePl_setConfig('is_auth', true);
+            update_option('simplybookMePl_is_auth_ne', 1); //add unencrypted flag to add menu badge
 
             return true;
         }
@@ -208,6 +210,9 @@ if (!class_exists('SimplybookMePl_Api')) {
                     return $this->refreshToken();
                 }
 
+                if(!get_option('simplybookMePl_is_auth_ne')){
+                    update_option('simplybookMePl_is_auth_ne', 1); //add unencrypted flag to add menu badge
+                }
                 return true;
             }
             return false;
@@ -235,6 +240,7 @@ if (!class_exists('SimplybookMePl_Api')) {
                 simplybookMePl_setConfig('auth_data', $authData);
                 simplybookMePl_setConfig('auth_datetime', time());
                 simplybookMePl_setConfig('is_auth', true);
+                update_option('simplybookMePl_is_auth_ne', 1); //add unencrypted flag to add menu badge
 
                 return $authData;
             } else {
