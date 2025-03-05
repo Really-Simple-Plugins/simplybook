@@ -137,7 +137,9 @@ class Plugin
             new App\CapabilityController(
                 new App\Services\CapabilityService(),
             ),
-            new App\TaskController(),
+            new App\TaskController(
+                new App\Services\TaskService(),
+            ),
             new App\ApiController(),
             new App\ScheduleController(),
         ]);
@@ -156,11 +158,15 @@ class Plugin
             new App\Http\Endpoints\ProvidersEndpoint(),
             new App\Http\Endpoints\SettingEndpoints(),
             new App\Http\Endpoints\WidgetEndpoint(),
-            new App\Http\Endpoints\TaskEndpoints(),
+            new App\Http\Endpoints\TaskEndpoints(
+                new App\Services\TaskService(),
+            ),
             new App\Http\Endpoints\DomainEndpoint(),
             new App\Http\Endpoints\RemotePluginsEndpoint(),
             new App\Http\Endpoints\DashboardDataEndpoint(),
-            new App\Http\Endpoints\CompanyRegistrationEndpoint(),
+            new App\Http\Endpoints\CompanyRegistrationEndpoint(
+                new App\Services\TaskService(),
+            ),
             new App\Http\Endpoints\WaitForRegistrationEndpoint(),
             new App\Http\Endpoints\RelatedPluginEndpoints(
                 new App\Services\RelatedPluginService(),

@@ -8,10 +8,9 @@ defined( 'ABSPATH' ) or die( '' );
  * Class Tasks
  * Task get added on activation, or on a server condition. If clientside condition is necessary is to be determined yet.
  *
- * @todo - START- https://teamdotblue.atlassian.net/browse/NL14RSP2-14
+ * @deprecated Use {@see \SimplyBook\App\Services\TaskService} instead.
  * @package Simplybook_old\Admin\Tasks
  */
-
 class Tasks {
 	use Helper;
 	public function __construct() {

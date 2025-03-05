@@ -2,6 +2,7 @@
 namespace SimplyBook\App;
 
 use Simplybook_old\Admin\Tasks\Tasks;
+use SimplyBook\App\Services\TaskService;
 use SimplyBook\Interfaces\ControllerInterface;
 
 /**
@@ -11,6 +12,13 @@ use SimplyBook\Interfaces\ControllerInterface;
  */
 class TaskController implements ControllerInterface
 {
+    private TaskService $service;
+
+    public function __construct(TaskService $service)
+    {
+        $this->service = $service;
+    }
+
     public function register()
     {
         add_action('simplybook_activation', [$this, 'handlePluginActivation']);
@@ -19,8 +27,7 @@ class TaskController implements ControllerInterface
 
     public function handlePluginActivation()
     {
-        $tasks = new Tasks();
-        $tasks->add_initial_tasks();
+        $this->service->addInitialTasks();
     }
 
     /**
@@ -28,9 +35,7 @@ class TaskController implements ControllerInterface
      */
     public function updateTasks(): void
     {
-        $tasks = new Tasks();
-        $tasks_data = $tasks->get_raw_tasks();
-
+        $taskData = $this->service->getRawTasks();
         // todo, is this a completed method?
     }
 }

@@ -3,7 +3,7 @@ namespace SimplyBook\App\Http\Endpoints;
 
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
-use Simplybook_old\Admin\Tasks\Tasks;
+use SimplyBook\App\Services\TaskService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
@@ -12,6 +12,13 @@ class TaskEndpoints implements MultiEndpointInterface
     use Save;
     use HasRestAccess;
     use HasAllowlistControl;
+
+    private TaskService $service;
+
+    public function __construct(TaskService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -43,8 +50,9 @@ class TaskEndpoints implements MultiEndpointInterface
      */
     public function getTasksCallback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $tasks = new Tasks();
-        return $this->sendHttpResponse($tasks->get_tasks());
+        return $this->sendHttpResponse(
+            $this->service->getTasks()
+        );
     }
 
     /**
@@ -54,8 +62,8 @@ class TaskEndpoints implements MultiEndpointInterface
     {
         $storage = $this->retrieveHttpStorage($request);
 
-        $tasks = new Tasks();
-        $tasks->dismiss_task($storage->getTitle('taskId'));
+        $sanitizedTaskId = $storage->getTitle('taskId');
+        $this->service->dismissTask($sanitizedTaskId);
 
         return $this->sendHttpResponse();
     }

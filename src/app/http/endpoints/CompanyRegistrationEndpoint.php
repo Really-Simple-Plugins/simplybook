@@ -5,6 +5,7 @@ use SimplyBook\App;
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
 use Simplybook_old\Admin\Tasks\Tasks;
+use SimplyBook\App\Services\TaskService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
@@ -17,9 +18,11 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     const ROUTE = 'company_registration';
 
     private string $callbackUrl;
+    private TaskService $service;
 
-    public function __construct()
+    public function __construct(TaskService $service)
     {
+        $this->service = $service;
         $this->callbackUrl = $this->get_callback_url();
     }
 
@@ -90,7 +93,6 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
 
         $this->cleanup_callback_url();
 
-        $tasks = new Tasks();
-        $tasks->validate_tasks();
+        $this->service->validateTasks();
     }
 }
