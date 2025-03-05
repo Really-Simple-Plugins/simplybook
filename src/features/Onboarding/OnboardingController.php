@@ -88,7 +88,7 @@ class OnboardingController implements FeatureInterface
         $step = ($response->success ? 3 : 1);
         $this->service->setOnboardingStep($step);
 
-        return $this->service->sendHttpResponse( [], $response->success, $response->message );
+        return $this->service->sendHttpResponse([], $response->success, $response->message);
     }
 
     /**
