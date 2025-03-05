@@ -4,8 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
 * Install suggested plugins
+* @deprecated Use {@see \SimplyBook\App\Services\RelatedPluginService} instead.
 */
-
 class Installer {
 	private string $slug = '';
 	public string $action;

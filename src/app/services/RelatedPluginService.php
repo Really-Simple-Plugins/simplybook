@@ -108,8 +108,9 @@ class RelatedPluginService
 
         set_transient($transientName, $this->pluginConfig->getString('slug'), MINUTE_IN_SECONDS);
 
-        $pluginInfo = $this->getCurrentPluginInfo();
-        if (empty($pluginInfo)) {
+        try {
+            $pluginInfo = $this->getCurrentPluginInfo();
+        } catch (\Exception $e) {
             return false;
         }
 
@@ -219,9 +220,12 @@ class RelatedPluginService
     }
 
     /**
-     * Method returns the plugin info for the current plugin.
+     * Method returns the plugin info for the current plugin. Because we pass
+     * the action 'plugin_information' to the plugins_api function, an object is
+     * returned if the plugin is found, otherwise a WP_Error.
+     * @throws \Exception If the plugin info could not be retrieved
      */
-    protected function getCurrentPluginInfo()
+    protected function getCurrentPluginInfo(): object
     {
         $transientName = 'rsp_' . $this->pluginConfig->getString('slug') . '_plugin_info';
         $pluginInfo = get_transient($transientName);
@@ -239,7 +243,7 @@ class RelatedPluginService
         ]);
 
         if (is_wp_error($pluginInfo)) {
-            return false;
+            throw new \Exception('Unable to get plugin info');
         }
 
         set_transient($transientName, $pluginInfo, WEEK_IN_SECONDS);
