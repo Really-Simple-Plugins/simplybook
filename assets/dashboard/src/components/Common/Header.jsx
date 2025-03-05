@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { ReactComponent as Logo } from "../../../../../../assets/img/logo.svg";
+import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
 import LoginLink from "./LoginLink";
 import { __ } from "@wordpress/i18n";
 import { useEffect } from "react";
