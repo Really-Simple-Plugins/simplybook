@@ -5,10 +5,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Simplybook_old\Api\ApiResponse\ApiResponse;
 use Simplybook_old\Traits\Helper;
 use Simplybook_old\Traits\Load;
 use Simplybook_old\Traits\Save;
+
+use Simplybook\App\Http\DTO\ApiResponseDTO;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -517,12 +518,12 @@ class ApiClient
     /**
      * Registers a company with the API
      *
-     * @return ApiResponse
+     * @return ApiResponseDTO
      */
-    public function register_company(): ApiResponse {
+    public function register_company(): ApiResponseDTO {
 
         if ( !$this->user_can_manage() ) {
-            return new ApiResponse( false, __('You are not authorized to do this.', 'simplybook') );
+            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
         }
 
         //check if we have a token
@@ -533,7 +534,7 @@ class ApiClient
 
         if ( get_transient('simply_book_attempt_count') >3 ) {
             $this->log("Too many attempts to register company");
-            return new ApiResponse( false, __('Too many attempts, please try again later.', 'simplybook') );
+            return new ApiResponseDTO( false, __('Too many attempts, please try again later.', 'simplybook') );
         }
 
         $email = sanitize_email( $this->get_option('email') );
@@ -560,7 +561,7 @@ class ApiClient
         if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
             $this->log("Missing fields for company registration");
             $this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
-            return new ApiResponse( false, __('Missing fields for company registration. Please fill out all fields.', 'simplybook') );
+            return new ApiResponseDTO( false, __('Missing fields for company registration. Please fill out all fields.', 'simplybook') );
         }
 
         $coordinates = $this->get_coordinates($address, $zip, $city, $country);
@@ -610,7 +611,7 @@ class ApiClient
                 $this->update_option( 'company_id', (int) $request->company_id );
                 update_option("simplybook_company_registration_start_time", time(), false);
                 //successful registered
-                return new ApiResponse( true );
+                return new ApiResponseDTO( true );
 
             } else {
                 if ( str_contains( $request->message, 'Token Expired')) {
@@ -633,7 +634,7 @@ class ApiClient
                     in_array('The field contains illegal words', $request->data->name)
                 ) {
                     error_log("company name contains illegal words, go one step back and report issue");
-                    return new ApiResponse( false, __('The company name contains illegal words. Please change the company name.', 'simplybook') );
+                    return new ApiResponseDTO( false, __('The company name contains illegal words. Please change the company name.', 'simplybook') );
                 }
 
                 if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
@@ -641,7 +642,7 @@ class ApiClient
                     //company login already exists. We will be assuming for now that the user is here by accident.
                     //we return a success and exit.
                     //@todo update existing data instead of just returning.
-                    return new ApiResponse( true );
+                    return new ApiResponseDTO( true );
                 }
 
                 $this->log("Error during company registration: ".$request->message);
@@ -653,13 +654,13 @@ class ApiClient
                     $error = $error_messages[0] ?? '';
                 }
 
-                return new ApiResponse( false, $request->message.' '.$error );
+                return new ApiResponseDTO( false, $request->message.' '.$error );
             }
 
         } else {
             //retrieve the wp_error message
             $this->log("Error during company registration: ".$request->get_error_message());
-            return new ApiResponse( false, __('Error during company registration.', 'simplybook')." ".$request->get_error_message() );
+            return new ApiResponseDTO( false, __('Error during company registration.', 'simplybook')." ".$request->get_error_message() );
         }
     }
 
@@ -743,17 +744,17 @@ class ApiClient
      * @param int $email_code
      * @param string $recaptcha_token
      *
-     * @return ApiResponse
+     * @return ApiResponseDTO
      */
-    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponse {
+    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO {
         if ( !$this->user_can_manage() ) {
-            return new ApiResponse( false, __('You are not authorized to do this.', 'simplybook') );
+            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
         }
 
         //check if the company registration was started
         if ( !get_option("simplybook_company_registration_start_time") ) {
             $this->log("Company registration not started yet");
-            return new ApiResponse( false, __('Complete the previous, company registration step first.', 'simplybook') );
+            return new ApiResponseDTO( false, __('Complete the previous, company registration step first.', 'simplybook') );
         }
 
         error_log("confirming email with body:");
@@ -783,13 +784,13 @@ class ApiClient
             $request = json_decode( wp_remote_retrieve_body( $request ) );
             if ( isset($request->success) ) {
                 error_log("email confirmation success, please wait for the callback.");
-                return new ApiResponse( true, __('Email successfully confirmed.', 'simplybook') );
+                return new ApiResponseDTO( true, __('Email successfully confirmed.', 'simplybook') );
             } else {
                 $this->log("Error during email confirmation: ".$request->message);
-                return new ApiResponse( false, $request->message);
+                return new ApiResponseDTO( false, $request->message);
             }
         } else {
-            return new ApiResponse( false, __('Error email confirmation.', 'simplybook')." ".$request->get_error_message() );
+            return new ApiResponseDTO( false, __('Error email confirmation.', 'simplybook')." ".$request->get_error_message() );
         }
     }
 

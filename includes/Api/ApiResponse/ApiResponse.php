@@ -4,7 +4,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
+/**
+ * @deprecated Use {@see \SimplyBook\App\Http\DTO\ApiResponseDTO} instead
+ */
 class ApiResponse {
 	public bool $success;
 	public string $message;
