@@ -176,78 +176,9 @@ if(!class_exists('SimplybookMePl_AdminMainPage')) {
         }
 
         public function deleteWidgetPageAction(){
-            $page = get_page_by_path('simplybook-widget');
-            $pageId = simplybookMePl_getConfig('widget_page_id');
-
-            if(!$page && $pageId){
-                $page = get_post($pageId);
-            }
-
-            if(!$page) {
-                simplybookMePl_addFlashMessage(__('Page not found', 'simplybook'), 'error');
-            } else {
-                wp_delete_post($page->ID, true);
-                //save to config that page was deleted
-                simplybookMePl_setConfig('widget_page_deleted', true);
-                simplybookMePl_setConfig('widget_page_id', null);
-                simplybookMePl_addFlashMessage(__('Page was successfully deleted', 'simplybook'), 'message');
-            }
-            return true;
+            return $this->deleteWidgetPage();
         }
 
-        protected function createPageWithWidget($editUrl = false){
-            //check if page was deleted
-
-            //check if page exist (by slug)
-            $page = get_page_by_path('simplybook-widget');
-            $pageId = simplybookMePl_getConfig('widget_page_id');
-
-            if($page && !$pageId){
-                simplybookMePl_setConfig('widget_page_id', $page->ID);
-            }else if(!$page && $pageId){
-                $page = get_post($pageId);
-            }
-
-            if(!$page) {
-                $pageDeleted = simplybookMePl_getConfig('widget_page_deleted');
-                if($pageDeleted) {
-                    return null;
-                }
-
-                $pageData = array(
-                    'post_title' => 'SimplyBook.me Booking Page',
-                    //'post_content' => '[simplybook_widget]',
-                    'post_content' => "<!-- wp:simplybook/widget -->\n<div class=\"wp-block-simplybook-widget\"></div>\n<!-- /wp:simplybook/widget -->",
-                    'post_status' => 'publish',
-                    'post_author' => 1,
-                    'post_type' => 'page',
-                    'post_name' => 'simplybook-widget',
-                    'comment_status' => 'closed',
-                    'ping_status' => 'closed',
-                    'menu_order' => 0,
-                );
-                $pageId = wp_insert_post($pageData);
-                simplybookMePl_setConfig('widget_page_id', $pageId);
-
-                if($pageId) {
-                    $page = get_post($pageId);
-                }
-            }
-
-            $url = null;
-
-            if($editUrl){
-                if ($page && !is_wp_error($page)) {
-                    $url = get_edit_post_link($page->ID);
-                }
-            } else {
-                if ($page && !is_wp_error($page)) {
-                    $url = get_permalink($page->ID);
-                }
-            }
-
-            return $url;
-        }
 
     }
 }
