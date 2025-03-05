@@ -14,11 +14,11 @@ class DashboardDataEndpoint implements SingleEndpointInterface
     const ROUTE = 'get_dashboard_data';
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

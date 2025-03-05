@@ -4,19 +4,21 @@ namespace SimplyBook\App\Endpoints;
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
 use Simplybook_old\Admin\Tasks\Tasks;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class TaskEndpoints implements MultiEndpointInterface
 {
     use Save;
     use HasRestAccess;
+    use HasAllowlistControl;
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

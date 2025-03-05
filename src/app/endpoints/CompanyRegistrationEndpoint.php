@@ -5,12 +5,14 @@ use SimplyBook\App;
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
 use Simplybook_old\Admin\Tasks\Tasks;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class CompanyRegistrationEndpoint implements SingleEndpointInterface
 {
     use Save;
     use HasRestAccess;
+    use HasAllowlistControl;
 
     const ROUTE = 'company_registration';
 
@@ -27,7 +29,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
      */
     public function enabled(): bool
     {
-        return !empty($this->callbackUrl);
+        return !empty($this->callbackUrl) && $this->adminAccessAllowed();
     }
 
     /**

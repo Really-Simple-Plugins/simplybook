@@ -3,21 +3,23 @@ namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
 use Simplybook_old\Frontend\Traits\Widget;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class WidgetEndpoint implements SingleEndpointInterface
 {
     use Widget;
     use HasRestAccess;
+    use HasAllowlistControl;
 
     const ROUTE = 'get_widget';
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

@@ -2,10 +2,8 @@
 namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\App;
-use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
-use Simplybook_old\Admin\Installer\Installer;
 use SimplyBook\App\Services\RelatedPluginService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
@@ -24,11 +22,11 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
     }
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

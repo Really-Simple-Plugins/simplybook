@@ -3,6 +3,7 @@ namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 /**
@@ -15,15 +16,16 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 class RemotePluginsEndpoint implements SingleEndpointInterface
 {
     use HasRestAccess;
+    use HasAllowlistControl;
 
     const ROUTE = 'get_plugins';
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

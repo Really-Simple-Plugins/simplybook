@@ -2,20 +2,22 @@
 namespace SimplyBook\App\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class WaitForRegistrationEndpoint implements SingleEndpointInterface
 {
     use HasRestAccess;
+    use HasAllowlistControl;
 
     const ROUTE = 'check_registration_callback_status';
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**

@@ -22,7 +22,6 @@ class Dashboard extends RestApi {
 		parent::__construct();
 	}
 
-    // todo - add singular endpoint classes for each endpoint
 	public function register_rest_route(): void
 	{
 		register_rest_route(

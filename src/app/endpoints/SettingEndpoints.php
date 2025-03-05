@@ -3,21 +3,23 @@ namespace SimplyBook\App\Endpoints;
 
 use Simplybook_old\Traits\Save;
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class SettingEndpoints implements MultiEndpointInterface
 {
     use Save;
     use HasRestAccess;
+    use HasAllowlistControl;
 
     const ROUTE = 'settings';
 
     /**
-     * Always enabled
+     * Only enable this endpoint if the user has access to the admin area
      */
     public function enabled(): bool
     {
-        return true;
+        return $this->adminAccessAllowed();
     }
 
     /**
