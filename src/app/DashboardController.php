@@ -133,14 +133,14 @@ class DashboardController implements ControllerInterface
             'simplybook-tailwind',
             App::env('plugin.react_url') . '/src/tailwind.generated.css',
             [],
-            $chunkTranslation['version']
+            ($chunkTranslation['version'] ?? '')
         );
 
         wp_enqueue_script(
             'simplybook',
-            App::env('plugin.react_url') . '/build/' . $chunkTranslation['js_file_name'],
-            $chunkTranslation['dependencies'],
-            $chunkTranslation['version'],
+            App::env('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
+            ($chunkTranslation['dependencies'] ?? ''),
+            ($chunkTranslation['version'] ?? ''),
             true
         );
 
