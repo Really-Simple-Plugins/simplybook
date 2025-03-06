@@ -44,9 +44,9 @@ class SettingEndpoints implements MultiEndpointInterface
      * settings are saved in the correct format. Settings are skipped for saving
      * if the 'value' key is not set.
      */
-    public function saveSettingsCallback(\WP_REST_Request $request, $ajax_data = false): \WP_REST_Response
+    public function saveSettingsCallback(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $fields = $this->retrieveHttpParameters($request, $ajax_data, '');
+        $fields = $this->retrieveHttpParameters($request, $ajaxData, '');
         unset($fields['nonce']);
 
         if (count($fields) === 0) {
@@ -74,9 +74,9 @@ class SettingEndpoints implements MultiEndpointInterface
     /**
      * Return the fields array. Values of the fields are included when requested
      */
-    public function getSettingsCallback(\WP_REST_Request $request, $ajax_data = false): \WP_REST_Response
+    public function getSettingsCallback(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->retrieveHttpStorage($request, $ajax_data);
+        $storage = $this->retrieveHttpStorage($request, $ajaxData);
         $getSettingsWithValues = ($storage->getInt('withValues') === 1);
 
         $fields = $this->fields($getSettingsWithValues);
