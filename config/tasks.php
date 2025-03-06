@@ -12,7 +12,7 @@ return [
         'id' => 'add_service',
         'condition' => [
             'type' => 'serverside',
-            'function' => '(new \Simplybook_old\Api\Api())->company_registration_complete()',
+            'function' => '!(new \SimplyBook\App\Http\ApiClient())->company_registration_complete()',
         ],
         'text' => __('Complete the onboarding to get started!','simplybook'),
         'status' => 'open',

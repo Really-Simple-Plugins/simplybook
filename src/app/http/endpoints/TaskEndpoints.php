@@ -51,7 +51,7 @@ class TaskEndpoints implements MultiEndpointInterface
     public function getTasksCallback(\WP_REST_Request $request): \WP_REST_Response
     {
         return $this->sendHttpResponse(
-            $this->service->getTasks()
+            array_values($this->service->getTasks())
         );
     }
 

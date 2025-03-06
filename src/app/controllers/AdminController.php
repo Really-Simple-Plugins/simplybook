@@ -2,8 +2,22 @@
 namespace SimplyBook\App\Controllers;
 
 use SimplyBook\App;
+use Simplybook_old\Upgrades\Upgrades;
 use SimplyBook\Traits\HasAllowlistControl;
+use Simplybook_old\Admin\RestApi\LoginUrl;
+use Simplybook_old\Admin\RestApi\Services;
+use Simplybook_old\Admin\RestApi\Settings;
+use Simplybook_old\Admin\RestApi\GetTasks;
+use Simplybook_old\Admin\RestApi\Providers;
+use Simplybook_old\Admin\RestApi\GetWidget;
+use Simplybook_old\Admin\RestApi\Dashboard;
+use Simplybook_old\Admin\RestApi\GetDomain;
+use Simplybook_old\Admin\RestApi\Onboarding;
+use Simplybook_old\Admin\RestApi\GetPlugins;
 use SimplyBook\Interfaces\ControllerInterface;
+use Simplybook_old\Admin\Capability\Capability;
+use Simplybook_old\Admin\RestApi\CompanyRegistration;
+use Simplybook_old\Admin\RestApi\WaitForRegistrationCallback;
 
 class AdminController implements ControllerInterface
 {
@@ -14,6 +28,20 @@ class AdminController implements ControllerInterface
         if ($this->adminAccessAllowed() === false) {
             return;
         }
+
+        ( new Upgrades() );
+        ( new Capability() );
+        ( new Onboarding() );
+        ( new LoginUrl() );
+        ( new Services() );
+        ( new Providers() );
+        ( new Settings() );
+        ( new CompanyRegistration() );
+        ( new WaitForRegistrationCallback() );
+        ( new GetWidget() );
+        ( new Dashboard() );
+        ( new GetPlugins() );
+        ( new GetDomain() );
 
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
     }

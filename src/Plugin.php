@@ -153,24 +153,24 @@ class Plugin
     public function registerEndpoints()
     {
         $this->endpointManager->registerEndpoints([
-            new App\Http\Endpoints\LoginUrlEndpoint(),
-            new App\Http\Endpoints\ServicesEndpoint(),
-            new App\Http\Endpoints\ProvidersEndpoint(),
-            new App\Http\Endpoints\SettingEndpoints(),
-            new App\Http\Endpoints\WidgetEndpoint(),
+//            new App\Http\Endpoints\LoginUrlEndpoint(),
+//            new App\Http\Endpoints\ServicesEndpoint(),
+//            new App\Http\Endpoints\ProvidersEndpoint(),
+//            new App\Http\Endpoints\SettingEndpoints(),
+//            new App\Http\Endpoints\WidgetEndpoint(),
             new App\Http\Endpoints\TaskEndpoints(
                 new App\Services\TaskService(),
             ),
-            new App\Http\Endpoints\DomainEndpoint(),
-            new App\Http\Endpoints\RemotePluginsEndpoint(),
-            new App\Http\Endpoints\DashboardDataEndpoint(),
-            new App\Http\Endpoints\CompanyRegistrationEndpoint(
-                new App\Services\TaskService(),
-            ),
-            new App\Http\Endpoints\WaitForRegistrationEndpoint(),
-            new App\Http\Endpoints\RelatedPluginEndpoints(
-                new App\Services\RelatedPluginService(),
-            ),
+//            new App\Http\Endpoints\DomainEndpoint(),
+//            new App\Http\Endpoints\RemotePluginsEndpoint(),
+//            new App\Http\Endpoints\DashboardDataEndpoint(),
+//            new App\Http\Endpoints\CompanyRegistrationEndpoint(
+//                new App\Services\TaskService(),
+//            ),
+//            new App\Http\Endpoints\WaitForRegistrationEndpoint(),
+//            new App\Http\Endpoints\RelatedPluginEndpoints(
+//                new App\Services\RelatedPluginService(),
+//            ),
         ]);
     }
 

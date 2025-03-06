@@ -11,9 +11,9 @@ final class EndpointManager
     use HasNonces;
     use HasAllowlistControl;
 
-    private array $routes;
     private string $version;
     private string $namespace;
+    private array $routes = [];
 
     public function __construct()
     {
@@ -28,7 +28,6 @@ final class EndpointManager
      */
     public function registerEndpoints(array $endpoints)
     {
-        $routes = [];
         foreach ($endpoints as $endpoint) {
             if ($endpoint instanceof SingleEndpointInterface) {
                 $this->registerSingleEndpointRoute($endpoint);

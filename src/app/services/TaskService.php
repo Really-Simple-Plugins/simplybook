@@ -5,7 +5,6 @@ namespace SimplyBook\App\Services;
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
 
-// todo - https://teamdotblue.atlassian.net/browse/NL14RSP2-14
 class TaskService
 {
     use HasAllowlistControl;
@@ -17,7 +16,7 @@ class TaskService
      */
     public function getRawTasksConfig(): array
     {
-        return App::tasks();
+        return App::tasks()->all();
     }
 
     /**
@@ -134,7 +133,7 @@ class TaskService
             error_log("Function not recognized: $function");
         }
 
-        return false;
+        return true;
     }
 
     /**

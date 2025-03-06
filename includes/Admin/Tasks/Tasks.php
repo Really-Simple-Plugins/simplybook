@@ -39,9 +39,18 @@ class Tasks {
 				$function = $invert ? substr( $task['condition']['function'], 1 ) : $task['condition']['function'];
 				$is_valid = $this->validate_function( $function );
 
+                echo '<pre>';
+                var_dump($is_valid);
+                var_dump($function);
+
 				if ( $invert ) {
 					$is_valid = !$is_valid;
 				}
+
+                echo '<pre>';
+                var_dump($is_valid);
+                exit();
+
 				if ( $is_valid ) {
 					$this->dismiss_task($task['id']);
 				} else {
@@ -102,7 +111,7 @@ class Tasks {
 	 * @return array
 	 */
 	public function get_raw_tasks(): array {
-		return require_once( SIMPLYBOOK_PATH . 'includes/Config/Tasks.php' );
+		return require( SIMPLYBOOK_PATH . 'includes/Config/Tasks.php' );
 	}
 
 	/**
