@@ -155,7 +155,7 @@ trait Load {
 
 		$fields = $this->fields;
 	    if ( count($this->fields) === 0 ) {
-		    $fields = App::fields();
+		    $fields = App::fields()->all();
 		    $fields = apply_filters( 'simplybook_fields', $fields );
 	    }
 
@@ -193,7 +193,7 @@ trait Load {
 	 */
 	public function menu(): array
 	{
-		$menus = App::menus();
+		$menus = App::menus()->all();
 		$menus = apply_filters('simplybook_menu', $menus);
 
 		foreach ( $menus as $key => $menu ) {
@@ -215,7 +215,6 @@ trait Load {
 		}
 
 		$menus = apply_filters( 'simplybook_menus_values', $menus );
-
 		return array_values( $menus );
 	}
 
