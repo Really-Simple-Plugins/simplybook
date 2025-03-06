@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Features\Onboarding;
 
-use Simplybook_old\Api\Api;
+use SimplyBook\App;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
@@ -10,13 +10,11 @@ use SimplyBook\Interfaces\FeatureInterface;
 class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
-    private Api $api;
 
     // todo - refactor legacy Api (NL14RSP2-6)
-    public function __construct(OnboardingService $service, Api $legacyApi)
+    public function __construct(OnboardingService $service)
     {
         $this->service = $service;
-        $this->api = $legacyApi;
     }
 
     public function register()
@@ -34,7 +32,7 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this->service, 'storeEmailAddress'],
         ];
 
-        $routes['onboarding/tips_and_tricks'] = [
+        $routes['onboarding/tipstricks'] = [
             'methods' => 'POST',
             'callback' => [$this->service, 'storeTipsAndTricksChoice'],
         ];
@@ -82,7 +80,7 @@ class OnboardingController implements FeatureInterface
         $this->service->storeCompanyData($companyBuilder);
 
         // Register it
-        $response = $this->api->register_company();
+        $response = App::provide('client')->register_company();
 
         //store step, to start with on return of user.
         $step = ($response->success ? 3 : 1);
@@ -99,7 +97,7 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
-        $response = $this->api->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
+        $response = App::provide('client')->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
 
         $step = ($response->success ? 4 : 3);
         $this->service->setOnboardingStep($step);
