@@ -1,6 +1,8 @@
 <?php
 namespace Simplybook_old\Traits;
 
+use SimplyBook\App;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -153,7 +155,7 @@ trait Load {
 
 		$fields = $this->fields;
 	    if ( count($this->fields) === 0 ) {
-		    $fields = include( SIMPLYBOOK_PATH . 'includes/Config/Fields.php' );
+		    $fields = App::fields();
 		    $fields = apply_filters( 'simplybook_fields', $fields );
 	    }
 
@@ -191,7 +193,7 @@ trait Load {
 	 */
 	public function menu(): array
 	{
-		$menus = include( SIMPLYBOOK_PATH . 'includes/Config/Menus.php' );
+		$menus = App::menus();
 		$menus = apply_filters('simplybook_menu', $menus);
 
 		foreach ( $menus as $key => $menu ) {
