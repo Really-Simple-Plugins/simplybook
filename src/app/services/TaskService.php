@@ -10,6 +10,16 @@ class TaskService
 {
     use HasAllowlistControl;
 
+    const TASK_OPTION_PREFIX = 'simplybook_task_';
+
+    /**
+     * Return the raw tasks configuration using the App::tasks() method.
+     */
+    public function getRawTasksConfig(): array
+    {
+        return App::tasks();
+    }
+
     /**
      * Add a task to the list of tasks. The given taskID will be sanitized as a
      * slug and formatted like 'simplybook_task_{taskID}'. Existing tasks will
@@ -17,7 +27,7 @@ class TaskService
      */
     public function addTask(string $taskId): void
     {
-        update_option('simplybook_task_' . sanitize_title($taskId), true, false);
+        update_option(self::TASK_OPTION_PREFIX . sanitize_title($taskId), true, false);
     }
 
     /**
@@ -27,15 +37,19 @@ class TaskService
      */
     public function dismissTask(string $taskId): void
     {
-        delete_option('simplybook_task_' . sanitize_title($taskId));
+        delete_option(self::TASK_OPTION_PREFIX . sanitize_title($taskId));
     }
 
     /**
-     * Return the raw tasks configuration using the App::tasks() method.
+     * Check if a task is completed by checking if the option exists in the
+     * database. The taskID will be sanitized as a slug and formatted like
+     * 'simplybook_task_{taskID}'. If the option exists, the task is active and
+     * not completed yet.
      */
-    public function getRawTasksConfig(): array
+    public function taskIsCompleted(string $taskId): bool
     {
-        return App::tasks();
+        $taskExist = (bool) get_option(self::TASK_OPTION_PREFIX . sanitize_title($taskId), false);
+        return $taskExist === false;
     }
 
     /**
@@ -137,7 +151,7 @@ class TaskService
         $tasks = $this->getRawTasksConfig();
 
         foreach ($tasks as $key => $task) {
-            if (get_option('simplybook_task_' . sanitize_title($task['id']), false)) {
+            if ($this->taskIsCompleted($task['id'])) {
                 continue;
             }
 
