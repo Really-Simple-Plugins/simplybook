@@ -22,7 +22,7 @@ return [
             'link' => '/services/new',
         ],
     ],
-    // todo - this entry has the same ID as the previous one, why?
+    // todo - this entry had the same ID as the previous one, why?
     'add_service_todo' => [
         'id' => 'add_service_todo',
         'condition' => [

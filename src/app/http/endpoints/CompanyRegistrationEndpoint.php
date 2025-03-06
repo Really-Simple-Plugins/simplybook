@@ -72,7 +72,6 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     {
         $client = App::provide('client');
         $storage = $this->retrieveHttpStorage($request);
-        $data = $request->get_json_params();
 
         if ($storage->getBoolean('success') === false) {
             if ($storage->isNotEmpty('error.message')) {
@@ -93,6 +92,6 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
 
         $this->cleanup_callback_url();
 
-        $this->service->validateTasks();
+        $this->service->validateTaskConditions();
     }
 }

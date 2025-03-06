@@ -10,17 +10,30 @@ class TaskService
 {
     use HasAllowlistControl;
 
+    /**
+     * Add a task to the list of tasks. The given taskID will be sanitized as a
+     * slug and formatted like 'simplybook_task_{taskID}'. Existing tasks will
+     * be overwritten.
+     */
     public function addTask(string $taskId): void
     {
         update_option('simplybook_task_' . sanitize_title($taskId), true, false);
     }
 
+    /**
+     * Dismiss a task by taskId. The given taskID will be sanitized as a slug
+     * and formatted like 'simplybook_task_{taskID}' to find and delete the
+     * option.
+     */
     public function dismissTask(string $taskId): void
     {
         delete_option('simplybook_task_' . sanitize_title($taskId));
     }
 
-    public function getRawTasks(): array
+    /**
+     * Return the raw tasks configuration using the App::tasks() method.
+     */
+    public function getRawTasksConfig(): array
     {
         return App::tasks();
     }
@@ -31,36 +44,56 @@ class TaskService
      */
     public function addInitialTasks(): void
     {
-        $tasks = $this->getRawTasks();
+        $tasks = $this->getRawTasksConfig();
         foreach ($tasks as $task) {
             if (isset($task['condition']['type']) && $task['condition']['type'] === 'activation') {
-                update_option('simplybook_task_' . $task['id'], true, false);
+                $this->addTask($task['id']);
             }
         }
     }
 
-    public function validateTasks(): void
+    /**
+     * Validate the tasks by checking the conditions of each task. If the
+     * condition is met, the task will be dismissed, otherwise it will be added
+     * or updated.
+     */
+    public function validateTaskConditions(): void
     {
-        $tasks = $this->getRawTasks();
-        foreach ($tasks as $task) {
-            if (isset($task['condition']['type']) && $task['condition']['type'] === 'serverside') {
-                $invert = str_contains($task['condition']['function'], '!');
-                $function = $invert ? substr($task['condition']['function'], 1) : $task['condition']['function'];
-                $isValid = $this->validateFunction($function);
+        $tasks = $this->getRawTasksConfig();
+        $serversideFunctionableTasks = array_filter($tasks, function($task) {
+            return (
+                isset($task['condition']['function'])
+                && (isset($task['condition']['type']) && $task['condition']['type'] === 'serverside')
+            );
+        });
 
-                if ($invert) {
-                    $isValid = !$isValid;
-                }
-                if ($isValid) {
-                    $this->dismissTask($task['id']);
-                } else {
-                    $this->addTask($task['id']);
-                }
+        foreach ($serversideFunctionableTasks as $task) {
+            $taskFunction = $task['condition']['function'];
+            $taskCompletedWhenFalse = str_contains($taskFunction, '!');
+
+            // Remove the '!' from the function name if needed
+            $taskFunction = $taskCompletedWhenFalse ? substr($taskFunction, 1) : $taskFunction;
+
+            $taskCompleted = $this->functionableConditionIsMet($taskFunction);
+
+            if ($taskCompletedWhenFalse) {
+                $taskCompleted = !$taskCompleted;
+            }
+
+            if ($taskCompleted) {
+                $this->dismissTask($task['id']);
+            } else {
+                $this->addTask($task['id']);
             }
         }
     }
 
-    public function validateFunction(string $function): bool
+    /**
+     * Method can process a given function as a string. Currently used to check
+     * if the function in the condition of a task returns true.
+     * @see validateTaskConditions
+     */
+    private function functionableConditionIsMet(string $function): bool
     {
         if ($this->userCanManage() === false) {
             return false;
@@ -90,10 +123,18 @@ class TaskService
         return false;
     }
 
+    /**
+     * Get the tasks, including those that are not completed yet and those that
+     * are completed. We recognize completed tasks by checking if the option
+     * exists in the database.
+     *
+     * @return array The list of tasks, with completed tasks at the end and
+     * premium tasks at the very end.
+     */
     public function getTasks(): array
     {
         $completedTasks = [];
-        $tasks = $this->getRawTasks();
+        $tasks = $this->getRawTasksConfig();
 
         foreach ($tasks as $key => $task) {
             if (get_option('simplybook_task_' . sanitize_title($task['id']), false)) {

@@ -34,7 +34,7 @@ class TaskController implements ControllerInterface
      */
     public function updateTasks(): void
     {
-        $taskData = $this->service->getRawTasks();
+        $taskData = $this->service->getRawTasksConfig();
         // todo, is this a completed method?
     }
 }
