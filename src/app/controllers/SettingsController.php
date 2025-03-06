@@ -1,5 +1,5 @@
 <?php
-namespace SimplyBook\App;
+namespace SimplyBook\App\Controllers;
 
 use Simplybook_old\Traits\Save;
 use SimplyBook\Interfaces\ControllerInterface;

@@ -1,5 +1,5 @@
 <?php
-namespace SimplyBook\App;
+namespace SimplyBook\App\Controllers;
 
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;

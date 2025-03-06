@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use CapabilityController instead
- * @see \SimplyBook\App\CapabilityController
+ * @see \SimplyBook\App\controllers\CapabilityController
  */
 class Capability {
     public function __construct() {

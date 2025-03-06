@@ -1,7 +1,6 @@
 <?php
-namespace SimplyBook\App;
+namespace SimplyBook\App\Controllers;
 
-use Simplybook_old\Admin\Tasks\Tasks;
 use SimplyBook\App\Services\TaskService;
 use SimplyBook\Interfaces\ControllerInterface;
 

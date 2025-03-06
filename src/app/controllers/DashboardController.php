@@ -1,15 +1,13 @@
 <?php
-namespace SimplyBook\App;
+namespace SimplyBook\App\Controllers;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasViews;
+use Simplybook_old\Traits\Load;
+use Simplybook_old\Traits\Helper;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-
-// todo
-use Simplybook_old\Traits\Load;
-use Simplybook_old\Traits\Helper;
 
 class DashboardController implements ControllerInterface
 {

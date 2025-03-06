@@ -130,18 +130,18 @@ class Plugin
     public function registerControllers()
     {
         $this->controllerManager->registerControllers([
-            new App\DashboardController(),
-            new App\AdminController(),
-            new App\SettingsController(),
-            new App\FrontendController(),
-            new App\CapabilityController(
+            new App\Controllers\DashboardController(),
+            new App\Controllers\AdminController(),
+            new App\Controllers\SettingsController(),
+            new App\Controllers\FrontendController(),
+            new App\Controllers\CapabilityController(
                 new App\Services\CapabilityService(),
             ),
-            new App\TaskController(
+            new App\Controllers\TaskController(
                 new App\Services\TaskService(),
             ),
-            new App\ApiController(),
-            new App\ScheduleController(),
+            new App\Controllers\ApiController(),
+            new App\Controllers\ScheduleController(),
         ]);
     }
 
