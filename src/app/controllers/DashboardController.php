@@ -81,7 +81,8 @@ class DashboardController implements ControllerInterface
     }
 
     /**
-     * Get the default navigation items for the dashboard
+     * Get the default navigation items for the dashboard.
+     * @internal This is solely used in the skeleton view!
      * @uses apply_filters simplybook_dashboard_menu_items
      */
     private function getNavigationItems(): array
