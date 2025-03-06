@@ -42,7 +42,7 @@ class WaitForRegistrationEndpoint implements SingleEndpointInterface
     /**
      * Check if the registration callback has been completed
      */
-    public function check_registration_callback_status(\WP_REST_Request $request): \WP_REST_Response
+    public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $completed  = (get_option('simplybook_refresh_company_token_expiration') > 0);
         return $this->sendHttpResponse([
