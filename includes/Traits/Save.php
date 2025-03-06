@@ -120,6 +120,7 @@ trait Save {
 
         //todo - parsing all fields like this for each save is quite heavy just to know the type
         // todo - also this is redundant when used as in the OnboardingService
+        // todo - it IS the only way to get the field now as I nested the fields in its own group with the groupname equal to the filename
         $field = $this->get_field_by_id($key);
 
         //don't save if not found

@@ -153,31 +153,31 @@ trait Load {
 			return $this->fields;
 		}
 
-		$fields = $this->fields;
-	    if ( count($this->fields) === 0 ) {
-		    $fields = App::fields()->all();
-		    $fields = apply_filters( 'simplybook_fields', $fields );
-	    }
+        $fields = [];
+        $fieldsConfig = App::fields()->all();
+        $fieldsConfig = apply_filters( 'simplybook_fields', $fieldsConfig );
 
-        foreach ( $fields as $key => $field ) {
-            $field = wp_parse_args( $field, [
-                'id' => false,
-                'menu_id' => 'general',
-                'group_id' => 'general',
-                'type' => 'text',
-                'visible' => true,
-                'disabled' => false,
-                'default' => false,
-                'encrypt' => false,
-                'label' => '',
-            ] );
+        foreach ( $fieldsConfig as $groupID => $fieldGroup ) {
+            foreach ( $fieldGroup as $key => $field ) {
+                $field = wp_parse_args( $field, [
+                    'id' => false,
+                    'menu_id' => 'general',
+                    'group_id' => 'general',
+                    'type' => 'text',
+                    'visible' => true,
+                    'disabled' => false,
+                    'default' => false,
+                    'encrypt' => false,
+                    'label' => '',
+                ] );
 
-            //only preload field values for logged in admins
-            if ( $load_values && $this->user_can_manage() ) {
-                $value          = $this->get_option( $field['id'], $field['default'] );
-                $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
+                //only preload field values for logged in admins
+                if ( $load_values && $this->user_can_manage() ) {
+                    $value          = $this->get_option( $field['id'], $field['default'] );
+                    $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
+                }
+                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
             }
-            $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
         }
 
         $fields = apply_filters( 'simplybook_fields_values', $fields );
