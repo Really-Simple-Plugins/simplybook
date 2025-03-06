@@ -102,3 +102,18 @@ if (!function_exists('simplybookMePl_getAllowedHtmlEntities')) {
         return $allowedEnt;
     }
 }
+
+if (!function_exists('simplybook_is_wp_json_request')) {
+    /**
+     * Check if the current request is a WP JSON request. This is better than
+     * the WordPress native function `wp_is_json_request()`, because that
+     * returns false when visiting /wp-json/ endpoint. We need a true value
+     * there to activate features that register REST routes. For example
+     * {@see \SimplyBook\Features\Onboarding\OnboardingController}
+     */
+    function simplybook_is_wp_json_request(): bool {
+        $restUrlPrefix = trailingslashit(rest_get_url_prefix());
+        $currentRequestUri = ($_SERVER['REQUEST_URI'] ?? '');
+        return (strpos($currentRequestUri, $restUrlPrefix) !== false);
+    }
+}
