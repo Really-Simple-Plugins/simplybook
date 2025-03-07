@@ -16,5 +16,6 @@
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["src", "src/global.d.ts"]
+  "include": [
+    "src", "src/global.d.ts"]
 }

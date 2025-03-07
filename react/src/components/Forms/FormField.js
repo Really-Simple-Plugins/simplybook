@@ -3,7 +3,7 @@ import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
 import SelectField from "../Fields/SelectField";
-import ErrorBoundary from "../../components/Common/ErrorBoundary";
+import ErrorBoundary from "../Common/ErrorBoundary";
 import {memo, useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import ColorPickerField from "../Fields/ColorPickerField";

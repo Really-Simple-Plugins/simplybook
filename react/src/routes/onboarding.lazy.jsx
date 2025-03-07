@@ -1,5 +1,5 @@
 import { createLazyFileRoute, Outlet } from "@tanstack/react-router";
-import { ReactComponent as Logo } from "../../../img/logo.svg";
+import { ReactComponent as Logo } from "../../../assets/img/logo.svg";
 import { __ } from "@wordpress/i18n";
 import OnboardingFooter from "../components/Onboarding/OnboardingFooter";
 
