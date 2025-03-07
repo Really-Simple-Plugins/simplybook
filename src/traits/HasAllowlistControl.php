@@ -17,11 +17,6 @@ trait HasAllowlistControl
      */
     public function adminAccessAllowed(): bool
     {
-        // During activation, we need to allow access
-        if (get_option('simplybook_run_activation')) {
-            return true;
-        }
-
         $wpcli = defined( 'WP_CLI' ) && WP_CLI;
         $currentUserCanVisitAdmin = (is_admin() && current_user_can('simplybook_manage'));
 

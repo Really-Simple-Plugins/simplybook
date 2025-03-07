@@ -1,14 +1,11 @@
 <?php
 namespace SimplyBook\App\Controllers;
 
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\App\Services\CapabilityService;
 
 class CapabilityController implements ControllerInterface
 {
-    use HasAllowlistControl;
-
     private CapabilityService $service;
 
     public function __construct(CapabilityService $service)
@@ -18,11 +15,6 @@ class CapabilityController implements ControllerInterface
 
     public function register()
     {
-        // todo - this is true on activation. Ask Rogier if this check is needed in this class?
-        if ($this->adminAccessAllowed() === false) {
-            return;
-        }
-
         add_action('simplybook_activation', [$this, 'handlePluginActivation']);
         add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
         add_action('wp_initialize_site', array( $this, 'addCapabilityToNewSubsite'), 10 ,2);
