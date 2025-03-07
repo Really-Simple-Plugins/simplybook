@@ -6,6 +6,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+/**
+ * @deprecated Use {@see \SimplyBook\App\Controllers\FrontendController} instead.
+ */
 class Shortcodes {
     use Widget;
 
