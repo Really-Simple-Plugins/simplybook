@@ -3,3 +3,6 @@
 
 /* To use our current tailwind.config.js we now use @config in this CSS file */
 @config "../tailwind.config.js";
+
+/* load the safelist */
+@source "../safelist.txt"

@@ -1,0 +1,16 @@
+# Safelist as a work-around for Tailwind v4
+
+# borders
+rounded-md
+border
+border-gray-300
+
+# backgrounds
+bg-white
+
+# shadows
+shadow-lg
+
+# Absolute positions
+after:top-1
+after:top-0.5
