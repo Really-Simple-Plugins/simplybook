@@ -23,7 +23,7 @@ const Header = () => {
   }, [onboardingCompleted]);
 
   const linkClassName =
-    "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-none";
+    "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden";
 
   return (
     <div className="bg-white">
