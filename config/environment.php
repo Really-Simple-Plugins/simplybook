@@ -23,6 +23,8 @@ return [
     ],
     'simplybook' => [
         'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
+        'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
+        'widget_script_version' => '1.3.0',
     ],
     'http' => [
         'version' => 'v1',

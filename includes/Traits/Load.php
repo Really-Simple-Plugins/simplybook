@@ -87,31 +87,6 @@ trait Load {
     }
 
     /**
-     * Get the widget settings
-     *
-     * @return array
-     */
-    public function get_widget_settings(): array
-    {
-        $fields = $this->get_fields_by_attribute( 'widget_field', true );
-        $widget_fields = [];
-        foreach ( $fields as $field ) {
-            if ( $field['widget_field'] === '/') {
-                $widget_fields[ $field['id'] ] = $this->get_option( $field['id'] );
-            } else {
-                $widget_fields[ $field['widget_field'] ][ $field['id'] ] = $this->get_option( $field['id'] );
-            }
-        }
-        $widget_fields['is_rtl'] = (int) is_rtl();
-
-        if ( !is_array($widget_fields['predefined']) ) {
-            $widget_fields['predefined'] = [];
-        }
-
-        return $widget_fields;
-    }
-
-    /**
      * Get array of fields of a specific type. Also loads the values
      *
      * @param string $attribute

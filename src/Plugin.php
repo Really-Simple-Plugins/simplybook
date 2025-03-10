@@ -133,7 +133,7 @@ class Plugin
             new App\Controllers\DashboardController(),
             new App\Controllers\AdminController(),
             new App\Controllers\SettingsController(),
-            new App\Controllers\FrontendController(),
+            new App\Controllers\WidgetController(),
             new App\Controllers\CapabilityController(
                 new App\Services\CapabilityService(),
             ),

@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Trait admin helper
  *
  * @since   3.0
- * @deprecated Use {@see \SimplyBook\Traits\HasWidgets} instead.
+ * @deprecated Use {@see \SimplyBook\Builders\WidgetScriptBuilder} instead.
  */
 trait Widget {
     use Load;
