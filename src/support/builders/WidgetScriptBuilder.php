@@ -27,6 +27,8 @@ class WidgetScriptBuilder
         'service'
     ];
 
+    protected string $fallbackAttribute = 'location';
+
     /**
      * Build the widget based on the given type, settings and attributes
      * @throws BuilderException
@@ -124,7 +126,7 @@ class WidgetScriptBuilder
      */
     private function sanitizeAttribute(string $attribute ): string
     {
-        return in_array($attribute, $this->acceptedAttributes) ? sanitize_text_field($attribute) : 'location';
+        return in_array($attribute, $this->acceptedAttributes) ? sanitize_text_field($attribute) : $this->fallbackAttribute;
     }
 
     /**
