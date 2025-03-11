@@ -9,7 +9,7 @@ use SimplyBook\Interfaces\ControllerInterface;
 
 class WidgetController implements ControllerInterface
 {
-    use Load;
+    use LegacyLoad;
 
     public function register()
     {

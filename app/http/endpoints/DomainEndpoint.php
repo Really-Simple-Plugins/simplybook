@@ -9,7 +9,7 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class DomainEndpoint implements SingleEndpointInterface
 {
-    use Save;
+    use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
 

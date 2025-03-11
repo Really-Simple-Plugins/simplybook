@@ -15,9 +15,9 @@ use SimplyBook\Http\DTO\ApiResponseDTO;
  */
 class ApiClient
 {
-    use Load;
-    use Save;
-    use Helper;
+    use LegacyLoad;
+    use LegacySave;
+    use LegacyHelper;
 
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [

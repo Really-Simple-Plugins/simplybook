@@ -8,8 +8,8 @@ use SimplyBook\Traits\HasRestAccess;
 
 class OnboardingService
 {
-    use Helper;
-    use Save;
+    use LegacyHelper;
+    use LegacySave;
     use HasRestAccess;
 
     /**

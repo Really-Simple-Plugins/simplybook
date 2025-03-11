@@ -9,7 +9,7 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class TaskEndpoints implements MultiEndpointInterface
 {
-    use Save;
+    use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
 

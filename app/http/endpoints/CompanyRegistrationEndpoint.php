@@ -10,7 +10,7 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class CompanyRegistrationEndpoint implements SingleEndpointInterface
 {
-    use Save;
+    use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
 

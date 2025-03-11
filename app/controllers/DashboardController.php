@@ -11,8 +11,8 @@ use SimplyBook\Interfaces\ControllerInterface;
 
 class DashboardController implements ControllerInterface
 {
-    use Helper; // Needed for Load lol, bad stuffs
-    use Load; // Needed for get_option
+    use LegacyHelper; // Needed for Load lol, bad stuffs
+    use LegacyLoad; // Needed for get_option
     use HasViews;
     use HasUserAccess;
     use HasAllowlistControl;

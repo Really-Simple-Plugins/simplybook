@@ -7,7 +7,7 @@ use SimplyBook\Interfaces\ControllerInterface;
 class SettingsController implements ControllerInterface
 {
     // todo
-    use Save;
+    use LegacySave;
 
     public function register()
     {

@@ -8,7 +8,7 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class SettingEndpoints implements MultiEndpointInterface
 {
-    use Save;
+    use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
 

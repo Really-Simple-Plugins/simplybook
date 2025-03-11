@@ -9,7 +9,7 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class LoginUrlEndpoint implements SingleEndpointInterface
 {
-    use Save; // todo
+    use LegacySave; // todo
     use HasRestAccess;
     use HasAllowlistControl;
 
