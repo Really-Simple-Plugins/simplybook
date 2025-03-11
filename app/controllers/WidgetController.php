@@ -2,7 +2,7 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
-use Simplybook_old\Traits\Load;
+use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;

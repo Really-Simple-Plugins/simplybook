@@ -1,16 +1,16 @@
 <?php
-namespace Simplybook_old\Traits;
+namespace SimplyBook\Traits;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 /**
  * Trait admin helper
- * @deprecated Use {@see \SimplyBook\Traits\LegacyHelper} instead
+ *
  * @since   3.0
  *
  */
-trait Helper {
+trait LegacyHelper {
     /**
      * Check manage capability
      *

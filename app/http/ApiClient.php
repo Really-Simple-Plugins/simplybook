@@ -5,9 +5,9 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Simplybook_old\Traits\Load;
-use Simplybook_old\Traits\Save;
-use Simplybook_old\Traits\Helper;
+use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Traits\LegacySave;
+use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Http\DTO\ApiResponseDTO;
 
 /**

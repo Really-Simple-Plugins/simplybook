@@ -2,7 +2,7 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
-use Simplybook_old\Traits\Save;
+use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Services\TaskService;
 use SimplyBook\Traits\HasAllowlistControl;

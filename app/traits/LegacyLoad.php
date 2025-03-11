@@ -1,5 +1,5 @@
 <?php
-namespace Simplybook_old\Traits;
+namespace SimplyBook\Traits;
 
 use SimplyBook\App;
 
@@ -10,9 +10,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * todo
  * Give proper name and make it follow Single Responsibility Principle
- * @deprecated Use {@see \SimplyBook\Traits\LegacyLoad} instead
  */
-trait Load {
+trait LegacyLoad {
 	public $fields = [];
 	public $values_loaded = false;
 

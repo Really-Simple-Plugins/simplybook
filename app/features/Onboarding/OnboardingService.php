@@ -1,7 +1,7 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
-use Simplybook_old\Traits\Save;
-use Simplybook_old\Traits\Helper;
+use SimplyBook\Traits\LegacySave;
+use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Traits\HasRestAccess;

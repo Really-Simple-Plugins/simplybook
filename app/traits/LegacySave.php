@@ -1,15 +1,14 @@
 <?php
-namespace Simplybook_old\Traits;
+namespace SimplyBook\Traits;
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 /**
  * @Rogier maybe move to Admin?
- * @deprecated Use {@see \SimplyBook\Traits\LegacySave} instead
  */
-trait Save {
-    use Load;
-    use Helper;
+trait LegacySave {
+    use LegacyLoad;
+    use LegacyHelper;
     /**
      * Get options the old way
      *

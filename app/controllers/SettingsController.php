@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use Simplybook_old\Traits\Save;
+use SimplyBook\Traits\LegacySave;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class SettingsController implements ControllerInterface

@@ -3,8 +3,8 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
 use SimplyBook\Traits\HasViews;
-use Simplybook_old\Traits\Load;
-use Simplybook_old\Traits\Helper;
+use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
