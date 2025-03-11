@@ -2,12 +2,10 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
-use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
-    use HasRestAccess;
 
     const ROUTE = 'internal';
 
@@ -27,63 +25,89 @@ class BlockEndpoints implements MultiEndpointInterface
     {
         return [
             self::ROUTE . '/is-authorized' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'isAuthorized'],
             ],
             self::ROUTE . '/locations' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getLocations'],
             ],
             self::ROUTE . '/services' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getServices'],
             ],
             self::ROUTE . '/categories' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getCategories'],
             ],
             self::ROUTE . '/providers' => [
-                'methods' => \WP_REST_Server::READABLE,
+                'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getProviders'],
             ],
         ];
     }
 
+    /**
+     * Check if the user is authorized to use the plugin
+     */
     public function isAuthorized(): bool
     {
-        return App::provide('client')->company_registration_complete();
+        $cacheKey = 'simplybook_blockendpoints_is_authorized';
+        if ($cache = wp_cache_get($cacheKey, 'simplybook')) {
+            return $cache;
+        }
+
+        $isAuthorized = App::provide('client')->company_registration_complete();
+
+        wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
+        return $isAuthorized;
     }
 
-    public function getLocations()
+    /**
+     * Return the locations as an array.
+     */
+    public function getLocations(): array
     {
-        if (!$this->isAuthorized()){
+        if (!$this->isAuthorized()) {
             return [];
         }
 
         return App::provide('client')->getLocations(true);
     }
 
+    /**
+     * Return the categories as an array.
+     */
     public function getCategories()
     {
-        if (!$this->isAuthorized()){
+        if (!$this->isAuthorized()) {
             return [];
         }
 
         return App::provide('client')->getCategories(true);
     }
 
-    public function getServices()
+    /**
+     * Deprecated when the {@see \SimplyBook\Http\Endpoints\ServicesEndpoint}
+     * response can be handled by the Gutenberg block.
+     */
+    public function getServices(): array
     {
-        if (!$this->isAuthorized()){
+        if (!$this->isAuthorized()) {
             return [];
         }
 
         return App::provide('client')->getServices(true);
     }
 
+    /**
+     * Deprecated when the {@see \SimplyBook\Http\Endpoints\ProvidersEndpoint}
+     * also adds the 'any' provider to the response. And when the Gutenberg
+     * block can handle the response.
+     */
     public function getProviders()
     {
-        if (!$this->isAuthorized()){
+        if (!$this->isAuthorized()) {
             return [];
         }
 

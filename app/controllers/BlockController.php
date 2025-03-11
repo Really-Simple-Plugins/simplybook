@@ -1,18 +1,10 @@
 <?php namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
-use Simplybook_old\Traits\Helper;
-use Simplybook_old\Api\InternalApi;
-use Simplybook_old\Frontend\Traits\Widget;
 use SimplyBook\Interfaces\ControllerInterface;
 
-// todo - START- registering block did not work if all the block files are not
-// in the same folder. WHY?!
 class BlockController implements ControllerInterface
 {
-    use Helper;
-    use Widget;
-
     public function register()
     {
         if (!function_exists('register_block_type')) {
@@ -77,6 +69,7 @@ class BlockController implements ControllerInterface
             'simplybook-block',
             'simplybook',
             [
+                'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
@@ -89,6 +82,9 @@ class BlockController implements ControllerInterface
 
         wp_register_style('simplybookMePl_widget_styles', $indexCss);
         wp_enqueue_style('simplybookMePl_widget_styles');
+
+        $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
+        wp_enqueue_style('simplybook-font', $iconCss);
 
         wp_set_script_translations('simplybook-block', 'simplybook');
     }

@@ -5,6 +5,7 @@ import { useEffect, useState } from '@wordpress/element';
 import './editor.scss';
 import SettingsModal from "./setting.modal";
 import React from "react";
+import request from "../../../react/src/api/requests/request";
 
 export default function Edit(props) {
 	const { attributes, setAttributes } = props;
@@ -19,31 +20,25 @@ export default function Edit(props) {
 	const [modalContent, setModalContent] = useState('');
 	const previewModal = React.createRef();
 
-	const apiUrl = '/wp-json/simplybook/v1/internal/';
-
 	useEffect(() => {
 		const fetchData = async (endpoint) => {
-			const response = await fetch(apiUrl + endpoint);
-			const data = await response.json();
-			return data;
+			return await request(endpoint, "POST");
 		};
 
-		fetchData('is-authorized').then(setIsUserAuthorized);
+		fetchData('internal/is-authorized').then(setIsUserAuthorized);
 
-		if (isUserAuthorized) {
-			Promise.all([
-				fetchData('locations'),
-				fetchData('categories'),
-				fetchData('services'),
-				fetchData('providers')
-			]).then(([locations, categories, services, providers]) => {
-				setLocations(locations);
-				setCategories(categories);
-				setServices(services);
-				setProviders(providers);
-			});
-		}
-	}, [isUserAuthorized]);
+		Promise.all([
+			fetchData('internal/locations'),
+			fetchData('internal/categories'),
+			fetchData('internal/services'),
+			fetchData('internal/providers')
+		]).then(([locations, categories, services, providers]) => {
+			setLocations(locations);
+			setCategories(categories);
+			setServices(services);
+			setProviders(providers);
+		});
+	}, []);
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
@@ -93,7 +88,7 @@ export default function Edit(props) {
 		if(attributes.provider) {
 			formData.append('formData[predefined][provider]', attributes.provider);
 		}
-		formData.append('_wpnonce', window.simplybookData?.nonce);
+		formData.append('_wpnonce', window.simplybook.nonce);
 
 		//convert to string  'orem=ipsum&name=binny';
 		formData = new URLSearchParams(formData).toString();
