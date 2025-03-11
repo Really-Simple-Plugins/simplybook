@@ -4,7 +4,7 @@ import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
 
 const menuItemClassName =
-  "py-2 px-5 border-l-4 text-black border-transparent [&.active]:border-tertiary hover:border-gray-500 hover:bg-gray-100 focus:outline-none";
+  "py-2 px-5 border-l-4 text-black border-transparent [&.active]:border-tertiary hover:border-gray-500 hover:bg-gray-100 focus:outline-hidden";
 
 const SettingsMenuItem = React.memo(({ item }) => {
   const isExternalLink = Boolean(item.url);

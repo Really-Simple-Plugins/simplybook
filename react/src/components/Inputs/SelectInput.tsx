@@ -39,7 +39,7 @@ const SelectInput = React.forwardRef<HTMLButtonElement, SelectInputProps>(
             <Select.Root value={value} onValueChange={onChange}>
                 <Select.Trigger
                     ref={ref}
-                    className="flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-none focus:ring"
+                    className="flex w-full items-center justify-between rounded-md border border-gray-300 p-2 focus:border-tertiary focus:outline-hidden focus:ring"
                 >
                     <Select.Value placeholder="Select an option…" />
                     <Select.Icon className="ml-2">
