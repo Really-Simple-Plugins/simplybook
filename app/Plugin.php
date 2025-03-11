@@ -173,6 +173,7 @@ class Plugin
             new Http\Endpoints\RelatedPluginEndpoints(
                 new Services\RelatedPluginService(),
             ),
+            new Http\Endpoints\BlockEndpoints(),
         ]);
     }
 

@@ -19,7 +19,7 @@ export default function Edit(props) {
 	const [modalContent, setModalContent] = useState('');
 	const previewModal = React.createRef();
 
-	const apiUrl = '/wp-json/simplybook/';
+	const apiUrl = '/wp-json/simplybook/v1/internal/';
 
 	useEffect(() => {
 		const fetchData = async (endpoint) => {

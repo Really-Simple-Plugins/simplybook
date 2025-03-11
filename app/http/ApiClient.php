@@ -1114,59 +1114,72 @@ class ApiClient
     //X-Token: <insert your token from auth step>
     //Response in JSON format
     //With cache data on 30 minutes
-    public function getProviders()
+    public function getProviders(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_providers' . $this->_commonCacheKey;
 
         if (($result = get_transient($cacheKey)) !== false) {
             return $result['data'];
         }
-        $url = $this->_getApiUrl() . 'admin/providers';
-        return $this->makeApiCall($url, $cacheKey);
+
+        $response = $this->api_call('admin/providers', [], 'GET');
+        $result = $response['data'] ?? [];
+
+        return $onlyValues ? array_values($result) : $result;
     }
 
-    public function getServices()
+    public function getServices(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_services' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
             return $result['data'];
         }
-        $url = $this->_getApiUrl() . 'admin/services';
-        return $this->makeApiCall($url, $cacheKey);
+
+        $response = $this->api_call('admin/services', [], 'GET');
+        $result = $response['data'] ?? [];
+
+        return $onlyValues ? array_values($result) : $result;
     }
 
-    public function getCategories()
+    public function getCategories(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_categories' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
             return $result['data'];
         }
-        $url = $this->_getApiUrl() . 'admin/categories';
-        return $this->makeApiCall($url, $cacheKey);
+
+        $response = $this->api_call('admin/categories', [], 'GET');
+        $result = $response['data'] ?? [];
+
+        return $onlyValues ? array_values($result) : $result;
     }
 
-    public function getLocations()
+    public function getLocations(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_locations' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
             return $result['data'];
         }
-        $url = $this->_getApiUrl() . 'admin/locations';
-        return $this->makeApiCall($url, $cacheKey);
+
+        $response = $this->api_call('admin/locations', [], 'GET');
+        $result = $response['data'] ?? [];
+
+        return $onlyValues ? array_values($result) : $result;
     }
 
-    public function getPluginsList()
+    public function getSpecialFeatureList()
     {
         $cacheKey = 'sb_plugin_plugins' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
             return $result['data'];
         }
-        $url = $this->_getApiUrl() . 'admin/plugins';
-        return $this->makeApiCall($url, $cacheKey);
+
+        $response = $this->api_call('admin/plugins', [], 'GET');
+        return $response['data'] ?? [];
     }
 
-    public function isPluginEnabled($pluginKey){
-        $plugins = $this->getPluginsList();
+    public function isSpecialFeatureEnabled($pluginKey){
+        $plugins = $this->getSpecialFeatureList();
         if(!$plugins){
             return false;
         }

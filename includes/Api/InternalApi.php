@@ -4,6 +4,9 @@ namespace Simplybook_old\Api;
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 if ( !class_exists('InternalApi') ) {
+    /**
+     * @deprecated Use {@see \SimplyBook\Http\Endpoints\BlockEndpoints} instead
+     */
     class InternalApi
     {
         protected $auth = null;

@@ -22,85 +22,42 @@ class BlockController implements ControllerInterface
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorAssets']);
         add_action('init', [$this, 'registerBlockType']);
-        add_action( 'rest_api_init', array( $this, 'register_rest_route') );
     }
 
     /**
-     * Register the REST route
-     * @todo - refactor
+     * Register the SimplyBook Widget block
      */
-    public function register_rest_route(): void
-    {
-        $internalApi = new InternalApi();
-        register_rest_route( 'simplybook', '/is-authorized', array(
-            'methods' => 'GET',
-            'callback' => array($internalApi, 'isAuthorized'),
-            'permission_callback' => function () {
-                return $this->user_can_manage();
-            },
-        ));
-
-        register_rest_route( 'simplybook', '/locations', array(
-            'methods' => 'GET',
-            'callback' => array($internalApi, 'getLocations'),
-            'permission_callback' => function () {
-                return $this->user_can_manage();
-            },
-        ));
-
-        register_rest_route( 'simplybook', '/services', array(
-            'methods' => 'GET',
-            'callback' => array($internalApi, 'getServices'),
-            'permission_callback' => function () {
-                return $this->user_can_manage();
-            },
-        ));
-
-        register_rest_route( 'simplybook', '/categories', array(
-            'methods' => 'GET',
-            'callback' => array($internalApi, 'getCategories'),
-            'permission_callback' => function () {
-                return $this->user_can_manage();
-            },
-        ));
-
-        register_rest_route( 'simplybook', '/providers', array(
-            'methods' => 'GET',
-            'callback' => array($internalApi, 'getProviders'),
-            'permission_callback' => function () {
-                return $this->user_can_manage();
-            },
-        ));
-    }
-
     public function registerBlockType()
     {
         register_block_type('simplybook/widget', [
-            'title' => 'Simplybook Widget',
+            'title' => 'SimplyBook Widget',
             'icon' => 'simplybook',
             'category' => 'widgets',
             'render_callback' => [$this, 'addWidgetBlock'],
-            'attributes' => array(
-                'location' => array(
+            'attributes' => [
+                'location' => [
                     'type' => 'integer',
                     'default' => 0
-                ),
-                'category' => array(
+                ],
+                'category' => [
                     'type' => 'integer',
                     'default' => 0
-                ),
-                'provider' => array(
+                ],
+                'provider' => [
                     'type' => 'string', //any provide id = any
                     'default' => 'any'
-                ),
-                'service' => array(
+                ],
+                'service' => [
                     'type' => 'integer',
                     'default' => 0
-                ),
-            ),
+                ],
+            ],
         ]);
     }
 
+    /**
+     * Enqueue the block editor assets
+     */
     public function enqueueBlockEditorAssets()
     {
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
@@ -119,11 +76,11 @@ class BlockController implements ControllerInterface
         wp_localize_script(
             'simplybook-block',
             'simplybook',
-            array(
+            [
                 'rest_url' => get_rest_url(),
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
-            )
+            ]
         );
 
         //add widget.js script
@@ -136,11 +93,18 @@ class BlockController implements ControllerInterface
         wp_set_script_translations('simplybook-block', 'simplybook');
     }
 
+    /**
+     * Render the SimplyBook Widget block when the block is displayed on the
+     * front-end
+     */
     public function addWidgetBlock(array $attributes = []): string
     {
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
     }
 
+    /**
+     * Convert the attributes array to a string to be used in a shortcode
+     */
     private function attributesToString(array $attributes): string
     {
         $result = '';
