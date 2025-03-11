@@ -133,7 +133,6 @@ class Plugin
             new App\Controllers\DashboardController(),
             new App\Controllers\AdminController(),
             new App\Controllers\SettingsController(),
-            new App\Controllers\WidgetController(),
             new App\Controllers\CapabilityController(
                 new App\Services\CapabilityService(),
             ),
@@ -142,6 +141,9 @@ class Plugin
             ),
             new App\Controllers\ApiController(),
             new App\Controllers\ScheduleController(),
+
+            new App\Controllers\WidgetController(),
+            new App\Controllers\BlockController(),
         ]);
     }
 

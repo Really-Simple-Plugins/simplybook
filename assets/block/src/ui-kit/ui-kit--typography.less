@@ -1,0 +1,63 @@
+.wp-sb{
+  //set colors
+  .color-primary{color: @color-primary;}
+  .color-neutral-dark{color: @color-neutral-dark;}
+  .color-danger{color: @color-danger;}
+  .color-success{color: @color-success;}
+
+  // font weight
+  .--fw-bold{font-weight: @bold;}
+  .--fw-semibold{font-weight: @semibold;}
+  .--fw-normal{font-weight: @normal;}
+  .--fw-light{font-weight: @light;}
+
+  // texts
+  &--p{
+    font-size: 14px;
+    line-height: 1.44;
+    font-weight: normal;
+    padding: 0;
+    margin: 0;
+    font-family: @noto-sans;
+
+    &_secondary{color: @color-neutral;}
+    &_primary{color: @color-neutral-dark;}
+    &_small{font-size: 12px;}
+    &_caption{font-size: 16px;}
+    &_hint{
+      padding-left: 4px;
+      padding-top: 1px;
+      padding-bottom: 1px;
+      line-height: 1.22;
+      font-weight: normal;
+      font-style: italic;
+      color: @color-neutral;
+      border-left: 4px solid @color-primary;
+    }
+
+    &.--fw-bold{font-weight: @bold;}
+    &.--fw-semibold{font-weight: @semibold;}
+    &.--fw-normal{font-weight: @normal;}
+    &.--fw-light{font-weight: @light;}
+  }
+
+  // titles
+  &--title{
+    font-weight: @bold;
+    line-height: 1.46;
+    padding: 0;
+    margin: 0;
+    font-family: @mulish;
+    letter-spacing: 0.01em;
+
+    &_h2{font-size: 24px;}
+    &_h3{font-size: 18px;}
+    &_h4{font-size: 16px;}
+
+
+    &.--fw-bold{font-weight: @bold;}
+    &.--fw-semibold{font-weight: @semibold;}
+    &.--fw-normal{font-weight: @normal;}
+    &.--fw-light{font-weight: @light;}
+  }
+}

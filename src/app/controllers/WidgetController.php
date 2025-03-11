@@ -3,7 +3,6 @@ namespace SimplyBook\App\Controllers;
 
 use SimplyBook\App;
 use Simplybook_old\Traits\Load;
-use Simplybook_old\Frontend\Blocks\Blocks;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -14,8 +13,6 @@ class WidgetController implements ControllerInterface
 
     public function register()
     {
-        ( new Blocks() ); // todo
-
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
         add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
         add_shortcode('simplybook_booking_button', [$this, 'renderBookingButton']);

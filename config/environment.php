@@ -18,6 +18,7 @@ return [
         'lang' => plugin_basename(dirname(__DIR__)) . '/assets/languages',
         'url'  => plugin_dir_url(__DIR__),
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
+        'views_url' => plugin_dir_url(__DIR__).'src/views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
         'admin_url' => admin_url('admin.php?page=simplybook'),
     ],

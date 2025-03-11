@@ -74,7 +74,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $logoUrl = App::env('plugin.assets_url') . 'img/logo.svg';
+        $logoUrl = App::env('plugin.assets_url').'img/logo.svg';
         $navigation = $this->getNavigationItems();
 
         $this->render('admin/dashboard', compact('logoUrl', 'navigation'));
