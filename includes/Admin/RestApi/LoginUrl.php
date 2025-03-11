@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use SimplyBook\App\Endpoints\LoginUrlEndpoint instead:
- * {@see \SimplyBook\App\Http\Endpoints\LoginUrlEndpoint}
+ * {@see \SimplyBook\http\endpoints\LoginUrlEndpoint}
  */
 class LoginUrl extends RestApi {
 	use Helper;

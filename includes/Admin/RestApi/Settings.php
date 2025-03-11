@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use SettingEndpoints instead:
- * {@see \SimplyBook\App\Http\Endpoints\SettingEndpoints}
+ * {@see \SimplyBook\http\endpoints\SettingEndpoints}
  */
 class Settings extends RestApi {
     use Helper;

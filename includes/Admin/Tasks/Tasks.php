@@ -8,7 +8,7 @@ defined( 'ABSPATH' ) or die( '' );
  * Class Tasks
  * Task get added on activation, or on a server condition. If clientside condition is necessary is to be determined yet.
  *
- * @deprecated Use {@see \SimplyBook\App\Services\TaskService} instead.
+ * @deprecated Use {@see \SimplyBook\Services\TaskService} instead.
  * @package Simplybook_old\Admin\Tasks
  */
 class Tasks {

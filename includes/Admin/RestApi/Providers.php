@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use ProvidersEndpoint instead:
- * {@see \SimplyBook\App\Http\Endpoints\ProvidersEndpoint}
+ * {@see \SimplyBook\http\endpoints\ProvidersEndpoint}
  */
 class Providers extends RestApi {
 	use Helper;

@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated Use {@see \SimplyBook\App\Http\Endpoints\DashboardDataEndpoint}
+ * @deprecated Use {@see \SimplyBook\http\endpoints\DashboardDataEndpoint}
  * and {@see \SimplyBook\App\Endpoints\OtherPluginsDataEndpoint} instead
  */
 class Dashboard extends RestApi {

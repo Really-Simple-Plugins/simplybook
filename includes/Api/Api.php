@@ -4,15 +4,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use Simplybook_old\Api\ApiResponse\ApiResponse;
-use Simplybook_old\Traits\Helper;
 use Simplybook_old\Traits\Load;
 use Simplybook_old\Traits\Save;
+use Simplybook_old\Traits\Helper;
+use Simplybook_old\Api\ApiResponse\ApiResponse;
 
 
 /**
  * @deprecated 3.0.0 Use SimplyBook\App\Http\ApiClient instead:
- * {@see \SimplyBook\App\Http\ApiClient}
+ * {@see \SimplyBook\Http\ApiClient}
  */
 class Api
 {

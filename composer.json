@@ -20,23 +20,23 @@
   "autoload": {
     "psr-4": {
       "Simplybook_old\\": "includes/",
-      "SimplyBook\\Traits\\": "src/traits",
-      "SimplyBook\\Managers\\": "src/managers",
-      "SimplyBook\\Providers\\": "src/providers",
-      "SimplyBook\\Interfaces\\": "src/interfaces",
-      "SimplyBook\\Exceptions\\": "src/exceptions",
-      "SimplyBook\\Helpers\\": "src/support/helpers",
-      "SimplyBook\\Utility\\": "src/support/utility",
-      "SimplyBook\\Builders\\": "src/support/builders",
-      "SimplyBook\\App\\Http\\": "src/app/http",
-      "SimplyBook\\App\\Services\\": "src/app/services",
-      "SimplyBook\\App\\Http\\DTO\\": "src/app/http/dto",
-      "SimplyBook\\App\\Controllers\\": "src/app/controllers",
-      "SimplyBook\\App\\Http\\Endpoints\\": "src/app/http/endpoints"
+      "SimplyBook\\Traits\\": "app/traits",
+      "SimplyBook\\Managers\\": "app/managers",
+      "SimplyBook\\Providers\\": "app/providers",
+      "SimplyBook\\Interfaces\\": "app/interfaces",
+      "SimplyBook\\Exceptions\\": "app/exceptions",
+      "SimplyBook\\Helpers\\": "app/support/helpers",
+      "SimplyBook\\Utility\\": "app/support/utility",
+      "SimplyBook\\Builders\\": "app/support/builders",
+      "SimplyBook\\Http\\": "app/http",
+      "SimplyBook\\Services\\": "app/services",
+      "SimplyBook\\Http\\DTO\\": "app/http/dto",
+      "SimplyBook\\Controllers\\": "app/controllers",
+      "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints"
     },
     "files": [
-      "src/App.php",
-      "src/Plugin.php",
+      "app/App.php",
+      "app/Plugin.php",
       "helpers.php"
     ]
   },

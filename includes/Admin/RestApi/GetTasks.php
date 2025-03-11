@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\TaskEndpoints} instead.
+ * @deprecated 3.0.0 Use {@see \SimplyBook\http\endpoints\TaskEndpoints} instead.
  */
 class GetTasks extends RestApi {
 	use Helper;

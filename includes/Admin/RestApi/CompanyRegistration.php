@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\CompanyRegistrationEndpoint} instead.
+ * @deprecated 3.0.0 Use {@see \SimplyBook\http\endpoints\CompanyRegistrationEndpoint} instead.
  */
 class CompanyRegistration extends RestApi {
 	use Helper;

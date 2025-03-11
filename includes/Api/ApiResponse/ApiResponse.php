@@ -5,7 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated Use {@see \SimplyBook\App\Http\DTO\ApiResponseDTO} instead
+ * @deprecated Use {@see \SimplyBook\http\dto\ApiResponseDTO} instead
  */
 class ApiResponse {
 	public bool $success;

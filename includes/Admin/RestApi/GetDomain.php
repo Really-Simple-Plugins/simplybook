@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\DomainEndpoint} instead.
+ * @deprecated 3.0.0 Use {@see \SimplyBook\http\endpoints\DomainEndpoint} instead.
  */
 class GetDomain extends RestApi {
 	use Helper;

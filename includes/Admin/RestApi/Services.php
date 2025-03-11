@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /**
  * @deprecated 3.0.0 Use ServicesEndpoint instead:
- * {@see \SimplyBook\App\Http\Endpoints\ServicesEndpoint}
+ * {@see \SimplyBook\http\endpoints\ServicesEndpoint}
  */
 class Services extends RestApi {
 	use Helper;

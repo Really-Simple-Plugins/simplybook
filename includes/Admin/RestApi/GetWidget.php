@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @deprecated 3.0.0 Use {@see \SimplyBook\App\Http\Endpoints\WidgetEndpoint} instead
+ * @deprecated 3.0.0 Use {@see \SimplyBook\http\endpoints\WidgetEndpoint} instead
  */
 class GetWidget extends RestApi {
 	use Helper;
