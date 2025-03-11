@@ -8,6 +8,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @deprecated Use {@see \SimplyBook\Controllers\BlockController} instead
+ */
 class Blocks {
     use Helper;
     use Widget;
