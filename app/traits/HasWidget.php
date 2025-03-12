@@ -12,13 +12,13 @@ trait HasWidget
      */
     protected function getWidgetSettings(): array
     {
-        $fields = $this->get_fields_by_attribute( 'widget_field', true );
+        $fields = $this->get_fields_by_attribute('widget_field', true);
         $widget_fields = [];
-        foreach ( $fields as $field ) {
-            if ( $field['widget_field'] === '/') {
-                $widget_fields[ $field['id'] ] = $this->get_option( $field['id'] );
+        foreach ($fields as $field) {
+            if ($field['widget_field'] === '/') {
+                $widget_fields[$field['id']] = $this->get_option($field['id']);
             } else {
-                $widget_fields[ $field['widget_field'] ][ $field['id'] ] = $this->get_option( $field['id'] );
+                $widget_fields[$field['widget_field']][$field['id']] = $this->get_option($field['id']);
             }
         }
         $widget_fields['is_rtl'] = (int) is_rtl();

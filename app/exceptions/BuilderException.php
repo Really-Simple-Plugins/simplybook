@@ -3,5 +3,4 @@ namespace SimplyBook\Exceptions;
 
 class BuilderException extends \Exception
 {
-    // Custom example to be able to catch an exception in a custom way
 }

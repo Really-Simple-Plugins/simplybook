@@ -11,7 +11,6 @@ class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
 
-    // todo - refactor legacy Api (NL14RSP2-6)
     public function __construct(OnboardingService $service)
     {
         $this->service = $service;

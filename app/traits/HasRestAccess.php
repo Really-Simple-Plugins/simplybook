@@ -53,8 +53,8 @@ trait HasRestAccess
 
         return new \WP_REST_Response([
             'message' => $message,
-            'status'  => $status ? 'success' : 'error',
-            'data'    => $data,
+            'status' => $status ? 'success' : 'error',
+            'data' => $data,
             'request_success' => true, // can be used to check if the response in react actually contains this array.
         ], $code);
     }

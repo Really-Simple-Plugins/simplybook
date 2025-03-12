@@ -184,8 +184,6 @@ class Plugin
      */
     public function checkForUpgrades(): void
     {
-        // todo - in includes/Upgrades/Upgrades.php there was a check ong adminAccessAllowed. Is this even needed? Ifso, add it here.
-
         $previousVersion = (string) get_option('simplybook_current_version', false);
         if ($previousVersion && version_compare($previousVersion, App::env('plugin.version'), '==')) {
             return; // Nothing to do

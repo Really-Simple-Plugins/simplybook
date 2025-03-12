@@ -4,11 +4,6 @@ namespace SimplyBook\Controllers;
 use SimplyBook\Services\TaskService;
 use SimplyBook\Interfaces\ControllerInterface;
 
-/**
- * todo
- * Is this a TaskFeature? Where we can add the Task class as a TaskService
- * dependency via the constructor?
- */
 class TaskController implements ControllerInterface
 {
     private TaskService $service;

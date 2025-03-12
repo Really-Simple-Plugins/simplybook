@@ -22,7 +22,6 @@ class OnboardingService
 
     /**
      * Store given email address when the user agrees to the terms
-     * @todo - Is this later used for registration? If not, rename endpoint?
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
@@ -33,7 +32,6 @@ class OnboardingService
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
 
-        // todo - refactor update_option
         $this->update_option('email', $submittedEmailAddress );
         $this->update_option('terms-and-conditions', $adminAgreesToTerms);
 
@@ -51,7 +49,6 @@ class OnboardingService
         $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
         $adminWantsTipsAndTricks = $storage->getBoolean('tips-and-tricks');
 
-        // todo - refactor update_option
         $this->update_option('tips-and-tricks', $adminWantsTipsAndTricks);
 
         return $this->sendHttpResponse();
