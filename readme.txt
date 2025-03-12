@@ -1,10 +1,12 @@
 === SimplyBook.me - Online Booking System ===
-Contributors: simplybook
+Contributors: simplybook, reallysimpleplugins
+Contributors: simplybook, wimbraam, RogierLankhorst, hesseldejong
 Donate link: https://simplybook.me/
 Tags: Booking System, Scheduling system, Appointment System, Bookings, Appointment Plugin
 Requires at least: 6.0
-Tested up to: 6.7.1
-Stable tag: 2.3
+Tested up to: 6.6.1
+Requires PHP: 7.4
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -141,4 +143,3 @@ SimplyBook.me appointment booking and online scheduling is fully translated to:
 
 = 1.0 =
 * First version of plugin
-
