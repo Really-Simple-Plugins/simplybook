@@ -139,7 +139,6 @@ class Plugin
             new Controllers\TaskController(
                 new Services\TaskService(),
             ),
-            new Controllers\ApiController(),
             new Controllers\ScheduleController(),
 
             new Controllers\WidgetController(),

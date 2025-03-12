@@ -25,6 +25,7 @@ class DashboardController implements ControllerInterface
 
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
+        add_action('admin_init', [$this, 'maybeResetRegistration']);
     }
 
     /**
@@ -238,5 +239,18 @@ class DashboardController implements ControllerInterface
     private function onboarding_completed(): bool {
         // TODO: check if all onboarding fields are set, or use a separate option for completing the onboarding
         return App::provide('client')->company_registration_complete();
+    }
+
+    /**
+     * Reset the company registration if the user has requested it by setting
+     * the `reset_registration` query parameter to `true`
+     */
+    public function maybeResetRegistration(): void
+    {
+        if (App::provide('request')->getString('reset_registration', 'false') !== 'true') {
+            return;
+        }
+
+        App::provide('client')->reset_registration();
     }
 }
