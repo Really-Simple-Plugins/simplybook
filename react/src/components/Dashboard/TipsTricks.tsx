@@ -34,7 +34,11 @@ const TipsTricks = () => {
       <BlockFooter>
           {/* Typescript does not recognise global variable simplybook
           @ts-ignore*/}
-        <a href={simplybook.tips_and_tricks.all} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("View All", "simplybook")}</a>
+          <a href={simplybook.tips_and_tricks.all} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("View All", "simplybook")}</a>
+
+          {/* Typescript does not recognise global variable simplybook
+          @ts-ignore*/}
+          <a href={simplybook.tips_and_tricks.video_tutorials} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("Video tutorials", "simplybook")}</a>
       </BlockFooter>
     </Block>
   );
