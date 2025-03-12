@@ -1,10 +1,13 @@
-<?php if (!defined('ABSPATH')) {
+<?php
+use SimplyBook\Helpers\FeatureHelper;
+
+if (!defined('ABSPATH')) {
     exit;
 }
 
 return [
     'Onboarding' => [
-        'enabled' => true, // todo - we need some way to track if the onboarding is completed and disable this feature if it is
+        'enabled' => FeatureHelper::isEnabled('onboarding'),
         'inScope' => is_admin() || simplybook_is_wp_json_request(),
         'pro' => false,
         'dependencies' => [
