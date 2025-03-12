@@ -2,14 +2,14 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
-use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Traits\HasWidget;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class WidgetController implements ControllerInterface
 {
-    use LegacyLoad;
+    use HasWidget;
 
     public function register()
     {
@@ -52,7 +52,8 @@ class WidgetController implements ControllerInterface
             $builder = new WidgetScriptBuilder();
             $builder->setWidgetType($widgetType)
                 ->setAttributes($attributes)
-                ->setWidgetSettings($this->getWidgetSettings());
+                ->setWidgetSettings($this->getWidgetSettings())
+                ->withHTML();
 
             if (!empty($wrapperID)) {
                 $builder->setWrapperID($wrapperID);
@@ -65,40 +66,6 @@ class WidgetController implements ControllerInterface
 
         $this->enqueueRemoteWidgetScript();
         return $content;
-    }
-
-    /**
-     * Get the widget settings. These contain the preferences set by the user in
-     * the widget settings page.
-     */
-    private function getWidgetSettings(): array
-    {
-        $fields = $this->get_fields_by_attribute( 'widget_field', true );
-        $widget_fields = [];
-        foreach ( $fields as $field ) {
-            if ( $field['widget_field'] === '/') {
-                $widget_fields[ $field['id'] ] = $this->get_option( $field['id'] );
-            } else {
-                $widget_fields[ $field['widget_field'] ][ $field['id'] ] = $this->get_option( $field['id'] );
-            }
-        }
-        $widget_fields['is_rtl'] = (int) is_rtl();
-
-        if (isset($widget_fields['predefined']) && !is_array($widget_fields['predefined']) ) {
-            $widget_fields['predefined'] = [];
-        }
-
-        $widget_fields['server'] = $this->getServerURL();
-        return $widget_fields;
-    }
-
-    /**
-     * Get the server URL
-     */
-    private function getServerURL(): string {
-        $domain = $this->get_option('domain');
-        $login = get_option('simplybook_company_login', '');
-        return "https://$login.$domain";
     }
 
     /**

@@ -7,6 +7,7 @@ use SimplyBook\Exceptions\BuilderException;
 
 class WidgetScriptBuilder
 {
+    protected bool $withHTML = false;
     protected string $widgetType = '';
     protected string $widgetTemplate = '';
     protected array $attributes = [];
@@ -40,7 +41,12 @@ class WidgetScriptBuilder
         }
 
         $script = $this->getWidgetScript();
-        return $this->getWrappedScriptHTML($script);
+
+        if ($this->withHTML) {
+            return $this->getWrappedScriptHTML($script);
+        }
+
+        return $script;
     }
 
     /**
@@ -84,6 +90,12 @@ class WidgetScriptBuilder
     public function setAttributes(array $attributes): WidgetScriptBuilder
     {
         $this->attributes = $this->sanitizeAttributes($attributes, true);
+        return $this;
+    }
+
+    public function withHTML(): WidgetScriptBuilder
+    {
+        $this->withHTML = true;
         return $this;
     }
 

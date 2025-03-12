@@ -1,14 +1,16 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
+use SimplyBook\Traits\HasWidget;
 use SimplyBook\Traits\HasRestAccess;
-use Simplybook_old\Frontend\Traits\Widget;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Exceptions\BuilderException;
+use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class WidgetEndpoint implements SingleEndpointInterface
 {
-    use Widget;
+    use HasWidget;
     use HasRestAccess;
     use HasAllowlistControl;
 
@@ -47,7 +49,24 @@ class WidgetEndpoint implements SingleEndpointInterface
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         return $this->sendHttpResponse([
-            'widget' => $this->get_widget(),
+            'widget' => $this->getCalendarWidget(),
         ]);
+    }
+
+    /**
+     * Get the calendar widget without HTML wrapper
+     */
+    private function getCalendarWidget(): string
+    {
+        try {
+            $builder = new WidgetScriptBuilder();
+            $content = $builder->setWidgetType('calendar')
+                ->setWidgetSettings($this->getWidgetSettings())
+                ->build();
+        } catch (BuilderException $e) {
+            return '';
+        }
+
+        return $content;
     }
 }
