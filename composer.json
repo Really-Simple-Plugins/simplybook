@@ -19,7 +19,6 @@
   },
   "autoload": {
     "psr-4": {
-      "Simplybook_old\\": "includes/",
       "SimplyBook\\Traits\\": "app/traits",
       "SimplyBook\\Managers\\": "app/managers",
       "SimplyBook\\Providers\\": "app/providers",
