@@ -69,7 +69,7 @@ final class FeatureManager
      */
     private function getFeaturePath(string $featureName, bool $needsPro): string
     {
-        return App::env('plugin.path') . '/src/features/' . ($needsPro ? 'Pro/' : '') . $featureName . '/';
+        return App::env('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
     }
 
     /**
