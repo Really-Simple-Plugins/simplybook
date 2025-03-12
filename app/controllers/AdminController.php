@@ -15,20 +15,6 @@ class AdminController implements ControllerInterface
             return;
         }
 
-//        ( new Upgrades() );
-//        ( new Capability() );
-//        ( new Onboarding() );
-//        ( new LoginUrl() );
-//        ( new Services() );
-//        ( new Providers() );
-//        ( new Settings() );
-//        ( new CompanyRegistration() );
-//        ( new WaitForRegistrationCallback() );
-//        ( new GetWidget() );
-//        ( new Dashboard() );
-//        ( new GetPlugins() );
-//        ( new GetDomain() );
-
         add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
     }
 
