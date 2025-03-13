@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use Carbon\Carbon;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
@@ -80,18 +81,21 @@ class ApiClient
 
     /**
      * Check if we have a company_id, which shows we have a registered company
-     *
-     * @return bool
      */
-    public function company_registration_complete(): bool {
-
+    public function company_registration_complete(): bool
+    {
         //check if the callback has been completed, resulting in a company/admin token.
         if ( !$this->get_token('admin') ) {
-            $company_registration_start_time = get_option('simplybook_company_registration_start_time', 0);
-            if ( $company_registration_start_time > time() - HOUR_IN_SECONDS ) {
-                //the registration has not completed in one hour. Clear the company login so we can try with a fresh one.
+            $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
+
+            $oneHourAgo = Carbon::now()->subHour();
+            $companyRegistrationStartedAt = Carbon::parse($companyRegistrationStartTime);
+
+            // Registration was more than 1h ago. Clear and try again.
+            if ($companyRegistrationStartedAt->isBefore($oneHourAgo)) {
                 $this->delete_company_login();
             }
+
             return false;
         }
         return true;
