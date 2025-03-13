@@ -1,7 +1,6 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use Carbon\Carbon;
 use SimplyBook\App;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
