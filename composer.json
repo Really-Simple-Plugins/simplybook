@@ -15,7 +15,8 @@
   "require": {
     "php": ">=7.4, <=8.3",
     "adbario/php-dot-notation": "*",
-    "automattic/jetpack-autoloader": "^5"
+    "automattic/jetpack-autoloader": "^5",
+    "nesbot/carbon": "*"
   },
   "autoload": {
     "psr-4": {

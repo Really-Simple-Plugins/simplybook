@@ -146,6 +146,25 @@ class ApiClient
     }
 
     /**
+     * Method call the create-login-hash endpoint on the SimplyBook API.
+     * @throws \Exception When the company registration is not complete or when
+     * the response is not as expected.
+     */
+    public function createLoginHash(): array
+    {
+        if ( !$this->company_registration_complete() ) {
+            throw new \Exception('Company registration is not complete');
+        }
+
+        $response = $this->api_call("admin/auth/create-login-hash", [], 'POST');
+        if (!isset($response['login_url'])) {
+            throw new \Exception('Login URL not found');
+        }
+
+        return $response;
+    }
+
+    /**
      * Get headers for an API call
      *
      * @param bool $include_token // optional, default false
