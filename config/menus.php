@@ -20,10 +20,6 @@ return [
                 'id' => 'widgets',
                 'title' => __('Widgets', 'rsp-plugin'),
             ],
-            [
-                'id' => 'working-hours',
-                'title' => __('Working hours', 'rsp-plugin'),
-            ],
         ],
     ],
     'services' => [
@@ -52,13 +48,14 @@ return [
         'id' => 'custom',
         'title' => __('Custom', 'rsp-plugin'),
     ],
-    'schedule' => [
-        'id' => 'schedule',
-        'title' => __('Schedule', 'rsp-plugin'),
-    ],
     'providers' => [
         'id' => 'providers',
         'title' => __('Providers', 'rsp-plugin'),
+    ],
+    'schedule' => [
+        'id' => 'schedule',
+        'title' => __('Schedule', 'rsp-plugin'),
+        'url' => 'v2/management/#company-worktime/week',
     ],
     'bookings' => [
         'id' => 'bookings',
