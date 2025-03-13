@@ -27,6 +27,24 @@ return [
         'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
         'widget_script_version' => '1.3.0',
+        'tips_and_tricks' => [
+            'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
+            'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
+            'items' => [
+                [
+                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
+                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                ],
+                [
+                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
+                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                ],
+                [
+                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
+                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                ]
+            ]
+        ]
     ],
     'http' => [
         'version' => 'v1',
