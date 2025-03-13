@@ -22,6 +22,10 @@ return [
             ],
         ],
     ],
+    'providers' => [
+        'id' => 'providers',
+        'title' => __('Providers', 'rsp-plugin'),
+    ],
     'services' => [
         'id' => 'services',
         'title' => __('Services', 'rsp-plugin'),
@@ -47,10 +51,6 @@ return [
     'custom' => [
         'id' => 'custom',
         'title' => __('Custom', 'rsp-plugin'),
-    ],
-    'providers' => [
-        'id' => 'providers',
-        'title' => __('Providers', 'rsp-plugin'),
     ],
     'schedule' => [
         'id' => 'schedule',
