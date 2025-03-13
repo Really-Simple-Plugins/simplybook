@@ -21,7 +21,7 @@ const OurPlugins = () => {
       {/* align list in middle of block */}
       <BlockContent className={"flex flex-col items-center"}>
         {// @ts-ignore
-            plugins && plugins.length>0 && plugins.map((plugin) => (
+            plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin) => (
                 <div key={plugin.url} className={"flex items-center gap-2 text-sm w-full py-2 "}>
                     <Icon name={"circle"} color={plugin.color}/>
                     <Link to={plugin.url}>
