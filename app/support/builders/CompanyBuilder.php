@@ -97,6 +97,7 @@ class CompanyBuilder
             'address' => $this->address,
             'service' => $this->service,
             'country' => $this->country,
+            'zip' => $this->zip,
         ];
     }
 

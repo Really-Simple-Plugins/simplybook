@@ -553,8 +553,6 @@ class ApiClient
         //no spaces allowed in zip
         $zip = (string) $this->get_option('zip');
         $zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
-        //currently zip validation is too strict on simplybookme
-        $zip = '12345';
         $company_login = $this->get_company_login();
         error_log("company login $company_login");
         if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
