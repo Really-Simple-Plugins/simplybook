@@ -238,8 +238,7 @@ class DashboardController implements ControllerInterface
     }
 
     private function onboarding_completed(): bool {
-        // TODO: check if all onboarding fields are set, or use a separate option for completing the onboarding
-        return App::provide('client')->company_registration_complete();
+        return get_option('simplybook_onboarding_completed', false);
     }
 
     /**
