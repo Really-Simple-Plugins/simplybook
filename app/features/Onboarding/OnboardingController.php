@@ -136,6 +136,11 @@ class OnboardingController implements FeatureInterface
 
         $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
 
+        if ($pagesCreatedSuccessfully) {
+            $this->service->setOnboardingStep(5);
+            $this->service->setOnboardingCompleted();
+        }
+
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
             'booking_page_id' => $bookingPageID,

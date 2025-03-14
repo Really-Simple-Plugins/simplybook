@@ -21,6 +21,14 @@ class OnboardingService
     }
 
     /**
+     * Set the onboarding as completed in the general options without autoload
+     */
+    public function setOnboardingCompleted(): void
+    {
+        update_option('simplybook_onboarding_completed', true, false);
+    }
+
+    /**
      * Store given email address when the user agrees to the terms
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
