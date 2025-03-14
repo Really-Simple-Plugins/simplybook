@@ -29,6 +29,6 @@ class FeatureHelper
      */
     private static function isOnboardingEnabled(): bool
     {
-        return App::provide('client')->company_registration_complete() === false;
+        return get_option('simplybook_onboarding_completed', false) === false;
     }
 }
