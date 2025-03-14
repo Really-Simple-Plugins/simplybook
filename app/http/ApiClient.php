@@ -89,7 +89,7 @@ class ApiClient
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
 
             $oneHourAgo = Carbon::now()->subHour();
-            $companyRegistrationStartedAt = Carbon::parse($companyRegistrationStartTime);
+            $companyRegistrationStartedAt = Carbon::createFromTimestamp($companyRegistrationStartTime);
 
             // Registration was more than 1h ago. Clear and try again.
             if ($companyRegistrationStartedAt->isBefore($oneHourAgo)) {
