@@ -62,7 +62,7 @@ class LoginUrlService
     protected function userShouldBeLoggedIn(string $loginUrlCreationDate): bool
     {
         $userLoggedThreshold = Carbon::now()->subHour();
-        return !empty($loginUrlCreationDate) && Carbon::parse($loginUrlCreationDate)->isBefore($userLoggedThreshold);
+        return !empty($loginUrlCreationDate) && Carbon::parse($loginUrlCreationDate)->isAfter($userLoggedThreshold);
     }
 
     /**
