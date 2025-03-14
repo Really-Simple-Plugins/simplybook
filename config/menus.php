@@ -6,63 +6,60 @@
 return [
     'general' => [
         'id' => 'general',
-        'title' => __('General', 'rsp-plugin'),
+        'title' => __('General', 'simplybook'),
         'groups' => [
             [
                 'id' => 'general',
-                'title' => __('General', 'rsp-plugin'),
+                'title' => __('General', 'simplybook'),
             ],
             [
                 'id' => 'authentication',
-                'title' => __('Authentication', 'rsp-plugin'),
+                'title' => __('Authentication', 'simplybook'),
             ],
             [
                 'id' => 'widgets',
-                'title' => __('Widgets', 'rsp-plugin'),
-            ],
-            [
-                'id' => 'working-hours',
-                'title' => __('Working hours', 'rsp-plugin'),
+                'title' => __('Widgets', 'simplybook'),
             ],
         ],
     ],
+    'providers' => [
+        'id' => 'providers',
+        'title' => __('Providers', 'simplybook'),
+    ],
     'services' => [
         'id' => 'services',
-        'title' => __('Services', 'rsp-plugin'),
+        'title' => __('Services', 'simplybook'),
     ],
     'design' => [
         'id' => 'design',
-        'title' => __('Design', 'rsp-plugin'),
+        'title' => __('Design', 'simplybook'),
         'groups' => [
             [
                 'id' => 'design',
-                'title' => __('Design', 'rsp-plugin'),
+                'title' => __('Design', 'simplybook'),
             ],
             [
                 'id' => 'palettes',
-                'title' => __('Palettes', 'rsp-plugin'),
+                'title' => __('Palettes', 'simplybook'),
             ],
         ],
     ],
     'notifications' => [
         'id' => 'notifications',
-        'title' => __('Notifications', 'rsp-plugin'),
+        'title' => __('Notifications', 'simplybook'),
     ],
     'custom' => [
         'id' => 'custom',
-        'title' => __('Custom', 'rsp-plugin'),
+        'title' => __('Custom', 'simplybook'),
     ],
     'schedule' => [
         'id' => 'schedule',
-        'title' => __('Schedule', 'rsp-plugin'),
-    ],
-    'providers' => [
-        'id' => 'providers',
-        'title' => __('Providers', 'rsp-plugin'),
+        'title' => __('Schedule', 'simplybook'),
+        'url' => 'v2/management/#company-worktime/week',
     ],
     'bookings' => [
         'id' => 'bookings',
-        'title' => __('Bookings', 'rsp-plugin'),
+        'title' => __('Bookings', 'simplybook'),
         'url' => '/index/index',
     ],
 ];
