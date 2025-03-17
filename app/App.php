@@ -2,6 +2,8 @@
 namespace SimplyBook;
 
 use Adbar\Dot;
+use SimplyBook\Http\ApiClient;
+use SimplyBook\Helpers\Request;
 
 final class App
 {
@@ -125,7 +127,12 @@ final class App
 
     /**
      * Static method to get data from the providers.
-     * @return mixed
+     *
+     * @internal Adding the return type of the provided functionality helps
+     * your IDE with code completion. For example; these return types are
+     * provided by the {@see AppServiceProvider}
+     *
+     * @return mixed|ApiClient|Request
      * @throws \InvalidArgumentException If the key is not available in the providers
      */
     public static function provide($key)

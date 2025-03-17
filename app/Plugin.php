@@ -154,7 +154,9 @@ class Plugin
     public function registerEndpoints()
     {
         $this->endpointManager->registerEndpoints([
-            new Http\Endpoints\LoginUrlEndpoint(),
+            new Http\Endpoints\LoginUrlEndpoint(
+                new Services\LoginUrlService(),
+            ),
             new Http\Endpoints\ServicesEndpoint(),
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),

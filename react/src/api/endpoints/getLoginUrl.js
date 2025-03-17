@@ -6,10 +6,9 @@ import { LoginData } from "../../types/LoginData";
  */
 const getLoginUrl = async () => {
   const res = await request("get_login_url", "POST");
-  if (!res || !res.data.direct_url) {
+  if (!res || !res.data.simplybook_dashboard_url) {
     return {
-      direct_url: "",
-      login_url: "",
+      simplybook_dashboard_url: "",
     };
   }
   return res.data;

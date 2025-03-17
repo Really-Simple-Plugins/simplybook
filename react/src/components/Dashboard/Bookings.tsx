@@ -100,7 +100,7 @@ const Bookings = () => {
         </div>
       </BlockContent>
       <BlockFooter>
-        <LoginLink className="" isButton={true} btnVariant="secondary" page="r/payment-widget" >{__('View Bookings', 'simplybook')}</LoginLink>
+        <LoginLink className="" isButton={true} btnVariant="secondary" page="/r/payment-widget/">{__('View Bookings', 'simplybook')}</LoginLink>
       </BlockFooter>
     </Block>
   );
