@@ -9,10 +9,6 @@ return [
         'title' => __('General', 'simplybook'),
         'groups' => [
             [
-                'id' => 'general',
-                'title' => __('General', 'simplybook'),
-            ],
-            [
                 'id' => 'authentication',
                 'title' => __('Authentication', 'simplybook'),
             ],
