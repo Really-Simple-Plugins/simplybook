@@ -67,16 +67,20 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
      * - cleanup the callback URL
      * - validate the tasks
      */
-    public function callback(\WP_REST_Request $request): void
+    public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $client = App::provide('client');
         $storage = $this->retrieveHttpStorage($request);
 
         if ($storage->getBoolean('success') === false) {
+            $errorMessage = 'An error occurred during the registration process';
             if ($storage->isNotEmpty('error.message')) {
+                $errorMessage = $storage->getString('error.message');
                 $this->log($storage->getString('error.message'));
             }
-            return;
+            return new \WP_REST_Response([
+                'error' => $errorMessage,
+            ], 400);
         }
 
         $client->update_token($storage->getString('token'), 'admin' );
@@ -92,5 +96,9 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->cleanup_callback_url();
 
         $this->service->validateTaskConditions();
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully registered company for current WordPress website.',
+        ]);
     }
 }
