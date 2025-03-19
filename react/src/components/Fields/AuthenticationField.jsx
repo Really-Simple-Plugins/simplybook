@@ -29,7 +29,6 @@ const AuthenticationField = forwardRef(
             }
 
             const response = await request("logout");
-            console.log(response);
             if (!response) {
                 return console.error("Logout failed");
             }
