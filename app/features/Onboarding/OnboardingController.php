@@ -189,6 +189,56 @@ class OnboardingController implements FeatureInterface
             ], 400);
         }
 
+        $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully authenticated user',
+        ], 200);
+    }
+
+    /**
+     * Method is the callback for the two-factor authentication route. It
+     * authenticates the user with the given company login, domain, session id
+     * and two-factor authentication code.
+     */
+    public function loginExistingUserTwoFa(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+        $companyLogin = $storage->getString('company_login');
+        $companyDomain = $storage->getString('domain');
+
+        try {
+            $response = App::provide('client')->processTwoFaAuthenticationRequest(
+                $companyDomain,
+                $companyLogin,
+                $storage->getString('auth_session_id'),
+                'ga', // todo - make dynamic with SMS in React.
+                $storage->getString('google_authenticator')
+            );
+        } catch (\Exception $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully authenticated user',
+        ], 200);
+    }
+
+    /**
+     * Method is used to finish the logging in of the user. It is either called
+     * after a direct login of the user ({@see loginExistingUser}) or after the
+     * two-factor authentication ({@see loginExistingUserTwoFa}).
+     *
+     * @param array $response Should contain: token, refresh_token, company_id
+     * @param string $parsedDomain Will be saved in the options as 'domain'
+     * @param string $companyLogin Will be saved in the options as 'simplybook_company_login'
+     */
+    protected function finishLoggingInUser(array $response, string $parsedDomain, string $companyLogin): bool
+    {
         $responseStorage = new Storage($response);
 
         App::provide('client')->saveAuthenticationData(
@@ -201,43 +251,6 @@ class OnboardingController implements FeatureInterface
 
         $this->service->setOnboardingCompleted();
 
-        return new \WP_REST_Response([
-            'message' => 'Successfully authenticated user',
-        ], 200);
-    }
-
-    // todo - besides fixing this method and request. We should clean up these 2 requests, the api client and the react side.
-    public function loginExistingUserTwoFa(\WP_REST_Request $request): \WP_REST_Response
-    {
-        $storage = $this->service->retrieveHttpStorage($request);
-
-        $companyLogin = $storage->getString('company_login');
-        $companyDomain = $storage->getString('domain');
-        $sessionId = $storage->getString('auth_session_id');
-        $twoFaType = 'ga'; // todo - make dynamic with SMS in React.
-        $twoFaCode = $storage->getString('google_authenticator');
-
-        try {
-            $response = App::provide('client')->processTwoFaAuthenticationRequest($companyDomain, $companyLogin, $sessionId, $twoFaType, $twoFaCode);
-        } catch (\Exception $e) {
-            return new \WP_REST_Response([
-                'message' => $e->getMessage(),
-            ], 400);
-        }
-
-        $responseStorage = new Storage($response);
-        App::provide('client')->saveAuthenticationData(
-            $responseStorage->getString('token'),
-            $responseStorage->getString('refresh_token'),
-            $companyDomain,
-            $companyLogin,
-            $responseStorage->getInt('company_id'),
-        );
-
-        $this->service->setOnboardingCompleted();
-
-        return new \WP_REST_Response([
-            'message' => 'Successfully authenticated user',
-        ], 200);
+        return true;
     }
 }
