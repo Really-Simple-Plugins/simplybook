@@ -225,4 +225,26 @@ trait LegacySave {
         $this->log("Invalid field type: $type");
         return 'checkbox';
     }
+
+    /**
+     * Delete all WordPress options containing 'simplybook_' or 'simplybookMePl_'
+     * Method can be used to log out a user.
+     */
+    public function delete_all_options(): bool
+    {
+        if ( !$this->user_can_manage() ) {
+            return false;
+        }
+
+        global $wpdb;
+        $result = $wpdb->query(
+            $wpdb->prepare(
+                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
+                'simplybook_%',
+                'simplybookMePl_%'
+            )
+        );
+
+        return $result !== false;
+    }
 }

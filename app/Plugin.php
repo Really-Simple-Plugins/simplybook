@@ -175,6 +175,7 @@ class Plugin
                 new Services\RelatedPluginService(),
             ),
             new Http\Endpoints\BlockEndpoints(),
+            new Http\Endpoints\LogOutEndpoint(),
         ]);
     }
 
