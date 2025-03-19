@@ -73,6 +73,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'loginExistingUserTwoFa'],
         ];
 
+        $routes['onboarding/auth_send_sms'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'sendSmsToUser'],
+        ];
+
         return $routes;
     }
 
@@ -212,8 +217,8 @@ class OnboardingController implements FeatureInterface
                 $companyDomain,
                 $companyLogin,
                 $storage->getString('auth_session_id'),
-                'ga', // todo - make dynamic with SMS in React.
-                $storage->getString('google_authenticator')
+                $storage->getString('two_fa_type'),
+                $storage->getString('two_fa_code'),
             );
         } catch (\Exception $e) {
             return new \WP_REST_Response([
@@ -252,5 +257,29 @@ class OnboardingController implements FeatureInterface
         $this->service->setOnboardingCompleted();
 
         return true;
+    }
+
+    /**
+     * Method is used to send an SMS to the user for two-factor authentication.
+     */
+    public function sendSmsToUser(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        try {
+            App::provide('client')->requestSmsForUser(
+                $storage->getString('domain'),
+                $storage->getString('company_login'),
+                $storage->getString('auth_session_id'),
+            );
+        } catch (\Exception $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully requested SMS code',
+        ], 200);
     }
 }

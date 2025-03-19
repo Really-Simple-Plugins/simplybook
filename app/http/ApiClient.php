@@ -1344,6 +1344,32 @@ class ApiClient
         return $response;
     }
 
+    public function requestSmsForUser(string $companyDomain, string $companyLogin, string $sessionId): bool
+    {
+        $endpoint = add_query_arg([
+            'company' => $companyLogin,
+            'session_id' => $sessionId,
+        ], $this->endpoint('/admin/auth/sms', $companyDomain));
+
+        $response = wp_safe_remote_get($endpoint, [
+            'headers' => $this->get_headers(),
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \Exception($response->get_error_message());
+        }
+
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode != 200) {
+            throw new \Exception($responseBody['message'] ?? 'SMS request failed');
+        }
+
+        return true; // code send.
+    }
+
     /**
      * Save the authentication data given as parameters. This method is used
      * after a successful authentication process. For example after
