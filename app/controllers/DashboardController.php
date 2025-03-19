@@ -230,6 +230,7 @@ class DashboardController implements ControllerInterface
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
                 'is_onboarding_completed' => $this->onboarding_completed(),
+                // 'is_onboarding_completed' => false,
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'tips_and_tricks' => App::env('simplybook.tips_and_tricks'),
