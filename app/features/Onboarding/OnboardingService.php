@@ -2,9 +2,9 @@
 
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
-use SimplyBook\Traits\HasRestAccess;
 
 class OnboardingService
 {
@@ -25,6 +25,7 @@ class OnboardingService
      */
     public function setOnboardingCompleted(): void
     {
+        $this->setOnboardingStep(5);
         update_option('simplybook_onboarding_completed', true, false);
     }
 
@@ -98,5 +99,28 @@ class OnboardingService
         ]);
 
         return empty($posts);
+    }
+
+    /**
+     * Method is used to build the company domain and login based on the given
+     * domain and login values. For non-default domains the domain should be
+     * appended to the login for the authentication process. The domains are
+     * maintained here {@see react/src/routes/onboarding.lazy.jsx}
+     *
+     * @see https://teamdotblue.atlassian.net/browse/NL14RSP2-49?focusedCommentId=3407285
+     *
+     * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
+     * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     */
+    public function parseCompanyDomainAndLogin(string $domain, string $login): array
+    {
+        $companyDomainContainsLoginIdentifier = strpos($domain, 'login:') === 0;
+        $domain = substr($domain, strpos($domain, ':') + 1);
+
+        if ($companyDomainContainsLoginIdentifier) {
+            $login .= '.' . $domain;
+        }
+
+        return [$domain, $login];
     }
 }
