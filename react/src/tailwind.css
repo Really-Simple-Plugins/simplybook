@@ -1,8 +1,21 @@
-/* New way to load Tailwindcss */
-@import "tailwindcss";
-
 /* To use our current tailwind.config.js we now use @config in this CSS file */
-@config "../tailwind.config.js";
+/* @config "../tailwind.config.js"; */
+
+/* New way to load Tailwindcss */
+/* @import "tailwindcss"; */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+
 
 /* load the safelist */
-@source "../safelist.txt"
+@source "../safelist.txt";
+
+@theme {
+    --text-1xl: 1.25rem;
+    --text-2xl: 1.75rem;
+    --text-3xl: 2.25rem;
+}
+
