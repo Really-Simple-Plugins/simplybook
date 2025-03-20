@@ -26,6 +26,8 @@ class DashboardController implements ControllerInterface
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
+        
     }
 
     /**
@@ -116,6 +118,32 @@ class DashboardController implements ControllerInterface
     }
 
     /**
+     * Enqueue the Tailwind CSS for the dashboard in the header
+     */
+    public function enqueueDashboardStyles(string $hookSuffix)
+    {
+        $pageSimplyBook = App::provide('request')->getString('page') === 'simplybook';
+        $hookContainsSimplyBook = strpos($hookSuffix, 'simplybook') !== false;
+        $currentScreenIsSimplyBook = $pageSimplyBook || $hookContainsSimplyBook;
+
+        if ($currentScreenIsSimplyBook === false) {
+            return;
+        }
+
+        $chunkTranslation = $this->getReactChunkTranslations();
+        if (empty($chunkTranslation)) {
+            return;
+        }
+
+        wp_enqueue_style(
+            'simplybook-tailwind',
+            App::env('plugin.react_url') . '/src/tailwind.generated.css',
+            [],
+            ($chunkTranslation['version'] ?? '')
+        );
+    }
+
+    /**
      * Enqueue the React scripts and styles for the dashboard:
      * - Tailwind CSS (tailwind.generated.css)
      * - React app (probably: index.js)
@@ -128,13 +156,6 @@ class DashboardController implements ControllerInterface
         if (empty($chunkTranslation)) {
             return;
         }
-
-        wp_enqueue_style(
-            'simplybook-tailwind',
-            App::env('plugin.react_url') . '/src/tailwind.generated.css',
-            [],
-            ($chunkTranslation['version'] ?? '')
-        );
 
         wp_enqueue_script(
             'simplybook',
@@ -160,6 +181,11 @@ class DashboardController implements ControllerInterface
      */
     private function getReactChunkTranslations(): array
     {
+        $cacheName = 'simplybook-react-chunk-translations';
+        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+            return $cache;
+        }
+
         // get all files from the settings/build folder
         $buildDirPath = App::env('plugin.react_path') . '/build';
         $filenames = scandir($buildDirPath);
@@ -202,13 +228,15 @@ class DashboardController implements ControllerInterface
         }
 
         $assetFileData = require $buildDirPath . '/' . $assetFilename;
-
-        return [
+        $chunkTranslations = [
             'json_translations' => $jsonTranslations,
             'js_file_name' => $jsFileName,
             'dependencies' => $assetFileData['dependencies'] ?? [],
             'version' => $assetFileData['version'] ?? '',
         ];
+
+        wp_cache_set($cacheName, $chunkTranslations, 'simplybook');
+        return $chunkTranslations;
     }
 
     /**
@@ -229,10 +257,11 @@ class DashboardController implements ControllerInterface
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
-                'is_onboarding_completed' => $this->onboarding_completed(),
-                // 'is_onboarding_completed' => false,
+                // 'is_onboarding_completed' => $this->onboarding_completed(),
+                'is_onboarding_completed' => false,
                 'first_name' => $this->getCurrentUserFirstName(),
-                'completed_step' => get_option('simplybook_completed_step', 0),
+                // 'completed_step' => get_option('simplybook_completed_step', 0),
+                'completed_step' => 0,
                 'tips_and_tricks' => App::env('simplybook.tips_and_tricks'),
             ]
         );

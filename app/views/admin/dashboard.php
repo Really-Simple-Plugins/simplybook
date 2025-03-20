@@ -5,6 +5,6 @@
  * @var array $navigation
  */
 ?>
-<div id="simplybook_app">
+<div id="simplybook_app" style="font-size:16px;">
     <?php echo $this->render('admin/skeleton', compact('logoUrl', 'navigation')); ?>
 </div>

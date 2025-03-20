@@ -3,7 +3,7 @@ import React from "react";
 import OnboardingContainer from "../components/Grid/OnboardingContainer";
 import OnboardingHeader from "../components/Onboarding/OnboardingHeader"
 
-const OnboardingWrapper = ({ 
+const OnboardingLayout = ({ 
      children
 }) => {
     return (
@@ -19,6 +19,6 @@ const OnboardingWrapper = ({
     );
   };
   
-  OnboardingWrapper.displayName = "OnboardingWrapper";
+  OnboardingLayout.displayName = "OnboardingLayout";
   
-  export default OnboardingWrapper;
+  export default OnboardingLayout;

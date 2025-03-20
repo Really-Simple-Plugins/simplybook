@@ -119,21 +119,9 @@ const OnboardingStep = ({
   return (
     <>
       <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
-        <div className={"my-6 text-center"}>
-          {companyName.length>0 && <h1 className={"text-2xl text-gray-500 mb-4"}>{companyName}</h1>}
-          <h1 className={"text-3xl font-semibold text-black"}>{title}</h1>
-          {subtitle && (
-              <h2 className={"mt-2 text-base font-light text-black"}>
-                {subtitle}
-              </h2>
-
-          )}
-          <Error error={apiError}/>
-        </div>
         <div className={"flex flex-col"}>
           <form>
             <FormFieldWrapper fields={currentStep.fields} control={control}/>
-            {customHtml}
             <ButtonField
                 showLoader={disabled}
                 btnVariant="primary"
@@ -142,14 +130,6 @@ const OnboardingStep = ({
                 disabled={disabled}
                 onClick={handleSubmit((data) => onSubmit(data, "primary"))}
             />
-            {secondaryButton && (
-                <ButtonField
-                    btnVariant="tertiary"
-                    disabled={disabled}
-                    label={secondaryButton.label}
-                    onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
-                />
-            )}
           </form>
         </div>
         <Error error={apiError}/>

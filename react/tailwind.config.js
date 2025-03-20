@@ -7,6 +7,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontSize: {
+        '1xl': '1.25rem',
+        '2xl': '1.75rem',
+        '3xl': '2.25rem',
+        
+      },
       colors: {
         primary: {
           light: "#b3e4f9",
@@ -33,5 +39,5 @@ module.exports = {
   variants: {
     extend: {},
   },
-  important: "#simplybook_app",
+  // important: "#simplybook_app",
 };

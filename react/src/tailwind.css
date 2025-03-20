@@ -1,12 +1,12 @@
 /* To use our current tailwind.config.js we now use @config in this CSS file */
-/* @config "../tailwind.config.js"; */
+@config "../tailwind.config.js";
 
 /* New way to load Tailwindcss */
 /* @import "tailwindcss"; */
 @layer theme, base, components, utilities;
 
-@import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css";
 
 
@@ -14,8 +14,24 @@
 @source "../safelist.txt";
 
 @theme {
+    /* Define custom font sizes */
     --text-1xl: 1.25rem;
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
+
+    /* Define custom colors */
+    --bg-primary-light: #b3e4f9;
+    --bg-primary: #06adef;
+    --bg-primary-dark: #055b78;
+    
+    --bg-secondary-light: #ffb3c1;
+    --bg-secondary: #ff3259;
+    --bg-secondary-dark: #950c28;
+
+    --bg-tertiary-light: #f0f4fe;
+    --bg-tertiary: #0c3052;
+    --bg-tertiary-dark: #061f32;
+
+    --bg-gray-200: rgba(218, 218, 218, 0.5);
 }
 

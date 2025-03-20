@@ -14,3 +14,16 @@ shadow-lg
 # Absolute positions
 after:top-1
 after:top-0.5
+
+# Colors
+    --bg-primary-light
+    --bg-primary:
+    --bg-primary-dark
+    
+    --bg-secondary-light
+    --bg-secondary
+    --bg-secondary-dark
+
+    --bg-tertiary-light
+    --bg-tertiary
+    --bg-tertiary-dark
