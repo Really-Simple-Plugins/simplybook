@@ -8,7 +8,7 @@ import Icon from "../Common/Icon";
 import useDashboardData from "../../hooks/useDashboardData";
 import LoginLink from "../Common/LoginLink";
 
-// @TODO: Split up into multiple components? 
+// @TODO: Split up into multiple components?
 
 const Bookings = () => {
   const {
@@ -100,7 +100,8 @@ const Bookings = () => {
         </div>
       </BlockContent>
       <BlockFooter>
-        <LoginLink className="" isButton={true} btnVariant="secondary" page="/r/payment-widget/">{__('View Bookings', 'simplybook')}</LoginLink>
+        <LoginLink className="" isButton={true} btnVariant="secondary" page="v2/r/payment-widget/">{__('View' +
+            ' Bookings', 'simplybook')}</LoginLink>
       </BlockFooter>
     </Block>
   );
