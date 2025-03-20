@@ -33,6 +33,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
     );
   }
   const FieldComponent = fieldComponents[setting.type];
+  
   const { saveSettings, setValue, getValue, settings } = useSettingsData();
   if (!FieldComponent) {
     return (
