@@ -10,8 +10,6 @@ class LoginUrlService
 {
     use LegacyLoad;
 
-    const LOGIN_URL_OPTION = 'simplybook_login_url_value';
-    const LOGIN_URL_EXPIRY_DATE_OPTION = 'simplybook_login_url_expiry_date';
     const LOGIN_URL_CREATION_DATE_OPTION = 'simplybook_login_url_creation_date';
 
     /**
@@ -32,13 +30,7 @@ class LoginUrlService
      */
     public function getLoginUrl(): string
     {
-        $loginUrlValue = get_option(self::LOGIN_URL_OPTION, '');
-        $loginUrlExpiryDate = get_option(self::LOGIN_URL_EXPIRY_DATE_OPTION, '');
         $loginUrlCreationDate = get_option(self::LOGIN_URL_CREATION_DATE_OPTION, '');
-
-        if ($this->isLoginUrlValid($loginUrlValue, $loginUrlExpiryDate)) {
-            return $loginUrlValue;
-        }
 
         if ($this->userShouldBeLoggedIn($loginUrlCreationDate)) {
             return $this->getDashboardUrl();
@@ -48,21 +40,20 @@ class LoginUrlService
     }
 
     /**
-     * Method checks if the login URL is valid and has not expired.
-     */
-    protected function isLoginUrlValid(string $loginUrlValue, string $loginUrlExpiryDate): bool
-    {
-        return !empty($loginUrlValue) && Carbon::parse($loginUrlExpiryDate)->isFuture();
-    }
-
-    /**
      * Method checks if the user should be logged in already. This is based on
      * the login URL creation date. A user should be logged in for one hour.
+     *
+     * @param string $loginUrlCreationDate Can only be empty if the login-hash
+     * was never created before. We then assume a user is not logged in.
      */
     protected function userShouldBeLoggedIn(string $loginUrlCreationDate): bool
     {
+        if (empty($loginUrlCreationDate)) {
+            return false;
+        }
+
         $userLoggedThreshold = Carbon::now()->subHour();
-        return !empty($loginUrlCreationDate) && Carbon::parse($loginUrlCreationDate)->isAfter($userLoggedThreshold);
+        return Carbon::parse($loginUrlCreationDate)->isAfter($userLoggedThreshold);
     }
 
     /**
@@ -78,11 +69,8 @@ class LoginUrlService
         }
 
         $loginUrlValue = $loginHashData['login_url'];
-        $loginUrlExpiryDate = $loginHashData['expire_date'];
-        $loginUrlCreationDate = Carbon::now()->toDateTimeString();
+        $loginUrlCreationDate = Carbon::now('UTC')->toDateTimeString();
 
-        update_option(self::LOGIN_URL_OPTION, $loginUrlValue, false);
-        update_option(self::LOGIN_URL_EXPIRY_DATE_OPTION, $loginUrlExpiryDate, false);
         update_option(self::LOGIN_URL_CREATION_DATE_OPTION, $loginUrlCreationDate, false);
 
         return $loginUrlValue;
