@@ -11,6 +11,7 @@ import ImplementationField from "../Fields/ImplementationField";
 import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
+import AuthenticationField from "../Fields/AuthenticationField";
 
 const fieldComponents = {
   text: TextField,
@@ -22,6 +23,7 @@ const fieldComponents = {
   implementation: ImplementationField,
   list:ListField,
   palettes: PalettesField,
+  authentication: AuthenticationField,
 };
 
 const FormField = memo(({ setting, control, ...props } ) => {

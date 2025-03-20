@@ -10,6 +10,7 @@ use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Http\DTO\ApiResponseDTO;
+use SimplyBook\Exceptions\RestDataException;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -24,8 +25,6 @@ class ApiClient
     protected array $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
     ];
-
-    protected string $endpoint = 'https://user-api-v2.wp.simplybook.ovh/';
 
     protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
     public function __construct()
@@ -107,8 +106,11 @@ class ApiClient
      *
      * @return string
      */
-    protected function endpoint( string $path ): string {
-        return $this->endpoint . $path;
+    protected function endpoint( string $path, string $companyDomain = '' ): string {
+        $base = 'https://user-api-v2.';
+        $domain = $companyDomain ?: $this->get_option('domain');
+
+        return $base . $domain . '/' . $path;
     }
 
     /**
@@ -1249,5 +1251,142 @@ class ApiClient
 
         //success, or last fail was an hour ago, try again.
         return true;
+    }
+
+    /**
+     * Authenticate an existing user with the API by company login, user login
+     * and password. If successful, the token is stored in the options.
+     *
+     * @todo: response data is handling is not DRY (see CompanyRegistrationEndpoint)
+     * @throws \Exception|RestDataException
+     */
+    public function authenticateExistingUser(string $companyDomain, string $companyLogin, string $userLogin, string $userPassword): array
+    {
+        $payload = json_encode([
+            'company' => $companyLogin,
+            'login' => $userLogin,
+            'password' => $userPassword,
+        ]);
+
+        $endpoint = $this->endpoint('admin/auth', $companyDomain);
+        $response = wp_safe_remote_post($endpoint, [
+            'headers' => $this->get_headers(),
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => $payload,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \Exception($response->get_error_message());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode != 200) {
+            throw new \Exception('Authentication failed with code ' . $responseCode);
+        }
+
+        $response = json_decode(wp_remote_retrieve_body($response), true);
+        if (!isset($response['token'])) {
+            throw new \Exception('Authentication failed with no token');
+        }
+
+        if (isset($response['require2fa'], $response['auth_session_id']) && ($response['require2fa'] === true)) {
+            throw (new RestDataException('Two FA Required'))
+                ->setResponseCode(200) // todo - 200 is needed due to how to "request" now works in React :/
+                ->setData([
+                    'require2fa' => true,
+                    'auth_session_id' => $response['auth_session_id'],
+                    'company_login' => $companyLogin,
+                    'user_login' => $userLogin,
+                    'domain' => $companyDomain,
+                ]);
+        }
+
+        return $response;
+    }
+
+    /**
+     * Process two-factor authentication with the API. If successful, the token is stored in the options.
+     *
+     * @throws \Exception
+     */
+    public function processTwoFaAuthenticationRequest(string $companyDomain, string $companyLogin, string $sessionId, string $twoFaType, string $twoFaCode): array
+    {
+        $payload = json_encode([
+            'company' => $companyLogin,
+            'session_id' => $sessionId,
+            'code' => $twoFaCode,
+            'type' => $twoFaType,
+        ]);
+
+        $endpoint = $this->endpoint('admin/auth/2fa', $companyDomain);
+        $response = wp_safe_remote_post($endpoint, [
+            'headers' => $this->get_headers(),
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => $payload,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \Exception($response->get_error_message());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode != 200) {
+            throw new \Exception('2fa Authentication failed with code ' . $responseCode);
+        }
+
+        $response = json_decode(wp_remote_retrieve_body($response), true);
+        if (!isset($response['token'])) {
+            throw new \Exception('2fa Authentication failed with no token');
+        }
+
+        return $response;
+    }
+
+    public function requestSmsForUser(string $companyDomain, string $companyLogin, string $sessionId): bool
+    {
+        $endpoint = add_query_arg([
+            'company' => $companyLogin,
+            'session_id' => $sessionId,
+        ], $this->endpoint('/admin/auth/sms', $companyDomain));
+
+        $response = wp_safe_remote_get($endpoint, [
+            'headers' => $this->get_headers(),
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new \Exception($response->get_error_message());
+        }
+
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode != 200) {
+            throw new \Exception($responseBody['message'] ?? 'SMS request failed');
+        }
+
+        return true; // code send.
+    }
+
+    /**
+     * Save the authentication data given as parameters. This method is used
+     * after a successful authentication process. For example after
+     * {@see authenticateExistingUser} & {@see processTwoFaAuthenticationRequest}.
+     * This is used in {@see OnboardingController}
+     */
+    public function saveAuthenticationData(string $token, string $refreshToken, string $companyDomain, string $companyLogin, int $companyId, string $tokenType = 'admin'): void
+    {
+        $this->update_token($token, $tokenType);
+        $this->update_token($refreshToken, $tokenType, true );
+
+        $this->update_option('domain', $companyDomain);
+        $this->update_option('company_id', $companyId);
+
+        update_option('simplybook_refresh_company_token_expiration', time() + 3600);
+
+        update_option('simplybook_company_login', $companyLogin);
+        update_option('simplybook_company_registration_start_time', time());
     }
 }

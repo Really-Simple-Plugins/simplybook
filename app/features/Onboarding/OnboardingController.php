@@ -2,10 +2,12 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\App;
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Interfaces\FeatureInterface;
+use SimplyBook\Exceptions\RestDataException;
 
 class OnboardingController implements FeatureInterface
 {
@@ -59,6 +61,21 @@ class OnboardingController implements FeatureInterface
         $routes['onboarding/generate_pages'] = [
             'methods' => 'POST',
             'callback' => [$this, 'generateDefaultPages'],
+        ];
+
+        $routes['onboarding/auth'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'loginExistingUser'],
+        ];
+
+        $routes['onboarding/auth_two_fa'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'loginExistingUserTwoFa'],
+        ];
+
+        $routes['onboarding/auth_send_sms'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'sendSmsToUser'],
         ];
 
         return $routes;
@@ -137,7 +154,6 @@ class OnboardingController implements FeatureInterface
         $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
 
         if ($pagesCreatedSuccessfully) {
-            $this->service->setOnboardingStep(5);
             $this->service->setOnboardingCompleted();
         }
 
@@ -145,5 +161,125 @@ class OnboardingController implements FeatureInterface
             'calendar_page_id' => $calendarPageID,
             'booking_page_id' => $bookingPageID,
         ], $pagesCreatedSuccessfully);
+    }
+
+    /**
+     * Login an existing user with the given company login, user login and user
+     * password. The onboarding is completed after this step, and we save the
+     * company login in the options. We also store the current time as the
+     * company registration start time.
+     */
+    public function loginExistingUser(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        $companyDomain = $storage->getString('company_domain');
+        $companyLogin = $storage->getString('company_login');
+
+        [$parsedDomain, $parsedLogin] = $this->service->parseCompanyDomainAndLogin($companyDomain, $companyLogin);
+
+        $userLogin = $storage->getString('user_login');
+        $userPassword = $storage->getString('user_password');
+
+        try {
+            $response = App::provide('client')->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
+        } catch (RestDataException $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+                'data' => $e->getData(),
+            ], $e->getResponseCode());
+        } catch (\Exception $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully authenticated user',
+        ], 200);
+    }
+
+    /**
+     * Method is the callback for the two-factor authentication route. It
+     * authenticates the user with the given company login, domain, session id
+     * and two-factor authentication code.
+     */
+    public function loginExistingUserTwoFa(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+        $companyLogin = $storage->getString('company_login');
+        $companyDomain = $storage->getString('domain');
+
+        try {
+            $response = App::provide('client')->processTwoFaAuthenticationRequest(
+                $companyDomain,
+                $companyLogin,
+                $storage->getString('auth_session_id'),
+                $storage->getString('two_fa_type'),
+                $storage->getString('two_fa_code'),
+            );
+        } catch (\Exception $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully authenticated user',
+        ], 200);
+    }
+
+    /**
+     * Method is used to finish the logging in of the user. It is either called
+     * after a direct login of the user ({@see loginExistingUser}) or after the
+     * two-factor authentication ({@see loginExistingUserTwoFa}).
+     *
+     * @param array $response Should contain: token, refresh_token, company_id
+     * @param string $parsedDomain Will be saved in the options as 'domain'
+     * @param string $companyLogin Will be saved in the options as 'simplybook_company_login'
+     */
+    protected function finishLoggingInUser(array $response, string $parsedDomain, string $companyLogin): bool
+    {
+        $responseStorage = new Storage($response);
+
+        App::provide('client')->saveAuthenticationData(
+            $responseStorage->getString('token'),
+            $responseStorage->getString('refresh_token'),
+            $parsedDomain,
+            $companyLogin,
+            $responseStorage->getInt('company_id'),
+        );
+
+        $this->service->setOnboardingCompleted();
+
+        return true;
+    }
+
+    /**
+     * Method is used to send an SMS to the user for two-factor authentication.
+     */
+    public function sendSmsToUser(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        try {
+            App::provide('client')->requestSmsForUser(
+                $storage->getString('domain'),
+                $storage->getString('company_login'),
+                $storage->getString('auth_session_id'),
+            );
+        } catch (\Exception $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully requested SMS code',
+        ], 200);
     }
 }
