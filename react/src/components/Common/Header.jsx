@@ -52,7 +52,7 @@ const Header = () => {
             className={linkClassName}
             isButton={true}
             btnVariant="tertiary"
-            page="r/payment-widget"
+            page="v2/r/payment-widget"
           >
             {__("Upgrade", "simplybook")}
           </LoginLink>

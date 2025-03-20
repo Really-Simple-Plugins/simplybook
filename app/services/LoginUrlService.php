@@ -20,7 +20,7 @@ class LoginUrlService
     {
         $simplyBookDomain = $this->get_option('domain');
         $simplyBookCompanyPath = App::provide('client')->get_company_login();
-        return "https://$simplyBookCompanyPath.secure.$simplyBookDomain/v2";
+        return "https://$simplyBookCompanyPath.secure.$simplyBookDomain/";
     }
 
     /**
