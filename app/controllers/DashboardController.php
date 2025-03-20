@@ -26,8 +26,7 @@ class DashboardController implements ControllerInterface
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
-        
+
     }
 
     /**
@@ -69,6 +68,7 @@ class DashboardController implements ControllerInterface
             $menuPosition
         );
 
+        add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
         add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);
     }
 
@@ -120,16 +120,8 @@ class DashboardController implements ControllerInterface
     /**
      * Enqueue the Tailwind CSS for the dashboard in the header
      */
-    public function enqueueDashboardStyles(string $hookSuffix)
+    public function enqueueDashboardStyles()
     {
-        $pageSimplyBook = App::provide('request')->getString('page') === 'simplybook';
-        $hookContainsSimplyBook = strpos($hookSuffix, 'simplybook') !== false;
-        $currentScreenIsSimplyBook = $pageSimplyBook || $hookContainsSimplyBook;
-
-        if ($currentScreenIsSimplyBook === false) {
-            return;
-        }
-
         $chunkTranslation = $this->getReactChunkTranslations();
         if (empty($chunkTranslation)) {
             return;
