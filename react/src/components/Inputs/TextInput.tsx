@@ -30,7 +30,7 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
                 <input
                     ref={ref}
                     type={type}
-                    className={`w-full rounded-md p-1 shadow-lg focus:border-tertiary focus:outline-hidden focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ${className || ""}`}
+                    className={`w-full rounded-md !p-[0.5rem] !shadow-md !text-base !border-2 !border-gray-200 focus:border-tertiary focus:outline-hidden focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ${className || ""}`}
                     onClick={handleClick}
                     {...props}
                 />

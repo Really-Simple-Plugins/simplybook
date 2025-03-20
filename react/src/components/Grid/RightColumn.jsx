@@ -6,7 +6,7 @@ const RightColumn = ({
     children 
 }) => {
     return (
-        <div className="col-span-4">
+        <div className={clsx(className, "right-column")}>
             {children}
         </div>
     )

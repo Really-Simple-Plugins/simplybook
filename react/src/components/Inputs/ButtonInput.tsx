@@ -31,16 +31,11 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
 }) => {
   let localClassName = clsx(
     // Base styles
-    "rounded-full transition-all duration-200 ",
+    "rounded-full transition-all duration-200 p-4 cursor-pointer",
     {
       'bg-secondary text-white hover:bg-secondary-dark ': btnVariant === 'primary',
       'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant === 'secondary',
       'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant === 'tertiary'
-    },
-    {
-      'py-.5 px-3 font-normal text-xs border-1 ': size === 'sm',
-      'py-2 px-6 font-semibold ': size === 'md',
-      'py-3 px-8 text-lg font-semibold ': size === 'lg'
     },
     {
      'opacity-50 cursor-not-allowed ': disabled

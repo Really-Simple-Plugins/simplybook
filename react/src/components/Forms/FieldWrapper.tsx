@@ -1,6 +1,7 @@
 import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
+import Error from "../Errors/Error";
 
 interface FieldWrapperProps {
   label: string;
@@ -27,6 +28,7 @@ const FieldWrapper = memo(({
     type="text",
   children,
 }: FieldWrapperProps) => {
+
   const wrapperClasses = [
     "flex w-full flex-col",
     className,
@@ -42,26 +44,27 @@ const FieldWrapper = memo(({
       <div className={contentClasses}>
         {type==='checkbox' && children}
         <div className="flex items-center justify-between">
-        <Label.Root
-          className={"cursor-pointer pb-1 font-medium text-black text-md "}
-          htmlFor={inputId}
-        >
-          {label}
-          {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>}
-        </Label.Root>
+          <Label.Root
+            className={"cursor-pointer pb-2 font-medium text-black text-label "}
+            htmlFor={inputId}
+          >
+            {label}
+            {/* {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>} */}
+            {required}
+          </Label.Root>
         
-        {/* TODO: MAKE ICON ON HOVER:  */}
-        {help && (
-          <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
-        )}
+          {/* TODO: MAKE ICON ON HOVER:  */}
+          {help && (
+            <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
+          )}
         </div>
         {type!=='checkbox' && children}
       </div>
       
       {error && (
-        <p className="mt-2 text-xs font-light text-red-600" role="alert">
-          {error}
-        </p>
+        <Error 
+          error={error}
+        />
       )}
       
       {context && (

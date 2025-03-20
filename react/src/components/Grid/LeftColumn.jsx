@@ -6,7 +6,7 @@ const LeftColumn = ({
     children 
 }) => {
     return (
-        <div className={clsx(className, "col-span-4 col-start-2")}>
+        <div className={clsx(className, "left-column")}>
             {children}
         </div>
     )

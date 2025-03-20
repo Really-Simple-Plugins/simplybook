@@ -14,8 +14,14 @@
 @source "../safelist.txt";
 
 @theme {
+    /* Define new container width */
+
+    /* Box-shadow */
+    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);;
+
     /* Define custom font sizes */
-    --text-1xl: 1.25rem;
+    --text-label: 1rem;
+    --text-xl: 1.25rem;
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
@@ -32,6 +38,24 @@
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
 
-    --bg-gray-200: rgba(218, 218, 218, 0.5);
+    /* Overwrite base colors */
+    --color-gray-200: rgba(218, 218, 218, 0.5);
 }
+/**
+======================================
+
+======================================
+**/
+.max-w-container { width: 1400px; }
+
+/**
+======================================
+Onboarding styles
+======================================
+**/
+.onboarding-body {
+    height: 90svh;
+    margin: 1svh;
+}
+
 

@@ -28,9 +28,9 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                     {...props}
                 />
                 <div
-                    className={"w-8 h-4 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-"+top+" after:left-0.5 after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all"}
+                    className={"w-10 h-6 bg-gray-200  peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600 peer-checked:after:translate-x-4 peer-checked:after:border-white after:content-[''] after:absolute after:top-"+top+" after:left-0.5 after:bg-white after:border-gray-200 after:border after:rounded-full after:aspect-square after:h-4 after:w-4 after:transition-all"}
                 ></div>
-                <span className={`ml-2 leading-5 font-medium text-black text-md ${className || ""}`}>
+                <span className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}>
                     {label}
               </span>
             </label>
