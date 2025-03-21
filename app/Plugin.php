@@ -176,6 +176,9 @@ class Plugin
             ),
             new Http\Endpoints\BlockEndpoints(),
             new Http\Endpoints\LogOutEndpoint(),
+            new Http\Endpoints\SubscriptionEndpoints(
+                new Services\SubscriptionDataService(),
+            ),
         ]);
     }
 

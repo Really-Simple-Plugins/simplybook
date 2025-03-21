@@ -860,8 +860,21 @@ class ApiClient
         if ( !$this->company_registration_complete() ){
             return [];
         }
+
         $response = $this->api_call('admin/providers', [], 'GET');
         return $response['data'] ?? [];
+    }
+
+    /**
+     * Get all subscription data
+     */
+    public function get_subscription_data(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/tariff/current', [], 'GET');
     }
 
     /**
