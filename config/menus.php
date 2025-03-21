@@ -43,6 +43,7 @@ return [
     'notifications' => [
         'id' => 'notifications',
         'title' => __('Notifications', 'simplybook'),
+        'url' => '/settings/templates',
     ],
     'schedule' => [
         'id' => 'schedule',
