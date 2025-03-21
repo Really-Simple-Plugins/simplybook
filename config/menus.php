@@ -44,10 +44,6 @@ return [
         'id' => 'notifications',
         'title' => __('Notifications', 'simplybook'),
     ],
-    'custom' => [
-        'id' => 'custom',
-        'title' => __('Custom', 'simplybook'),
-    ],
     'schedule' => [
         'id' => 'schedule',
         'title' => __('Schedule', 'simplybook'),
