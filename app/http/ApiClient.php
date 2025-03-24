@@ -865,6 +865,63 @@ class ApiClient
     }
 
     /**
+     * Get all statistics
+     */
+    public function get_statistics(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        $json = '{
+  "most_popular_provider": {
+    "id": 5,
+    "name": "sdfsdf",
+    "qty": 1,
+    "email": "",
+    "description": "",
+    "phone": "",
+    "picture": null,
+    "picture_preview": null,
+    "color": null,
+    "is_active": true,
+    "is_visible": true,
+    "services": []
+  },
+  "most_popular_provider_bookings": 1,
+  "most_popular_service": {
+    "id": 5,
+    "name": "sdfsdf",
+    "description": "",
+    "price": null,
+    "currency": "EUR",
+    "deposit_price": null,
+    "tax_id": null,
+    "tax": null,
+    "duration": 60,
+    "buffer_time_after": 0,
+    "recurring_settings": null,
+    "picture": null,
+    "picture_preview": null,
+    "memberships": [],
+    "providers": [],
+    "is_active": true,
+    "is_visible": true,
+    "duration_type": null,
+    "limit_booking": null,
+    "min_group_booking": null
+  },
+  "most_popular_service_bookings": 2,
+  "bookings_today": 0,
+  "bookings_this_week": 0,
+  "id": null
+}';
+        return json_decode($json, true);
+
+//        return $this->api_call('admin/statistic', [], 'GET');
+    }
+
+    /**
      * If any services are registered
      *
      * @return bool
