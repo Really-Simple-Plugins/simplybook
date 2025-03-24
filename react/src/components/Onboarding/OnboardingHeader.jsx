@@ -18,14 +18,16 @@ const OnboardingHeader = ({
     return (
         <div className={clsx(className, "flex w-full items-center justify-between")}>
             {isModalOpen && <SignInModal onClose={toggleModal}/>}
-            <Logo className="mx-4 w-40 py-8" />
-            <div className="flex items-center">
-                <span className={"m-5 text-black"}>
-                    {__("Already got an account?", "simplybook")}{" "}
-                </span>
-                <a className="font-bold text-primary" href="#" onClick={toggleModal}>
-                    {__("Sign in here")}
-                </a>{" "}
+            <div className="flex flex-row justify-between w-full px-4">
+                <Logo className="mx-4 w-40 py-8" />
+                <div className="flex items-center">
+                    <span className={"m-5 text-black"}>
+                        {__("Already got an account?", "simplybook")}{" "}
+                    </span>
+                    <a className="font-bold text-primary" href="#" onClick={toggleModal}>
+                        {__("Sign in here")}
+                    </a>{" "}
+                </div>
             </div>
         </div>
     )
