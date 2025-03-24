@@ -72,7 +72,7 @@ class SubscriptionEndpoints implements MultiEndpointInterface
      * Fetch a specific subscription data key from the SimplyBook API and return
      * it. Dot notation is supported.
      * @example /wp-json/simplybook/v1/subscription_data/expire_date
-     * @example /wp-json/simplybook/v1/subscription_data/limits.booking-website
+     * @example /wp-json/simplybook/v1/subscription_data/limits:booking-website
      */
     public function getSubscriptionData(\WP_REST_Request $request): \WP_REST_Response
     {

@@ -47,13 +47,17 @@ class SubscriptionDataService
     /**
      * Using the Storage helper ensures we can utilize dot notation in the
      * request for a specific key in the subscription data.
-     * @param string $key The key to search for in the subscription data.
-     * @example /wp-json/simplybook/v1/subscription_data/limits.booking-website
+     * @param string $key The key to search for in the subscription data, a
+     * semicolon can be used for dot notation instead of a dot.
+     * @example /wp-json/simplybook/v1/subscription_data/limits:booking-website
      * @return mixed The value of the key in the subscription data.
      */
     public function search(string $key)
     {
         $storage = new Storage($this->all());
+
+        $key = str_replace(':', '.', $key);
+
         return $storage->get($key);
     }
 
