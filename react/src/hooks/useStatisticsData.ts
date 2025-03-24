@@ -7,15 +7,15 @@ const useStatisticsData = () => {
     const { onboardingCompleted } = useOnboardingData();
 
     const query = useQuery<StatisticsData>({
-        queryKey: ["subscription_data"],
+        queryKey: ["statistics"],
         queryFn: async () => {
             if (!onboardingCompleted) {
                 return {} as StatisticsData;
             }
 
-            let response = await request('subscription_data');
+            let response = await request('statistics');
             if (response == null) {
-                console.error('subscription_data error', response);
+                console.error('statistics error', response);
                 return {} as StatisticsData;
             }
 
@@ -29,16 +29,14 @@ const useStatisticsData = () => {
     const isLoading = query.isLoading;
 
     return {
-        subscription: query.data?.data,
-        subscriptionPlan: query.data?.data?.subscription_name,
-        expiresIn: query.data?.data?.expires_in,
-        isExpired: query.data?.data?.is_expired,
-        smsRemaining: query.data?.data?.limits?.sms_limits?.rest,
-        smsTotal: query.data?.data?.limits?.sms_limits?.total,
-        bookingsRemaining: query.data?.data?.limits?.sheduler_limit?.rest,
-        bookingsTotal: query.data?.data?.limits?.sheduler_limit?.total,
-        providersRemaining: query.data?.data?.limits?.provider_limit?.rest,
-        providersTotal: query.data?.data?.limits?.provider_limit?.total,
+        statistics: query.data?.data,
+        mostPopularProvider: query.data?.data.most_popular_provider,
+        mostPopularProviderName: query.data?.data.most_popular_provider.name,
+        mostPopularService: query.data?.data.most_popular_service,
+        mostPopularServiceName: query.data?.data.most_popular_service.name,
+        bookingsToday: query.data?.data.bookings_today,
+        bookingsThisWeek: query.data?.data.bookings_this_week,
+        bookingsThisMonth: query.data?.data.bookings_this_month,
         isLoading: isLoading,
     }
 };

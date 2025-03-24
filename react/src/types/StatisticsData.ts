@@ -1,21 +1,25 @@
 export interface StatisticsData {
     data: {
-        subscription_name: string;
-        expires_in: string;
-        is_expired: boolean;
-        limits: {
-            sms_limits: {
-                rest: number;
-                total: number;
-            };
-            sheduler_limit: { // Typo intended, its misspelled in the API
-                rest: number;
-                total: number;
-            };
-            provider_limit: {
-                rest: number;
-                total: number;
-            };
-        };
+        id: number | null;
+        most_popular_provider_bookings: number;
+        most_popular_service_bookings: number;
+        bookings_today: number;
+        bookings_this_week: number;
+        bookings_this_month: number | null | undefined;
+        most_popular_provider: {
+            id: number | null;
+            name: string;
+            is_active: boolean;
+            is_visible: boolean;
+            [key: string]: any; // Allow additional properties
+        },
+        most_popular_service: {
+            id: number | null;
+            name: string;
+            is_active: boolean;
+            is_visible: boolean;
+            [key: string]: any; // Allow additional properties
+        }
+        [key: string]: any; // Allow additional properties
     }
 }
