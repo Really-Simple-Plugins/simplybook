@@ -1,22 +1,22 @@
 import { useQuery } from "@tanstack/react-query";
 import useOnboardingData from "./useOnboardingData";
-import { SubscriptionData } from "../types/SubscriptionData";
+import { StatisticsData } from "../types/StatisticsData";
 import request from "../api/requests/request";
 
 const useStatisticsData = () => {
     const { onboardingCompleted } = useOnboardingData();
 
-    const query = useQuery<SubscriptionData>({
+    const query = useQuery<StatisticsData>({
         queryKey: ["subscription_data"],
         queryFn: async () => {
             if (!onboardingCompleted) {
-                return {} as SubscriptionData;
+                return {} as StatisticsData;
             }
 
             let response = await request('subscription_data');
             if (response == null) {
                 console.error('subscription_data error', response);
-                return {} as SubscriptionData;
+                return {} as StatisticsData;
             }
 
             return response;
