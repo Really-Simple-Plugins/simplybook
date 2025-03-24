@@ -912,8 +912,8 @@ class ApiClient
     "min_group_booking": null
   },
   "most_popular_service_bookings": 2,
-  "bookings_today": 0,
-  "bookings_this_week": 0,
+  "bookings_today": 4,
+  "bookings_this_week": 22,
   "id": null
 }';
         return json_decode($json, true);
