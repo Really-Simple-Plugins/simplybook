@@ -15,21 +15,22 @@ import useSettingsData from "../../hooks/useSettingsData";
  * @return {JSX.Element}
  */
 const TextField = forwardRef(
-  ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
-    const inputId = setting.id;
+  ({ setting, fieldState, name, label, help, context, className, type, ...props }, ref) => {
+    const inputId = setting.id; 
     return (
       <FieldWrapper
         label={label}
         help={help}
         error={fieldState?.error?.message}
-        context={context}
+        context= {context}
         className={className}
         inputId={inputId}
         required={props.required}
       >
         <TextInput
+          name={name}
           id={inputId}
-          type="text"
+          type={type}
           aria-invalid={!!fieldState?.error?.message}
           {...props}
         />
