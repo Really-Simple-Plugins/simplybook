@@ -166,7 +166,6 @@ class Plugin
             ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
-            new Http\Endpoints\DashboardDataEndpoint(),
             new Http\Endpoints\CompanyRegistrationEndpoint(
                 new Services\TaskService(),
             ),
