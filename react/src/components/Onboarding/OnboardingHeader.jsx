@@ -8,7 +8,7 @@ const OnboardingHeader = ({
     className, 
     signInLink 
 }) => {
-    const [isModalOpen, setIsModalOpen] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
   
     const toggleModal = (e) => {
         e.preventDefault();
