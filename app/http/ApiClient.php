@@ -1299,6 +1299,7 @@ class ApiClient
                     'company_login' => $companyLogin,
                     'user_login' => $userLogin,
                     'domain' => $companyDomain,
+                    'allowed2fa_providers' => $this->get2FaProvidersWithLabel(($response['allowed2fa_providers'] ?? ['ga'])),
                 ]);
         }
 
@@ -1344,6 +1345,10 @@ class ApiClient
         return $response;
     }
 
+    /**
+     * Request to send an SMS code to the user for two-factor authentication.
+     * @throws \Exception
+     */
     public function requestSmsForUser(string $companyDomain, string $companyLogin, string $sessionId): bool
     {
         $endpoint = add_query_arg([
@@ -1388,5 +1393,25 @@ class ApiClient
 
         update_option('simplybook_company_login', $companyLogin);
         update_option('simplybook_company_registration_start_time', time());
+    }
+
+    /**
+     * Return given providers with their labels. Can be used to parse the
+     * 'allowed2fa_providers' key in a response from the API.
+     */
+    private function get2FaProvidersWithLabel(array $providerKeys): array
+    {
+        $providerLabels = [
+            'ga'  => esc_html__('Google Authenticator', 'simplybook'),
+            'sms' => esc_html__('SMS', 'simplybook'),
+        ];
+
+        $allowedProviders = [];
+        foreach ($providerKeys as $provider) {
+            $allowedProviders[$provider] = ($providerLabels[$provider] ??
+                esc_html__('Unknown 2fa provider', 'simplybook'));
+        }
+
+        return $allowedProviders;
     }
 }
