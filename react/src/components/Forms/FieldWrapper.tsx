@@ -11,7 +11,7 @@ interface FieldWrapperProps {
   reverseLabel?: boolean;
   className?: string;
   inputId: string;
-  required?: boolean;
+  requiredMessage?: boolean;
   children: React.ReactNode;
     type?: string;
 }
@@ -24,7 +24,7 @@ const FieldWrapper = memo(({
   reverseLabel = false,
   className = "",
   inputId,
-  required = false,
+  requiredMessage = false,
     type="text",
   children,
 }: FieldWrapperProps) => {
@@ -49,7 +49,7 @@ const FieldWrapper = memo(({
           >
             {label}
             {/* {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>} */}
-            {required}
+            {requiredMessage}
           </Label.Root>
         
           {/* TODO: MAKE ICON ON HOVER:  */}

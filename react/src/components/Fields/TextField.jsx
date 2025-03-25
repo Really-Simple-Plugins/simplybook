@@ -25,10 +25,11 @@ const TextField = forwardRef(
         context= {context}
         className={className}
         inputId={inputId}
-        required={props.required}
+        requiredMessage={props.required}
       >
         <TextInput
           name={name}
+          ref={ref}
           id={inputId}
           type={type}
           aria-invalid={!!fieldState?.error?.message}
