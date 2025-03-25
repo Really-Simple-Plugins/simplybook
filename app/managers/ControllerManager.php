@@ -7,7 +7,7 @@ final class ControllerManager
     /**
      * Register a single controller as long as it implements the
      * ControllerInterface.
-     * @uses do_action simplybook_Controllers_loaded
+     * @uses do_action simplybook_controllers_loaded
      */
     public function registerControllers(array $Controllers)
     {
@@ -21,6 +21,6 @@ final class ControllerManager
             $controller->register();
         }
 
-        do_action('simplybook_Controllers_loaded');
+        do_action('simplybook_controllers_loaded');
     }
 }

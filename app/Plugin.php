@@ -38,7 +38,7 @@ class Plugin
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
-        add_action('simplybook_Controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
+        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
     }
 
@@ -125,7 +125,7 @@ class Plugin
     /**
      * Register Controllers. Hooked into simplybook_features_loaded to make sure
      * features are available to the Controllers.
-     * @uses do_action simplybook_Controllers_loaded
+     * @uses do_action simplybook_controllers_loaded
      */
     public function registerControllers()
     {
@@ -181,7 +181,7 @@ class Plugin
 
     /**
      * Fire an action when the plugin is upgraded from one version to another.
-     * Hooked into simplybook_Controllers_loaded to make sure Controllers can
+     * Hooked into simplybook_controllers_loaded to make sure Controllers can
      * hook into simplybook_plugin_version_upgrade
      * @uses do_action simplybook_plugin_version_upgrade
      */
