@@ -12,7 +12,7 @@ const Bookings = () => {
 
     const {
         mostPopularProviderName,
-        mostPoularProviderBookings,
+        mostPopularProviderBookings,
         mostPopularServiceName,
         mostPopularServiceBookings,
         bookingsToday,
@@ -23,12 +23,12 @@ const Bookings = () => {
     const FeaturedBlocks = [
         {
             title: __("Today", "simplybook"),
-            value: bookingsToday,
+            value: bookingsToday ?? '...',
             icon: "user-group",
         },
         {
             title: __("This week", "simplybook"),
-            value: bookingsThisWeek,
+            value: bookingsThisWeek ?? '...',
             icon: "user-group",
         },
     ];
@@ -36,13 +36,13 @@ const Bookings = () => {
     const DataList = [
         {
             title: __("Most popular provider", "simplybook"),
-            value: mostPopularProviderName,
-            uplift: mostPoularProviderBookings,
+            value: mostPopularProviderName ?? '...',
+            uplift: mostPopularProviderBookings,
             icon: "trophy",
         },
         {
             title: __("Most popular service", "simplybook"),
-            value: mostPopularServiceName,
+            value: mostPopularServiceName ?? '...',
             uplift: mostPopularServiceBookings,
             icon: "trophy",
         },
