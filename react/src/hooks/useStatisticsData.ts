@@ -30,15 +30,15 @@ const useStatisticsData = () => {
 
     return {
         statistics: query.data?.data,
-        mostPopularProvider: query.data?.data.most_popular_provider,
-        mostPopularProviderName: query.data?.data.most_popular_provider.name,
-        mostPoularProviderBookings: query.data?.data.most_popular_provider_bookings,
-        mostPopularService: query.data?.data.most_popular_service,
-        mostPopularServiceName: query.data?.data.most_popular_service.name,
-        mostPopularServiceBookings: query.data?.data.most_popular_service_bookings,
-        bookingsToday: query.data?.data.bookings_today,
-        bookingsThisWeek: query.data?.data.bookings_this_week,
-        bookingsThisMonth: query.data?.data.bookings_this_month,
+        mostPopularProvider: query.data?.data?.most_popular_provider,
+        mostPopularProviderName: query.data?.data?.most_popular_provider.name,
+        mostPopularProviderBookings: query.data?.data?.most_popular_provider_bookings,
+        mostPopularService: query.data?.data?.most_popular_service,
+        mostPopularServiceName: query.data?.data?.most_popular_service.name,
+        mostPopularServiceBookings: query.data?.data?.most_popular_service_bookings,
+        bookingsToday: query.data?.data?.bookings_today,
+        bookingsThisWeek: query.data?.data?.bookings_this_week,
+        bookingsThisMonth: query.data?.data?.bookings_this_month,
         isLoading: isLoading,
     }
 };
