@@ -9,8 +9,7 @@ final class FeatureManager
     /**
      * Register and load all features from the src/features directory. This
      * method automatically loads all classes from the features directory and
-     * injects the Service and Repository classes into the Controller class if
-     * they exist.
+     * injects the dependency classes into the Controller class if they exist.
      * @uses do_action simplybook_features_loaded
      */
     public function registerFeatures(array $features)
@@ -25,6 +24,7 @@ final class FeatureManager
                 continue;
             }
 
+            // Check if the feature directory exists
             $featuresPath = $this->getFeaturePath($featureName, $needsPro);
             if (!is_dir($featuresPath)) {
                 continue;
