@@ -2,7 +2,6 @@ import fetchRequest from "./fetchRequest";
 import glue from "../helpers/glue";
 import errorHandler from "../helpers/errorHandler";
 import { API_BASE_PATH, NONCE } from "../config";
-import { c } from "react-compiler-runtime";
 
 /**
  * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
@@ -36,9 +35,6 @@ const request = async (path, method = "POST", data = {}) => {
   } catch (fetchError) {
     // If fetch fails, log error with handler and try AJAX fallback
     errorHandler(fetchError, args.path);
-
-    console.error("fetch error", fetchError);
-
   }
 };
 
