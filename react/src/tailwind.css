@@ -84,7 +84,6 @@ Input global styles
 #simplybook_app{
 
     label {
-        display: block;
         font-size: var(--text-label);
         font-weight: var(--font-weight-medium);
         margin-bottom: 0.5rem; 

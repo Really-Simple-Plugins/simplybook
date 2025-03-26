@@ -2,6 +2,7 @@ import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import Error from "../Errors/Error";
+import { faSquarePen } from "@fortawesome/free-solid-svg-icons";
 
 interface FieldWrapperProps {
   label: string;
@@ -11,9 +12,9 @@ interface FieldWrapperProps {
   reverseLabel?: boolean;
   className?: string;
   inputId: string;
-  requiredMessage?: boolean;
+  required?: boolean;
   children: React.ReactNode;
-    type?: string;
+  type?: string;
 }
 
 const FieldWrapper = memo(({
@@ -24,10 +25,14 @@ const FieldWrapper = memo(({
   reverseLabel = false,
   className = "",
   inputId,
-  requiredMessage = false,
-    type="text",
+  required = false,
+  type="text",
   children,
 }: FieldWrapperProps) => {
+
+  const setRequired = required ? false : true;
+
+  console.log(setRequired);
 
   const wrapperClasses = [
     "flex w-full flex-col",
@@ -48,8 +53,11 @@ const FieldWrapper = memo(({
             htmlFor={inputId}
           >
             {label}
-            {/* {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>} */}
-            {requiredMessage}
+            {required}
+            {/* {setRequired 
+            ? <span className="ml-1 text-gray-500 font-normal text-xs">({__('This field is required', 'simplybook')})</span>
+            : <span></span>
+            } */}
           </Label.Root>
         
           {/* TODO: MAKE ICON ON HOVER:  */}
