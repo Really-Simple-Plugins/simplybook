@@ -38,7 +38,7 @@ const useStatisticsData = () => {
         mostPopularServiceBookings: query.data?.data?.most_popular_service_bookings,
         bookingsToday: query.data?.data?.bookings_today,
         bookingsThisWeek: query.data?.data?.bookings_this_week,
-        bookingsThisMonth: query.data?.data?.bookings_this_month,
+        bookingsLastThirtyDays: query.data?.data?.bookings,
         isLoading: isLoading,
     }
 };

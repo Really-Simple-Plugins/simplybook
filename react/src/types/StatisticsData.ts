@@ -5,7 +5,7 @@ export interface StatisticsData {
         most_popular_service_bookings: number;
         bookings_today: number;
         bookings_this_week: number;
-        bookings_this_month: number | null | undefined;
+        bookings: number | null | undefined; // Last 30 days
         most_popular_provider: {
             id: number | null;
             name: string;

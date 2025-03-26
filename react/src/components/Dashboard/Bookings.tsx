@@ -3,7 +3,7 @@ import BlockHeading from "../Blocks/BlockHeading";
 import { __ } from "@wordpress/i18n";
 import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
-import {Fragment, useEffect} from "react";
+import {Fragment} from "react";
 import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
 import useStatisticsData from "../../hooks/useStatisticsData";
@@ -17,6 +17,7 @@ const Bookings = () => {
         mostPopularServiceBookings,
         bookingsToday,
         bookingsThisWeek,
+        bookingsLastThirtyDays,
         isLoading,
     } = useStatisticsData();
 
