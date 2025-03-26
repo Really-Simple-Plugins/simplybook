@@ -31,10 +31,9 @@ final class FeatureManager
             }
 
             // Load all classes from the feature directory
-            foreach (glob($featuresPath . '*.php') as $file) {
-                require_once $file;
-            }
+            $this->loadFilesFromDirectory($featuresPath);
 
+            // Get the feature namespace
             $prefix = $this->getFeatureNamespace($featureName, $needsPro) . $featureName;
 
             // The controller is the backbone of a feature
@@ -46,6 +45,13 @@ final class FeatureManager
             $dependencies = [];
             if (!empty($settings['dependencies'])) {
                 $dependencies = $this->resolveDependencies($settings['dependencies'], $prefix);
+            }
+
+            // Check if the feature has a domain folder, this should be loaded
+            // before the controller. This way the controller can use them.
+            if (!empty($settings['domain'])) {
+                $domainPath = $featuresPath . $settings['domain'] . '/';
+                $this->loadFilesFromDirectory($domainPath);
             }
 
             // Start the feature by instantiating the controller
@@ -106,5 +112,18 @@ final class FeatureManager
 
             return new $fullClassName();
         }, $dependencies);
+    }
+
+    private function loadFilesFromDirectory(string $directory, string $fileExtension = 'php'): bool
+    {
+        if (!is_dir($directory)) {
+            return false;
+        }
+
+        foreach (glob($directory . '*.' . $fileExtension) as $file) {
+            require_once $file;
+        }
+
+        return true;
     }
 }

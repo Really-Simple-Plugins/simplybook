@@ -12,21 +12,6 @@ return [
         'id' => 'add_service',
         'condition' => [
             'type' => 'serverside',
-            'function' => '!(new \SimplyBook\App\Http\ApiClient())->company_registration_complete()',
-        ],
-        'text' => __('Complete the onboarding to get started!','simplybook'),
-        'status' => 'open',
-        'type' => 'required',
-        'action' => [
-            'text' => 'Add Service',
-            'link' => '/services/new',
-        ],
-    ],
-    // todo - this entry had the same ID as the previous one, why?
-    'add_service_todo' => [
-        'id' => 'add_service_todo',
-        'condition' => [
-            'type' => 'serverside',
             'function' => '(new \Simplybook_old\Api\Api())->has_services()',
         ],
         'text' => __('Add your first service','simplybook'),

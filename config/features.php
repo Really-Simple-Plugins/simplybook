@@ -14,4 +14,14 @@ return [
             'Service',
         ]
     ],
+    'TaskManagement' => [
+        'enabled' => true,
+        'inScope' => is_admin(),
+        'pro' => false,
+        'dependencies' => [
+            'Repository',
+            'Service',
+        ],
+        'domain' => 'Tasks',
+    ],
 ];
