@@ -4,9 +4,9 @@ import { useForm, Controller } from "react-hook-form";
 import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 
+
 const FormTwoFa = ({
-    onClose,
-    parseTwoFaProviders
+    onClose
 }) => {
     /**
      * Initialise constants
