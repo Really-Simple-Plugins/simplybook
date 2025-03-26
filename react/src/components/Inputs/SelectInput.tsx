@@ -1,19 +1,8 @@
 import React from "react";
 import * as Select from "@radix-ui/react-select";
 import Icon from "../Common/Icon";
-
-interface SelectOption {
-    key: string;
-    value: string;
-    label: string;
-}
-
-interface SelectInputProps {
-    name: string;
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void; // Update the type
-    options?: SelectOption[];
-}
+import { SelectOption } from "../../types/inputs/SelectOption";
+import { SelectInputProps } from "../../types/inputs/SelectInputProps";
 
 /**
  * Styled select input component
@@ -41,7 +30,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 {...props}
             >
                 {normalizedOptions.map((option) => (
-                    <option key={option.key} value={option.value}>
+                    <option key={option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}
