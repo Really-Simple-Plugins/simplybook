@@ -14,6 +14,7 @@ const FormTwoFa = ({
     const [twoFaProviders, setTwoFaProviders] = useState({ga: __("Google Authenticator", "simplybook")});
     const [twoFaCode, setTwoFaCode] = useState("");
     const [selectedProvider, setSelectedProvider] = useState(twoFaProviders[0]);
+    const [smsRequested, setSmsRequested] = useState(false); // Default is false
 
     /**
      * Create a useForm instance for the 2FA field
@@ -72,7 +73,8 @@ const FormTwoFa = ({
       domain: domain,
     });
     if (response) {
-      return console.log("SMS request successful:", response);
+        setSmsRequested(true);
+        return console.log("SMS request successful:", response);
     }
     console.error("SMS request error:", error);
   };
@@ -126,9 +128,15 @@ const FormTwoFa = ({
                         )}
                     />
                 {selectedProvider === "sms" && (
-                <button type="button" onClick={requestSms}>
-                    {__("Request SMS", "simplybook")}
-                </button>
+                <ButtonInput 
+                    className="mt-4 mb-4"
+                    btnVariant="primary"
+                    type="button"
+                    onClick={requestSms}
+                    disabled={setDisabled2FA || smsRequested}
+                >
+                    {smsRequested ? __("SMS Requested", "simplybook") : __("Request SMS", "simplybook")}
+                </ButtonInput>
                 )}
                 <div className={"two_fa_button_wrapper flex flex-col"}>
                     <ButtonInput 
