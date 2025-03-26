@@ -40,6 +40,8 @@ class Plugin
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
+
+        do_action('simplybook_plugin_loaded');
     }
 
     /**
@@ -136,11 +138,7 @@ class Plugin
             new Controllers\CapabilityController(
                 new Services\CapabilityService(),
             ),
-            new Controllers\TaskController(
-                new Services\TaskService(),
-            ),
             new Controllers\ScheduleController(),
-
             new Controllers\WidgetController(),
             new Controllers\BlockController(),
         ]);
@@ -161,15 +159,10 @@ class Plugin
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),
             new Http\Endpoints\WidgetEndpoint(),
-            new Http\Endpoints\TaskEndpoints(
-                new Services\TaskService(),
-            ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
             new Http\Endpoints\DashboardDataEndpoint(),
-            new Http\Endpoints\CompanyRegistrationEndpoint(
-                new Services\TaskService(),
-            ),
+            new Http\Endpoints\CompanyRegistrationEndpoint(),
             new Http\Endpoints\WaitForRegistrationEndpoint(),
             new Http\Endpoints\RelatedPluginEndpoints(
                 new Services\RelatedPluginService(),

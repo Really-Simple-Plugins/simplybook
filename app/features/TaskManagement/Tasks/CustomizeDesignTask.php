@@ -2,17 +2,17 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AddServiceTask extends AbstractTask
+class CustomizeDesignTask extends AbstractTask
 {
     /**
      * @inheritDoc
      */
-    protected bool $required = true;
+    protected bool $required = false;
 
     /**
      * @inheritDoc
      */
-    protected string $identifier = 'add_service';
+    protected string $identifier = 'customize_design';
 
     /**
      * @inheritDoc
@@ -34,7 +34,7 @@ class AddServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Add your first service','simplybook');
+        return esc_html__('Customize your booking widget','simplybook');
     }
 
     /**
@@ -44,8 +44,8 @@ class AddServiceTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add service','simplybook'),
-            'link' => '#/settings/services',
+            'text' => esc_html__('Design settings','simplybook'),
+            'link' => '#/settings/design',
         ];
     }
 }

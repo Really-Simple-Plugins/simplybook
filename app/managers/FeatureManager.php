@@ -31,7 +31,11 @@ final class FeatureManager
             }
 
             // Load all classes from the feature directory
-            $this->loadFilesFromDirectory($featuresPath);
+            $priorityFiles = ($settings['priorityFiles'] ?? []);
+            $loaded = $this->loadAllFeatureFiles($featuresPath, $priorityFiles);
+            if ($loaded === false) {
+                continue;
+            }
 
             // Get the feature namespace
             $prefix = $this->getFeatureNamespace($featureName, $needsPro) . $featureName;
@@ -47,20 +51,13 @@ final class FeatureManager
                 $dependencies = $this->resolveDependencies($settings['dependencies'], $prefix);
             }
 
-            // Check if the feature has a domain folder, this should be loaded
-            // before the controller. This way the controller can use them.
-            if (!empty($settings['domain'])) {
-                $domainPath = $featuresPath . $settings['domain'] . '/';
-                $this->loadFilesFromDirectory($domainPath);
-            }
-
             // Start the feature by instantiating the controller
             $instance = new $controllerClass(... $dependencies);
 
             // Reject all given feature Controllers when they do not implement
             // the FeatureInterface
             if (!$instance instanceof FeatureInterface) {
-                return;
+                continue;
             }
 
             $instance->register();
@@ -101,7 +98,7 @@ final class FeatureManager
             $fullClassName = $featureNamespace . $dependency;
 
             // if $dependency starts with a backslash, it's a fully qualified
-            // class name and we can instantiate it directly
+            // class name, and we can instantiate it directly
             if ($dependency[0] === '\\') {
                 $fullClassName = $dependency;
             }
@@ -114,14 +111,28 @@ final class FeatureManager
         }, $dependencies);
     }
 
-    private function loadFilesFromDirectory(string $directory, string $fileExtension = 'php'): bool
+    /**
+     * Load all files for the current feature from the given directory. This
+     * method will even load files from subdirectories.
+     */
+    private function loadAllFeatureFiles(string $directory, array $priorityFiles = []): bool
     {
         if (!is_dir($directory)) {
             return false;
         }
 
-        foreach (glob($directory . '*.' . $fileExtension) as $file) {
-            require_once $file;
+        if (!empty($priorityFiles)) {
+            foreach ($priorityFiles as $priorityFile) {
+                require_once trailingslashit($directory) . $priorityFile . '.php';
+            }
+        }
+
+        $recursivelyFoundFilesInDirectory = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($recursivelyFoundFilesInDirectory as $file) {
+            require_once $file->getPathname();
         }
 
         return true;

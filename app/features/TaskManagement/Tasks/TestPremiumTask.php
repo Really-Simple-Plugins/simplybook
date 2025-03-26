@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AddServiceTask extends AbstractTask
+class TestPremiumTask extends AbstractTask
 {
     /**
      * @inheritDoc
@@ -12,7 +12,12 @@ class AddServiceTask extends AbstractTask
     /**
      * @inheritDoc
      */
-    protected string $identifier = 'add_service';
+    protected bool $premium = true;
+
+    /**
+     * @inheritDoc
+     */
+    protected string $identifier = 'is_premium';
 
     /**
      * @inheritDoc
@@ -34,7 +39,7 @@ class AddServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Add your first service','simplybook');
+        return esc_html__('This is a premium task!','simplybook');
     }
 
     /**
@@ -44,8 +49,8 @@ class AddServiceTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add service','simplybook'),
-            'link' => '#/settings/services',
+            'text' => esc_html__('Upgrade','simplybook'),
+            'link' => 'todo',
         ];
     }
 }

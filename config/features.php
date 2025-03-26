@@ -12,16 +12,14 @@ return [
         'pro' => false,
         'dependencies' => [
             'Service',
-        ]
+        ],
     ],
     'TaskManagement' => [
-        'enabled' => true,
-        'inScope' => is_admin(),
+        'enabled' => FeatureHelper::isEnabled('task_management'),
+        'inScope' => is_admin() || simplybook_is_wp_json_request(),
         'pro' => false,
-        'dependencies' => [
-            'Repository',
-            'Service',
+        'priorityFiles' => [
+            'Tasks/AbstractTask',
         ],
-        'domain' => 'Tasks',
     ],
 ];
