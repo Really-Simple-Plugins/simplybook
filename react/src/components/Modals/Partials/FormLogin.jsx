@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { __ } from "@wordpress/i18n";
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, set } from "react-hook-form";
 import TextField from "../../Fields/TextField";
 import SelectField from "../../Fields/SelectField";
 import ButtonInput from "../../Inputs/ButtonInput";
@@ -12,11 +12,13 @@ import { API_BASE_PATH, NONCE } from "../../../api/config";
 import request from "../../../api/requests/request";
 
 const formLogin = ({
-    onClose
+    onClose,
+    setRequire2fa
 }) => {
         /**
          * Initialise constants
         */
+        const [twoFaProviders, setTwoFaProviders] = useState({ga: __("Google Authenticator", "simplybook")});
         const [authSessionId, setAuthSessionId] = useState(null);
         const [companyLogin, setCompanyLogin] = useState(null);
         const [userLogin, setUserLogin] = useState(null);
@@ -78,7 +80,6 @@ const formLogin = ({
          * @returns 
          */
         const logUserIn = async (formData) => {
-
             try {
                 // let path = "https://user-api-v2.simplybook.me/admin/"
                 let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
@@ -91,12 +92,14 @@ const formLogin = ({
                 });
 
                 if (response.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
-                    setRequire2fa(true);
+
                     setAuthSessionId(response.data.auth_session_id);
                     setCompanyLogin(response.data.company_login);
                     setUserLogin(response.data.user_login);
                     setDomain(response.data.domain);
                     setTwoFaProviders(response.data.allowed2fa_providers);
+
+                    setRequire2fa(true);
 
                     return;
                 }
@@ -217,7 +220,7 @@ const formLogin = ({
                 >
                     {__("Close", "simplybook")}
                 </ButtonInput>
-            </form>          
+            </form>         
         </>
     );  
 }

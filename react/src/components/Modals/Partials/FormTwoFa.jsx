@@ -5,9 +5,9 @@ import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 
 const FormTwoFa = ({
-    onClose
+    onClose,
+    parseTwoFaProviders
 }) => {
-
     /**
      * Initialise constants
      */
