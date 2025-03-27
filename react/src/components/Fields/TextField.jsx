@@ -29,8 +29,6 @@ const TextField = forwardRef(
 
     const inputId = setting.id; 
 
-    console.log(required);
-
     return (
       <FieldWrapper
         label={label}

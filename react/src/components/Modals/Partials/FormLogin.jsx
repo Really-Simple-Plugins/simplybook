@@ -131,7 +131,7 @@ const formLogin = ({
             { key: "login:booking.lcn.uk", value: "login:booking.lcn.uk", label: "booking.lcn.uk" },
             { key: "login:booking.register365.ie", value: "login:booking.register365.ie", label: "booking.register365.ie" },
             // GET RID OF THIS LATER!! 
-            { key: "default:https://wp.simplybook.ovh/", value: "default:https://wp.simplybook.ovh/", label: "wp.simplybook.ovh/" }
+            { key: "default:wp.simplybook.ovh/", value: "default:wp.simplybook.ovh/", label: "wp.simplybook.ovh/" }
     
         ];
 
