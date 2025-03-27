@@ -58,7 +58,7 @@ class TaskManagementController implements FeatureInterface
     private function initiateTasks(): void
     {
         if ($this->service->hasTasks()) {
-//            return;
+            return;
         }
 
         $this->service->addTasks(
