@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  important: "#simplybook_app",
   mode: "jit",
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   plugins: [
@@ -11,7 +12,7 @@ module.exports = {
         '1xl': '1.25rem',
         '2xl': '1.75rem',
         '3xl': '2.25rem',
-        
+
       },
       colors: {
         primary: {
