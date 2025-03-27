@@ -61,8 +61,6 @@ const OnboardingStep = ({
       }
     }, []);
 
-    console.log(currentStep);
-
   const onSubmit = async (formData, buttonType = "primary") => {
     setApiError(null);
     setDisabled(true);
