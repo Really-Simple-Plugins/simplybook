@@ -1,30 +1,49 @@
 <?php
+
 namespace SimplyBook\Features\TaskManagement;
 
-use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\TaskInterface;
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 
 class TaskManagementController implements FeatureInterface
 {
-    use HasRestAccess;
-    use HasAllowlistControl;
-
+    private TaskManagementEndpoints $endpoints;
     private TaskManagementService $service;
+    private TaskManagementListener $listener;
 
     public function __construct()
     {
         $this->service = new TaskManagementService(
             new TaskManagementRepository
         );
+
+        $this->endpoints = new TaskManagementEndpoints($this->service);
+        $this->listener = new TaskManagementListener($this->service);
     }
 
     public function register()
     {
+        $this->test();
+
+        $this->endpoints->register();
+        $this->listener->listen();
+
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
-        add_filter('simplybook_rest_routes', [$this, 'addTaskRoutes']);
+    }
+
+    public function test()
+    {
+        if (isset($_GET['admin']) && $_GET['admin'] === 'rsp') {
+
+            echo '<pre>';
+            foreach ($this->service->getAllTasks() as $task) {
+                var_dump($task->toArray());
+                echo '<br>';
+            }
+            exit();
+
+        }
     }
 
     /**
@@ -46,7 +65,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\TestPremiumTask(),
         ];
 
-        return array_filter($pluginTasks, function($task) {
+        return array_filter($pluginTasks, function ($task) {
             return $task instanceof TaskInterface;
         });
     }
@@ -80,54 +99,5 @@ class TaskManagementController implements FeatureInterface
         $this->service->upgradeTasks(
             $this->getTaskObjects()
         );
-    }
-
-    /**
-     * Add the task routes to the REST API.
-     */
-    public function addTaskRoutes(array $routes): array
-    {
-        if ($this->adminAccessAllowed() === false) {
-            return $routes;
-        }
-
-        $routes['get_tasks'] = [
-            'methods' => \WP_REST_Server::CREATABLE,
-            'callback' => [$this, 'getTasksCallback'],
-        ];
-
-        $routes ['dismiss_task'] = [
-            'methods' => \WP_REST_Server::CREATABLE,
-            'callback' => [$this, 'dismissTaskCallback'],
-        ];
-
-        return $routes;
-    }
-
-    /**
-     * Return current tasks as a WP_REST_Response.
-     */
-    public function getTasksCallback(\WP_REST_Request $request): \WP_REST_Response
-    {
-        $allTasksAsArray = array_map(function($task) {
-            return $task->toArray();
-        }, $this->service->getAllTasks());
-
-        return $this->sendHttpResponse(
-            array_values($allTasksAsArray) // Keys should be removed
-        );
-    }
-
-    /**
-     * Dismiss a task by taskId.
-     */
-    public function dismissTaskCallback(\WP_REST_Request $request): \WP_REST_Response
-    {
-        $storage = $this->retrieveHttpStorage($request);
-
-        $sanitizedTaskId = $storage->getTitle('taskId');
-        $this->service->dismissTask($sanitizedTaskId);
-
-        return $this->sendHttpResponse();
     }
 }
