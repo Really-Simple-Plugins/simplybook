@@ -194,7 +194,7 @@ class OnboardingController implements FeatureInterface
             ], 400);
         }
 
-        $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
+        $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
 
         return new \WP_REST_Response([
             'message' => 'Successfully authenticated user',
