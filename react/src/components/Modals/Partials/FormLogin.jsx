@@ -81,7 +81,6 @@ const formLogin = ({
          */
         const logUserIn = async (formData) => {
             try {
-                // let path = "https://user-api-v2.simplybook.me/admin/"
                 let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
                 let data = { ...formData, nonce: NONCE };
 
@@ -103,7 +102,6 @@ const formLogin = ({
 
                     return;
                 }
-
 
                 window.location.href = "/wp-admin/admin.php?page=simplybook";
 

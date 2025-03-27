@@ -17,6 +17,8 @@ const FormTwoFa = ({
     const [selectedProvider, setSelectedProvider] = useState(firstProvider);
     const [smsRequested, setSmsRequested] = useState(false); // Default is false
 
+    console.log(firstProvider);
+
     /**
      * Create a useForm instance for the 2FA field
      */
@@ -104,7 +106,7 @@ const FormTwoFa = ({
                 )}
                 />
         ) : (
-            <input type={"hidden"} name={"two_fa_type"} value={twoFaProviders} />
+            <input type={"hidden"} name={"two_fa_type"} value={firstProvider} />
         )}
             <div className={"two_fa_type_wrapper flex flex-col"}>
                     <Controller
