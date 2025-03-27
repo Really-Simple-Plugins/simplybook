@@ -4,30 +4,12 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class AddServiceTask extends AbstractTask
 {
+    const IDENTIFIER = 'add_service';
+
     /**
      * @inheritDoc
      */
     protected bool $required = true;
-
-    /**
-     * @inheritDoc
-     */
-    protected string $identifier = 'add_service';
-
-    /**
-     * @inheritDoc
-     */
-    public function condition(): bool
-    {
-        /**
-         * Original:
-         * 'condition' => [
-         *      'type' => 'serverside',
-         *      'function' => '(new \Simplybook_old\Api\Api())->has_services()',
-         * ],
-         */
-        return true;
-    }
 
     /**
      * @inheritDoc

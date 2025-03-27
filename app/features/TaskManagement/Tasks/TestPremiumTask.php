@@ -4,6 +4,8 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class TestPremiumTask extends AbstractTask
 {
+    const IDENTIFIER = 'is_premium';
+
     /**
      * @inheritDoc
      */
@@ -13,26 +15,6 @@ class TestPremiumTask extends AbstractTask
      * @inheritDoc
      */
     protected bool $premium = true;
-
-    /**
-     * @inheritDoc
-     */
-    protected string $identifier = 'is_premium';
-
-    /**
-     * @inheritDoc
-     */
-    public function condition(): bool
-    {
-        /**
-         * Original:
-         * 'condition' => [
-         *      'type' => 'serverside',
-         *      'function' => '(new \Simplybook_old\Api\Api())->has_services()',
-         * ],
-         */
-        return true;
-    }
 
     /**
      * @inheritDoc

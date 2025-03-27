@@ -12,10 +12,10 @@ abstract class AbstractTask implements TaskInterface
     const STATUS_PREMIUM = 'premium';
 
     /**
-     * Override this property to define the identifier of the task. This
+     * Override this constant to define the identifier of the task. This
      * identifier is used to identify the task in the database and in the UI.
      */
-    protected string $identifier;
+    const IDENTIFIER = '';
 
     /**
      * Override this property to define the version of the task. This version is
@@ -58,21 +58,11 @@ abstract class AbstractTask implements TaskInterface
     abstract public function getText(): string;
 
     /**
-     * Override this method to define the initial condition of the task. If the
-     * condition is false, the task will not be displayed to the user. This is
-     * done by setting the initial status to 'completed'.
-     */
-    public function condition(): bool
-    {
-        return true;
-    }
-
-    /**
      * @inheritDoc
      */
     public function getId(): string
     {
-        return $this->identifier;
+        return static::IDENTIFIER;
     }
 
     /**

@@ -4,30 +4,12 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class CustomizeDesignTask extends AbstractTask
 {
+    const IDENTIFIER = 'customize_design';
+
     /**
      * @inheritDoc
      */
     protected bool $required = false;
-
-    /**
-     * @inheritDoc
-     */
-    protected string $identifier = 'customize_design';
-
-    /**
-     * @inheritDoc
-     */
-    public function condition(): bool
-    {
-        /**
-         * Original:
-         * 'condition' => [
-         *      'type' => 'serverside',
-         *      'function' => '(new \Simplybook_old\Api\Api())->has_services()',
-         * ],
-         */
-        return true;
-    }
 
     /**
      * @inheritDoc
