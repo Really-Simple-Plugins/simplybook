@@ -77,16 +77,26 @@ class TaskManagementService
         }
     }
 
+    /**
+     * Dismiss a task by setting the status to 'dismissed'. Only allowed if
+     * the task is not required.
+     */
     public function dismissTask(string $taskId): void
     {
         $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_DISMISSED);
     }
 
+    /**
+     * Open a task by setting the status to 'open'
+     */
     public function openTask(string $taskId): void
     {
         $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_OPEN);
     }
 
+    /**
+     * Complete a task by setting the status to 'completed'
+     */
     public function completeTask(string $taskId): void
     {
         $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_COMPLETED);
