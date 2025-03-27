@@ -3,6 +3,7 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Interfaces\TaskInterface;
+use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 
 class TaskManagementRepository
 {
@@ -86,13 +87,18 @@ class TaskManagementRepository
     }
 
     /**
-     * Update the status of a task if the task exists
+     * Update the status of a task if the task exists. If the task is required
+     * and the status is set to 'dismissed', the status will not be updated.
      */
     public function updateTaskStatus(string $taskId, string $status): void
     {
         $task = $this->getTask($taskId);
         if ($task === null) {
             return;
+        }
+
+        if ($task->isRequired() && $status === AbstractTask::STATUS_DISMISSED) {
+            return; // Not allowed
         }
 
         $task->setStatus($status);
