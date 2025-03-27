@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunksimplybook_app=globalThis.webpackChunksimplybook_app||[]).push([[184],{6184:(l,e,o)=>{o.r(e),o.d(e,{ReactQueryDevtools:()=>u,ReactQueryDevtoolsPanel:()=>n});var u=function(){return null},n=function(){return null}}}]);
