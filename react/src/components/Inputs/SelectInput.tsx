@@ -30,7 +30,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 {...props}
             >
                 {normalizedOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
+                    <option key={option.key ? option.key : option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}
