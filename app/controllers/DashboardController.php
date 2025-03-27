@@ -27,7 +27,7 @@ class DashboardController implements ControllerInterface
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
-        
+
     }
 
     /**
@@ -257,11 +257,9 @@ class DashboardController implements ControllerInterface
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
-                // 'is_onboarding_completed' => $this->onboarding_completed(),
-                'is_onboarding_completed' => false,
+                 'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
-                // 'completed_step' => get_option('simplybook_completed_step', 0),
-                'completed_step' => 0,
+                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'tips_and_tricks' => App::env('simplybook.tips_and_tricks'),
             ]
         );
