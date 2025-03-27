@@ -92,8 +92,11 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
 
         $this->cleanup_callback_url();
 
-        // todo - find other way to trigger task validation
-        // $this->service->validateTaskConditions();
+        /**
+         * Action: simplybook_company_registered
+         * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
+         */
+        do_action('simplybook_company_registered', $storage->getString('domain'), $storage->getInt('company_id'));
 
         return new \WP_REST_Response([
             'message' => 'Successfully registered company for current WordPress website.',
