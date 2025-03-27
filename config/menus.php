@@ -43,10 +43,7 @@ return [
     'notifications' => [
         'id' => 'notifications',
         'title' => __('Notifications', 'simplybook'),
-    ],
-    'custom' => [
-        'id' => 'custom',
-        'title' => __('Custom', 'simplybook'),
+        'url' => '/settings/templates',
     ],
     'schedule' => [
         'id' => 'schedule',

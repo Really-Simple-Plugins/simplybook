@@ -38,8 +38,10 @@ class Plugin
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
-        add_action('simplybook_Controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
+        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
+
+        do_action('simplybook_plugin_loaded');
     }
 
     /**
@@ -125,7 +127,7 @@ class Plugin
     /**
      * Register Controllers. Hooked into simplybook_features_loaded to make sure
      * features are available to the Controllers.
-     * @uses do_action simplybook_Controllers_loaded
+     * @uses do_action simplybook_controllers_loaded
      */
     public function registerControllers()
     {
@@ -136,11 +138,7 @@ class Plugin
             new Controllers\CapabilityController(
                 new Services\CapabilityService(),
             ),
-            new Controllers\TaskController(
-                new Services\TaskService(),
-            ),
             new Controllers\ScheduleController(),
-
             new Controllers\WidgetController(),
             new Controllers\BlockController(),
         ]);
@@ -161,15 +159,10 @@ class Plugin
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),
             new Http\Endpoints\WidgetEndpoint(),
-            new Http\Endpoints\TaskEndpoints(
-                new Services\TaskService(),
-            ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
             new Http\Endpoints\DashboardDataEndpoint(),
-            new Http\Endpoints\CompanyRegistrationEndpoint(
-                new Services\TaskService(),
-            ),
+            new Http\Endpoints\CompanyRegistrationEndpoint(),
             new Http\Endpoints\WaitForRegistrationEndpoint(),
             new Http\Endpoints\RelatedPluginEndpoints(
                 new Services\RelatedPluginService(),
@@ -181,7 +174,7 @@ class Plugin
 
     /**
      * Fire an action when the plugin is upgraded from one version to another.
-     * Hooked into simplybook_Controllers_loaded to make sure Controllers can
+     * Hooked into simplybook_controllers_loaded to make sure Controllers can
      * hook into simplybook_plugin_version_upgrade
      * @uses do_action simplybook_plugin_version_upgrade
      */

@@ -4,14 +4,14 @@ import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
-const LoginLink = ({ 
-    className, 
-    page, 
-    isButton = false, 
-    size="md", 
-    btnVariant, 
-    children 
-}) => { 
+const LoginLink = ({
+    className,
+    page,
+    isButton = false,
+    size="md",
+    btnVariant,
+    children
+}) => {
 
     // Import the fetch module
     const {fetchLinkData } = useLoginData();
@@ -24,17 +24,10 @@ const LoginLink = ({
 
         const loginData = await fetchLinkData();
         const link = loginData.simplybook_dashboard_url;
-        let finalUrl = "";
 
-        // Check if the login URL has not been fetched
-        // If the link is not fetched
-        if ( !link ) {
-            console.log("Link is not fetched");
-        } else {
-            // If the link is already fetched
-            finalUrl = link
-            ? `${link}`
-            : `${link}?back_url=/${page}/`;
+        let finalUrl = `${link}/${page}/`;
+        if (link.includes("by-hash")) {
+            finalUrl = `${link}?back_url=/${page}/`;
         }
 
         // Open a new tab with the login URL
