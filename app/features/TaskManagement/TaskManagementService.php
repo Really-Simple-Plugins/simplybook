@@ -14,11 +14,18 @@ class TaskManagementService
         $this->repository = $repository;
     }
 
+    /**
+     * Check if there are tasks
+     */
     public function hasTasks(): bool
     {
         return !empty($this->repository->getAllTasks());
     }
 
+    /**
+     * Get all tasks
+     * @return TaskInterface[]
+     */
     public function getAllTasks(): array
     {
         return $this->repository->getAllTasks();

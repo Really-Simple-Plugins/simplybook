@@ -89,7 +89,6 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->update_option('company_id', $storage->getInt('company_id'));
 
         // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
-
         $this->cleanup_callback_url();
 
         /**

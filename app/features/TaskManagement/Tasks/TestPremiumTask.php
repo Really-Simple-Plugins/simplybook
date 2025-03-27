@@ -32,7 +32,7 @@ class TestPremiumTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Upgrade','simplybook'),
-            'link' => 'todo',
+            'link' => 'todo', // @jeroen add LoginLink functionality to task actions
         ];
     }
 }

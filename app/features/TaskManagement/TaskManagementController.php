@@ -23,27 +23,11 @@ class TaskManagementController implements FeatureInterface
 
     public function register()
     {
-        $this->test();
-
         $this->endpoints->register();
         $this->listener->listen();
 
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
-    }
-
-    public function test()
-    {
-        if (isset($_GET['admin']) && $_GET['admin'] === 'rsp') {
-
-            echo '<pre>';
-            foreach ($this->service->getAllTasks() as $task) {
-                var_dump($task->toArray());
-                echo '<br>';
-            }
-            exit();
-
-        }
     }
 
     /**
