@@ -41,9 +41,27 @@
     /* Overwrite base colors */
     --color-gray-200: rgba(218, 218, 218, 0.5);
 }
+
 /**
 ======================================
+Text styles
+======================================
+**/
+small {
+    font-size: var(--text-base);
+}
+/**
+======================================
+Base styles
+======================================
+**/
+h1 { font-size: var(--text-3xl);}
+h2 { font-size: var(--text-2xl);}
+h3 { font-size: var(--text-xl);}
 
+/**
+======================================
+Grid styles
 ======================================
 **/
 .max-w-container { width: 1400px; }
@@ -54,8 +72,37 @@ Onboarding styles
 ======================================
 **/
 .onboarding-body {
-    height: 90svh;
+    height: 85svh;
     margin: 1svh;
 }
+
+/**
+======================================
+Input global styles
+======================================
+**/
+#simplybook_app{
+
+    label {
+        font-size: var(--text-label);
+        font-weight: var(--font-weight-medium);
+        margin-bottom: 0.5rem; 
+    }
+
+    .input-base {
+            font-size: var(--text-base);
+            max-width: 100%;
+            width: 100%;
+            border-radius: var(--radius-md);
+            padding: 0.5rem;
+            /* margin-bottom: 1rem; */
+            border-color: var(--color-gray-200);
+            border-style: var(--tw-border-style);
+            border-width: 2px;
+            box-shadow: var(--shadow-md);
+    }
+}
+
+
 
 

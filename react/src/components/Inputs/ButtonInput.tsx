@@ -20,6 +20,7 @@ type ButtonInputProps = {
  * Styled button component
  */
 const ButtonInput: React.FC<ButtonInputProps> = ({
+  type,
   children,
   onClick,
   link,
@@ -59,6 +60,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
 
   return (
     <button
+      type={type}
       onClick={onClick}
       className={localClassName}
       disabled={disabled}

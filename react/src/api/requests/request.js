@@ -35,15 +35,6 @@ const request = async (path, method = "POST", data = {}) => {
   } catch (fetchError) {
     // If fetch fails, log error with handler and try AJAX fallback
     errorHandler(fetchError, args.path);
-
-    // try {
-    //   // Try the AJAX fallback request
-    //   return await ajaxRequest(args.path, args.method, args.data);
-    // } catch (ajaxError) {
-    //   // If AJAX also fails, handle the final error
-    //   errorHandler(ajaxError, args.path);
-    //   throw new Error('API request failed');
-    // }
   }
 };
 

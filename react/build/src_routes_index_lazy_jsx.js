@@ -451,6 +451,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_glue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/glue */ "./src/api/helpers/glue.js");
 /* harmony import */ var _helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/errorHandler */ "./src/api/helpers/errorHandler.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
 
 
 
@@ -489,15 +492,7 @@ const request = async (path, method = "POST", data = {}) => {
   } catch (fetchError) {
     // If fetch fails, log error with handler and try AJAX fallback
     (0,_helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__["default"])(fetchError, args.path);
-
-    // try {
-    //   // Try the AJAX fallback request
-    //   return await ajaxRequest(args.path, args.method, args.data);
-    // } catch (ajaxError) {
-    //   // If AJAX also fails, handle the final error
-    //   errorHandler(ajaxError, args.path);
-    //   throw new Error('API request failed');
-    // }
+    console.error("fetch error", fetchError);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
@@ -808,6 +803,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 // Map your icons to keys for easy referencing
 const iconMap = {
+  "xmark": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faXmark,
   "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSquareArrowUpRight,
   "spinner": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSpinner,
   "chevron-down": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faChevronDown,
@@ -3375,7 +3371,8 @@ __webpack_require__.r(__webpack_exports__);
  * Styled button component
  */
 var ButtonInput = function (_a) {
-  var children = _a.children,
+  var type = _a.type,
+    children = _a.children,
     onClick = _a.onClick,
     link = _a.link,
     _b = _a.btnVariant,
@@ -3409,6 +3406,7 @@ var ButtonInput = function (_a) {
     });
   }
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("button", {
+    type: type,
     onClick: onClick,
     className: localClassName,
     disabled: disabled,

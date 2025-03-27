@@ -13,7 +13,7 @@ interface FieldWrapperProps {
   inputId: string;
   required?: boolean;
   children: React.ReactNode;
-    type?: string;
+  type?: string;
 }
 
 const FieldWrapper = memo(({
@@ -25,14 +25,14 @@ const FieldWrapper = memo(({
   className = "",
   inputId,
   required = false,
-    type="text",
+  type="text",
   children,
 }: FieldWrapperProps) => {
 
   const wrapperClasses = [
     "flex w-full flex-col",
     className,
-    "pt-4"
+    "mb-4"
   ].filter(Boolean).join(" ");
 
   const contentClasses = [
@@ -43,26 +43,22 @@ const FieldWrapper = memo(({
     <div className={wrapperClasses}>
       <div className={contentClasses}>
         {type==='checkbox' && children}
-        <div className="flex items-center justify-between">
           <Label.Root
             className={"cursor-pointer pb-2 font-medium text-black text-label "}
             htmlFor={inputId}
           >
             {label}
-            {/* {required && <span className="ml-1 text-gray-500 font-normal text-xs">({__("Required", 'simplybook')})</span>} */}
             {required}
           </Label.Root>
-        
-          {/* TODO: MAKE ICON ON HOVER:  */}
           {help && (
             <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
           )}
-        </div>
         {type!=='checkbox' && children}
       </div>
       
       {error && (
-        <Error 
+        <Error
+          errorHeading={__("Something wen't wrong...", "simplybook")} 
           error={error}
         />
       )}

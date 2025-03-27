@@ -1,7 +1,6 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
-import useSettingsData from "../../hooks/useSettingsData";
 
 /**
  * TextField component
@@ -15,8 +14,21 @@ import useSettingsData from "../../hooks/useSettingsData";
  * @return {JSX.Element}
  */
 const TextField = forwardRef(
-  ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
-    const inputId = setting.id;
+  ({ 
+    setting, 
+    fieldState, 
+    name, 
+    label, 
+    help, 
+    context, 
+    className, 
+    type, 
+    required,
+    ...props 
+  }, ref) => {
+
+    const inputId = setting.id; 
+
     return (
       <FieldWrapper
         label={label}
@@ -25,11 +37,13 @@ const TextField = forwardRef(
         context={context}
         className={className}
         inputId={inputId}
-        required={props.required}
+        required={required}
       >
         <TextInput
+          name={name}
+          ref={ref}
           id={inputId}
-          type="text"
+          type={type}
           aria-invalid={!!fieldState?.error?.message}
           {...props}
         />

@@ -1,20 +1,20 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef } from "react";
 import FieldWrapper from "../Forms/FieldWrapper";
 import SelectInput from "../Inputs/SelectInput";
-import getServices from "../../api/endpoints/getServices";
+
 /**
- * TextField component
+ * SelectField component
  * @param {object} field - Provided by react-hook-form's Controller
  * @param {object} fieldState - Contains validation state
  * @param {string} label
  * @param {string} help
  * @param {string} context
  * @param {string} className
- * @param {object} props
+ * @param {object} options
  * @return {JSX.Element}
  */
 const SelectField = forwardRef(
-    ({ setting, fieldState, label, help, context, className, options, ...props }, ref) => {
+    ({ setting, field, fieldState, label, help, context, className, options, ...props }, ref) => {
         const inputId = setting.id;
 
         return (
@@ -28,11 +28,11 @@ const SelectField = forwardRef(
                 required={props.required}
             >
                 <SelectInput
-                    value={ setting.value }
                     id={inputId}
                     options={options}
                     aria-invalid={!!fieldState?.error?.message}
-                    setting={setting}
+                    {...field} // Spread field to include onChange, onBlur, etc.
+                    ref={ref} // Forward the ref if needed
                     {...props}
                 />
             </FieldWrapper>
