@@ -61,6 +61,8 @@ const OnboardingStep = ({
       }
     }, []);
 
+    console.log(currentStep);
+
   const onSubmit = async (formData, buttonType = "primary") => {
     setApiError(null);
     setDisabled(true);
@@ -91,6 +93,8 @@ const OnboardingStep = ({
 
     setDisabled(false);
 
+
+
     if (buttonType === "primary" && primaryButton.navigateTo) {
       navigate({ to: primaryButton.navigateTo });
     } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
@@ -100,9 +104,10 @@ const OnboardingStep = ({
     } else {
       let currentStep = getCurrentStep(path);
 
-      //if onboarding already completed, skip steps 1, 2 3 and 4, and continue from step 5
-      if (currentStep.id <=4 && onboardingCompleted ) {
-        navigate({ to: getURLForStep(5) });
+      // There are 5 onboarding steps, but the in de currentStep.id is 0 based so 0 = onboarding step 1
+      // If the onboarding already is completed, skip steps 1, 2 3 and 4, and continue from step 5
+      if (currentStep.id <=3 && onboardingCompleted ) {
+        navigate({ to: getURLForStep(4) });
       } else {
         navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
       }
@@ -130,6 +135,14 @@ const OnboardingStep = ({
                 disabled={disabled}
                 onClick={handleSubmit((data) => onSubmit(data, "primary"))}
             />
+            {secondaryButton && (
+                <ButtonField
+                    btnVariant="tertiary"
+                    disabled={disabled}
+                    label={secondaryButton.label}
+                    onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
+                />
+            )}
           </form>
         </div>
         <Error error={apiError}/>
