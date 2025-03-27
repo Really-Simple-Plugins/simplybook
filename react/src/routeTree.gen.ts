@@ -20,9 +20,6 @@ const SettingsLazyImport = createFileRoute('/settings')()
 const OnboardingLazyImport = createFileRoute('/onboarding')()
 const IndexLazyImport = createFileRoute('/')()
 const SettingsSettingsIdLazyImport = createFileRoute('/settings/$settingsId')()
-const OnboardingTipsAndTricksLazyImport = createFileRoute(
-  '/onboarding/tips-and-tricks',
-)()
 const OnboardingStyleWidgetLazyImport = createFileRoute(
   '/onboarding/style-widget',
 )()
@@ -66,15 +63,6 @@ const SettingsSettingsIdLazyRoute = SettingsSettingsIdLazyImport.update({
 } as any).lazy(() =>
   import('./routes/settings/$settingsId.lazy').then((d) => d.Route),
 )
-
-const OnboardingTipsAndTricksLazyRoute =
-  OnboardingTipsAndTricksLazyImport.update({
-    id: '/tips-and-tricks',
-    path: '/tips-and-tricks',
-    getParentRoute: () => OnboardingLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/onboarding/tips-and-tricks.lazy').then((d) => d.Route),
-  )
 
 const OnboardingStyleWidgetLazyRoute = OnboardingStyleWidgetLazyImport.update({
   id: '/style-widget',
@@ -181,13 +169,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingStyleWidgetLazyImport
       parentRoute: typeof OnboardingLazyImport
     }
-    '/onboarding/tips-and-tricks': {
-      id: '/onboarding/tips-and-tricks'
-      path: '/tips-and-tricks'
-      fullPath: '/onboarding/tips-and-tricks'
-      preLoaderRoute: typeof OnboardingTipsAndTricksLazyImport
-      parentRoute: typeof OnboardingLazyImport
-    }
     '/settings/$settingsId': {
       id: '/settings/$settingsId'
       path: '/$settingsId'
@@ -206,7 +187,6 @@ interface OnboardingLazyRouteChildren {
   OnboardingImplementationLazyRoute: typeof OnboardingImplementationLazyRoute
   OnboardingInformationCheckLazyRoute: typeof OnboardingInformationCheckLazyRoute
   OnboardingStyleWidgetLazyRoute: typeof OnboardingStyleWidgetLazyRoute
-  OnboardingTipsAndTricksLazyRoute: typeof OnboardingTipsAndTricksLazyRoute
 }
 
 const OnboardingLazyRouteChildren: OnboardingLazyRouteChildren = {
@@ -215,7 +195,6 @@ const OnboardingLazyRouteChildren: OnboardingLazyRouteChildren = {
   OnboardingImplementationLazyRoute: OnboardingImplementationLazyRoute,
   OnboardingInformationCheckLazyRoute: OnboardingInformationCheckLazyRoute,
   OnboardingStyleWidgetLazyRoute: OnboardingStyleWidgetLazyRoute,
-  OnboardingTipsAndTricksLazyRoute: OnboardingTipsAndTricksLazyRoute,
 }
 
 const OnboardingLazyRouteWithChildren = OnboardingLazyRoute._addFileChildren(
@@ -243,7 +222,6 @@ export interface FileRoutesByFullPath {
   '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
-  '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
@@ -256,7 +234,6 @@ export interface FileRoutesByTo {
   '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
-  '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
@@ -270,7 +247,6 @@ export interface FileRoutesById {
   '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
   '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
-  '/onboarding/tips-and-tricks': typeof OnboardingTipsAndTricksLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
 
@@ -285,7 +261,6 @@ export interface FileRouteTypes {
     | '/onboarding/implementation'
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
-    | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -297,7 +272,6 @@ export interface FileRouteTypes {
     | '/onboarding/implementation'
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
-    | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
   id:
     | '__root__'
@@ -309,7 +283,6 @@ export interface FileRouteTypes {
     | '/onboarding/implementation'
     | '/onboarding/information-check'
     | '/onboarding/style-widget'
-    | '/onboarding/tips-and-tricks'
     | '/settings/$settingsId'
   fileRoutesById: FileRoutesById
 }
@@ -351,8 +324,7 @@ export const routeTree = rootRoute
         "/onboarding/create-your-account",
         "/onboarding/implementation",
         "/onboarding/information-check",
-        "/onboarding/style-widget",
-        "/onboarding/tips-and-tricks"
+        "/onboarding/style-widget"
       ]
     },
     "/settings": {
@@ -379,10 +351,6 @@ export const routeTree = rootRoute
     },
     "/onboarding/style-widget": {
       "filePath": "onboarding/style-widget.lazy.jsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/tips-and-tricks": {
-      "filePath": "onboarding/tips-and-tricks.lazy.jsx",
       "parent": "/onboarding"
     },
     "/settings/$settingsId": {
