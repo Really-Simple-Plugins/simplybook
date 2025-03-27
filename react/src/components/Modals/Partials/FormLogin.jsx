@@ -1,65 +1,51 @@
-import { useState } from "react";
 import { __ } from "@wordpress/i18n";
 import { useForm, Controller, set } from "react-hook-form";
 import TextField from "../../Fields/TextField";
 import SelectField from "../../Fields/SelectField";
 import ButtonInput from "../../Inputs/ButtonInput";
 
-// API IMPORTS 
+// API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
 import { API_BASE_PATH, NONCE } from "../../../api/config";
-import request from "../../../api/requests/request";
 
 const formLogin = ({
     onClose,
-    setRequire2fa
+    setRequire2fa,
+    setAuthSessionId,
+    setCompanyLogin,
+    setUserLogin,
+    setTwoFaProviders,
+    setDomain,
+    domain,
 }) => {
-        /**
-         * Initialise constants
-        */
-        const [twoFaProviders, setTwoFaProviders] = useState({ga: __("Google Authenticator", "simplybook")});
-        const [authSessionId, setAuthSessionId] = useState(null);
-        const [companyLogin, setCompanyLogin] = useState(null);
-        const [userLogin, setUserLogin] = useState(null);
-        const [domain, setDomain] = useState("default:simplybook.it");
-        const [selectedDomain, setSelectedDomain] = useState("default:simplybook.it");
-
         /**
          * We use React Hook Form to handle client-side validation for the main login
         */
         const { control, register, handleSubmit, formState: { errors, isValid }, watch } = useForm({
             mode: "onChange",
             defaultValues: {
-                company_domain: selectedDomain,
+                company_domain: domain,
                 company_login: "",
                 user_login: "",
                 user_password: ""
             }
         });
-    
+
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
-      
-        /**
-         * CHeck if the fields are empty, only when all are filled the button becomes enabled
-         */
-        const isFormFilled = watchFields.every((field) => field && field.trim() !== "");
-       
-    
-        /**
-         * Set the button disabled state
-         */
-        const setDisabled = !isFormFilled ? true : false;
+
+        // Set the button disabled state
+        const setDisabled = (
+            watchFields.every((field) => field && field.trim() !== "") === false
+        );
 
         /**
-             * Sends the filled in form data to the api to log the user
-             * 
-             * @param {event} e 
-             */
+         * Sends the filled in form data to the api to log the user
+         */
         const submitForm = handleSubmit((data) => {
             const formData = {
-                company_domain: selectedDomain,
+                company_domain: domain,
                 company_login: data?.company_login,
                 user_login: data?.user_login,
                 user_password: data?.user_password
@@ -68,16 +54,8 @@ const formLogin = ({
             logUserIn(formData);
         });
 
-        const handleProviderChange = (e) => {
-            setSelectedProvider(e.target.value);
-        };
-
         /**
-         * 
          * Checks if the filled input credentials comply and sends an API call to SimplyBook
-         * 
-         * @param {object} formData
-         * @returns 
          */
         const logUserIn = async (formData) => {
             try {
@@ -111,7 +89,6 @@ const formLogin = ({
         };
 
         /**
-         * 
          * Initialise the different domain URL's
          */
         const companyDomains = [
@@ -150,7 +127,7 @@ const formLogin = ({
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
-                                setSelectedDomain(selectedValue); // Update local state
+                                setDomain(selectedValue); // Update local state
                                 field.onChange(selectedValue); // Update form state
                             }}
                         />

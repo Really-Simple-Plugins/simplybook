@@ -5,13 +5,14 @@ import {__} from "@wordpress/i18n";
 import FormTwoFa from "./Partials/FormTwoFa";
 import FormLogin from "./Partials/FormLogin";
 
-const SignInModal = ({ 
-    onClose 
-}) => {
-    /**
-     * Require 2FA setState
-     */
+const SignInModal = ({onClose}) => {
+
     const [require2fa, set2fa] = useState(false);
+    const [authSessionId, setAuthSessionId] = useState("");
+    const [companyLogin, setCompanyLogin] = useState("");
+    const [userLogin, setUserLogin] = useState("");
+    const [domain, setDomain] = useState("default:simplybook.it");
+    const [twoFaProviders, setTwoFaProviders] = useState({ga: __("Google Authenticator", "simplybook")});
 
     return (
         <div className="signin-modal-bg fixed z-999 inset-0 flex items-center justify-center bg-black/50 border-2 border-gray-200 ">
@@ -22,10 +23,16 @@ const SignInModal = ({
                             <Logo className="mx-4 w-65 py-2 my-4" />
                             <h2 className="my-4">{__("Sign In", "simplybook")}</h2>
                             <small>{__("Please enter your SimplyBook credentials to sign in.", "simplybook")}</small>
-                        </div>  
-                        <FormLogin 
-                            onClose={onClose} 
+                        </div>
+                        <FormLogin
+                            onClose={onClose}
                             setRequire2fa={set2fa}
+                            setAuthSessionId={setAuthSessionId}
+                            setCompanyLogin={setCompanyLogin}
+                            setUserLogin={setUserLogin}
+                            setTwoFaProviders={setTwoFaProviders}
+                            setDomain={setDomain}
+                            domain={domain}
                         />
                     </>
                 ) : (
@@ -34,10 +41,15 @@ const SignInModal = ({
                             <Logo className="mx-4 w-65 py-2 my-4" />
                             <h2 className="my-4">{__("2FA authentication", "simplybook")}</h2>
                             <small>{__("Please use your 2FA provider to sign in.", "simplybook")}</small>
-                        </div>  
-                        <FormTwoFa 
+                        </div>
+                        <FormTwoFa
+                            authSessionId={authSessionId}
+                            companyLogin={companyLogin}
+                            userLogin={userLogin}
+                            domain={domain}
+                            twoFaProviders={twoFaProviders}
                             onClose={onClose}
-                        /> 
+                        />
                     </>
                 )}
             </div>
