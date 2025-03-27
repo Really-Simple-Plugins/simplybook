@@ -47,10 +47,23 @@ class SettingEndpoints implements MultiEndpointInterface
     public function saveSettingsCallback(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $fields = $this->retrieveHttpParameters($request, $ajaxData, '');
+
         unset($fields['nonce']);
 
         if (count($fields) === 0) {
             return $this->sendHttpResponse(['error' => 'No data to save']);
+        }
+
+        // todo - @jeroen - Add settings_section key-value pair to the formdata so we can recognise which fields are saved.
+        // example: if the design settings are saved the settings_section key-value pair should be ['settings_section' => 'design_section']
+        // this will trigger simplybook_save_design_section action hook. Which we listen to in TaskManagementListener
+        if (isset($fields['settings_section'])) {
+            /**
+             * Action: simplybook_save_{settings_section}
+             * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
+             */
+            do_action('simplybook_save_' . sanitize_title($fields['settings_section']));
+            unset($fields['settings_section']);
         }
 
         //check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]

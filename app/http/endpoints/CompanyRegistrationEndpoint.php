@@ -4,7 +4,6 @@ namespace SimplyBook\Http\Endpoints;
 use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Services\TaskService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
@@ -17,11 +16,9 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     const ROUTE = 'company_registration';
 
     private string $callbackUrl;
-    private TaskService $service;
 
-    public function __construct(TaskService $service)
+    public function __construct()
     {
-        $this->service = $service;
         $this->callbackUrl = $this->get_callback_url();
     }
 
@@ -92,10 +89,13 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->update_option('company_id', $storage->getInt('company_id'));
 
         // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
-
         $this->cleanup_callback_url();
 
-        $this->service->validateTaskConditions();
+        /**
+         * Action: simplybook_company_registered
+         * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
+         */
+        do_action('simplybook_company_registered', $storage->getString('domain'), $storage->getInt('company_id'));
 
         return new \WP_REST_Response([
             'message' => 'Successfully registered company for current WordPress website.',
