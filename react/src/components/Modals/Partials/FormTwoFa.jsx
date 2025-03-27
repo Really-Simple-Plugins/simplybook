@@ -12,8 +12,9 @@ const FormTwoFa = ({
      * Initialise constants
      */
     const [twoFaProviders, setTwoFaProviders] = useState({ga: __("Google Authenticator", "simplybook")});
+    const firstProvider = Object.keys(twoFaProviders)[0];
     const [twoFaCode, setTwoFaCode] = useState("");
-    const [selectedProvider, setSelectedProvider] = useState(twoFaProviders[0]);
+    const [selectedProvider, setSelectedProvider] = useState(firstProvider);
     const [smsRequested, setSmsRequested] = useState(false); // Default is false
 
     /**
@@ -27,8 +28,8 @@ const FormTwoFa = ({
     } = useForm({
         mode: "onChange",
         defaultValues: {
-        two_fa_code: "",
-        two_fa_type: twoFaProviders[0],
+            two_fa_code: "",
+            two_fa_type: firstProvider,
         },
     });
 
