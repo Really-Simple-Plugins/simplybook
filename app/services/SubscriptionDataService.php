@@ -39,6 +39,13 @@ class SubscriptionDataService
     public function save(array $subscriptionData): void
     {
         $subscriptionData['updated_at_utc'] = Carbon::now('UTC')->toDateTimeString();
+
+        // This is done to make sure the last day still shows "1 day left"
+        // instead of "0 days left"
+        if (!empty($subscriptionData['expire_in'])) {
+            $subscriptionData['expire_in'] = $subscriptionData['expire_in'] + 1;
+        }
+
         $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
 
         update_option('simplybook_subscription_data', $subscriptionData);
