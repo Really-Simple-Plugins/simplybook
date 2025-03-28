@@ -172,6 +172,9 @@ class Plugin
             new Http\Endpoints\StatisticsEndpoint(
                 new Services\StatisticsService(),
             ),
+            new Http\Endpoints\SubscriptionEndpoints(
+                new Services\SubscriptionDataService(),
+            ),
         ]);
     }
 

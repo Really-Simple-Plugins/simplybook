@@ -807,6 +807,18 @@ class ApiClient
     }
 
     /**
+     * Get all subscription data
+     */
+    public function get_subscription_data(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/tariff/current', [], 'GET');
+    }
+
+    /**
      * Get all statistics
      */
     public function get_statistics(): array
@@ -1368,4 +1380,5 @@ class ApiClient
 
         return $allowedProviders;
     }
+
 }
