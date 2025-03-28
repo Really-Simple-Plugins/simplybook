@@ -39,10 +39,6 @@ const TipsTricks = () => {
                     <div><p>{__("Loading...", "simplybook")}</p></div>
                 )}
 
-                {error && (
-                    <div><p>{error.message}</p></div>
-                )}
-
                 {loadingCompleted && (<>
                     <a href={data?.data.all ?? '#'} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("View All", "simplybook")}</a>
                     <a href={data?.data.video_tutorials ?? '#'} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("Video tutorials", "simplybook")}</a>

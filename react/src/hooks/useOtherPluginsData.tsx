@@ -15,16 +15,6 @@ const useOtherPluginsData = () => {
     const {isLoading, error, data: response} = useQuery({
         queryKey: [route],
         queryFn: () => client.get(),
-        placeholderData: [
-            {
-                url: "#",
-                title: "...",
-                action: "...",
-                actionNiceName: "...",
-                slug: "...",
-                color: "black",
-            },
-        ],
         staleTime: 1000 * 60 * 60,
         retry: 0,
         enabled: true,
