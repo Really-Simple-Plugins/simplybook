@@ -161,7 +161,6 @@ class Plugin
             new Http\Endpoints\WidgetEndpoint(),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
-            new Http\Endpoints\DashboardDataEndpoint(),
             new Http\Endpoints\CompanyRegistrationEndpoint(),
             new Http\Endpoints\WaitForRegistrationEndpoint(),
             new Http\Endpoints\RelatedPluginEndpoints(
@@ -170,6 +169,9 @@ class Plugin
             new Http\Endpoints\BlockEndpoints(),
             new Http\Endpoints\LogOutEndpoint(),
             new Http\Endpoints\TipsTricksEndpoint(),
+            new Http\Endpoints\StatisticsEndpoint(
+                new Services\StatisticsService(),
+            ),
         ]);
     }
 
