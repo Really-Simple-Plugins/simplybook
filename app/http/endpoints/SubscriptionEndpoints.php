@@ -35,11 +35,11 @@ class SubscriptionEndpoints implements MultiEndpointInterface
     {
         return [
             self::ROUTE => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'getAllSubscriptionData'],
             ],
             self::ROUTE . '/(?P<key>[^/]+)' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'getSubscriptionData'],
             ],
         ];

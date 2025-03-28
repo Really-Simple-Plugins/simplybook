@@ -8,7 +8,7 @@ import useSubscriptionData from "../../hooks/useSubscriptionData";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
-    const { subscriptionPlan, expiresIn, isExpired, isLoading } = useSubscriptionData();
+    const { subscriptionPlan, expiresIn, isExpired, isLoading, hasError } = useSubscriptionData();
 
     useEffect(() => {
         if (
@@ -50,12 +50,12 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
-                    {!isLoading && !isExpired && (
+                    {!isLoading && !isExpired && !hasError && (
                         <p>
                             <span>{subscriptionPlan} - {expiresIn} {__("days left", "simplybook")}</span>
                         </p>
                     )}
-                    {!isLoading && isExpired && (
+                    {!isLoading && !hasError && isExpired && (
                         <p className="color-red">
                             <span>{subscriptionPlan} - {__("Expired", "simplybook")}</span>
                         </p>
