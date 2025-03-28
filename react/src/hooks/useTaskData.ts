@@ -1,19 +1,20 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/Task";
-import dismissTaskApi from "../api/endpoints/Dashboard/dismissTaskApi";
 import { TaskData } from "../types/TaskData";
 import HttpClient from "../api/requests/HttpClient";
 
 const useTaskData = () => {
     const queryClient = useQueryClient();
 
-    const route = 'get_tasks';
-    const client = new HttpClient(route);
+    const getTasksRoute = 'get_tasks';
+    const dismissTaskRoute = 'dismiss_task';
+
+    const client = new HttpClient();
 
     // Query for fetching tasks
     const { data: response, isLoading, error } = useQuery({
-        queryKey: [route],
-        queryFn: () => client.get(),
+        queryKey: [getTasksRoute],
+        queryFn: () => client.setRoute(getTasksRoute).get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
 
@@ -26,11 +27,15 @@ const useTaskData = () => {
     // Mutation for updating task status
     const { mutate: dismissTask } = useMutation({
         mutationFn: async ( taskId:string ): Promise<TaskData> => {
-            console.log("dismissing task ", taskId);
-            return dismissTaskApi(taskId);
+            return client.setRoute(dismissTaskRoute).setPayload({
+                'taskId': taskId,
+            }).post();
         },
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [route] });
+            queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+        },
+        onError: (error: Error) => {
+            console.error('Error dismissing task: ', error.message);
         },
     });
 
