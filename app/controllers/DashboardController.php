@@ -249,17 +249,20 @@ class DashboardController implements ControllerInterface
             'simplybook_localize_dashboard_script',
             [
                 'nonce' => wp_create_nonce('simplybook_nonce'),
+                'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
+                'rest_namespace' => App::env('http.namespace'),
+                'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
-                 'is_onboarding_completed' => $this->onboarding_completed(),
+                'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
-                 'completed_step' => get_option('simplybook_completed_step', 0),
+                'completed_step' => get_option('simplybook_completed_step', 0),
                 'tips_and_tricks' => App::env('simplybook.tips_and_tricks'),
             ]
         );
