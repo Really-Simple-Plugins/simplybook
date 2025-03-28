@@ -19,7 +19,7 @@ const ListItem = forwardRef(
         };
         const { domain, domainFetched, hasError: domainHasError } = useDomainData();
         const hasPicture = domainFetched && item.picture_preview && item.picture_preview.length > 0;
-        const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label) : __("Edit", "simplybook");
+        const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label.toLowerCase()) : __("Edit", "simplybook");
 
         return (
             <>
