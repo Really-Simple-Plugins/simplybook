@@ -1,30 +1,30 @@
 import {useQuery} from "@tanstack/react-query";
-import getDomain from "../api/endpoints/getDomain";
 import useOnboardingData from "./useOnboardingData";
+import HttpClient from "../api/requests/HttpClient";
 
 const useDomainData = () => {
     const { onboardingCompleted } = useOnboardingData();
 
-    const query = useQuery<string>({
-        queryKey: ["domain_data"],
-        queryFn: async () => {
-            if (!onboardingCompleted) {
-                return '';
-            }
+    const route = 'get_domain';
+    const client = new HttpClient(route);
 
-            const response = await getDomain();
-            console.log("getdomain response", response);
-            return response;
-        },
+    const {isLoading, error, data: response} = useQuery({
+        queryKey: [route],
+        queryFn: () => client.get(),
         staleTime: 1000 * 60 * 60,
         retry: 0,
         enabled: !!onboardingCompleted,
     });
 
+    if (error !== null) {
+        console.error('Error fetching domain data:', error.message);
+    }
 
     return {
-        domain: query.data,
-        domainFetched: (query.data?.length ?? 0) > 0,
+        domain: response?.data?.domain,
+        domainFetched: !isLoading,
+        hasError: (error !== null),
+        message: response?.message ?? error?.message,
     };
 };
 
