@@ -1,5 +1,5 @@
 import React, {Fragment, useEffect, useState, FC} from "react";
-import useManagementData from "../../../hooks/useManagementData";
+import useSpecialFeaturesData from "../../../hooks/useSpecialFeaturesData";
 import { __ } from "@wordpress/i18n";
 import LoginLink from "../../Common/LoginLink";
 interface PluginProps {
@@ -8,7 +8,7 @@ interface PluginProps {
     id:string,
 }
 const Plugin: FC<PluginProps> = ({ title, link, id }) => {
-    const {isPluginActive, plugins = [], refetchData} = useManagementData();
+    const {isPluginActive, plugins = [], refetchData} = useSpecialFeaturesData();
     const [active, setActive] = useState(true);
 
     useEffect(() => {
