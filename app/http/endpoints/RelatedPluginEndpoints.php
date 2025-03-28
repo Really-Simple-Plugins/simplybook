@@ -71,6 +71,9 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
         $this->service->setPluginConfig($plugin);
         $this->service->executeAction($action);
 
+        // After executing the action, a new action should be available
+        $plugin['action'] = $this->service->getAvailablePluginAction();
+
         return $this->sendHttpResponse([
             'plugin' => $plugin
         ]);
