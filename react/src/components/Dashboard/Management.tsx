@@ -4,10 +4,10 @@ import { __ } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import { Fragment } from "react";
-import Plugin from "./Management/Plugin";
-import Manage from "./Management/Manage";
+import Plugin from "./Partials/Plugin";
+import Manage from "./Partials/Manage";
 
-// @TODO: Split up into multiple components? 
+// @TODO: Split up into multiple components?
 
 const DataList = [
   {
@@ -82,4 +82,3 @@ const Management = () => {
 
 Management.displayName = "Management";
 export default Management;
-
