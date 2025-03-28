@@ -1,11 +1,11 @@
-import { X_WP_NONCE, NONCE, SB_API_URL } from '../config';
-import { __ } from "@wordpress/i18n";
+import {X_WP_NONCE, NONCE, SB_API_URL} from '../config';
+import {__} from "@wordpress/i18n";
 
 /**
  * HttpClient class to handle HTTP requests.
  */
 class HttpClient {
-    private readonly endpoint: string;
+    private route: string | null = null;
     private getMethodHeaders: Record<string, string> = {
         'X-WP-NONCE': X_WP_NONCE,
     }
@@ -21,20 +21,26 @@ class HttpClient {
     }
 
     /**
-     * Constructor to initialize the endpoint URL.
-     * @param endpoint - The API endpoint to be used.
+     * Constructor to initialize the route URL.
+     * @param route - The API route to be used.
      */
-    constructor(endpoint: string) {
-        this.endpoint = SB_API_URL + endpoint;
+    constructor(route?: string) {
+        if (route) {
+            this.route = SB_API_URL + route;
+        }
     }
 
     /**
      * Performs a GET request.
      * @returns The response data in JSON format.
-     * @throws An error if the response is not ok.
+     * @throws An error if the response is not ok or route is not set.
      */
     async get() {
-        const response = await fetch(this.endpoint, {
+        if (!this.route) {
+            throw new Error(__('Route is not set', 'simplybook'));
+        }
+
+        const response = await fetch(this.route, {
             method: 'GET',
             headers: this.getMethodHeaders,
         });
@@ -49,10 +55,14 @@ class HttpClient {
      * Performs a POST request.
      * @param body - The body of the POST request.
      * @returns The response data in JSON format.
-     * @throws An error if the response is not ok.
+     * @throws An error if the response is not ok or route is not set.
      */
     async post(body: any) {
-        const response = await fetch(this.endpoint, {
+        if (!this.route) {
+            throw new Error(__('Route is not set', 'simplybook'));
+        }
+
+        const response = await fetch(this.route, {
             method: 'POST',
             headers: this.postMethodHeaders,
             body: JSON.stringify({
@@ -65,6 +75,16 @@ class HttpClient {
             return this.handleError(errorData);
         }
         return response.json();
+    }
+
+    /**
+     * Sets the route URL.
+     * @param route - The API route to be used.
+     * @returns The HttpClient instance.
+     */
+    public setRoute(route: string) {
+        this.route = SB_API_URL + route;
+        return this;
     }
 
     /**
