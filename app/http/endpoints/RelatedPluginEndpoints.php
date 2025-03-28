@@ -12,8 +12,6 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'other_plugins_data';
-
     private RelatedPluginService $service;
 
     public function __construct(RelatedPluginService $service)
@@ -36,7 +34,7 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
     {
         return [
             'other_plugins_data' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
                 'callback' => [$this, 'getRelatedPluginsData'],
             ],
             'do_plugin_action' => [
