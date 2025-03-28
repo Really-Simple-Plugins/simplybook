@@ -19,6 +19,7 @@ const Bookings = () => {
         bookingsThisWeek,
         bookingsLastThirtyDays,
         isLoading,
+        hasError,
     } = useStatisticsData();
 
     const FeaturedBlocks = [
