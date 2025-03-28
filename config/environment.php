@@ -32,17 +32,35 @@ return [
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
             'items' => [
                 [
-                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
-                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                    'title' => 'Integrations',
+                    'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar – Keep your schedule updated in real time by integrating your bookings with Google and Outlook Calendar.',
+                    'link' => 'https://help.simplybook.me/index.php?title=Calendar_Sync_custom_feature ',
                 ],
                 [
-                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
-                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                    'title' => 'Automation',
+                    'content' => 'Reduce No-Shows with Automated Reminders – Set up SMS and email reminders to ensure your clients never miss an appointment.',
+                    'link' => '/settings/templates', // todo: use loginLink() method
                 ],
                 [
-                    'content' => 'You can add the booking widget to your website by using the [simplybook] shortcode.',
-                    'link' => 'https://simplybook.me/en/wordpress-booking-plugin',
-                ]
+                    'title' => 'News & Updates',
+                    'content' => 'Simplybook.me  newsletter: exciting new features and upcoming enhancements.',
+                    'link' => 'https://news.simplybook.me/ ',
+                ],
+                [
+                    'title' => 'Customization',
+                    'content' => 'Accept Payments Online – Enable secure payment gateways like Stripe or PayPal to allow clients to prepay for services.',
+                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
+                ],
+                [
+                    'title' => 'Client Management',
+                    'content' => 'Create Membership & Packages – Offer exclusive memberships and service packages to increase client retention and revenue.',
+                    'link' => 'https://help.simplybook.me/index.php?title=Packages_custom_feature/en',
+                ],
+                [
+                    'title' => 'Marketing',
+                    'content' => 'Boost Engagement with Promo Codes – Attract more clients by offering discounts and special promotions via customizable promo codes.',
+                    'link' => 'https://help.simplybook.me/index.php?title=Coupons_and_Gift_Cards_custom_feature/en',
+                ],
             ]
         ]
     ],
