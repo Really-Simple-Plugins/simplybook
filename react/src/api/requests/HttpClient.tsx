@@ -57,7 +57,13 @@ class HttpClient {
      * @returns The response data in JSON format.
      * @throws An error if the response is not ok or route is not set.
      */
-    async post(body: any) {
+    async post(body?: any) {
+        let payload = body ?? this.payload;
+
+        if (!payload) {
+            throw new Error(__('Payload is not set', 'simplybook'));
+        }
+
         if (!this.route) {
             throw new Error(__('Route is not set', 'simplybook'));
         }
@@ -66,7 +72,7 @@ class HttpClient {
             method: 'POST',
             headers: this.postMethodHeaders,
             body: JSON.stringify({
-                ...body,
+                ...payload,
                 nonce: NONCE,
             }),
         });
