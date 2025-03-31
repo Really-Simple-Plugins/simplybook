@@ -2,7 +2,19 @@ import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import Error from "../Errors/Error";
-import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
+
+interface FieldWrapperProps {
+  label: string;
+  context?: string;
+  help?: string;
+  error?: string;
+  reverseLabel?: boolean;
+  className?: string;
+  inputId: string;
+  required?: boolean;
+  children: React.ReactNode;
+  type?: string;
+}
 
 const FieldWrapper = memo(({
   label,
@@ -18,7 +30,7 @@ const FieldWrapper = memo(({
 }: FieldWrapperProps) => {
 
   const wrapperClasses = [
-    "flex flex-col",
+    "flex w-full flex-col",
     className,
     "mb-4"
   ].filter(Boolean).join(" ");
@@ -27,7 +39,6 @@ const FieldWrapper = memo(({
     "flex w-full flex-col",
     reverseLabel ? "flex-col-reverse" : ""
   ].filter(Boolean).join(" ");
-
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>

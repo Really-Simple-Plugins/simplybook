@@ -12,7 +12,7 @@ const SettingsGroupBlock = memo(
       <Block key={group.id} className={className}>
         <BlockHeading title={group.title} />
         <BlockContent>
-          <div className="flex flex-wrap justify-between gap-4">
+          <div className="flex flex-wrap">
               <FormFieldWrapper fields={currentGroupFields} control={control}/>
           </div>
         </BlockContent>

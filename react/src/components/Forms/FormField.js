@@ -3,9 +3,8 @@ import TextField from "../Fields/TextField";
 import HiddenField from "../Fields/HiddenField";
 import CheckboxField from "../Fields/CheckboxField";
 import SelectField from "../Fields/SelectField";
-import ButtonField from "../Fields/ButtonField";
 import ErrorBoundary from "../Common/ErrorBoundary";
-import {memo, useEffect, useState} from "react";
+import {memo, useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import ColorPickerField from "../Fields/ColorPickerField";
 import ImplementationField from "../Fields/ImplementationField";
@@ -18,7 +17,6 @@ const fieldComponents = {
   text: TextField,
   api: TextField,
   hidden: HiddenField,
-  button: ButtonField,
   checkbox: CheckboxField,
   select: SelectField,
   colorpicker: ColorPickerField,
@@ -81,9 +79,6 @@ const FormField = memo(({ setting, control, ...props } ) => {
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue===1;
   }
-
-
-
   return (
     <ErrorBoundary>
       <Controller
@@ -107,22 +102,19 @@ const FormField = memo(({ setting, control, ...props } ) => {
               }
             }, [field.value]);
             return (
-              <>
                 <FieldComponent
-                  className={""}
-                  setting={setting}
-                  fieldState={fieldState}
-                  required={setting.required}
-                  label={setting.label}
-                  button={setting.buttonSettings}
-                  disabled={props.settingsIsUpdating || setting.disabled}
-                  context={setting.context}
-                  help={setting.help}
-                  options={setting.options}
-                  {...props}
-                  {...field}
+                    className={setting.inline_group ? "inline-flex" : ""}
+                    setting={setting}
+                    fieldState={fieldState}
+                    required={setting.required}
+                    label={setting.label}
+                    disabled={props.settingsIsUpdating || setting.disabled}
+                    context={setting.context}
+                    help={setting.help}
+                    options={setting.options}
+                    {...props}
+                    {...field}
                 />
-              </>
             );
           }}
       />
