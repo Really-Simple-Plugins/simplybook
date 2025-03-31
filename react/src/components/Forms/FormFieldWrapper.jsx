@@ -1,5 +1,6 @@
 import React from "react";
 import FormField from "./FormField";
+import clsx from "clsx";
 
 /**
  * The form field wrapper component is created to allow some fields to be grouped, and to be displayed in a row.
@@ -9,34 +10,16 @@ import FormField from "./FormField";
  * @constructor
  */
 const FormFieldWrapper = ({ fields, control }) => {
-    // Group fields by `inline_group`
-    const groupedFields = fields.reduce((groups, field) => {
-        if (field.inline_group) {
-            groups[field.inline_group] = groups[field.inline_group] || [];
-            groups[field.inline_group].push(field);
-        }
-        return groups;
-    }, {})
 
     return (
         <>
-            {/* Fields without inline_group */}
-            {fields
-                .filter((field) => !field.inline_group)
-                .map((field) => (
-                    <FormField setting={field} key={field.id} control={control} />
-                ))}
-
-            {/* Grouped fields */}
-            {Object.entries(groupedFields).map(([groupKey, fields]) => (
-                <div className="flex flex-row" key={groupKey}>
-                    {fields.map((field) => (
-                        <FormField setting={field} key={field.id} control={control} />
-                    ))}
-                </div>
+            {/* Fields without wrapper_id */}
+            {fields.map((field) => (
+                <FormField className={field?.style == 'inline' ? 'form-field-inline' : 'w-full'} setting={field} key={field.id} control={control} />
             ))}
         </>
     );
 };
+
 
 export default FormFieldWrapper;
