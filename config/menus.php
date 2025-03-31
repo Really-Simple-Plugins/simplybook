@@ -12,6 +12,10 @@ return [
                 'id' => 'authentication',
                 'title' => __('Authentication', 'simplybook'),
             ],
+            [
+                'id' => 'content',
+                'title' => __('Content', 'simplybook'),
+            ]
         ],
     ],
     'providers' => [
