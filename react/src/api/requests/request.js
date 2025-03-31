@@ -9,6 +9,7 @@ import { API_BASE_PATH, NONCE } from "../config";
  * @param method
  * @param data
  * @return {Promise<void>}
+ * @deprecated use {@link HttpClient} instead
  */
 const request = async (path, method = "POST", data = {}) => {
   const args = { path, method, data };
