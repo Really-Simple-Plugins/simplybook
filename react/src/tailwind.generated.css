@@ -225,7 +225,6 @@
     --bg-tertiary-light: #f0f4fe;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
-    --container-8xl: 125rem;
   }
 }
 .\@container {
@@ -325,15 +324,6 @@
 .col-span-6 {
   grid-column: span 6 / span 6;
 }
-<<<<<<< HEAD
-.col-span-7 {
-  grid-column: span 7 / span 7;
-}
-.col-start-1 {
-  grid-column-start: 1;
-}
-=======
->>>>>>> origin/main
 .col-start-3 {
   grid-column-start: 3;
 }
@@ -611,12 +601,6 @@
 .max-w-7xl {
   max-width: var(--container-7xl);
 }
-<<<<<<< HEAD
-.max-w-8xl {
-  max-width: var(--container-8xl);
-}
-=======
->>>>>>> origin/main
 .max-w-\[40px\] {
   max-width: 40px;
 }
@@ -860,13 +844,6 @@
   border-left-style: var(--tw-border-style);
   border-left-width: 4px;
 }
-<<<<<<< HEAD
-.border-none {
-  --tw-border-style: none;
-  border-style: none;
-}
-=======
->>>>>>> origin/main
 .border-blue-500 {
   border-color: var(--color-blue-500);
 }
@@ -1020,15 +997,6 @@
 .py-10 {
   padding-block: calc(var(--spacing) * 10);
 }
-<<<<<<< HEAD
-.py-20 {
-  padding-block: calc(var(--spacing) * 20);
-}
-.py-30 {
-  padding-block: calc(var(--spacing) * 30);
-}
-=======
->>>>>>> origin/main
 .pt-4 {
   padding-top: calc(var(--spacing) * 4);
 }
@@ -1223,13 +1191,6 @@
   --tw-grayscale: grayscale(100%);
   filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
 }
-<<<<<<< HEAD
-.invert {
-  --tw-invert: invert(100%);
-  filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
-}
-=======
->>>>>>> origin/main
 .filter {
   filter: var(--tw-blur,) var(--tw-brightness,) var(--tw-contrast,) var(--tw-grayscale,) var(--tw-hue-rotate,) var(--tw-invert,) var(--tw-saturate,) var(--tw-sepia,) var(--tw-drop-shadow,);
 }
@@ -1381,17 +1342,6 @@
     }
   }
 }
-<<<<<<< HEAD
-.first\:mr-2 {
-  &:first-child {
-    margin-right: calc(var(--spacing) * 2);
-  }
-}
-.last\:ml-2 {
-  &:last-child {
-    margin-left: calc(var(--spacing) * 2);
-  }
-}
 .odd\:bg-white {
   &:nth-child(odd) {
     background-color: var(--color-white);
@@ -1409,25 +1359,6 @@
     }
   }
 }
-=======
-.odd\:bg-white {
-  &:nth-child(odd) {
-    background-color: var(--color-white);
-  }
-}
-.even\:bg-gray-50 {
-  &:nth-child(even) {
-    background-color: var(--color-gray-50);
-  }
-}
-.hover\:cursor-pointer {
-  &:hover {
-    @media (hover: hover) {
-      cursor: pointer;
-    }
-  }
-}
->>>>>>> origin/main
 .hover\:border-gray-500 {
   &:hover {
     @media (hover: hover) {
@@ -1595,14 +1526,11 @@ h3 {
   font-size: var(--text-xl);
 }
 .max-w-container {
-  width: 2000px;
+  width: 1400px;
 }
 .onboarding-body {
-  height: 100%;
+  height: 85svh;
   margin: 1svh;
-}
-.form-field-inline {
-  width: calc(1/2 * 95%);
 }
 #simplybook_app {
   label {
@@ -1620,7 +1548,6 @@ h3 {
     border-style: var(--tw-border-style);
     border-width: 2px;
     box-shadow: var(--shadow-md);
-    line-height: 2rem;
   }
 }
 @property --tw-rotate-x {

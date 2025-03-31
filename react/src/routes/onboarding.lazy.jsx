@@ -14,7 +14,7 @@ function OnboardingPage() {
 
     return (
         <>
-            <div className={"onboarding-body bg-white flex flex-col items-center px-4 max-w-8xl"}>
+            <div className={"onboarding-body bg-white flex flex-col items-center px-4"}>
                 <OnboardingLayout>
                     <Outlet />
                 </OnboardingLayout> 
