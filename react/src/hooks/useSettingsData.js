@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import getSettingsFields from "../api/endpoints/getSettingsFields";
 import HttpClient from "../api/requests/HttpClient";
 
 /**
@@ -11,12 +10,15 @@ import HttpClient from "../api/requests/HttpClient";
 const useSettingsData = () => {
     const queryClient = useQueryClient();
 
+    const getSettingsQueryKey = 'setting_fields';
     const getSettingsRoute = 'settings/get';
     const saveSettingsRoute = 'settings/save';
     const client = new HttpClient();
 
+    /**
+     * Transform data to ensure boolean values for checkboxes.
+     */
     const transformData = (data) => {
-        //find all items with type===checkbox, and ensure that the value is a boolean
         return data.map((field) => {
             if (field.type === "checkbox") {
                 field.value = !!field.value;
@@ -25,51 +27,74 @@ const useSettingsData = () => {
         });
     };
 
+    /**
+     * Fetch settings fields using Tanstack Query.
+     */
     const query = useQuery({
-        queryKey: ["settings_fields"],
-        queryFn: () => getSettingsFields({ withValues: true }),
+        queryKey: [getSettingsQueryKey],
+        queryFn: () => client.setRoute(getSettingsRoute).setPayload({
+            withValues: true,
+        }).post(),
         staleTime: 1000 * 60 * 5, // 5 minutes
         initialData: transformData(
             window.simplybook && window.simplybook.settings_fields,
         ),
         retry: 0,
-        select: (data) => (data ? [...data] : []),
+        select: function (data) {
+            let fields = (data?.data ?? data);
+            return transformData(fields);
+        }
     });
 
+    /**
+     * Get value for a specific setting field
+     * @param id
+     * @returns {*}
+     */
     const getValue = (id) => {
-        return query.data.find((field) => field.id === id)?.value;
+        return query?.data.find((field) => field.id === id)?.value;
     };
+
+    /**
+     * Set value for a specific setting field
+     * @param id
+     * @param value
+     */
     const setValue = (id, value) => {
-        queryClient.setQueryData(["settings_fields"], (oldData) => {
-            return oldData.map((field) =>
+        queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
+            return oldResponse.map((field) =>
                 field.id === id ? { ...field, value } : field,
             );
         });
     };
 
-    // Update Mutation for settings data with destructured values
-    const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
-        useMutation({
-            mutationFn: async (data) => {
-                let settings = await client.setRoute(saveSettingsRoute).setPayload(data).post();
-                return transformData(settings?.data);
-            },
-            onSuccess: async (data) => {
-                queryClient.setQueryData(["settings_fields"], (oldData) => {
-                    return data ? [...data] : [];
-                });
-                queryClient.invalidateQueries(["settings_fields"]);
-            },
-        });
+    /**
+     * Save settings mutation
+     */
+    const { mutateAsync: saveSettings, isLoading: isSavingSettings } = useMutation({
+        // Post new settings
+        mutationFn: async (data) => {
+            let settings = await client.setRoute(saveSettingsRoute).setPayload(data).post();
+            return transformData(settings?.data);
+        },
+        // Mutate current settings to show updated values
+        onSuccess: async (data) => {
+            queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
+                return data ? [...data] : [];
+            });
+
+            // Do NOT "await" here: it results in showing default settings
+            queryClient.invalidateQueries([getSettingsQueryKey]);
+        },
+    });
 
     return {
-        settings: query.data,
+        settings: query?.data,
         saveSettings,
         getValue,
         setValue,
-        isSavingSettings: query.isLoading || query.fetchStatus === "fetching",
-        invalidateSettings: () =>
-            queryClient.invalidateQueries(["settings_fields"]),
+        isSavingSettings: query?.isLoading,
+        invalidateSettings: () => queryClient.invalidateQueries([getSettingsQueryKey]),
     };
 };
 
