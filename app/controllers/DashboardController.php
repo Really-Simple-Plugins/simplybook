@@ -77,44 +77,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $logoUrl = App::env('plugin.assets_url').'img/logo.svg';
-        $navigation = $this->getNavigationItems();
-
-        $this->render('admin/dashboard', compact('logoUrl', 'navigation'));
-    }
-
-    /**
-     * Get the default navigation items for the dashboard.
-     * @internal This is solely used in the skeleton view!
-     * @uses apply_filters simplybook_dashboard_menu_items
-     */
-    private function getNavigationItems(): array
-    {
-        $menuItems = [
-            [
-                'title' => esc_html__('Dashboard', 'simplybook'),
-            ],
-            [
-                'title' => esc_html__('Clients 0', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-            [
-                'title' => esc_html__('Calendar 0', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-            [
-                'title' => esc_html__('Settings', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-        ];
-
-        /**
-         * Filter: simplybook_dashboard_menu_items
-         * Can be used to add or remove menu items from the dashboard.
-         * @param array $menuItems
-         * @return array
-         */
-        return apply_filters('simplybook_dashboard_menu_items', $menuItems);
+        $this->render('admin/dashboard');
     }
 
     /**
