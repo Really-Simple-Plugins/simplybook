@@ -15,6 +15,9 @@ export const AJAX_URL = getSiteUrl("ajax_url");
 // Text domain for SimplyBook translations
 export const TEXT_DOMAIN = "simplybook";
 
+// Handy constants
+export const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
+
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
  * If the site is loaded over HTTPS, enforces HTTPS for the URL to prevent mixed content issues.

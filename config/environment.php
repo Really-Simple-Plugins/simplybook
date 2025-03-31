@@ -61,6 +61,23 @@ return [
                     'content' => 'Boost Engagement with Promo Codes – Attract more clients by offering discounts and special promotions via customizable promo codes.',
                     'link' => 'https://help.simplybook.me/index.php?title=Coupons_and_Gift_Cards_custom_feature/en',
                 ],
+            ],
+            'domains' => [
+                ['key' => 'default:simplybook.it', 'value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
+                ['key' => 'default:simplybook.me', 'value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
+                ['key' => 'default:simplybook.asia', 'value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
+                ['key' => 'login:simplybook.vip', 'value' => 'login:simplybook.vip', 'label' => 'simplybook.vip'],
+                ['key' => 'login:simplybook.cc', 'value' => 'login:simplybook.cc', 'label' => 'login:simplybook.cc'],
+                ['key' => 'login:simplybook.us', 'value' => 'login:simplybook.us', 'label' => 'login:simplybook.us'],
+                ['key' => 'login:simplybook.pro', 'value' => 'login:simplybook.pro', 'label' => 'login:simplybook.pro'],
+                ['key' => 'login:enterpriseappointments.com', 'value' => 'login:enterpriseappointments.com', 'label' => 'login:enterpriseappointments.com'],
+                ['key' => 'login:simplybook.webnode.page', 'value' => 'login:simplybook.webnode.page', 'label' => 'login:simplybook.webnode.page'],
+                ['key' => 'login:servicebookings.net', 'value' => 'login:servicebookings.net', 'label' => 'login:servicebookings.net'],
+                ['key' => 'login:booking.names.uk', 'value' => 'login:booking.names.uk', 'label' => 'login:booking.names.uk'],
+                ['key' => 'login:booking.lcn.uk', 'value' => 'login:booking.lcn.uk', 'label' => 'login:booking.lcn.uk'],
+                ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'login:booking.register365.ie'],
+                // GET RID OF THIS LATER!!
+                ['key' => 'default:wp.simplybook.ovh', 'value' => 'default:wp.simplybook.ovh', 'label' => 'wp.simplybook.ovh'],
             ]
         ]
     ],
