@@ -451,9 +451,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_glue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/glue */ "./src/api/helpers/glue.js");
 /* harmony import */ var _helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/errorHandler */ "./src/api/helpers/errorHandler.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__);
-
 
 
 
@@ -492,7 +489,6 @@ const request = async (path, method = "POST", data = {}) => {
   } catch (fetchError) {
     // If fetch fails, log error with handler and try AJAX fallback
     (0,_helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__["default"])(fetchError, args.path);
-    console.error("fetch error", fetchError);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
@@ -769,7 +765,7 @@ const Header = () => {
       className: "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden",
       isButton: true,
       btnVariant: "tertiary",
-      page: "r/payment-widget"
+      page: "v2/r/payment-widget"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook")))));
     $[8] = t7;
   } else {
@@ -803,7 +799,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 // Map your icons to keys for easy referencing
 const iconMap = {
-  "xmark": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faXmark,
   "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSquareArrowUpRight,
   "spinner": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSpinner,
   "chevron-down": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faChevronDown,
@@ -951,11 +946,9 @@ const LoginLink = t0 => {
       e.preventDefault();
       const loginData = await fetchLinkData();
       const link = loginData.simplybook_dashboard_url;
-      let finalUrl = "";
-      if (!link) {
-        console.log("Link is not fetched");
-      } else {
-        finalUrl = link ? `${link}` : `${link}?back_url=/${page_0}/`;
+      let finalUrl = `${link}/${page_0}/`;
+      if (link.includes("by-hash")) {
+        finalUrl = `${link}?back_url=/${page_0}/`;
       }
       window.open(finalUrl, "_blank");
       window.focus();
@@ -1101,6 +1094,19 @@ const useOnboardingData = () => {
       id: "terms-and-conditions",
       type: "checkbox",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("I agree to the terms and conditions", "simplybook")
+    }, {
+      id: "submit",
+      type: "button",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Start registration", "simplybook"),
+      buttonSettings: {
+        showLoader: true,
+        //{disabled}
+        btnVariant: "primary",
+        disabled: true,
+        onClick: () => {
+          beforeSubmit();
+        }
+      }
     }],
     beforeSubmit: async data => {
       console.log("submit email step");
@@ -1137,6 +1143,8 @@ const useOnboardingData = () => {
     }, {
       id: "category",
       type: "select",
+      style: "inline",
+      inline_group: true,
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Business category", "simplybook"),
       options: [{
         value: "3",
@@ -1169,10 +1177,12 @@ const useOnboardingData = () => {
     }, {
       id: "service",
       type: "text",
+      style: "inline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("What service do you provide?", "simplybook")
     }, {
       id: "phone",
       type: "text",
+      style: "inline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Phone", "simplybook"),
       validation: {
         regex: "^\\+?[0-9\\s\\-().]+$",
@@ -1181,14 +1191,17 @@ const useOnboardingData = () => {
     }, {
       id: "address",
       type: "text",
+      style: "inline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Address", "simplybook")
     }, {
       id: "zip",
       type: "text",
+      style: "inline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Postal Code", "simplybook")
     }, {
       id: "city",
       type: "text",
+      style: "inline",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("City", "simplybook")
     }, {
       id: "country",
@@ -1207,6 +1220,19 @@ const useOnboardingData = () => {
         value: "US",
         label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("United States", "simplybook")
       }]
+    }, {
+      id: "submit",
+      type: "button",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Next Step: Styling", "simplybook"),
+      buttonSettings: {
+        showLoader: true,
+        //{disabled}
+        btnVariant: "primary",
+        disabled: true,
+        onClick: () => {
+          beforeSubmit();
+        }
+      }
     }],
     beforeSubmit: async data_1 => {
       console.log("submit information check step");
@@ -2691,7 +2717,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// @TODO: Split up into multiple components? 
+// @TODO: Split up into multiple components?
 var Bookings = function () {
   var _a = (0,_hooks_useDashboardData__WEBPACK_IMPORTED_MODULE_8__["default"])(),
     dashboardData = _a.dashboardData,
@@ -2789,8 +2815,8 @@ var Bookings = function () {
         className: "",
         isButton: true,
         btnVariant: "secondary",
-        page: "/r/payment-widget/",
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('View Bookings', 'simplybook')
+        page: "v2/r/payment-widget/",
+        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)('View' + ' Bookings', 'simplybook')
       })
     })]
   });
@@ -3371,26 +3397,21 @@ __webpack_require__.r(__webpack_exports__);
  * Styled button component
  */
 var ButtonInput = function (_a) {
-  var type = _a.type,
+  var _b = _a.className,
+    className = _b === void 0 ? "" : _b,
+    type = _a.type,
     children = _a.children,
     onClick = _a.onClick,
     link = _a.link,
-    _b = _a.btnVariant,
-    btnVariant = _b === void 0 ? "secondary" : _b,
+    btnVariant = _a.btnVariant,
     _c = _a.disabled,
-    disabled = _c === void 0 ? false : _c,
-    _d = _a.showLoader,
-    showLoader = _d === void 0 ? false : _d,
-    _e = _a.size,
-    size = _e === void 0 ? "md" : _e,
-    _f = _a.className,
-    className = _f === void 0 ? "" : _f;
+    disabled = _c === void 0 ? false : _c;
   var localClassName = (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)(
   // Base styles
   "rounded-full transition-all duration-200 p-4 cursor-pointer", {
-    'bg-secondary text-white hover:bg-secondary-dark ': btnVariant === 'primary',
-    'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant === 'secondary',
-    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant === 'tertiary'
+    'bg-secondary text-white hover:bg-secondary-dark ': btnVariant == 'primary',
+    'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant == 'secondary',
+    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary'
   }, {
     'opacity-50 cursor-not-allowed ': disabled
   });

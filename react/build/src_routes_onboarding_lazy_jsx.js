@@ -97,64 +97,6 @@ function getSiteUrl(type) {
 
 /***/ }),
 
-/***/ "./src/api/endpoints/getSettingsFields.js":
-/*!************************************************!*\
-  !*** ./src/api/endpoints/getSettingsFields.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param withValues
- * @return {Promise<void>}
- */
-const getSettingsFields = async ({
-  withValues = true
-}) => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get", "POST", {
-    withValues
-  });
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/saveSettings.js":
-/*!*******************************************!*\
-  !*** ./src/api/endpoints/saveSettings.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param data
- * @return {Promise<void>}
- */
-const saveSettingsFields = async data => {
-  console.log("saving settings", data);
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/save", "POST", data);
-  console.log("save settings fields response", res.data);
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (saveSettingsFields);
-
-/***/ }),
-
 /***/ "./src/api/helpers/errorHandler.js":
 /*!*****************************************!*\
   !*** ./src/api/helpers/errorHandler.js ***!
@@ -241,9 +183,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpers_glue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/glue */ "./src/api/helpers/glue.js");
 /* harmony import */ var _helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../helpers/errorHandler */ "./src/api/helpers/errorHandler.js");
 /* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_4__);
-
 
 
 
@@ -282,7 +221,6 @@ const request = async (path, method = "POST", data = {}) => {
   } catch (fetchError) {
     // If fetch fails, log error with handler and try AJAX fallback
     (0,_helpers_errorHandler__WEBPACK_IMPORTED_MODULE_2__["default"])(fetchError, args.path);
-    console.error("fetch error", fetchError);
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (request);
@@ -310,7 +248,6 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 // Map your icons to keys for easy referencing
 const iconMap = {
-  "xmark": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faXmark,
   "square-arrow-up-right": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSquareArrowUpRight,
   "spinner": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faSpinner,
   "chevron-down": _fortawesome_free_solid_svg_icons__WEBPACK_IMPORTED_MODULE_2__.faChevronDown,
@@ -618,9 +555,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Inputs/TextInput */ "./src/components/Inputs/TextInput.tsx");
 /* harmony import */ var _Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Forms/FieldWrapper */ "./src/components/Forms/FieldWrapper.tsx");
-/* harmony import */ var _hooks_useSettingsData__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../hooks/useSettingsData */ "./src/hooks/useSettingsData.js");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
-
 
 
 
@@ -638,7 +573,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
  * @return {JSX.Element}
  */
 const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(26);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(27);
   let className;
   let context;
   let fieldState;
@@ -646,6 +581,7 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
   let label;
   let name;
   let props;
+  let required;
   let setting;
   let type;
   if ($[0] !== t0) {
@@ -658,6 +594,7 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       context,
       className,
       type,
+      required,
       ...props
     } = t0);
     $[0] = t0;
@@ -668,8 +605,9 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
     $[5] = label;
     $[6] = name;
     $[7] = props;
-    $[8] = setting;
-    $[9] = type;
+    $[8] = required;
+    $[9] = setting;
+    $[10] = type;
   } else {
     className = $[1];
     context = $[2];
@@ -678,14 +616,15 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
     label = $[5];
     name = $[6];
     props = $[7];
-    setting = $[8];
-    type = $[9];
+    required = $[8];
+    setting = $[9];
+    type = $[10];
   }
   const inputId = setting.id;
   const t1 = fieldState?.error?.message;
   const t2 = !!fieldState?.error?.message;
   let t3;
-  if ($[10] !== inputId || $[11] !== name || $[12] !== props || $[13] !== ref || $[14] !== t2 || $[15] !== type) {
+  if ($[11] !== inputId || $[12] !== name || $[13] !== props || $[14] !== ref || $[15] !== t2 || $[16] !== type) {
     t3 = /*#__PURE__*/React.createElement(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
       name: name,
       ref: ref,
@@ -693,18 +632,18 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       type: type,
       "aria-invalid": t2
     }, props));
-    $[10] = inputId;
-    $[11] = name;
-    $[12] = props;
-    $[13] = ref;
-    $[14] = t2;
-    $[15] = type;
-    $[16] = t3;
+    $[11] = inputId;
+    $[12] = name;
+    $[13] = props;
+    $[14] = ref;
+    $[15] = t2;
+    $[16] = type;
+    $[17] = t3;
   } else {
-    t3 = $[16];
+    t3 = $[17];
   }
   let t4;
-  if ($[17] !== className || $[18] !== context || $[19] !== help || $[20] !== inputId || $[21] !== label || $[22] !== props.required || $[23] !== t1 || $[24] !== t3) {
+  if ($[18] !== className || $[19] !== context || $[20] !== help || $[21] !== inputId || $[22] !== label || $[23] !== required || $[24] !== t1 || $[25] !== t3) {
     t4 = /*#__PURE__*/React.createElement(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_3__["default"], {
       label: label,
       help: help,
@@ -712,19 +651,19 @@ const TextField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
       context: context,
       className: className,
       inputId: inputId,
-      requiredMessage: props.required
+      required: required
     }, t3);
-    $[17] = className;
-    $[18] = context;
-    $[19] = help;
-    $[20] = inputId;
-    $[21] = label;
-    $[22] = props.required;
-    $[23] = t1;
-    $[24] = t3;
-    $[25] = t4;
+    $[18] = className;
+    $[19] = context;
+    $[20] = help;
+    $[21] = inputId;
+    $[22] = label;
+    $[23] = required;
+    $[24] = t1;
+    $[25] = t3;
+    $[26] = t4;
   } else {
-    t4 = $[25];
+    t4 = $[26];
   }
   return t4;
 });
@@ -759,7 +698,7 @@ const OnboardingContainer = t0 => {
   } = t0;
   let t1;
   if ($[0] !== className) {
-    t1 = (0,clsx__WEBPACK_IMPORTED_MODULE_2__["default"])(className, "onboarding-container w-full h-full flex flex-col justify-center bg-white");
+    t1 = (0,clsx__WEBPACK_IMPORTED_MODULE_2__["default"])(className, "onboarding-container w-full h-full flex flex-col items-center bg-white py-20");
     $[0] = className;
     $[1] = t1;
   } else {
@@ -768,7 +707,7 @@ const OnboardingContainer = t0 => {
   let t2;
   if ($[2] !== children) {
     t2 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "grid grid-cols-12 gap-24 w-full px-4"
+      className: "grid grid-cols-12 gap-24 w-full px-8"
     }, children);
     $[2] = children;
     $[3] = t2;
@@ -793,10 +732,10 @@ OnboardingContainer.displayName = "OnboardingContainer";
 
 /***/ }),
 
-/***/ "./src/components/Modals/SignInModal.js":
-/*!**********************************************!*\
-  !*** ./src/components/Modals/SignInModal.js ***!
-  \**********************************************/
+/***/ "./src/components/Modals/Partials/FormLogin.jsx":
+/*!******************************************************!*\
+  !*** ./src/components/Modals/Partials/FormLogin.jsx ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -805,52 +744,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../assets/img/logo.svg */ "../assets/img/logo.svg");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _api_helpers_glue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../api/helpers/glue */ "./src/api/helpers/glue.js");
-/* harmony import */ var _api_config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../api/config */ "./src/api/config.js");
-/* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../api/requests/request */ "./src/api/requests/request.js");
-/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
-/* harmony import */ var _Fields_SelectField__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Fields/SelectField */ "./src/components/Fields/SelectField.jsx");
-/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Fields/TextField */ "./src/components/Fields/TextField.jsx");
-/* harmony import */ var _Errors_Error__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../Errors/Error */ "./src/components/Errors/Error.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Fields/TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _Fields_SelectField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Fields/SelectField */ "./src/components/Fields/SelectField.jsx");
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _api_helpers_glue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/helpers/glue */ "./src/api/helpers/glue.js");
+/* harmony import */ var _api_config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../api/config */ "./src/api/config.js");
+/* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../api/requests/request */ "./src/api/requests/request.js");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
 
 
 
-// API imports
+
+
+
+// API IMPORTS 
 
 
 
 
-
-
-
-
-function SignInModal({
-  onClose
-}) {
-  const [require2fa, setRequire2fa] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+const formLogin = ({
+  onClose,
+  setRequire2fa
+}) => {
+  /**
+   * Initialise constants
+  */
+  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Google Authenticator", "simplybook")
+  });
   const [authSessionId, setAuthSessionId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [companyLogin, setCompanyLogin] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [userLogin, setUserLogin] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Google Authenticator", "simplybook")
-  });
   const [domain, setDomain] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("default:simplybook.it");
-  const [twoFaCode, setTwoFaCode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [selectedDomain, setSelectedDomain] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("default:simplybook.it");
-  const [selectedProvider, setSelectedProvider] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(twoFaProviders[0]);
-  console.error(setSelectedProvider);
 
   /**
    * We use React Hook Form to handle client-side validation for the main login
-   */
+  */
   const {
     control,
     register,
@@ -860,10 +796,10 @@ function SignInModal({
       isValid
     },
     watch
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_11__.useForm)({
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_9__.useForm)({
     mode: "onChange",
     defaultValues: {
-      company_domain: "default:simplybook.it",
+      company_domain: selectedDomain,
       company_login: "",
       user_login: "",
       user_password: ""
@@ -871,15 +807,12 @@ function SignInModal({
   });
 
   // Update how we watch the fields
-  const watchCompanyDomain = watch("company_domain");
-  const watchCompanyLogin = watch("company_login");
-  const watchUserLogin = watch("user_login");
-  const watchUserPassword = watch("user_password");
+  const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
   /**
    * CHeck if the fields are empty, only when all are filled the button becomes enabled
    */
-  const isFormFilled = watchCompanyLogin && watchCompanyDomain && watchUserLogin && watchUserPassword && watchCompanyDomain.trim() !== "" && watchCompanyLogin.trim() !== "" && watchUserLogin.trim() !== "" && watchUserPassword.trim() !== "";
+  const isFormFilled = watchFields.every(field => field && field.trim() !== "");
 
   /**
    * Set the button disabled state
@@ -887,54 +820,16 @@ function SignInModal({
   const setDisabled = !isFormFilled ? true : false;
 
   /**
-   * Create another constant for the 2FA field
-   */
-  const {
-    control: control2fa,
-    handleSubmit: handleSubmit2fa,
-    watch: watch2fa,
-    formState: {
-      errors: errors2fa
-    }
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_11__.useForm)({
-    mode: "onChange",
-    defaultValues: {
-      two_fa_code: "",
-      two_fa_type: twoFaProviders[0]
-    }
-  });
-
-  /**
-   * Watch the 2FA fields
-   */
-  const watch2faCode = watch2fa("two_fa_code");
-  const watch2faType = watch2fa("two_fa_type");
-
-  /**
-   * Check 2FA fields
-   */
-  const is2faFilled = watch2faCode && watch2faCode.trim() !== "";
-  /**
-   * Set the 2FA button disabled state
-   */
-  const setDisabled2FA = !is2faFilled ? true : false;
-
-  // Add this console log to debug
-  console.log('Form state:', {
-    watch2faCode
-  });
-
-  /**
-   * Sends the filled in form data to the api to log the user
-   * 
-   * @param {event} e 
-   */
+       * Sends the filled in form data to the api to log the user
+       * 
+       * @param {event} e 
+       */
   const submitForm = handleSubmit(data => {
     const formData = {
       company_domain: selectedDomain,
-      company_login: data.company_login,
-      user_login: data.user_login,
-      user_password: data.user_password
+      company_login: data?.company_login,
+      user_login: data?.user_login,
+      user_password: data?.user_password
     };
     logUserIn(formData);
   });
@@ -949,75 +844,37 @@ function SignInModal({
    * @param {object} formData
    * @returns 
    */
-  const logUserIn = async formData_0 => {
-    /**
-     * 
-     * TODO: Create a request for this that validates the form data on the serverside
-     */
+  const logUserIn = async formData => {
     try {
-      // let path = "https://user-api-v2.simplybook.me/admin/"
-      let path = _api_config__WEBPACK_IMPORTED_MODULE_5__.API_BASE_PATH + "onboarding/auth" + (0,_api_helpers_glue__WEBPACK_IMPORTED_MODULE_4__["default"])() + "&token=" + Math.random().toString(36).substring(2, 7);
-      let data_0 = {
-        ...formData_0,
-        nonce: _api_config__WEBPACK_IMPORTED_MODULE_5__.NONCE
+      let path = _api_config__WEBPACK_IMPORTED_MODULE_7__.API_BASE_PATH + "onboarding/auth" + (0,_api_helpers_glue__WEBPACK_IMPORTED_MODULE_6__["default"])() + "&token=" + Math.random().toString(36).substring(2, 7);
+      let data = {
+        ...formData,
+        nonce: _api_config__WEBPACK_IMPORTED_MODULE_7__.NONCE
       };
-      let response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_3___default()({
+      let response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5___default()({
         path,
         method: "POST",
-        data: data_0
+        data
       });
-      if (!response) {
-        return; // Logging is done in request.js
-      }
       if (response.data && 'require2fa' in response.data && response.data.require2fa === true) {
-        setRequire2fa(true);
         setAuthSessionId(response.data.auth_session_id);
         setCompanyLogin(response.data.company_login);
         setUserLogin(response.data.user_login);
         setDomain(response.data.domain);
         setTwoFaProviders(response.data.allowed2fa_providers);
+        setRequire2fa(true);
         return;
       }
       window.location.href = "/wp-admin/admin.php?page=simplybook";
     } catch (error) {
-      if (error) {
-        console.error(error);
-        return;
-      }
+      console.error(error);
     }
   };
-  const handle2faSubmit = handleSubmit2fa(async data_1 => {
-    // BUG getting 2fa error and not succesful with the 2fa
-    // API Error at simplybook/v1/onboarding/auth_two_fa?&token=a9lhs: 2fa Authentication failed with code 400
-    const response_0 = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_6__["default"])("onboarding/auth_two_fa", "POST", {
-      auth_session_id: authSessionId,
-      company_login: companyLogin,
-      user_login: userLogin,
-      domain: domain,
-      two_fa_code: data_1.two_fa_code,
-      two_fa_type: data_1.two_fa_type
-    });
-    if (response_0) {
-      console.log("2FA successful:", response_0);
-      window.location.href = "/wp-admin/admin.php?page=simplybook";
-      return;
-    }
-    console.error("2FA error:");
-  });
-  const requestSms = async () => {
-    const response_1 = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_6__["default"])("onboarding/auth_send_sms", "POST", {
-      auth_session_id: authSessionId,
-      company_login: companyLogin,
-      domain: domain
-    });
-    if (response_1) {
-      return console.log("SMS request successful:", response_1);
-    }
-    console.error("SMS request error:", error);
-  };
-  const onError = errors_0 => {
-    console.error("wrong", errors_0);
-  };
+
+  /**
+   * 
+   * Initialise the different domain URL's
+   */
   const companyDomains = [{
     key: "default:simplybook.it",
     value: "default:simplybook.it",
@@ -1073,180 +930,336 @@ function SignInModal({
   },
   // GET RID OF THIS LATER!! 
   {
-    key: "default:https://wp.simplybook.ovh/",
-    value: "default:https://wp.simplybook.ovh/",
-    label: "https://wp.simplybook.ovh/"
+    key: "default:wp.simplybook.ovh",
+    value: "default:wp.simplybook.ovh",
+    label: "wp.simplybook.ovh"
   }];
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "signin-modal-bg fixed z-999 inset-0 flex items-center justify-center bg-black/50 border-2 border-gray-200 "
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "signin-modal mt-8 w-3/8 bg-white p-4 px-4 rounded border-3 border-gray-200"
-  }, !require2fa ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "flex flex-col items-center mb-8"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "mx-4 w-65 py-2 my-4"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
-    className: "my-4"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Sign In", "simplybook")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please enter your SimplyBook credentials to sign in.", "simplybook"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
     className: "flex flex-col relative",
     onSubmit: submitForm
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
     name: "company_domain",
     control: control,
     rules: {
       required: true
     },
-    defaultValue: "default:simplybook.it",
     render: ({
       field,
       fieldState
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_SelectField__WEBPACK_IMPORTED_MODULE_8__["default"], _extends({}, field, {
+    }) => /*#__PURE__*/React.createElement(_Fields_SelectField__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, field, {
       fieldState: fieldState,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Company domain", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company domain", "simplybook"),
       setting: "company_domain",
-      className: "relative z-999",
       options: companyDomains,
       value: field.value // Bind the value to the field value
       ,
-      onChange: e_0 => {
-        const selectedValue = e_0.target.value; // Get the selected value
+      onChange: e => {
+        const selectedValue = e.target.value; // Get the selected value
         setSelectedDomain(selectedValue); // Update local state
         field.onChange(selectedValue); // Update form state
       }
     }))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
     name: "company_login",
     control: control,
     rules: {
-      required: true
+      required: "Login needed"
     },
     render: ({
-      field: field_0,
-      fieldState: fieldState_0
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({}, field_0, {
-      fieldState: fieldState_0,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Company login", "simplybook"),
+      field,
+      fieldState
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+      fieldState: fieldState,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company login", "simplybook"),
       setting: "company_login",
       type: "text",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Company login", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company login", "simplybook")
     }))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
     name: "user_login",
     control: control,
     rules: {
       required: true
     },
     render: ({
-      field: field_1,
-      fieldState: fieldState_1
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({}, field_1, {
-      fieldState: fieldState_1,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Email", "simplybook"),
+      field,
+      fieldState
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+      fieldState: fieldState,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "simplybook"),
       setting: "email",
       type: "email",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Email", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "simplybook")
     }))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
     name: "user_password",
     control: control,
     rules: {
       required: true
     },
     render: ({
-      field: field_2,
-      fieldState: fieldState_2
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({}, field_2, {
-      fieldState: fieldState_2,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Password", "simplybook"),
+      field,
+      fieldState
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+      fieldState: fieldState,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Password", "simplybook"),
       setting: "password",
       type: "password",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Password", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Password", "simplybook")
     }))
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
     className: "mt-4 mb-4",
     btnVariant: "primary",
     type: "submit",
     disabled: setDisabled
-  }, "Submit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Submit", "simplybook")), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
     btnVariant: "secondary",
     type: "button",
     onClick: onClose
-  }, "Close"))) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
-    className: "flex flex-col items-center mb-8"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
-    className: "mx-4 w-65 py-2 my-4"
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", {
-    className: "my-4"
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("2FA authentication", "simplybook")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Please use your 2FA provider to sign in.", "simplybook"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("form", {
-    className: "flex flex-col ",
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Close", "simplybook"))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formLogin);
+
+/***/ }),
+
+/***/ "./src/components/Modals/Partials/FormTwoFa.jsx":
+/*!******************************************************!*\
+  !*** ./src/components/Modals/Partials/FormTwoFa.jsx ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Fields/TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
+
+
+
+
+const FormTwoFa = ({
+  onClose
+}) => {
+  /**
+   * Initialise constants
+   */
+  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Google Authenticator", "simplybook")
+  });
+  const firstProvider = Object.keys(twoFaProviders)[0];
+  const [twoFaCode, setTwoFaCode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+  const [selectedProvider, setSelectedProvider] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(firstProvider);
+  const [smsRequested, setSmsRequested] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false); // Default is false
+
+  console.log(firstProvider);
+
+  /**
+   * Create a useForm instance for the 2FA field
+   */
+  const {
+    control: control2fa,
+    handleSubmit: handleSubmit2fa,
+    watch: watch2fa,
+    formState: {
+      errors: errors2fa
+    }
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useForm)({
+    mode: "onChange",
+    defaultValues: {
+      two_fa_code: "",
+      two_fa_type: firstProvider
+    }
+  });
+
+  /**
+   * Watch the 2FA fields
+   */
+  const watch2faFields = watch2fa(["two_fa_code"]);
+
+  /**
+   * Check 2FA fields
+   */
+  const is2faFilled = watch2faFields.every(field => field && field.trim() !== "");
+
+  /**
+   * Set the 2FA button disabled state
+   */
+  const setDisabled2FA = !is2faFilled ? true : false;
+  const handle2faSubmit = handleSubmit2fa(async data => {
+    // BUG getting 2fa error and not succesful with the 2fa
+    // API Error at simplybook/v1/onboarding/auth_two_fa?&token=a9lhs: 2fa Authentication failed with code 400
+    const response = await request("onboarding/auth_two_fa", "POST", {
+      auth_session_id: authSessionId,
+      company_login: companyLogin,
+      user_login: userLogin,
+      domain: domain,
+      two_fa_code: data.two_fa_code,
+      two_fa_type: data.two_fa_type
+    });
+    if (response) {
+      console.log("2FA successful:", response);
+      window.location.href = "/wp-admin/admin.php?page=simplybook";
+      return;
+    }
+  });
+  const requestSms = async () => {
+    const response_0 = await request("onboarding/auth_send_sms", "POST", {
+      auth_session_id: authSessionId,
+      company_login: companyLogin,
+      domain: domain
+    });
+    if (response_0) {
+      setSmsRequested(true);
+      return console.log("SMS request successful:", response_0);
+    }
+    console.error("SMS request error:", error);
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
+    className: "flex flex-col",
     onSubmit: handle2faSubmit
-  }, twoFaProviders.length > 1 ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }, twoFaProviders.length > 1 ? /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
     name: "two_fa_type",
     control: control2fa,
     rules: {
       required: true
     },
-    defaultValue: twoFaProviders[0],
     render: ({
-      field: field_3,
-      fieldState: fieldState_3
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_SelectField__WEBPACK_IMPORTED_MODULE_8__["default"], _extends({}, field_3, {
-      fieldState: fieldState_3,
-      className: "relative z-999",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Select 2FA provider", "simplybook"),
+      field: field_0,
+      fieldState
+    }) => /*#__PURE__*/React.createElement(SelectField, _extends({}, field_0, {
+      fieldState: fieldState,
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Select 2FA provider", "simplybook"),
       setting: "two_fa_type",
       options: selectedProvider,
       value: selectedProvider,
-      onChange: e_1 => {
-        handleProviderChange(e_1);
-        field_3.onChange(e_1);
+      onChange: e => {
+        handleProviderChange(e);
+        field_0.onChange(e);
       }
     }))
-  }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", {
+  }) : /*#__PURE__*/React.createElement("input", {
     type: "hidden",
     name: "two_fa_type",
-    value: twoFaProviders[0]
-  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    value: firstProvider
+  }), /*#__PURE__*/React.createElement("div", {
     className: "two_fa_type_wrapper flex flex-col"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_11__.Controller, {
+  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
     name: "two_fa_code",
     control: control2fa,
     rules: {
       required: true
     },
     render: ({
-      field: field_4,
-      fieldState: fieldState_4
-    }) => /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_9__["default"], _extends({}, field_4, {
-      fieldState: fieldState_4,
+      field: field_1,
+      fieldState: fieldState_0
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field_1, {
+      fieldState: fieldState_0,
       className: "mb-4",
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enter 2FA authentication code", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enter 2FA authentication code", "simplybook"),
       setting: "two_fa_code",
       type: "text",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Enter code", "simplybook"),
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Enter code", "simplybook"),
       value: twoFaCode,
-      onChange: e_2 => {
-        setTwoFaCode(e_2.target.value);
-        field_4.onChange(e_2);
+      onChange: e_0 => {
+        setTwoFaCode(e_0.target.value);
+        field_1.onChange(e_0);
       }
     }))
-  }), selectedProvider === 'sms' && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", {
+  }), selectedProvider === "sms" && /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    className: "mt-4 mb-4",
+    btnVariant: "primary",
     type: "button",
-    onClick: requestSms
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Request SMS", "simplybook")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", {
+    onClick: requestSms,
+    disabled: setDisabled2FA || smsRequested
+  }, smsRequested ? (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("SMS Requested", "simplybook") : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Request SMS", "simplybook")), /*#__PURE__*/React.createElement("div", {
     className: "two_fa_button_wrapper flex flex-col"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "mt-4 mb-4",
     btnVariant: "primary",
     type: "submit",
     disabled: setDisabled2FA
-  }, "Submit"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_7__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Submit", "simplybook")), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "",
     btnVariant: "secondary",
     type: "submit",
     onClick: onClose
-  }, "Close")))))));
-}
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Close", "simplybook"))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (FormTwoFa);
+
+/***/ }),
+
+/***/ "./src/components/Modals/SignInModal.jsx":
+/*!***********************************************!*\
+  !*** ./src/components/Modals/SignInModal.jsx ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../assets/img/logo.svg */ "../assets/img/logo.svg");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Partials_FormTwoFa__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Partials/FormTwoFa */ "./src/components/Modals/Partials/FormTwoFa.jsx");
+/* harmony import */ var _Partials_FormLogin__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Partials/FormLogin */ "./src/components/Modals/Partials/FormLogin.jsx");
+
+
+
+
+
+
+const SignInModal = t0 => {
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(3);
+  const {
+    onClose
+  } = t0;
+  const [require2fa, set2fa] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  let t1;
+  if ($[0] !== onClose || $[1] !== require2fa) {
+    t1 = /*#__PURE__*/React.createElement("div", {
+      className: "signin-modal-bg fixed z-999 inset-0 flex items-center justify-center bg-black/50 border-2 border-gray-200 "
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "signin-modal mt-8 w-3/8 bg-white p-4 px-4 rounded border-3 border-gray-200"
+    }, !require2fa ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-col items-center mb-8"
+    }, /*#__PURE__*/React.createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_2__.ReactComponent, {
+      className: "mx-4 w-65 py-2 my-4"
+    }), /*#__PURE__*/React.createElement("h2", {
+      className: "my-4"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Sign In", "simplybook")), /*#__PURE__*/React.createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Please enter your SimplyBook credentials to sign in.", "simplybook"))), /*#__PURE__*/React.createElement(_Partials_FormLogin__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      onClose: onClose,
+      setRequire2fa: set2fa
+    })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "flex flex-col items-center mb-8"
+    }, /*#__PURE__*/React.createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_2__.ReactComponent, {
+      className: "mx-4 w-65 py-2 my-4"
+    }), /*#__PURE__*/React.createElement("h2", {
+      className: "my-4"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("2FA authentication", "simplybook")), /*#__PURE__*/React.createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Please use your 2FA provider to sign in.", "simplybook"))), /*#__PURE__*/React.createElement(_Partials_FormTwoFa__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      onClose: onClose
+    }))));
+    $[0] = onClose;
+    $[1] = require2fa;
+    $[2] = t1;
+  } else {
+    t1 = $[2];
+  }
+  return t1;
+};
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SignInModal);
 
 /***/ }),
@@ -1356,7 +1369,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../../assets/img/logo.svg */ "../assets/img/logo.svg");
-/* harmony import */ var _Modals_SignInModal_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Modals/SignInModal.js */ "./src/components/Modals/SignInModal.js");
+/* harmony import */ var _Modals_SignInModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Modals/SignInModal */ "./src/components/Modals/SignInModal.jsx");
 
 
 
@@ -1391,7 +1404,7 @@ const OnboardingHeader = t0 => {
   }
   let t3;
   if ($[4] !== isModalOpen || $[5] !== toggleModal) {
-    t3 = isModalOpen && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_Modals_SignInModal_js__WEBPACK_IMPORTED_MODULE_5__["default"], {
+    t3 = isModalOpen && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_Modals_SignInModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
       onClose: toggleModal
     });
     $[4] = isModalOpen;
@@ -1403,7 +1416,7 @@ const OnboardingHeader = t0 => {
   let t4;
   if ($[7] === Symbol.for("react.memo_cache_sentinel")) {
     t4 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_4__.ReactComponent, {
-      className: "mx-4 w-40 py-8"
+      className: "w-40 py-8"
     });
     $[7] = t4;
   } else {
@@ -1413,7 +1426,7 @@ const OnboardingHeader = t0 => {
   if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
     t5 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("span", {
       className: "m-5 text-black"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Already got an account?", "simplybook"), " ");
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Already got an account?", "simplybook"));
     $[8] = t5;
   } else {
     t5 = $[8];
@@ -1435,7 +1448,7 @@ const OnboardingHeader = t0 => {
       className: "font-bold text-primary",
       href: "#",
       onClick: toggleModal
-    }, t6), " "));
+    }, t6)));
     $[10] = toggleModal;
     $[11] = t7;
   } else {
@@ -1443,7 +1456,7 @@ const OnboardingHeader = t0 => {
   }
   let t8;
   if ($[12] !== t2 || $[13] !== t3 || $[14] !== t7) {
-    t8 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+    t8 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("header", {
       className: t2
     }, t3, t7);
     $[12] = t2;
@@ -1457,163 +1470,6 @@ const OnboardingHeader = t0 => {
 };
 OnboardingHeader.displayName = "OnboardingHeader";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnboardingHeader);
-
-/***/ }),
-
-/***/ "./src/hooks/useSettingsData.js":
-/*!**************************************!*\
-  !*** ./src/hooks/useSettingsData.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
-/* harmony import */ var _api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/saveSettings */ "./src/api/endpoints/saveSettings.js");
-
-
-
-
-
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-const useSettingsData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(18);
-  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQueryClient)();
-  const transformData = _temp2;
-  let t0;
-  if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = ["settings_fields"];
-    $[0] = t0;
-  } else {
-    t0 = $[0];
-  }
-  let t1;
-  if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = {
-      queryKey: t0,
-      queryFn: _temp3,
-      staleTime: 300000,
-      initialData: transformData(window.simplybook && window.simplybook.settings_fields),
-      retry: 0,
-      select: _temp4
-    };
-    $[1] = t1;
-  } else {
-    t1 = $[1];
-  }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useQuery)(t1);
-  let t2;
-  if ($[2] !== query.data) {
-    t2 = id => query.data.find(field_0 => field_0.id === id)?.value;
-    $[2] = query.data;
-    $[3] = t2;
-  } else {
-    t2 = $[3];
-  }
-  const getValue = t2;
-  let t3;
-  if ($[4] !== queryClient) {
-    t3 = (id_0, value) => {
-      queryClient.setQueryData(["settings_fields"], oldData => oldData.map(field_1 => field_1.id === id_0 ? {
-        ...field_1,
-        value
-      } : field_1));
-    };
-    $[4] = queryClient;
-    $[5] = t3;
-  } else {
-    t3 = $[5];
-  }
-  const setValue = t3;
-  let t4;
-  if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = async data_1 => {
-      console.log("saving data", data_1);
-      const settings = await (0,_api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__["default"])(data_1);
-      return transformData(settings);
-    };
-    $[6] = t4;
-  } else {
-    t4 = $[6];
-  }
-  let t5;
-  if ($[7] !== queryClient) {
-    t5 = {
-      mutationFn: t4,
-      onSuccess: async data_2 => {
-        queryClient.setQueryData(["settings_fields"], oldData_0 => data_2 ? [...data_2] : []);
-        queryClient.invalidateQueries(["settings_fields"]);
-      }
-    };
-    $[7] = queryClient;
-    $[8] = t5;
-  } else {
-    t5 = $[8];
-  }
-  const {
-    mutateAsync: saveSettings
-  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__.useMutation)(t5);
-  const t6 = query.isLoading || query.fetchStatus === "fetching";
-  let t7;
-  if ($[9] !== queryClient) {
-    t7 = () => queryClient.invalidateQueries(["settings_fields"]);
-    $[9] = queryClient;
-    $[10] = t7;
-  } else {
-    t7 = $[10];
-  }
-  let t8;
-  if ($[11] !== getValue || $[12] !== query.data || $[13] !== saveSettings || $[14] !== setValue || $[15] !== t6 || $[16] !== t7) {
-    t8 = {
-      settings: query.data,
-      saveSettings,
-      getValue,
-      setValue,
-      isSavingSettings: t6,
-      invalidateSettings: t7
-    };
-    $[11] = getValue;
-    $[12] = query.data;
-    $[13] = saveSettings;
-    $[14] = setValue;
-    $[15] = t6;
-    $[16] = t7;
-    $[17] = t8;
-  } else {
-    t8 = $[17];
-  }
-  return t8;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSettingsData);
-function _temp(field) {
-  if (field.type === "checkbox") {
-    field.value = !!field.value;
-  }
-  return field;
-}
-function _temp2(data) {
-  return data.map(_temp);
-}
-function _temp3() {
-  return (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__["default"])({
-    withValues: true
-  });
-}
-function _temp4(data_0) {
-  return data_0 ? [...data_0] : [];
-}
 
 /***/ }),
 
@@ -1705,7 +1561,7 @@ function OnboardingPage() {
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
     t0 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
-      className: "onboarding-body bg-white flex flex-col items-center"
+      className: "onboarding-body bg-white flex flex-col items-center px-4 max-w-8xl"
     }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_layouts_OnboardingLayout__WEBPACK_IMPORTED_MODULE_5__["default"], null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.Outlet, null))));
     $[0] = t0;
   } else {
@@ -1749,12 +1605,12 @@ var FieldWrapper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(func
     _c = _a.className,
     className = _c === void 0 ? "" : _c,
     inputId = _a.inputId,
-    _d = _a.requiredMessage,
-    requiredMessage = _d === void 0 ? false : _d,
+    _d = _a.required,
+    required = _d === void 0 ? false : _d,
     _e = _a.type,
     type = _e === void 0 ? "text" : _e,
     children = _a.children;
-  var wrapperClasses = ["flex w-full flex-col", className, "mb-4"].filter(Boolean).join(" ");
+  var wrapperClasses = ["flex flex-col", className, "mb-4"].filter(Boolean).join(" ");
   var contentClasses = ["flex w-full flex-col", reverseLabel ? "flex-col-reverse" : ""].filter(Boolean).join(" ");
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
     className: wrapperClasses,
@@ -1763,7 +1619,7 @@ var FieldWrapper = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.memo)(func
       children: [type === 'checkbox' && children, (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_radix_ui_react_label__WEBPACK_IMPORTED_MODULE_4__.Root, {
         className: "cursor-pointer pb-2 font-medium text-black text-label ",
         htmlFor: inputId,
-        children: [label, requiredMessage]
+        children: [label, required]
       }), help && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
         className: "pb-1 text-xs font-light text-gray-600",
         children: help
@@ -1803,26 +1659,21 @@ __webpack_require__.r(__webpack_exports__);
  * Styled button component
  */
 var ButtonInput = function (_a) {
-  var type = _a.type,
+  var _b = _a.className,
+    className = _b === void 0 ? "" : _b,
+    type = _a.type,
     children = _a.children,
     onClick = _a.onClick,
     link = _a.link,
-    _b = _a.btnVariant,
-    btnVariant = _b === void 0 ? "secondary" : _b,
+    btnVariant = _a.btnVariant,
     _c = _a.disabled,
-    disabled = _c === void 0 ? false : _c,
-    _d = _a.showLoader,
-    showLoader = _d === void 0 ? false : _d,
-    _e = _a.size,
-    size = _e === void 0 ? "md" : _e,
-    _f = _a.className,
-    className = _f === void 0 ? "" : _f;
+    disabled = _c === void 0 ? false : _c;
   var localClassName = (0,clsx__WEBPACK_IMPORTED_MODULE_1__.clsx)(
   // Base styles
   "rounded-full transition-all duration-200 p-4 cursor-pointer", {
-    'bg-secondary text-white hover:bg-secondary-dark ': btnVariant === 'primary',
-    'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant === 'secondary',
-    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant === 'tertiary'
+    'bg-secondary text-white hover:bg-secondary-dark ': btnVariant == 'primary',
+    'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant == 'secondary',
+    'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary'
   }, {
     'opacity-50 cursor-not-allowed ': disabled
   });
@@ -1920,7 +1771,7 @@ var SelectInput = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().forw
       return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("option", {
         value: option.value,
         children: option.label
-      }, option.key);
+      }, option.key ? option.key : option.value);
     })
   }));
 });
