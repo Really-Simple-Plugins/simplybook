@@ -184,6 +184,19 @@ const useOnboardingData = () => {
           type: "text",
           label: __("Confirmation Code", "simplybook"),
         },
+        {
+          id: "submit",
+          type: "button",
+          label: __("Verify Email", "simplybook"),
+          buttonSettings: {
+            showLoader: true, //{disabled}
+            btnVariant: "primary",
+            disabled: true,
+            onClick: () => {
+              beforeSubmit();
+            }
+          },
+        },
       ],
       beforeSubmit: async (data) => {
         if (!data.recaptchaToken) {

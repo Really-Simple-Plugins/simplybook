@@ -60,16 +60,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AJAX_URL: () => (/* binding */ AJAX_URL),
 /* harmony export */   API_BASE_PATH: () => (/* binding */ API_BASE_PATH),
 /* harmony export */   NONCE: () => (/* binding */ NONCE),
+/* harmony export */   SB_API_URL: () => (/* binding */ SB_API_URL),
+/* harmony export */   SIMPLYBOOK_DOMAINS: () => (/* binding */ SIMPLYBOOK_DOMAINS),
 /* harmony export */   SITE_URL: () => (/* binding */ SITE_URL),
-/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN)
+/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN),
+/* harmony export */   X_WP_NONCE: () => (/* binding */ X_WP_NONCE)
 /* harmony export */ });
 // src/api/config.js
 
 // Token for authenticated requests; fix to get the SimplyBook nonce
 const NONCE = simplybook.nonce;
+const X_WP_NONCE = simplybook.x_wp_nonce;
 
 // Base URL for SimplyBook API requests
-const API_BASE_PATH = "simplybook/v1/";
+const API_BASE_PATH = simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
+const SB_API_URL = simplybook.rest_url + simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
 
 // URLs for the site and AJAX endpoint
 const SITE_URL = getSiteUrl("rest_url");
@@ -77,6 +82,9 @@ const AJAX_URL = getSiteUrl("ajax_url");
 
 // Text domain for SimplyBook translations
 const TEXT_DOMAIN = "simplybook";
+
+// Handy constants
+const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
@@ -94,67 +102,6 @@ function getSiteUrl(type) {
   }
   return url;
 }
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getLoginUrl.js":
-/*!******************************************!*\
-  !*** ./src/api/endpoints/getLoginUrl.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-/* harmony import */ var _types_LoginData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../types/LoginData */ "./src/types/LoginData.ts");
-
-
-/**
- * Update an onboarding step
- * @return {Promise<LoginData>}
- */
-const getLoginUrl = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_login_url", "POST");
-  if (!res || !res.data.simplybook_dashboard_url) {
-    return {
-      simplybook_dashboard_url: ""
-    };
-  }
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getLoginUrl);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getSettingsFields.js":
-/*!************************************************!*\
-  !*** ./src/api/endpoints/getSettingsFields.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param withValues
- * @return {Promise<void>}
- */
-const getSettingsFields = async ({
-  withValues = true
-}) => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get", "POST", {
-    withValues
-  });
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
 
 /***/ }),
 
@@ -337,34 +284,6 @@ const registerTipsTricks = async ({
 
 /***/ }),
 
-/***/ "./src/api/endpoints/saveSettings.js":
-/*!*******************************************!*\
-  !*** ./src/api/endpoints/saveSettings.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param data
- * @return {Promise<void>}
- */
-const saveSettingsFields = async data => {
-  console.log("saving settings", data);
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/save", "POST", data);
-  console.log("save settings fields response", res.data);
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (saveSettingsFields);
-
-/***/ }),
-
 /***/ "./src/api/helpers/errorHandler.js":
 /*!*****************************************!*\
   !*** ./src/api/helpers/errorHandler.js ***!
@@ -462,6 +381,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param method
  * @param data
  * @return {Promise<void>}
+ * @deprecated use {@link HttpClient} instead
  */
 const request = async (path, method = "POST", data = {}) => {
   const args = {
@@ -663,7 +583,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
 /* harmony import */ var _assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../assets/img/logo.svg */ "../assets/img/logo.svg");
 /* harmony import */ var _LoginLink__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LoginLink */ "./src/components/Common/LoginLink.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
@@ -671,6 +591,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _hooks_useSubscriptionData__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../hooks/useSubscriptionData */ "./src/hooks/useSubscriptionData.tsx");
+
 
 
 
@@ -679,10 +601,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const Header = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(9);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(23);
   const {
     onboardingCompleted
   } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_5__["default"])();
+  const {
+    subscriptionPlan,
+    expiresIn,
+    isExpired,
+    isLoading,
+    hasError
+  } = (0,_hooks_useSubscriptionData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   let t0;
   let t1;
   if ($[0] !== onboardingCompleted) {
@@ -702,7 +631,7 @@ const Header = () => {
   (0,react__WEBPACK_IMPORTED_MODULE_4__.useEffect)(t0, t1);
   let t2;
   if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
-    t2 = /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__.Link, {
+    t2 = /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.Link, {
       to: "/"
     }, /*#__PURE__*/React.createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_1__.ReactComponent, {
       className: "h-12 w-40 px-5 py-2"
@@ -713,7 +642,7 @@ const Header = () => {
   }
   let t3;
   if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
-    t3 = /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__.Link, {
+    t3 = /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.Link, {
       to: "/",
       className: "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Dashboard", "simplybook"));
@@ -745,7 +674,7 @@ const Header = () => {
   if ($[7] === Symbol.for("react.memo_cache_sentinel")) {
     t6 = /*#__PURE__*/React.createElement("div", {
       className: "flex items-center"
-    }, t3, t4, t5, /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_6__.Link, {
+    }, t3, t4, t5, /*#__PURE__*/React.createElement(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.Link, {
       to: "/settings/general",
       className: "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Settings", "simplybook")));
@@ -754,24 +683,58 @@ const Header = () => {
     t6 = $[7];
   }
   let t7;
-  if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
-    t7 = /*#__PURE__*/React.createElement("div", {
+  if ($[8] !== expiresIn || $[9] !== hasError || $[10] !== isExpired || $[11] !== isLoading || $[12] !== subscriptionPlan) {
+    t7 = !isLoading && !isExpired && !hasError && /*#__PURE__*/React.createElement("p", null, /*#__PURE__*/React.createElement("span", null, subscriptionPlan, " - ", expiresIn, " ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("days left", "simplybook")));
+    $[8] = expiresIn;
+    $[9] = hasError;
+    $[10] = isExpired;
+    $[11] = isLoading;
+    $[12] = subscriptionPlan;
+    $[13] = t7;
+  } else {
+    t7 = $[13];
+  }
+  let t8;
+  if ($[14] !== hasError || $[15] !== isExpired || $[16] !== isLoading || $[17] !== subscriptionPlan) {
+    t8 = !isLoading && !hasError && isExpired && /*#__PURE__*/React.createElement("p", {
+      className: "color-red"
+    }, /*#__PURE__*/React.createElement("span", null, subscriptionPlan, " - ", (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Expired", "simplybook")));
+    $[14] = hasError;
+    $[15] = isExpired;
+    $[16] = isLoading;
+    $[17] = subscriptionPlan;
+    $[18] = t8;
+  } else {
+    t8 = $[18];
+  }
+  let t9;
+  if ($[19] === Symbol.for("react.memo_cache_sentinel")) {
+    t9 = /*#__PURE__*/React.createElement(_LoginLink__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden",
+      isButton: true,
+      btnVariant: "tertiary",
+      page: "v2/r/payment-widget"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook"));
+    $[19] = t9;
+  } else {
+    t9 = $[19];
+  }
+  let t10;
+  if ($[20] !== t7 || $[21] !== t8) {
+    t10 = /*#__PURE__*/React.createElement("div", {
       className: "bg-white"
     }, /*#__PURE__*/React.createElement("div", {
       className: "mx-auto flex max-w-screen-2xl items-center px-5"
     }, t2, t6, /*#__PURE__*/React.createElement("div", {
       className: "float-right ml-auto flex items-center gap-6 px-4"
-    }, /*#__PURE__*/React.createElement(_LoginLink__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      className: "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden",
-      isButton: true,
-      btnVariant: "tertiary",
-      page: "v2/r/payment-widget"
-    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook")))));
-    $[8] = t7;
+    }, t7, t8, t9)));
+    $[20] = t7;
+    $[21] = t8;
+    $[22] = t10;
   } else {
-    t7 = $[8];
+    t10 = $[22];
   }
-  return t7;
+  return t10;
 };
 Header.displayName = "Header";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Header);
@@ -942,16 +905,21 @@ const LoginLink = t0 => {
   } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let t3;
   if ($[0] !== fetchLinkData) {
-    t3 = async (e, page_0) => {
+    t3 = (e, page_0) => {
       e.preventDefault();
-      const loginData = await fetchLinkData();
-      const link = loginData.simplybook_dashboard_url;
-      let finalUrl = `${link}/${page_0}/`;
-      if (link.includes("by-hash")) {
-        finalUrl = `${link}?back_url=/${page_0}/`;
-      }
-      window.open(finalUrl, "_blank");
-      window.focus();
+      fetchLinkData().then(response => {
+        const link = response?.data.simplybook_dashboard_url;
+        if (!link) {
+          console.error("No link found in response");
+          return;
+        }
+        let finalUrl = `${link}/${page_0}/`;
+        if (link.includes("by-hash")) {
+          finalUrl = `${link}?back_url=/${page_0}/`;
+        }
+        window.open(finalUrl, "_blank");
+        window.focus();
+      }).catch(_temp);
     };
     $[0] = fetchLinkData;
     $[1] = t3;
@@ -1032,6 +1000,9 @@ const LoginLink = t0 => {
 };
 LoginLink.displayName = "LoginLink";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LoginLink);
+function _temp(error) {
+  console.error("Error fetching login URL:", error);
+}
 
 /***/ }),
 
@@ -1255,6 +1226,19 @@ const useOnboardingData = () => {
       id: "confirmation-code",
       type: "text",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Confirmation Code", "simplybook")
+    }, {
+      id: "submit",
+      type: "button",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Verify Email", "simplybook"),
+      buttonSettings: {
+        showLoader: true,
+        //{disabled}
+        btnVariant: "primary",
+        disabled: true,
+        onClick: () => {
+          beforeSubmit();
+        }
+      }
     }],
     beforeSubmit: async data_2 => {
       if (!data_2.recaptchaToken) {
@@ -1504,12 +1488,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
-/* harmony import */ var _api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/saveSettings */ "./src/api/endpoints/saveSettings.js");
-
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
 
 
@@ -1521,112 +1503,140 @@ __webpack_require__.r(__webpack_exports__);
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
 const useSettingsData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(18);
-  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQueryClient)();
-  const transformData = _temp2;
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(21);
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = ["settings_fields"];
+    t0 = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"]();
     $[0] = t0;
   } else {
     t0 = $[0];
   }
+  const client = t0;
+  const transformData = _temp2;
   let t1;
+  let t2;
   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = {
-      queryKey: t0,
-      queryFn: _temp3,
-      staleTime: 300000,
-      initialData: transformData(window.simplybook && window.simplybook.settings_fields),
-      retry: 0,
-      select: _temp4
-    };
+    t1 = ["setting_fields"];
+    t2 = () => client.setRoute("settings/get").setPayload({
+      withValues: true
+    }).post();
     $[1] = t1;
+    $[2] = t2;
   } else {
     t1 = $[1];
+    t2 = $[2];
   }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useQuery)(t1);
-  let t2;
-  if ($[2] !== query.data) {
-    t2 = id => query.data.find(field_0 => field_0.id === id)?.value;
-    $[2] = query.data;
-    $[3] = t2;
-  } else {
-    t2 = $[3];
-  }
-  const getValue = t2;
   let t3;
-  if ($[4] !== queryClient) {
-    t3 = (id_0, value) => {
-      queryClient.setQueryData(["settings_fields"], oldData => oldData.map(field_1 => field_1.id === id_0 ? {
+  if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+    t3 = transformData(window.simplybook && window.simplybook.settings_fields);
+    $[3] = t3;
+  } else {
+    t3 = $[3];
+  }
+  let t4;
+  if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
+    t4 = {
+      queryKey: t1,
+      queryFn: t2,
+      staleTime: 300000,
+      initialData: t3,
+      retry: 0,
+      select: function (data_0) {
+        const fields = data_0?.data ?? data_0;
+        return transformData(fields);
+      }
+    };
+    $[4] = t4;
+  } else {
+    t4 = $[4];
+  }
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t4);
+  let t5;
+  if ($[5] !== query?.data) {
+    t5 = id => query?.data.find(field_0 => field_0.id === id)?.value;
+    $[5] = query?.data;
+    $[6] = t5;
+  } else {
+    t5 = $[6];
+  }
+  const getValue = t5;
+  let t6;
+  if ($[7] !== queryClient) {
+    t6 = (id_0, value) => {
+      queryClient.setQueryData(["setting_fields"], oldResponse => oldResponse.map(field_1 => field_1.id === id_0 ? {
         ...field_1,
         value
       } : field_1));
     };
-    $[4] = queryClient;
-    $[5] = t3;
+    $[7] = queryClient;
+    $[8] = t6;
   } else {
-    t3 = $[5];
+    t6 = $[8];
   }
-  const setValue = t3;
-  let t4;
-  if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = async data_1 => {
-      console.log("saving data", data_1);
-      const settings = await (0,_api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__["default"])(data_1);
-      return transformData(settings);
+  const setValue = t6;
+  let t7;
+  if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
+    t7 = async data_1 => {
+      const settings = await client.setRoute("settings/save").setPayload(data_1).post();
+      return transformData(settings?.data);
     };
-    $[6] = t4;
+    $[9] = t7;
   } else {
-    t4 = $[6];
+    t7 = $[9];
   }
-  let t5;
-  if ($[7] !== queryClient) {
-    t5 = {
-      mutationFn: t4,
-      onSuccess: async data_2 => {
-        queryClient.setQueryData(["settings_fields"], oldData_0 => data_2 ? [...data_2] : []);
-        queryClient.invalidateQueries(["settings_fields"]);
+  let t8;
+  if ($[10] !== queryClient) {
+    t8 = {
+      mutationFn: t7,
+      onSuccess: data_2 => {
+        queryClient.setQueryData(["setting_fields"], oldResponse_0 => data_2 ? [...data_2] : []);
+        queryClient.invalidateQueries({
+          queryKey: ["setting_fields"]
+        });
       }
     };
-    $[7] = queryClient;
-    $[8] = t5;
+    $[10] = queryClient;
+    $[11] = t8;
   } else {
-    t5 = $[8];
+    t8 = $[11];
   }
   const {
     mutateAsync: saveSettings
-  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__.useMutation)(t5);
-  const t6 = query.isLoading || query.fetchStatus === "fetching";
-  let t7;
-  if ($[9] !== queryClient) {
-    t7 = () => queryClient.invalidateQueries(["settings_fields"]);
-    $[9] = queryClient;
-    $[10] = t7;
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useMutation)(t8);
+  const t9 = query?.data;
+  const t10 = query?.isLoading;
+  let t11;
+  if ($[12] !== queryClient) {
+    t11 = () => queryClient.invalidateQueries({
+      queryKey: ["setting_fields"]
+    });
+    $[12] = queryClient;
+    $[13] = t11;
   } else {
-    t7 = $[10];
+    t11 = $[13];
   }
-  let t8;
-  if ($[11] !== getValue || $[12] !== query.data || $[13] !== saveSettings || $[14] !== setValue || $[15] !== t6 || $[16] !== t7) {
-    t8 = {
-      settings: query.data,
+  let t12;
+  if ($[14] !== getValue || $[15] !== saveSettings || $[16] !== setValue || $[17] !== t10 || $[18] !== t11 || $[19] !== t9) {
+    t12 = {
+      settings: t9,
       saveSettings,
       getValue,
       setValue,
-      isSavingSettings: t6,
-      invalidateSettings: t7
+      isSavingSettings: t10,
+      invalidateSettings: t11
     };
-    $[11] = getValue;
-    $[12] = query.data;
-    $[13] = saveSettings;
-    $[14] = setValue;
-    $[15] = t6;
-    $[16] = t7;
-    $[17] = t8;
+    $[14] = getValue;
+    $[15] = saveSettings;
+    $[16] = setValue;
+    $[17] = t10;
+    $[18] = t11;
+    $[19] = t9;
+    $[20] = t12;
   } else {
-    t8 = $[17];
+    t12 = $[20];
   }
-  return t8;
+  return t12;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSettingsData);
 function _temp(field) {
@@ -1637,14 +1647,6 @@ function _temp(field) {
 }
 function _temp2(data) {
   return data.map(_temp);
-}
-function _temp3() {
-  return (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__["default"])({
-    withValues: true
-  });
-}
-function _temp4(data_0) {
-  return data_0 ? [...data_0] : [];
 }
 
 /***/ }),
@@ -1704,17 +1706,29 @@ function Dashboard() {
 
 /***/ }),
 
-/***/ "./src/api/endpoints/Dashboard/dismissTaskApi.tsx":
-/*!********************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/dismissTaskApi.tsx ***!
-  \********************************************************/
+/***/ "./src/api/requests/HttpClient.tsx":
+/*!*****************************************!*\
+  !*** ./src/api/requests/HttpClient.tsx ***!
+  \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+var __assign = undefined && undefined.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -1827,828 +1841,158 @@ var __generator = undefined && undefined.__generator || function (thisArg, body)
   }
 };
 
-/**
- * Update the task status
- * @param {string} taskId
- *
- * @return {Promise<TaskData>}
- */
-var dismissTaskApi = function (taskId) {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var data, response;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          data = {
-            taskId: taskId
-          };
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("dismiss_task", "POST", data)];
-        case 1:
-          response = _a.sent();
-          console.log("dismissing task", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            //return empty TaskData
-            return [2 /*return*/, []];
-          }
-          // @ts-ignore
-          return [2 /*return*/, response.data];
-      }
-    });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (dismissTaskApi);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/Dashboard/doPluginAction.tsx":
-/*!********************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/doPluginAction.tsx ***!
-  \********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
-    }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
 
 /**
- * Get the other plugins data
- * @return {Promise<OtherPlugin>}
+ * HttpClient class to handle HTTP requests.
  */
-var doPluginAction = function (slug, action) {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var data, response;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          data = {
-            slug: slug,
-            action: action
-          };
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("do_plugin_action", "POST", data)];
-        case 1:
-          response = _a.sent();
-          console.log("actions Plugins response", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            return [2 /*return*/, {
-              url: "#",
-              title: "loading",
-              action: "...",
-              actionNiceName: "...",
-              slug: "...",
-              color: "black"
-            }];
-          }
-          // @ts-ignore
-          return [2 /*return*/, response.data.plugin];
-      }
-    });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (doPluginAction);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/Dashboard/getDashboardData.tsx":
-/*!**********************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/getDashboardData.tsx ***!
-  \**********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
+var HttpClient = /** @class */function () {
+  /**
+   * Constructor to initialize the route URL.
+   * @param route - The API route to be used.
+   */
+  function HttpClient(route) {
+    this.route = null;
+    this.getMethodHeaders = {
+      'X-WP-NONCE': _config__WEBPACK_IMPORTED_MODULE_0__.X_WP_NONCE
     };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
-    }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
+    this.postMethodHeaders = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-WP-NONCE': _config__WEBPACK_IMPORTED_MODULE_0__.X_WP_NONCE
     };
+    this.payload = {
+      'nonce': _config__WEBPACK_IMPORTED_MODULE_0__.NONCE
+    };
+    if (route) {
+      this.route = _config__WEBPACK_IMPORTED_MODULE_0__.SB_API_URL + route;
+    }
   }
-};
-
-/**
- * Get the bookings count
- * @return {Promise<getDashboardData>}
- */
-var getDashboardData = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var response, defaultData, data, dashboardData;
-    var _a, _b, _c, _d;
-    return __generator(this, function (_e) {
-      switch (_e.label) {
-        case 0:
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_dashboard_data", "POST")];
-        case 1:
-          response = _e.sent();
-          console.log("getDashboardData response", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            defaultData = {
-              bookings_count_month: 0,
-              bookings_count_day: 0,
-              most_popular_provider: {
-                name: '',
-                percentage: 0
-              },
-              most_popular_service: {
-                name: '',
-                percentage: 0
-              }
-            };
-            return [2 /*return*/, defaultData];
-          }
-          data = response.data;
-          dashboardData = {
-            bookings_count_month: (_a = data.bookings_count_month) !== null && _a !== void 0 ? _a : 0,
-            bookings_count_day: (_b = data.bookings_count_day) !== null && _b !== void 0 ? _b : 0,
-            most_popular_provider: (_c = data.most_popular_provider) !== null && _c !== void 0 ? _c : {
-              name: '',
-              percentage: 0
-            },
-            most_popular_service: (_d = data.most_popular_service) !== null && _d !== void 0 ? _d : {
-              name: '',
-              percentage: 0
+  /**
+   * Performs a GET request.
+   * @returns The response data in JSON format.
+   * @throws An error if the response is not ok or route is not set.
+   */
+  HttpClient.prototype.get = function () {
+    return __awaiter(this, void 0, void 0, function () {
+      var response, errorData;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            if (!this.route) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Route is not set', 'simplybook'));
             }
-          };
-          return [2 /*return*/, dashboardData];
-      }
+            return [4 /*yield*/, fetch(this.route, {
+              method: 'GET',
+              headers: this.getMethodHeaders
+            })];
+          case 1:
+            response = _a.sent();
+            if (!!response.ok) return [3 /*break*/, 3];
+            return [4 /*yield*/, response.json()];
+          case 2:
+            errorData = _a.sent();
+            return [2 /*return*/, this.handleError(errorData)];
+          case 3:
+            return [2 /*return*/, response.json()];
+        }
+      });
     });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getDashboardData);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/Dashboard/getOtherPlugins.tsx":
-/*!*********************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/getOtherPlugins.tsx ***!
-  \*********************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
+  };
+  /**
+   * Performs a POST request.
+   * @param body - The body of the POST request.
+   * @returns The response data in JSON format.
+   * @throws An error if the response is not ok or route is not set.
+   */
+  HttpClient.prototype.post = function (body) {
+    return __awaiter(this, void 0, void 0, function () {
+      var payload, response, errorData;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            payload = body !== null && body !== void 0 ? body : this.payload;
+            if (!payload) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Payload is not set', 'simplybook'));
+            }
+            if (!this.route) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Route is not set', 'simplybook'));
+            }
+            return [4 /*yield*/, fetch(this.route, {
+              method: 'POST',
+              headers: this.postMethodHeaders,
+              body: JSON.stringify(__assign(__assign({}, payload), {
+                nonce: _config__WEBPACK_IMPORTED_MODULE_0__.NONCE
+              }))
+            })];
+          case 1:
+            response = _a.sent();
+            if (!!response.ok) return [3 /*break*/, 3];
+            return [4 /*yield*/, response.json()];
+          case 2:
+            errorData = _a.sent();
+            return [2 /*return*/, this.handleError(errorData)];
+          case 3:
+            return [2 /*return*/, response.json()];
+        }
+      });
     });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+  };
+  /**
+   * Sets the route URL.
+   * @param route - The API route to be used.
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setRoute = function (route) {
+    this.route = _config__WEBPACK_IMPORTED_MODULE_0__.SB_API_URL + route;
     return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
+  };
+  /**
+   * Sets custom headers for GET or POST requests.
+   * @param headers - The headers to be set.
+   * @param method - The HTTP method ('get' or 'post').
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setHeaders = function (headers, method) {
+    if (method === 'get') {
+      this.getMethodHeaders = __assign(__assign({}, this.getMethodHeaders), headers);
+      return this;
     }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
-/**
- * Get the other plugins data
- * @return {Promise<Plugins>}
- */
-var getOtherPlugins = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var response;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("other_plugins_data", "POST")];
-        case 1:
-          response = _a.sent();
-          console.log("Other Plugins response", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            return [2 /*return*/, []];
-          }
-          // @ts-ignore
-          return [2 /*return*/, response.data.plugins];
-      }
-    });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getOtherPlugins);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/Dashboard/getPlugins.tsx":
-/*!****************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/getPlugins.tsx ***!
-  \****************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
+    if (method === 'post') {
+      this.postMethodHeaders = __assign(__assign({}, this.postMethodHeaders), headers);
+      return this;
     }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
     return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
-    }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
-/**
- * Get the plugins data
- * @return {Promise<Plugins>}
- */
-var getPlugins = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var response;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_plugins", "POST")];
-        case 1:
-          response = _a.sent();
-          console.log("Plugins response", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            return [2 /*return*/, []];
-          }
-          // @ts-ignore
-          return [2 /*return*/, response.data];
-      }
-    });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getPlugins);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/Dashboard/getTasks.tsx":
-/*!**************************************************!*\
-  !*** ./src/api/endpoints/Dashboard/getTasks.tsx ***!
-  \**************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../requests/request */ "./src/api/requests/request.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+  };
+  /**
+   * Sets additional payload data.
+   * @param payload - The payload data to be set.
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setPayload = function (payload) {
+    this.payload = __assign(__assign({}, this.payload), payload);
     return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
+  };
+  /**
+   * Handles errors from the server response.
+   * @param errorData - The error data from the server.
+   * @throws An error with a message.
+   */
+  HttpClient.prototype.handleError = function (errorData) {
+    var error = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('An error occurred', 'simplybook');
+    if (typeof errorData === 'string') {
+      error = errorData;
     }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
-/**
- * Get the bookings count
- * @return {Promise<TaskData>}
- */
-var getTasks = function () {
-  return __awaiter(void 0, void 0, void 0, function () {
-    var response;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          return [4 /*yield*/, (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_tasks", "POST")];
-        case 1:
-          response = _a.sent();
-          console.log("getTasks response", response);
-          // @ts-ignore
-          if (!response || !response.data) {
-            return [2 /*return*/, []];
-          }
-          // @ts-ignore
-          return [2 /*return*/, response.data];
-      }
-    });
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getTasks);
+    if (errorData === null || errorData === void 0 ? void 0 : errorData.message) {
+      error = errorData.message;
+    }
+    if (errorData === null || errorData === void 0 ? void 0 : errorData.error) {
+      error = errorData.error;
+    }
+    throw new Error(error);
+  };
+  return HttpClient;
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HttpClient);
 
 /***/ }),
 
@@ -2705,8 +2049,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var _Common_Icon__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../Common/Icon */ "./src/components/Common/Icon.jsx");
-/* harmony import */ var _hooks_useDashboardData__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../hooks/useDashboardData */ "./src/hooks/useDashboardData.tsx");
-/* harmony import */ var _Common_LoginLink__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../Common/LoginLink */ "./src/components/Common/LoginLink.jsx");
+/* harmony import */ var _Common_LoginLink__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../Common/LoginLink */ "./src/components/Common/LoginLink.jsx");
+/* harmony import */ var _hooks_useStatisticsData__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../hooks/useStatisticsData */ "./src/hooks/useStatisticsData.ts");
 
 
 
@@ -2717,41 +2061,36 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// @TODO: Split up into multiple components?
 var Bookings = function () {
-  var _a = (0,_hooks_useDashboardData__WEBPACK_IMPORTED_MODULE_8__["default"])(),
-    dashboardData = _a.dashboardData,
-    refetchData = _a.refetchData;
-  (0,react__WEBPACK_IMPORTED_MODULE_6__.useEffect)(function () {
-    refetchData();
-  }, [refetchData]);
+  var _a = (0,_hooks_useStatisticsData__WEBPACK_IMPORTED_MODULE_9__["default"])(),
+    mostPopularProviderName = _a.mostPopularProviderName,
+    mostPopularProviderBookings = _a.mostPopularProviderBookings,
+    mostPopularServiceName = _a.mostPopularServiceName,
+    mostPopularServiceBookings = _a.mostPopularServiceBookings,
+    bookingsToday = _a.bookingsToday,
+    bookingsThisWeek = _a.bookingsThisWeek,
+    bookingsLastThirtyDays = _a.bookingsLastThirtyDays,
+    isLoading = _a.isLoading,
+    hasError = _a.hasError;
   var FeaturedBlocks = [{
     title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Today", "simplybook"),
-    value: dashboardData.bookings_count_day,
+    value: bookingsToday !== null && bookingsToday !== void 0 ? bookingsToday : '...',
     icon: "user-group"
   }, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This Month", "simplybook"),
-    value: dashboardData.bookings_count_month,
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("This week", "simplybook"),
+    value: bookingsThisWeek !== null && bookingsThisWeek !== void 0 ? bookingsThisWeek : '...',
     icon: "user-group"
   }];
   var DataList = [{
-    title: dashboardData.most_popular_provider.name,
-    percentage: dashboardData.most_popular_provider.percentage,
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Most popular provider", "simplybook"),
+    value: mostPopularProviderName !== null && mostPopularProviderName !== void 0 ? mostPopularProviderName : '...',
+    uplift: mostPopularProviderBookings,
     icon: "trophy"
   }, {
-    title: dashboardData.most_popular_service.name,
-    percentage: dashboardData.most_popular_service.percentage,
-    icon: "eye"
-  }, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Facebook", "simplybook"),
-    value: "0",
-    uplift: "0",
-    icon: "bullhorn"
-  }, {
-    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Booking per Visit", "simplybook"),
-    value: "0",
-    uplift: "0",
-    icon: "clock"
+    title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Most popular service", "simplybook"),
+    value: mostPopularServiceName !== null && mostPopularServiceName !== void 0 ? mostPopularServiceName : '...',
+    uplift: mostPopularServiceBookings,
+    icon: "trophy"
   }];
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
     className: "col-span-3 row-span-2",
@@ -2798,20 +2137,18 @@ var Bookings = function () {
                 children: block_0.uplift && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
                   children: [block_0.uplift, "%"]
                 })
-              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+              }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
                 className: "font-bold",
-                children: [block_0.percentage && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-                  children: [block_0.percentage, "%"]
-                }), block_0.value && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+                children: block_0.value && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
                   children: block_0.value
-                })]
+                })
               })]
             })
           }, index_0);
         })
       })]
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_LoginLink__WEBPACK_IMPORTED_MODULE_9__["default"], {
+      children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_LoginLink__WEBPACK_IMPORTED_MODULE_8__["default"], {
         className: "",
         isButton: true,
         btnVariant: "secondary",
@@ -2846,8 +2183,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var _Management_Plugin__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Management/Plugin */ "./src/components/Dashboard/Management/Plugin.tsx");
-/* harmony import */ var _Management_Manage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Management/Manage */ "./src/components/Dashboard/Management/Manage.tsx");
+/* harmony import */ var _Partials_Plugin__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./Partials/Plugin */ "./src/components/Dashboard/Partials/Plugin.tsx");
+/* harmony import */ var _Partials_Manage__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./Partials/Manage */ "./src/components/Dashboard/Partials/Manage.tsx");
 
 
 
@@ -2857,7 +2194,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-// @TODO: Split up into multiple components? 
+// @TODO: Split up into multiple components?
 var DataList = [{
   title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Providers", "simplybook"),
   link: "/settings/providers",
@@ -2906,11 +2243,11 @@ var Management = function () {
       children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
         children: DataList.map(function (block, index) {
           return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react__WEBPACK_IMPORTED_MODULE_6__.Fragment, {
-            children: block.isPlugin ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Management_Plugin__WEBPACK_IMPORTED_MODULE_7__["default"], {
+            children: block.isPlugin ? (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Partials_Plugin__WEBPACK_IMPORTED_MODULE_7__["default"], {
               title: block.title,
               link: block.link,
               id: block.id
-            }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Management_Manage__WEBPACK_IMPORTED_MODULE_8__["default"], {
+            }) : (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Partials_Manage__WEBPACK_IMPORTED_MODULE_8__["default"], {
               title: block.title,
               link: block.link,
               buttonText: block.buttonText
@@ -2928,10 +2265,97 @@ Management.displayName = "Management";
 
 /***/ }),
 
-/***/ "./src/components/Dashboard/Management/Manage.tsx":
-/*!********************************************************!*\
-  !*** ./src/components/Dashboard/Management/Manage.tsx ***!
-  \********************************************************/
+/***/ "./src/components/Dashboard/OurPlugins.tsx":
+/*!*************************************************!*\
+  !*** ./src/components/Dashboard/OurPlugins.tsx ***!
+  \*************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Blocks_Block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Blocks/Block */ "./src/components/Blocks/Block.tsx");
+/* harmony import */ var _Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Blocks/BlockHeading */ "./src/components/Blocks/BlockHeading.jsx");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
+/* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
+/* harmony import */ var _Common_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Common/Icon */ "./src/components/Common/Icon.jsx");
+/* harmony import */ var _hooks_useOtherPluginsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/useOtherPluginsData */ "./src/hooks/useOtherPluginsData.tsx");
+
+
+
+
+
+
+
+
+
+var OurPlugins = function () {
+  var _a = (0,_hooks_useOtherPluginsData__WEBPACK_IMPORTED_MODULE_7__["default"])(),
+    plugins = _a.plugins,
+    fetched = _a.fetched,
+    runPluginAction = _a.runPluginAction,
+    pluginActionNice = _a.pluginActionNice;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: "col-span-6 row-span-1 bg-transparent shadow-none",
+    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Our Plugins", "simplybook"),
+      controls: undefined
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      className: "flex flex-col items-center",
+      children:
+      // @ts-ignore
+      fetched && plugins && Object.keys(plugins).length && Object.values(plugins).map(function (plugin) {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+          className: "flex items-center gap-2 text-sm w-full py-2 ",
+          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
+            name: "circle",
+            color: plugin.color
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
+            to: plugin.url,
+            children: plugin.title
+          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+            className: "text-sm ml-auto",
+            children: [plugin.action === 'installed' && pluginActionNice(plugin.action), plugin.action !== 'installed' && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+                target: "_blank",
+                href: plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url,
+                onClick: function (e) {
+                  return runPluginAction({
+                    slug: plugin.slug,
+                    action: plugin.action,
+                    e: e
+                  });
+                },
+                children: pluginActionNice(plugin.action)
+              })
+            })]
+          })]
+        }, plugin.url);
+      })
+    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      children: !fetched && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading...", "simplybook")
+        })
+      })
+    })]
+  });
+};
+OurPlugins.displayName = "OurPlugins";
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OurPlugins);
+
+/***/ }),
+
+/***/ "./src/components/Dashboard/Partials/Manage.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/Dashboard/Partials/Manage.tsx ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -2973,10 +2397,10 @@ var Manage = function (_a) {
 
 /***/ }),
 
-/***/ "./src/components/Dashboard/Management/Plugin.tsx":
-/*!********************************************************!*\
-  !*** ./src/components/Dashboard/Management/Plugin.tsx ***!
-  \********************************************************/
+/***/ "./src/components/Dashboard/Partials/Plugin.tsx":
+/*!******************************************************!*\
+  !*** ./src/components/Dashboard/Partials/Plugin.tsx ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -2987,7 +2411,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _hooks_useManagementData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../hooks/useManagementData */ "./src/hooks/useManagementData.tsx");
+/* harmony import */ var _hooks_useSpecialFeaturesData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../hooks/useSpecialFeaturesData */ "./src/hooks/useSpecialFeaturesData.tsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Common_LoginLink__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Common/LoginLink */ "./src/components/Common/LoginLink.jsx");
@@ -3000,7 +2424,7 @@ var Plugin = function (_a) {
   var title = _a.title,
     link = _a.link,
     id = _a.id;
-  var _b = (0,_hooks_useManagementData__WEBPACK_IMPORTED_MODULE_2__["default"])(),
+  var _b = (0,_hooks_useSpecialFeaturesData__WEBPACK_IMPORTED_MODULE_2__["default"])(),
     isPluginActive = _b.isPluginActive,
     _c = _b.plugins,
     plugins = _c === void 0 ? [] : _c,
@@ -3043,87 +2467,51 @@ var Plugin = function (_a) {
 
 /***/ }),
 
-/***/ "./src/components/Dashboard/OurPlugins.tsx":
-/*!*************************************************!*\
-  !*** ./src/components/Dashboard/OurPlugins.tsx ***!
-  \*************************************************/
+/***/ "./src/components/Dashboard/Partials/Tip.tsx":
+/*!***************************************************!*\
+  !*** ./src/components/Dashboard/Partials/Tip.tsx ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   "default": () => (/* binding */ Tip)
 /* harmony export */ });
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _Blocks_Block__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Blocks/Block */ "./src/components/Blocks/Block.tsx");
-/* harmony import */ var _Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Blocks/BlockHeading */ "./src/components/Blocks/BlockHeading.jsx");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
-/* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
-/* harmony import */ var _tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tanstack/react-router */ "./node_modules/@tanstack/react-router/dist/esm/link.js");
-/* harmony import */ var _Common_Icon__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../Common/Icon */ "./src/components/Common/Icon.jsx");
-/* harmony import */ var _hooks_useOtherPluginsData__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../hooks/useOtherPluginsData */ "./src/hooks/useOtherPluginsData.tsx");
 
-
-
-
-
-
-
-
-
-var OurPlugins = function () {
-  var _a = (0,_hooks_useOtherPluginsData__WEBPACK_IMPORTED_MODULE_7__["default"])(),
-    plugins = _a.plugins,
-    fetched = _a.fetched,
-    runPluginAction = _a.runPluginAction,
-    pluginActionNice = _a.pluginActionNice;
-  console.log("OurPlugins", plugins);
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
-    className: "col-span-6 row-span-1 bg-transparent shadow-none",
-    children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Our Plugins", "simplybook"),
-      controls: undefined
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      className: "flex flex-col items-center",
-      children:
-      // @ts-ignore
-      plugins && Object.keys(plugins).length && Object.values(plugins).map(function (plugin) {
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-          className: "flex items-center gap-2 text-sm w-full py-2 ",
-          children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Common_Icon__WEBPACK_IMPORTED_MODULE_6__["default"], {
-            name: "circle",
-            color: plugin.color
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_tanstack_react_router__WEBPACK_IMPORTED_MODULE_8__.Link, {
-            to: plugin.url,
-            children: plugin.title
-          }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
-            className: "text-sm ml-auto",
-            children: [plugin.action === 'installed' && pluginActionNice(plugin.action), plugin.action !== 'installed' && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
-              children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
-                target: "_blank",
-                href: plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url,
-                onClick: function (e) {
-                  return runPluginAction({
-                    slug: plugin.slug,
-                    action: plugin.action,
-                    e: e
-                  });
-                },
-                children: pluginActionNice(plugin.action)
-              })
-            })]
-          })]
-        }, plugin.url);
-      })
-    }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      children: ""
-    })]
+function Tip(_a) {
+  var link = _a.link,
+    title = _a.title,
+    content = _a.content;
+  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+    className: "simplybook-tips-tricks-element",
+    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
+      href: link,
+      target: "_blank",
+      rel: "noopener noreferrer",
+      title: content,
+      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        className: "simplybook-icon",
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
+          "aria-hidden": "true",
+          focusable: "false",
+          role: "img",
+          xmlns: "http://www.w3.org/2000/svg",
+          viewBox: "0 0 512 512",
+          height: "15",
+          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
+            fill: "var(--rsp-grey-300)",
+            d: "M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-144c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3-32-32 32z"
+          })
+        })
+      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("div", {
+        className: "simplybook-tips-tricks-content",
+        children: [title, ": ", content]
+      })]
+    })
   });
-};
-OurPlugins.displayName = "OurPlugins";
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OurPlugins);
+}
 
 /***/ }),
 
@@ -3176,13 +2564,19 @@ var Progress = function () {
     setShowAll = _a[1];
   var _b = (0,_hooks_useTaskData__WEBPACK_IMPORTED_MODULE_7__["default"])(),
     tasks = _b.tasks,
+    isLoading = _b.isLoading,
+    hasError = _b.hasError,
     dismissTask = _b.dismissTask,
     getRemainingTasks = _b.getRemainingTasks,
     getCompletionPercentage = _b.getCompletionPercentage;
   var displayedTasks = showAll ? tasks : getRemainingTasks();
   var completionPercentage = getCompletionPercentage();
   var remainingTasks = getRemainingTasks();
-  if (tasks.length === 0) {
+  var defaultMessage = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("No tasks available.", "simplybook");
+  if (isLoading) {
+    defaultMessage = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("Loading tasks...", "simplybook");
+  }
+  if (isLoading || hasError) {
     return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_2__["default"], {
       className: "col-span-6 row-span-2",
       children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_3__["default"], {
@@ -3192,7 +2586,7 @@ var Progress = function () {
         children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
           className: "text-center py-8 text-gray-500",
           children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
-            children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_4__.__)("No tasks available", "simplybook")
+            children: defaultMessage
           })
         })
       })]
@@ -3304,69 +2698,64 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../Blocks/BlockFooter */ "./src/components/Blocks/BlockFooter.jsx");
 /* harmony import */ var _Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../Blocks/BlockContent */ "./src/components/Blocks/BlockContent.jsx");
+/* harmony import */ var _Partials_Tip__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Partials/Tip */ "./src/components/Dashboard/Partials/Tip.tsx");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
 
 
 
 
 
-var Tip = function (_a) {
-  var link = _a.link,
-    content = _a.content;
-  return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-    className: "simplybook-tips-tricks-element",
-    children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)("a", {
-      href: link,
-      target: "_blank",
-      rel: "noopener noreferrer",
-      title: content,
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "simplybook-icon",
-        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("svg", {
-          "aria-hidden": "true",
-          focusable: "false",
-          role: "img",
-          xmlns: "http://www.w3.org/2000/svg",
-          viewBox: "0 0 512 512",
-          height: "15",
-          children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("path", {
-            fill: "var(--rsp-grey-300)",
-            d: "M256 512c141.4 0 256-114.6 256-256S397.4 0 256 0S0 114.6 0 256S114.6 512 256 512zM216 336h24V272H216c-13.3 0-24-10.7-24-24s10.7-24 24-24h48c13.3 0 24 10.7 24 24v88h8c13.3 0 24 10.7 24 24s-10.7 24-24 24H216c-13.3 0-24-10.7-24-24s10.7-24 24-24zm40-144c-17.7 0-32-14.3-32-32s14.3-32 32-32s32 14.3 32 32s-14.3 32-32 32z"
-          })
-        })
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
-        className: "simplybook-tips-tricks-content",
-        children: content
-      })]
-    })
-  });
-};
+
+
+
 var TipsTricks = function () {
+  var _a, _b;
+  var route = 'tips_and_tricks';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_7__["default"](route);
+  var _c = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_8__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      }
+    }),
+    isLoading = _c.isLoading,
+    error = _c.error,
+    data = _c.data;
+  var loadingCompleted = !isLoading && !error && (data === null || data === void 0 ? void 0 : data.data) && data.data.items;
   return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_Block__WEBPACK_IMPORTED_MODULE_1__["default"], {
     className: "col-span-6 row-span-1",
     children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockHeading__WEBPACK_IMPORTED_MODULE_2__["default"], {
       title: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Tips & Tricks", "simplybook"),
       controls: undefined
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Blocks_BlockContent__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      children: simplybook.tips_and_tricks.items.map(function (item, i) {
-        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(Tip, {
+      children: loadingCompleted && data.data.items.map(function (item, i) {
+        return (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)(_Partials_Tip__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          title: item.title,
           link: item.link,
           content: item.content
         }, "trick-".concat(i));
       })
     }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(_Blocks_BlockFooter__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
-        href: simplybook.tips_and_tricks.all,
-        target: "_blank",
-        rel: "noopener noreferrer",
-        className: "simplybook-tips-tricks-all",
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View All", "simplybook")
-      }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
-        href: simplybook.tips_and_tricks.video_tutorials,
-        target: "_blank",
-        rel: "noopener noreferrer",
-        className: "simplybook-tips-tricks-all",
-        children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Video tutorials", "simplybook")
+      children: [isLoading && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("div", {
+        children: (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("p", {
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading...", "simplybook")
+        })
+      }), loadingCompleted && (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.Fragment, {
+        children: [(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+          href: (_a = data === null || data === void 0 ? void 0 : data.data.all) !== null && _a !== void 0 ? _a : '#',
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "simplybook-tips-tricks-all",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("View All", "simplybook")
+        }), (0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_0__.jsx)("a", {
+          href: (_b = data === null || data === void 0 ? void 0 : data.data.video_tutorials) !== null && _b !== void 0 ? _b : '#',
+          target: "_blank",
+          rel: "noopener noreferrer",
+          className: "simplybook-tips-tricks-all",
+          children: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Video tutorials", "simplybook")
+        })]
       })]
     })]
   });
@@ -3439,183 +2828,6 @@ ButtonInput.displayName = 'ButtonInput';
 
 /***/ }),
 
-/***/ "./src/hooks/useDashboardData.tsx":
-/*!****************************************!*\
-  !*** ./src/hooks/useDashboardData.tsx ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_Dashboard_getDashboardData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getDashboardData */ "./src/api/endpoints/Dashboard/getDashboardData.tsx");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
-    }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
-
-
-/**
- * Custom hook for managing dashboard data using Tanstack Query.
- * This hook provides functions to fetch the data.
- *
- * @returns {Object} - An object containing dashboard data
- */
-var useDashboardData = function () {
-  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
-  // Query for fetching settings from server
-  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
-    queryKey: ["dashboard_data"],
-    queryFn: function () {
-      return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              return [4 /*yield*/, (0,_api_endpoints_Dashboard_getDashboardData__WEBPACK_IMPORTED_MODULE_0__["default"])()];
-            case 1:
-              response = _a.sent();
-              console.log("getDashboardData response", response);
-              return [2 /*return*/, response];
-          }
-        });
-      });
-    },
-    staleTime: 1000 * 60 * 5,
-    // 5 minutes
-    retry: 0
-  });
-  var defaultData = {
-    bookings_count_month: 0,
-    bookings_count_day: 0,
-    most_popular_provider: {
-      name: '',
-      percentage: 0
-    },
-    most_popular_service: {
-      name: '',
-      percentage: 0
-    }
-  };
-  return {
-    dashboardData: query.data || defaultData,
-    refetchData: query.refetch
-  };
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useDashboardData);
-
-/***/ }),
-
 /***/ "./src/hooks/useLoginData.tsx":
 /*!************************************!*\
   !*** ./src/hooks/useLoginData.tsx ***!
@@ -3628,7 +2840,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getLoginUrl */ "./src/api/endpoints/getLoginUrl.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -3747,27 +2959,17 @@ var defaultLoginData = {
 };
 var useLoginData = function () {
   var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+  var route = 'get_login_url';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"](route);
   var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
-    // Set the key where to store the data
-    queryKey: ["login_data"],
-    // Run the query
+    queryKey: [route],
     queryFn: function () {
-      return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              return [4 /*yield*/, (0,_api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_0__["default"])()];
-            case 1:
-              response = _a.sent();
-              return [2 /*return*/, response];
-          }
-        });
-      });
+      return client.get();
     },
     staleTime: 1000 * 60 * 60,
     retry: 0,
     enabled: false,
+    // Only fetch on request
     initialData: defaultLoginData,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -3786,8 +2988,8 @@ var useLoginData = function () {
             return [4 /*yield*/, query.refetch()];
           case 1:
             response = _a.sent();
-            queryClient.setQueryData(["login_data"], response.data);
-            return [2 /*return*/, response.data];
+            queryClient.setQueryData([route], response === null || response === void 0 ? void 0 : response.data);
+            return [2 /*return*/, response === null || response === void 0 ? void 0 : response.data];
         }
       });
     });
@@ -3801,64 +3003,6 @@ var useLoginData = function () {
 
 /***/ }),
 
-/***/ "./src/hooks/useManagementData.tsx":
-/*!*****************************************!*\
-  !*** ./src/hooks/useManagementData.tsx ***!
-  \*****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_Dashboard_getPlugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getPlugins */ "./src/api/endpoints/Dashboard/getPlugins.tsx");
-var __spreadArray = undefined && undefined.__spreadArray || function (to, from, pack) {
-  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-    if (ar || !(i in from)) {
-      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-      ar[i] = from[i];
-    }
-  }
-  return to.concat(ar || Array.prototype.slice.call(from));
-};
-
-
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-var useManagementData = function () {
-  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
-    queryKey: ["manage_data"],
-    queryFn: function () {
-      return (0,_api_endpoints_Dashboard_getPlugins__WEBPACK_IMPORTED_MODULE_0__["default"])();
-    },
-    staleTime: 1000 * 60 * 60 * 24,
-    // @ts-ignore
-    initialData: [],
-    retry: 0,
-    select: function (data) {
-      return __spreadArray([], data, true);
-    }
-  });
-  var isPluginActive = function (id) {
-    return query.data.some(function (plugin) {
-      return plugin.id === id && plugin.is_turned_on;
-    });
-  };
-  return {
-    isPluginActive: isPluginActive,
-    refetchData: query.refetch,
-    plugins: query.data
-  };
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useManagementData);
-
-/***/ }),
-
 /***/ "./src/hooks/useOtherPluginsData.tsx":
 /*!*******************************************!*\
   !*** ./src/hooks/useOtherPluginsData.tsx ***!
@@ -3869,13 +3013,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_Dashboard_getOtherPlugins__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getOtherPlugins */ "./src/api/endpoints/Dashboard/getOtherPlugins.tsx");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _api_endpoints_Dashboard_doPluginAction__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/Dashboard/doPluginAction */ "./src/api/endpoints/Dashboard/doPluginAction.tsx");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -3990,76 +3133,72 @@ var __generator = undefined && undefined.__generator || function (thisArg, body)
 
 
 
-
 var useOtherPluginsData = function () {
-  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)({
-    queryKey: ["other_plugins"],
-    queryFn: function () {
-      return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              return [4 /*yield*/, (0,_api_endpoints_Dashboard_getOtherPlugins__WEBPACK_IMPORTED_MODULE_0__["default"])()];
-            case 1:
-              response = _a.sent();
-              console.log("other plugins response", response);
-              return [2 /*return*/, response];
-          }
-        });
-      });
-    },
-    placeholderData: [{
-      url: "#",
-      title: "...",
-      action: "...",
-      actionNiceName: "...",
-      slug: "...",
-      color: "black"
-    }],
-    staleTime: 1000 * 60 * 60,
-    retry: 0,
-    enabled: true
-  });
-  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useQueryClient)();
+  var _a;
+  var pluginActionRoute = 'do_plugin_action';
+  var otherPluginsDataRoute = 'other_plugins_data';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"]();
+  // Query for fetching settings from server
+  var _b = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+      queryKey: [otherPluginsDataRoute],
+      queryFn: function () {
+        return client.setRoute(otherPluginsDataRoute).get();
+      },
+      staleTime: 1000 * 60 * 60,
+      retry: 0,
+      enabled: true
+    }),
+    isLoading = _b.isLoading,
+    error = _b.error,
+    response = _b.data;
+  var relatedReallySimplePlugins = (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.plugins;
+  if (error !== null) {
+    console.error('Error fetching related plugins: ', error.message);
+  }
+  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQueryClient)();
   var updatePluginData = function (slug, newPluginItem) {
-    if (!query.data) {
+    if (!relatedReallySimplePlugins) {
       return;
     }
-    queryClient.setQueryData(["other_plugins"], function (oldData) {
-      return oldData.map(function (plugin) {
-        return plugin.slug === slug ? newPluginItem : plugin;
-      });
+    queryClient.setQueryData([otherPluginsDataRoute], function (oldResponse) {
+      var _a;
+      oldResponse.data.plugins = Object.fromEntries(Object.entries((_a = oldResponse === null || oldResponse === void 0 ? void 0 : oldResponse.data) === null || _a === void 0 ? void 0 : _a.plugins).map(function (_a) {
+        var key = _a[0],
+          plugin = _a[1];
+        return plugin.slug === slug ? [key, newPluginItem] : [key, plugin];
+      }));
+      return oldResponse;
     });
   };
   var getPluginData = function (slug) {
-    if (!query.data) {
+    if (!relatedReallySimplePlugins) {
       return;
     }
-    return query.data.find(function (plugin) {
+    return Object.values(relatedReallySimplePlugins).find(function (plugin) {
       return plugin.slug === slug;
     });
   };
   var pluginActionNice = function (action) {
     var statuses = {
-      installed: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Installed", "simplybook"),
-      download: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Install", "simplybook"),
-      activate: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Activate", "simplybook"),
-      activating: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Activating...", "simplybook"),
-      downloading: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Downloading...", "simplybook"),
-      "upgrade-to-premium": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Upgrade", "simplybook")
+      installed: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Installed", "simplybook"),
+      download: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Install", "simplybook"),
+      activate: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Activate", "simplybook"),
+      activating: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Activating...", "simplybook"),
+      downloading: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Downloading...", "simplybook"),
+      "upgrade-to-premium": (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Upgrade", "simplybook")
     };
     return statuses[action] || "";
   };
-  var runPluginAction = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__.useMutation)({
+  var runPluginAction = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useMutation)({
     mutationFn: function (_a) {
       return __awaiter(void 0, [_a], void 0, function (_b) {
-        var data, pluginItem, updatedPluginItem;
+        var data, pluginItem, updatedPluginItemResponse, updatedPluginItem;
+        var _c, _d;
         var slug = _b.slug,
           action = _b.action,
           e = _b.e;
-        return __generator(this, function (_c) {
-          switch (_c.label) {
+        return __generator(this, function (_e) {
+          switch (_e.label) {
             case 0:
               if (action === "installed" || action === "upgrade-to-premium") {
                 return [2 /*return*/];
@@ -4079,17 +3218,33 @@ var useOtherPluginsData = function () {
               if (action === "installed" || action === "upgrade-to-premium") {
                 return [2 /*return*/];
               }
-              return [4 /*yield*/, (0,_api_endpoints_Dashboard_doPluginAction__WEBPACK_IMPORTED_MODULE_2__["default"])(slug, action)];
+              return [4 /*yield*/, client.setRoute(pluginActionRoute).setPayload({
+                'slug': slug,
+                'action': action
+              }).post()];
             case 1:
-              updatedPluginItem = _c.sent();
-              console.log("resulting plugin item", updatedPluginItem);
+              updatedPluginItemResponse = _e.sent();
+              updatedPluginItem = (_c = updatedPluginItemResponse === null || updatedPluginItemResponse === void 0 ? void 0 : updatedPluginItemResponse.data) === null || _c === void 0 ? void 0 : _c.plugin;
+              if (!updatedPluginItem) {
+                console.error('Error fetching updated plugin item: ', updatedPluginItemResponse === null || updatedPluginItemResponse === void 0 ? void 0 : updatedPluginItemResponse.message);
+                return [2 /*return*/];
+              }
               if (!(updatedPluginItem.action === "activate")) return [3 /*break*/, 3];
               pluginItem.action = "activating";
               updatePluginData(slug, pluginItem);
-              return [4 /*yield*/, (0,_api_endpoints_Dashboard_doPluginAction__WEBPACK_IMPORTED_MODULE_2__["default"])(slug, "activate")];
+              return [4 /*yield*/, client.setRoute(pluginActionRoute).setPayload({
+                'slug': slug,
+                'action': 'activate'
+              }).post()];
             case 2:
-              updatedPluginItem = _c.sent();
-              _c.label = 3;
+              // updatedPluginItem = await doPluginAction(slug, "activate");
+              updatedPluginItemResponse = _e.sent();
+              updatedPluginItem = (_d = updatedPluginItemResponse === null || updatedPluginItemResponse === void 0 ? void 0 : updatedPluginItemResponse.data) === null || _d === void 0 ? void 0 : _d.plugin;
+              if (!updatedPluginItem) {
+                console.error('Error 2 fetching updated plugin item: ', updatedPluginItemResponse === null || updatedPluginItemResponse === void 0 ? void 0 : updatedPluginItemResponse.message);
+                return [2 /*return*/];
+              }
+              _e.label = 3;
             case 3:
               updatePluginData(slug, updatedPluginItem);
               return [2 /*return*/];
@@ -4099,13 +3254,191 @@ var useOtherPluginsData = function () {
     }
   });
   return {
-    plugins: query.data,
-    fetched: query.isFetched,
+    plugins: relatedReallySimplePlugins,
+    fetched: !isLoading,
     pluginActionNice: pluginActionNice,
     runPluginAction: runPluginAction.mutate
   };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useOtherPluginsData);
+
+/***/ }),
+
+/***/ "./src/hooks/useSpecialFeaturesData.tsx":
+/*!**********************************************!*\
+  !*** ./src/hooks/useSpecialFeaturesData.tsx ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
+var __spreadArray = undefined && undefined.__spreadArray || function (to, from, pack) {
+  if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+    if (ar || !(i in from)) {
+      if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+      ar[i] = from[i];
+    }
+  }
+  return to.concat(ar || Array.prototype.slice.call(from));
+};
+
+
+/**
+ * Custom hook for managing settings data using Tanstack Query.
+ * This hook provides functions to fetch and update settings.
+ *
+ * @returns {Object} - An object containing settings data, update function, and status flags.
+ */
+var useSpecialFeaturesData = function () {
+  var route = 'get_plugins';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"](route);
+  var _a = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 60 * 24,
+      retry: 0,
+      select: function (data) {
+        return __spreadArray([], data, true);
+      }
+    }),
+    isLoading = _a.isLoading,
+    error = _a.error,
+    response = _a.data,
+    refetch = _a.refetch;
+  if (error !== null) {
+    console.error('Error fetching special features data:', error.message);
+  }
+  var isPluginActive = function (id) {
+    var _a;
+    return (_a = response === null || response === void 0 ? void 0 : response.some(function (plugin) {
+      return plugin.id === id && plugin.is_turned_on;
+    })) !== null && _a !== void 0 ? _a : false;
+  };
+  return {
+    isPluginActive: isPluginActive,
+    refetchData: refetch,
+    plugins: response !== null && response !== void 0 ? response : [],
+    hasError: error !== null,
+    isLoading: isLoading
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSpecialFeaturesData);
+
+/***/ }),
+
+/***/ "./src/hooks/useStatisticsData.ts":
+/*!****************************************!*\
+  !*** ./src/hooks/useStatisticsData.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _useOnboardingData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
+
+
+
+var useStatisticsData = function () {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+  var onboardingCompleted = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_0__["default"])().onboardingCompleted;
+  var route = 'statistics';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"](route);
+  var _k = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 60,
+      retry: 0,
+      enabled: !!onboardingCompleted
+    }),
+    isLoading = _k.isLoading,
+    error = _k.error,
+    response = _k.data;
+  if (error !== null) {
+    console.error('Error fetching statistics data: ', error.message);
+  }
+  return {
+    statistics: response === null || response === void 0 ? void 0 : response.data,
+    mostPopularProvider: (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.most_popular_provider,
+    mostPopularProviderName: (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.most_popular_provider.name,
+    mostPopularProviderBookings: (_c = response === null || response === void 0 ? void 0 : response.data) === null || _c === void 0 ? void 0 : _c.most_popular_provider_bookings,
+    mostPopularService: (_d = response === null || response === void 0 ? void 0 : response.data) === null || _d === void 0 ? void 0 : _d.most_popular_service,
+    mostPopularServiceName: (_e = response === null || response === void 0 ? void 0 : response.data) === null || _e === void 0 ? void 0 : _e.most_popular_service.name,
+    mostPopularServiceBookings: (_f = response === null || response === void 0 ? void 0 : response.data) === null || _f === void 0 ? void 0 : _f.most_popular_service_bookings,
+    bookingsToday: (_g = response === null || response === void 0 ? void 0 : response.data) === null || _g === void 0 ? void 0 : _g.bookings_today,
+    bookingsThisWeek: (_h = response === null || response === void 0 ? void 0 : response.data) === null || _h === void 0 ? void 0 : _h.bookings_this_week,
+    bookingsLastThirtyDays: (_j = response === null || response === void 0 ? void 0 : response.data) === null || _j === void 0 ? void 0 : _j.bookings,
+    isLoading: isLoading,
+    hasError: error !== null
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useStatisticsData);
+
+/***/ }),
+
+/***/ "./src/hooks/useSubscriptionData.tsx":
+/*!*******************************************!*\
+  !*** ./src/hooks/useSubscriptionData.tsx ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _useOnboardingData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
+
+
+
+var useSubscriptionData = function () {
+  var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q, _r, _s, _t, _u, _v, _w;
+  var onboardingCompleted = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_0__["default"])().onboardingCompleted;
+  var route = 'subscription_data';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"](route);
+  var _x = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 60,
+      retry: 0,
+      enabled: !!onboardingCompleted
+    }),
+    isLoading = _x.isLoading,
+    error = _x.error,
+    response = _x.data;
+  if (error !== null) {
+    console.error('Error fetching subscription data: ', error.message);
+  }
+  return {
+    subscription: response === null || response === void 0 ? void 0 : response.data,
+    subscriptionPlan: (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.subscription_name,
+    expiresIn: (_b = response === null || response === void 0 ? void 0 : response.data) === null || _b === void 0 ? void 0 : _b.expire_in,
+    isExpired: (_c = response === null || response === void 0 ? void 0 : response.data) === null || _c === void 0 ? void 0 : _c.is_expired,
+    smsRemaining: (_f = (_e = (_d = response === null || response === void 0 ? void 0 : response.data) === null || _d === void 0 ? void 0 : _d.limits) === null || _e === void 0 ? void 0 : _e.sms_limits) === null || _f === void 0 ? void 0 : _f.rest,
+    smsTotal: (_j = (_h = (_g = response === null || response === void 0 ? void 0 : response.data) === null || _g === void 0 ? void 0 : _g.limits) === null || _h === void 0 ? void 0 : _h.sms_limits) === null || _j === void 0 ? void 0 : _j.total,
+    bookingsRemaining: (_m = (_l = (_k = response === null || response === void 0 ? void 0 : response.data) === null || _k === void 0 ? void 0 : _k.limits) === null || _l === void 0 ? void 0 : _l.sheduler_limit) === null || _m === void 0 ? void 0 : _m.rest,
+    bookingsTotal: (_q = (_p = (_o = response === null || response === void 0 ? void 0 : response.data) === null || _o === void 0 ? void 0 : _o.limits) === null || _p === void 0 ? void 0 : _p.sheduler_limit) === null || _q === void 0 ? void 0 : _q.total,
+    providersRemaining: (_t = (_s = (_r = response === null || response === void 0 ? void 0 : response.data) === null || _r === void 0 ? void 0 : _r.limits) === null || _s === void 0 ? void 0 : _s.provider_limit) === null || _t === void 0 ? void 0 : _t.rest,
+    providersTotal: (_w = (_v = (_u = response === null || response === void 0 ? void 0 : response.data) === null || _u === void 0 ? void 0 : _u.limits) === null || _v === void 0 ? void 0 : _v.provider_limit) === null || _w === void 0 ? void 0 : _w.total,
+    isLoading: isLoading,
+    hasError: error !== null
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSubscriptionData);
 
 /***/ }),
 
@@ -4119,11 +3452,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_Dashboard_getTasks__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/Dashboard/getTasks */ "./src/api/endpoints/Dashboard/getTasks.tsx");
-/* harmony import */ var _api_endpoints_Dashboard_dismissTaskApi__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/Dashboard/dismissTaskApi */ "./src/api/endpoints/Dashboard/dismissTaskApi.tsx");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -4237,40 +3569,72 @@ var __generator = undefined && undefined.__generator || function (thisArg, body)
 };
 
 
-
 var useTaskData = function () {
-  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
-  // Query for fetching tasks
-  var _a = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)({
-      queryKey: ["tasks"],
-      queryFn: _api_endpoints_Dashboard_getTasks__WEBPACK_IMPORTED_MODULE_0__["default"],
+  var _a;
+  var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+  var getTasksRoute = 'get_tasks';
+  var dismissTaskRoute = 'dismiss_task';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"]();
+  /**
+   * Fetches tasks from the server using Tanstack Query.
+   */
+  var _b = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+      queryKey: [getTasksRoute],
+      queryFn: function () {
+        return client.setRoute(getTasksRoute).get();
+      },
       staleTime: 1000 * 60 * 5 // 5 minutes
     }),
-    _b = _a.data,
-    tasks = _b === void 0 ? [] : _b,
-    isLoading = _a.isLoading,
-    isError = _a.isError;
-  // Mutation for updating task status
-  var dismissTask = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useMutation)({
+    response = _b.data,
+    isLoading = _b.isLoading,
+    error = _b.error;
+  /**
+   * Log an error message if the request fails.
+   */
+  if (error !== null) {
+    console.error('Error fetching tasks: ', error.message);
+  }
+  /**
+   * Extract the tasks from the response for easy access.
+   * @type {Task[]}
+   */
+  var tasks = Array.isArray(response === null || response === void 0 ? void 0 : response.data) ? response === null || response === void 0 ? void 0 : response.data : [];
+  /**
+   * Handles the mutation for dismissing a task.
+   */
+  var dismissTask = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useMutation)({
     mutationFn: function (taskId) {
       return __awaiter(void 0, void 0, void 0, function () {
         return __generator(this, function (_a) {
-          console.log("dismissing task ", taskId);
-          return [2 /*return*/, (0,_api_endpoints_Dashboard_dismissTaskApi__WEBPACK_IMPORTED_MODULE_1__["default"])(taskId)];
+          return [2 /*return*/, client.setRoute(dismissTaskRoute).setPayload({
+            'taskId': taskId
+          }).post()];
         });
       });
     },
     onSuccess: function () {
+      // Do NOT "await" here: this is a fire-and-forget mutation
       queryClient.invalidateQueries({
-        queryKey: ["tasks"]
+        queryKey: [getTasksRoute]
       });
+    },
+    onError: function (error) {
+      console.error('Error dismissing task: ', error.message);
     }
   }).mutate;
+  /**
+   * Returns the tasks that are not completed or dismissed.
+   * @returns {Task[]}
+   */
   var getRemainingTasks = function () {
     return tasks.filter(function (task) {
       return ["open", "urgent", "premium"].includes(task.status);
     });
   };
+  /**
+   * Calculates the completion percentage of tasks.
+   * @returns {number}
+   */
   var getCompletionPercentage = function () {
     var total = tasks.length;
     var completed = tasks.filter(function (task) {
@@ -4282,24 +3646,14 @@ var useTaskData = function () {
   return {
     tasks: tasks,
     isLoading: isLoading,
-    isError: isError,
+    hasError: error !== null,
+    message: (_a = response === null || response === void 0 ? void 0 : response.message) !== null && _a !== void 0 ? _a : error === null || error === void 0 ? void 0 : error.message,
     dismissTask: dismissTask,
     getRemainingTasks: getRemainingTasks,
     getCompletionPercentage: getCompletionPercentage
   };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useTaskData);
-
-/***/ }),
-
-/***/ "./src/types/LoginData.ts":
-/*!********************************!*\
-  !*** ./src/types/LoginData.ts ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-
 
 /***/ })
 
