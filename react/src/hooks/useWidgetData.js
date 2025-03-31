@@ -12,7 +12,7 @@ const useWidgetData = () => {
         queryFn: () => client.get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 0,
-        enabled: true,
+        enabled: false,
     });
 
     const invalidateAndRefetchWidgetScript = async () => {
