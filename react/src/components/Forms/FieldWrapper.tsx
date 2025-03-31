@@ -2,19 +2,7 @@ import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import Error from "../Errors/Error";
-
-interface FieldWrapperProps {
-  label: string;
-  context?: string;
-  help?: string;
-  error?: string;
-  reverseLabel?: boolean;
-  className?: string;
-  inputId: string;
-  required?: boolean;
-  children: React.ReactNode;
-  type?: string;
-}
+import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
 
 const FieldWrapper = memo(({
   label,
