@@ -556,7 +556,7 @@ class ApiClient
                     'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
 //					'providers'=>[$provider],
 //					'services'=>[$service],
-//					'dismiss_onboarding' => true,
+					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
