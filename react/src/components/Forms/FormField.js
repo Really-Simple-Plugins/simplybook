@@ -12,9 +12,11 @@ import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
+import CopyTextField from "../Fields/CopyTextField";
 
 const fieldComponents = {
   text: TextField,
+  copy: CopyTextField,
   api: TextField,
   hidden: HiddenField,
   checkbox: CheckboxField,
@@ -33,7 +35,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
     );
   }
   const FieldComponent = fieldComponents[setting.type];
-  
+
   const { saveSettings, setValue, getValue, settings } = useSettingsData();
   if (!FieldComponent) {
     return (

@@ -400,8 +400,14 @@
 .top-0 {
   top: calc(var(--spacing) * 0);
 }
+.top-1\/2 {
+  top: calc(1/2 * 100%);
+}
 .-right-5 {
   right: calc(var(--spacing) * -5);
+}
+.right-\[0\.5rem\] {
+  right: 0.5rem;
 }
 .bottom-0 {
   bottom: calc(var(--spacing) * 0);
@@ -751,6 +757,10 @@
 }
 .border-collapse {
   border-collapse: collapse;
+}
+.-translate-y-1\/2 {
+  --tw-translate-y: calc(calc(1/2 * 100%) * -1);
+  translate: var(--tw-translate-x) var(--tw-translate-y);
 }
 .rotate-90 {
   rotate: 90deg;
@@ -2535,6 +2545,21 @@ h3 {
     box-shadow: var(--shadow-md);
   }
 }
+@property --tw-translate-x {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-y {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
+@property --tw-translate-z {
+  syntax: "*";
+  inherits: false;
+  initial-value: 0;
+}
 @property --tw-rotate-x {
   syntax: "*";
   inherits: false;
@@ -2715,21 +2740,6 @@ h3 {
   syntax: "*";
   initial-value: "";
   inherits: false;
-}
-@property --tw-translate-x {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-y {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
-}
-@property --tw-translate-z {
-  syntax: "*";
-  inherits: false;
-  initial-value: 0;
 }
 @keyframes pulse {
   50% {
