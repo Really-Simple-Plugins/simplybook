@@ -60,16 +60,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AJAX_URL: () => (/* binding */ AJAX_URL),
 /* harmony export */   API_BASE_PATH: () => (/* binding */ API_BASE_PATH),
 /* harmony export */   NONCE: () => (/* binding */ NONCE),
+/* harmony export */   SB_API_URL: () => (/* binding */ SB_API_URL),
+/* harmony export */   SIMPLYBOOK_DOMAINS: () => (/* binding */ SIMPLYBOOK_DOMAINS),
 /* harmony export */   SITE_URL: () => (/* binding */ SITE_URL),
-/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN)
+/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN),
+/* harmony export */   X_WP_NONCE: () => (/* binding */ X_WP_NONCE)
 /* harmony export */ });
 // src/api/config.js
 
 // Token for authenticated requests; fix to get the SimplyBook nonce
 const NONCE = simplybook.nonce;
+const X_WP_NONCE = simplybook.x_wp_nonce;
 
 // Base URL for SimplyBook API requests
-const API_BASE_PATH = "simplybook/v1/";
+const API_BASE_PATH = simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
+const SB_API_URL = simplybook.rest_url + simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
 
 // URLs for the site and AJAX endpoint
 const SITE_URL = getSiteUrl("rest_url");
@@ -77,6 +82,9 @@ const AJAX_URL = getSiteUrl("ajax_url");
 
 // Text domain for SimplyBook translations
 const TEXT_DOMAIN = "simplybook";
+
+// Handy constants
+const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
@@ -194,6 +202,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param method
  * @param data
  * @return {Promise<void>}
+ * @deprecated use {@link HttpClient} instead
  */
 const request = async (path, method = "POST", data = {}) => {
   const args = {
@@ -742,19 +751,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
-/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Fields/TextField */ "./src/components/Fields/TextField.jsx");
-/* harmony import */ var _Fields_SelectField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Fields/SelectField */ "./src/components/Fields/SelectField.jsx");
-/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _api_helpers_glue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/helpers/glue */ "./src/api/helpers/glue.js");
-/* harmony import */ var _api_config__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../api/config */ "./src/api/config.js");
-/* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../../../api/requests/request */ "./src/api/requests/request.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../Fields/TextField */ "./src/components/Fields/TextField.jsx");
+/* harmony import */ var _Fields_SelectField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Fields/SelectField */ "./src/components/Fields/SelectField.jsx");
+/* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _api_helpers_glue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../../api/helpers/glue */ "./src/api/helpers/glue.js");
+/* harmony import */ var _api_config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../api/config */ "./src/api/config.js");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
 
@@ -762,28 +768,20 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 
 
 
-
-// API IMPORTS 
-
+// API IMPORTS
 
 
 
 const formLogin = ({
   onClose,
-  setRequire2fa
+  setRequire2fa,
+  setAuthSessionId,
+  setCompanyLogin,
+  setUserLogin,
+  setTwoFaProviders,
+  setDomain,
+  domain
 }) => {
-  /**
-   * Initialise constants
-  */
-  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Google Authenticator", "simplybook")
-  });
-  const [authSessionId, setAuthSessionId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [companyLogin, setCompanyLogin] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [userLogin, setUserLogin] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [domain, setDomain] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("default:simplybook.it");
-  const [selectedDomain, setSelectedDomain] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("default:simplybook.it");
-
   /**
    * We use React Hook Form to handle client-side validation for the main login
   */
@@ -796,10 +794,10 @@ const formLogin = ({
       isValid
     },
     watch
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_9__.useForm)({
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_7__.useForm)({
     mode: "onChange",
     defaultValues: {
-      company_domain: selectedDomain,
+      company_domain: domain,
       company_login: "",
       user_login: "",
       user_password: ""
@@ -809,49 +807,33 @@ const formLogin = ({
   // Update how we watch the fields
   const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
-  /**
-   * CHeck if the fields are empty, only when all are filled the button becomes enabled
-   */
-  const isFormFilled = watchFields.every(field => field && field.trim() !== "");
+  // Set the button disabled state
+  const setDisabled = watchFields.every(field => field && field.trim() !== "") === false;
 
   /**
-   * Set the button disabled state
+   * Sends the filled in form data to the api to log the user
    */
-  const setDisabled = !isFormFilled ? true : false;
-
-  /**
-       * Sends the filled in form data to the api to log the user
-       * 
-       * @param {event} e 
-       */
   const submitForm = handleSubmit(data => {
     const formData = {
-      company_domain: selectedDomain,
+      company_domain: domain,
       company_login: data?.company_login,
       user_login: data?.user_login,
       user_password: data?.user_password
     };
     logUserIn(formData);
   });
-  const handleProviderChange = e => {
-    setSelectedProvider(e.target.value);
-  };
 
   /**
-   * 
    * Checks if the filled input credentials comply and sends an API call to SimplyBook
-   * 
-   * @param {object} formData
-   * @returns 
    */
   const logUserIn = async formData => {
     try {
-      let path = _api_config__WEBPACK_IMPORTED_MODULE_7__.API_BASE_PATH + "onboarding/auth" + (0,_api_helpers_glue__WEBPACK_IMPORTED_MODULE_6__["default"])() + "&token=" + Math.random().toString(36).substring(2, 7);
+      let path = _api_config__WEBPACK_IMPORTED_MODULE_6__.API_BASE_PATH + "onboarding/auth" + (0,_api_helpers_glue__WEBPACK_IMPORTED_MODULE_5__["default"])() + "&token=" + Math.random().toString(36).substring(2, 7);
       let data = {
         ...formData,
-        nonce: _api_config__WEBPACK_IMPORTED_MODULE_7__.NONCE
+        nonce: _api_config__WEBPACK_IMPORTED_MODULE_6__.NONCE
       };
-      let response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_5___default()({
+      let response = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
         path,
         method: "POST",
         data
@@ -870,74 +852,10 @@ const formLogin = ({
       console.error(error);
     }
   };
-
-  /**
-   * 
-   * Initialise the different domain URL's
-   */
-  const companyDomains = [{
-    key: "default:simplybook.it",
-    value: "default:simplybook.it",
-    label: "simplybook.it"
-  }, {
-    key: "default:simplybook.me",
-    value: "default:simplybook.me",
-    label: "simplybook.me"
-  }, {
-    key: "default:simplybook.asia",
-    value: "default:simplybook.asia",
-    label: "simplybook.asia"
-  }, {
-    key: "login:simplybook.vip",
-    value: "login:simplybook.vip",
-    label: "simplybook.vip"
-  }, {
-    key: "login:simplybook.cc",
-    value: "login:simplybook.cc",
-    label: "simplybook.cc"
-  }, {
-    key: "login:simplybook.us",
-    value: "login:simplybook.us",
-    label: "simplybook.us"
-  }, {
-    key: "login:simplybook.pro",
-    value: "login:simplybook.pro",
-    label: "simplybook.pro"
-  }, {
-    key: "login:enterpriseappointments.com",
-    value: "login:enterpriseappointments.com",
-    label: "enterpriseappointments.com"
-  }, {
-    key: "login:simplybook.webnode.page",
-    value: "login:simplybook.webnode.page",
-    label: "simplybook.webnode.page"
-  }, {
-    key: "login:servicebookings.net",
-    value: "login:servicebookings.net",
-    label: "servicebookings.net"
-  }, {
-    key: "login:booking.names.uk",
-    value: "login:booking.names.uk",
-    label: "booking.names.uk"
-  }, {
-    key: "login:booking.lcn.uk",
-    value: "login:booking.lcn.uk",
-    label: "booking.lcn.uk"
-  }, {
-    key: "login:booking.register365.ie",
-    value: "login:booking.register365.ie",
-    label: "booking.register365.ie"
-  },
-  // GET RID OF THIS LATER!! 
-  {
-    key: "default:wp.simplybook.ovh",
-    value: "default:wp.simplybook.ovh",
-    label: "wp.simplybook.ovh"
-  }];
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
     className: "flex flex-col relative",
     onSubmit: submitForm
-  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
+  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: "company_domain",
     control: control,
     rules: {
@@ -946,20 +864,20 @@ const formLogin = ({
     render: ({
       field,
       fieldState
-    }) => /*#__PURE__*/React.createElement(_Fields_SelectField__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, field, {
+    }) => /*#__PURE__*/React.createElement(_Fields_SelectField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
       fieldState: fieldState,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company domain", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Company domain", "simplybook"),
       setting: "company_domain",
-      options: companyDomains,
+      options: _api_config__WEBPACK_IMPORTED_MODULE_6__.SIMPLYBOOK_DOMAINS,
       value: field.value // Bind the value to the field value
       ,
       onChange: e => {
         const selectedValue = e.target.value; // Get the selected value
-        setSelectedDomain(selectedValue); // Update local state
+        setDomain(selectedValue); // Update local state
         field.onChange(selectedValue); // Update form state
       }
     }))
-  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: "company_login",
     control: control,
     rules: {
@@ -968,14 +886,14 @@ const formLogin = ({
     render: ({
       field,
       fieldState
-    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, field, {
       fieldState: fieldState,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company login", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Company login", "simplybook"),
       setting: "company_login",
       type: "text",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Company login", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Company login", "simplybook")
     }))
-  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: "user_login",
     control: control,
     rules: {
@@ -984,14 +902,14 @@ const formLogin = ({
     render: ({
       field,
       fieldState
-    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, field, {
       fieldState: fieldState,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Email", "simplybook"),
       setting: "email",
       type: "email",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Email", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Email", "simplybook")
     }))
-  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_9__.Controller, {
+  }), /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
     name: "user_password",
     control: control,
     rules: {
@@ -1000,23 +918,23 @@ const formLogin = ({
     render: ({
       field,
       fieldState
-    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+    }) => /*#__PURE__*/React.createElement(_Fields_TextField__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, field, {
       fieldState: fieldState,
-      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Password", "simplybook"),
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Password", "simplybook"),
       setting: "password",
       type: "password",
-      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Password", "simplybook")
+      placeholder: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Password", "simplybook")
     }))
-  }), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
     className: "mt-4 mb-4",
     btnVariant: "primary",
     type: "submit",
     disabled: setDisabled
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Submit", "simplybook")), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Submit", "simplybook")), /*#__PURE__*/React.createElement(_Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__["default"], {
     btnVariant: "secondary",
     type: "button",
     onClick: onClose
-  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Close", "simplybook"))));
+  }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_0__.__)("Close", "simplybook"))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (formLogin);
 
@@ -1036,42 +954,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
 /* harmony import */ var _Fields_TextField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../Fields/TextField */ "./src/components/Fields/TextField.jsx");
 /* harmony import */ var _Inputs_ButtonInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../Inputs/ButtonInput */ "./src/components/Inputs/ButtonInput.tsx");
+/* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../../api/requests/request */ "./src/api/requests/request.js");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
 
 
 
 
+
 const FormTwoFa = ({
+  authSessionId,
+  companyLogin,
+  userLogin,
+  domain,
+  twoFaProviders,
   onClose
 }) => {
-  /**
-   * Initialise constants
-   */
-  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
-    ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)("Google Authenticator", "simplybook")
-  });
   const firstProvider = Object.keys(twoFaProviders)[0];
   const [twoFaCode, setTwoFaCode] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [selectedProvider, setSelectedProvider] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(firstProvider);
   const [smsRequested, setSmsRequested] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false); // Default is false
 
-  console.log(firstProvider);
-
-  /**
-   * Create a useForm instance for the 2FA field
-   */
+  // Create a useForm instance for the 2FA field
   const {
     control: control2fa,
     handleSubmit: handleSubmit2fa,
-    watch: watch2fa,
-    formState: {
-      errors: errors2fa
-    }
-  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_4__.useForm)({
+    watch: watch2fa
+  } = (0,react_hook_form__WEBPACK_IMPORTED_MODULE_5__.useForm)({
     mode: "onChange",
     defaultValues: {
       two_fa_code: "",
@@ -1079,24 +991,15 @@ const FormTwoFa = ({
     }
   });
 
-  /**
-   * Watch the 2FA fields
-   */
+  // Watch the 2FA fields
   const watch2faFields = watch2fa(["two_fa_code"]);
 
-  /**
-   * Check 2FA fields
-   */
-  const is2faFilled = watch2faFields.every(field => field && field.trim() !== "");
-
-  /**
-   * Set the 2FA button disabled state
-   */
-  const setDisabled2FA = !is2faFilled ? true : false;
+  // Set the 2FA button disabled state
+  const setDisabled2FA = watch2faFields.every(field => field && field.trim() !== "") === false;
   const handle2faSubmit = handleSubmit2fa(async data => {
     // BUG getting 2fa error and not succesful with the 2fa
     // API Error at simplybook/v1/onboarding/auth_two_fa?&token=a9lhs: 2fa Authentication failed with code 400
-    const response = await request("onboarding/auth_two_fa", "POST", {
+    const response = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_4__["default"])("onboarding/auth_two_fa", "POST", {
       auth_session_id: authSessionId,
       company_login: companyLogin,
       user_login: userLogin,
@@ -1111,7 +1014,7 @@ const FormTwoFa = ({
     }
   });
   const requestSms = async () => {
-    const response_0 = await request("onboarding/auth_send_sms", "POST", {
+    const response_0 = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_4__["default"])("onboarding/auth_send_sms", "POST", {
       auth_session_id: authSessionId,
       company_login: companyLogin,
       domain: domain
@@ -1125,7 +1028,7 @@ const FormTwoFa = ({
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("form", {
     className: "flex flex-col",
     onSubmit: handle2faSubmit
-  }, twoFaProviders.length > 1 ? /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
+  }, Object.keys(twoFaProviders).length > 1 ? /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_5__.Controller, {
     name: "two_fa_type",
     control: control2fa,
     rules: {
@@ -1141,7 +1044,7 @@ const FormTwoFa = ({
       options: selectedProvider,
       value: selectedProvider,
       onChange: e => {
-        handleProviderChange(e);
+        setSelectedProvider(e.target.value);
         field_0.onChange(e);
       }
     }))
@@ -1151,7 +1054,7 @@ const FormTwoFa = ({
     value: firstProvider
   }), /*#__PURE__*/React.createElement("div", {
     className: "two_fa_type_wrapper flex flex-col"
-  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_4__.Controller, {
+  }, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_5__.Controller, {
     name: "two_fa_code",
     control: control2fa,
     rules: {
@@ -1223,14 +1126,28 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const SignInModal = t0 => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(3);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(9);
   const {
     onClose
   } = t0;
   const [require2fa, set2fa] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
+  const [authSessionId, setAuthSessionId] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [companyLogin, setCompanyLogin] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [userLogin, setUserLogin] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("");
+  const [domain, setDomain] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)("default:simplybook.it");
   let t1;
-  if ($[0] !== onClose || $[1] !== require2fa) {
-    t1 = /*#__PURE__*/React.createElement("div", {
+  if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+    t1 = {
+      ga: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Google Authenticator", "simplybook")
+    };
+    $[0] = t1;
+  } else {
+    t1 = $[0];
+  }
+  const [twoFaProviders, setTwoFaProviders] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(t1);
+  let t2;
+  if ($[1] !== authSessionId || $[2] !== companyLogin || $[3] !== domain || $[4] !== onClose || $[5] !== require2fa || $[6] !== twoFaProviders || $[7] !== userLogin) {
+    t2 = /*#__PURE__*/React.createElement("div", {
       className: "signin-modal-bg fixed z-999 inset-0 flex items-center justify-center bg-black/50 border-2 border-gray-200 "
     }, /*#__PURE__*/React.createElement("div", {
       className: "signin-modal mt-8 w-3/8 bg-white p-4 px-4 rounded border-3 border-gray-200"
@@ -1242,7 +1159,13 @@ const SignInModal = t0 => {
       className: "my-4"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Sign In", "simplybook")), /*#__PURE__*/React.createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Please enter your SimplyBook credentials to sign in.", "simplybook"))), /*#__PURE__*/React.createElement(_Partials_FormLogin__WEBPACK_IMPORTED_MODULE_5__["default"], {
       onClose: onClose,
-      setRequire2fa: set2fa
+      setRequire2fa: set2fa,
+      setAuthSessionId: setAuthSessionId,
+      setCompanyLogin: setCompanyLogin,
+      setUserLogin: setUserLogin,
+      setTwoFaProviders: setTwoFaProviders,
+      setDomain: setDomain,
+      domain: domain
     })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "flex flex-col items-center mb-8"
     }, /*#__PURE__*/React.createElement(_assets_img_logo_svg__WEBPACK_IMPORTED_MODULE_2__.ReactComponent, {
@@ -1250,15 +1173,25 @@ const SignInModal = t0 => {
     }), /*#__PURE__*/React.createElement("h2", {
       className: "my-4"
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("2FA authentication", "simplybook")), /*#__PURE__*/React.createElement("small", null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Please use your 2FA provider to sign in.", "simplybook"))), /*#__PURE__*/React.createElement(_Partials_FormTwoFa__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      authSessionId: authSessionId,
+      companyLogin: companyLogin,
+      userLogin: userLogin,
+      domain: domain,
+      twoFaProviders: twoFaProviders,
       onClose: onClose
     }))));
-    $[0] = onClose;
-    $[1] = require2fa;
-    $[2] = t1;
+    $[1] = authSessionId;
+    $[2] = companyLogin;
+    $[3] = domain;
+    $[4] = onClose;
+    $[5] = require2fa;
+    $[6] = twoFaProviders;
+    $[7] = userLogin;
+    $[8] = t2;
   } else {
-    t1 = $[2];
+    t2 = $[8];
   }
-  return t1;
+  return t2;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SignInModal);
 

@@ -12,16 +12,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   AJAX_URL: () => (/* binding */ AJAX_URL),
 /* harmony export */   API_BASE_PATH: () => (/* binding */ API_BASE_PATH),
 /* harmony export */   NONCE: () => (/* binding */ NONCE),
+/* harmony export */   SB_API_URL: () => (/* binding */ SB_API_URL),
+/* harmony export */   SIMPLYBOOK_DOMAINS: () => (/* binding */ SIMPLYBOOK_DOMAINS),
 /* harmony export */   SITE_URL: () => (/* binding */ SITE_URL),
-/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN)
+/* harmony export */   TEXT_DOMAIN: () => (/* binding */ TEXT_DOMAIN),
+/* harmony export */   X_WP_NONCE: () => (/* binding */ X_WP_NONCE)
 /* harmony export */ });
 // src/api/config.js
 
 // Token for authenticated requests; fix to get the SimplyBook nonce
 const NONCE = simplybook.nonce;
+const X_WP_NONCE = simplybook.x_wp_nonce;
 
 // Base URL for SimplyBook API requests
-const API_BASE_PATH = "simplybook/v1/";
+const API_BASE_PATH = simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
+const SB_API_URL = simplybook.rest_url + simplybook.rest_namespace + "/" + simplybook.rest_version + "/";
 
 // URLs for the site and AJAX endpoint
 const SITE_URL = getSiteUrl("rest_url");
@@ -29,6 +34,9 @@ const AJAX_URL = getSiteUrl("ajax_url");
 
 // Text domain for SimplyBook translations
 const TEXT_DOMAIN = "simplybook";
+
+// Handy constants
+const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
@@ -46,180 +54,6 @@ function getSiteUrl(type) {
   }
   return url;
 }
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getDomain.js":
-/*!****************************************!*\
-  !*** ./src/api/endpoints/getDomain.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-const getDomain = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_domain", "POST");
-  if (!res || !res.data.domain) {
-    return '';
-  }
-  return res.data.domain;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getDomain);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getLoginUrl.js":
-/*!******************************************!*\
-  !*** ./src/api/endpoints/getLoginUrl.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-/* harmony import */ var _types_LoginData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../types/LoginData */ "./src/types/LoginData.ts");
-
-
-/**
- * Update an onboarding step
- * @return {Promise<LoginData>}
- */
-const getLoginUrl = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_login_url", "POST");
-  if (!res || !res.data.simplybook_dashboard_url) {
-    return {
-      simplybook_dashboard_url: ""
-    };
-  }
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getLoginUrl);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getProviders.js":
-/*!*******************************************!*\
-  !*** ./src/api/endpoints/getProviders.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Update an onboarding step
- * @return {Promise<array>}
- */
-const getProviders = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("providers", "POST");
-  if (!res || !res.data) {
-    console.log("no Providers found");
-    return [];
-  }
-  console.log("getProviders response ", res);
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getProviders);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getServices.js":
-/*!******************************************!*\
-  !*** ./src/api/endpoints/getServices.js ***!
-  \******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Update an onboarding step
- * @return {Promise<array>}
- */
-const getServices = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("services", "POST");
-  if (!res || !res.data) {
-    console.log("no services found");
-    return [];
-  }
-  console.log("getServices response ", res);
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getServices);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getSettingsFields.js":
-/*!************************************************!*\
-  !*** ./src/api/endpoints/getSettingsFields.js ***!
-  \************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param withValues
- * @return {Promise<void>}
- */
-const getSettingsFields = async ({
-  withValues = true
-}) => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/get", "POST", {
-    withValues
-  });
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getSettingsFields);
-
-/***/ }),
-
-/***/ "./src/api/endpoints/getWidget.js":
-/*!****************************************!*\
-  !*** ./src/api/endpoints/getWidget.js ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Update an onboarding step
- * @return {Promise<string>}
- */
-const getWidget = async () => {
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("get_widget", "POST");
-  if (!res || !res.data.widget) {
-    return {
-      'widget': ''
-    };
-  }
-  return res.data.widget;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getWidget);
 
 /***/ }),
 
@@ -402,34 +236,6 @@ const registerTipsTricks = async ({
 
 /***/ }),
 
-/***/ "./src/api/endpoints/saveSettings.js":
-/*!*******************************************!*\
-  !*** ./src/api/endpoints/saveSettings.js ***!
-  \*******************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _requests_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../requests/request */ "./src/api/requests/request.js");
-
-
-/**
- * Get settings fields (with or without values)
- * @param data
- * @return {Promise<void>}
- */
-const saveSettingsFields = async data => {
-  console.log("saving settings", data);
-  const res = await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("settings/save", "POST", data);
-  console.log("save settings fields response", res.data);
-  return res.data;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (saveSettingsFields);
-
-/***/ }),
-
 /***/ "./src/api/helpers/errorHandler.js":
 /*!*****************************************!*\
   !*** ./src/api/helpers/errorHandler.js ***!
@@ -527,6 +333,7 @@ __webpack_require__.r(__webpack_exports__);
  * @param method
  * @param data
  * @return {Promise<void>}
+ * @deprecated use {@link HttpClient} instead
  */
 const request = async (path, method = "POST", data = {}) => {
   const args = {
@@ -1161,16 +968,21 @@ const LoginLink = t0 => {
   } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_4__["default"])();
   let t3;
   if ($[0] !== fetchLinkData) {
-    t3 = async (e, page_0) => {
+    t3 = (e, page_0) => {
       e.preventDefault();
-      const loginData = await fetchLinkData();
-      const link = loginData.simplybook_dashboard_url;
-      let finalUrl = `${link}/${page_0}/`;
-      if (link.includes("by-hash")) {
-        finalUrl = `${link}?back_url=/${page_0}/`;
-      }
-      window.open(finalUrl, "_blank");
-      window.focus();
+      fetchLinkData().then(response => {
+        const link = response?.data.simplybook_dashboard_url;
+        if (!link) {
+          console.error("No link found in response");
+          return;
+        }
+        let finalUrl = `${link}/${page_0}/`;
+        if (link.includes("by-hash")) {
+          finalUrl = `${link}?back_url=/${page_0}/`;
+        }
+        window.open(finalUrl, "_blank");
+        window.focus();
+      }).catch(_temp);
     };
     $[0] = fetchLinkData;
     $[1] = t3;
@@ -1251,6 +1063,9 @@ const LoginLink = t0 => {
 };
 LoginLink.displayName = "LoginLink";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LoginLink);
+function _temp(error) {
+  console.error("Error fetching login URL:", error);
+}
 
 /***/ }),
 
@@ -1336,7 +1151,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ButtonField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ButtonField */ "./src/components/Fields/ButtonField.jsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _api_requests_request__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../api/requests/request */ "./src/api/requests/request.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
 
 
@@ -1358,7 +1173,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
  * @return {JSX.Element}
  */
 const AuthenticationField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(26);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(27);
   let className;
   let context;
   let fieldState;
@@ -1394,87 +1209,98 @@ const AuthenticationField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.f
     setting = $[7];
   }
   const inputId = setting.id;
-  const handleLogoutClick = _temp;
-  const t1 = fieldState?.error?.message;
-  const t2 = props.required;
-  const t3 = !!fieldState?.error?.message;
-  let t4;
-  if ($[8] !== inputId || $[9] !== props || $[10] !== t3) {
-    t4 = /*#__PURE__*/React.createElement(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
+  let t1;
+  if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
+    const client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_6__["default"]("logout");
+    t1 = async e => {
+      e.preventDefault();
+      const confirmed = window.confirm((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Are you sure you want to logout?", "simplybook"));
+      if (!confirmed) {
+        return;
+      }
+      ;
+      try {
+        await client.post();
+      } catch (t2) {
+        const error = t2;
+        console.error("Logout request failed", error);
+        return;
+      }
+      window.location.href = "/wp-admin/admin.php?page=simplybook";
+    };
+    $[8] = t1;
+  } else {
+    t1 = $[8];
+  }
+  const handleLogoutClick = t1;
+  const t2 = fieldState?.error?.message;
+  const t3 = props.required;
+  const t4 = !!fieldState?.error?.message;
+  let t5;
+  if ($[9] !== inputId || $[10] !== props || $[11] !== t4) {
+    t5 = /*#__PURE__*/React.createElement(_Inputs_TextInput__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({
       id: inputId,
       type: "text",
-      "aria-invalid": t3
+      "aria-invalid": t4
     }, props));
-    $[8] = inputId;
-    $[9] = props;
-    $[10] = t3;
+    $[9] = inputId;
+    $[10] = props;
     $[11] = t4;
+    $[12] = t5;
   } else {
-    t4 = $[11];
+    t5 = $[12];
   }
-  const t5 = !!fieldState?.error?.message;
-  let t6;
-  if ($[12] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Log out", "simplybook");
-    $[12] = t6;
-  } else {
-    t6 = $[12];
-  }
+  const t6 = !!fieldState?.error?.message;
   let t7;
-  if ($[13] !== inputId || $[14] !== t5) {
-    t7 = /*#__PURE__*/React.createElement(_ButtonField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      id: inputId,
-      type: "button",
-      "aria-invalid": t5,
-      label: t6,
-      onClick: handleLogoutClick
-    });
-    $[13] = inputId;
-    $[14] = t5;
-    $[15] = t7;
+  if ($[13] === Symbol.for("react.memo_cache_sentinel")) {
+    t7 = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Log out", "simplybook");
+    $[13] = t7;
   } else {
-    t7 = $[15];
+    t7 = $[13];
   }
   let t8;
-  if ($[16] !== className || $[17] !== context || $[18] !== help || $[19] !== inputId || $[20] !== label || $[21] !== props.required || $[22] !== t1 || $[23] !== t4 || $[24] !== t7) {
-    t8 = /*#__PURE__*/React.createElement(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  if ($[14] !== inputId || $[15] !== t6) {
+    t8 = /*#__PURE__*/React.createElement(_ButtonField__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      id: inputId,
+      type: "button",
+      "aria-invalid": t6,
+      label: t7,
+      onClick: handleLogoutClick
+    });
+    $[14] = inputId;
+    $[15] = t6;
+    $[16] = t8;
+  } else {
+    t8 = $[16];
+  }
+  let t9;
+  if ($[17] !== className || $[18] !== context || $[19] !== help || $[20] !== inputId || $[21] !== label || $[22] !== props.required || $[23] !== t2 || $[24] !== t5 || $[25] !== t8) {
+    t9 = /*#__PURE__*/React.createElement(_Forms_FieldWrapper__WEBPACK_IMPORTED_MODULE_3__["default"], {
       label: label,
       help: help,
-      error: t1,
+      error: t2,
       context: context,
       className: className,
       inputId: inputId,
-      required: t2
-    }, t4, t7);
-    $[16] = className;
-    $[17] = context;
-    $[18] = help;
-    $[19] = inputId;
-    $[20] = label;
-    $[21] = props.required;
-    $[22] = t1;
-    $[23] = t4;
-    $[24] = t7;
+      required: t3
+    }, t5, t8);
+    $[17] = className;
+    $[18] = context;
+    $[19] = help;
+    $[20] = inputId;
+    $[21] = label;
+    $[22] = props.required;
+    $[23] = t2;
+    $[24] = t5;
     $[25] = t8;
+    $[26] = t9;
   } else {
-    t8 = $[25];
+    t9 = $[26];
   }
-  return t8;
+  return t9;
 });
 AuthenticationField.displayName = "AuthenticationField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AuthenticationField);
-async function _temp(e) {
-  e.preventDefault();
-  const confirmed = window.confirm((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__.__)("Are you sure you want to logout?", "simplybook"));
-  if (!confirmed) {
-    return;
-  }
-  const response = await (0,_api_requests_request__WEBPACK_IMPORTED_MODULE_6__["default"])("logout");
-  if (!response) {
-    return console.error("Logout failed");
-  }
-  window.location.href = "/wp-admin/admin.php?page=simplybook";
-}
 
 /***/ }),
 
@@ -2134,11 +1960,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _hooks_useServicesData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../hooks/useServicesData */ "./src/hooks/useServicesData.js");
+/* harmony import */ var _hooks_useServicesData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../hooks/useServicesData */ "./src/hooks/useServicesData.tsx");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
 /* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _ListItem__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ListItem */ "./src/components/Fields/ListItem.js");
-/* harmony import */ var _hooks_useProviderData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useProviderData */ "./src/hooks/useProviderData.js");
+/* harmony import */ var _hooks_useProviderData__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../hooks/useProviderData */ "./src/hooks/useProviderData.tsx");
 
 
 
@@ -2158,16 +1984,18 @@ __webpack_require__.r(__webpack_exports__);
  * @return {JSX.Element}
  */
 const ListField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(27);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(36);
   const {
     setting,
     label
   } = t0;
   const {
-    services
+    services,
+    servicesFetched
   } = (0,_hooks_useServicesData__WEBPACK_IMPORTED_MODULE_2__["default"])();
   const {
-    providers
+    providers,
+    providersFetched
   } = (0,_hooks_useProviderData__WEBPACK_IMPORTED_MODULE_5__["default"])();
   let t1;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
@@ -2177,133 +2005,153 @@ const ListField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)
     t1 = $[0];
   }
   const [listArray, setListArray] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(t1);
+  const [listFetched, setListFetched] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(false);
   let t2;
-  if ($[1] !== providers || $[2] !== services) {
+  if ($[1] !== services || $[2] !== servicesFetched) {
     t2 = {
-      services,
-      providers
+      fetched: servicesFetched,
+      data: services
     };
-    $[1] = providers;
-    $[2] = services;
+    $[1] = services;
+    $[2] = servicesFetched;
     $[3] = t2;
   } else {
     t2 = $[3];
   }
-  const sourceData = t2;
   let t3;
-  if ($[4] !== setting.source || $[5] !== sourceData) {
-    t3 = () => {
-      console.log("loading listArray for ", setting.source);
-      setListArray(sourceData[setting.source]);
+  if ($[4] !== providers || $[5] !== providersFetched) {
+    t3 = {
+      fetched: providersFetched,
+      data: providers
     };
-    $[4] = setting.source;
-    $[5] = sourceData;
+    $[4] = providers;
+    $[5] = providersFetched;
     $[6] = t3;
   } else {
     t3 = $[6];
   }
-  const t4 = sourceData[setting.source];
-  let t5;
-  if ($[7] !== t4) {
-    t5 = [t4];
-    $[7] = t4;
-    $[8] = t5;
-  } else {
-    t5 = $[8];
-  }
-  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(t3, t5);
-  if (!listArray) {
-    let t6;
-    if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
-      t6 = /*#__PURE__*/React.createElement(React.Fragment, null, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading, please wait a few seconds..."));
-      $[9] = t6;
-    } else {
-      t6 = $[9];
-    }
-    return t6;
-  }
-  console.log("listArray for ", setting.source, listArray);
-  if (!Array.isArray(listArray)) {
-    let t6;
-    if ($[10] !== setting.label) {
-      t6 = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No items found for %s"), setting.label);
-      $[10] = setting.label;
-      $[11] = t6;
-    } else {
-      t6 = $[11];
-    }
-    let t7;
-    if ($[12] !== t6) {
-      t7 = /*#__PURE__*/React.createElement(React.Fragment, null, t6);
-      $[12] = t6;
-      $[13] = t7;
-    } else {
-      t7 = $[13];
-    }
-    return t7;
-  }
-  let t6;
-  if ($[14] === Symbol.for("react.memo_cache_sentinel")) {
-    t6 = {
-      id: "upgrade",
-      name: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Want more services?"),
-      picture_preview: ""
+  let t4;
+  if ($[7] !== t2 || $[8] !== t3) {
+    t4 = {
+      services: t2,
+      providers: t3
     };
-    $[14] = t6;
+    $[7] = t2;
+    $[8] = t3;
+    $[9] = t4;
   } else {
-    t6 = $[14];
+    t4 = $[9];
   }
-  const premiumItem = t6;
-  let t7;
-  if ($[15] !== label || $[16] !== listArray || $[17] !== setting.link) {
-    let t8;
-    if ($[19] !== label || $[20] !== setting.link) {
-      t8 = item => /*#__PURE__*/React.createElement(_ListItem__WEBPACK_IMPORTED_MODULE_4__["default"], {
-        upgrade: false,
-        key: item.id + item.source,
-        label: label,
-        link: setting.link,
-        item: item
-      });
-      $[19] = label;
-      $[20] = setting.link;
-      $[21] = t8;
-    } else {
-      t8 = $[21];
-    }
-    t7 = listArray.map(t8);
-    $[15] = label;
-    $[16] = listArray;
-    $[17] = setting.link;
-    $[18] = t7;
+  const sourceData = t4;
+  let t5;
+  if ($[10] !== setting.source || $[11] !== sourceData) {
+    t5 = () => {
+      setListArray(sourceData[setting.source]?.data);
+      setListFetched(sourceData[setting.source]?.fetched);
+    };
+    $[10] = setting.source;
+    $[11] = sourceData;
+    $[12] = t5;
   } else {
-    t7 = $[18];
+    t5 = $[12];
+  }
+  const t6 = sourceData[setting.source];
+  let t7;
+  if ($[13] !== t6) {
+    t7 = [t6];
+    $[13] = t6;
+    $[14] = t7;
+  } else {
+    t7 = $[14];
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(t5, t7);
+  if (listFetched && !Array.isArray(listArray)) {
+    let t8;
+    if ($[15] !== setting.label) {
+      t8 = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("No %s found."), setting.label.toLowerCase());
+      $[15] = setting.label;
+      $[16] = t8;
+    } else {
+      t8 = $[16];
+    }
+    let t9;
+    if ($[17] !== t8) {
+      t9 = /*#__PURE__*/React.createElement(React.Fragment, null, t8);
+      $[17] = t8;
+      $[18] = t9;
+    } else {
+      t9 = $[18];
+    }
+    return t9;
   }
   let t8;
-  if ($[22] !== label) {
-    t8 = /*#__PURE__*/React.createElement(_ListItem__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  if ($[19] !== setting.premiumText) {
+    t8 = {
+      id: "upgrade",
+      name: setting.premiumText,
+      picture_preview: ""
+    };
+    $[19] = setting.premiumText;
+    $[20] = t8;
+  } else {
+    t8 = $[20];
+  }
+  const premiumItem = t8;
+  let t9;
+  if ($[21] !== listFetched || $[22] !== setting.label) {
+    t9 = !listFetched && /*#__PURE__*/React.createElement("p", {
+      className: "mb-4"
+    }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading %s..."), setting.label.toLowerCase()));
+    $[21] = listFetched;
+    $[22] = setting.label;
+    $[23] = t9;
+  } else {
+    t9 = $[23];
+  }
+  let t10;
+  if ($[24] !== label || $[25] !== listArray || $[26] !== listFetched || $[27] !== setting.link) {
+    t10 = listFetched && listArray.map(item => /*#__PURE__*/React.createElement(_ListItem__WEBPACK_IMPORTED_MODULE_4__["default"], {
+      upgrade: false,
+      key: item.id + item.source,
+      label: label,
+      link: setting.link,
+      item: item
+    }));
+    $[24] = label;
+    $[25] = listArray;
+    $[26] = listFetched;
+    $[27] = setting.link;
+    $[28] = t10;
+  } else {
+    t10 = $[28];
+  }
+  let t11;
+  if ($[29] !== label || $[30] !== premiumItem) {
+    t11 = /*#__PURE__*/React.createElement(_ListItem__WEBPACK_IMPORTED_MODULE_4__["default"], {
       upgrade: true,
       label: label,
       link: "v2/r/payment-widget",
       item: premiumItem
     });
-    $[22] = label;
-    $[23] = t8;
+    $[29] = label;
+    $[30] = premiumItem;
+    $[31] = t11;
   } else {
-    t8 = $[23];
+    t11 = $[31];
   }
-  let t9;
-  if ($[24] !== t7 || $[25] !== t8) {
-    t9 = /*#__PURE__*/React.createElement("div", {
+  let t12;
+  if ($[32] !== t10 || $[33] !== t11 || $[34] !== t9) {
+    t12 = /*#__PURE__*/React.createElement("div", {
       className: "w-full"
-    }, t7, t8);
-    $[24] = t7;
-    $[25] = t8;
-    $[26] = t9;
+    }, t9, t10, t11);
+    $[32] = t10;
+    $[33] = t11;
+    $[34] = t9;
+    $[35] = t12;
   } else {
-    t9 = $[26];
+    t12 = $[35];
   }
-  return t9;
+  return t12;
 });
 ListField.displayName = 'ListField';
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ListField);
@@ -2344,7 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
 
  */
 const ListItem = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(36);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(44);
   const {
     upgrade,
     link,
@@ -2366,12 +2214,13 @@ const ListItem = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(
   const onChange = t1;
   const {
     domain,
-    domainFetched
+    domainFetched,
+    hasError: domainHasError
   } = (0,_hooks_useDomainData__WEBPACK_IMPORTED_MODULE_6__["default"])();
   const hasPicture = domainFetched && item.picture_preview && item.picture_preview.length > 0;
   let t2;
   if ($[2] !== label || $[3] !== upgrade) {
-    t2 = upgrade ? " |  " + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Get unlimited %s", "simplybook"), label) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Edit", "simplybook");
+    t2 = upgrade ? " |  " + (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.sprintf)((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Get unlimited %s", "simplybook"), label.toLowerCase()) : (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Edit", "simplybook");
     $[2] = label;
     $[3] = upgrade;
     $[4] = t2;
@@ -2380,122 +2229,130 @@ const ListItem = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)(
   }
   const fullLabel = t2;
   let t3;
-  if ($[5] !== domain || $[6] !== hasPicture || $[7] !== item.picture_preview) {
-    t3 = hasPicture && /*#__PURE__*/React.createElement("img", {
+  if ($[5] !== domain || $[6] !== domainFetched || $[7] !== domainHasError || $[8] !== hasPicture || $[9] !== item.picture_preview) {
+    t3 = domainFetched && !domainHasError && hasPicture && /*#__PURE__*/React.createElement("img", {
       className: "w-15 h-15 max-w-[40px] max-h-[40px]",
       src: domain + item.picture_preview,
-      alt: item.picture_preview
+      alt: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Loading", "simplybook")
     });
     $[5] = domain;
-    $[6] = hasPicture;
-    $[7] = item.picture_preview;
-    $[8] = t3;
+    $[6] = domainFetched;
+    $[7] = domainHasError;
+    $[8] = hasPicture;
+    $[9] = item.picture_preview;
+    $[10] = t3;
   } else {
-    t3 = $[8];
+    t3 = $[10];
   }
   let t4;
-  if ($[9] !== hasPicture) {
-    t4 = !hasPicture && /*#__PURE__*/React.createElement("div", {
+  if ($[11] !== domainFetched || $[12] !== domainHasError || $[13] !== hasPicture) {
+    t4 = (!domainFetched || domainHasError || !hasPicture) && /*#__PURE__*/React.createElement("div", {
       className: "min-w-[40px] min-h-[40px] flex items-center justify-center"
     }, /*#__PURE__*/React.createElement(_Common_Icon__WEBPACK_IMPORTED_MODULE_4__["default"], {
       name: "cart"
     }));
-    $[9] = hasPicture;
-    $[10] = t4;
+    $[11] = domainFetched;
+    $[12] = domainHasError;
+    $[13] = hasPicture;
+    $[14] = t4;
   } else {
-    t4 = $[10];
+    t4 = $[14];
   }
   let t5;
-  if ($[11] !== t3 || $[12] !== t4) {
+  if ($[15] !== t3 || $[16] !== t4) {
     t5 = /*#__PURE__*/React.createElement("div", null, t3, t4);
-    $[11] = t3;
-    $[12] = t4;
-    $[13] = t5;
+    $[15] = t3;
+    $[16] = t4;
+    $[17] = t5;
   } else {
-    t5 = $[13];
+    t5 = $[17];
   }
   let t6;
-  if ($[14] !== item.name) {
+  if ($[18] !== item.name) {
     t6 = /*#__PURE__*/React.createElement("div", {
       className: "font-bold"
     }, item.name);
-    $[14] = item.name;
-    $[15] = t6;
+    $[18] = item.name;
+    $[19] = t6;
   } else {
-    t6 = $[15];
+    t6 = $[19];
   }
   let t7;
-  if ($[16] !== fullLabel || $[17] !== link) {
-    t7 = /*#__PURE__*/React.createElement(_Common_LoginLink__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  if ($[20] !== domainFetched || $[21] !== domainHasError || $[22] !== fullLabel || $[23] !== link) {
+    t7 = domainFetched && !domainHasError && /*#__PURE__*/React.createElement(_Common_LoginLink__WEBPACK_IMPORTED_MODULE_5__["default"], {
       page: link
     }, fullLabel);
-    $[16] = fullLabel;
-    $[17] = link;
-    $[18] = t7;
+    $[20] = domainFetched;
+    $[21] = domainHasError;
+    $[22] = fullLabel;
+    $[23] = link;
+    $[24] = t7;
   } else {
-    t7 = $[18];
+    t7 = $[24];
   }
   let t8;
-  if ($[19] !== t5 || $[20] !== t6 || $[21] !== t7) {
+  if ($[25] !== t5 || $[26] !== t6 || $[27] !== t7) {
     t8 = /*#__PURE__*/React.createElement("div", {
       className: "flex items-center space-x-3"
     }, t5, t6, t7);
-    $[19] = t5;
-    $[20] = t6;
-    $[21] = t7;
-    $[22] = t8;
+    $[25] = t5;
+    $[26] = t6;
+    $[27] = t7;
+    $[28] = t8;
   } else {
-    t8 = $[22];
+    t8 = $[28];
   }
   let t9;
-  if ($[23] !== item.id || $[24] !== onChange || $[25] !== upgrade || $[26] !== visible) {
-    t9 = !upgrade && /*#__PURE__*/React.createElement(_Inputs_CheckboxInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  if ($[29] !== domainFetched || $[30] !== domainHasError || $[31] !== item.id || $[32] !== onChange || $[33] !== upgrade || $[34] !== visible) {
+    t9 = domainFetched && !domainHasError && !upgrade && /*#__PURE__*/React.createElement(_Inputs_CheckboxInput__WEBPACK_IMPORTED_MODULE_2__["default"], {
       label: "",
       id: item.id,
       checked: visible,
       onChange: e_0 => onChange(e_0)
     });
-    $[23] = item.id;
-    $[24] = onChange;
-    $[25] = upgrade;
-    $[26] = visible;
-    $[27] = t9;
+    $[29] = domainFetched;
+    $[30] = domainHasError;
+    $[31] = item.id;
+    $[32] = onChange;
+    $[33] = upgrade;
+    $[34] = visible;
+    $[35] = t9;
   } else {
-    t9 = $[27];
+    t9 = $[35];
   }
   let t10;
-  if ($[28] !== upgrade) {
+  if ($[36] !== upgrade) {
     t10 = upgrade && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
       className: `inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium bg-tertiary text-white`
     }, (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_3__.__)("Upgrade", "simplybook")));
-    $[28] = upgrade;
-    $[29] = t10;
+    $[36] = upgrade;
+    $[37] = t10;
   } else {
-    t10 = $[29];
+    t10 = $[37];
   }
   let t11;
-  if ($[30] !== t10 || $[31] !== t9) {
+  if ($[38] !== t10 || $[39] !== t9) {
     t11 = /*#__PURE__*/React.createElement("div", {
       className: "flex items-center"
     }, /*#__PURE__*/React.createElement("div", {
       className: "ml-4 relative"
     }, t9, t10));
-    $[30] = t10;
-    $[31] = t9;
-    $[32] = t11;
+    $[38] = t10;
+    $[39] = t9;
+    $[40] = t11;
   } else {
-    t11 = $[32];
+    t11 = $[40];
   }
   let t12;
-  if ($[33] !== t11 || $[34] !== t8) {
+  if ($[41] !== t11 || $[42] !== t8) {
     t12 = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "w-full flex items-center justify-between px-4 py-5 bg-gray-100 mb-4"
     }, t8, t11));
-    $[33] = t11;
-    $[34] = t8;
-    $[35] = t12;
+    $[41] = t11;
+    $[42] = t8;
+    $[43] = t12;
   } else {
-    t12 = $[35];
+    t12 = $[43];
   }
   return t12;
 });
@@ -3627,6 +3484,19 @@ const useOnboardingData = () => {
       id: "confirmation-code",
       type: "text",
       label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Confirmation Code", "simplybook")
+    }, {
+      id: "submit",
+      type: "button",
+      label: (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_2__.__)("Verify Email", "simplybook"),
+      buttonSettings: {
+        showLoader: true,
+        //{disabled}
+        btnVariant: "primary",
+        disabled: true,
+        onClick: () => {
+          beforeSubmit();
+        }
+      }
     }],
     beforeSubmit: async data_2 => {
       if (!data_2.recaptchaToken) {
@@ -3864,132 +3734,6 @@ const useOnboardingData = () => {
 
 /***/ }),
 
-/***/ "./src/hooks/useProviderData.js":
-/*!**************************************!*\
-  !*** ./src/hooks/useProviderData.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getProviders__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getProviders */ "./src/api/endpoints/getProviders.js");
-
-
-
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-const useProvidersData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(3);
-  (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
-  let t0;
-  if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = {
-      queryKey: ["providers"],
-      queryFn: _temp,
-      staleTime: 300000,
-      retry: 0,
-      select: _temp2
-    };
-    $[0] = t0;
-  } else {
-    t0 = $[0];
-  }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t0);
-  let t1;
-  if ($[1] !== query.data) {
-    t1 = {
-      providers: query.data
-    };
-    $[1] = query.data;
-    $[2] = t1;
-  } else {
-    t1 = $[2];
-  }
-  return t1;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useProvidersData);
-function _temp() {
-  return (0,_api_endpoints_getProviders__WEBPACK_IMPORTED_MODULE_1__["default"])();
-}
-function _temp2(data) {
-  return [...data];
-}
-
-/***/ }),
-
-/***/ "./src/hooks/useServicesData.js":
-/*!**************************************!*\
-  !*** ./src/hooks/useServicesData.js ***!
-  \**************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
-/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getServices__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getServices */ "./src/api/endpoints/getServices.js");
-
-
-
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-const useServicesData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(3);
-  (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
-  let t0;
-  if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = {
-      queryKey: ["services"],
-      queryFn: _temp,
-      staleTime: 300000,
-      retry: 0,
-      select: _temp2
-    };
-    $[0] = t0;
-  } else {
-    t0 = $[0];
-  }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t0);
-  let t1;
-  if ($[1] !== query.data) {
-    t1 = {
-      services: query.data
-    };
-    $[1] = query.data;
-    $[2] = t1;
-  } else {
-    t1 = $[2];
-  }
-  return t1;
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useServicesData);
-function _temp() {
-  return (0,_api_endpoints_getServices__WEBPACK_IMPORTED_MODULE_1__["default"])();
-}
-function _temp2(data) {
-  return [...data];
-}
-
-/***/ }),
-
 /***/ "./src/hooks/useSettingsData.js":
 /*!**************************************!*\
   !*** ./src/hooks/useSettingsData.js ***!
@@ -4002,12 +3746,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
-/* harmony import */ var _api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getSettingsFields */ "./src/api/endpoints/getSettingsFields.js");
-/* harmony import */ var _api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/endpoints/saveSettings */ "./src/api/endpoints/saveSettings.js");
-
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useMutation.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
 
 
@@ -4019,112 +3761,140 @@ __webpack_require__.r(__webpack_exports__);
  * @returns {Object} - An object containing settings data, update function, and status flags.
  */
 const useSettingsData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(18);
-  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQueryClient)();
-  const transformData = _temp2;
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(21);
+  const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = ["settings_fields"];
+    t0 = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"]();
     $[0] = t0;
   } else {
     t0 = $[0];
   }
+  const client = t0;
+  const transformData = _temp2;
   let t1;
+  let t2;
   if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
-    t1 = {
-      queryKey: t0,
-      queryFn: _temp3,
-      staleTime: 300000,
-      initialData: transformData(window.simplybook && window.simplybook.settings_fields),
-      retry: 0,
-      select: _temp4
-    };
+    t1 = ["setting_fields"];
+    t2 = () => client.setRoute("settings/get").setPayload({
+      withValues: true
+    }).post();
     $[1] = t1;
+    $[2] = t2;
   } else {
     t1 = $[1];
+    t2 = $[2];
   }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useQuery)(t1);
-  let t2;
-  if ($[2] !== query.data) {
-    t2 = id => query.data.find(field_0 => field_0.id === id)?.value;
-    $[2] = query.data;
-    $[3] = t2;
-  } else {
-    t2 = $[3];
-  }
-  const getValue = t2;
   let t3;
-  if ($[4] !== queryClient) {
-    t3 = (id_0, value) => {
-      queryClient.setQueryData(["settings_fields"], oldData => oldData.map(field_1 => field_1.id === id_0 ? {
+  if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+    t3 = transformData(window.simplybook && window.simplybook.settings_fields);
+    $[3] = t3;
+  } else {
+    t3 = $[3];
+  }
+  let t4;
+  if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
+    t4 = {
+      queryKey: t1,
+      queryFn: t2,
+      staleTime: 300000,
+      initialData: t3,
+      retry: 0,
+      select: function (data_0) {
+        const fields = data_0?.data ?? data_0;
+        return transformData(fields);
+      }
+    };
+    $[4] = t4;
+  } else {
+    t4 = $[4];
+  }
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t4);
+  let t5;
+  if ($[5] !== query?.data) {
+    t5 = id => query?.data.find(field_0 => field_0.id === id)?.value;
+    $[5] = query?.data;
+    $[6] = t5;
+  } else {
+    t5 = $[6];
+  }
+  const getValue = t5;
+  let t6;
+  if ($[7] !== queryClient) {
+    t6 = (id_0, value) => {
+      queryClient.setQueryData(["setting_fields"], oldResponse => oldResponse.map(field_1 => field_1.id === id_0 ? {
         ...field_1,
         value
       } : field_1));
     };
-    $[4] = queryClient;
-    $[5] = t3;
+    $[7] = queryClient;
+    $[8] = t6;
   } else {
-    t3 = $[5];
+    t6 = $[8];
   }
-  const setValue = t3;
-  let t4;
-  if ($[6] === Symbol.for("react.memo_cache_sentinel")) {
-    t4 = async data_1 => {
-      console.log("saving data", data_1);
-      const settings = await (0,_api_endpoints_saveSettings__WEBPACK_IMPORTED_MODULE_2__["default"])(data_1);
-      return transformData(settings);
+  const setValue = t6;
+  let t7;
+  if ($[9] === Symbol.for("react.memo_cache_sentinel")) {
+    t7 = async data_1 => {
+      const settings = await client.setRoute("settings/save").setPayload(data_1).post();
+      return transformData(settings?.data);
     };
-    $[6] = t4;
+    $[9] = t7;
   } else {
-    t4 = $[6];
+    t7 = $[9];
   }
-  let t5;
-  if ($[7] !== queryClient) {
-    t5 = {
-      mutationFn: t4,
-      onSuccess: async data_2 => {
-        queryClient.setQueryData(["settings_fields"], oldData_0 => data_2 ? [...data_2] : []);
-        queryClient.invalidateQueries(["settings_fields"]);
+  let t8;
+  if ($[10] !== queryClient) {
+    t8 = {
+      mutationFn: t7,
+      onSuccess: data_2 => {
+        queryClient.setQueryData(["setting_fields"], oldResponse_0 => data_2 ? [...data_2] : []);
+        queryClient.invalidateQueries({
+          queryKey: ["setting_fields"]
+        });
       }
     };
-    $[7] = queryClient;
-    $[8] = t5;
+    $[10] = queryClient;
+    $[11] = t8;
   } else {
-    t5 = $[8];
+    t8 = $[11];
   }
   const {
     mutateAsync: saveSettings
-  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_5__.useMutation)(t5);
-  const t6 = query.isLoading || query.fetchStatus === "fetching";
-  let t7;
-  if ($[9] !== queryClient) {
-    t7 = () => queryClient.invalidateQueries(["settings_fields"]);
-    $[9] = queryClient;
-    $[10] = t7;
+  } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_4__.useMutation)(t8);
+  const t9 = query?.data;
+  const t10 = query?.isLoading;
+  let t11;
+  if ($[12] !== queryClient) {
+    t11 = () => queryClient.invalidateQueries({
+      queryKey: ["setting_fields"]
+    });
+    $[12] = queryClient;
+    $[13] = t11;
   } else {
-    t7 = $[10];
+    t11 = $[13];
   }
-  let t8;
-  if ($[11] !== getValue || $[12] !== query.data || $[13] !== saveSettings || $[14] !== setValue || $[15] !== t6 || $[16] !== t7) {
-    t8 = {
-      settings: query.data,
+  let t12;
+  if ($[14] !== getValue || $[15] !== saveSettings || $[16] !== setValue || $[17] !== t10 || $[18] !== t11 || $[19] !== t9) {
+    t12 = {
+      settings: t9,
       saveSettings,
       getValue,
       setValue,
-      isSavingSettings: t6,
-      invalidateSettings: t7
+      isSavingSettings: t10,
+      invalidateSettings: t11
     };
-    $[11] = getValue;
-    $[12] = query.data;
-    $[13] = saveSettings;
-    $[14] = setValue;
-    $[15] = t6;
-    $[16] = t7;
-    $[17] = t8;
+    $[14] = getValue;
+    $[15] = saveSettings;
+    $[16] = setValue;
+    $[17] = t10;
+    $[18] = t11;
+    $[19] = t9;
+    $[20] = t12;
   } else {
-    t8 = $[17];
+    t12 = $[20];
   }
-  return t8;
+  return t12;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useSettingsData);
 function _temp(field) {
@@ -4135,14 +3905,6 @@ function _temp(field) {
 }
 function _temp2(data) {
   return data.map(_temp);
-}
-function _temp3() {
-  return (0,_api_endpoints_getSettingsFields__WEBPACK_IMPORTED_MODULE_1__["default"])({
-    withValues: true
-  });
-}
-function _temp4(data_0) {
-  return data_0 ? [...data_0] : [];
 }
 
 /***/ }),
@@ -4308,60 +4070,67 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getWidget__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/endpoints/getWidget */ "./src/api/endpoints/getWidget.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
 
 
 const useWidgetData = () => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(7);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(8);
   const queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQueryClient)();
   let t0;
   if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
-    t0 = {
-      queryKey: ["widget_script"],
-      queryFn: _temp,
-      staleTime: 300000,
-      initialData: "",
-      retry: 0,
-      enabled: false
-    };
+    t0 = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"]("get_widget");
     $[0] = t0;
   } else {
     t0 = $[0];
   }
-  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t0);
+  const client = t0;
   let t1;
-  if ($[1] !== query || $[2] !== queryClient) {
-    t1 = async () => {
-      console.log("invalidate and refetch widget script");
-      queryClient.invalidateQueries(["widget_script"]);
-      await query.refetch();
+  if ($[1] === Symbol.for("react.memo_cache_sentinel")) {
+    t1 = {
+      queryKey: ["get_widget"],
+      queryFn: () => client.get(),
+      staleTime: 300000,
+      retry: 0,
+      enabled: false
     };
-    $[1] = query;
-    $[2] = queryClient;
-    $[3] = t1;
+    $[1] = t1;
   } else {
-    t1 = $[3];
+    t1 = $[1];
   }
-  const invalidateAndRefetchWidgetScript = t1;
+  const query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_3__.useQuery)(t1);
   let t2;
-  if ($[4] !== invalidateAndRefetchWidgetScript || $[5] !== query.data) {
-    t2 = {
-      widgetScript: query.data,
+  if ($[2] !== query || $[3] !== queryClient) {
+    t2 = async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ["get_widget"]
+      }).then(function (response) {
+        query.refetch();
+      });
+    };
+    $[2] = query;
+    $[3] = queryClient;
+    $[4] = t2;
+  } else {
+    t2 = $[4];
+  }
+  const invalidateAndRefetchWidgetScript = t2;
+  const t3 = query?.data?.widget;
+  let t4;
+  if ($[5] !== invalidateAndRefetchWidgetScript || $[6] !== t3) {
+    t4 = {
+      widgetScript: t3,
       invalidateAndRefetchWidgetScript
     };
-    $[4] = invalidateAndRefetchWidgetScript;
-    $[5] = query.data;
-    $[6] = t2;
+    $[5] = invalidateAndRefetchWidgetScript;
+    $[6] = t3;
+    $[7] = t4;
   } else {
-    t2 = $[6];
+    t4 = $[7];
   }
-  return t2;
+  return t4;
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useWidgetData);
-function _temp() {
-  return (0,_api_endpoints_getWidget__WEBPACK_IMPORTED_MODULE_1__["default"])();
-}
 
 /***/ }),
 
@@ -4498,6 +4267,296 @@ const Route = (0,_tanstack_react_router__WEBPACK_IMPORTED_MODULE_7__.createLazyF
     });
   }
 });
+
+/***/ }),
+
+/***/ "./src/api/requests/HttpClient.tsx":
+/*!*****************************************!*\
+  !*** ./src/api/requests/HttpClient.tsx ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../config */ "./src/api/config.js");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
+/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__);
+var __assign = undefined && undefined.__assign || function () {
+  __assign = Object.assign || function (t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+      s = arguments[i];
+      for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+    }
+    return t;
+  };
+  return __assign.apply(this, arguments);
+};
+var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
+  function adopt(value) {
+    return value instanceof P ? value : new P(function (resolve) {
+      resolve(value);
+    });
+  }
+  return new (P || (P = Promise))(function (resolve, reject) {
+    function fulfilled(value) {
+      try {
+        step(generator.next(value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function rejected(value) {
+      try {
+        step(generator["throw"](value));
+      } catch (e) {
+        reject(e);
+      }
+    }
+    function step(result) {
+      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
+    }
+    step((generator = generator.apply(thisArg, _arguments || [])).next());
+  });
+};
+var __generator = undefined && undefined.__generator || function (thisArg, body) {
+  var _ = {
+      label: 0,
+      sent: function () {
+        if (t[0] & 1) throw t[1];
+        return t[1];
+      },
+      trys: [],
+      ops: []
+    },
+    f,
+    y,
+    t,
+    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
+  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
+    return this;
+  }), g;
+  function verb(n) {
+    return function (v) {
+      return step([n, v]);
+    };
+  }
+  function step(op) {
+    if (f) throw new TypeError("Generator is already executing.");
+    while (g && (g = 0, op[0] && (_ = 0)), _) try {
+      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+      if (y = 0, t) op = [op[0] & 2, t.value];
+      switch (op[0]) {
+        case 0:
+        case 1:
+          t = op;
+          break;
+        case 4:
+          _.label++;
+          return {
+            value: op[1],
+            done: false
+          };
+        case 5:
+          _.label++;
+          y = op[1];
+          op = [0];
+          continue;
+        case 7:
+          op = _.ops.pop();
+          _.trys.pop();
+          continue;
+        default:
+          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
+            _ = 0;
+            continue;
+          }
+          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
+            _.label = op[1];
+            break;
+          }
+          if (op[0] === 6 && _.label < t[1]) {
+            _.label = t[1];
+            t = op;
+            break;
+          }
+          if (t && _.label < t[2]) {
+            _.label = t[2];
+            _.ops.push(op);
+            break;
+          }
+          if (t[2]) _.ops.pop();
+          _.trys.pop();
+          continue;
+      }
+      op = body.call(thisArg, _);
+    } catch (e) {
+      op = [6, e];
+      y = 0;
+    } finally {
+      f = t = 0;
+    }
+    if (op[0] & 5) throw op[1];
+    return {
+      value: op[0] ? op[1] : void 0,
+      done: true
+    };
+  }
+};
+
+
+/**
+ * HttpClient class to handle HTTP requests.
+ */
+var HttpClient = /** @class */function () {
+  /**
+   * Constructor to initialize the route URL.
+   * @param route - The API route to be used.
+   */
+  function HttpClient(route) {
+    this.route = null;
+    this.getMethodHeaders = {
+      'X-WP-NONCE': _config__WEBPACK_IMPORTED_MODULE_0__.X_WP_NONCE
+    };
+    this.postMethodHeaders = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-WP-NONCE': _config__WEBPACK_IMPORTED_MODULE_0__.X_WP_NONCE
+    };
+    this.payload = {
+      'nonce': _config__WEBPACK_IMPORTED_MODULE_0__.NONCE
+    };
+    if (route) {
+      this.route = _config__WEBPACK_IMPORTED_MODULE_0__.SB_API_URL + route;
+    }
+  }
+  /**
+   * Performs a GET request.
+   * @returns The response data in JSON format.
+   * @throws An error if the response is not ok or route is not set.
+   */
+  HttpClient.prototype.get = function () {
+    return __awaiter(this, void 0, void 0, function () {
+      var response, errorData;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            if (!this.route) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Route is not set', 'simplybook'));
+            }
+            return [4 /*yield*/, fetch(this.route, {
+              method: 'GET',
+              headers: this.getMethodHeaders
+            })];
+          case 1:
+            response = _a.sent();
+            if (!!response.ok) return [3 /*break*/, 3];
+            return [4 /*yield*/, response.json()];
+          case 2:
+            errorData = _a.sent();
+            return [2 /*return*/, this.handleError(errorData)];
+          case 3:
+            return [2 /*return*/, response.json()];
+        }
+      });
+    });
+  };
+  /**
+   * Performs a POST request.
+   * @param body - The body of the POST request.
+   * @returns The response data in JSON format.
+   * @throws An error if the response is not ok or route is not set.
+   */
+  HttpClient.prototype.post = function (body) {
+    return __awaiter(this, void 0, void 0, function () {
+      var payload, response, errorData;
+      return __generator(this, function (_a) {
+        switch (_a.label) {
+          case 0:
+            payload = body !== null && body !== void 0 ? body : this.payload;
+            if (!payload) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Payload is not set', 'simplybook'));
+            }
+            if (!this.route) {
+              throw new Error((0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('Route is not set', 'simplybook'));
+            }
+            return [4 /*yield*/, fetch(this.route, {
+              method: 'POST',
+              headers: this.postMethodHeaders,
+              body: JSON.stringify(__assign(__assign({}, payload), {
+                nonce: _config__WEBPACK_IMPORTED_MODULE_0__.NONCE
+              }))
+            })];
+          case 1:
+            response = _a.sent();
+            if (!!response.ok) return [3 /*break*/, 3];
+            return [4 /*yield*/, response.json()];
+          case 2:
+            errorData = _a.sent();
+            return [2 /*return*/, this.handleError(errorData)];
+          case 3:
+            return [2 /*return*/, response.json()];
+        }
+      });
+    });
+  };
+  /**
+   * Sets the route URL.
+   * @param route - The API route to be used.
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setRoute = function (route) {
+    this.route = _config__WEBPACK_IMPORTED_MODULE_0__.SB_API_URL + route;
+    return this;
+  };
+  /**
+   * Sets custom headers for GET or POST requests.
+   * @param headers - The headers to be set.
+   * @param method - The HTTP method ('get' or 'post').
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setHeaders = function (headers, method) {
+    if (method === 'get') {
+      this.getMethodHeaders = __assign(__assign({}, this.getMethodHeaders), headers);
+      return this;
+    }
+    if (method === 'post') {
+      this.postMethodHeaders = __assign(__assign({}, this.postMethodHeaders), headers);
+      return this;
+    }
+    return this;
+  };
+  /**
+   * Sets additional payload data.
+   * @param payload - The payload data to be set.
+   * @returns The HttpClient instance.
+   */
+  HttpClient.prototype.setPayload = function (payload) {
+    this.payload = __assign(__assign({}, this.payload), payload);
+    return this;
+  };
+  /**
+   * Handles errors from the server response.
+   * @param errorData - The error data from the server.
+   * @throws An error with a message.
+   */
+  HttpClient.prototype.handleError = function (errorData) {
+    var error = (0,_wordpress_i18n__WEBPACK_IMPORTED_MODULE_1__.__)('An error occurred', 'simplybook');
+    if (typeof errorData === 'string') {
+      error = errorData;
+    }
+    if (errorData === null || errorData === void 0 ? void 0 : errorData.message) {
+      error = errorData.message;
+    }
+    if (errorData === null || errorData === void 0 ? void 0 : errorData.error) {
+      error = errorData.error;
+    }
+    throw new Error(error);
+  };
+  return HttpClient;
+}();
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (HttpClient);
 
 /***/ }),
 
@@ -5191,152 +5250,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getDomain__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getDomain */ "./src/api/endpoints/getDomain.js");
-/* harmony import */ var _useOnboardingData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useOnboardingData */ "./src/hooks/useOnboardingData.js");
-var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
-  function adopt(value) {
-    return value instanceof P ? value : new P(function (resolve) {
-      resolve(value);
-    });
-  }
-  return new (P || (P = Promise))(function (resolve, reject) {
-    function fulfilled(value) {
-      try {
-        step(generator.next(value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function rejected(value) {
-      try {
-        step(generator["throw"](value));
-      } catch (e) {
-        reject(e);
-      }
-    }
-    function step(result) {
-      result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected);
-    }
-    step((generator = generator.apply(thisArg, _arguments || [])).next());
-  });
-};
-var __generator = undefined && undefined.__generator || function (thisArg, body) {
-  var _ = {
-      label: 0,
-      sent: function () {
-        if (t[0] & 1) throw t[1];
-        return t[1];
-      },
-      trys: [],
-      ops: []
-    },
-    f,
-    y,
-    t,
-    g = Object.create((typeof Iterator === "function" ? Iterator : Object).prototype);
-  return g.next = verb(0), g["throw"] = verb(1), g["return"] = verb(2), typeof Symbol === "function" && (g[Symbol.iterator] = function () {
-    return this;
-  }), g;
-  function verb(n) {
-    return function (v) {
-      return step([n, v]);
-    };
-  }
-  function step(op) {
-    if (f) throw new TypeError("Generator is already executing.");
-    while (g && (g = 0, op[0] && (_ = 0)), _) try {
-      if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-      if (y = 0, t) op = [op[0] & 2, t.value];
-      switch (op[0]) {
-        case 0:
-        case 1:
-          t = op;
-          break;
-        case 4:
-          _.label++;
-          return {
-            value: op[1],
-            done: false
-          };
-        case 5:
-          _.label++;
-          y = op[1];
-          op = [0];
-          continue;
-        case 7:
-          op = _.ops.pop();
-          _.trys.pop();
-          continue;
-        default:
-          if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) {
-            _ = 0;
-            continue;
-          }
-          if (op[0] === 3 && (!t || op[1] > t[0] && op[1] < t[3])) {
-            _.label = op[1];
-            break;
-          }
-          if (op[0] === 6 && _.label < t[1]) {
-            _.label = t[1];
-            t = op;
-            break;
-          }
-          if (t && _.label < t[2]) {
-            _.label = t[2];
-            _.ops.push(op);
-            break;
-          }
-          if (t[2]) _.ops.pop();
-          _.trys.pop();
-          continue;
-      }
-      op = body.call(thisArg, _);
-    } catch (e) {
-      op = [6, e];
-      y = 0;
-    } finally {
-      f = t = 0;
-    }
-    if (op[0] & 5) throw op[1];
-    return {
-      value: op[0] ? op[1] : void 0,
-      done: true
-    };
-  }
-};
+/* harmony import */ var _useOnboardingData__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./useOnboardingData */ "./src/hooks/useOnboardingData.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
 
 
 var useDomainData = function () {
   var _a, _b;
-  var onboardingCompleted = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_1__["default"])().onboardingCompleted;
-  var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
-    queryKey: ["domain_data"],
-    queryFn: function () {
-      return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              if (!onboardingCompleted) {
-                return [2 /*return*/, ''];
-              }
-              return [4 /*yield*/, (0,_api_endpoints_getDomain__WEBPACK_IMPORTED_MODULE_0__["default"])()];
-            case 1:
-              response = _a.sent();
-              console.log("getdomain response", response);
-              return [2 /*return*/, response];
-          }
-        });
-      });
-    },
-    staleTime: 1000 * 60 * 60,
-    retry: 0,
-    enabled: !!onboardingCompleted
-  });
+  var onboardingCompleted = (0,_useOnboardingData__WEBPACK_IMPORTED_MODULE_0__["default"])().onboardingCompleted;
+  var route = 'get_domain';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_1__["default"](route);
+  var _c = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 60,
+      retry: 0,
+      enabled: !!onboardingCompleted
+    }),
+    isLoading = _c.isLoading,
+    error = _c.error,
+    response = _c.data;
+  if (error !== null) {
+    console.error('Error fetching domain data:', error.message);
+  }
   return {
-    domain: query.data,
-    domainFetched: ((_b = (_a = query.data) === null || _a === void 0 ? void 0 : _a.length) !== null && _b !== void 0 ? _b : 0) > 0
+    domain: (_a = response === null || response === void 0 ? void 0 : response.data) === null || _a === void 0 ? void 0 : _a.domain,
+    domainFetched: !isLoading,
+    hasError: error !== null,
+    message: (_b = response === null || response === void 0 ? void 0 : response.message) !== null && _b !== void 0 ? _b : error === null || error === void 0 ? void 0 : error.message
   };
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useDomainData);
@@ -5355,7 +5298,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/QueryClientProvider.js");
 /* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
-/* harmony import */ var _api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/endpoints/getLoginUrl */ "./src/api/endpoints/getLoginUrl.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 var __awaiter = undefined && undefined.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
     return value instanceof P ? value : new P(function (resolve) {
@@ -5474,27 +5417,17 @@ var defaultLoginData = {
 };
 var useLoginData = function () {
   var queryClient = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQueryClient)();
+  var route = 'get_login_url';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"](route);
   var query = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_2__.useQuery)({
-    // Set the key where to store the data
-    queryKey: ["login_data"],
-    // Run the query
+    queryKey: [route],
     queryFn: function () {
-      return __awaiter(void 0, void 0, void 0, function () {
-        var response;
-        return __generator(this, function (_a) {
-          switch (_a.label) {
-            case 0:
-              return [4 /*yield*/, (0,_api_endpoints_getLoginUrl__WEBPACK_IMPORTED_MODULE_0__["default"])()];
-            case 1:
-              response = _a.sent();
-              return [2 /*return*/, response];
-          }
-        });
-      });
+      return client.get();
     },
     staleTime: 1000 * 60 * 60,
     retry: 0,
     enabled: false,
+    // Only fetch on request
     initialData: defaultLoginData,
     refetchOnMount: false,
     refetchOnReconnect: false,
@@ -5513,8 +5446,8 @@ var useLoginData = function () {
             return [4 /*yield*/, query.refetch()];
           case 1:
             response = _a.sent();
-            queryClient.setQueryData(["login_data"], response.data);
-            return [2 /*return*/, response.data];
+            queryClient.setQueryData([route], response === null || response === void 0 ? void 0 : response.data);
+            return [2 /*return*/, response === null || response === void 0 ? void 0 : response.data];
         }
       });
     });
@@ -5528,14 +5461,105 @@ var useLoginData = function () {
 
 /***/ }),
 
-/***/ "./src/types/LoginData.ts":
-/*!********************************!*\
-  !*** ./src/types/LoginData.ts ***!
-  \********************************/
+/***/ "./src/hooks/useProviderData.tsx":
+/*!***************************************!*\
+  !*** ./src/hooks/useProviderData.tsx ***!
+  \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
 
+
+/**
+ * Custom hook for managing settings data using Tanstack Query.
+ * This hook provides functions to fetch and update settings.
+ *
+ * @returns {Object} - An object containing settings data, update function, and status flags.
+ */
+var useProviderData = function () {
+  var _a;
+  var route = 'providers';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"](route);
+  // Query for fetching settings from server
+  var _b = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 5,
+      // 5 minutes
+      retry: 0
+    }),
+    isLoading = _b.isLoading,
+    error = _b.error,
+    response = _b.data;
+  if (error !== null) {
+    console.error('Error fetching providers: ', error.message);
+  }
+  return {
+    providers: response === null || response === void 0 ? void 0 : response.data,
+    providersFetched: !isLoading,
+    providersHasError: error !== null,
+    providersMessage: (_a = response === null || response === void 0 ? void 0 : response.message) !== null && _a !== void 0 ? _a : error === null || error === void 0 ? void 0 : error.message
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useProviderData);
+
+/***/ }),
+
+/***/ "./src/hooks/useServicesData.tsx":
+/*!***************************************!*\
+  !*** ./src/hooks/useServicesData.tsx ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @tanstack/react-query */ "./node_modules/@tanstack/react-query/build/modern/useQuery.js");
+/* harmony import */ var _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../api/requests/HttpClient */ "./src/api/requests/HttpClient.tsx");
+
+
+/**
+ * Custom hook for managing settings data using Tanstack Query.
+ * This hook provides functions to fetch and update settings.
+ *
+ * @returns {Object} - An object containing settings data, update function, and status flags.
+ */
+var useServicesData = function () {
+  var _a;
+  var route = 'services';
+  var client = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_0__["default"](route);
+  // Query for fetching settings from server
+  var _b = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_1__.useQuery)({
+      queryKey: [route],
+      queryFn: function () {
+        return client.get();
+      },
+      staleTime: 1000 * 60 * 5,
+      // 5 minutes
+      retry: 0
+    }),
+    isLoading = _b.isLoading,
+    error = _b.error,
+    response = _b.data;
+  if (error !== null) {
+    console.error('Error fetching services: ', error.message);
+  }
+  return {
+    services: response === null || response === void 0 ? void 0 : response.data,
+    servicesFetched: !isLoading,
+    servicesHasError: error !== null,
+    servicesMessage: (_a = response === null || response === void 0 ? void 0 : response.message) !== null && _a !== void 0 ? _a : error === null || error === void 0 ? void 0 : error.message
+  };
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (useServicesData);
 
 /***/ })
 
