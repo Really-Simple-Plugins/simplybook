@@ -1,50 +1,44 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import getLoginUrl from "../api/endpoints/getLoginUrl";
 import { LoginData } from "../types/LoginData";
-
+import HttpClient from "../api/requests/HttpClient";
 
 const defaultLoginData: LoginData = {
-  simplybook_dashboard_url: "",
+    simplybook_dashboard_url: "",
 };
-
 
 const useLoginData = () => {
 
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const query = useQuery<LoginData>({
-    // Set the key where to store the data
-    queryKey: ["login_data"],
-    // Run the query
-    queryFn: async () => {
-      const response = await getLoginUrl();
-      
-      return response;
-    },
-    staleTime: 1000 * 60 * 60,
-    retry: 0,
-    enabled: false,
-    initialData: defaultLoginData,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchOnWindowFocus: false,
-  });
+    const route = 'get_login_url';
+    const client = new HttpClient(route);
 
-  /**
-   * Refetch query to refresh data when  something has changed 
-   * @returns 
-   */
-  const fetchAndInvalidate = async () => {
-    let response = await query.refetch();
-    queryClient.setQueryData(["login_data"], response.data);
+    const query = useQuery<LoginData>({
+        queryKey: [route],
+        queryFn: () => client.get(),
+        staleTime: 1000 * 60 * 60,
+        retry: 0,
+        enabled: false, // Only fetch on request
+        initialData: defaultLoginData,
+        refetchOnMount: false,
+        refetchOnReconnect: false,
+        refetchOnWindowFocus: false,
+    });
 
-    return response.data;
-  };
+    /**
+     * Refetch query to refresh data when  something has changed
+     * @returns
+     */
+    const fetchAndInvalidate = async () => {
+        const response = await query.refetch();
+        queryClient.setQueryData([route], response?.data);
+        return response?.data;
+    };
 
-  return {
-    loginData: query.data,
-    fetchLinkData: fetchAndInvalidate,
-  };
+    return {
+        loginData: query.data,
+        fetchLinkData: fetchAndInvalidate,
+    };
 };
 
 export default useLoginData;

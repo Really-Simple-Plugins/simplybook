@@ -474,64 +474,6 @@ class ApiClient
         return true;
     }
 
-    /**
-     * Format a unix timestamp in the required format for the API
-     * @param int $timestamp
-     *
-     * @return string
-     */
-    private function format_date_for_api(int $timestamp): string {
-        return date('Y-m-d', $timestamp);
-    }
-
-    /**
-     * Get a list of bookings
-     *
-     * @param int $from
-     * @param int $to
-     *
-     * @return array
-     */
-    public function get_bookings(int $from, int $to): array {
-        if ( !$this->company_registration_complete() ){
-            return [];
-        }
-
-        $args = [
-            'date_from' => $this->format_date_for_api($from),
-            'date_to' => $this->format_date_for_api($to),
-        ];
-        $bookings = $this->api_call('admin/bookings', $args, 'GET');
-        error_log(print_r("bookings", true));
-        error_log(print_r($bookings, true));
-        return $bookings['data'] ?? [];
-    }
-
-    /**
-     * Get the bookings count
-     *
-     * @param int $from
-     * @param int $to
-     *
-     * @return int
-     */
-    public function get_bookings_count( int $from, int $to): int {
-
-        if ( !$this->company_registration_complete() ){
-            return 0;
-        }
-
-        $args = [
-            'date_from' => $this->format_date_for_api($from),
-            'date_to' => $this->format_date_for_api($to),
-        ];
-        $bookings = $this->api_call('admin/bookings', $args, 'GET');
-        if ( $bookings ) {
-            return $bookings['metadata']['items_count'] ?? 0;
-        }
-        return 0;
-    }
-
     public function reset_registration(){
         $this->delete_company_login();
         $this->clear_tokens();
@@ -614,7 +556,7 @@ class ApiClient
                     'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
 //					'providers'=>[$provider],
 //					'services'=>[$service],
-//					'dismiss_onboarding' => true,
+					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
@@ -862,6 +804,30 @@ class ApiClient
         }
         $response = $this->api_call('admin/providers', [], 'GET');
         return $response['data'] ?? [];
+    }
+
+    /**
+     * Get all subscription data
+     */
+    public function get_subscription_data(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/tariff/current', [], 'GET');
+    }
+
+    /**
+     * Get all statistics
+     */
+    public function get_statistics(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/statistic', [], 'GET');
     }
 
     /**
@@ -1414,4 +1380,5 @@ class ApiClient
 
         return $allowedProviders;
     }
+
 }

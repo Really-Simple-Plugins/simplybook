@@ -7,10 +7,10 @@ import { Link } from "@tanstack/react-router";
 import Icon from "../Common/Icon";
 import useOtherPluginsData from "../../hooks/useOtherPluginsData";
 import React from "react";
+import {OtherPlugin} from "../../types/OtherPlugin";
 
 const OurPlugins = () => {
     const {plugins, fetched, runPluginAction, pluginActionNice} = useOtherPluginsData();
-    console.log("OurPlugins", plugins);
 
   return (
     <Block className={"col-span-6 row-span-1 bg-transparent shadow-none"}>
@@ -21,7 +21,7 @@ const OurPlugins = () => {
       {/* align list in middle of block */}
       <BlockContent className={"flex flex-col items-center"}>
         {// @ts-ignore
-            plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin) => (
+            fetched && plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin: OtherPlugin) => (
                 <div key={plugin.url} className={"flex items-center gap-2 text-sm w-full py-2 "}>
                     <Icon name={"circle"} color={plugin.color}/>
                     <Link to={plugin.url}>
@@ -44,7 +44,11 @@ const OurPlugins = () => {
                 </div>
             ))}
       </BlockContent>
-        <BlockFooter>{""}</BlockFooter>
+        <BlockFooter>
+            {!fetched && (
+                <div><p>{__("Loading...", "simplybook")}</p></div>
+            )}
+        </BlockFooter>
     </Block>
   );
 };
