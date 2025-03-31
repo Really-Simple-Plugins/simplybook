@@ -84,7 +84,7 @@ const useSettingsData = () => {
             });
 
             // Do NOT "await" here: it results in showing default settings
-            queryClient.invalidateQueries([getSettingsQueryKey]);
+            queryClient.invalidateQueries({queryKey: [getSettingsQueryKey]});
         },
     });
 
@@ -94,7 +94,7 @@ const useSettingsData = () => {
         getValue,
         setValue,
         isSavingSettings: query?.isLoading,
-        invalidateSettings: () => queryClient.invalidateQueries([getSettingsQueryKey]),
+        invalidateSettings: () => queryClient.invalidateQueries({queryKey: [getSettingsQueryKey]}),
     };
 };
 
