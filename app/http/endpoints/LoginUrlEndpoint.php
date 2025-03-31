@@ -46,7 +46,7 @@ class LoginUrlEndpoint implements SingleEndpointInterface
     public function registerArguments(): array
     {
         return [
-            'methods' => \WP_REST_Server::CREATABLE,
+            'methods' => \WP_REST_Server::READABLE,
             'callback' => [$this, 'callback'],
         ];
     }
