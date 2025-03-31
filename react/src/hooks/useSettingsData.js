@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import getSettingsFields from "../api/endpoints/getSettingsFields";
-import saveSettingsFields from "../api/endpoints/saveSettings";
+import HttpClient from "../api/requests/HttpClient";
 
 /**
  * Custom hook for managing settings data using Tanstack Query.
@@ -10,6 +10,10 @@ import saveSettingsFields from "../api/endpoints/saveSettings";
  */
 const useSettingsData = () => {
     const queryClient = useQueryClient();
+
+    const getSettingsRoute = 'settings/get';
+    const saveSettingsRoute = 'settings/save';
+    const client = new HttpClient();
 
     const transformData = (data) => {
         //find all items with type===checkbox, and ensure that the value is a boolean
@@ -47,9 +51,8 @@ const useSettingsData = () => {
     const { mutateAsync: saveSettings, isLoading: isSavingSettings } =
         useMutation({
             mutationFn: async (data) => {
-                console.log("saving data", data);
-                let settings = await saveSettingsFields(data);
-                return transformData(settings);
+                let settings = await client.setRoute(saveSettingsRoute).setPayload(data).post();
+                return transformData(settings?.data);
             },
             onSuccess: async (data) => {
                 queryClient.setQueryData(["settings_fields"], (oldData) => {
