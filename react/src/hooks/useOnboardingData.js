@@ -34,6 +34,19 @@ const useOnboardingData = () => {
           type: "checkbox",
           label: __("I agree to the terms and conditions", "simplybook"),
         },
+        {
+          id: "submit",
+          type: "button",
+          label: __("Start registration", "simplybook"),
+          buttonSettings: {
+            showLoader: true, //{disabled}
+            btnVariant: "primary",
+            disabled: true,
+            onClick: () => {
+              beforeSubmit();
+            }
+          },
+        },
       ],
       beforeSubmit: async (data) => {
         console.log("submit email step");
@@ -72,6 +85,8 @@ const useOnboardingData = () => {
         {
           id: "category",
           type: "select",
+          style: "inline",
+          inline_group: true,
           label: __("Business category", "simplybook"),
           options: [
             { value: "3", label: __("Beauty and wellness", "simplybook") },
@@ -91,11 +106,13 @@ const useOnboardingData = () => {
         {
           id: "service",
           type: "text",
+          style: "inline",
           label: __("What service do you provide?", "simplybook"),
         },
         {
           id: "phone",
           type: "text",
+          style: "inline",
           label: __("Phone", "simplybook"),
           validation: {
             regex: "^\\+?[0-9\\s\\-().]+$",
@@ -105,16 +122,19 @@ const useOnboardingData = () => {
         {
           id: "address",
           type: "text",
+          style: "inline",
           label: __("Address", "simplybook"),
         },
         {
           id: "zip",
           type: "text",
+          style: "inline",
           label: __("Postal Code", "simplybook"),
         },
         {
           id: "city",
           type: "text",
+          style: "inline",
           label: __("City", "simplybook"),
         },
         {
@@ -127,6 +147,19 @@ const useOnboardingData = () => {
             { value: "BE", label: __("Belgium", "simplybook") },
             { value: "US", label: __("United States", "simplybook") },
           ],
+        },
+        {
+          id: "submit",
+          type: "button",
+          label: __("Next Step: Styling", "simplybook"),
+          buttonSettings: {
+            showLoader: true, //{disabled}
+            btnVariant: "primary",
+            disabled: true,
+            onClick: () => {
+              beforeSubmit();
+            }
+          },
         },
       ],
       beforeSubmit: async (data) => {
