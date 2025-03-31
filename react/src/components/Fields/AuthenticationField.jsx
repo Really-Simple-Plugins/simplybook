@@ -25,7 +25,9 @@ const AuthenticationField = forwardRef(
         const handleLogoutClick = async (e) => {
             e.preventDefault();
 
-            const confirmed = window.confirm(__("Are you sure you want to logout?", "simplybook"));
+            const confirmed = window.confirm(
+                __("Are you sure you want to logout? All settings will be lost.", "simplybook")
+            );
             if (!confirmed) {
                 return;
             }
