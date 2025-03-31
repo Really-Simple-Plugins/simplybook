@@ -78,7 +78,7 @@ const useSettingsData = () => {
             return transformData(settings?.data);
         },
         // Mutate current settings to show updated values
-        onSuccess: async (data) => {
+        onSuccess: (data) => {
             queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
                 return data ? [...data] : [];
             });
