@@ -30,7 +30,7 @@ const FieldWrapper = memo(({
 }: FieldWrapperProps) => {
 
   const wrapperClasses = [
-    "flex w-full flex-col",
+    "flex flex-col",
     className,
     "mb-4"
   ].filter(Boolean).join(" ");
@@ -39,6 +39,7 @@ const FieldWrapper = memo(({
     "flex w-full flex-col",
     reverseLabel ? "flex-col-reverse" : ""
   ].filter(Boolean).join(" ");
+
   return (
     <div className={wrapperClasses}>
       <div className={contentClasses}>
