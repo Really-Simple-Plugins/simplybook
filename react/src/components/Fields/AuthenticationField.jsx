@@ -3,7 +3,7 @@ import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
 import ButtonField from "./ButtonField";
 import { __ } from "@wordpress/i18n";
-import request from "../../api/requests/request";
+import HttpClient from "../../api/requests/HttpClient";
 
 /**
  * AuthenticationField component
@@ -20,6 +20,8 @@ const AuthenticationField = forwardRef(
     ({ setting, fieldState, label, help, context, className, ...props }, ref) => {
         const inputId = setting.id;
 
+        const client = new HttpClient('logout');
+
         const handleLogoutClick = async (e) => {
             e.preventDefault();
 
@@ -28,9 +30,11 @@ const AuthenticationField = forwardRef(
                 return;
             }
 
-            const response = await request("logout");
-            if (!response) {
-                return console.error("Logout failed");
+            try {
+                await client.post();
+            } catch (error) {
+                console.error("Logout request failed", error);
+                return;
             }
 
             window.location.href = "/wp-admin/admin.php?page=simplybook";

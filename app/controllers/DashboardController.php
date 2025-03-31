@@ -26,6 +26,7 @@ class DashboardController implements ControllerInterface
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
 
     }
 
@@ -77,44 +78,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $logoUrl = App::env('plugin.assets_url').'img/logo.svg';
-        $navigation = $this->getNavigationItems();
-
-        $this->render('admin/dashboard', compact('logoUrl', 'navigation'));
-    }
-
-    /**
-     * Get the default navigation items for the dashboard.
-     * @internal This is solely used in the skeleton view!
-     * @uses apply_filters simplybook_dashboard_menu_items
-     */
-    private function getNavigationItems(): array
-    {
-        $menuItems = [
-            [
-                'title' => esc_html__('Dashboard', 'simplybook'),
-            ],
-            [
-                'title' => esc_html__('Clients 0', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-            [
-                'title' => esc_html__('Calendar 0', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-            [
-                'title' => esc_html__('Settings', 'simplybook'),
-                'classes' => 'ml-2',
-            ],
-        ];
-
-        /**
-         * Filter: simplybook_dashboard_menu_items
-         * Can be used to add or remove menu items from the dashboard.
-         * @param array $menuItems
-         * @return array
-         */
-        return apply_filters('simplybook_dashboard_menu_items', $menuItems);
+        $this->render('admin/dashboard');
     }
 
     /**
@@ -241,20 +205,21 @@ class DashboardController implements ControllerInterface
             'simplybook_localize_dashboard_script',
             [
                 'nonce' => wp_create_nonce('simplybook_nonce'),
+                'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
+                'rest_namespace' => App::env('http.namespace'),
+                'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
-                // 'is_onboarding_completed' => $this->onboarding_completed(),
-                'is_onboarding_completed' => false,
+                'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
-                // 'completed_step' => get_option('simplybook_completed_step', 0),
-                'completed_step' => 0,
-                'tips_and_tricks' => App::env('simplybook.tips_and_tricks'),
+                'completed_step' => get_option('simplybook_completed_step', 0),
+                'simplybook_domains' => App::env('simplybook.domains'),
             ]
         );
     }

@@ -9,7 +9,6 @@ final class App
 {
     private static Dot $env;
     private static Dot $menus;
-    private static Dot $tasks;
     private static Dot $fields;
     private static Dot $related;
     private static Dot $features;
@@ -84,27 +83,6 @@ final class App
     }
 
     /**
-     * Static method to get tasks config for this plugin. Method ensures loading
-     * is only done once and just in time.
-     *
-     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-     * @return mixed
-     * @throws \LogicException If the method is called before the init hook
-     */
-    public static function tasks(?string $key = null)
-    {
-        if (doing_action('init') === false && did_action('init') === false) {
-            throw new \LogicException('Tasks can only be accessed after the init hook due to the use of translations.');
-        }
-
-        if (empty(self::$tasks)) {
-            self::$tasks = self::dotFromPath(dirname(__FILE__, 2).'/config/tasks.php');
-        }
-
-        return (empty($key) ? self::$tasks : self::$tasks->get($key));
-    }
-
-    /**
      * Static method to get fields config for this plugin. Method ensures loading
      * is only done once and just in time.
      *
@@ -115,7 +93,7 @@ final class App
     public static function fields(?string $key = null)
     {
         if (doing_action('init') === false && did_action('init') === false) {
-            throw new \LogicException('Tasks can only be accessed after the init hook due to the use of translations.');
+            throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
         }
 
         if (empty(self::$fields)) {

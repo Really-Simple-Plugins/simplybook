@@ -14,7 +14,15 @@ import Icon from "../Common/Icon";
  * @return {JSX.Element}
  */
 const ButtonField = forwardRef(
-  ({ setting, label, help, context, className, ...props }, ref) => {
+  ({ 
+    setting, 
+    label, 
+    help, 
+    context, 
+    className, 
+    button, 
+    ...props 
+  }, ref) => {
     return (
       <FieldWrapper
         label=""
@@ -23,7 +31,13 @@ const ButtonField = forwardRef(
         className={className}
         inputId=""
       >
-        <ButtonInput {...props}>
+        <ButtonInput 
+          btnVariant={button?.btnVariant}
+          disabled={button?.disabled}
+          showLoader={button?.showLoader}
+          onClick={button?.onClick}
+          {...props}
+        >
             {props.showLoader && <Icon color="white" name="spinner" size="1x" className="mr-2" />}
           {label}
         </ButtonInput>

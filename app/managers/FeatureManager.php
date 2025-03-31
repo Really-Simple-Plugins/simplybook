@@ -9,8 +9,7 @@ final class FeatureManager
     /**
      * Register and load all features from the src/features directory. This
      * method automatically loads all classes from the features directory and
-     * injects the Service and Repository classes into the Controller class if
-     * they exist.
+     * injects the dependency classes into the Controller class if they exist.
      * @uses do_action simplybook_features_loaded
      */
     public function registerFeatures(array $features)
@@ -25,16 +24,20 @@ final class FeatureManager
                 continue;
             }
 
+            // Check if the feature directory exists
             $featuresPath = $this->getFeaturePath($featureName, $needsPro);
             if (!is_dir($featuresPath)) {
                 continue;
             }
 
             // Load all classes from the feature directory
-            foreach (glob($featuresPath . '*.php') as $file) {
-                require_once $file;
+            $priorityFiles = ($settings['priorityFiles'] ?? []);
+            $loaded = $this->loadAllFeatureFiles($featuresPath, $priorityFiles);
+            if ($loaded === false) {
+                continue;
             }
 
+            // Get the feature namespace
             $prefix = $this->getFeatureNamespace($featureName, $needsPro) . $featureName;
 
             // The controller is the backbone of a feature
@@ -54,7 +57,7 @@ final class FeatureManager
             // Reject all given feature Controllers when they do not implement
             // the FeatureInterface
             if (!$instance instanceof FeatureInterface) {
-                return;
+                continue;
             }
 
             $instance->register();
@@ -95,7 +98,7 @@ final class FeatureManager
             $fullClassName = $featureNamespace . $dependency;
 
             // if $dependency starts with a backslash, it's a fully qualified
-            // class name and we can instantiate it directly
+            // class name, and we can instantiate it directly
             if ($dependency[0] === '\\') {
                 $fullClassName = $dependency;
             }
@@ -106,5 +109,32 @@ final class FeatureManager
 
             return new $fullClassName();
         }, $dependencies);
+    }
+
+    /**
+     * Load all files for the current feature from the given directory. This
+     * method will even load files from subdirectories.
+     */
+    private function loadAllFeatureFiles(string $directory, array $priorityFiles = []): bool
+    {
+        if (!is_dir($directory)) {
+            return false;
+        }
+
+        if (!empty($priorityFiles)) {
+            foreach ($priorityFiles as $priorityFile) {
+                require_once trailingslashit($directory) . $priorityFile . '.php';
+            }
+        }
+
+        $recursivelyFoundFilesInDirectory = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
+        );
+
+        foreach ($recursivelyFoundFilesInDirectory as $file) {
+            require_once $file->getPathname();
+        }
+
+        return true;
     }
 }

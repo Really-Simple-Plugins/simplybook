@@ -17,7 +17,7 @@ class FeatureHelper
      */
     public static function isEnabled(string $feature): bool
     {
-        $method = 'is' . ucwords($feature, '_') . 'Enabled';
+        $method = 'is' . str_replace('_', '', ucwords($feature, '_')) . 'Enabled';
         if (method_exists(__CLASS__, $method)) {
             return self::$method();
         }
@@ -30,5 +30,13 @@ class FeatureHelper
     private static function isOnboardingEnabled(): bool
     {
         return get_option('simplybook_onboarding_completed', false) === false;
+    }
+
+    /**
+     * TaskManagement feature is enabled when the onboarding is completed.
+     */
+    private static function isTaskManagementEnabled(): bool
+    {
+        return get_option('simplybook_onboarding_completed', false);
     }
 }

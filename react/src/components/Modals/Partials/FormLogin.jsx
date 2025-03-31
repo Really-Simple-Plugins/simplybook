@@ -1,0 +1,181 @@
+import { __ } from "@wordpress/i18n";
+import { useForm, Controller, set } from "react-hook-form";
+import TextField from "../../Fields/TextField";
+import SelectField from "../../Fields/SelectField";
+import ButtonInput from "../../Inputs/ButtonInput";
+
+// API IMPORTS
+import apiFetch from "@wordpress/api-fetch";
+import glue from "../../../api/helpers/glue";
+import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
+
+const formLogin = ({
+    onClose,
+    setRequire2fa,
+    setAuthSessionId,
+    setCompanyLogin,
+    setUserLogin,
+    setTwoFaProviders,
+    setDomain,
+    domain,
+}) => {
+        /**
+         * We use React Hook Form to handle client-side validation for the main login
+        */
+        const { control, register, handleSubmit, formState: { errors, isValid }, watch } = useForm({
+            mode: "onChange",
+            defaultValues: {
+                company_domain: domain,
+                company_login: "",
+                user_login: "",
+                user_password: ""
+            }
+        });
+
+        // Update how we watch the fields
+        const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
+
+        // Set the button disabled state
+        const setDisabled = (
+            watchFields.every((field) => field && field.trim() !== "") === false
+        );
+
+        /**
+         * Sends the filled in form data to the api to log the user
+         */
+        const submitForm = handleSubmit((data) => {
+            const formData = {
+                company_domain: domain,
+                company_login: data?.company_login,
+                user_login: data?.user_login,
+                user_password: data?.user_password
+            };
+
+            logUserIn(formData);
+        });
+
+        /**
+         * Checks if the filled input credentials comply and sends an API call to SimplyBook
+         */
+        const logUserIn = async (formData) => {
+            try {
+                let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
+                let data = { ...formData, nonce: NONCE };
+
+                let response = await apiFetch({
+                    path,
+                    method: "POST",
+                    data
+                });
+
+                if (response.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
+
+                    setAuthSessionId(response.data.auth_session_id);
+                    setCompanyLogin(response.data.company_login);
+                    setUserLogin(response.data.user_login);
+                    setDomain(response.data.domain);
+                    setTwoFaProviders(response.data.allowed2fa_providers);
+
+                    setRequire2fa(true);
+
+                    return;
+                }
+
+                window.location.href = "/wp-admin/admin.php?page=simplybook";
+
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+    return (
+        <>
+            <form className="flex flex-col relative" onSubmit={submitForm}>
+                <Controller
+                    name="company_domain"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => (
+                        <SelectField
+                            {...field}
+                            fieldState={fieldState}
+                            label={__("Company domain", "simplybook")}
+                            setting="company_domain"
+                            options={SIMPLYBOOK_DOMAINS}
+                            value={field.value} // Bind the value to the field value
+                            onChange={(e) => {
+                                const selectedValue = e.target.value; // Get the selected value
+                                setDomain(selectedValue); // Update local state
+                                field.onChange(selectedValue); // Update form state
+                            }}
+                        />
+                    )}
+                />
+                <Controller
+                    name="company_login"
+                    control={control}
+                    rules={{ required: "Login needed" }}
+                    render={({ field, fieldState }) => (
+                        <TextField
+                            {...field}
+                            fieldState={fieldState}
+                            label={__("Company login", "simplybook")}
+                            setting="company_login"
+                            type="text"
+                            placeholder={__("Company login", "simplybook")}
+                        />
+                    )}
+                />
+
+                <Controller
+                    name="user_login"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => (
+                        <TextField
+                            {...field}
+                            fieldState={fieldState}
+                            label={__("Email", "simplybook")}
+                            setting="email"
+                            type="email"
+                            placeholder={__("Email", "simplybook")}
+                        />
+                    )}
+                />
+
+                <Controller
+                    name="user_password"
+                    control={control}
+                    rules={{ required: true }}
+                    render={({ field, fieldState }) => (
+                        <TextField
+                            {...field}
+                            fieldState={fieldState}
+                            label={__("Password", "simplybook")}
+                            setting="password"
+                            type="password"
+                            placeholder={__("Password", "simplybook")}
+                        />
+                    )}
+                />
+                <ButtonInput
+                    className="mt-4 mb-4"
+                    btnVariant="primary"
+                    type="submit"
+                    disabled={setDisabled}
+                >
+                    {__("Submit", "simplybook")}
+                </ButtonInput>
+                <ButtonInput
+                    btnVariant="secondary"
+                    type="button"
+                    onClick={onClose}
+                >
+                    {__("Close", "simplybook")}
+                </ButtonInput>
+            </form>
+        </>
+    );
+}
+
+export default formLogin;

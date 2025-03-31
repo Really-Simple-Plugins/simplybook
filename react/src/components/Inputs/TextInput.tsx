@@ -11,7 +11,7 @@ interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
  * @returns {JSX.Element} The rendered input element
  */
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
-    ({ type = "text", className, clickToSelect, ...props }, ref) => {
+    ({ name, placeholder, type, className, clickToSelect, ...props }, ref) => {
         const [copiedFeedback, setCopiedFeedback] = React.useState("");
         const handleClick = (event: React.MouseEvent<HTMLInputElement>) => {
             if (clickToSelect) {
@@ -28,9 +28,11 @@ const TextInput = forwardRef<HTMLInputElement, TextInputProps>(
         return (
             <>
                 <input
+                    name={name}
+                    placeholder={placeholder}
                     ref={ref}
                     type={type}
-                    className={`w-full rounded-md p-[0.5rem] shadow-md text-base border-2 border-gray-200 focus:border-tertiary focus:outline-hidden focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ${className || ""}`}
+                    className={`input-base p-[0.5rem] shadow-md text-base border-2 border-gray-200 focus:border-tertiary focus:outline-hidden focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ${className || ""}`}
                     onClick={handleClick}
                     {...props}
                 />
