@@ -5,6 +5,10 @@ import {useEffect, useRef, useState} from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSettingsData from "../../hooks/useSettingsData";
+import LeftColumn from "../../components/Grid/LeftColumn";
+import RightColumn from "../../components/Grid/RightColumn";
+import VideoFrame from "../../components/Media/VideoFrame";
+
 const path = "/onboarding/confirm-email";
 
 export const Route = createLazyFileRoute(path)({
@@ -70,28 +74,38 @@ export const Route = createLazyFileRoute(path)({
 
         return (
             <>
-                <OnboardingStep
-                    path={path}
-                    title={__("Confirm your e-mail address", "simplybook")}
-                    customHtml={<div id="recaptcha_container" className="mt-4" ref={recaptchaContainerRef}></div>    }
-                    subtitle={__("Type in the code from the e-mail you received.", "simplybook")}
-                    bottomText={__(
-                        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut",
-                        "simplybook"
-                    )}
-                    rightColumn={
-                        <div className="relative w-full aspect-w-16 aspect-h-9">
-                            <iframe
-                                className="absolute inset-0 w-full h-full"
-                                src="https://www.youtube.com/embed/qgMn9dKJAt4"
-                                title="How to get started with SimplyBook.me"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                referrerPolicy="strict-origin-when-cross-origin"
-                            ></iframe>
-                        </div>
-                    }
-                />
+                <LeftColumn className={"flex flex-col justify-center col-span-6"}>
+                    <div className={"text-center"}>
+                        <h2 className={"mt-2 text-lg font-light text-black"}>
+                        {__("Lets get you verified!", "simplybook")}
+                        </h2>
+                        <h1 className={"text-3xl font-semibold text-black mb-4"}>
+                        {__("Fill in the authentication code sent in your email", "simplybook")}
+                        </h1>
 
+                    </div>  
+                    <OnboardingStep path={path} />
+                </LeftColumn>
+                <RightColumn className={"flex flex-col justify-center col-span-6"}>
+                    <div className="flex flex-col items-center pb-4">
+                        <VideoFrame
+                        FrameWrapperClass="h-full w-full aspect-w-16 aspect-h-9 mb-8"
+                        className="w-full h-full"
+                        src="https://www.youtube.com/embed/qgMn9dKJAt4"
+                        title="How to get started with SimplyBook.me"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        refPolicy="strict-origin-when-cross-origin"
+                        />
+                        <div className="text-center flex flex-col items-center">
+                        <h1 className="m-0 mb-4 text-2xl">
+                            {__("SimplyBook.me fits seamlessly into your business", "simplybook")}
+                            </h1>
+                        <small className="text-lg text-gray-400 w-3/4">
+                            {__("It’s easy to keep your appointments in sync with the apps and plugins you need.", "simplybook")}
+                        </small>
+                        </div>
+                    </div>
+                </RightColumn>
             </>
         );
     },
