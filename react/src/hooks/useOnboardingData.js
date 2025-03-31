@@ -34,19 +34,6 @@ const useOnboardingData = () => {
           type: "checkbox",
           label: __("I agree to the terms and conditions", "simplybook"),
         },
-        {
-          id: "submit",
-          type: "button",
-          label: __("Start registration", "simplybook"),
-          buttonSettings: {
-            showLoader: true, //{disabled}
-            btnVariant: "primary",
-            disabled: true,
-            onClick: () => {
-              beforeSubmit();
-            }
-          },
-        },
       ],
       beforeSubmit: async (data) => {
         console.log("submit email step");
@@ -148,19 +135,6 @@ const useOnboardingData = () => {
             { value: "US", label: __("United States", "simplybook") },
           ],
         },
-        {
-          id: "submit",
-          type: "button",
-          label: __("Next Step: Styling", "simplybook"),
-          buttonSettings: {
-            showLoader: true, //{disabled}
-            btnVariant: "primary",
-            disabled: true,
-            onClick: () => {
-              beforeSubmit();
-            }
-          },
-        },
       ],
       beforeSubmit: async (data) => {
         console.log("submit information check step");
@@ -183,19 +157,6 @@ const useOnboardingData = () => {
           id: "confirmation-code",
           type: "text",
           label: __("Confirmation Code", "simplybook"),
-        },
-        {
-          id: "submit",
-          type: "button",
-          label: __("Verify Email", "simplybook"),
-          buttonSettings: {
-            showLoader: true, //{disabled}
-            btnVariant: "primary",
-            disabled: true,
-            onClick: () => {
-              beforeSubmit();
-            }
-          },
         },
       ],
       beforeSubmit: async (data) => {
