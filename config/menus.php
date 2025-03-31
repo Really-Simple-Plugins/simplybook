@@ -12,10 +12,6 @@ return [
                 'id' => 'authentication',
                 'title' => __('Authentication', 'simplybook'),
             ],
-            [
-                'id' => 'widgets',
-                'title' => __('Widgets', 'simplybook'),
-            ],
         ],
     ],
     'providers' => [
@@ -33,6 +29,10 @@ return [
             [
                 'id' => 'design',
                 'title' => __('Design', 'simplybook'),
+            ],
+            [
+                'id' => 'widget',
+                'title' => __('Widget', 'simplybook'),
             ],
             [
                 'id' => 'palettes',
