@@ -3,22 +3,6 @@ defined( 'ABSPATH' ) or die( );
 
 return
     [
-        'booking_page' => [
-            'id'       => 'booking_page',
-            'menu_id'  => 'general',
-            'group_id' => 'content',
-            'type'     => 'select',
-            'label'    => __('Booking page', 'simplybook'),
-            'default'  => true,
-        ],
-        'calendar_page' => [
-            'id'       => 'calendar_page',
-            'menu_id'  => 'general',
-            'group_id' => 'content',
-            'type'     => 'select',
-            'label'    => __('Calendar page', 'simplybook'),
-            'default'  => true,
-        ],
         'calendar_shortcode' => [
             'id'       => 'calendar_shortcode',
             'menu_id'  => 'general',
