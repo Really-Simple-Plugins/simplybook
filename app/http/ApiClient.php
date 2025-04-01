@@ -21,6 +21,8 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
+    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
+
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
@@ -106,9 +108,12 @@ class ApiClient
      *
      * @return string
      */
-    protected function endpoint( string $path, string $companyDomain = '' ): string {
+    protected function endpoint( string $path, string $companyDomain = '' ): string
+    {
+        $fallbackDomain = ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
+
         $base = 'https://user-api-v2.';
-        $domain = $companyDomain ?: $this->get_option('domain');
+        $domain = $companyDomain ?: $fallbackDomain;
 
         return $base . $domain . '/' . $path;
     }
@@ -502,22 +507,22 @@ class ApiClient
             return new ApiResponseDTO( false, __('Too many attempts, please try again later.', 'simplybook') );
         }
 
-        $email = sanitize_email( $this->get_option('email') );
+        $email = sanitize_email( $this->get_company('email') );
         $callback_url = $this->generate_callback_url();
-        $category = (int) $this->get_option('category');
+        $category = (int) $this->get_company('category');
         $category =  $category < 1 ? 8 : $category; //default other category
         $random_password = wp_generate_password( 24, false );
-        $company_name = sanitize_text_field( $this->get_option('company_name') );
+        $company_name = sanitize_text_field( $this->get_company('company_name') );
         //strip off
         //get a description using the WordPress get_bloginfo function
         $description = $this->get_description();
-        $phone = sanitize_text_field( $this->get_option('phone') );
-        $city = sanitize_text_field( $this->get_option('city') );
-        $address = sanitize_text_field( $this->get_option('address') );
-        $service = sanitize_text_field( $this->get_option('service') );
-        $country = $this->sanitize_country( $this->get_option('country') );
+        $phone = sanitize_text_field( $this->get_company('phone') );
+        $city = sanitize_text_field( $this->get_company('city') );
+        $address = sanitize_text_field( $this->get_company('address') );
+        $service = sanitize_text_field( $this->get_company('service') );
+        $country = $this->sanitize_country( $this->get_company('country') );
         //no spaces allowed in zip
-        $zip = (string) $this->get_option('zip');
+        $zip = (string) $this->get_company('zip');
         $zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
         $company_login = $this->get_company_login();
         error_log("company login $company_login");
