@@ -21,7 +21,6 @@ trait HasWidget
                 $widget_fields[$field['widget_field']][$field['id']] = $this->get_option($field['id']);
             }
         }
-        $widget_fields['is_rtl'] = (int) is_rtl();
 
         if (isset($widget_fields['predefined']) && !is_array($widget_fields['predefined']) ) {
             $widget_fields['predefined'] = [];
