@@ -162,6 +162,7 @@ const useOnboardingData = () => {
       beforeSubmit: async (data) => {
         if (!data.recaptchaToken) {
           console.log("missing recaptchatoken, cancel submit");
+          setApiError(__('Recaptcha is required', 'simplybook'));
           return false;
         }
         console.log("found recaptcha token ", data.recaptchaToken);
