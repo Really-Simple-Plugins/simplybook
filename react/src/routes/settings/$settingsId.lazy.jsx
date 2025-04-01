@@ -9,102 +9,108 @@ import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 
 const useSettingsLoader = (settingsId) => {
-  const menuData = window.simplybook?.settings_menu || [];
-  const settingsData = menuData.find((item) => item.id === settingsId);
+    const menuData = window.simplybook?.settings_menu || [];
+    const settingsData = menuData.find((item) => item.id === settingsId);
 
-  if (!settingsData) {
-    throw new Error("Settings not found");
-  }
-  return { settingsData };
+    if (!settingsData) {
+        throw new Error("Settings not found");
+    }
+    return { settingsData };
 };
 
 // Route Definition
 export const Route = createLazyFileRoute("/settings/$settingsId")({
-  loader: ({ params }) => useSettingsLoader(params.settingsId),
-  component: Settings,
+    loader: ({ params }) => useSettingsLoader(params.settingsId),
+    component: Settings,
 });
 
 // Settings Component
 function Settings() {
-  const { settingsId } = Route.useParams();
-  const { settings, saveSettings } = useSettingsData();
-  const { currentForm } = useSettingsMenu();
+    const { settingsId } = Route.useParams();
+    const { settings, saveSettings } = useSettingsData();
+    const { currentForm } = useSettingsMenu();
 
-  const currentFormFields = useMemo(
-    () => settings.filter((setting) => setting.menu_id === settingsId),
-    [settings, settingsId],
-  );
+    const currentFormFields = useMemo(
+        () => settings.filter((setting) => setting.menu_id === settingsId),
+        [settings, settingsId],
+    );
 
-  const currentFormDefaultValues = useMemo(
-    () => extractFormValuesPerMenuId(settings, settingsId),
-    [settings, settingsId],
-  );
+    const currentFormDefaultValues = useMemo(
+        () => extractFormValuesPerMenuId(settings, settingsId),
+        [settings, settingsId],
+    );
 
-  const currentFormValues = useMemo(
-    () => extractFormValuesPerMenuId(settings, settingsId, "value"),
-    [settings, settingsId],
-  );
+    const currentFormValues = useMemo(
+        () => extractFormValuesPerMenuId(settings, settingsId, "value"),
+        [settings, settingsId],
+    );
 
-  const lastGroup = useMemo(
-    () => currentForm.groups[currentForm.groups.length - 1],
-    [currentForm.groups],
-  );
+    const lastGroup = useMemo(
+        () => currentForm.groups[currentForm.groups.length - 1],
+        [currentForm.groups],
+    );
 
-  // Initialize useForm with default values from the fetched settings data
-  const {
-    handleSubmit,
-    control,
-    reset,
-    formState: { isDirty },
-  } = useForm({
-    defaultValues: currentFormDefaultValues,
-    values: currentFormValues,
-  });
+    const formHasSettings = (currentForm.has_settings ?? true);
 
-  useBlocker({
-    blockerFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
-    condition: isDirty,
-  });
+    // Initialize useForm with default values from the fetched settings data
+    const {
+        handleSubmit,
+        control,
+        reset,
+        formState: { isDirty },
+    } = useForm({
+        defaultValues: currentFormDefaultValues,
+        values: currentFormValues,
+    });
 
-  return (
-    <form>
-      {currentForm.groups?.map((group) => {
-        const isLastGroup = lastGroup.id === group.id;
-        const currentGroupFields = currentFormFields.filter(
-          (field) => field.group_id === group.id,
-        );
+    useBlocker({
+        blockerFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
+        condition: isDirty,
+    });
 
-        return (
-          <SettingsGroupBlock
-            key={group.id}
-            group={group}
-            currentGroupFields={currentGroupFields}
-            control={control}
-            isLastGroup={isLastGroup}
-          />
-        );
-      })}
+    return (
+        <form>
+            {currentForm.groups?.map((group) => {
+                const isLastGroup = lastGroup.id === group.id;
+                const currentGroupFields = currentFormFields.filter(
+                    (field) => field.group_id === group.id,
+                );
 
-      <FormFooter
-        onSubmit={handleSubmit((formData) => {
-          saveSettings(formData).then(() => {
-            reset(currentFormDefaultValues);
-          });
-        })}
-        control={control}
-      />
-    </form>
-  );
+                return (
+                    <SettingsGroupBlock
+                        key={group.id}
+                        group={group}
+                        currentGroupFields={currentGroupFields}
+                        control={control}
+                        isLastGroup={isLastGroup}
+                        formHasSettings={formHasSettings}
+                    />
+                );
+            })}
+
+            {formHasSettings && (
+                <FormFooter
+                    onSubmit={handleSubmit((formData) => {
+                        saveSettings(formData).then(() => {
+                            reset(currentFormDefaultValues);
+                        });
+                    })}
+                    control={control}
+                />
+            )}
+
+        </form>
+    );
 }
 
 const extractFormValuesPerMenuId = (settings, menuId, key = "default") => {
-  // Extract default values from settings data where menu_id ===  settingsId
-  const formValues = {};
-  settings.forEach((setting) => {
-    if (setting.menu_id === menuId) {
-      formValues[setting.id] = setting[key];
-    }
-  });
+    // Extract default values from settings data where menu_id ===  settingsId
+    const formValues = {};
+    settings.forEach((setting) => {
+        if (setting.menu_id === menuId) {
+            formValues[setting.id] = setting[key];
+        }
+    });
 
-  return formValues;
+    return formValues;
 };
