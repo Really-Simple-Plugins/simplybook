@@ -18,7 +18,7 @@ class LoginUrlService
      */
     public function getDashboardUrl(): string
     {
-        $simplyBookDomain = $this->get_option('domain');
+        $simplyBookDomain = $this->get_domain();
         $simplyBookCompanyPath = App::provide('client')->get_company_login();
         return "https://$simplyBookCompanyPath.secure.$simplyBookDomain/";
     }

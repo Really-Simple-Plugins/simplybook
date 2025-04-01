@@ -21,7 +21,6 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
-    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
 
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
@@ -103,17 +102,11 @@ class ApiClient
 
     /**
      * Build the endpoint
-     *
-     * @param string $path
-     *
-     * @return string
      */
     protected function endpoint( string $path, string $companyDomain = '' ): string
     {
-        $fallbackDomain = ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
-
         $base = 'https://user-api-v2.';
-        $domain = $companyDomain ?: $fallbackDomain;
+        $domain = $companyDomain ?: $this->get_domain();
 
         return $base . $domain . '/' . $path;
     }
