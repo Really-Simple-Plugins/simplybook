@@ -71,6 +71,26 @@ trait LegacyLoad {
     }
 
     /**
+     * Get company
+     *
+     * @param string $key
+     * @param $default
+     * @return mixed
+     */
+    public function get_company(string $key)
+    {
+        global $simplybook_company_cache;
+        if ( !empty($simplybook_company_cache) ) {
+            $company = $simplybook_company_cache;
+        } else {
+            $company = get_option('simplybook_company_data', []);
+            $simplybook_company_cache = $company;
+        }
+
+        return $company[$key] ?? false;
+    }
+
+    /**
      * Decrypt a string
      * @param $encrypted_string
      * @return string
