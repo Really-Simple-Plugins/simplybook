@@ -13,9 +13,9 @@ return [
                 'title' => __('Authentication', 'simplybook'),
             ],
             [
-                'id' => 'widgets',
-                'title' => __('Widgets', 'simplybook'),
-            ],
+                'id' => 'content',
+                'title' => __('Content', 'simplybook'),
+            ]
         ],
     ],
     'providers' => [
@@ -33,6 +33,10 @@ return [
             [
                 'id' => 'design',
                 'title' => __('Design', 'simplybook'),
+            ],
+            [
+                'id' => 'widget',
+                'title' => __('Widget', 'simplybook'),
             ],
             [
                 'id' => 'palettes',
