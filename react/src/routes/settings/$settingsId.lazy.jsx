@@ -50,6 +50,8 @@ function Settings() {
         [currentForm.groups],
     );
 
+    const formHasSettings = (currentForm.has_settings ?? true);
+
     // Initialize useForm with default values from the fetched settings data
     const {
         handleSubmit,
@@ -81,18 +83,22 @@ function Settings() {
                         currentGroupFields={currentGroupFields}
                         control={control}
                         isLastGroup={isLastGroup}
+                        formHasSettings={formHasSettings}
                     />
                 );
             })}
 
-            <FormFooter
-                onSubmit={handleSubmit((formData) => {
-                    saveSettings(formData).then(() => {
-                        reset(currentFormDefaultValues);
-                    });
-                })}
-                control={control}
-            />
+            {formHasSettings && (
+                <FormFooter
+                    onSubmit={handleSubmit((formData) => {
+                        saveSettings(formData).then(() => {
+                            reset(currentFormDefaultValues);
+                        });
+                    })}
+                    control={control}
+                />
+            )}
+
         </form>
     );
 }
