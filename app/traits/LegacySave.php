@@ -119,18 +119,19 @@ trait LegacySave {
      * Save data in the config
      * @param $key
      * @param $value
-     * @return void
+     * @param bool $duringOnboarding Flag to indicate if the update is during
+     * onboarding. If false, stale fields will not be saved.
      */
-    public function update_option($key, $value): void
+    public function update_option($key, $value, bool $duringOnboarding = false): bool
     {
         if ( !$this->user_can_manage() ) {
 			error_log("user cannot manage, exit update_option for $key");
-            return;
+            return false;
         }
 
         // Abort if the setting is marked as stale
-        if (in_array($key, $this->staleFields, true)) {
-            return;
+        if (in_array($key, $this->staleFields, true) && ($duringOnboarding === false)) {
+            return false;
         }
 
         //$pass = '7*w$9pumLw5koJc#JT6';
@@ -145,7 +146,7 @@ trait LegacySave {
         //don't save if not found
         if ( !$field ) {
             error_log("field ".$key." not found in fields config");
-            return;
+            return false;
         }
 
         // todo - usage of sanitize_field is redundant when used as in the OnboardingService
@@ -157,6 +158,7 @@ trait LegacySave {
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);
+        return true;
     }
 
 	/**
