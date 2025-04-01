@@ -15,7 +15,7 @@ export const Route = createLazyFileRoute(path)({
 
     component: () => {
         const {getValue, settings} = useSettingsData();
-        const {setRecaptchaToken,} = useOnboardingData();
+        const {setRecaptchaToken} = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
 
