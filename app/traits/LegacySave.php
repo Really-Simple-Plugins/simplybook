@@ -9,6 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait LegacySave {
     use LegacyLoad;
     use LegacyHelper;
+
+    /**
+     * Fields that are not changeable by the user
+     */
+    private array $staleFields = [
+        'company_login',
+        'calendar_shortcode',
+        'reviews_shortcode',
+        'simplybook_booking_button',
+        'domain',
+        'company_id',
+        'server',
+    ];
+
     /**
      * Get options the old way
      *
@@ -111,6 +125,11 @@ trait LegacySave {
     {
         if ( !$this->user_can_manage() ) {
 			error_log("user cannot manage, exit update_option for $key");
+            return;
+        }
+
+        // Abort if the setting is marked as stale
+        if (in_array($key, $this->staleFields, true)) {
             return;
         }
 
