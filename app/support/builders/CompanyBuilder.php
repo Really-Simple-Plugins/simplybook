@@ -34,55 +34,55 @@ class CompanyBuilder
 
     public function setEmail(string $email): CompanyBuilder
     {
-        $this->email = $email;
+        $this->email = sanitize_email($email);
         return $this;
     }
 
     public function setCategory(int $category): CompanyBuilder
     {
-        $this->category = $category;
+        $this->category = (int) $category;
         return $this;
     }
 
     public function setCompanyName(string $company_name): CompanyBuilder
     {
-        $this->company_name = $company_name;
+        $this->company_name = sanitize_text_field($company_name);
         return $this;
     }
 
     public function setPhone(string $phone): CompanyBuilder
     {
-        $this->phone = $phone;
+        $this->phone = preg_replace('/[^0-9]/', '', $phone);
         return $this;
     }
 
     public function setCity(string $city): CompanyBuilder
     {
-        $this->city = $city;
+        $this->city = sanitize_text_field($city);
         return $this;
     }
 
     public function setAddress(string $address): CompanyBuilder
     {
-        $this->address = $address;
+        $this->address = sanitize_text_field($address);
         return $this;
     }
 
     public function setService(string $service): CompanyBuilder
     {
-        $this->service = $service;
+        $this->service = sanitize_text_field($service);
         return $this;
     }
 
     public function setCountry(string $country): CompanyBuilder
     {
-        $this->country = $country;
+        $this->country = sanitize_text_field($country);
         return $this;
     }
 
     public function setZip(string $zip): CompanyBuilder
     {
-        $this->zip = strtolower(str_replace(' ', '', trim($zip)));
+        $this->zip = strtolower(str_replace(' ', '', trim(sanitize_text_field($zip))));
         return $this;
     }
 
