@@ -562,7 +562,8 @@ class ApiClient
 //					'providers'=>[$provider],
 //					'services'=>[$service],
 					'journey_type' => 'skip_welcome_tour',
-                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+//                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+                    'callback_url' => 'https://webhook.site/e58d0977-2a8e-4a77-8806-238a2191aab2',
                 ]
             ),
         ) );

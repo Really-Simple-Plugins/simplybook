@@ -85,8 +85,8 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 
-        $this->update_option('domain', $storage->getString('domain'));
-        $this->update_option('company_id', $storage->getInt('company_id'));
+        $this->update_option('domain', $storage->getString('domain'), true);
+        $this->update_option('company_id', $storage->getInt('company_id'), true);
 
         // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
         $this->cleanup_callback_url();
