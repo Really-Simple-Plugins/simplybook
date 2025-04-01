@@ -17,6 +17,10 @@ export default function Edit(props) {
 	const [categories, setCategories] = useState([]);
 	const [services, setServices] = useState([]);
 	const [providers, setProviders] = useState([]);
+	const [selectedLocation, setSelectedLocation] = useState(null);
+	const [selectedCategory, setSelectedCategory] = useState(null);
+	const [selectedService, setSelectedService] = useState(null);
+	const [selectedProvider, setSelectedProvider] = useState(null);
 	const [modalContent, setModalContent] = useState('');
 	const previewModal = React.createRef();
 
@@ -46,6 +50,29 @@ export default function Edit(props) {
 	const openPreview = () => setIsPreviewOpen(true);
 	const closePreview = () => setIsPreviewOpen(false);
 
+	useEffect(() => {
+		if (locations.length > 0 && !attributes.location) {
+			setSelectedLocation(
+				locations.find(loc => loc.id === attributes.location)?.name
+			)
+		}
+		if (categories.length > 0 && !attributes.category) {
+			setSelectedCategory(
+				categories.find(cat => cat.id === attributes.category)?.name
+			)
+		}
+		if (services.length > 0 && !attributes.service) {
+			setSelectedService(
+				services.find(serv => serv.id === attributes.service)?.name
+			)
+		}
+		if (providers.length > 0 && !attributes.provider) {
+			setSelectedProvider(
+				providers.find(prov => prov.id === attributes.provider)?.name
+			)
+		}
+	}, [locations, categories, services, providers]);
+
 
 	const saveParameters = () => {
 		setAttributes(attributes);
@@ -64,7 +91,6 @@ export default function Edit(props) {
 
 
 	const previewWidget = () => {
-		console.log('preview');
 		let ajaxUrl = '/wp-admin/admin-ajax.php';
 
 		let formData = new FormData();
@@ -148,24 +174,24 @@ export default function Edit(props) {
 							</p>
 						) : (
 							<>
-								{locations.length > 0 && attributes.location ? (
+								{selectedLocation ? (
 									<p className="wp-sb--p sb-widget-predefined sb-widget-location">
-										{__('Location: ', 'simplybook') + locations.find(loc => loc.id === attributes.location).name}
+										{__('Location: ', 'simplybook') + selectedLocation}
 									</p>
 								) : null}
-								{categories.length > 0 && attributes.category ? (
+								{selectedCategory ? (
 									<p className="wp-sb--p sb-widget-predefined sb-widget-category">
-										{__('Category: ', 'simplybook') + categories.find(cat => cat.id === attributes.category).name}
+										{__('Category: ', 'simplybook') + selectedCategory}
 									</p>
 								) : null}
-								{services.length > 0 && attributes.service ? (
+								{selectedService ? (
 									<p className="wp-sb--p sb-widget-predefined sb-widget-service">
-										{__('Service: ', 'simplybook') + services.find(serv => serv.id === attributes.service).name}
+										{__('Service: ', 'simplybook') + selectedService}
 									</p>
 								) : null}
-								{providers.length > 0 && attributes.provider ? (
+								{selectedProvider ? (
 									<p className="wp-sb--p sb-widget-predefined sb-widget-provider">
-										{__('Provider: ', 'simplybook') + providers.find(prov => prov.id === attributes.provider).name}
+										{__('Provider: ', 'simplybook') + selectedProvider}
 									</p>
 								) : null}
 								<Button

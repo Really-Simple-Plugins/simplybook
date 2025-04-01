@@ -73,6 +73,12 @@ class BlockController implements ControllerInterface
                 'rest_url' => get_rest_url(),
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
+                'x_wp_nonce' => wp_create_nonce('wp_rest'),
+                'rest_namespace' => App::env('http.namespace'),
+                'rest_version' => App::env('http.version'),
+                'site_url' => site_url(),
+                'assets_url' => App::env('plugin.assets_url'),
+                'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
             ]
         );
 
