@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import CalendarLoading from "./CalendarLoading";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useWidgetData from "../../hooks/useWidgetData";
@@ -7,10 +7,12 @@ import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCa
 
 const Calendar = () => {
     const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
+
     const { isSavingSettings, settings } = useSettingsData();
     const { onboardingCompleted } = useOnboardingData();
     const { startPolling, pollingEnabled, isPolling } = useWaitForRegistrationCallback();
     const [isLoadingScript, setIsLoadingScript] = useState(false);
+
     const runInlineScript = async () => {
         let targetObj = document.createElement("script");
         targetObj.id = "simplybook-inline-script";
@@ -28,13 +30,12 @@ const Calendar = () => {
     }
 
     useEffect(() => {
-        if ( pollingEnabled ) {
+        if (pollingEnabled) {
             console.log("polling already enabled, exit");
             return;
         }
         console.log("start polling");
         startPolling();
-
     }, [onboardingCompleted]);
 
     const setupPreview = async () => {
@@ -63,7 +64,7 @@ const Calendar = () => {
         }
     }
 
-    const clearInlineScript =() => {
+    const clearInlineScript = () => {
         const inlineScript = document.head.querySelector('#simplybook-inline-script');
         if (inlineScript) {
             console.log("removing inline script");
@@ -75,14 +76,14 @@ const Calendar = () => {
         console.log("useeffect for preview setup",
             "onboardingcompleted", onboardingCompleted,
             "isSavingSettings", isSavingSettings,
-            "widgetScript.length", widgetScript.length
+            "widgetScript.length", widgetScript?.length
         );
 
         if (!onboardingCompleted) {
             return;
         }
 
-        if (widgetScript.length === 0) {
+        if (!widgetScript || widgetScript.length === 0) {
             return;
         }
 
@@ -103,24 +104,24 @@ const Calendar = () => {
             onboardingCompleted,
         );
 
-        if ( !onboardingCompleted ) {
+        if (!onboardingCompleted) {
             console.log("onboarding not completed, do not reload script");
             return;
         }
 
-        if ( isSavingSettings ) {
+        if (isSavingSettings) {
             console.log("saving settings, do not reload script");
             return;
         }
 
         console.log("invalidate and refetch widget script");
         invalidateAndRefetchWidgetScript();
-    }, [isSavingSettings, onboardingCompleted, settings ]);
+    }, [isSavingSettings, onboardingCompleted, settings]);
 
-    if ( !onboardingCompleted ) {
+    if (!onboardingCompleted) {
         return (
             <CalendarLoading />
-        )
+        );
     }
 
     return (

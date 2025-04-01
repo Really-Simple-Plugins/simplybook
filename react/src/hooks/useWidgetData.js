@@ -7,7 +7,7 @@ const useWidgetData = () => {
     const route = 'get_widget';
     const client = new HttpClient(route);
 
-    const query = useQuery({
+    const {data: response, refetch} = useQuery({
         queryKey: [route],
         queryFn: () => client.get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
@@ -16,13 +16,13 @@ const useWidgetData = () => {
     });
 
     const invalidateAndRefetchWidgetScript = async () => {
-        await queryClient.invalidateQueries({queryKey: [route]}).then(function(response) {
-            query.refetch();
+        queryClient.invalidateQueries({queryKey: [route]}).then(function(response) {
+            return refetch();
         });
     };
 
     return {
-        widgetScript: query?.data?.widget,
+        widgetScript: response?.data?.widget,
         invalidateAndRefetchWidgetScript
     };
 };
