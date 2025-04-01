@@ -120,8 +120,17 @@ const OnboardingStep = ({
     <>
       <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
         <div className={"flex flex-col"}>
-          <form className="flex flex-wrap justify-between gap-4">
+          <form>
             <FormFieldWrapper fields={currentStep.fields} control={control}/>
+            {customHtml}
+            <ButtonField
+                showLoader={disabled}
+                btnVariant="primary"
+                label={primaryButton.label}
+                context={bottomText}
+                disabled={disabled}
+                onClick={handleSubmit((data) => onSubmit(data, "primary"))}
+            />
           </form>
         </div>
         <Error error={apiError}/>

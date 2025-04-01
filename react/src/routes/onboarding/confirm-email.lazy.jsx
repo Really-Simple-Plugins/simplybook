@@ -1,5 +1,5 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
-import { __ } from "@wordpress/i18n";
+import {createLazyFileRoute} from "@tanstack/react-router";
+import {__} from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import {useEffect, useRef, useState} from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
@@ -14,17 +14,15 @@ const path = "/onboarding/confirm-email";
 export const Route = createLazyFileRoute(path)({
 
     component: () => {
-        const { getValue, settings } = useSettingsData();
-
-        const {
-            setRecaptchaToken,
-        } = useOnboardingData();
+        const {getValue, settings} = useSettingsData();
+        const {setRecaptchaToken} = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
 
         useEffect(() => {
             let token = getValue('confirmation-code');
-        }, [ settings ] );
+        }, [settings]);
+
         const setupRecaptcha = async () => {
             //get sitekey first, loading script has to wait.
             let siteKey = await getRecaptchaSiteKey();
@@ -56,7 +54,7 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
-            if ( !recaptchaRendered ) {
+            if (!recaptchaRendered) {
                 console.log("setup recaptcha");
                 setRecaptchaRendered(true);
                 setupRecaptcha();

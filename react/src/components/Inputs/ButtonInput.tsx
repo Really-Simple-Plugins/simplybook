@@ -11,6 +11,8 @@ type ButtonInputProps = {
   };
   btnVariant?: "primary" | "secondary" | "tertiary";
   disabled?: boolean;
+  showLoader?: boolean;
+  size?: "sm" | "md" | "lg";
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
@@ -18,21 +20,23 @@ type ButtonInputProps = {
  * Styled button component
  */
 const ButtonInput: React.FC<ButtonInputProps> = ({
-  className="",
   type,
   children,
   onClick,
   link,
-  btnVariant,
+  btnVariant = "secondary",
   disabled = false,
+ showLoader = false,
+  size = "md",
+  className="",
 }) => {
   let localClassName = clsx(
     // Base styles
     "rounded-full transition-all duration-200 p-4 cursor-pointer",
     {
-      'bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'primary',
-      'bg-tertiary text-white hover:bg-tertiary-dark ' : btnVariant == 'secondary',
-      'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary'
+      'bg-secondary text-white hover:bg-secondary-dark ': btnVariant === 'primary',
+      'bg-tertiary text-white hover:bg-tertiary-dark ': btnVariant === 'secondary',
+      'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant === 'tertiary'
     },
     {
      'opacity-50 cursor-not-allowed ': disabled

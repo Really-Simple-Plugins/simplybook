@@ -70,10 +70,14 @@ return
 			'id'       => 'is_rtl',
 			'menu_id'  => 'design',
 			'group_id' => 'design',
-			'type'     => 'hidden',
-			'label'    => '',
+			'type'     => 'checkbox',
+            'label'    => __('RTL', 'simplybook'),
+            'help'     => sprintf(
+                __('When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL.', 'simplybook'),
+                (is_rtl() ? 'IS' : 'IS NOT'),
+            ),
 			'disabled' => false,
-			'default'  => false,
+			'default'  => is_rtl(),
 			'widget_field'  => '/',
 		],
 		'allow_switch_to_ada' => [
