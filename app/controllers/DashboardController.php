@@ -26,8 +26,18 @@ class DashboardController implements ControllerInterface
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
+    }
 
+    /**
+     * Enqueue the SimplyBook Dashicon style, which makes dashicons-simplybook
+     * available in the admin area. Also used by our Gutenberg block.
+     */
+    public function enqueueSimplyBookDashiconStyle()
+    {
+        $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
+        wp_enqueue_style('simplybook-font', $iconCss);
     }
 
     /**
@@ -55,18 +65,19 @@ class DashboardController implements ControllerInterface
          * Filter: simplybook_menu_position
          * Can be used to change the position of the menu item in the admin menu.
          * @param int $menuPosition
-         * @return int
+         * @return int Default 59 to be positioned after "wp-menu-separator" and
+         * before "Appearance".
          */
-        $menuPosition = apply_filters('simplybook_menu_position', 3);
+        $menuPosition = apply_filters('simplybook_menu_position', 59);
 
         $pageHookSuffix = add_menu_page(
-            esc_html__('Bookings', 'simplybook'),
-            esc_html__('Bookings', 'simplybook'),
+            esc_html__('SimplyBook.me', 'simplybook'),
+            esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
             'simplybook',
             [$this, 'renderReactApp'],
-            'dashicons-calendar-alt',
-            $menuPosition
+            'dashicons-simplybook',
+            $menuPosition,
         );
 
         add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);

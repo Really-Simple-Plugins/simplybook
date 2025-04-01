@@ -89,9 +89,6 @@ class BlockController implements ControllerInterface
         wp_register_style('simplybookMePl_widget_styles', $indexCss);
         wp_enqueue_style('simplybookMePl_widget_styles');
 
-        $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
-        wp_enqueue_style('simplybook-font', $iconCss);
-
         wp_set_script_translations('simplybook-block', 'simplybook');
     }
 
