@@ -7,6 +7,7 @@ return [
     'general' => [
         'id' => 'general',
         'title' => __('General', 'simplybook'),
+        'has_settings' => false,
         'groups' => [
             [
                 'id' => 'authentication',
