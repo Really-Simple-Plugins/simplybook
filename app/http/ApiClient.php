@@ -21,14 +21,15 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
-
+    protected JsonRpcClient $jsonRpcClient;
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
     ];
 
     protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
-    public function __construct()
+
+    public function __construct(JsonRpcClient $client)
     {
         //if we have a token, check if it needs to be refreshed
         if ( !$this->get_token('public') ) {
@@ -42,6 +43,8 @@ class ApiClient
                 $this->refresh_token('admin');
             }
         }
+
+        $this->jsonRpcClient = $client;
 
 //		$recently_loaded = get_transient('simplybook_recently_loaded');
 //		if ( !$recently_loaded ) {
@@ -103,9 +106,9 @@ class ApiClient
     /**
      * Build the endpoint
      */
-    protected function endpoint( string $path, string $companyDomain = '' ): string
+    protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = false): string
     {
-        $base = 'https://user-api-v2.';
+        $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
         $domain = $companyDomain ?: $this->get_domain();
 
         return $base . $domain . '/' . $path;
@@ -1378,6 +1381,27 @@ class ApiClient
         }
 
         return $allowedProviders;
+    }
+
+    /**
+     * Get the list of themes available for the company
+     * @uses \SimplyBook\Http\JsonRpcClient
+     */
+    public function getThemeList(): array
+    {
+        if ($cache = wp_cache_get('simplybook_theme_list', 'simplybook')) {
+            return $cache;
+        }
+
+        $response = $this->jsonRpcClient->setUrl(
+            $this->endpoint('public')
+        )->setHeaders([
+            'X-Company-Login: ' . $this->get_company_login(),
+            'X-User-Token: ' . $this->get_token('public'),
+        ])->getThemeList();
+
+        wp_cache_add('simplybook_theme_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $response;
     }
 
 }
