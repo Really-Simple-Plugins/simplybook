@@ -1404,4 +1404,25 @@ class ApiClient
         return $response;
     }
 
+    /**
+     * Get the timeline setting options that are available for the company
+     * @uses \SimplyBook\Http\JsonRpcClient
+     */
+    public function getTimelineList(): array
+    {
+        if ($cache = wp_cache_get('simplybook_timeline_list', 'simplybook')) {
+            return $cache;
+        }
+
+        $response = $this->jsonRpcClient->setUrl(
+            $this->endpoint('public')
+        )->setHeaders([
+            'X-Company-Login: ' . $this->get_company_login(),
+            'X-User-Token: ' . $this->get_token('public'),
+        ])->getTimelineList();
+
+        wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $response;
+    }
+
 }
