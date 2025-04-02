@@ -19,7 +19,7 @@ trait LegacyHelper {
      */
     public function user_can_manage(): bool {
 		//during activation, we need to allow access
-	    if ( get_option('simplybook_activating_flag') ) {
+	    if ( get_option('simplybook_activation_flag') ) {
 		    return true;
 	    }
         if ( defined( 'WP_CLI' ) && WP_CLI ){

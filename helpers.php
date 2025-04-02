@@ -21,7 +21,7 @@ if ( ! function_exists( 'simplybook_has_admin_access' ) ) {
     function simplybook_has_admin_access(): bool
     {
         //during activation, we need to allow access
-        if ( get_option('simplybook_activating_flag') ) {
+        if ( get_option('simplybook_activation_flag') ) {
             return true;
         }
         $wpcli = defined( 'WP_CLI' ) && WP_CLI;
