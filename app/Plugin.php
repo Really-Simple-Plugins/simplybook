@@ -67,7 +67,7 @@ class Plugin
      */
     public function fireActivationHook()
     {
-        if (!get_option('simplybook_activating_flag', false)) {
+        if (get_option('simplybook_activating_flag', false) === false) {
             return;
         }
 
