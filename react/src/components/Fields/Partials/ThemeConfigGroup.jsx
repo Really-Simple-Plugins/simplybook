@@ -1,13 +1,17 @@
 import {forwardRef} from "react";
-import CheckboxField from "../CheckboxField";
-import ColorPickerField from "../ColorPickerField";
-import SelectField from "../SelectField";
-import {__} from "@wordpress/i18n";
+import ThemeConfigGroupItem from "./ThemeConfigGroupItem";
 
 const ThemeConfigGroup = forwardRef(({
-    parentSetting,
-    selectedTheme,
-}, ref) => {
+     control,
+     parentSetting,
+     selectedTheme,
+ }, ref) => {
+
+    const configTypePriority = {
+        'checkbox': 10,
+        'select': 9,
+        'color': 8,
+    };
 
     /**
      * Group the settings by their config_type. This results in color pickers,
@@ -17,20 +21,35 @@ const ThemeConfigGroup = forwardRef(({
      * @type {{}|{}}
      */
     const groupedSettings = Object.entries(selectedTheme?.config).reduce((groups, [setting, config]) => {
+
+        /**
+         * Reject the config if it is not visible or widget support is not
+         * enabled.
+         */
         if (config.is_visible == false || config.widget_support == false) {
             return groups;
         }
 
+        /**
+         * Normalize the color config_types. This will bundle values like:
+         * base_color, color, etc.
+         */
         let configType = config.config_type;
         if (configType.includes('color')) {
             configType = 'color';
         }
 
+        /**
+         * If the configType does not exist yet, create the array container for
+         * it so we can push the config to it later.
+         */
         if (!groups[configType]) {
             groups[configType] = [];
         }
 
-        // Map the values to be translated
+        /**
+         * Map select values to be translated.
+         */
         if (configType === 'select') {
             config.values = Object.entries(config.values).map(([key, value]) => ({
                 key : key,
@@ -39,7 +58,10 @@ const ThemeConfigGroup = forwardRef(({
             }));
         }
 
-        // On an empty label try to translate the config_key
+        /**
+         * Translate the config title. If the config title is not set, use the
+         * config key as the title.
+         */
         if (!config.config_title) {
             config.config_title = (parentSetting?.translations[config.config_key] ?? config.config_key);
         } else {
@@ -50,67 +72,27 @@ const ThemeConfigGroup = forwardRef(({
         return groups;
     }, {});
 
+    /**
+     * Sort the grouped settings by their config_type. This is done by
+     * assigning a priority to each config_type. The higher the priority, the
+     * earlier it will be displayed.
+     * @type {[string, any][]}
+     */
+    const sortedGroupSettings = Object.entries(groupedSettings).sort(([a], [b]) => {
+        return (configTypePriority[b] ?? 0) - (configTypePriority[a] ?? 0);
+    });
+
     return (
         <div className="theme-config">
-            {Object.entries(groupedSettings).sort(([a], [b]) => {
-                const order = {
-                    'checkbox': 10,
-                    'select': 9,
-                    'color': 8,
-                }
-                return (order[b] ?? 0) - (order[a] ?? 0);
-            }).map(([configType, configs]) => (
+            {sortedGroupSettings.map(([configType, configs]) => (
                 <div key={configType} className={`theme-config-group theme-config-group-${configType}`}>
-                    {configs.map((config) => {
-                        if (config.visible == false) {
-                            return null;
-                        }
-
-                        if (config.config_type === 'checkbox') {
-                            return (
-                                <CheckboxField
-                                    key={config.config_key}
-                                    name={"theme_settings[" + config.config_key + "]"}
-                                    id={"theme_settings[" + config.config_key + "]"}
-                                    setting={config}
-                                    label={config.config_title}
-                                    value={config.default_value}
-                                    className="theme-config-field"
-                                />
-                            );
-                        }
-
-                        if (config.config_type === 'base_color' || config.config_type === 'color') {
-                            return (
-                                <ColorPickerField
-                                    key={config.config_key}
-                                    name={"theme_settings[" + config.config_key + "]"}
-                                    id={"theme_settings[" + config.config_key + "]"}
-                                    setting={config}
-                                    label={config.config_title}
-                                    value={config.default_value}
-                                    className="theme-config-field"
-                                />
-                            );
-                        }
-
-                        if (config.config_type === 'select') {
-                            return (
-                                <SelectField
-                                    key={config.config_key}
-                                    name={"theme_settings[" + config.config_key + "]"}
-                                    id={"theme_settings[" + config.config_key + "]"}
-                                    setting={config}
-                                    label={config.config_title}
-                                    value={config.default_value}
-                                    options={config.values}
-                                    className="theme-config-field"
-                                />
-                            );
-                        }
-
-                        return null;
-                    })}
+                    {configs.map((config) => (
+                        <ThemeConfigGroupItem
+                            key={config.config_key}
+                            control={control}
+                            item={config}
+                        ></ThemeConfigGroupItem>
+                    ))}
                 </div>
             ))}
         </div>

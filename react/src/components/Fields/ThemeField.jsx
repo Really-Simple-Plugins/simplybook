@@ -4,18 +4,27 @@ import {useQuery} from "@tanstack/react-query";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import SelectField from "./SelectField";
 import ThemeConfigGroup from "./Partials/ThemeConfigGroup";
+import { Controller } from "react-hook-form";
 
 /**
  * ThemeConfigField component
+ * @param {object} props - Props passed from parent component
+ * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
  * @return {JSX.Element}
  */
-const ThemeField = forwardRef(({ ...props }, ref) => {
-    const { onboardingCompleted } = useOnboardingData();
+const ThemeField = forwardRef(({ control, ...props }, ref) => {
+    const {onboardingCompleted} = useOnboardingData();
     const [selectedTheme, setSelectedTheme] = useState(null);
 
+    /**
+     * Setup HttpClient
+     */
     const route = 'theme_list';
     const client = new HttpClient(route);
 
+    /**
+     * Fetch domain data using React Query
+     */
     const {isLoading, error, data: response} = useQuery({
         queryKey: [route],
         queryFn: () => client.get(),
@@ -24,53 +33,81 @@ const ThemeField = forwardRef(({ ...props }, ref) => {
         enabled: !!onboardingCompleted,
     });
 
+    /**
+     * Set a default theme if none is selected
+     */
     if (!selectedTheme && response?.data?.length > 0) {
         setSelectedTheme(
-            response?.data?.find((theme) => theme.name === props?.setting?.value)
+            response?.data?.find((theme) => theme.name === props?.setting?.default['theme'])
         );
     }
 
+    /**
+     * Show error in the console for easy debugging
+     */
     if (error !== null) {
         console.error('Error fetching domain data:', error.message);
     }
 
-    const onChange = (e) => {
-        const selectedOnChange = response?.data?.find((theme) => theme.name === e.target.value);
-        setSelectedTheme(selectedOnChange);
-    }
-
+    /**
+     * Map the selected theme options to the format required by SelectField
+     */
     const mappedSelectedThemeOptions = response?.data?.map((theme) => ({
         label: theme.title.charAt(0).toUpperCase() + theme.title.slice(1),
         value: theme.name,
         key: theme.id,
     }));
 
+    /**
+     * Handle change event for the SelectField. We set the selected theme based
+     * on the selected value from the dropdown. With the .find method, we
+     * get the selected theme object from the response data instead of just the
+     * theme label/value from the select.
+     */
+    const onChange = (e) => {
+        const selectedOnChange = response?.data?.find((theme) => theme.name === e.target.value);
+        setSelectedTheme(selectedOnChange);
+    }
+
     return (
         <>
-            <SelectField
-                setting={props?.setting}
-                name={"theme_settings[" + props?.setting?.id + "]"}
-                label={props?.setting?.label}
-                help={props?.setting?.help}
-                className="mb-6"
-                options={mappedSelectedThemeOptions}
-                value={selectedTheme?.name ?? props?.setting?.value}
-                onChange={onChange}
-                error={error?.message}
-                required={props?.setting?.required}
-                inputId={props?.setting?.id}
-                disabled={isLoading}
-            >
-            </SelectField>
-
-            {selectedTheme && selectedTheme?.config && (
-                <ThemeConfigGroup
-                    parentSetting={props?.setting}
-                    selectedTheme={selectedTheme}
-                />
+            {error && (
+                <div className="error-message">
+                    {__("Error fetching theme settings. Please try again later.", "simplybook")}
+                </div>
             )}
 
-            <input type="hidden" name="settings_section" value="theme_settings" />
+            {!isLoading && !error && selectedTheme && (
+                <>
+                    <Controller
+                        control={control}
+                        name={`theme_settings.theme`}
+                        defaultValue={selectedTheme?.name || ""}
+                        render={({ field }) => (
+                            <SelectField
+                                {...field}
+                                setting={props?.setting}
+                                options={mappedSelectedThemeOptions}
+                                label={props?.setting?.label}
+                                help={props?.setting?.help}
+                                required={props?.setting?.required}
+                                disabled={isLoading}
+                                onChange={onChange}
+                            />
+                        )}
+                    ></Controller>
+
+                    {selectedTheme?.config && (
+                        <ThemeConfigGroup
+                            control={control}
+                            parentSetting={props?.setting}
+                            selectedTheme={selectedTheme}
+                        />
+                    )}
+
+                    <input type="hidden" name="settings_section" value="theme_settings" />
+                </>
+            )}
         </>
     );
 });
