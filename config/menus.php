@@ -32,17 +32,25 @@ return [
         'title' => __('Design', 'simplybook'),
         'groups' => [
             [
-                'id' => 'design',
-                'title' => __('Design', 'simplybook'),
+                'id' => 'main',
+                'title' => __('Main settings', 'simplybook'),
+            ],
+            [
+                'id' => 'theme',
+                'title' => __('Theme settings', 'simplybook'),
+            ],
+            [
+                'id' => 'colors',
+                'title' => __('Colors', 'simplybook'),
             ],
             [
                 'id' => 'widget',
                 'title' => __('Widget', 'simplybook'),
             ],
-            [
-                'id' => 'palettes',
-                'title' => __('Palettes', 'simplybook'),
-            ],
+//            [
+//                'id' => 'palettes',
+//                'title' => __('Palettes', 'simplybook'),
+//            ],
         ],
     ],
     'notifications' => [

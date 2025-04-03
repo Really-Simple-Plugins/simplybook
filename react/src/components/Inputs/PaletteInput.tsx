@@ -66,18 +66,18 @@ const PaletteInput: React.FC<PaletteInputProps> = ({id, label, colors, onChange,
     console.log("value " ,value);
 
     return (
-        <div onClick={(e) => handleChange()} className={"cursor-pointer"}>
+        <div>
             <p className={"pb-1 font-medium text-black text-md "}>
                 {label}
             </p>
             <div className="flex space-x-2 pb-4">
-                <div className="border border-gray-300 p-2 gap-2 flex">
+                <div className="border border-gray-300 p-2 gap-2 flex cursor-pointer" onClick={(e) => handleChange()}>
                     {actualColors?.map((color, index) => (
                         <div key={index} style={{ backgroundColor: color }} className={"w-20 h-6 border border-gray-300"}></div>
                     ))}
                 </div>
                 <div className="flex items-center space-x-2 cursor-pointer"
-                //     onClick={(e) => setShowPreview && setShowPreview(true)}
+                    onClick={(e) => setShowPreview && setShowPreview(true)}
                 >
                     <Icon name="eye" />
                     <span>{value === id ? __('live','simplybook') : __('preview','simplybook')}</span>

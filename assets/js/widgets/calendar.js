@@ -1,9 +1,8 @@
 function instantiateSimplybookWidget() {
-    console.log("Fired our event listener, instantiating Simplybook widget");
     new SimplybookWidget({
         "widget_type": "iframe",
         "url": "{{ server }}", // Replace with your SimplyBook URL
-        "theme": "{{ theme }}", // Replace with your preferred theme, e.g., "default", "modern"
+        "theme": "{{ theme }}",
         "theme_settings": {
             "is_rtl": "{{ is_rtl }}", // Not right-to-left
             "primary_color": "{{ primary_color }}",
@@ -21,26 +20,24 @@ function instantiateSimplybookWidget() {
             "dark_font_color": "{{ dark_font_color }}",
             "light_font_color": "{{ light_font_color }}",
             "timeline_modern_display": "{{ timeline_modern_display }}",
-            "display_item_mode": "block",
+            "display_item_mode": "{{ display_item_mode }}",
             "timeline_show_end_time": "{{ timeline_show_end_time }}",
             "timeline_hide_unavailable": "{{ timeline_hide_unavailable }}",
             "hide_past_days": "{{ hide_past_days }}",
-            "hide_img_mode": "0",
-            "show_sidebar": "0",
+            "hide_img_mode": "{{ hide_img_mode }}",
+            "show_sidebar": "{{ show_sidebar }}",
             "datepicker_start_weekday": 1
         },
-        "timeline": "modern",
+        "timeline": "{{ timeline_type }}",
         "datepicker": "{{ datepicker }}",
         "is_rtl": "{{ is_rtl }}",
         "app_config": {
-            "clear_session": false,
-            "allow_switch_to_ada": true,
+            "clear_session": "{{ clear_session }}",
+            "allow_switch_to_ada": "{{ allow_switch_to_ada }}",
             "predefined": []
         },
         "container_id": "sbw_z0hg2i"
     });
 }
-
-console.log("Running Simplybook script");
 
 document.addEventListener("DOMContentLoaded", instantiateSimplybookWidget);
