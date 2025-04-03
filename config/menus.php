@@ -40,17 +40,9 @@ return [
                 'title' => __('Theme settings', 'simplybook'),
             ],
             [
-                'id' => 'colors',
-                'title' => __('Colors', 'simplybook'),
-            ],
-            [
                 'id' => 'widget',
                 'title' => __('Widget', 'simplybook'),
             ],
-//            [
-//                'id' => 'palettes',
-//                'title' => __('Palettes', 'simplybook'),
-//            ],
         ],
     ],
     'notifications' => [
