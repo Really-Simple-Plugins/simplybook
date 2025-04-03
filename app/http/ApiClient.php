@@ -1393,6 +1393,21 @@ class ApiClient
             return $cache;
         }
 
+        $fallback = [
+            'created_at_utc' => Carbon::now('UTC')->subDays(3)->toDateTimeString(),
+            'themes' => [],
+        ];
+
+        $cachedOption = get_option('simplybook_cached_theme_list', $fallback);
+        $cachedOptionCreatedAt = Carbon::parse($cachedOption['created_at_utc']);
+        $cachedOptionIsValid = $cachedOptionCreatedAt->isAfter(
+            Carbon::now('UTC')->subDays(2) // Cache is valid for 2 days
+        );
+
+        if ($cachedOptionIsValid) {
+            return $cachedOption;
+        }
+
         $response = $this->jsonRpcClient->setUrl(
             $this->endpoint('public')
         )->setHeaders([
@@ -1400,8 +1415,12 @@ class ApiClient
             'X-User-Token: ' . $this->get_token('public'),
         ])->getThemeList();
 
-        wp_cache_add('simplybook_theme_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
-        return $response;
+        $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
+        $data['themes'] = $response;
+
+        update_option('simplybook_cached_theme_list', $data);
+        wp_cache_add('simplybook_theme_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $data;
     }
 
     /**
@@ -1414,6 +1433,21 @@ class ApiClient
             return $cache;
         }
 
+        $fallback = [
+            'created_at_utc' => Carbon::now('UTC')->subDays(3)->toDateTimeString(),
+            'list' => [],
+        ];
+
+        $cachedOption = get_option('simplybook_cached_timeline_list', $fallback);
+        $cachedOptionCreatedAt = Carbon::parse($cachedOption['created_at_utc']);
+        $cachedOptionIsValid = $cachedOptionCreatedAt->isAfter(
+            Carbon::now('UTC')->subDays(2) // Cache is valid for 2 days
+        );
+
+        if ($cachedOptionIsValid) {
+            return $cachedOption;
+        }
+
         $response = $this->jsonRpcClient->setUrl(
             $this->endpoint('public')
         )->setHeaders([
@@ -1421,6 +1455,10 @@ class ApiClient
             'X-User-Token: ' . $this->get_token('public'),
         ])->getTimelineList();
 
+        $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
+        $data['list'] = $response;
+
+        update_option('simplybook_cached_timeline_list', $data);
         wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
         return $response;
     }
