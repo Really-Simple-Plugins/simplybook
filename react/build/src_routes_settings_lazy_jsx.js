@@ -3768,6 +3768,12 @@ const FormField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue === 1;
   }
+
+  /**
+   * If the field is a self-controlled field, we don't need to use the
+   * Controller from react-hook-form. This is used for fields that are
+   * controlled by the field itself, like the theme field.
+   */
   if (setting?.control === 'self') {
     return /*#__PURE__*/React.createElement(_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, /*#__PURE__*/React.createElement(FieldComponent, _extends({
       className: setting.inline_group ? "inline-flex" : "",
