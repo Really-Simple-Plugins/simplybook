@@ -2939,39 +2939,49 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _CheckboxField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../CheckboxField */ "./src/components/Fields/CheckboxField.js");
-/* harmony import */ var _ColorPickerField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../ColorPickerField */ "./src/components/Fields/ColorPickerField.jsx");
-/* harmony import */ var _SelectField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../SelectField */ "./src/components/Fields/SelectField.jsx");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/i18n */ "@wordpress/i18n");
-/* harmony import */ var _wordpress_i18n__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_i18n__WEBPACK_IMPORTED_MODULE_5__);
-
-
-
+/* harmony import */ var _ThemeConfigGroupItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ThemeConfigGroupItem */ "./src/components/Fields/Partials/ThemeConfigGroupItem.jsx");
 
 
 
 const ThemeConfigGroup = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(9);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(14);
   const {
+    control,
     parentSetting,
     selectedTheme
   } = t0;
   let t1;
+  if ($[0] === Symbol.for("react.memo_cache_sentinel")) {
+    t1 = {
+      "checkbox": 10,
+      "select": 9,
+      "color": 8
+    };
+    $[0] = t1;
+  } else {
+    t1 = $[0];
+  }
+  const configTypePriority = t1;
   let t2;
-  if ($[0] !== parentSetting?.translations || $[1] !== selectedTheme?.config) {
-    let t3;
-    if ($[4] !== parentSetting?.translations) {
-      t3 = (groups, t4) => {
-        const [, config] = t4;
+  let t3;
+  if ($[1] !== control || $[2] !== parentSetting?.translations || $[3] !== selectedTheme?.config) {
+    let t4;
+    if ($[6] !== parentSetting?.translations) {
+      t4 = (groups, t5) => {
+        const [, config] = t5;
         if (config.is_visible == false || config.widget_support == false) {
           return groups;
         }
-        if (!groups[config.config_type]) {
-          groups[config.config_type] = [];
+        let configType = config.config_type;
+        if (configType.includes("color")) {
+          configType = "color";
         }
-        if (config.config_type === "select") {
-          config.values = Object.entries(config.values).map(t5 => {
-            const [key, value] = t5;
+        if (!groups[configType]) {
+          groups[configType] = [];
+        }
+        if (configType === "select") {
+          config.values = Object.entries(config.values).map(t6 => {
+            const [key, value] = t6;
             return {
               key,
               value,
@@ -2984,86 +2994,169 @@ const ThemeConfigGroup = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forw
         } else {
           config.config_title = parentSetting?.translations[config.config_title] ?? config.config_title;
         }
-        groups[config.config_type].push(config);
+        groups[configType].push(config);
         return groups;
       };
-      $[4] = parentSetting?.translations;
-      $[5] = t3;
+      $[6] = parentSetting?.translations;
+      $[7] = t4;
     } else {
-      t3 = $[5];
+      t4 = $[7];
     }
-    const groupedSettings = Object.entries(selectedTheme?.config).reduce(t3, {});
-    t1 = "theme-config";
-    t2 = Object.entries(groupedSettings).map(_temp2);
-    $[0] = parentSetting?.translations;
-    $[1] = selectedTheme?.config;
-    $[2] = t1;
-    $[3] = t2;
+    const groupedSettings = Object.entries(selectedTheme?.config).reduce(t4, {});
+    let t5;
+    if ($[8] === Symbol.for("react.memo_cache_sentinel")) {
+      t5 = (t6, t7) => {
+        const [a] = t6;
+        const [b] = t7;
+        return (configTypePriority[b] ?? 0) - (configTypePriority[a] ?? 0);
+      };
+      $[8] = t5;
+    } else {
+      t5 = $[8];
+    }
+    const sortedGroupSettings = Object.entries(groupedSettings).sort(t5);
+    t2 = "theme-config";
+    let t6;
+    if ($[9] !== control) {
+      t6 = t7 => {
+        const [configType_0, configs] = t7;
+        return /*#__PURE__*/React.createElement("div", {
+          key: configType_0,
+          className: `theme-config-group theme-config-group-${configType_0}`
+        }, configs.map(config_0 => /*#__PURE__*/React.createElement(_ThemeConfigGroupItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          key: config_0.config_key,
+          control: control,
+          item: config_0
+        })));
+      };
+      $[9] = control;
+      $[10] = t6;
+    } else {
+      t6 = $[10];
+    }
+    t3 = sortedGroupSettings.map(t6);
+    $[1] = control;
+    $[2] = parentSetting?.translations;
+    $[3] = selectedTheme?.config;
+    $[4] = t2;
+    $[5] = t3;
   } else {
-    t1 = $[2];
-    t2 = $[3];
+    t2 = $[4];
+    t3 = $[5];
+  }
+  let t4;
+  if ($[11] !== t2 || $[12] !== t3) {
+    t4 = /*#__PURE__*/React.createElement("div", {
+      className: t2
+    }, t3);
+    $[11] = t2;
+    $[12] = t3;
+    $[13] = t4;
+  } else {
+    t4 = $[13];
+  }
+  return t4;
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ThemeConfigGroup);
+
+/***/ }),
+
+/***/ "./src/components/Fields/Partials/ThemeConfigGroupItem.jsx":
+/*!*****************************************************************!*\
+  !*** ./src/components/Fields/Partials/ThemeConfigGroupItem.jsx ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react-compiler-runtime */ "./node_modules/react-compiler-runtime/dist/index.js");
+/* harmony import */ var react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _CheckboxField__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../CheckboxField */ "./src/components/Fields/CheckboxField.js");
+/* harmony import */ var _ColorPickerField__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../ColorPickerField */ "./src/components/Fields/ColorPickerField.jsx");
+/* harmony import */ var _SelectField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../SelectField */ "./src/components/Fields/SelectField.jsx");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_4__);
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
+
+
+
+
+
+
+/**
+ * ThemeConfigGroupItem component
+ * @param {object} props - Props passed from parent component
+ * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
+ * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{readonly control?: *, readonly item?: *}> & React.RefAttributes<unknown>>}
+ */
+const ThemeConfigGroupItem = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_4__.forwardRef)((t0, ref) => {
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(7);
+  const {
+    control,
+    item
+  } = t0;
+  const t1 = `theme_settings.${item.config_key}`;
+  let t2;
+  if ($[0] !== item) {
+    t2 = t3 => {
+      const {
+        field
+      } = t3;
+      if (item.is_visible == false || item.widget_support == false) {
+        return null;
+      }
+      if (item.config_type === "checkbox") {
+        return /*#__PURE__*/React.createElement(_CheckboxField__WEBPACK_IMPORTED_MODULE_1__["default"], _extends({}, field, {
+          setting: item,
+          label: item.config_title,
+          className: "theme-config-field"
+        }));
+      }
+      if (item.config_type.includes("color")) {
+        return /*#__PURE__*/React.createElement(_ColorPickerField__WEBPACK_IMPORTED_MODULE_2__["default"], _extends({}, field, {
+          setting: item,
+          label: item.config_title,
+          className: "theme-config-field"
+        }));
+      }
+      if (item.config_type === "select") {
+        return /*#__PURE__*/React.createElement(_SelectField__WEBPACK_IMPORTED_MODULE_3__["default"], _extends({}, field, {
+          setting: item,
+          label: item.config_title,
+          options: item.values,
+          className: "theme-config-field"
+        }));
+      }
+      return null;
+    };
+    $[0] = item;
+    $[1] = t2;
+  } else {
+    t2 = $[1];
   }
   let t3;
-  if ($[6] !== t1 || $[7] !== t2) {
-    t3 = /*#__PURE__*/React.createElement("div", {
-      className: t1
-    }, t2);
-    $[6] = t1;
-    $[7] = t2;
-    $[8] = t3;
+  if ($[2] !== control || $[3] !== item.default_value || $[4] !== t1 || $[5] !== t2) {
+    t3 = /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_5__.Controller, {
+      control: control,
+      name: t1,
+      defaultValue: item.default_value,
+      render: t2
+    });
+    $[2] = control;
+    $[3] = item.default_value;
+    $[4] = t1;
+    $[5] = t2;
+    $[6] = t3;
   } else {
-    t3 = $[8];
+    t3 = $[6];
   }
   return t3;
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ThemeConfigGroup);
-function _temp(config_0) {
-  if (config_0.visible == false) {
-    return null;
-  }
-  if (config_0.config_type === "checkbox") {
-    return /*#__PURE__*/React.createElement(_CheckboxField__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      key: config_0.config_key,
-      name: "theme_settings[" + config_0.config_key + "]",
-      id: "theme_settings[" + config_0.config_key + "]",
-      setting: config_0,
-      label: config_0.config_title,
-      value: config_0.default_value,
-      className: "theme-config-field"
-    });
-  }
-  if (config_0.config_type === "base_color" || config_0.config_type === "color") {
-    return /*#__PURE__*/React.createElement(_ColorPickerField__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      key: config_0.config_key,
-      name: "theme_settings[" + config_0.config_key + "]",
-      id: "theme_settings[" + config_0.config_key + "]",
-      setting: config_0,
-      label: config_0.config_title,
-      value: config_0.default_value,
-      className: "theme-config-field"
-    });
-  }
-  if (config_0.config_type === "select") {
-    return /*#__PURE__*/React.createElement(_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      key: config_0.config_key,
-      name: "theme_settings[" + config_0.config_key + "]",
-      id: "theme_settings[" + config_0.config_key + "]",
-      setting: config_0,
-      label: config_0.config_title,
-      value: config_0.default_value,
-      options: config_0.values,
-      className: "theme-config-field"
-    });
-  }
-  return null;
-}
-function _temp2(t0) {
-  const [configType, configs] = t0;
-  return /*#__PURE__*/React.createElement("div", {
-    key: configType,
-    className: `theme-config-group theme-config-group-${configType}`
-  }, configs.map(_temp));
-}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ThemeConfigGroupItem);
 
 /***/ }),
 
@@ -3348,6 +3441,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../hooks/useOnboardingData */ "./src/hooks/useOnboardingData.js");
 /* harmony import */ var _SelectField__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SelectField */ "./src/components/Fields/SelectField.jsx");
 /* harmony import */ var _Partials_ThemeConfigGroup__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Partials/ThemeConfigGroup */ "./src/components/Fields/Partials/ThemeConfigGroup.jsx");
+/* harmony import */ var react_hook_form__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-hook-form */ "./node_modules/react-hook-form/dist/index.esm.mjs");
+function _extends() { return _extends = Object.assign ? Object.assign.bind() : function (n) { for (var e = 1; e < arguments.length; e++) { var t = arguments[e]; for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]); } return n; }, _extends.apply(null, arguments); }
+
 
 
 
@@ -3358,46 +3454,52 @@ __webpack_require__.r(__webpack_exports__);
 
 /**
  * ThemeConfigField component
+ * @param {object} props - Props passed from parent component
+ * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
  * @return {JSX.Element}
  */
 const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(30);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(25);
+  let control;
   let props;
   if ($[0] !== t0) {
     ({
+      control,
       ...props
     } = t0);
     $[0] = t0;
-    $[1] = props;
+    $[1] = control;
+    $[2] = props;
   } else {
-    props = $[1];
+    control = $[1];
+    props = $[2];
   }
   const {
     onboardingCompleted
   } = (0,_hooks_useOnboardingData__WEBPACK_IMPORTED_MODULE_3__["default"])();
   const [selectedTheme, setSelectedTheme] = (0,react__WEBPACK_IMPORTED_MODULE_1__.useState)(null);
   let t1;
-  if ($[2] === Symbol.for("react.memo_cache_sentinel")) {
+  if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
     t1 = new _api_requests_HttpClient__WEBPACK_IMPORTED_MODULE_2__["default"]("theme_list");
-    $[2] = t1;
+    $[3] = t1;
   } else {
-    t1 = $[2];
+    t1 = $[3];
   }
   const client = t1;
   let t2;
   let t3;
-  if ($[3] === Symbol.for("react.memo_cache_sentinel")) {
+  if ($[4] === Symbol.for("react.memo_cache_sentinel")) {
     t2 = ["theme_list"];
     t3 = () => client.get();
-    $[3] = t2;
-    $[4] = t3;
+    $[4] = t2;
+    $[5] = t3;
   } else {
-    t2 = $[3];
-    t3 = $[4];
+    t2 = $[4];
+    t3 = $[5];
   }
   const t4 = !!onboardingCompleted;
   let t5;
-  if ($[5] !== t4) {
+  if ($[6] !== t4) {
     t5 = {
       queryKey: t2,
       queryFn: t3,
@@ -3405,10 +3507,10 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
       retry: 0,
       enabled: t4
     };
-    $[5] = t4;
-    $[6] = t5;
+    $[6] = t4;
+    $[7] = t5;
   } else {
-    t5 = $[6];
+    t5 = $[7];
   }
   const {
     isLoading,
@@ -3416,112 +3518,100 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
     data: response
   } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_6__.useQuery)(t5);
   if (!selectedTheme && response?.data?.length > 0) {
-    setSelectedTheme(response?.data?.find(theme => theme.name === props?.setting?.value));
+    setSelectedTheme(response?.data?.find(theme => theme.name === props?.setting?.default.theme));
   }
   if (error !== null) {
     console.error("Error fetching domain data:", error.message);
   }
   let t6;
-  if ($[7] !== response?.data) {
-    t6 = e => {
-      const selectedOnChange = response?.data?.find(theme_0 => theme_0.name === e.target.value);
+  if ($[8] !== response?.data) {
+    t6 = response?.data?.map(_temp);
+    $[8] = response?.data;
+    $[9] = t6;
+  } else {
+    t6 = $[9];
+  }
+  const mappedSelectedThemeOptions = t6;
+  let t7;
+  if ($[10] !== response?.data) {
+    t7 = e => {
+      const selectedOnChange = response?.data?.find(theme_1 => theme_1.name === e.target.value);
       setSelectedTheme(selectedOnChange);
     };
-    $[7] = response?.data;
-    $[8] = t6;
+    $[10] = response?.data;
+    $[11] = t7;
   } else {
-    t6 = $[8];
+    t7 = $[11];
   }
-  const onChange = t6;
-  let t7;
-  if ($[9] !== response?.data) {
-    t7 = response?.data?.map(_temp);
-    $[9] = response?.data;
-    $[10] = t7;
+  const onChange = t7;
+  let t8;
+  if ($[12] !== error) {
+    t8 = error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+      className: "error-message"
+    }, __("Error fetching theme settings. Please try again later.", "simplybook"));
+    $[12] = error;
+    $[13] = t8;
   } else {
-    t7 = $[10];
+    t8 = $[13];
   }
-  const mappedSelectedThemeOptions = t7;
-  const t8 = props?.setting;
-  const t9 = "theme_settings[" + props?.setting?.id + "]";
-  const t10 = props?.setting?.label;
-  const t11 = props?.setting?.help;
-  const t12 = selectedTheme?.name ?? props?.setting?.value;
-  const t13 = error?.message;
-  const t14 = props?.setting?.required;
-  const t15 = props?.setting?.id;
-  let t16;
-  if ($[11] !== isLoading || $[12] !== mappedSelectedThemeOptions || $[13] !== onChange || $[14] !== t10 || $[15] !== t11 || $[16] !== t12 || $[17] !== t13 || $[18] !== t14 || $[19] !== t15 || $[20] !== t8 || $[21] !== t9) {
-    t16 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      setting: t8,
-      name: t9,
-      label: t10,
-      help: t11,
-      className: "mb-6",
-      options: mappedSelectedThemeOptions,
-      value: t12,
-      onChange: onChange,
-      error: t13,
-      required: t14,
-      inputId: t15,
-      disabled: isLoading
-    });
-    $[11] = isLoading;
-    $[12] = mappedSelectedThemeOptions;
-    $[13] = onChange;
-    $[14] = t10;
-    $[15] = t11;
-    $[16] = t12;
-    $[17] = t13;
-    $[18] = t14;
-    $[19] = t15;
-    $[20] = t8;
-    $[21] = t9;
-    $[22] = t16;
-  } else {
-    t16 = $[22];
-  }
-  let t17;
-  if ($[23] !== props?.setting || $[24] !== selectedTheme) {
-    t17 = selectedTheme && selectedTheme?.config && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_Partials_ThemeConfigGroup__WEBPACK_IMPORTED_MODULE_5__["default"], {
+  let t9;
+  if ($[14] !== control || $[15] !== error || $[16] !== isLoading || $[17] !== mappedSelectedThemeOptions || $[18] !== onChange || $[19] !== props?.setting || $[20] !== selectedTheme) {
+    t9 = !isLoading && !error && selectedTheme && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
+      control: control,
+      name: `theme_settings.theme`,
+      defaultValue: selectedTheme?.name || "",
+      render: t10 => {
+        const {
+          field
+        } = t10;
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, field, {
+          setting: props?.setting,
+          options: mappedSelectedThemeOptions,
+          label: props?.setting?.label,
+          help: props?.setting?.help,
+          required: props?.setting?.required,
+          disabled: isLoading,
+          onChange: onChange
+        }));
+      }
+    }), selectedTheme?.config && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_Partials_ThemeConfigGroup__WEBPACK_IMPORTED_MODULE_5__["default"], {
+      control: control,
       parentSetting: props?.setting,
       selectedTheme: selectedTheme
-    });
-    $[23] = props?.setting;
-    $[24] = selectedTheme;
-    $[25] = t17;
-  } else {
-    t17 = $[25];
-  }
-  let t18;
-  if ($[26] === Symbol.for("react.memo_cache_sentinel")) {
-    t18 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
+    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
       type: "hidden",
       name: "settings_section",
       value: "theme_settings"
-    });
-    $[26] = t18;
+    }));
+    $[14] = control;
+    $[15] = error;
+    $[16] = isLoading;
+    $[17] = mappedSelectedThemeOptions;
+    $[18] = onChange;
+    $[19] = props?.setting;
+    $[20] = selectedTheme;
+    $[21] = t9;
   } else {
-    t18 = $[26];
+    t9 = $[21];
   }
-  let t19;
-  if ($[27] !== t16 || $[28] !== t17) {
-    t19 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, t16, t17, t18);
-    $[27] = t16;
-    $[28] = t17;
-    $[29] = t19;
+  let t10;
+  if ($[22] !== t8 || $[23] !== t9) {
+    t10 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, t8, t9);
+    $[22] = t8;
+    $[23] = t9;
+    $[24] = t10;
   } else {
-    t19 = $[29];
+    t10 = $[24];
   }
-  return t19;
+  return t10;
 });
 ThemeField.displayName = "ThemeField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ThemeField);
-function _temp(theme_1) {
+function _temp(theme_0) {
   return {
-    label: theme_1.title.charAt(0).toUpperCase() + theme_1.title.slice(1),
-    value: theme_1.name,
-    key: theme_1.id
+    label: theme_0.title.charAt(0).toUpperCase() + theme_0.title.slice(1),
+    value: theme_0.name,
+    key: theme_0.id
   };
 }
 
@@ -3651,6 +3741,19 @@ const FormField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_5__.memo)(({
   let defaultValue = setting.value || setting.default;
   if (setting.type === "checkbox") {
     defaultValue = defaultValue === "1" || defaultValue === true || defaultValue === 1;
+  }
+  if (setting?.control === 'self') {
+    return /*#__PURE__*/React.createElement(_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, /*#__PURE__*/React.createElement(FieldComponent, _extends({
+      className: setting.inline_group ? "inline-flex" : "",
+      setting: setting,
+      required: setting.required,
+      label: setting.label,
+      disabled: props.settingsIsUpdating || setting.disabled,
+      context: setting.context,
+      help: setting.help,
+      options: setting.options,
+      control: control
+    }, props, fieldComponents[setting.type])));
   }
   return /*#__PURE__*/React.createElement(_Common_ErrorBoundary__WEBPACK_IMPORTED_MODULE_4__["default"], null, /*#__PURE__*/React.createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_15__.Controller, {
     name: setting.id,
