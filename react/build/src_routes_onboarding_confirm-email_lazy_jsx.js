@@ -3163,7 +3163,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
  * @return {JSX.Element}
  */
 const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef)((t0, ref) => {
-  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(25);
+  const $ = (0,react_compiler_runtime__WEBPACK_IMPORTED_MODULE_0__.c)(32);
   let control;
   let props;
   if ($[0] !== t0) {
@@ -3221,53 +3221,76 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
     error,
     data: response
   } = (0,_tanstack_react_query__WEBPACK_IMPORTED_MODULE_6__.useQuery)(t5);
-  if (!selectedTheme && response?.data?.length > 0) {
-    setSelectedTheme(response?.data?.find(theme => theme.name === props?.setting?.default.theme));
+  let t6;
+  if ($[8] !== props?.setting?.default || $[9] !== response || $[10] !== selectedTheme) {
+    t6 = () => {
+      if (!selectedTheme && response?.data?.length > 0) {
+        const defaultTheme = response.data.find(theme => theme.name === props?.setting?.default.theme);
+        setSelectedTheme(defaultTheme);
+      }
+    };
+    $[8] = props?.setting?.default;
+    $[9] = response;
+    $[10] = selectedTheme;
+    $[11] = t6;
+  } else {
+    t6 = $[11];
   }
+  const t7 = props?.setting?.default;
+  let t8;
+  if ($[12] !== response || $[13] !== t7) {
+    t8 = [response, t7];
+    $[12] = response;
+    $[13] = t7;
+    $[14] = t8;
+  } else {
+    t8 = $[14];
+  }
+  (0,react__WEBPACK_IMPORTED_MODULE_1__.useEffect)(t6, t8);
   if (error !== null) {
     console.error("Error fetching domain data:", error.message);
   }
-  let t6;
-  if ($[8] !== response?.data) {
-    t6 = response?.data?.map(_temp);
-    $[8] = response?.data;
-    $[9] = t6;
+  let t9;
+  if ($[15] !== response?.data) {
+    t9 = response?.data?.map(_temp);
+    $[15] = response?.data;
+    $[16] = t9;
   } else {
-    t6 = $[9];
+    t9 = $[16];
   }
-  const mappedSelectedThemeOptions = t6;
-  let t7;
-  if ($[10] !== response?.data) {
-    t7 = e => {
+  const mappedSelectedThemeOptions = t9;
+  let t10;
+  if ($[17] !== response?.data) {
+    t10 = e => {
       const selectedOnChange = response?.data?.find(theme_1 => theme_1.name === e.target.value);
       setSelectedTheme(selectedOnChange);
     };
-    $[10] = response?.data;
-    $[11] = t7;
+    $[17] = response?.data;
+    $[18] = t10;
   } else {
-    t7 = $[11];
+    t10 = $[18];
   }
-  const onChange = t7;
-  let t8;
-  if ($[12] !== error) {
-    t8 = error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
+  const setSelectedThemeOnChange = t10;
+  let t11;
+  if ($[19] !== error) {
+    t11 = error && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("div", {
       className: "error-message"
     }, __("Error fetching theme settings. Please try again later.", "simplybook"));
-    $[12] = error;
-    $[13] = t8;
+    $[19] = error;
+    $[20] = t11;
   } else {
-    t8 = $[13];
+    t11 = $[20];
   }
-  let t9;
-  if ($[14] !== control || $[15] !== error || $[16] !== isLoading || $[17] !== mappedSelectedThemeOptions || $[18] !== onChange || $[19] !== props?.setting || $[20] !== selectedTheme) {
-    t9 = !isLoading && !error && selectedTheme && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
+  let t12;
+  if ($[21] !== control || $[22] !== error || $[23] !== isLoading || $[24] !== mappedSelectedThemeOptions || $[25] !== props?.setting || $[26] !== selectedTheme || $[27] !== setSelectedThemeOnChange) {
+    t12 = !isLoading && !error && selectedTheme && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(react_hook_form__WEBPACK_IMPORTED_MODULE_7__.Controller, {
       control: control,
       name: `theme_settings.theme`,
       defaultValue: selectedTheme?.name || "",
-      render: t10 => {
+      render: t13 => {
         const {
           field
-        } = t10;
+        } = t13;
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_SelectField__WEBPACK_IMPORTED_MODULE_4__["default"], _extends({}, field, {
           setting: props?.setting,
           options: mappedSelectedThemeOptions,
@@ -3275,7 +3298,10 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
           help: props?.setting?.help,
           required: props?.setting?.required,
           disabled: isLoading,
-          onChange: onChange
+          onChange: e_0 => {
+            field.onChange(e_0);
+            setSelectedThemeOnChange(e_0);
+          }
         }));
       }
     }), selectedTheme?.config && /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement(_Partials_ThemeConfigGroup__WEBPACK_IMPORTED_MODULE_5__["default"], {
@@ -3287,27 +3313,27 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
       name: "settings_section",
       value: "theme_settings"
     }));
-    $[14] = control;
-    $[15] = error;
-    $[16] = isLoading;
-    $[17] = mappedSelectedThemeOptions;
-    $[18] = onChange;
-    $[19] = props?.setting;
-    $[20] = selectedTheme;
-    $[21] = t9;
+    $[21] = control;
+    $[22] = error;
+    $[23] = isLoading;
+    $[24] = mappedSelectedThemeOptions;
+    $[25] = props?.setting;
+    $[26] = selectedTheme;
+    $[27] = setSelectedThemeOnChange;
+    $[28] = t12;
   } else {
-    t9 = $[21];
+    t12 = $[28];
   }
-  let t10;
-  if ($[22] !== t8 || $[23] !== t9) {
-    t10 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, t8, t9);
-    $[22] = t8;
-    $[23] = t9;
-    $[24] = t10;
+  let t13;
+  if ($[29] !== t11 || $[30] !== t12) {
+    t13 = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement((react__WEBPACK_IMPORTED_MODULE_1___default().Fragment), null, t11, t12);
+    $[29] = t11;
+    $[30] = t12;
+    $[31] = t13;
   } else {
-    t10 = $[24];
+    t13 = $[31];
   }
-  return t10;
+  return t13;
 });
 ThemeField.displayName = "ThemeField";
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ThemeField);
