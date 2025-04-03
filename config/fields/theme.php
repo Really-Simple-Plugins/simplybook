@@ -9,7 +9,10 @@ return
             'group_id' => 'theme',
             'type'     => 'theme',
             'label'    => __('Theme', 'simplybook'),
-            'default'  => 'default',
+            'control' => 'self',
+            'default'  => [
+                'theme' => 'default',
+            ],
             'translations' => [
                 'flexible_week' => __('Flexible weekly', 'simplybook'),
                 'flexible_provider' => __('Flexible Provider', 'simplybook'),
@@ -29,7 +32,7 @@ return
                 'sb_base_color' => __('Base theme color', 'simplybook'),
                 'Hide unavailable time' => __('Show only available time'),
                 'Hide past days on calendar' => __('Hide unavailable days on calendar'),
-                'Display timeline sidebar' => __('Display calendar layout sidebar (some themes only)'),
+                'Display timeline sidebar' => __('Display calendar layout sidebar'),
                 'Image fit mode' => __('Image scale mode', 'simplybook'),
             ],
         ],
