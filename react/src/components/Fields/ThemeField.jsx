@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from "react";
+import React, { forwardRef, useState, useEffect } from "react";
 import HttpClient from "../../api/requests/HttpClient";
 import {useQuery} from "@tanstack/react-query";
 import useOnboardingData from "../../hooks/useOnboardingData";
@@ -34,13 +34,16 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
     });
 
     /**
-     * Set a default theme if none is selected
+     * Set a default theme if none is selected and response data is available.
      */
-    if (!selectedTheme && response?.data?.length > 0) {
-        setSelectedTheme(
-            response?.data?.find((theme) => theme.name === props?.setting?.default['theme'])
-        );
-    }
+    useEffect(() => {
+        if (!selectedTheme && response?.data?.length > 0) {
+            const defaultTheme = response.data.find(
+                (theme) => theme.name === props?.setting?.default["theme"]
+            );
+            setSelectedTheme(defaultTheme);
+        }
+    }, [response, props?.setting?.default]);
 
     /**
      * Show error in the console for easy debugging
@@ -64,7 +67,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
      * get the selected theme object from the response data instead of just the
      * theme label/value from the select.
      */
-    const onChange = (e) => {
+    const setSelectedThemeOnChange = (e) => {
         const selectedOnChange = response?.data?.find((theme) => theme.name === e.target.value);
         setSelectedTheme(selectedOnChange);
     }
@@ -92,7 +95,10 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
                                 help={props?.setting?.help}
                                 required={props?.setting?.required}
                                 disabled={isLoading}
-                                onChange={onChange}
+                                onChange={(e) => {
+                                    field.onChange(e);
+                                    setSelectedThemeOnChange(e);
+                                }}
                             />
                         )}
                     ></Controller>
