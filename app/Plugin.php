@@ -194,6 +194,7 @@ class Plugin
             new Http\Endpoints\SubscriptionEndpoints(
                 new Services\SubscriptionDataService(),
             ),
+            new Http\Endpoints\PublicThemeListEndpoint(),
         ]);
     }
 
