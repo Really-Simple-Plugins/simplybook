@@ -20,12 +20,18 @@ const ThemeConfigGroup = forwardRef(({
         if (config.is_visible == false || config.widget_support == false) {
             return groups;
         }
-        if (!groups[config.config_type]) {
-            groups[config.config_type] = [];
+
+        let configType = config.config_type;
+        if (configType.includes('color')) {
+            configType = 'color';
+        }
+
+        if (!groups[configType]) {
+            groups[configType] = [];
         }
 
         // Map the values to be translated
-        if (config.config_type === 'select') {
+        if (configType === 'select') {
             config.values = Object.entries(config.values).map(([key, value]) => ({
                 key : key,
                 value: value,
@@ -40,13 +46,20 @@ const ThemeConfigGroup = forwardRef(({
             config.config_title = (parentSetting?.translations[config.config_title] ?? config.config_title);
         }
 
-        groups[config.config_type].push(config);
+        groups[configType].push(config);
         return groups;
     }, {});
 
     return (
         <div className="theme-config">
-            {Object.entries(groupedSettings).map(([configType, configs]) => (
+            {Object.entries(groupedSettings).sort(([a], [b]) => {
+                const order = {
+                    'checkbox': 10,
+                    'select': 9,
+                    'color': 8,
+                }
+                return (order[b] ?? 0) - (order[a] ?? 0);
+            }).map(([configType, configs]) => (
                 <div key={configType} className={`theme-config-group theme-config-group-${configType}`}>
                     {configs.map((config) => {
                         if (config.visible == false) {
