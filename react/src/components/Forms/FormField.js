@@ -84,6 +84,11 @@ const FormField = memo(({ setting, control, ...props } ) => {
         defaultValue = defaultValue === "1" || defaultValue === true || defaultValue===1;
     }
 
+    /**
+     * If the field is a self-controlled field, we don't need to use the
+     * Controller from react-hook-form. This is used for fields that are
+     * controlled by the field itself, like the theme field.
+     */
     if (setting?.control === 'self') {
         return (
             <ErrorBoundary>
