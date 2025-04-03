@@ -13,6 +13,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
 import CopyTextField from "../Fields/CopyTextField";
+import ThemeField from "../Fields/ThemeField";
 
 const fieldComponents = {
   text: TextField,
@@ -26,6 +27,7 @@ const fieldComponents = {
   list:ListField,
   palettes: PalettesField,
   authentication: AuthenticationField,
+  theme: ThemeField,
 };
 
 const FormField = memo(({ setting, control, ...props } ) => {
