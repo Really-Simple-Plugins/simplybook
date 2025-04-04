@@ -10,7 +10,7 @@ function instantiateSimplybookWidget() {
         "app_config": {
             "clear_session": "{{ clear_session }}",
             "allow_switch_to_ada": "{{ allow_switch_to_ada }}",
-            "predefined": []
+            "predefined": "{{ predefined }}",
         },
         "container_id": "sbw_z0hg2i_calendar"
     });

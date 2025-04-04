@@ -7,7 +7,7 @@ let widget = new SimplybookWidget({
     "datepicker": "{{ datepicker }}",
     "is_rtl": "{{ is_rtl }}",
     "app_config": {
-        "predefined": []
+        "predefined": "{{ predefined }}",
     },
     "reviews_count": "{{ reviews_count }}",
     "hide_add_reviews": "{{ hide_add_reviews }}",

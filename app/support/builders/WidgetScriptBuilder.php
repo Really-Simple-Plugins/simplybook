@@ -28,8 +28,6 @@ class WidgetScriptBuilder
         'service'
     ];
 
-    protected string $fallbackAttribute = 'location';
-
     /**
      * Build the widget based on the given type, settings and attributes
      * @throws BuilderException
@@ -126,19 +124,15 @@ class WidgetScriptBuilder
             $attributes = array_change_key_case($attributes, CASE_LOWER);
         }
 
-        $sanitized_attributes = [];
-        foreach ($attributes as $attribute) {
-            $sanitized_attributes[] = $this->sanitizeAttribute($attribute);
-        }
-        return array_unique( $sanitized_attributes );
-    }
+        $sanitizedAttributes = [];
+        foreach ($attributes as $attribute => $value) {
+            if (!in_array($attribute, $this->acceptedAttributes)) {
+                continue;
+            }
 
-    /**
-     * Sanitize the attribute
-     */
-    private function sanitizeAttribute(string $attribute ): string
-    {
-        return in_array($attribute, $this->acceptedAttributes) ? sanitize_text_field($attribute) : $this->fallbackAttribute;
+            $sanitizedAttributes[sanitize_text_field($attribute)] = sanitize_text_field($value);
+        }
+        return array_unique( $sanitizedAttributes );
     }
 
     /**
@@ -156,9 +150,13 @@ class WidgetScriptBuilder
                 $setting = json_encode($setting);
                 $searchable = '"{{ ' . $key . ' }}"'; // Also replace the quotes
             }
-            if (empty($setting) && ($setting != '0')) {
+
+            // This will work the same as a false value. Therefor it is not an
+            // issue that the empty check triggers for these false(y) values.
+            if (empty($setting)) {
                 $setting = '';
             }
+
             $content = str_replace($searchable, $setting, $content);
         }
 
