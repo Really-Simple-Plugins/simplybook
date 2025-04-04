@@ -109,26 +109,6 @@ trait LegacyLoad {
     }
 
     /**
-     * Get array of fields of a specific type. Also loads the values
-     *
-     * @param string $attribute
-     * @param string $attribute_value
-     * @return array
-     */
-    public function get_fields_by_attribute(string $attribute, string $attribute_value ): array
-    {
-        $fields = $this->fields();
-        $fields_of_type = [];
-        foreach ( $fields as $field ) {
-            if ( !isset( $field[ $attribute ] ) ) {
-                continue;
-            }
-            $fields_of_type[] = $field;
-        }
-        return $fields_of_type;
-    }
-
-    /**
      * Get fields array for the settings
      *
      * @param bool $load_values

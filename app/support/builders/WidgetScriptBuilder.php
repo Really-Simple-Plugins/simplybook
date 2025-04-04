@@ -150,13 +150,16 @@ class WidgetScriptBuilder
     {
         $content = $this->widgetTemplate;
         foreach ($this->getWidgetSettings() as $key => $setting) {
+            $searchable = '{{ ' . $key . ' }}';
+
             if (is_array($setting)) {
                 $setting = json_encode($setting);
+                $searchable = '"{{ ' . $key . ' }}"'; // Also replace the quotes
             }
-            if (empty($setting)) {
+            if (empty($setting) && ($setting != '0')) {
                 $setting = '';
             }
-            $content = str_replace('{{ ' . $key . ' }}', $setting, $content);
+            $content = str_replace($searchable, $setting, $content);
         }
 
         return $content;

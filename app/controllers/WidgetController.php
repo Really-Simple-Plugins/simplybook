@@ -23,7 +23,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderCalendarWidget(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i');
+        return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i_calendar');
     }
 
     /**
@@ -31,7 +31,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderReviewsWidget(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('reviews', $attributes);
+        return $this->loadWidgetScriptTemplate('reviews', $attributes, 'sbw_z0hg2i_reviews');
     }
 
     /**
@@ -39,7 +39,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderBookingButton(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('booking-button', $attributes);
+        return $this->loadWidgetScriptTemplate('booking-button', $attributes, 'sbw_z0hg2i_button');
     }
 
     /**
