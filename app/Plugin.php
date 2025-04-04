@@ -5,6 +5,7 @@ use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
+use SimplyBook\Services\DesignSettingsService;
 
 class Plugin
 {
@@ -160,7 +161,9 @@ class Plugin
             new Controllers\ScheduleController(),
             new Controllers\WidgetController(),
             new Controllers\BlockController(),
-            new Controllers\DesignSettingsController(),
+            new Controllers\DesignSettingsController(
+                new Services\DesignSettingsService()
+            ),
         ]);
     }
 

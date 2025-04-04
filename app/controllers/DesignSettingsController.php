@@ -3,21 +3,32 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\DesignSettingsService;
 
 class DesignSettingsController implements ControllerInterface
 {
-    /**
-     * Never save these setting keys.
-     */
-    protected array $blockList = [
-        'withValues',
-    ];
+    protected DesignSettingsService $service;
+
+    public function __construct(DesignSettingsService $service) {
+        $this->service = $service;
+    }
 
     public function register()
     {
+        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
         add_action('simplybook_save_design_settings', [$this, 'saveSettings']);
         add_filter('simplybook_public_theme_list', [$this, 'insertDesignThemeSettings']);
         add_filter('simplybook_field', [$this, 'insertDesignSettings'], 10, 3);
+    }
+
+    /**
+     * Handle plugin upgrades
+     */
+    public function handlePluginUpgrade(string $previousVersion, string $newVersion): void
+    {
+        if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
+            $this->service->handleLegacyDesignUpgrade();
+        }
     }
 
     /**
@@ -26,13 +37,13 @@ class DesignSettingsController implements ControllerInterface
      */
     public function saveSettings(array $savedSettings): bool
     {
-        $designSettings = get_option('simplybook_design_settings', []);
+        $designSettings = $this->service->getDesignOptions();
         if (empty($designSettings)) {
-            return update_option('simplybook_design_settings', $savedSettings);
+            return $this->service->saveAsDesignOptions($savedSettings);
         }
 
-        $designSettings = $this->getDesignSettings($savedSettings, $designSettings);
-        return update_option('simplybook_design_settings', $designSettings);
+        $designSettings = $this->service->updateOrRetainDesignSettings($savedSettings, $designSettings);
+        return $this->service->saveAsDesignOptions($designSettings);
     }
 
     /**
@@ -43,7 +54,7 @@ class DesignSettingsController implements ControllerInterface
      */
     public function insertDesignThemeSettings(array $themeList): array
     {
-        $designSettings = get_option('simplybook_design_settings', []);
+        $designSettings = $this->service->getDesignOptions();
 
         // Only continue if these values exist
         if (empty($designSettings)
@@ -78,42 +89,13 @@ class DesignSettingsController implements ControllerInterface
             return $field;
         }
 
-        $designSettings = get_option('simplybook_design_settings', []);
+        $designSettings = $this->service->getDesignOptions();
         if (empty($designSettings[$id])) {
             return $field;
         }
 
         $field['value'] = $designSettings[$id];
         return $field;
-    }
-
-    /**
-     * Recursively merge the saved settings with the existing design settings.
-     * This method ensures that existing values, that are not present in the
-     * saved settings, are kept. Otherwise, the saved settings will override the
-     * existing values. Missing keys in the savedSettings can occur for
-     * design settings because not all theme settings apply for each theme.
-     */
-    protected function getDesignSettings(array $savedSettings, array $designSettings): array
-    {
-        foreach ($savedSettings as $key => $value) {
-
-            if (in_array($key, $this->blockList, true)) {
-                continue;
-            }
-
-            if (is_array($value)) {
-                if (!isset($designSettings[$key]) || !is_array($designSettings[$key])) {
-                    $designSettings[$key] = [];
-                }
-                $designSettings[$key] = $this->getDesignSettings($value, $designSettings[$key]);
-                continue;
-            }
-
-            $designSettings[$key] = sanitize_text_field($value) ?: '0';
-        }
-
-        return $designSettings;
     }
 
 }
