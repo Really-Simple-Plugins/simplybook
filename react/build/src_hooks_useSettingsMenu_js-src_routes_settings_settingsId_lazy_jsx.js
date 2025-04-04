@@ -3303,7 +3303,7 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
   if ($[8] !== props?.setting?.default || $[9] !== response || $[10] !== selectedTheme) {
     t6 = () => {
       if (!selectedTheme && response?.data?.length > 0) {
-        const defaultTheme = response.data.find(theme => theme.name === props?.setting?.default.theme);
+        const defaultTheme = response.data.find(theme => theme.name === props?.setting?.default);
         setSelectedTheme(defaultTheme);
       }
     };
@@ -3386,10 +3386,6 @@ const ThemeField = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_1__.forwardRef
       control: control,
       parentSetting: props?.setting,
       selectedTheme: selectedTheme
-    }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default().createElement("input", {
-      type: "hidden",
-      name: "settings_section",
-      value: "theme_settings"
     }));
     $[21] = control;
     $[22] = error;
