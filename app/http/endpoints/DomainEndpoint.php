@@ -37,7 +37,7 @@ class DomainEndpoint implements SingleEndpointInterface
     public function registerArguments(): array
     {
         return [
-            'methods' => \WP_REST_Server::CREATABLE,
+            'methods' => \WP_REST_Server::READABLE,
             'callback' => [$this, 'callback'],
         ];
     }
@@ -45,7 +45,8 @@ class DomainEndpoint implements SingleEndpointInterface
     /**
      * Return the company login domain in the WP_REST_Response.
      */
-    public function callback(\WP_REST_Request $request): \WP_REST_Response {
+    public function callback(\WP_REST_Request $request): \WP_REST_Response
+    {
         $domain = $this->get_option('domain');
         $companyLoginPath = App::provide('client')->get_company_login();
 

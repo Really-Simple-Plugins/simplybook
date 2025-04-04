@@ -32,7 +32,7 @@ class TaskManagementEndpoints
         }
 
         $routes['get_tasks'] = [
-            'methods' => \WP_REST_Server::CREATABLE,
+            'methods' => \WP_REST_Server::READABLE,
             'callback' => [$this, 'getTasksCallback'],
         ];
 

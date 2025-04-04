@@ -125,6 +125,7 @@ const OnboardingStep = ({
         <div className={"flex flex-col"}>
           <form>
             <FormFieldWrapper fields={currentStep.fields} control={control}/>
+            {customHtml}
             <ButtonField
                 showLoader={disabled}
                 btnVariant="primary"

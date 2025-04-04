@@ -68,9 +68,13 @@ class OnboardingService
      */
     public function storeCompanyData(CompanyBuilder $companyBuilder): void
     {
+        $options = get_option('simplybook_company_data', []);
+
         foreach ($companyBuilder->toArray() as $key => $value) {
-            $this->update_option($key, $value);
+            $options[$key] = $value;
         }
+
+        update_option('simplybook_company_data', $options);
     }
 
     /**

@@ -21,6 +21,8 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
+    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
+
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
@@ -106,9 +108,12 @@ class ApiClient
      *
      * @return string
      */
-    protected function endpoint( string $path, string $companyDomain = '' ): string {
+    protected function endpoint( string $path, string $companyDomain = '' ): string
+    {
+        $fallbackDomain = ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
+
         $base = 'https://user-api-v2.';
-        $domain = $companyDomain ?: $this->get_option('domain');
+        $domain = $companyDomain ?: $fallbackDomain;
 
         return $base . $domain . '/' . $path;
     }
@@ -474,64 +479,6 @@ class ApiClient
         return true;
     }
 
-    /**
-     * Format a unix timestamp in the required format for the API
-     * @param int $timestamp
-     *
-     * @return string
-     */
-    private function format_date_for_api(int $timestamp): string {
-        return date('Y-m-d', $timestamp);
-    }
-
-    /**
-     * Get a list of bookings
-     *
-     * @param int $from
-     * @param int $to
-     *
-     * @return array
-     */
-    public function get_bookings(int $from, int $to): array {
-        if ( !$this->company_registration_complete() ){
-            return [];
-        }
-
-        $args = [
-            'date_from' => $this->format_date_for_api($from),
-            'date_to' => $this->format_date_for_api($to),
-        ];
-        $bookings = $this->api_call('admin/bookings', $args, 'GET');
-        error_log(print_r("bookings", true));
-        error_log(print_r($bookings, true));
-        return $bookings['data'] ?? [];
-    }
-
-    /**
-     * Get the bookings count
-     *
-     * @param int $from
-     * @param int $to
-     *
-     * @return int
-     */
-    public function get_bookings_count( int $from, int $to): int {
-
-        if ( !$this->company_registration_complete() ){
-            return 0;
-        }
-
-        $args = [
-            'date_from' => $this->format_date_for_api($from),
-            'date_to' => $this->format_date_for_api($to),
-        ];
-        $bookings = $this->api_call('admin/bookings', $args, 'GET');
-        if ( $bookings ) {
-            return $bookings['metadata']['items_count'] ?? 0;
-        }
-        return 0;
-    }
-
     public function reset_registration(){
         $this->delete_company_login();
         $this->clear_tokens();
@@ -560,22 +507,22 @@ class ApiClient
             return new ApiResponseDTO( false, __('Too many attempts, please try again later.', 'simplybook') );
         }
 
-        $email = sanitize_email( $this->get_option('email') );
+        $email = sanitize_email( $this->get_company('email') );
         $callback_url = $this->generate_callback_url();
-        $category = (int) $this->get_option('category');
+        $category = (int) $this->get_company('category');
         $category =  $category < 1 ? 8 : $category; //default other category
         $random_password = wp_generate_password( 24, false );
-        $company_name = sanitize_text_field( $this->get_option('company_name') );
+        $company_name = sanitize_text_field( $this->get_company('company_name') );
         //strip off
         //get a description using the WordPress get_bloginfo function
         $description = $this->get_description();
-        $phone = sanitize_text_field( $this->get_option('phone') );
-        $city = sanitize_text_field( $this->get_option('city') );
-        $address = sanitize_text_field( $this->get_option('address') );
-        $service = sanitize_text_field( $this->get_option('service') );
-        $country = $this->sanitize_country( $this->get_option('country') );
+        $phone = sanitize_text_field( $this->get_company('phone') );
+        $city = sanitize_text_field( $this->get_company('city') );
+        $address = sanitize_text_field( $this->get_company('address') );
+        $service = sanitize_text_field( $this->get_company('service') );
+        $country = $this->sanitize_country( $this->get_company('country') );
         //no spaces allowed in zip
-        $zip = (string) $this->get_option('zip');
+        $zip = (string) $this->get_company('zip');
         $zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
         $company_login = $this->get_company_login();
         error_log("company login $company_login");
@@ -614,7 +561,7 @@ class ApiClient
                     'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
 //					'providers'=>[$provider],
 //					'services'=>[$service],
-//					'dismiss_onboarding' => true,
+					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
@@ -862,6 +809,30 @@ class ApiClient
         }
         $response = $this->api_call('admin/providers', [], 'GET');
         return $response['data'] ?? [];
+    }
+
+    /**
+     * Get all subscription data
+     */
+    public function get_subscription_data(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/tariff/current', [], 'GET');
+    }
+
+    /**
+     * Get all statistics
+     */
+    public function get_statistics(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        return $this->api_call('admin/statistic', [], 'GET');
     }
 
     /**
@@ -1414,4 +1385,5 @@ class ApiClient
 
         return $allowedProviders;
     }
+
 }

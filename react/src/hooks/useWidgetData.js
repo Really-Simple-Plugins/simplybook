@@ -1,25 +1,28 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import getWidget from "../api/endpoints/getWidget";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import HttpClient from "../api/requests/HttpClient";
 
 const useWidgetData = () => {
     const queryClient = useQueryClient();
-    const query = useQuery({
-        queryKey: ["widget_script"],
-        queryFn: () => getWidget(),
+
+    const route = 'get_widget';
+    const client = new HttpClient(route);
+
+    const {data: response, refetch} = useQuery({
+        queryKey: [route],
+        queryFn: () => client.get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
-        initialData: '',
         retry: 0,
         enabled: false,
     });
 
     const invalidateAndRefetchWidgetScript = async () => {
-        console.log("invalidate and refetch widget script");
-        queryClient.invalidateQueries(["widget_script"]);
-        await query.refetch();
+        queryClient.invalidateQueries({queryKey: [route]}).then(function(response) {
+            return refetch();
+        });
     };
 
     return {
-        widgetScript: query.data,
+        widgetScript: response?.data?.widget,
         invalidateAndRefetchWidgetScript
     };
 };

@@ -13,26 +13,32 @@ const LoginLink = ({
     children
 }) => {
 
-    // Import the fetch module
-    const {fetchLinkData } = useLoginData();
+    const {fetchLinkData} = useLoginData();
 
     // import onboardingData for conditional classes
     const { onboardingCompleted } = useOnboardingData();
 
-    const loginTo = async (e, page ) => {
+    const loginTo = (e, page ) => {
         e.preventDefault();
 
-        const loginData = await fetchLinkData();
-        const link = loginData.simplybook_dashboard_url;
+        // Start fetch when the link is clicked
+        fetchLinkData().then((response) => {
+            let link = response?.data.simplybook_dashboard_url;
+            if (!link) {
+                console.error("No link found in response");
+                return;
+            }
 
-        let finalUrl = `${link}/${page}/`;
-        if (link.includes("by-hash")) {
-            finalUrl = `${link}?back_url=/${page}/`;
-        }
+            let finalUrl = `${link}/${page}/`;
+            if (link.includes("by-hash")) {
+                finalUrl = `${link}?back_url=/${page}/`;
+            }
 
-        // Open a new tab with the login URL
-        window.open(finalUrl, "_blank");
-        window.focus();
+            window.open(finalUrl, "_blank");
+            window.focus();
+        }).catch((error) => {
+            console.error("Error fetching login URL:", error);
+        });
 
     };
 

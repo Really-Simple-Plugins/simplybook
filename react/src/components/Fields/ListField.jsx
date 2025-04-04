@@ -17,45 +17,49 @@ import useProviderData from "../../hooks/useProviderData";
  */
 const ListField = forwardRef(
     ({ setting, field, fieldState, label, help, context, className, ...props }, ref) => {
-        const {services} = useServicesData();
-        const {providers} = useProviderData();
+        const {services, servicesFetched} = useServicesData();
+        const {providers, providersFetched} = useProviderData();
         const [listArray, setListArray] = useState([]);
+        const [listFetched, setListFetched] = useState(false);
+
         const sourceData = {
-            services: services,
-            providers: providers,
+            services: {
+                fetched: servicesFetched,
+                data: services,
+            },
+            providers: {
+                fetched: providersFetched,
+                data: providers,
+            },
         };
 
         useEffect(() => {
-            console.log("loading listArray for ", setting.source);
-            setListArray(sourceData[setting.source]);
+            setListArray(sourceData[setting.source]?.data);
+            setListFetched(sourceData[setting.source]?.fetched);
         }, [sourceData[setting.source]]);
 
-        if ( !listArray ) {
+        if (listFetched && !Array.isArray(listArray)) {
             return (
-                <>{__("Loading, please wait a few seconds...")}</>
-            );
-        }
-
-        console.log('listArray for ', setting.source , listArray );
-        if ( !Array.isArray(listArray) ) {
-            return (
-                <>{sprintf(__("No items found for %s"), setting.label)}</>
+                <>{sprintf(__("No %s found."), setting.label.toLowerCase())}</>
             );
         }
 
         const premiumItem = {
             id: "upgrade",
-            name: __("Want more services?"),
+            name: setting.premiumText,
             picture_preview: "",
         };
 
         return (
             <div className="w-full">
-                {listArray.map((item) => (
+                {!listFetched && (
+                    <p className="mb-4">{sprintf(__("Loading %s..."), setting.label.toLowerCase())}</p>
+                )}
+
+                {listFetched && listArray.map((item) => (
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={setting.link} item={item} />
                 ))}
                 <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
-
             </div>
         );
     },

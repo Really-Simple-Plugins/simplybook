@@ -10,6 +10,7 @@ return [
 		'link'     => 'management/#providers',
 		'type'     => 'list',
 		'label'    => __('Providers', 'simplybook'),
+        'premiumText' => __('Want more providers?', 'simplybook'),
 		'default'  => false,
 	],
 ];

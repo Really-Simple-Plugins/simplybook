@@ -128,20 +128,12 @@ final class EndpointManager
      */
     public function defaultPermissionCallback(\WP_REST_Request $request)
     {
+        $method = $request->get_method();
         $nonce = $request->get_param('nonce');
-        if ($this->verifyNonce($nonce) === false) {
+        if (($method === 'POST') && ($this->verifyNonce($nonce) === false)) {
             return new \WP_Error(
                 'rest_forbidden',
                 esc_html__('Forbidden.', 'simplybook'),
-                ['status' => 403]
-            );
-        }
-
-        // todo - should we create a custom method instead of adminAccessAllowed?
-        if ($this->adminAccessAllowed() === false) {
-            return new \WP_Error(
-                'rest_forbidden',
-                esc_html__('You are not allowed to do this.', 'simplybook'),
                 ['status' => 403]
             );
         }

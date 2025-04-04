@@ -5,14 +5,14 @@ import BlockContent from "../Blocks/BlockContent";
 import FormFieldWrapper from "../Forms/FormFieldWrapper";
 
 const SettingsGroupBlock = memo(
-  ({ group, currentGroupFields, control, isLastGroup }) => {
-    const className = isLastGroup ? "rounded-b-none" : "mb-5";
+  ({ group, currentGroupFields, control, isLastGroup, formHasSettings }) => {
+    const className = isLastGroup && formHasSettings ? "rounded-b-none" : "mb-5";
 
     return (
       <Block key={group.id} className={className}>
         <BlockHeading title={group.title} />
         <BlockContent>
-          <div className="flex flex-wrap">
+          <div className="flex flex-wrap justify-between gap-4">
               <FormFieldWrapper fields={currentGroupFields} control={control}/>
           </div>
         </BlockContent>

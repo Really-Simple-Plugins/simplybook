@@ -7,7 +7,7 @@ import ButtonInput from "../../Inputs/ButtonInput";
 // API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
-import { API_BASE_PATH, NONCE } from "../../../api/config";
+import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
 
 const formLogin = ({
     onClose,
@@ -88,28 +88,6 @@ const formLogin = ({
             }
         };
 
-        /**
-         * Initialise the different domain URL's
-         */
-        const companyDomains = [
-            { key: "default:simplybook.it", value: "default:simplybook.it", label: "simplybook.it" },
-            { key: "default:simplybook.me", value: "default:simplybook.me", label: "simplybook.me" },
-            { key: "default:simplybook.asia", value: "default:simplybook.asia", label: "simplybook.asia" },
-            { key: "login:simplybook.vip", value: "login:simplybook.vip", label: "simplybook.vip" },
-            { key: "login:simplybook.cc", value: "login:simplybook.cc", label: "simplybook.cc" },
-            { key: "login:simplybook.us", value: "login:simplybook.us", label: "simplybook.us" },
-            { key: "login:simplybook.pro", value: "login:simplybook.pro", label: "simplybook.pro" },
-            { key: "login:enterpriseappointments.com", value: "login:enterpriseappointments.com", label: "enterpriseappointments.com" },
-            { key: "login:simplybook.webnode.page", value: "login:simplybook.webnode.page", label: "simplybook.webnode.page" },
-            { key: "login:servicebookings.net", value: "login:servicebookings.net", label: "servicebookings.net" },
-            { key: "login:booking.names.uk", value: "login:booking.names.uk", label: "booking.names.uk" },
-            { key: "login:booking.lcn.uk", value: "login:booking.lcn.uk", label: "booking.lcn.uk" },
-            { key: "login:booking.register365.ie", value: "login:booking.register365.ie", label: "booking.register365.ie" },
-            // GET RID OF THIS LATER!! 
-            { key: "default:wp.simplybook.ovh", value: "default:wp.simplybook.ovh", label: "wp.simplybook.ovh" }
-    
-        ];
-
     return (
         <>
             <form className="flex flex-col relative" onSubmit={submitForm}>
@@ -121,9 +99,9 @@ const formLogin = ({
                         <SelectField
                             {...field}
                             fieldState={fieldState}
-                            label={__("Company domain", "simplybook")} 
+                            label={__("Company domain", "simplybook")}
                             setting="company_domain"
-                            options={companyDomains}
+                            options={SIMPLYBOOK_DOMAINS}
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
@@ -138,7 +116,7 @@ const formLogin = ({
                     control={control}
                     rules={{ required: "Login needed" }}
                     render={({ field, fieldState }) => (
-                        <TextField 
+                        <TextField
                             {...field}
                             fieldState={fieldState}
                             label={__("Company login", "simplybook")}
@@ -164,13 +142,13 @@ const formLogin = ({
                         />
                     )}
                 />
-                
+
                 <Controller
                     name="user_password"
                     control={control}
                     rules={{ required: true }}
                     render={({ field, fieldState }) => (
-                        <TextField 
+                        <TextField
                             {...field}
                             fieldState={fieldState}
                             label={__("Password", "simplybook")}
@@ -180,7 +158,7 @@ const formLogin = ({
                         />
                     )}
                 />
-                <ButtonInput 
+                <ButtonInput
                     className="mt-4 mb-4"
                     btnVariant="primary"
                     type="submit"
@@ -188,16 +166,16 @@ const formLogin = ({
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
-                <ButtonInput 
+                <ButtonInput
                     btnVariant="secondary"
                     type="button"
                     onClick={onClose}
                 >
                     {__("Close", "simplybook")}
                 </ButtonInput>
-            </form>         
+            </form>
         </>
-    );  
+    );
 }
 
 export default formLogin;

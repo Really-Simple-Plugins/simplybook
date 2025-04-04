@@ -1,53 +1,87 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/Task";
-import getTasks from "../api/endpoints/Dashboard/getTasks";
-import dismissTaskApi from "../api/endpoints/Dashboard/dismissTaskApi";
 import { TaskData } from "../types/TaskData";
+import HttpClient from "../api/requests/HttpClient";
 
 const useTaskData = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  // Query for fetching tasks
-  const { data: tasks = [], isLoading, isError } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: getTasks,
-    staleTime: 1000 * 60 * 5, // 5 minutes
-  });
+    const getTasksRoute = 'get_tasks';
+    const dismissTaskRoute = 'dismiss_task';
+    const client = new HttpClient();
 
-  // Mutation for updating task status
-  const { mutate: dismissTask } = useMutation({
-    mutationFn: async ( taskId:string ): Promise<TaskData> => {
-      console.log("dismissing task ", taskId);
-      return dismissTaskApi(taskId);
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["tasks"] });
-    },
-  });
+    /**
+     * Fetches tasks from the server using Tanstack Query.
+     */
+    const { data: response, isLoading, error } = useQuery({
+        queryKey: [getTasksRoute],
+        queryFn: () => client.setRoute(getTasksRoute).get(),
+        staleTime: 1000 * 60 * 5, // 5 minutes
+    });
 
-  const getRemainingTasks = () => {
-    return tasks.filter((task) =>
-        ["open", "urgent", "premium"].includes(task.status),
-    );
-  };
+    /**
+     * Log an error message if the request fails.
+     */
+    if (error !== null) {
+        console.error('Error fetching tasks: ', error.message);
+    }
 
-  const getCompletionPercentage = () => {
-    const total = tasks.length;
-    const completed = tasks.filter(
-        (task) => task.status === "dismissed" || task.status === "completed",
-    ).length;
-    const actualPercentage = Math.round((completed / total) * 80);
-    return 20 + actualPercentage;
-  };
+    /**
+     * Extract the tasks from the response for easy access.
+     * @type {Task[]}
+     */
+    const tasks: Task[] = Array.isArray(response?.data) ? response?.data : [];
 
-  return {
-    tasks,
-    isLoading,
-    isError,
-    dismissTask,
-    getRemainingTasks,
-    getCompletionPercentage,
-  };
+    /**
+     * Handles the mutation for dismissing a task.
+     */
+    const { mutate: dismissTask } = useMutation({
+        mutationFn: async ( taskId:string ): Promise<TaskData> => {
+            return client.setRoute(dismissTaskRoute).setPayload({
+                'taskId': taskId,
+            }).post();
+        },
+        onSuccess: () => {
+            // Do NOT "await" here: this is a fire-and-forget mutation
+            queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+        },
+        onError: (error: Error) => {
+            console.error('Error dismissing task: ', error.message);
+        },
+    });
+
+    /**
+     * Returns the tasks that are not completed or dismissed.
+     * @returns {Task[]}
+     */
+    const getRemainingTasks = () => {
+        return tasks.filter((task: Task) =>
+            ["open", "urgent", "premium"].includes(task.status),
+        );
+    };
+
+    /**
+     * Calculates the completion percentage of tasks.
+     * @returns {number}
+     */
+    const getCompletionPercentage = () => {
+        const total = tasks.length;
+        const completed = tasks.filter(
+            (task: Task) => task.status === "dismissed" || task.status === "completed",
+        ).length;
+        const actualPercentage = Math.round((completed / total) * 80);
+        return 20 + actualPercentage;
+    };
+
+    return {
+        tasks,
+        isLoading,
+        hasError: (error !== null),
+        message: (response?.message ?? error?.message),
+        dismissTask,
+        getRemainingTasks,
+        getCompletionPercentage,
+    };
 };
 
 export default useTaskData;
