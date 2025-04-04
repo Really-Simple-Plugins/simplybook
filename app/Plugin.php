@@ -160,6 +160,7 @@ class Plugin
             new Controllers\ScheduleController(),
             new Controllers\WidgetController(),
             new Controllers\BlockController(),
+            new Controllers\DesignSettingsController(),
         ]);
     }
 

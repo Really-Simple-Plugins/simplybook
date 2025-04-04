@@ -5,6 +5,7 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Controllers\DesignSettingsController;
 
 class SettingEndpoints implements MultiEndpointInterface
 {
@@ -54,16 +55,8 @@ class SettingEndpoints implements MultiEndpointInterface
             return $this->sendHttpResponse(['error' => 'No data to save']);
         }
 
-        // todo - @jeroen - Add settings_section key-value pair to the formdata so we can recognise which fields are saved.
-        // example: if the design settings are saved the settings_section key-value pair should be ['settings_section' => 'design_section']
-        // this will trigger simplybook_save_design_section action hook. Which we listen to in TaskManagementListener
         if (isset($fields['settings_section'])) {
-            /**
-             * Action: simplybook_save_{settings_section}
-             * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
-             */
-            do_action('simplybook_save_' . sanitize_title($fields['settings_section']));
-            unset($fields['settings_section']);
+            return $this->processSpecificSettingSection($fields['settings_section'], $fields);
         }
 
         //check the data format. If it is [id => value], convert it to [ ['id' => 'the-id', 'value' => 'the-value'], ...]
@@ -93,6 +86,27 @@ class SettingEndpoints implements MultiEndpointInterface
         $getSettingsWithValues = ($storage->getInt('withValues') === 1);
 
         $fields = $this->fields($getSettingsWithValues);
+        return $this->sendHttpResponse($fields);
+    }
+
+    /**
+     * Method can be called when the settings_section is set. This will trigger
+     * the action simplybook_save_{settings_section} which can be used to
+     * process the settings elsewhere. See {@see DesignSettingsController} as
+     * an example.
+     *
+     * @uses do_action simplybook_save_{settings_section}
+     */
+    private function processSpecificSettingSection(string $settingsSection, array $fields): \WP_REST_Response
+    {
+        /**
+         * Action: simplybook_save_{settings_section}
+         * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
+         * @hooked SimplyBook\Controllers\DesignSettingsController::saveSettings()
+         */
+        do_action('simplybook_save_' . sanitize_title($settingsSection), $fields);
+
+        $fields = $this->fields(true);
         return $this->sendHttpResponse($fields);
     }
 }

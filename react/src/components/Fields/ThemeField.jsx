@@ -5,6 +5,7 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import SelectField from "./SelectField";
 import ThemeConfigGroup from "./Partials/ThemeConfigGroup";
 import { Controller } from "react-hook-form";
+import { __ } from "@wordpress/i18n";
 
 /**
  * ThemeConfigField component
@@ -84,7 +85,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
                 <>
                     <Controller
                         control={control}
-                        name="theme"
+                        name={props?.setting?.id}
                         defaultValue={selectedTheme?.name || ""}
                         render={({ field }) => (
                             <SelectField

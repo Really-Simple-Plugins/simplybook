@@ -134,6 +134,6 @@ return
             'group_id' => 'main',
             'type'     => 'hidden',
             'disabled' => false,
-            'default'  => 'design_section',
+            'default'  => 'design_settings',
         ]
 	];
