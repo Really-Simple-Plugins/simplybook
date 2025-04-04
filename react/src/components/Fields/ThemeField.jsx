@@ -39,7 +39,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
     useEffect(() => {
         if (!selectedTheme && response?.data?.length > 0) {
             const defaultTheme = response.data.find(
-                (theme) => theme.name === props?.setting?.default["theme"]
+                (theme) => theme.name === props?.setting?.default
             );
             setSelectedTheme(defaultTheme);
         }
@@ -110,8 +110,6 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
                             selectedTheme={selectedTheme}
                         />
                     )}
-
-                    <input type="hidden" name="settings_section" value="theme_settings" />
                 </>
             )}
         </>
