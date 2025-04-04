@@ -39,7 +39,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderBookingButton(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('booking-button', $attributes, 'sbw_z0hg2i_button');
+        return $this->loadWidgetScriptTemplate('booking-button', $attributes);
     }
 
     /**

@@ -16,5 +16,4 @@ let widget = new SimplybookWidget({
     "button_text_color": "{{ button_text_color }}",
     "button_position": "{{ button_position }}",
     "button_position_offset": "{{ button_position_offset }}",
-    "container_id": "sbw_z0hg2i_button",
 });
