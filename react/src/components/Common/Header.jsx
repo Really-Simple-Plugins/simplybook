@@ -5,6 +5,8 @@ import { __ } from "@wordpress/i18n";
 import {useEffect} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
+import Icon from "./Icon";
+import ButtonLink from "../Buttons/ButtonLink";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
@@ -25,11 +27,11 @@ const Header = () => {
     }, [onboardingCompleted]);
 
     const linkClassName =
-        "py-6 px-5 border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden";
+        "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden";
 
     return (
-        <div className="bg-white">
-            <div className="mx-auto flex max-w-screen-2xl items-center px-5">
+        <div className="bg-white ">
+            <div className="mx-auto flex max-w-screen-2xl items-baseline px-5">
                 <div>
                     <Link to="/">
                         <Logo className="h-12 w-40 px-5 py-2" />
@@ -49,6 +51,17 @@ const Header = () => {
                         {__("Settings", "simplybook")}
                     </Link>
                 </div>
+                <ButtonLink
+                    className={"border-tertiary-border border-2 bg-tertiary-light hover:bg-tertiary-hover ml-4 "}
+                    target="_blank"
+                    href="https://help.simplybook.me/index.php/Help_Center"
+                    icon={true}
+                    iconName="support"
+                    iconSize="1x"
+                    name={"support"}
+                >    
+                    {__("Help Center", "simplybook")}
+                </ButtonLink>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
                     {!isLoading && !isExpired && !hasError && (
                         <p>
