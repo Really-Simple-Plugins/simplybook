@@ -40,8 +40,12 @@ return [
                 'title' => __('Theme settings', 'simplybook'),
             ],
             [
-                'id' => 'widget',
-                'title' => __('Widget', 'simplybook'),
+                'id' => 'reviews',
+                'title' => __('Reviews shortcode', 'simplybook'),
+            ],
+            [
+                'id' => 'booking',
+                'title' => __('Booking button shortcode', 'simplybook'),
             ],
         ],
     ],
