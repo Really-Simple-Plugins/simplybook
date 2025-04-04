@@ -1,0 +1,13 @@
+export interface ButtonLinkProps {
+    className?: string;
+    children: React.ReactNode;
+    btnVariant?: string;
+    disabled?: boolean;
+    target?: string;
+    link?: string;
+    onClick?: () => void;
+    icon?: boolean;
+    iconName?: string;
+    iconSize?: string;
+    name?: string;
+  }
