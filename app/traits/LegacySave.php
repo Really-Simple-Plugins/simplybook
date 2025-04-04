@@ -134,11 +134,6 @@ trait LegacySave {
             return false;
         }
 
-        // Abort if the setting is marked as stale
-        if (in_array($key, $this->staleFields, true)) {
-            return;
-        }
-
         //$pass = '7*w$9pumLw5koJc#JT6';
         $options = get_option('simplybook_options', []);
         //sanitize the value
