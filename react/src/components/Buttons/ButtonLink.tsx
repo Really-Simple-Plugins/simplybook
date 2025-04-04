@@ -39,14 +39,14 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
   return (
     <>
+    <Link target={target} to={link} className="text-base text-tertiary font-semibold">
       <div className={clsx("", buttonVariants)}>
           {icon && 
             <Icon className="mr-2" name={iconName} size={iconSize} />
           }
-          <Link target={target} to={link} className="text-base text-tertiary font-semibold">
               {children}
-          </Link>
       </div>
+      </Link>
     </>
   );
 };
