@@ -43,10 +43,17 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
 
     /**
      * Return theme list as a WP_REST_Response.
+     * @uses apply_filters simplybook_public_theme_list
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $themeList = App::provide('client')->getThemeList();
+        /**
+         * @hooked \SimplyBook\Controllers\DesignSettingsController::insertDesignSettings
+         */
+        $themeList = apply_filters(
+            'simplybook_public_theme_list',
+            App::provide('client')->getThemeList()
+        );
 
         if (empty($themeList['themes'])) {
             return $this->sendHttpResponse([], false, __('No themes found', 'simplybook'), 404);

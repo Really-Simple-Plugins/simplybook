@@ -18,7 +18,7 @@ const ThemeConfigGroupItem = forwardRef(({
         <Controller
             control={control}
             name={`theme_settings.${item.config_key}`}
-            defaultValue={item.default_value}
+            defaultValue={item?.value ?? item.default_value}
             render={({ field }) => {
 
                 /**
