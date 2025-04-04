@@ -12,7 +12,7 @@ const Manage: React.FC<ManageProps> = ({ title, link, buttonText }) => {
                 <div className={"grid grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50"}>
                     <div className={"text-sm"}>{title}</div>
                     <div className={"flex justify-end"}>
-                        <ButtonInput link={{ to: link }} size={"sm"} btnVariant={"tertiary"}>{buttonText}</ButtonInput>
+                        <ButtonInput link={{ to: link }} btnVariant={"tertiary"}>{buttonText}</ButtonInput>
                     </div>
                 </div>
             </>
