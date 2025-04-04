@@ -16,7 +16,8 @@ class DesignSettingsController implements ControllerInterface
     public function register()
     {
         add_action('simplybook_save_design_settings', [$this, 'saveSettings']);
-        add_filter('simplybook_public_theme_list', [$this, 'insertDesignSettings']);
+        add_filter('simplybook_public_theme_list', [$this, 'insertDesignThemeSettings']);
+        add_filter('simplybook_field', [$this, 'insertDesignSettings'], 10, 3);
     }
 
     /**
@@ -40,7 +41,7 @@ class DesignSettingsController implements ControllerInterface
      * with their own respective configs. The design settings from our database
      * are inserted into these configs based on the key of the config.
      */
-    public function insertDesignSettings(array $themeList): array
+    public function insertDesignThemeSettings(array $themeList): array
     {
         $designSettings = get_option('simplybook_design_settings', []);
 
@@ -62,6 +63,28 @@ class DesignSettingsController implements ControllerInterface
         }
 
         return $themeList;
+    }
+
+    /**
+     * Each field id will be saved as a key->value pair in the settings. Which
+     * means we can set the value of the field accordingly. Fields that pass
+     * this method can be found in config/fields
+     * @internal This does NOT work for dynamic theme_settings. Those are added
+     * by {@see insertDesignThemeSettings}
+     */
+    public function insertDesignSettings(array $field, string $id, string $group): array
+    {
+        if ($group !== 'design') {
+            return $field;
+        }
+
+        $designSettings = get_option('simplybook_design_settings', []);
+        if (empty($designSettings[$id])) {
+            return $field;
+        }
+
+        $field['value'] = $designSettings[$id];
+        return $field;
     }
 
     /**

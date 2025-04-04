@@ -135,7 +135,7 @@ trait LegacyLoad {
      *
      * @return array
      */
-    public function fields( bool $load_values = false ): array
+    public function fields(bool $load_values = false): array
     {
 		$reload_fields = false;
 		if ( $load_values && !$this->values_loaded ) {
@@ -173,7 +173,7 @@ trait LegacyLoad {
                     $value          = $this->get_option( $field['id'], $field['default'] );
                     $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
                 }
-                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
+                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'], $groupID );
             }
         }
 
