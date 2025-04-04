@@ -54,7 +54,7 @@ const Header = () => {
                 <ButtonLink
                     className={"border-tertiary-border border-2 bg-tertiary-light hover:bg-tertiary-hover ml-4 "}
                     target="_blank"
-                    href="https://help.simplybook.me/index.php/Help_Center"
+                    link="https://help.simplybook.me/index.php/Help_Center"
                     icon={true}
                     iconName="support"
                     iconSize="1x"
