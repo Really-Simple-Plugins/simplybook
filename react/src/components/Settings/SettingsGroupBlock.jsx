@@ -10,7 +10,7 @@ const SettingsGroupBlock = memo(
 
     return (
       <Block key={group.id} className={className}>
-        <BlockHeading title={group.title} />
+        <BlockHeading title={group.title} help={group?.help ?? ''}/>
         <BlockContent>
           <div className="flex flex-wrap">
               <FormFieldWrapper fields={currentGroupFields} control={control}/>

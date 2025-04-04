@@ -1,12 +1,21 @@
 import clsx from "clsx";
 
-const BlockHeading = ({ title, controls, className = "" }) => {
-  return (
-    <div className={clsx(className, "flex items-center justify-between px-5 py-4")}>
-      <h2 className="text-base font-bold">{title}</h2>
-      {controls}
-    </div>
-  );
+const BlockHeading = ({ title, help, controls, className = "" }) => {
+    let titleSpacing = (help ? "pt-4" : "py-4");
+
+    return (
+        <>
+            <div className={clsx(className, "flex items-center justify-between px-5", titleSpacing)}>
+                <h2 className="text-base font-bold">{title}</h2>
+                {controls}
+            </div>
+            {help && (
+                <div className="px-5 py-2 text-sm text-gray-500">
+                    {help}
+                </div>
+            )}
+        </>
+    );
 };
 
 BlockHeading.displayName = "BlockHeading";

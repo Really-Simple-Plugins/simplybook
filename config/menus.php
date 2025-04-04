@@ -46,6 +46,7 @@ return [
             [
                 'id' => 'booking',
                 'title' => __('Booking button shortcode', 'simplybook'),
+                'help' => __('The booking button shortcode can be placed anywhere in the page and it will automatically be added to the outermost edges of that page.', 'simplybook'),
             ],
         ],
     ],
