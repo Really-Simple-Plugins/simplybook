@@ -26,7 +26,6 @@ class DashboardController implements ControllerInterface
         add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
     }
 

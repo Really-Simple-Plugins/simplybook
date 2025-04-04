@@ -48,20 +48,6 @@ const useOnboardingData = () => {
     },
     {
       id: 2,
-      path: "/onboarding/tips-and-tricks",
-      fields: [
-        {
-          id: "tips-and-tricks",
-          type: "checkbox",
-        },
-      ],
-      beforeSubmit: async (data) => {
-        console.log("submit tips and tricks step");
-        await registerTipsTricks({ data });
-      },
-    },
-    {
-      id: 3,
       path: "/onboarding/information-check",
       fields: [
         {
@@ -150,7 +136,7 @@ const useOnboardingData = () => {
       },
     },
     {
-      id: 4,
+      id: 3,
       path: "/onboarding/confirm-email",
       fields: [
         {
@@ -178,7 +164,7 @@ const useOnboardingData = () => {
       },
     },
     {
-      id: 5,
+      id: 4,
       path: "/onboarding/style-widget",
       fields: [
         {
@@ -216,7 +202,7 @@ const useOnboardingData = () => {
       ],
     },
     {
-      id: 6,
+      id: 5,
       path: "/onboarding/implementation",
       fields: [
         {
