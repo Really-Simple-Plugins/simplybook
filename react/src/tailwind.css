@@ -14,10 +14,9 @@
 @source "../safelist.txt";
 
 @theme {
-    /* Define new container width */
 
     /* Box-shadow */
-    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);;
+    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
 
     /* Define custom font sizes */
     --text-label: 1rem;
@@ -38,7 +37,13 @@
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
 
-    /* Overwrite base colors */
+    --color-primary-lighter: #F0F4FE;
+
+    /* Border colors */
+    --color-tertiary-border: #EFF4FF;
+
+    /* Hover colors */
+    --color-tertiary-hover: #e8eeff;
     --color-gray-200: rgba(218, 218, 218, 0.5);
 
     /* Max width */
