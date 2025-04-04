@@ -84,7 +84,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
                 <>
                     <Controller
                         control={control}
-                        name={`theme_settings.theme`}
+                        name="theme"
                         defaultValue={selectedTheme?.name || ""}
                         render={({ field }) => (
                             <SelectField

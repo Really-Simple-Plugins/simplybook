@@ -98,7 +98,7 @@ return
             'widget_field'  => '/',
         ],
         'theme' => [
-            'id'       => 'theme_settings',
+            'id'       => 'theme',
             'menu_id'  => 'design',
             'group_id' => 'theme',
             'type'     => 'theme',
