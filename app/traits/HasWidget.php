@@ -34,7 +34,7 @@ trait HasWidget
      * Get the server URL
      */
     protected function getServerURL(): string {
-        $domain = $this->get_option('domain');
+        $domain = $this->get_domain();
         $login = get_option('simplybook_company_login', '');
         return "https://$login.$domain";
     }

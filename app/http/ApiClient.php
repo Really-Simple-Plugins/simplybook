@@ -21,7 +21,6 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
-    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
 
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
@@ -103,17 +102,11 @@ class ApiClient
 
     /**
      * Build the endpoint
-     *
-     * @param string $path
-     *
-     * @return string
      */
     protected function endpoint( string $path, string $companyDomain = '' ): string
     {
-        $fallbackDomain = ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
-
         $base = 'https://user-api-v2.';
-        $domain = $companyDomain ?: $fallbackDomain;
+        $domain = $companyDomain ?: $this->get_domain();
 
         return $base . $domain . '/' . $path;
     }
@@ -562,7 +555,8 @@ class ApiClient
 //					'providers'=>[$provider],
 //					'services'=>[$service],
 					'journey_type' => 'skip_welcome_tour',
-                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+//                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+                    'callback_url' => 'https://webhook.site/e58d0977-2a8e-4a77-8806-238a2191aab2',
                 ]
             ),
         ) );

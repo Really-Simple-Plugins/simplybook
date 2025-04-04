@@ -70,7 +70,7 @@ trait HasAllowlistControl
     public function userCanManage(): bool
     {
         // During activation, we need to allow access
-        if (get_option('simplybook_run_activation')) {
+        if (get_option('simplybook_activating_flag')) {
             return true;
         }
 

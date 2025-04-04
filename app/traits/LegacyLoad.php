@@ -15,6 +15,8 @@ trait LegacyLoad {
 	public $fields = [];
 	public $values_loaded = false;
 
+    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
+
     /**
      * Get a field by ID
      * @param string $id
@@ -212,5 +214,13 @@ trait LegacyLoad {
 		$menus = apply_filters( 'simplybook_menus_values', $menus );
 		return array_values( $menus );
 	}
+
+    /**
+     * Helper method to easily retrieve the correct SimplyBook (API) domain
+     */
+    public function get_domain()
+    {
+        return ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
+    }
 
 }

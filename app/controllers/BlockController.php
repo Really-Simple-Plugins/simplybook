@@ -73,6 +73,12 @@ class BlockController implements ControllerInterface
                 'rest_url' => get_rest_url(),
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
+                'x_wp_nonce' => wp_create_nonce('wp_rest'),
+                'rest_namespace' => App::env('http.namespace'),
+                'rest_version' => App::env('http.version'),
+                'site_url' => site_url(),
+                'assets_url' => App::env('plugin.assets_url'),
+                'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
             ]
         );
 
@@ -82,9 +88,6 @@ class BlockController implements ControllerInterface
 
         wp_register_style('simplybookMePl_widget_styles', $indexCss);
         wp_enqueue_style('simplybookMePl_widget_styles');
-
-        $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
-        wp_enqueue_style('simplybook-font', $iconCss);
 
         wp_set_script_translations('simplybook-block', 'simplybook');
     }

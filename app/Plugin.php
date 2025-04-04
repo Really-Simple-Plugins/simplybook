@@ -40,23 +40,42 @@ class Plugin
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
+        add_action('admin_init', [$this, 'fireActivationHook']);
 
         do_action('simplybook_plugin_loaded');
     }
 
     /**
-     * Method that fires on activation
+     * Method that fires on activation. It creates a flag in the database
+     * options table to indicate that the plugin is being activated. Flag is
+     * used by {@see fireActivationHook} to run the activation hook only once.
      */
     public function activation()
     {
-        // todo - please stop using this option..
-        update_option('simplybook_run_activation', true, false);
-        // But can we do that? See \SimplyBook\Traits\HasAllowlistControl::userCanManage
-
-        do_action('simplybook_activation');
+        // Set the flag on activation
+        update_option('simplybook_activating_flag', true, false);
 
         // Flush rewrite rules to ensure the new routes are available
         add_action('shutdown', 'flush_rewrite_rules');
+    }
+
+    /**
+     * Method fires the activation hook. But only if the plugin is being
+     * activated. The flag is set in the database options table
+     * {@see activation} and is used to determine if the plugin is being
+     * activated. This method removes the flag after it has been used.
+     */
+    public function fireActivationHook()
+    {
+        if (get_option('simplybook_activating_flag', false) === false) {
+            return;
+        }
+
+        // Gives possibility to hook into the activation process
+        do_action('simplybook_activation'); // !important
+
+        // Remove the activation flag so the action doesn't run again
+        delete_option('simplybook_activating_flag');
     }
 
     /**
