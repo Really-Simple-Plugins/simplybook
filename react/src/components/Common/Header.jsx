@@ -31,10 +31,10 @@ const Header = () => {
 
     return (
         <div className="bg-white ">
-            <div className="mx-auto flex max-w-screen-2xl items-baseline px-5">
-                <div>
+            <div className="mx-auto px-5 flex items-baseline max-w-screen-2xl">
+                <div className="self-center">
                     <Link to="/">
-                        <Logo className="h-12 w-40 px-5 py-2" />
+                        <Logo className=" w-40 px-5 py-2" />
                     </Link>
                 </div>
                 <div className="flex items-center">
