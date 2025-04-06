@@ -13,6 +13,8 @@ import {
     faEye,
     faBullhorn,
     faClock,
+    faGlobe,
+    faSupport,
     faShoppingCart,
  } from "@fortawesome/free-solid-svg-icons";
 
@@ -29,6 +31,7 @@ const iconMap = {
     "user-group": faUserGroup,
     "eye": faEye,
     "bullhorn": faBullhorn,
+    "support": faGlobe,
     "clock": faClock,
     "circle": faCircle,
     "cart": faShoppingCart,
