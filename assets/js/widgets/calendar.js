@@ -17,3 +17,4 @@ function instantiateSimplybookWidget() {
 }
 
 document.addEventListener("DOMContentLoaded", instantiateSimplybookWidget);
+document.addEventListener("loadSimplyBookPreviewWidget", instantiateSimplybookWidget);
