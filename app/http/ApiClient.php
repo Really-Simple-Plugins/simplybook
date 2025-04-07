@@ -22,6 +22,12 @@ class ApiClient
     use LegacyHelper;
 
     protected JsonRpcClient $jsonRpcClient;
+    /**
+     * Flag to use during onboarding. Will help us recognize if we are in the
+     * middle of the onboarding process.
+     */
+    private bool $duringOnboardingFlag = false;
+
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
@@ -51,6 +57,15 @@ class ApiClient
 //			$this->getBookingStats();
 //			set_transient('simplybook_recently_loaded', true, MINUTE_IN_SECONDS);
 //		}
+    }
+
+    /**
+     * Set the during onboarding flag
+     */
+    public function setDuringOnboardingFlag(bool $flag): ApiClient
+    {
+        $this->duringOnboardingFlag = $flag;
+        return $this;
     }
 
     public function getBookingStats(){
@@ -274,7 +289,7 @@ class ApiClient
                 $this->update_token( $request->token );
                 $this->update_token( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
-                $this->update_option( 'domain', $request->domain );
+                $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
             } else {
                 $this->log("Error during token retrieval");
             }
@@ -573,7 +588,7 @@ class ApiClient
                 error_log(print_r($request,true));
                 update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
                 update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
-                $this->update_option( 'company_id', (int) $request->company_id );
+                $this->update_option( 'company_id', (int) $request->company_id, $this->duringOnboardingFlag );
                 update_option("simplybook_company_registration_start_time", time(), false);
                 //successful registered
                 return new ApiResponseDTO( true );
@@ -1354,8 +1369,8 @@ class ApiClient
         $this->update_token($token, $tokenType);
         $this->update_token($refreshToken, $tokenType, true );
 
-        $this->update_option('domain', $companyDomain);
-        $this->update_option('company_id', $companyId);
+        $this->update_option('domain', $companyDomain, $this->duringOnboardingFlag);
+        $this->update_option('company_id', $companyId, $this->duringOnboardingFlag);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 
