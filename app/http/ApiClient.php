@@ -1251,7 +1251,7 @@ class ApiClient
             'password' => $userPassword,
         ]);
 
-        $endpoint = $this->endpoint('admin/auth', $companyDomain);
+        $endpoint = $this->endpoint('admin/auth', $companyDomain, true);
         $response = wp_safe_remote_post($endpoint, [
             'headers' => $this->get_headers(),
             'timeout' => 15,
