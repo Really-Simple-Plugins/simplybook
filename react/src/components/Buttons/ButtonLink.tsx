@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 import Icon from "../Common/Icon";
 import { __ } from "@wordpress/i18n";
 import { ButtonLinkProps } from "../../types/buttons/ButtonLinkProps";
+import useLoginData from "../../hooks/useLoginData";
 
 const ButtonLink: React.FC<ButtonLinkProps> = ({ 
     className = "", 
@@ -11,13 +12,38 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     btnVariant,
     disabled = false,
     target,
-    link,
-    onClick,
+    loginLink = "",
+    link = "",
     icon = false,
     iconName,
     iconSize,
-    name
 }) => {
+  const { fetchLinkData } = useLoginData();
+
+  const loginTo = ( e:any , page:string ) => {
+    e.preventDefault();
+
+    // Start fetch when the link is clicked
+    fetchLinkData().then((response) => {
+        let link = response?.data.simplybook_dashboard_url;
+
+        if (!link) {
+            console.error("No link found in response");
+            return;
+        }
+
+        let finalUrl = `${link}/${page}/`;
+        if (link.includes("by-hash")) {
+            finalUrl = `${link}?back_url=/${page}/`;
+        }
+
+        window.open(finalUrl, "_blank");
+        window.focus();
+    }).catch((error) => {
+        console.error("Error fetching login URL:", error);
+    });
+
+  };
 
   let buttonVariants = clsx(
     // Base styles
@@ -36,17 +62,16 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     buttonVariants = buttonVariants + ' ' + className;
   }
 
-
   return (
     <>
-    <Link target={target} to={link} className="text-base text-tertiary font-semibold">
+    <Link to={link} onClick={loginLink ? (e) => loginTo(e, loginLink) : undefined} target={target} className="text-base text-tertiary font-semibold">
       <div className={clsx(buttonVariants, className)}>
           {icon && 
             <Icon className="mr-2" name={iconName} size={iconSize} />
           }
               {children}
       </div>
-      </Link>
+    </Link>
     </>
   );
 };
