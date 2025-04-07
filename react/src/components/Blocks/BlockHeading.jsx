@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-const BlockHeading = ({ title, help, controls, className = "" }) => {
+const BlockHeading = ({ title, controls, className = "", help = "" }) => {
     let titleSpacing = (help ? "pt-4" : "py-4");
 
     return (
