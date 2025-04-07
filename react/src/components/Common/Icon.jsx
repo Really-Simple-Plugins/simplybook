@@ -1,26 +1,33 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { 
+  fas,
   faCircle,
   faSquareArrowUpRight,
   faSpinner,
   faChevronDown,
-    faChevronUp,
-    faCheck,
-    faInfoCircle,
-    faTimes,
-    faTrophy,
-    faUserGroup,
-    faEye,
-    faBullhorn,
-    faClock,
-    faGlobe,
-    faSupport,
-    faShoppingCart,
+  faChevronUp,
+  faCheck,
+  faInfoCircle,
+  faTimes,
+  faTrophy,
+  faUserGroup,
+  faEye,
+  faBullhorn,
+  faClock,
+  faGlobe,
+  faSupport,
+  faShoppingCart,
+  faCircleCheck,
+  faCircleXmark,
  } from "@fortawesome/free-solid-svg-icons";
+
+ console.error(faCircleCheck, faCircleCheck, faGlobe);
 
 // Map your icons to keys for easy referencing
 const iconMap = {
     "square-arrow-up-right": faSquareArrowUpRight,
+    "circle-check": faCircleCheck,
+    "circle-xmark": faCircleXmark,
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
