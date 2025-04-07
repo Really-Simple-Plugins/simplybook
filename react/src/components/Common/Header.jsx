@@ -5,6 +5,7 @@ import { __ } from "@wordpress/i18n";
 import {useEffect} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
+import useTaskData from "../../hooks/useTaskData";
 import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
 import Label from "./Label";
@@ -12,6 +13,8 @@ import Label from "./Label";
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
     const { subscriptionPlan, expiresIn, isExpired, isLoading, hasError } = useSubscriptionData();
+    const { isLoading: tasksLoading, getRemainingTasks } = useTaskData();
+    const tasksOpen = getRemainingTasks().length;
 
     useEffect(() => {
         if (
@@ -40,6 +43,11 @@ const Header = () => {
                 </div>
                 <div className="flex items-center">
                     <Link to="/" className={linkClassName}>
+                    {!tasksLoading && tasksOpen > 0 && (
+                        <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
+                            {tasksOpen}
+                        </div>
+                    )}
                         {__("Dashboard", "simplybook")}
                     </Link>
                     <LoginLink className={linkClassName} page="client">
