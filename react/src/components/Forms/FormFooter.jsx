@@ -6,39 +6,39 @@ import Icon from "../Common/Icon";
 import useSettingsData from "../../hooks/useSettingsData";
 
 function FormFooter({ onSubmit, control }) {
-  const { isDirty, isSubmitting, isValidating, isValid } = useFormState({
-    control,
-  });
+    const { isDirty, isSubmitting, isValidating, isValid } = useFormState({
+        control,
+    });
 
-  const { isSavingSettings } = useSettingsData();
+    const { isSavingSettings } = useSettingsData();
 
-  const formStates = [
-    { condition: isSubmitting, message: __("Saving...", "simplybook"), color: "blue" },
-    { condition: isValidating, message: __("Validating...", "simplybook"), color: "blue" },
-    { condition: !isValid, message: __("Form contains errors", "simplybook"), color: "red" },
-    { condition: isDirty, message: __("You have unsaved changes", "simplybook"), color: "amber" },
-  ];
+    const formStates = [
+        { condition: isSubmitting, message: __("Saving...", "simplybook"), color: "blue" },
+        { condition: isValidating, message: __("Validating...", "simplybook"), color: "blue" },
+        { condition: !isValid, message: __("Form contains errors", "simplybook"), color: "red" },
+        { condition: isDirty, message: __("You have unsaved changes", "simplybook"), color: "amber" },
+    ];
 
-  const currentState = formStates.find(state => state.condition);
-  return (
-    <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
-      <FormScrollProgressLine />
-      <div className="flex flex-row justify-end gap-2 items-center p-5">
-        {currentState && (
-          <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
-            {currentState.message}
-          </p>
-        )}
-        <ButtonInput 
-          onClick={onSubmit} 
-          disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-        >
-          {__("Save", "simplybook")}
-          {isSubmitting || isSavingSettings && <Icon className="ml-4" name="spinner" color="white"/>}
-        </ButtonInput>
-      </div>
-    </div>
-  );
+    const currentState = formStates.find(state => state.condition);
+    return (
+        <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
+            <FormScrollProgressLine />
+            <div className="flex flex-row justify-end gap-2 items-center p-5">
+                {currentState && (
+                    <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
+                        {currentState.message}
+                    </p>
+                )}
+                <ButtonInput
+                    onClick={onSubmit}
+                    disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
+                >
+                    {__("Save", "simplybook")}
+                    {isSubmitting || isSavingSettings && <Icon className="ml-4" name="spinner" color="white"/>}
+                </ButtonInput>
+            </div>
+        </div>
+    );
 }
 
 FormFooter.displayName = "FormFooter";
