@@ -59,7 +59,7 @@ const ListItem = forwardRef(
                                 className={"bg-primary hover:bg-primary-hover hover:text-primary-dark"}
                                 btnVariant={"square-small"}
                                 target="_blank"
-                                link="https://help.simplybook.me/index.php/Help_Center"
+                                loginLink="v2/r/payment-widget"
                             >    
                                 {__("Upgrade", "simplybook")}
                             </ButtonLink>
