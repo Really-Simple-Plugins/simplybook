@@ -24,10 +24,10 @@ const useStatisticsData = () => {
     return {
         statistics: response?.data,
         mostPopularProvider: response?.data?.most_popular_provider,
-        mostPopularProviderName: response?.data?.most_popular_provider.name,
+        mostPopularProviderName: response?.data?.most_popular_provider?.name,
         mostPopularProviderBookings: response?.data?.most_popular_provider_bookings,
         mostPopularService: response?.data?.most_popular_service,
-        mostPopularServiceName: response?.data?.most_popular_service.name,
+        mostPopularServiceName: response?.data?.most_popular_service?.name,
         mostPopularServiceBookings: response?.data?.most_popular_service_bookings,
         bookingsToday: response?.data?.bookings_today,
         bookingsThisWeek: response?.data?.bookings_this_week,
