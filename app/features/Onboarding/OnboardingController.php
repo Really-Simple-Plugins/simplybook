@@ -246,7 +246,7 @@ class OnboardingController implements FeatureInterface
     {
         $responseStorage = new Storage($response);
 
-        App::provide('client')->saveAuthenticationData(
+        App::provide('client')->setDuringOnboardingFlag(true)->saveAuthenticationData(
             $responseStorage->getString('token'),
             $responseStorage->getString('refresh_token'),
             $parsedDomain,
