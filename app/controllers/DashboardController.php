@@ -131,6 +131,10 @@ class DashboardController implements ControllerInterface
             return;
         }
 
+        // Enqueue SimplyBook Widget script for preview functionality
+        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
+        wp_enqueue_script('simplybookMePl_widget_scripts');
+
         wp_enqueue_script(
             'simplybook',
             App::env('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
