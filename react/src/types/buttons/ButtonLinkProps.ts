@@ -4,6 +4,7 @@ export interface ButtonLinkProps {
     btnVariant?: string;
     disabled?: boolean;
     target?: string;
+    loginLink?: string;
     link?: string;
     onClick?: () => void;
     icon?: boolean;

@@ -4,6 +4,7 @@ import {__, sprintf } from "@wordpress/i18n";
 import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
 import useDomainData from "../../hooks/useDomainData";
+import ButtonLink from "../Buttons/ButtonLink";
 /**
  * HiddenField component
  * @param {string} id
@@ -54,10 +55,14 @@ const ListItem = forwardRef(
                                 />
                             }
                             {upgrade && <>
-                                <span
-                                    className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium bg-tertiary text-white`}>
-                                  {__("Upgrade", "simplybook")}
-                                </span>
+                            <ButtonLink
+                                className={"bg-primary hover:bg-primary-hover hover:text-primary-dark"}
+                                btnVariant={"square-small"}
+                                target="_blank"
+                                loginLink="v2/r/payment-widget"
+                            >    
+                                {__("Upgrade", "simplybook")}
+                            </ButtonLink>
                             </>}
                         </div>
                     </div>

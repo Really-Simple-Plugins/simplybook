@@ -24,26 +24,33 @@
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
-    /* Define custom colors */
+    /* Error colors */
+    --color-succes: #2CE37B;
+    --color-succes-light: #EAFAF3;
+
+    /* Primary colors */
     --bg-primary-light: #b3e4f9;
     --bg-primary: #06adef;
     --bg-primary-dark: #055b78;
+    --color-primary-hover: #0589bd;
+    --color-primary-lighter: #F0F4FE;
     
+    /* Secondary colors */
     --bg-secondary-light: #ffb3c1;
     --bg-secondary: #ff3259;
     --bg-secondary-dark: #950c28;
 
+    /* Tertiary colors */
     --bg-tertiary-light: #f0f4fe;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
+    --color-tertiary-hover: #e8eeff;
 
-    --color-primary-lighter: #F0F4FE;
 
     /* Border colors */
     --color-tertiary-border: #EFF4FF;
 
     /* Hover colors */
-    --color-tertiary-hover: #e8eeff;
     --color-gray-200: rgba(218, 218, 218, 0.5);
 
     /* Max width */

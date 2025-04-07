@@ -8,6 +8,7 @@ import useSubscriptionData from "../../hooks/useSubscriptionData";
 import useTaskData from "../../hooks/useTaskData";
 import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
+import Label from "./Label";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
@@ -29,9 +30,9 @@ const Header = () => {
         }
     }, [onboardingCompleted]);
 
-    const linkClassName =
-        "text-base relative p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden";
-
+    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden";
+    const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+        
     return (
         <div className="bg-white ">
             <div className="mx-auto px-5 flex items-baseline max-w-screen-2xl">
@@ -60,7 +61,7 @@ const Header = () => {
                     </Link>
                 </div>
                 <ButtonLink
-                    className={"border-tertiary-border border-2 bg-tertiary-light hover:bg-tertiary-hover ml-4 "}
+                    className={"border-tertiary-border border-2 bg-tertiary-light hover:border-primary-border ml-4 "}
                     target="_blank"
                     link="https://help.simplybook.me/index.php/Help_Center"
                     icon={true}
@@ -71,24 +72,28 @@ const Header = () => {
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
-                    {!isLoading && !isExpired && !hasError && (
-                        <p>
-                            <span>{subscriptionPlan} - {expiresIn} {__("days left", "simplybook")}</span>
-                        </p>
-                    )}
-                    {!isLoading && !hasError && isExpired && (
-                        <p className="color-red">
-                            <span>{subscriptionPlan} - {__("Expired", "simplybook")}</span>
-                        </p>
-                    )}
-                    <LoginLink
-                        className={linkClassName}
-                        isButton={true}
-                        btnVariant="tertiary"
-                        page="v2/r/payment-widget"
+                    {!isExpired && expiresIn && subscriptionPlan && (
+                    <Label
+                        labelVariant="trial"
                     >
+                        {expireText}
+                    </Label>
+                    )}
+                    {!isExpired && subscriptionPlan && (
+                    <Label
+                    labelVariant="trial-expired"
+                     >
+                        {subscriptionPlan} {__("is expired.", "simplybook")}
+                    </Label>
+                    )}
+                    <ButtonLink
+                        className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
+                        btnVariant="ghost"
+                        target="_blank"
+                        loginLink="v2/r/payment-widget#/" 
+                    >    
                         {__("Upgrade", "simplybook")}
-                    </LoginLink>
+                    </ButtonLink>
                 </div>
             </div>
         </div>
