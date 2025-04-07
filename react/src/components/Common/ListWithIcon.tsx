@@ -14,14 +14,14 @@ const ListWithIcon: React.FC<ListWithIconProps> = ({
 }) => {
     return (
         <>
-            <li className={clsx("text-base font-medium mx-2", className)}>
+            <li className={clsx("flex justify-center items-center text-base font-medium mx-2", className)}>
                 <Icon
                     className={iconClass}
                     name={iconName} 
                     size={iconSize}
                     style={{ color: iconColor }}
                 />
-                <span className="ml-1 text-black">{children}</span>
+                <span className="ml-2 text-black">{children}</span>
             </li>
         </>
     );
