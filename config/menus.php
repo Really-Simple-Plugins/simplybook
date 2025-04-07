@@ -34,10 +34,12 @@ return [
             [
                 'id' => 'main',
                 'title' => __('Main settings', 'simplybook'),
+                'has_preview' => true,
             ],
             [
                 'id' => 'theme',
                 'title' => __('Theme settings', 'simplybook'),
+                'has_preview' => true,
             ],
             [
                 'id' => 'reviews',

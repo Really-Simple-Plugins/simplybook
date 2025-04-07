@@ -315,8 +315,14 @@
 .z-50 {
   z-index: 50;
 }
+.z-60 {
+  z-index: 60;
+}
 .z-999 {
   z-index: 999;
+}
+.z-99999 {
+  z-index: 99999;
 }
 .col-span-3 {
   grid-column: span 3 / span 3;
@@ -538,6 +544,9 @@
 .h-\[350px\] {
   height: 350px;
 }
+.h-auto {
+  height: auto;
+}
 .h-full {
   height: 100%;
 }
@@ -597,6 +606,9 @@
 }
 .w-65 {
   width: calc(var(--spacing) * 65);
+}
+.w-\[50vw\] {
+  width: 50vw;
 }
 .w-\[100px\] {
   width: 100px;
@@ -661,6 +673,9 @@
 }
 .animate-pulse {
   animation: var(--animate-pulse);
+}
+.cursor-default {
+  cursor: default;
 }
 .cursor-not-allowed {
   cursor: not-allowed;
@@ -786,6 +801,9 @@
 }
 .overflow-x-scroll {
   overflow-x: scroll;
+}
+.overflow-y-scroll {
+  overflow-y: scroll;
 }
 .rounded {
   border-radius: 0.25rem;

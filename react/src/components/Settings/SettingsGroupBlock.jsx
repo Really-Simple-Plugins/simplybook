@@ -3,9 +3,11 @@ import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
 import BlockContent from "../Blocks/BlockContent";
 import FormFieldWrapper from "../Forms/FormFieldWrapper";
+import BlockFooter from "../Blocks/BlockFooter";
+import PreviewButtonInput from "../Inputs/PreviewButton";
 
 const SettingsGroupBlock = memo(
-    ({ group, currentGroupFields, control, isLastGroup, formHasSettings }) => {
+    ({ group, currentGroupFields, control, isLastGroup, formHasSettings, getValues }) => {
         const className = isLastGroup && formHasSettings ? "rounded-b-none" : "mb-5";
 
         return (
@@ -13,9 +15,14 @@ const SettingsGroupBlock = memo(
                 <BlockHeading title={group.title} help={group?.help ?? ''}/>
                 <BlockContent>
                     <div className="flex flex-wrap">
-                        <FormFieldWrapper fields={currentGroupFields} control={control}/>
+                        <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues}/>
                     </div>
                 </BlockContent>
+                {group.has_preview && (
+                    <BlockFooter className="rounded-xl bg-gray-50">
+                        <PreviewButtonInput btnVariant="tertiary" getValues={getValues}></PreviewButtonInput>
+                    </BlockFooter>
+                )}
             </Block>
         );
     },
