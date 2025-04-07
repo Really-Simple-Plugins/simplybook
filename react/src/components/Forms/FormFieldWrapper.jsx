@@ -5,10 +5,11 @@ import FormField from "./FormField";
  * The form field wrapper component is created to allow some fields to be grouped, and to be displayed in a row.
  * @param fields
  * @param control
+ * @param getValues
  * @returns {Element}
  * @constructor
  */
-const FormFieldWrapper = ({ fields, control }) => {
+const FormFieldWrapper = ({ fields, control, getValues }) => {
     // Group fields by `inline_group`
     const groupedFields = fields.reduce((groups, field) => {
         if (field.inline_group) {
