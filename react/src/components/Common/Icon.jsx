@@ -20,11 +20,12 @@ import {
   faEye,
   faBullhorn,
   faClock,
-  faGlobe,
   faSupport,
   faShoppingCart,
   faArrowUpRightFromSquare
  } from "@fortawesome/free-solid-svg-icons";
+
+ import { faGlobe } from "@fortawesome/pro-regular-svg-icons";
 
 // Map your icons to keys for easy referencing
 const iconMap = {
