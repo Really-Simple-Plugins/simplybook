@@ -11,18 +11,19 @@ import {
   faSquareArrowUpRight,
   faSpinner,
   faChevronDown,
-    faChevronUp,
-    faCheck,
-    faInfoCircle,
-    faTimes,
-    faTrophy,
-    faUserGroup,
-    faEye,
-    faBullhorn,
-    faClock,
-    faGlobe,
-    faSupport,
-    faShoppingCart,
+  faChevronUp,
+  faCheck,
+  faInfoCircle,
+  faTimes,
+  faTrophy,
+  faUserGroup,
+  faEye,
+  faBullhorn,
+  faClock,
+  faGlobe,
+  faSupport,
+  faShoppingCart,
+  faArrowUpRightFromSquare
  } from "@fortawesome/free-solid-svg-icons";
 
 // Map your icons to keys for easy referencing
@@ -42,6 +43,7 @@ const iconMap = {
     "clock": faClock,
     "circle": faCircle,
     "cart": faShoppingCart,
+    "target-blank": faArrowUpRightFromSquare,
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {
