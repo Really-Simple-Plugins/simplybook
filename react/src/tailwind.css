@@ -46,6 +46,8 @@
     --bg-tertiary-dark: #061f32;
     --color-tertiary-hover: #e8eeff;
 
+    /* Button colors */
+    --color-button-blue: #5A6FA5;
 
     /* Border colors */
     --color-tertiary-border: #EFF4FF;
@@ -65,6 +67,7 @@ Text styles
 small {
     font-size: var(--text-base);
 }
+ 
 /**
 ======================================
 Base styles
