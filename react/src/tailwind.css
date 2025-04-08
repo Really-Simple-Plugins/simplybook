@@ -14,10 +14,9 @@
 @source "../safelist.txt";
 
 @theme {
-    /* Define new container width */
 
     /* Box-shadow */
-    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);;
+    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
 
     /* Define custom font sizes */
     --text-label: 1rem;
@@ -25,21 +24,37 @@
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
-    /* Define custom colors */
+    /* Error colors */
+    --color-succes: #2CE37B;
+    --color-succes-light: #EAFAF3;
+
+    /* Primary colors */
     --bg-primary-light: #b3e4f9;
     --bg-primary: #06adef;
     --bg-primary-dark: #055b78;
+    --color-primary-hover: #0589bd;
+    --color-primary-lighter: #F0F4FE;
     
+    /* Secondary colors */
     --bg-secondary-light: #ffb3c1;
     --bg-secondary: #ff3259;
     --bg-secondary-dark: #950c28;
 
+    /* Tertiary colors */
     --bg-tertiary-light: #f0f4fe;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
+    --color-tertiary-hover: #e8eeff;
 
-    /* Overwrite base colors */
+
+    /* Border colors */
+    --color-tertiary-border: #EFF4FF;
+
+    /* Hover colors */
     --color-gray-200: rgba(218, 218, 218, 0.5);
+
+    /* Max width */
+    --container-8xl: 125rem;
 }
 
 /**
@@ -64,7 +79,7 @@ h3 { font-size: var(--text-xl);}
 Grid styles
 ======================================
 **/
-.max-w-container { width: 1400px; }
+.max-w-container { width: 2000px; }
 
 /**
 ======================================
@@ -72,8 +87,17 @@ Onboarding styles
 ======================================
 **/
 .onboarding-body {
-    height: 85svh;
+    height: 100%;
     margin: 1svh;
+}
+
+/**
+======================================
+Form field container
+======================================
+**/
+.form-field-inline {
+    width: calc(1/2 * 95%)
 }
 
 /**
@@ -95,11 +119,11 @@ Input global styles
             width: 100%;
             border-radius: var(--radius-md);
             padding: 0.5rem;
-            /* margin-bottom: 1rem; */
             border-color: var(--color-gray-200);
             border-style: var(--tw-border-style);
             border-width: 2px;
             box-shadow: var(--shadow-md);
+            line-height: 2rem;
     }
 }
 

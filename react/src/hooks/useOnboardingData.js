@@ -48,20 +48,6 @@ const useOnboardingData = () => {
     },
     {
       id: 2,
-      path: "/onboarding/tips-and-tricks",
-      fields: [
-        {
-          id: "tips-and-tricks",
-          type: "checkbox",
-        },
-      ],
-      beforeSubmit: async (data) => {
-        console.log("submit tips and tricks step");
-        await registerTipsTricks({ data });
-      },
-    },
-    {
-      id: 3,
       path: "/onboarding/information-check",
       fields: [
         {
@@ -72,6 +58,8 @@ const useOnboardingData = () => {
         {
           id: "category",
           type: "select",
+          style: "inline",
+          inline_group: true,
           label: __("Business category", "simplybook"),
           options: [
             { value: "3", label: __("Beauty and wellness", "simplybook") },
@@ -91,11 +79,13 @@ const useOnboardingData = () => {
         {
           id: "service",
           type: "text",
+          style: "inline",
           label: __("What service do you provide?", "simplybook"),
         },
         {
           id: "phone",
           type: "text",
+          style: "inline",
           label: __("Phone", "simplybook"),
           validation: {
             regex: "^\\+?[0-9\\s\\-().]+$",
@@ -105,16 +95,19 @@ const useOnboardingData = () => {
         {
           id: "address",
           type: "text",
+          style: "inline",
           label: __("Address", "simplybook"),
         },
         {
           id: "zip",
           type: "text",
+          style: "inline",
           label: __("Postal Code", "simplybook"),
         },
         {
           id: "city",
           type: "text",
+          style: "inline",
           label: __("City", "simplybook"),
         },
         {
@@ -143,7 +136,7 @@ const useOnboardingData = () => {
       },
     },
     {
-      id: 4,
+      id: 3,
       path: "/onboarding/confirm-email",
       fields: [
         {
@@ -171,7 +164,7 @@ const useOnboardingData = () => {
       },
     },
     {
-      id: 5,
+      id: 4,
       path: "/onboarding/style-widget",
       fields: [
         {
@@ -209,7 +202,7 @@ const useOnboardingData = () => {
       ],
     },
     {
-      id: 6,
+      id: 5,
       path: "/onboarding/implementation",
       fields: [
         {

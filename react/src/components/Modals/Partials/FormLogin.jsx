@@ -9,7 +9,7 @@ import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
 import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
 
-const FormLogin = ({
+const formLogin = ({
     onClose,
     setRequire2fa,
     setAuthSessionId,
@@ -178,4 +178,4 @@ const FormLogin = ({
     );
 }
 
-export default FormLogin;
+export default formLogin;

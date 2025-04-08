@@ -33,11 +33,6 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this->service, 'storeEmailAddress'],
         ];
 
-        $routes['onboarding/tipstricks'] = [
-            'methods' => 'POST',
-            'callback' => [$this->service, 'storeTipsAndTricksChoice'],
-        ];
-
         $routes['onboarding/company_registration'] = [
             'methods' => 'POST',
             'callback' => [$this, 'registerCompanyAtSimplyBook'],
