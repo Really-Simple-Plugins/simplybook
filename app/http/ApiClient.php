@@ -530,7 +530,6 @@ class ApiClient
         $phone = sanitize_text_field( $this->get_company('phone') );
         $city = sanitize_text_field( $this->get_company('city') );
         $address = sanitize_text_field( $this->get_company('address') );
-        $service = sanitize_text_field( $this->get_company('service') );
         $country = $this->sanitize_country( $this->get_company('country') );
         //no spaces allowed in zip
         $zip = (string) $this->get_company('zip');
@@ -544,8 +543,6 @@ class ApiClient
         }
 
         $coordinates = $this->get_coordinates($address, $zip, $city, $country);
-
-        $provider = $this->get_user_full_name();
         $request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
             'headers' => $this->get_headers( true ),
             'timeout' => 15,
@@ -571,11 +568,8 @@ class ApiClient
                     'marketing_consent' => false,
                     //add a query arg so we can redirect to the correct page when user ends up on this link.
                     'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
-//					'providers'=>[$provider],
-//					'services'=>[$service],
 					'journey_type' => 'skip_welcome_tour',
-//                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
-                    'callback_url' => 'https://webhook.site/e58d0977-2a8e-4a77-8806-238a2191aab2',
+                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
         ) );
