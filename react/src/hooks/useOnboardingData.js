@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import {useCallback, useEffect} from "react";
 import debounce from "lodash.debounce"; // You can use lodash's debounce function
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -13,6 +13,9 @@ import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailab
 
 const useOnboardingData = () => {
   const { getValue } = useSettingsData();
+  const [calendarPageNameAvailable, setCalendarPageNameAvailable] = useState(false);
+  const [bookingPageNameAvailable, setBookingPageNameAvailable] = useState(false);
+
   const steps = [
     {
       id: 1,
@@ -275,14 +278,57 @@ const useOnboardingData = () => {
       prefilledData[setting.id] = setting.value;
     }
   });
+
+  const checkPageTitleAvailability = async (pageName) => {
+    const response = await isPageTitleAvailable({
+      data: { url: pageName },
+    });
+    return response.status === "success";
+  }
+
+  const handleBookingPageNameChange = (pageName) => {
+    setBookingPageUrl(pageName);
+    debouncedSetBookingPageName(pageName);
+  };
+
+  const handleCalendarPageNameChange = (pageName) => {
+    setCalendarPageUrl(pageName);
+    debouncedSetCalendarPageName(pageName);
+  };
+
+  const debouncedSetBookingPageName = useCallback(
+      debounce(async (pageName) =>
+          setBookingPageNameAvailable(
+              await checkPageTitleAvailability(pageName)
+          ), 500), // 500ms delay
+      [],
+  );
+
+  const debouncedSetCalendarPageName = useCallback(
+      debounce(async (pageName) =>
+          setCalendarPageNameAvailable(
+              await checkPageTitleAvailability(pageName)
+          ), 500), // 500ms delay
+      [],
+  );
+
+  useEffect(async () => {
+    setCalendarPageNameAvailable(
+        await checkPageTitleAvailability(calendarPageUrl)
+    );
+    setBookingPageNameAvailable(
+        await checkPageTitleAvailability(bookingPageUrl)
+    );
+  }, []);
+
   const query = useQuery({
     queryKey: ["onboarding_data"],
     initialData: {
       ...initialData,
       ...prefilledData,
       onboardingCompleted: simplybook.is_onboarding_completed, // Include onboardingCompleted
-      calendarPageNameAvailable: true,
-      bookingPageNameAvailable: true,
+      calendarPageNameAvailable: calendarPageNameAvailable,
+      bookingPageNameAvailable: bookingPageNameAvailable,
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
@@ -310,62 +356,6 @@ const useOnboardingData = () => {
     },
   });
 
-  const { mutate: updateCalendarPageNameAvailable } = useMutation({
-    mutationFn: async () => {
-      // Verify if the page title is available based on URL
-      const response = await isPageTitleAvailable({
-        data: { url: calendarPageUrl },
-      });
-      const isAvailable = response.status === "success";
-
-      // Update the query data with the new page name and availability status
-      queryClient.setQueryData(["onboarding_data"], (oldData) => ({
-        ...oldData,
-        calendarPageNameAvailable: isAvailable,
-      }));
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["onboarding_data"]);
-    },
-  });
-  const { mutate: updateBookingPageNameAvailable } = useMutation({
-    mutationFn: async () => {
-      // Verify if the page title is available based on URL
-      const response = await isPageTitleAvailable({
-        data: { url: bookingPageUrl },
-      });
-      const isAvailable = response.status === "success";
-      // Simulate API update call if needed, otherwise update the cache directly
-      queryClient.setQueryData(["onboarding_data"], (oldData) => ({
-        ...oldData,
-        bookingPageNameAvailable: isAvailable,
-      }));
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries(["onboarding_data"]);
-    },
-  });
-
-  const debouncedSetBookingPageName = useCallback(
-    debounce((pageName) => updateBookingPageNameAvailable(pageName), 500), // 500ms delay
-    [],
-  );
-
-  const handleBookingPageNameChange = (pageName) => {
-    setBookingPageUrl(pageName);
-    debouncedSetBookingPageName(pageName);
-  };
-
-  const debouncedSetCalendarPageName = useCallback(
-    debounce((pageName) => updateCalendarPageNameAvailable(pageName), 500), // 500ms delay
-    [],
-  );
-
-  const handleCalendarPageNameChange = (pageName) => {
-    setCalendarPageUrl(pageName);
-    debouncedSetCalendarPageName(pageName);
-  };
-
   return {
     steps,
     data: query.data,
@@ -384,8 +374,8 @@ const useOnboardingData = () => {
     setCalendarPageName: (pageName) => handleCalendarPageNameChange(pageName),
     bookingPageName: bookingPageUrl,
     calendarPageName: calendarPageUrl,
-    calendarPageNameAvailable: query.data?.calendarPageNameAvailable,
-    bookingPageNameAvailable: query.data?.bookingPageNameAvailable,
+    calendarPageNameAvailable: calendarPageNameAvailable,
+    bookingPageNameAvailable: bookingPageNameAvailable,
     apiError,
     setApiError,
   };
