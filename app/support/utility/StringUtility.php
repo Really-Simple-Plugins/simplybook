@@ -24,4 +24,12 @@ class StringUtility
         return ucfirst($title);
     }
 
+    /**
+     * Convert a string from snake_case to UpperCamelCase.
+     */
+    public static function snakeToUpperCamelCase(string $string): string
+    {
+        return str_replace('_', '', ucwords($string, '_'));
+    }
+
 }

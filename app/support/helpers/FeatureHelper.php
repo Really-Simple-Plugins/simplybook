@@ -3,6 +3,7 @@
 namespace SimplyBook\Helpers;
 
 use SimplyBook\App;
+use SimplyBook\Utility\StringUtility;
 
 /**
  * Helper class to check if a feature is enabled.
@@ -17,7 +18,7 @@ class FeatureHelper
      */
     public static function isEnabled(string $feature): bool
     {
-        $method = 'is' . str_replace('_', '', ucwords($feature, '_')) . 'Enabled';
+        $method = 'is' . StringUtility::snakeToUpperCamelCase($feature) . 'Enabled';
         if (method_exists(__CLASS__, $method)) {
             return self::$method();
         }
