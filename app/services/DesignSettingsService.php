@@ -201,6 +201,14 @@ class DesignSettingsService
                 $invalid = true;
             }
 
+            // Validate via the callable function
+            if (!empty($config['validate']) && is_callable($config['validate'])) {
+                $result = call_user_func($config['validate'], $value);
+                if ($result !== true) {
+                    $invalid = true;
+                }
+            }
+
             if ($invalid) {
                 $errors[] = [
                     'key' => $key,

@@ -104,7 +104,6 @@ return
             'type'     => 'colorpicker',
             'label'    => __('Text color', 'simplybook'),
             'default'  => '#ffffff',
-            'validate' => 'sanitize_hex_color',
         ],
         'button_position' => [
             'id'       => 'button_position',
