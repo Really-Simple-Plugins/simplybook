@@ -313,6 +313,10 @@ const useOnboardingData = () => {
   );
 
   useEffect(async () => {
+    if (simplybook.is_onboarding_completed) {
+      return;
+    }
+
     setCalendarPageNameAvailable(
         await checkPageTitleAvailability(calendarPageUrl)
     );
