@@ -41,8 +41,8 @@ class OnboardingService
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
 
-        $this->update_option('email', $submittedEmailAddress );
-        $this->update_option('terms-and-conditions', $adminAgreesToTerms);
+        $this->update_option('email', $submittedEmailAddress, true);
+        $this->update_option('terms-and-conditions', $adminAgreesToTerms, true);
 
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
         $message = ($success ? '' : esc_html__('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
