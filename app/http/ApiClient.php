@@ -121,7 +121,7 @@ class ApiClient
     /**
      * Build the endpoint
      */
-    protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = false): string
+    protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = true): string
     {
         $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
         $domain = $companyDomain ?: $this->get_domain();
@@ -1251,7 +1251,7 @@ class ApiClient
             'password' => $userPassword,
         ]);
 
-        $endpoint = $this->endpoint('admin/auth', $companyDomain, true);
+        $endpoint = $this->endpoint('admin/auth', $companyDomain);
         $response = wp_safe_remote_post($endpoint, [
             'headers' => $this->get_headers(),
             'timeout' => 15,
@@ -1424,7 +1424,7 @@ class ApiClient
         }
 
         $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public')
+            $this->endpoint('public', '', false)
         )->setHeaders([
             'X-Company-Login: ' . $this->get_company_login(),
             'X-User-Token: ' . $this->get_token('public'),
@@ -1464,7 +1464,7 @@ class ApiClient
         }
 
         $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public')
+            $this->endpoint('public', '', false)
         )->setHeaders([
             'X-Company-Login: ' . $this->get_company_login(),
             'X-User-Token: ' . $this->get_token('public'),
