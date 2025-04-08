@@ -6,8 +6,8 @@ import { __ } from "@wordpress/i18n";
 import { ButtonLinkProps } from "../../types/buttons/ButtonLinkProps";
 import useLoginData from "../../hooks/useLoginData";
 
-const ButtonLink: React.FC<ButtonLinkProps> = ({ 
-    className = "", 
+const ButtonLink: React.FC<ButtonLinkProps> = ({
+    className = "",
     children,
     btnVariant,
     disabled = false,
@@ -25,7 +25,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
     // Start fetch when the link is clicked
     fetchLinkData().then((response) => {
-        let link = response?.data.simplybook_dashboard_url;
+        let link = response?.data?.simplybook_dashboard_url;
 
         if (!link) {
             console.error("No link found in response");
@@ -66,7 +66,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     <>
     <Link to={link} onClick={loginLink ? (e) => loginTo(e, loginLink) : undefined} target={target} className="text-base text-tertiary font-semibold">
       <div className={clsx(buttonVariants, className)}>
-          {icon && 
+          {icon &&
             <Icon className="mr-2" name={iconName} size={iconSize} />
           }
               {children}

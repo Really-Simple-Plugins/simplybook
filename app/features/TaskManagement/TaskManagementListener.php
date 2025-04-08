@@ -14,7 +14,7 @@ class TaskManagementListener
     public function listen(): void
     {
         add_action('simplybook_company_registered', [$this, 'handleCompanyRegistered'], 10, 2);
-        add_action('simplybook_save_design_section', [$this, 'handleDesignSettingsSaved']);
+        add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
     /**

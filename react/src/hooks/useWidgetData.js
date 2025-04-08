@@ -4,26 +4,32 @@ import HttpClient from "../api/requests/HttpClient";
 const useWidgetData = () => {
     const queryClient = useQueryClient();
 
-    const route = 'get_widget';
-    const client = new HttpClient(route);
+    const client = new HttpClient();
+    const getWidgetRoute = 'get_widget';
+    const getPreviewWidgetRoute = 'get_preview_widget';
 
     const {data: response, refetch} = useQuery({
-        queryKey: [route],
-        queryFn: () => client.get(),
+        queryKey: [getWidgetRoute],
+        queryFn: () => client.setRoute(getWidgetRoute).get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
         retry: 0,
         enabled: false,
     });
 
     const invalidateAndRefetchWidgetScript = async () => {
-        queryClient.invalidateQueries({queryKey: [route]}).then(function(response) {
+        queryClient.invalidateQueries({queryKey: [getWidgetRoute]}).then(function(response) {
             return refetch();
         });
     };
 
+    const createPreviewWidget = async (formData) => {
+        return await client.setRoute(getPreviewWidgetRoute).setPayload(formData).post();
+    }
+
     return {
         widgetScript: response?.data?.widget,
-        invalidateAndRefetchWidgetScript
+        invalidateAndRefetchWidgetScript,
+        createPreviewWidget,
     };
 };
 export default useWidgetData;

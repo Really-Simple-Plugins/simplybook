@@ -3,6 +3,7 @@ namespace SimplyBook\Providers;
 
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Request;
+use SimplyBook\Http\JsonRpcClient;
 
 class AppServiceProvider extends Provider
 {
@@ -26,6 +27,8 @@ class AppServiceProvider extends Provider
      */
     public function provideClient(): ApiClient
     {
-        return new ApiClient();
+        return new ApiClient(
+            new JsonRpcClient()
+        );
     }
 }

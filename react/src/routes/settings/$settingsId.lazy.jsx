@@ -58,6 +58,7 @@ function Settings() {
         control,
         reset,
         formState: { isDirty },
+        getValues,
     } = useForm({
         defaultValues: currentFormDefaultValues,
         values: currentFormValues,
@@ -84,6 +85,7 @@ function Settings() {
                         control={control}
                         isLastGroup={isLastGroup}
                         formHasSettings={formHasSettings}
+                        getValues={getValues}
                     />
                 );
             })}

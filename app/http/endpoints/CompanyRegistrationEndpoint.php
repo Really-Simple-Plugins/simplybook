@@ -80,8 +80,8 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
             ], 400);
         }
 
-        $client->update_token($storage->getString('token'), 'admin' );
-        $client->update_token($storage->getString('refresh_token'), 'admin', true );
+        $client->update_token($storage->getString('token'), 'admin');
+        $client->update_token($storage->getString('refresh_token'), 'admin', true);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 

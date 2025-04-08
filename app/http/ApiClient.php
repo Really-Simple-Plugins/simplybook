@@ -21,6 +21,12 @@ class ApiClient
     use LegacySave;
     use LegacyHelper;
 
+    protected JsonRpcClient $jsonRpcClient;
+    /**
+     * Flag to use during onboarding. Will help us recognize if we are in the
+     * middle of the onboarding process.
+     */
+    private bool $duringOnboardingFlag = false;
 
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
@@ -28,7 +34,8 @@ class ApiClient
     ];
 
     protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
-    public function __construct()
+
+    public function __construct(JsonRpcClient $client)
     {
         //if we have a token, check if it needs to be refreshed
         if ( !$this->get_token('public') ) {
@@ -43,11 +50,22 @@ class ApiClient
             }
         }
 
+        $this->jsonRpcClient = $client;
+
 //		$recently_loaded = get_transient('simplybook_recently_loaded');
 //		if ( !$recently_loaded ) {
 //			$this->getBookingStats();
 //			set_transient('simplybook_recently_loaded', true, MINUTE_IN_SECONDS);
 //		}
+    }
+
+    /**
+     * Set the during onboarding flag
+     */
+    public function setDuringOnboardingFlag(bool $flag): ApiClient
+    {
+        $this->duringOnboardingFlag = $flag;
+        return $this;
     }
 
     public function getBookingStats(){
@@ -103,9 +121,9 @@ class ApiClient
     /**
      * Build the endpoint
      */
-    protected function endpoint( string $path, string $companyDomain = '' ): string
+    protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = false): string
     {
-        $base = 'https://user-api-v2.';
+        $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
         $domain = $companyDomain ?: $this->get_domain();
 
         return $base . $domain . '/' . $path;
@@ -271,7 +289,7 @@ class ApiClient
                 $this->update_token( $request->token );
                 $this->update_token( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
-                $this->update_option( 'domain', $request->domain );
+                $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
             } else {
                 $this->log("Error during token retrieval");
             }
@@ -570,7 +588,7 @@ class ApiClient
                 error_log(print_r($request,true));
                 update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
                 update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
-                $this->update_option( 'company_id', (int) $request->company_id );
+                $this->update_option( 'company_id', (int) $request->company_id, $this->duringOnboardingFlag );
                 update_option("simplybook_company_registration_start_time", time(), false);
                 //successful registered
                 return new ApiResponseDTO( true );
@@ -1233,7 +1251,7 @@ class ApiClient
             'password' => $userPassword,
         ]);
 
-        $endpoint = $this->endpoint('admin/auth', $companyDomain);
+        $endpoint = $this->endpoint('admin/auth', $companyDomain, true);
         $response = wp_safe_remote_post($endpoint, [
             'headers' => $this->get_headers(),
             'timeout' => 15,
@@ -1351,8 +1369,8 @@ class ApiClient
         $this->update_token($token, $tokenType);
         $this->update_token($refreshToken, $tokenType, true );
 
-        $this->update_option('domain', $companyDomain);
-        $this->update_option('company_id', $companyId);
+        $this->update_option('domain', $companyDomain, $this->duringOnboardingFlag);
+        $this->update_option('company_id', $companyId, $this->duringOnboardingFlag);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 
@@ -1378,6 +1396,86 @@ class ApiClient
         }
 
         return $allowedProviders;
+    }
+
+    /**
+     * Get the list of themes available for the company
+     * @uses \SimplyBook\Http\JsonRpcClient
+     */
+    public function getThemeList(): array
+    {
+        if ($cache = wp_cache_get('simplybook_theme_list', 'simplybook')) {
+            return $cache;
+        }
+
+        $fallback = [
+            'created_at_utc' => Carbon::now('UTC')->subDays(3)->toDateTimeString(),
+            'themes' => [],
+        ];
+
+        $cachedOption = get_option('simplybook_cached_theme_list', $fallback);
+        $cachedOptionCreatedAt = Carbon::parse($cachedOption['created_at_utc']);
+        $cachedOptionIsValid = $cachedOptionCreatedAt->isAfter(
+            Carbon::now('UTC')->subDays(2) // Cache is valid for 2 days
+        );
+
+        if ($cachedOptionIsValid) {
+            return $cachedOption;
+        }
+
+        $response = $this->jsonRpcClient->setUrl(
+            $this->endpoint('public')
+        )->setHeaders([
+            'X-Company-Login: ' . $this->get_company_login(),
+            'X-User-Token: ' . $this->get_token('public'),
+        ])->getThemeList();
+
+        $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
+        $data['themes'] = $response;
+
+        update_option('simplybook_cached_theme_list', $data);
+        wp_cache_add('simplybook_theme_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $data;
+    }
+
+    /**
+     * Get the timeline setting options that are available for the company
+     * @uses \SimplyBook\Http\JsonRpcClient
+     */
+    public function getTimelineList(): array
+    {
+        if ($cache = wp_cache_get('simplybook_timeline_list', 'simplybook')) {
+            return $cache;
+        }
+
+        $fallback = [
+            'created_at_utc' => Carbon::now('UTC')->subDays(3)->toDateTimeString(),
+            'list' => [],
+        ];
+
+        $cachedOption = get_option('simplybook_cached_timeline_list', $fallback);
+        $cachedOptionCreatedAt = Carbon::parse($cachedOption['created_at_utc']);
+        $cachedOptionIsValid = $cachedOptionCreatedAt->isAfter(
+            Carbon::now('UTC')->subDays(2) // Cache is valid for 2 days
+        );
+
+        if ($cachedOptionIsValid) {
+            return $cachedOption;
+        }
+
+        $response = $this->jsonRpcClient->setUrl(
+            $this->endpoint('public')
+        )->setHeaders([
+            'X-Company-Login: ' . $this->get_company_login(),
+            'X-User-Token: ' . $this->get_token('public'),
+        ])->getTimelineList();
+
+        $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
+        $data['list'] = $response;
+
+        update_option('simplybook_cached_timeline_list', $data);
+        wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $response;
     }
 
 }
