@@ -13,8 +13,9 @@ export const Label = ({
  }: LabelProps) => {
 
     // Base styles
-    const baseStyles = "py-2 px-4 text-base rounded-md font-semibold";
+    const baseStyles = "py-2 px-2 min-w-20 text-center text-base rounded-md font-semibold";
     const labelStyles = {
+        "border-2 border-blac text-xs " : labelVariant === 'ghost',
         "bg-succes-light text-succes" : labelVariant === 'trial',
         "bg-yellow-100 text-yellow-900" : labelVariant === 'warning',
         "bg-red-100 text-red-600" : labelVariant === 'trial-expired',
