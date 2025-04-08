@@ -96,6 +96,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
                                 help={props?.setting?.help}
                                 required={props?.setting?.required}
                                 disabled={isLoading}
+                                className="w-full"
                                 onChange={(e) => {
                                     field.onChange(e);
                                     setSelectedThemeOnChange(e);
