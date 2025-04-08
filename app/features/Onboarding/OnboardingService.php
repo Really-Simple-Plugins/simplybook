@@ -51,19 +51,6 @@ class OnboardingService
     }
 
     /**
-     * Store the admin's choice for receiving tips and tricks
-     */
-    public function storeTipsAndTricksChoice(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
-        $adminWantsTipsAndTricks = $storage->getBoolean('tips-and-tricks');
-
-        $this->update_option('tips-and-tricks', $adminWantsTipsAndTricks);
-
-        return $this->sendHttpResponse();
-    }
-
-    /**
      * Store company data from the onboarding step in the options
      */
     public function storeCompanyData(CompanyBuilder $companyBuilder): void
