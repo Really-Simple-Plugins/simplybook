@@ -5,7 +5,7 @@ const ThemeConfigGroup = forwardRef(({
      control,
      parentSetting,
      selectedTheme,
- }, ref) => {
+}, ref) => {
 
     const configTypePriority = {
         'checkbox': 10,
@@ -20,15 +20,18 @@ const ThemeConfigGroup = forwardRef(({
      *
      * @type {{}|{}}
      */
-    const groupedSettings = Object.entries(selectedTheme?.config).reduce((groups, [setting, config]) => {
+    const groupedSettings = Object.entries(selectedTheme?.config).reduce((groups, [setting, originalConfig]) => {
 
         /**
          * Reject the config if it is not visible or widget support is not
          * enabled.
          */
-        if (config.is_visible == false || config.widget_support == false) {
+        if (originalConfig.is_visible == false || originalConfig.widget_support == false) {
             return groups;
         }
+
+        // Clone the original config to avoid mutating it.
+        let config = { ...originalConfig };
 
         /**
          * Normalize the color config_types. This will bundle values like:
@@ -54,7 +57,7 @@ const ThemeConfigGroup = forwardRef(({
             config.values = Object.entries(config.values).map(([key, value]) => ({
                 key : key,
                 value: value,
-                label: (parentSetting?.translations[value] ?? value),
+                label: String(parentSetting?.translations?.[value] ?? value),
             }));
         }
 

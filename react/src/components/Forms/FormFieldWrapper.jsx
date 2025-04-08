@@ -9,13 +9,13 @@ import FormField from "./FormField";
  * @returns {Element}
  * @constructor
  */
-const FormFieldWrapper = ({ fields, control, getValues }) => {
+const FormFieldWrapper = ({ fields, control, getValues, reset }) => {
 
     return (
         <>
             {/* Fields without wrapper_id */}
             {fields.map((field) => (
-                <FormField className={field?.style == 'inline' ? 'form-field-inline' : 'w-full'} setting={field} key={field.id} control={control} />
+                <FormField className={field?.style == 'inline' ? 'form-field-inline' : 'w-full'} setting={field} key={field.id} control={control} reset={reset} />
             ))}
         </>
     );

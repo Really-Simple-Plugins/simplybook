@@ -62,7 +62,7 @@ const useSettingsData = () => {
      */
     const setValue = (id, value) => {
         queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
-            return oldResponse.map((field) =>
+            return oldResponse?.data?.map((field) =>
                 field.id === id ? { ...field, value } : field,
             );
         });

@@ -30,7 +30,7 @@ const fieldComponents = {
     theme: ThemeField,
 };
 
-const FormField = memo(({ setting, control, ...props } ) => {
+const FormField = memo(({ setting, control, reset, ...props } ) => {
     if (setting.visible === false) {
         return (
             <input type="hidden" defaultValue={setting.value || setting.default} />
@@ -102,6 +102,7 @@ const FormField = memo(({ setting, control, ...props } ) => {
                     help={setting.help}
                     options={setting.options}
                     control={control}
+                    reset={reset}
                     {...props}
                     {...fieldComponents[setting.type]}
                 />
