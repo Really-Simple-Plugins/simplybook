@@ -2,11 +2,19 @@
 
 namespace SimplyBook\Services;
 
+use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
+use SimplyBook\Exceptions\SettingsException;
 
 class DesignSettingsService
 {
     use LegacySave;
+
+    /**
+     * The configuration for the design settings. This is used to validate
+     * the settings.
+     */
+    protected array $config = [];
 
     /**
      * The key for the design settings in the WordPress options table.
@@ -29,6 +37,14 @@ class DesignSettingsService
     protected array $blockList = [
         'withValues',
     ];
+
+    /**
+     * Set the config on instantiation.
+     */
+    public function __construct()
+    {
+        $this->config = App::fields()->get('design');
+    }
 
     /**
      * Get the design settings from the WordPress options table.
@@ -119,6 +135,86 @@ class DesignSettingsService
         }
 
         return $currentSettings;
+    }
+
+    /**
+     * Validate the settings based on the config. This method will throw an
+     * exception if the settings do not match the config.
+     * @throws \Exception
+     */
+    public function validateSettings(array $settings): bool
+    {
+        $errors = [];
+
+        foreach ($settings as $key => $value) {
+            if (empty($this->config[$key])) {
+                continue; // No config so no validating. We manage the config so this is safe enough.
+            }
+
+            $config = $this->config[$key];
+
+            // No type so no validating. We manage the config so this is safe enough.
+            if (empty($config['type'])) {
+                continue;
+            }
+
+            // No validation callback so no validating. We manage the config so this is safe enough.
+            if (!empty($config['validate']) && !is_callable($config['validate'])) {
+                continue;
+            }
+
+            $invalid = false;
+            $errorMessage = esc_html__('Invalid value for setting:', 'simplybook') . ' ' . ($config['label'] ?? $config['id']);
+
+            // Saved value does not match regex
+            if (!empty($config['regex']) && (preg_match($config['regex'], $value) !== 1)) {
+                $invalid = true;
+            }
+
+            // Saved value is not one of our options
+            if (($config['type'] === 'select') && !isset($config['options'][$value])) {
+                $invalid = true;
+            }
+
+            // No hex color received from colorpicker
+            if (($config['type'] === 'colorpicker') && empty(sanitize_hex_color($value))) {
+                $invalid = true;
+            }
+
+            // If email is not empty, but not a valid email
+            if (($config['type'] === 'email') && !empty($value) && !is_email($value)) {
+                $invalid = true;
+            }
+
+            // If url is not empty, but not a valid url
+            if (($config['type'] === 'url') && !empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
+                $invalid = true;
+            }
+
+            // If number is not empty, but not a valid number
+            if (($config['type'] === 'number') && !empty($value) && !is_numeric($value)) {
+                $invalid = true;
+            }
+
+            // If text is not empty, but not a valid string
+            if (($config['type'] === 'text') && (empty(sanitize_text_field($value)) || !is_string($value))) {
+                $invalid = true;
+            }
+
+            if ($invalid) {
+                $errors[] = [
+                    'key' => $key,
+                    'message' => $errorMessage,
+                ];
+            }
+
+        }
+
+        if (!empty($errors)) {
+            throw (new SettingsException())->setErrors($errors);
+        }
+
+        return true;
     }
 
 }

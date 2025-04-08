@@ -150,7 +150,7 @@ trait LegacySave {
         }
 
         // todo - usage of sanitize_field is redundant when used as in the OnboardingService
-        $value = $this->sanitize_field($value, $field['type']);
+        $value = $this->sanitize_field($value, $field['type'], ($field['regex'] ?? null));
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
         if ( $field['encrypt'] ) {
@@ -197,7 +197,7 @@ trait LegacySave {
      * @param string $type
      * @return int|string
      */
-    public function sanitize_field( $value, $type ) {
+    public function sanitize_field( $value, $type, $regex = '' ) {
         switch ( $type ) {
             case 'checkbox':
             case 'number':
@@ -205,7 +205,11 @@ trait LegacySave {
             case 'select':
             case 'text':
             case 'textarea':
-                return sanitize_text_field( $value );
+                $sanitizedValue = sanitize_text_field( $value );
+                if ( $regex && preg_match( $regex, $sanitizedValue ) !== 1 ) {
+                    return ''; // Return empty if regex validation fails
+                }
+                return $sanitizedValue;
 	        case 'colorpicker':
 		        return sanitize_hex_color( $value );
             case 'email':

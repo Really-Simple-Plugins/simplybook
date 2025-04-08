@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
+use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 
@@ -34,9 +35,12 @@ class DesignSettingsController implements ControllerInterface
     /**
      * Process the save action for the design settings. Save the design fields
      * in the simplybook_design_settings option.
+     * @throws \Exception
      */
     public function saveSettings(array $savedSettings): bool
     {
+        $this->service->validateSettings($savedSettings);
+
         $designSettings = $this->service->getDesignOptions();
         if (empty($designSettings)) {
             return $this->service->saveAsDesignOptions($savedSettings);
