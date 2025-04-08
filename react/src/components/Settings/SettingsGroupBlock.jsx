@@ -7,7 +7,7 @@ import BlockFooter from "../Blocks/BlockFooter";
 import PreviewButtonInput from "../Inputs/PreviewButton";
 
 const SettingsGroupBlock = memo(
-    ({ group, currentGroupFields, control, isLastGroup, formHasSettings, getValues }) => {
+    ({ group, currentGroupFields, control, isLastGroup, formHasSettings, getValues, reset }) => {
         const className = isLastGroup && formHasSettings ? "rounded-b-none" : "mb-5";
 
         return (
@@ -15,7 +15,7 @@ const SettingsGroupBlock = memo(
                 <BlockHeading title={group.title} help={group?.help ?? ''}/>
                 <BlockContent>
                     <div className="flex flex-wrap justify-between gap-4">
-                        <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues}/>
+                        <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues} reset={reset}/>
                     </div>
                 </BlockContent>
                 {group.has_preview && (

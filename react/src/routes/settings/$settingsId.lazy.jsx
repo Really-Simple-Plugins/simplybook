@@ -86,6 +86,7 @@ function Settings() {
                         isLastGroup={isLastGroup}
                         formHasSettings={formHasSettings}
                         getValues={getValues}
+                        reset={reset}
                     />
                 );
             })}
