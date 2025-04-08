@@ -568,6 +568,7 @@ class ApiClient
                     "retype_password" => $random_password,
                     'categories' => [$category],
                     'lang' => $this->get_locale(),
+                    'marketing_consent' => false,
                     //add a query arg so we can redirect to the correct page when user ends up on this link.
                     'widget_notification_url' => add_query_arg(['simplybook' => true], get_site_url()),
 //					'providers'=>[$provider],
