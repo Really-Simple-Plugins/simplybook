@@ -53,7 +53,7 @@ class Plugin
     public function activation()
     {
         // Set the flag on activation
-        update_option('simplybook_activating_flag', true, false);
+        update_option('simplybook_activation_flag', true, false);
 
         // Flush rewrite rules to ensure the new routes are available
         add_action('shutdown', 'flush_rewrite_rules');
@@ -67,7 +67,7 @@ class Plugin
      */
     public function fireActivationHook()
     {
-        if (get_option('simplybook_activating_flag', false) === false) {
+        if (get_option('simplybook_activation_flag', false) === false) {
             return;
         }
 
@@ -75,7 +75,7 @@ class Plugin
         do_action('simplybook_activation'); // !important
 
         // Remove the activation flag so the action doesn't run again
-        delete_option('simplybook_activating_flag');
+        delete_option('simplybook_activation_flag');
     }
 
     /**
