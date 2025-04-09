@@ -1,10 +1,9 @@
-import {createLazyFileRoute} from "@tanstack/react-router";
+import { createLazyFileRoute } from "@tanstack/react-router";
 import {__} from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
-import {useEffect, useRef, useState} from "react";
+import { useEffect, useRef, useState } from "react";
 import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
 import useOnboardingData from "../../hooks/useOnboardingData";
-import useSettingsData from "../../hooks/useSettingsData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
@@ -14,14 +13,10 @@ const path = "/onboarding/confirm-email";
 export const Route = createLazyFileRoute(path)({
 
     component: () => {
-        const {getValue, settings} = useSettingsData();
         const {setRecaptchaToken} = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
-
-        useEffect(() => {
-            let token = getValue('confirmation-code');
-        }, [settings]);
+        const [confirmationCode, setConfirmationCode] = useState("");
 
         const setupRecaptcha = async () => {
             //get sitekey first, loading script has to wait.
@@ -32,17 +27,13 @@ export const Route = createLazyFileRoute(path)({
             script.async = true;
             script.defer = true;
             script.onload = () => {
-                console.log("Script loaded successfully!");
                 // Code to execute after the script has fully loaded
                 // Define the callback function globally to ensure it's accessible by reCAPTCHA
                 window.onloadRecaptchaCallback = () => {
                     if (window.grecaptcha && recaptchaContainerRef.current) {
-                        console.log("rendering recaptcha with sitekey", siteKey);
-
                         window.grecaptcha.render(recaptchaContainerRef.current, {
                             sitekey: siteKey,
                             callback: (recaptchaToken) => {
-                                console.log("resulting recaptchaToken", recaptchaToken);
                                 setRecaptchaToken(recaptchaToken);
                             },
                         });
@@ -55,7 +46,6 @@ export const Route = createLazyFileRoute(path)({
 
         useEffect(() => {
             if (!recaptchaRendered) {
-                console.log("setup recaptcha");
                 setRecaptchaRendered(true);
                 setupRecaptcha();
             }
@@ -75,32 +65,44 @@ export const Route = createLazyFileRoute(path)({
                 <LeftColumn className={"flex flex-col justify-center col-span-6"}>
                     <div className={"text-center"}>
                         <h2 className={"mt-2 text-lg font-light text-black"}>
-                        {__("Lets get you verified!", "simplybook")}
+                            {__("Lets get you verified!", "simplybook")}
                         </h2>
                         <h1 className={"text-3xl font-semibold text-black mb-4"}>
-                        {__("Fill in the authentication code sent in your email", "simplybook")}
+                            {__("Fill in the authentication code sent in your email", "simplybook")}
                         </h1>
-
-                    </div>  
-                    <OnboardingStep path={path} />
+                    </div>
+                    <OnboardingStep
+                        path={path}
+                        syncFieldConfig={{
+                            key: "confirmation-code",
+                            value: confirmationCode,
+                            setValue: setConfirmationCode
+                        }}
+                        customHtml={<div id="recaptcha_container" className="mt-4" ref={recaptchaContainerRef}></div>}
+                        primaryButton={{
+                            label: __("Verify Email", "simplybook"),
+                            disabled: true,
+                            showLoader: true
+                        }}
+                    />
                 </LeftColumn>
                 <RightColumn className={"flex flex-col justify-center col-span-6"}>
                     <div className="flex flex-col items-center pb-4">
                         <VideoFrame
-                        FrameWrapperClass="h-full w-full aspect-w-16 aspect-h-9 mb-8"
-                        className="w-full h-full"
-                        src="https://www.youtube.com/embed/qgMn9dKJAt4"
-                        title="How to get started with SimplyBook.me"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                        refPolicy="strict-origin-when-cross-origin"
+                            FrameWrapperClass="h-full w-full aspect-w-16 aspect-h-9 mb-8"
+                            className="w-full h-full"
+                            src="https://www.youtube.com/embed/qgMn9dKJAt4"
+                            title="How to get started with SimplyBook.me"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                            refPolicy="strict-origin-when-cross-origin"
                         />
                         <div className="text-center flex flex-col items-center">
-                        <h1 className="m-0 mb-4 text-2xl">
-                            {__("SimplyBook.me fits seamlessly into your business", "simplybook")}
+                            <h1 className="m-0 mb-4 text-2xl">
+                                {__("SimplyBook.me fits seamlessly into your business", "simplybook")}
                             </h1>
-                        <small className="text-lg text-gray-400 w-3/4">
-                            {__("It’s easy to keep your appointments in sync with the apps and plugins you need.", "simplybook")}
-                        </small>
+                            <small className="text-lg text-gray-400 w-3/4">
+                                {__("It’s easy to keep your appointments in sync with the apps and plugins you need.", "simplybook")}
+                            </small>
                         </div>
                     </div>
                 </RightColumn>

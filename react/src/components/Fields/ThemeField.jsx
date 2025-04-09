@@ -13,7 +13,7 @@ import { __ } from "@wordpress/i18n";
  * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
  * @return {JSX.Element}
  */
-const ThemeField = forwardRef(({ control, ...props }, ref) => {
+const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
     const {onboardingCompleted} = useOnboardingData();
     const [selectedTheme, setSelectedTheme] = useState(null);
 
@@ -40,7 +40,7 @@ const ThemeField = forwardRef(({ control, ...props }, ref) => {
     useEffect(() => {
         if (!selectedTheme && response?.data?.length > 0) {
             const defaultTheme = response.data.find(
-                (theme) => theme.name === props?.setting?.default
+                (theme) => theme.name === (props?.setting?.value ?? props?.setting?.default)
             );
             setSelectedTheme(defaultTheme);
         }

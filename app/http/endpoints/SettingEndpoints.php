@@ -4,6 +4,7 @@ namespace SimplyBook\Http\Endpoints;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Exceptions\SettingsException;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Controllers\DesignSettingsController;
 
@@ -103,8 +104,15 @@ class SettingEndpoints implements MultiEndpointInterface
          * Action: simplybook_save_{settings_section}
          * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
          * @hooked SimplyBook\Controllers\DesignSettingsController::saveSettings()
+         * @throws SettingsException Should be thrown on invalid settings
          */
-        do_action('simplybook_save_' . sanitize_title($settingsSection), $fields);
+        try {
+            do_action('simplybook_save_' . sanitize_title($settingsSection), $fields);
+        } catch (SettingsException $e) {
+            return $this->sendHttpResponse([
+                'errors' => $e->getErrors(),
+            ], false, esc_html__('Error processing settings', 'simplybook'), 500);
+        }
 
         $fields = $this->fields(true);
         return $this->sendHttpResponse($fields);
