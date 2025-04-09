@@ -15,9 +15,9 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     loginLink = "",
     link = "",
     icon = false,
-    iconName,
-    iconSize,
-    iconClass,
+    iconName = "",
+    iconSize = "",
+    iconClass = "",
     iconStyle,
     reverseIcon = false,
 }) => {
