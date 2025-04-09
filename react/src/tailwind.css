@@ -123,7 +123,7 @@ Input global styles
             border-style: var(--tw-border-style);
             border-width: 2px;
             box-shadow: var(--shadow-md);
-            line-height: 2rem;
+            line-height: 1.5;
     }
 }
 
