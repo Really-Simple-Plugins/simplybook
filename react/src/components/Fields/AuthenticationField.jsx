@@ -4,6 +4,7 @@ import FieldWrapper from "../Forms/FieldWrapper";
 import ButtonField from "./ButtonField";
 import { __ } from "@wordpress/i18n";
 import HttpClient from "../../api/requests/HttpClient";
+import ButtonLink from "../Buttons/ButtonLink";
 
 /**
  * AuthenticationField component
@@ -53,18 +54,22 @@ const AuthenticationField = forwardRef(
                 required={props.required}
             >
                 <TextInput
+                className="mb-4"
                     id={inputId}
                     type="text"
                     aria-invalid={!!fieldState?.error?.message}
                     {...props}
                 />
-                <ButtonField
+
+                <ButtonLink
                     id={inputId}
-                    type="button"
+                    btnVariant="secondary"
                     aria-invalid={!!fieldState?.error?.message}
                     label={__("Log out", "simplybook")}
                     onClick={handleLogoutClick}
-                />
+                >
+                    {__("Log out", "simplybook")}
+                </ButtonLink>
             </FieldWrapper>
         );
     },
