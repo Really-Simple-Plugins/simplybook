@@ -139,10 +139,11 @@ const OnboardingStep = ({
         <>
             <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
                 <div className={"flex flex-col"}>
-                    <form>
+                    <form className="flex flex-wrap justify-between">
                         <FormFieldWrapper fields={currentStep.fields} control={control}/>
                         {customHtml}
                         <ButtonField
+                            className="w-full"
                             showLoader={disabled}
                             btnVariant="primary"
                             label={primaryButton.label}
@@ -160,7 +161,10 @@ const OnboardingStep = ({
                         )}
                     </form>
                 </div>
-                <Error error={apiError}/>
+                <Error 
+                    errorHeading={__("Something went wrong...", "simplybook")}
+                    error={apiError}
+                />
             </div>
             <div className="col-span-4 col-start-7 row-span-2 my-12">
                 {rightColumn}
