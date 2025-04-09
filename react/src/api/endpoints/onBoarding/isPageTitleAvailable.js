@@ -7,7 +7,7 @@ import request from "../../requests/request";
  * @return {Promise<void>}
  */
 const isPageTitleAvailable = async ({ data = true }) => {
-  return await request("is_page_title_available", "POST", { data });
+  return await request("onboarding/is_page_title_available", "POST", { data });
 };
 
 export default isPageTitleAvailable;

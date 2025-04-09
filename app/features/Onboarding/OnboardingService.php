@@ -3,6 +3,7 @@
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 
 class OnboardingService
@@ -71,6 +72,24 @@ class OnboardingService
         return $this->sendHttpResponse([
             'site_key' => get_option('simplybook_recaptcha_site_key'),
         ]);
+    }
+
+    /**
+     * Checks if the given page title is available based on the given url and
+     * existing pages.
+     */
+    public function isPageTitleAvailableForURL(string $url): bool
+    {
+        $title = StringUtility::convertUrlToTitle($url);
+
+        $posts = get_posts([
+            'post_type' => 'page',
+            'title' => sanitize_text_field($title),
+            'post_status' => 'publish',
+            'fields' => 'ids',
+        ]);
+
+        return empty($posts);
     }
 
     /**

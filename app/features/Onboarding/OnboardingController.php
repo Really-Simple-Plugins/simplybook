@@ -117,6 +117,19 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
+     * Check if the given page title is available based on the given url and
+     * existing pages.
+     */
+    public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
+
+        return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
+    }
+
+
+    /**
      * Generate default shortcode pages
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
