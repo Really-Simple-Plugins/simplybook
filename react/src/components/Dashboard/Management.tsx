@@ -57,7 +57,7 @@ const DataList = [
 
 const Management = () => {
   return (
-    <Block className={"col-span-3 row-span-2"}>
+    <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2 xl:col-span-4"}>
       <BlockHeading
         title={__("Management", "simplybook")}
         controls={undefined}
