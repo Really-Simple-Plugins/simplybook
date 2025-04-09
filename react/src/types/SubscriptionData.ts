@@ -1,10 +1,10 @@
 export interface SubscriptionData {
     data: {
         subscription_name: string;
-        expire_in: string;
+        expire_in: number;
         is_expired: boolean;
         limits: {
-            sms_limits: {
+            sms_limit: {
                 rest: number;
                 total: number;
             };
