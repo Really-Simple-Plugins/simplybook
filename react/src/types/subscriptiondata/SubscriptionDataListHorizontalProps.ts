@@ -1,3 +1,3 @@
-export interface SubscriptionDataListHorizontal {
+export interface SubscriptionDataListHorizontalProps {
     className?: string;
 }
