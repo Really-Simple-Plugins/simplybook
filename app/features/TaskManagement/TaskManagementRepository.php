@@ -50,12 +50,13 @@ class TaskManagementRepository
      * Upgrade a task in the repository. Only replace existing tasks with same
      * identifier if the version is lower than the new task version.
      */
-    public function upgradeTask(TaskInterface $task): void
+    public function upgradeTask(TaskInterface $task, bool $save = true): void
     {
         $existingTask = $this->getTask($task->getId());
+        $taskExists = !empty($existingTask);
 
         $taskIsUpdatable = (
-            empty($existingTask)
+            !$taskExists
             || (version_compare($existingTask->getVersion(), $task->getVersion(), '<'))
         );
 
@@ -65,13 +66,14 @@ class TaskManagementRepository
 
         // Keep current status if new task does not want to reactivate on
         // upgrade
-        if ($task->reactivateOnUpgrade() === false) {
+        if ($taskExists && ($task->reactivateOnUpgrade() === false)) {
             $task->setStatus(
                 $existingTask->getStatus(),
             );
         }
 
-        $this->addTask($task, false);
+        // Upgrades existing tasks and add new tasks
+        $this->addTask($task, $save);
     }
 
     /**
@@ -102,7 +104,7 @@ class TaskManagementRepository
         }
 
         $task->setStatus($status);
-        $this->saveTasksToDatabase();
+        $this->addTask($task);
     }
 
     /**

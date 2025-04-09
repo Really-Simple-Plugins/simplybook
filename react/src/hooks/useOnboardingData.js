@@ -3,7 +3,6 @@ import debounce from "lodash.debounce"; // You can use lodash's debounce functio
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
-import registerTipsTricks from "../api/endpoints/onBoarding/registerTipsTricks";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";

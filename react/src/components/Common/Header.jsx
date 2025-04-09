@@ -43,11 +43,11 @@ const Header = () => {
                 </div>
                 <div className="flex items-center">
                     <Link to="/" className={linkClassName}>
-                    {!tasksLoading && tasksOpen > 0 && (
-                        <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
-                            {tasksOpen}
-                        </div>
-                    )}
+                        {!tasksLoading && tasksOpen > 0 && (
+                            <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
+                                {tasksOpen}
+                            </div>
+                        )}
                         {__("Dashboard", "simplybook")}
                     </Link>
                     <LoginLink className={linkClassName} page="client">
@@ -73,18 +73,18 @@ const Header = () => {
                 </ButtonLink>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
                     {!isExpired && expiresIn && subscriptionPlan && (
-                    <Label
-                        labelVariant="trial"
-                    >
-                        {expireText}
-                    </Label>
+                        <Label
+                            labelVariant="trial"
+                        >
+                            {expireText}
+                        </Label>
                     )}
-                    {!isExpired && subscriptionPlan && (
-                    <Label
-                    labelVariant="trial-expired"
-                     >
-                        {subscriptionPlan} {__("is expired.", "simplybook")}
-                    </Label>
+                    {isExpired && subscriptionPlan && (
+                        <Label
+                            labelVariant="trial-expired"
+                        >
+                            {subscriptionPlan} {__("is expired.", "simplybook")}
+                        </Label>
                     )}
                     <ButtonLink
                         className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"

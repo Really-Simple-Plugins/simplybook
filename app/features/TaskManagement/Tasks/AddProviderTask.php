@@ -2,9 +2,9 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AddServiceTask extends AbstractTask
+class AddProviderTask extends AbstractTask
 {
-    const IDENTIFIER = 'add_service';
+    const IDENTIFIER = 'add_provider';
 
     /**
      * @inheritDoc
@@ -12,8 +12,8 @@ class AddServiceTask extends AbstractTask
     protected bool $required = true;
 
     /**
-     * This task is completed by default, that is because services are added
-     * during onboarding. Only when the "get services" request returns empty
+     * This task is completed by default, that is because providers are added
+     * during onboarding. Only when the "get providers" request returns empty
      * will this task be opened.
      */
     public function __construct()
@@ -26,7 +26,7 @@ class AddServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Add your first service','simplybook');
+        return esc_html__('Add your first provider','simplybook');
     }
 
     /**
@@ -36,8 +36,8 @@ class AddServiceTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add service','simplybook'),
-            'link' => '#/settings/services',
+            'text' => esc_html__('Add provider','simplybook'),
+            'link' => '#/settings/providers',
         ];
     }
 }
