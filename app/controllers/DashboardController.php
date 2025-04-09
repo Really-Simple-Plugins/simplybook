@@ -23,17 +23,19 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
+
+        // Redirect on the activation hook, but do it after anything else.
+        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard'], 9999);
     }
 
     /**
      * Enqueue the SimplyBook Dashicon style, which makes dashicons-simplybook
      * available in the admin area. Also used by our Gutenberg block.
      */
-    public function enqueueSimplyBookDashiconStyle()
+    public function enqueueSimplyBookDashiconStyle(): void
     {
         $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
         wp_enqueue_style('simplybook-font', $iconCss);
