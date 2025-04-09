@@ -9,7 +9,7 @@ const LoginLink = ({
     page,
     isButton = false,
     size="md",
-    btnVariant,
+    btnVariant="primary",
     children
 }) => {
 
