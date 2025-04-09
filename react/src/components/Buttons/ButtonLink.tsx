@@ -19,6 +19,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     iconSize = "",
     iconClass = "",
     iconStyle,
+    onClick
     reverseIcon = false,
 }) => {
   const { fetchLinkData } = useLoginData();
@@ -47,20 +48,24 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     });
 
   };
+  console.log(disabled);
 
   let buttonVariants = clsx(
     // Base styles
-    "flex items-center justify-center rounded-full transition-all duration-200 px-4 py-2 cursor-pointer",
+    "flex items-center justify-center rounded-full transition-all duration-200 px-4 py-2 cursor-pointer border-2 hover:brightness-50",
     {
       'bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'primary',
-      'border-black border-3 bg-transparent text-black hover:brightness-70 ml-4' : btnVariant == 'ghost',
       'bg-tertiary text-white hover:bg-tertiary-dark ' : btnVariant == 'secondary',
-      'border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary',
-      'border-3 border-primary text-primary rounded-md py-2 px-6 text-base': btnVariant == 'square',
+      'border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary',
+      'border-black bg-transparent text-black ml-4' : btnVariant == 'ghost',
+      'border-primary text-primary rounded-md py-2 px-6 text-base': btnVariant == 'square-ghost',
       'rounded-md py-2 px-6 text-white text-sm': btnVariant == 'square-small',
-      'opacity-50 cursor-not-allowed ': btnVariant == 'disabled'
     }
   );
+
+  const disabledClass = 'opacity-50 cursor-not-allowed';
+
+
 
   if (className.length > 0) {
     buttonVariants = buttonVariants + ' ' + className;
@@ -68,8 +73,8 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
   return (
     <>
-    <Link to={link} onClick={loginLink ? (e) => loginTo(e, loginLink) : undefined} target={target} className="text-base text-tertiary font-semibold">
-      <div className={clsx(buttonVariants, className)}>
+    <Link to={link} onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick} target={target} className="text-base text-tertiary font-semibold">
+      <div className={clsx(disabled ? disabledClass + buttonVariants  : buttonVariants, className)}>
           {icon &&
             <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
           }
