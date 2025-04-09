@@ -7,14 +7,16 @@ import Icon from "../../Common/Icon";
 const MostPopular: React.FC<MostPopularProps> = ({
     className = "",
     title,
+    key,
     bookingAmount
 }) => {
     return (
         <>
+        {key === "provider" ? (           
             <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 border-2 border-[#E1E7F5] p-4 bg-primary-lighter text-base font-bold" , className)}>
                 <span className="text-succes flex items-center w-full mb-2">
                     <Icon style={{ color: "var(--color-success)" }} name="trophy" size={"1x"} className="mr-2" />
-                    <p className="text-base font-semibold m-0">{title}</p>   
+                    <p className="text-base font-semibold m-0">{__("Most Popular Provider", "simplybook")}</p>   
                 </span>
                 <div className="flex items-center justify-between w-full">
                     <p className="text-base font-semibold m-0">{title}</p>
@@ -24,6 +26,22 @@ const MostPopular: React.FC<MostPopularProps> = ({
                     </div>
                 </div>
             </div>
+        ) : (
+            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 border-2 border-[#E1E7F5] p-4 bg-primary-lighter text-base font-bold" , className)}>
+                <span className="text-succes flex items-center w-full mb-2">
+                    <Icon style={{ color: "var(--color-success)" }} name="trophy" size={"1x"} className="mr-2" />
+                    <p className="text-base font-semibold m-0">{__("Most Popular Service", "simplybook")}</p>   
+                </span>
+                <div className="flex items-center justify-between w-full">
+                    <p className="text-base font-semibold m-0">{title}</p>
+                    <div className="flex font-semibold">
+                        <p className="text-base m-0">{__("This week:", "simplybook")}</p>
+                        <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
+                    </div>
+                </div>
+            </div>
+
+        )}
         </>
     );
 };
