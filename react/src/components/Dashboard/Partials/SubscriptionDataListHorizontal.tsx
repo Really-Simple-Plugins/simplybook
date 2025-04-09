@@ -1,12 +1,12 @@
 import React from "react";
 import clsx from "clsx";
 import { __ } from "@wordpress/i18n";
-import{ SubscriptionDataListHorizontal as SubscriptionDataProps } from "../../../types/subscriptiondata/SubscriptionDataListHorizontalProps";
+import{ SubscriptionDataListHorizontalProps } from "../../../types/subscriptiondata/SubscriptionDataListHorizontalProps";
 import ListWithIcon from "../../Common/ListWithIcon";
 import useSubscriptionData from "../../../hooks/useSubscriptionData";
 import useServicesData from "../../../hooks/useServicesData";
 
-const SubscriptionData: React.FC<SubscriptionDataProps> = ({
+const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalProps> = ({
     className,
 }) => {
     // Load the subscription data
@@ -20,10 +20,10 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
     } = useSubscriptionData();
 
     // Initiate the data 
-    const trialExpired: boolean = isExpired;
-    const trialDaysLeft: number =  !isLoading ? expiresIn : __("No data found", "simplybook");
-    const smsCredits: number = !isLoading ? smsRemaining : __("No data found", "simplybook");
-    const bookingsRemainingAmount: number = !isLoading ? bookingsRemaining : __("No data found", "simplybook");;
+    const trialExpired: boolean|undefined = isExpired;
+    const trialDaysLeft: string|number = (!isLoading && expiresIn ? expiresIn : __("No data found", "simplybook"));
+    const smsCredits: string|number = (!isLoading && smsRemaining ? smsRemaining : __("No data found", "simplybook"));
+    const bookingsRemainingAmount: string|number = (!isLoading && bookingsRemaining ? bookingsRemaining : __("No data found", "simplybook"));
 
     return (
         <> 
@@ -45,15 +45,15 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
                     )}
                 </ListWithIcon>
                 <ListWithIcon
-                    iconColor={smsCredits < 0 || smsCredits == 0 ? "red" : "var(--color-green-600)"}
+                    iconColor={smsCredits <= 0 ? "red" : "var(--color-green-600)"}
                     iconName={smsCredits < 1 ? "circle-xmark" : "circle-check"}
                     iconSize="md"
                 >
                     {__('SMS Credits:', 'simplybook')} {smsCredits}
                 </ListWithIcon>
                 <ListWithIcon
-                    iconColor={bookingsRemainingAmount < 0 || bookingsRemainingAmount == 0 ? "red" : "var(--color-green-600)"}
-                    iconName={bookingsRemainingAmount < 0 ? "circle-xmark" : "circle-check"}
+                    iconColor={bookingsRemainingAmount <= 0 ? "red" : "var(--color-green-600)"}
+                    iconName={bookingsRemainingAmount < 1 ? "circle-xmark" : "circle-check"}
                     iconSize="md"
                 >
                     {__('Bookings:', 'simplybook')} {bookingsRemainingAmount}
@@ -64,4 +64,4 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
     );
 };
 
-export default SubscriptionData;
+export default SubscriptionDataListHorizontal;
