@@ -70,7 +70,6 @@ trait LegacySave {
     public function upgrade_options(): void
     {
         $upgrade_keys = [
-            'widget_settings',
             'api_status',
             'domain',
             'auth_datetime',
