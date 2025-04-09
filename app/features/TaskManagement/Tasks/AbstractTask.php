@@ -45,8 +45,11 @@ abstract class AbstractTask implements TaskInterface
     protected bool $premium;
 
     /**
-     * A task is ALWAYS active on construct. Only actions of the user can change
-     * this. Do NOT override this property.
+     * By default, a task is active on construct. This is because the $status
+     * property is not set. The {@see getStatus()} method will therefore return
+     * the default status 'open'. If you want to set a different default status
+     * use the {@see setStatus()} method in the construct of the task. See
+     * {@see AddProviderTask} for an example.
      */
     private string $status;
 

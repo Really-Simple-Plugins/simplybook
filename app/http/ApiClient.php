@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
+use SimplyBook\Helpers\Event;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
@@ -182,6 +183,7 @@ class ApiClient
             throw new \Exception('Login URL not found');
         }
 
+        Event::dispatch(EVENT::NAVIGATE_TO_SIMPLYBOOK);
         return $response;
     }
 
@@ -800,22 +802,50 @@ class ApiClient
         if ( !$this->company_registration_complete() ){
             return [];
         }
+
+        if ($cache = wp_cache_get('simplybook_services', 'simplybook')) {
+            return $cache;
+        }
+
+
         $response = $this->api_call('admin/services', [], 'GET');
-        return $response['data'] ?? [];
+        $services = $response['data'] ?? [];
+
+        if (empty($services)) {
+            Event::dispatch(Event::EMPTY_SERVICES);
+            return $services;
+        }
+
+        Event::dispatch(Event::HAS_SERVICES);
+
+        wp_cache_set('simplybook_services', $services, 'simplybook', MINUTE_IN_SECONDS);
+        return $services;
     }
 
     /**
      * Get list of Simplybook providers
-     *
-     * @return array
      */
-
     public function get_providers(): array {
         if ( !$this->company_registration_complete() ){
             return [];
         }
+
+        if ($cache = wp_cache_get('simplybook_providers', 'simplybook')) {
+            return $cache;
+        }
+
         $response = $this->api_call('admin/providers', [], 'GET');
-        return $response['data'] ?? [];
+        $providers = $response['data'] ?? [];
+
+        if (empty($providers)) {
+            Event::dispatch(Event::EMPTY_PROVIDERS);
+            return $providers;
+        }
+
+        Event::dispatch(Event::HAS_PROVIDERS);
+
+        wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
+        return $providers;
     }
 
     /**
@@ -840,16 +870,6 @@ class ApiClient
         }
 
         return $this->api_call('admin/statistic', [], 'GET');
-    }
-
-    /**
-     * If any services are registered
-     *
-     * @return bool
-     */
-    public function has_services(): bool {
-        $services = $this->get_services();
-        return !empty($services);
     }
 
     /**

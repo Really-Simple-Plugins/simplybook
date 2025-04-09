@@ -55,7 +55,7 @@ class TaskManagementService
         $deletableTasksList = $this->repository->getAllTasks();
 
         foreach ($tasks as $task) {
-            $this->repository->upgradeTask($task);
+            $this->repository->upgradeTask($task, false);
 
             // Current tasks is not deletable so remove it from the list
             unset($deletableTasksList[$task->getId()]);
