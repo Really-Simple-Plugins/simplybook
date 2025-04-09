@@ -45,13 +45,6 @@ const FieldWrapper = memo(({
         {type!=='checkbox' && children}
       </div>
 
-      {error && (
-        <Error
-          errorHeading={__("Something went wrong...", "simplybook")}
-          error={error}
-        />
-      )}
-
       {context && (
         <p className="mt-2 text-xs font-light text-gray-600">
           {context}
