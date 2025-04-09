@@ -5,7 +5,6 @@ use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
-use SimplyBook\Services\DesignSettingsService;
 
 class Plugin
 {
@@ -72,11 +71,12 @@ class Plugin
             return;
         }
 
+        // Remove the activation flag so the action doesn't run again. Do it
+        // before the action so its deleted before anything can go wrong.
+        delete_option('simplybook_activation_flag');
+
         // Gives possibility to hook into the activation process
         do_action('simplybook_activation'); // !important
-
-        // Remove the activation flag so the action doesn't run again
-        delete_option('simplybook_activation_flag');
     }
 
     /**
