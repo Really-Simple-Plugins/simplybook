@@ -11,7 +11,6 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
 }) => {
     // Load the subscription data
     const { 
-        subscription
         smsRemaining, 
         bookingsRemaining, 
         expiresIn,
@@ -21,12 +20,10 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
     } = useSubscriptionData();
 
     // Initiate the data 
-    const trialExpired = isExpired;
-    const trialDaysLeft =  !isLoading ? expiresIn : __("No data found", "simplybook");
-    const smsCredits = !isLoading ? smsRemaining : __("No data found", "simplybook");
-    const bookingsRemainingAmount = !isLoading ? bookingsRemaining : __("No data found", "simplybook");;
-
-    console.log(subscription);
+    const trialExpired: boolean = isExpired;
+    const trialDaysLeft: number =  !isLoading ? expiresIn : __("No data found", "simplybook");
+    const smsCredits: number = !isLoading ? smsRemaining : __("No data found", "simplybook");
+    const bookingsRemainingAmount: number = !isLoading ? bookingsRemaining : __("No data found", "simplybook");;
 
     return (
         <> 
