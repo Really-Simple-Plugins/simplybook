@@ -75,24 +75,6 @@ class OnboardingService
     }
 
     /**
-     * Checks if the given page title is available based on the given url and
-     * existing pages.
-     */
-    public function isPageTitleAvailableForURL(string $url): bool
-    {
-        $title = StringUtility::convertUrlToTitle($url);
-
-        $posts = get_posts([
-            'post_type' => 'page',
-            'title' => sanitize_text_field($title),
-            'post_status' => 'publish',
-            'fields' => 'ids',
-        ]);
-
-        return empty($posts);
-    }
-
-    /**
      * Method is used to build the company domain and login based on the given
      * domain and login values. For non-default domains the domain should be
      * appended to the login for the authentication process. The domains are
