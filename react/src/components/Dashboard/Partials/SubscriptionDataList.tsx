@@ -15,9 +15,6 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
     isLoading
 }) => {
 
-    console.log(remaining);
-    console.log(total);
-
     const labelClassName = (
         remaining < 0 ? "border-red-600 text-red-600" : (
             remaining > total ?  "border-red-600 text-red-600" : "border-green-600 text-green-600"
