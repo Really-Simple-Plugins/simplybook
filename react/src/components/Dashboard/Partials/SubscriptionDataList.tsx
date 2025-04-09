@@ -17,7 +17,7 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
 
     return (
     <>   
-        {!isLoading && total && (
+        {!isLoading && (
             <div className={clsx("flex justify-between items-center p-4", className)}>
                 <LoginLink className={linkClassName} page="providers">
                     {__(`${title}`, "simplybook")}

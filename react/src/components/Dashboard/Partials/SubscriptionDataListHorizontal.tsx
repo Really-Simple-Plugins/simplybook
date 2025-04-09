@@ -11,38 +11,30 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
 }) => {
     // Load the subscription data
     const { 
-        subscription, 
+        subscription
         smsRemaining, 
-        smsTotal,
         bookingsRemaining, 
-        bookingsTotal,
-        providersRemaining,
-        providersTotal,
         expiresIn,
         isExpired, 
         isLoading, 
         hasError 
     } = useSubscriptionData();
 
-    console.error(subscription, isLoading, isExpired, hasError);
-    
-    // const trialExpired = isExpired;
-    // const trialDaysLeft = expiresIn;
-    // const smsCredits = smsRemaining;
-    // const bookingsRemainingAmount = bookingsRemaining;
+    // Initiate the data 
+    const trialExpired = isExpired;
+    const trialDaysLeft =  !isLoading ? expiresIn : __("No data found", "simplybook");
+    const smsCredits = !isLoading ? smsRemaining : __("No data found", "simplybook");
+    const bookingsRemainingAmount = !isLoading ? bookingsRemaining : __("No data found", "simplybook");;
 
-    // DUMMY LIST DATA
-    const trialExpired = true;
-    const trialDaysLeft = 3;
-    const smsCredits = -230;
-    const bookingsRemainingAmount = 34;
+    console.log(subscription);
 
     return (
         <> 
+        {!isLoading && !hasError && (          
             <ul className={clsx("list-none flex gap-2", className)}>
                 <ListWithIcon
-                    iconColor={trialDaysLeft < 0 ? "red" : "var(--color-green-600)"}
-                    iconName={trialDaysLeft < 0 ? "circle-xmark" : "circle-check"}
+                    iconColor={trialDaysLeft == 0 || trialExpired ? "red" : "var(--color-green-600)"}
+                    iconName={trialExpired ? "circle-xmark" : "circle-check"}
                     iconSize="md"
                 >
                     {trialExpired ? (
@@ -56,20 +48,21 @@ const SubscriptionData: React.FC<SubscriptionDataProps> = ({
                     )}
                 </ListWithIcon>
                 <ListWithIcon
-                    iconColor={smsCredits < 0 ? "red" : "var(--color-green-600)"}
-                    iconName={smsCredits < 0 ? "circle-xmark" : "circle-check"}
+                    iconColor={smsCredits < 0 || smsCredits == 0 ? "red" : "var(--color-green-600)"}
+                    iconName={smsCredits < 1 ? "circle-xmark" : "circle-check"}
                     iconSize="md"
                 >
                     {__('SMS Credits:', 'simplybook')} {smsCredits}
                 </ListWithIcon>
                 <ListWithIcon
-                    iconColor={bookingsRemainingAmount < 0 ? "red" : "var(--color-green-600)"}
+                    iconColor={bookingsRemainingAmount < 0 || bookingsRemainingAmount == 0 ? "red" : "var(--color-green-600)"}
                     iconName={bookingsRemainingAmount < 0 ? "circle-xmark" : "circle-check"}
                     iconSize="md"
                 >
                     {__('Bookings:', 'simplybook')} {bookingsRemainingAmount}
                 </ListWithIcon>
             </ul>
+        )}
         </>
     );
 };
