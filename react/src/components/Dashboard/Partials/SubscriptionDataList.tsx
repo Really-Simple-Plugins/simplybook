@@ -15,14 +15,23 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
     isLoading
 }) => {
 
+    console.log(remaining);
+    console.log(total);
+
+    const labelClassName = (
+        remaining < 0 ? "border-red-600 text-red-600" : (
+            remaining > total ?  "border-red-600 text-red-600" : "border-green-600 text-green-600"
+        )
+    );
+
     return (
-    <>   
+    <>
         {!isLoading && (
             <div className={clsx("flex justify-between items-center p-4", className)}>
                 <LoginLink className={linkClassName} page="providers">
                     {__(`${title}`, "simplybook")}
                 </LoginLink>
-                <Label labelVariant="ghost" className={remaining < 0 ? "border-red-600 text-red-600" : remaining > total ?  "border-red-600 text-red-600" : "border-green-600 text-green-600"}>
+                <Label labelVariant="ghost" className={labelClassName}>
                     {remaining} / {total}
                 </Label>
             </div>
