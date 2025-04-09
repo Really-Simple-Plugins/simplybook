@@ -224,22 +224,11 @@ const useOnboardingData = () => {
                             label: __("Shortcode", "simplybook"),
                             description: __("Do it yourself", "simplybook"),
                         },
-                        {
-                            value: "templates",
-                            label: __("Templates", "simplybook"),
-                            description: __("Premium", "simplybook"),
-                            is_premium: true,
-                        },
                     ],
                 },
             ],
             beforeSubmit: async (data) => {
-                if (getValue("implementation") !== "manual") {
-                    console.log(
-                        "submit implementation step ",
-                        bookingPageUrl,
-                        calendarPageUrl,
-                    );
+                if (getValue("implementation") === "generated") {
                     const data = {
                         bookingPageUrl: bookingPageUrl,
                         calendarPageUrl: calendarPageUrl,
