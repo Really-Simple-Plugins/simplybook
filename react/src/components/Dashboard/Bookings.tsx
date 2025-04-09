@@ -26,12 +26,12 @@ const Bookings = () => {
     const FeaturedBlocks = [
         {
             title: __("Today", "simplybook"),
-            value: bookingsToday ?? '...',
+            value: bookingsToday ?? __('Loading', 'simplybook'),
             icon: "user-group",
         },
         {
             title: __("This week", "simplybook"),
-            value: bookingsThisWeek ?? '...',
+            value: bookingsThisWeek ?? __('Loading', 'simplybook'),
             icon: "user-group",
         },
     ];
@@ -65,10 +65,10 @@ const Bookings = () => {
                                 }
                             >
                                 <Icon name={block.icon} size={"2x"} />
-                                <div className={"my-2 text-2xl font-extrabold"}>
+                                <div className={"text-sm my-4"}>{block.title}</div>
+                                <div className={" text-2xl font-extrabold"}>
                                     {block.value}
                                 </div>
-                                <div className={"text-xs"}>{block.title}</div>
                             </div>
                         ))}
                     </div>
