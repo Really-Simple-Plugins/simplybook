@@ -3,7 +3,6 @@
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 
 class OnboardingService
