@@ -42,7 +42,7 @@ const TipsTricks = () => {
                     className={"border-tertiary text-tertiary mr-4"} 
                     icon={true}
                     iconName="tips" 
-                    loginLink="/tips-and-tricks" 
+                    loginLink={data?.data.all ?? '#'} 
                     btnVariant={"square-ghost"}
                 >
                     {__("View All", "simplybook")}
