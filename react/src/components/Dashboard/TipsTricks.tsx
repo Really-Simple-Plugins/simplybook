@@ -28,8 +28,8 @@ const TipsTricks = () => {
                 title={__("Tips & Tricks", "simplybook")}
                 controls={undefined}
             />
-            <BlockContent className="px-4 flex justify-between mb-4">
-                <div className="flex flex-wrap justify-between gap-x-4">
+            <BlockContent className="px-4 flex items-center">
+                <div className="flex flex-col justify-start gap-x-4">
                     {loadingCompleted && (
                         data.data.items.map((item: any, i: number) => (
                             <Tip className="mb-2 w-[48%]" key={`trick-${i}`} title={item.title} link={item.link} content={item.content} />
