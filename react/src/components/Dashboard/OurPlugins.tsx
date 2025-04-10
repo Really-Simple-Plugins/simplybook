@@ -16,10 +16,13 @@ const OurPlugins = () => {
   return (
     <>
         <Block className={"col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-6 !bg-transparent shadow-none"}>
-            <BlockHeading
-            title={__("Our Plugins", "simplybook")}
-            controls={undefined}
-            />
+            <div className="flex justify-between items-center">
+                <BlockHeading
+                title={__("Our Plugins", "simplybook")}
+                controls={undefined}
+                />
+                <img className="w-[200px]" src={rspLogo} alt="Really Simple Plugins" />
+            </div>
         {/* align list in middle of block */}
             <BlockContent className={"flex flex-col items-center px-4"}>
                 {// @ts-ignore
