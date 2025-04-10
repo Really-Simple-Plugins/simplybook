@@ -22,14 +22,14 @@ const NotificationBox: React.FC<NotificationBoxProps> = (
             "bg-red-100": notificationType == 'error',
             "bg-blue-100": notificationType == 'blue',
         }
-    ); 
+    );
 
 
     return (
         <>
         <div className={clsx("notification-box", NotificationClasses, className)}>
-            <a 
-                onClick={(e) => openNotification(e)}
+            <a
+                onClick={(e) => openNotification()}
                 className="flex flex-row justify-between items-baseline cursor-pointer ease-in-out"
             >
                 <h3 className="m-0">{__("Advanced Settings", "simplybook")}</h3>
@@ -37,7 +37,7 @@ const NotificationBox: React.FC<NotificationBoxProps> = (
             </a>
             <div className={clsx("notification-content overflow-hidden ease-in-out", {"max-h-0": isOpen})}>
                 <div className=" text-sm  py-4 mb-2">
-                    {__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut templates magna aliqua. Ut enim ad minim veniam, Read more", 
+                    {__("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut templates magna aliqua. Ut enim ad minim veniam, Read more",
                         "simplybook")}
                 </div>
                 <Link
