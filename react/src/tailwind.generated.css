@@ -663,6 +663,9 @@
   .w-\[100px\] {
     width: 100px;
   }
+  .w-\[200px\] {
+    width: 200px;
+  }
   .w-full {
     width: 100%;
   }
