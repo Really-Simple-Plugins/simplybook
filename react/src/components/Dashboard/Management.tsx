@@ -64,7 +64,7 @@ const Management = () => {
         hasError,
     } = useSubscriptionData();
 
-    const allowed: Record<string, string> = {
+    const allowedSubscriptionDataLimits: Record<string, string> = {
         provider_limit: __('Provider', 'simplybook'),
         sheduler_limit: __('Bookings', 'simplybook'),
     };
@@ -77,7 +77,7 @@ const Management = () => {
         const subscriptionObject = subscription?.limits;
 
         selectedLimits = Object.keys(subscriptionObject)
-            .filter(key => key in allowed)
+            .filter(key => key in allowedSubscriptionDataLimits)
             .reduce((obj, key) => {
                 // @ts-ignore
                 obj[key] = subscriptionObject[key];
@@ -97,7 +97,7 @@ const Management = () => {
                     {!isLoading && selectedLimits && Object.entries(selectedLimits).map(([key, value]) => (
                         <SubscriptionDataList
                             key={key}
-                            title={allowed[key]}
+                            title={allowedSubscriptionDataLimits[key]}
                             // @ts-ignore
                             remaining={value.rest}
                             // @ts-ignore
