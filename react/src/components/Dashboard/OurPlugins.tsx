@@ -31,7 +31,7 @@ const OurPlugins = () => {
                     fetched && plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin: OtherPlugin) => (
                         <div key={plugin.url} className={"flex items-center gap-2 text-sm w-full mb-2 xl:flex-wrap"}>
                             <Icon name={"circle"} color={plugin.color}/>
-                            <Link 
+                            <Link
                                 className="text-black font-semibold"
                                 to={plugin.url}>
                                 {plugin.title}
@@ -39,9 +39,9 @@ const OurPlugins = () => {
                             <div className={"flex text-black underline text-sm"}>
                                 {plugin.action === 'installed' && pluginActionNice(plugin.action)}
                                 {plugin.action !== 'installed' && <>
-                                    <a 
+                                    <a
                                         className="text-black"
-                                        target="_blank" 
+                                        target="_blank"
                                         href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url}
                                     onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
                                         slug: plugin.slug,

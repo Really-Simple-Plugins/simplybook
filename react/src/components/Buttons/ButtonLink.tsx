@@ -19,7 +19,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     iconSize = "",
     iconClass = "",
     iconStyle,
-    onClick
+    onClick,
     reverseIcon = false,
 }) => {
   const { fetchLinkData } = useLoginData();

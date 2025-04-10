@@ -20,6 +20,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
         add_action('simplybook_event_' . Event::HAS_PROVIDERS, [$this, 'handleHasProviders']);
         add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
+        add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -71,6 +72,31 @@ class TaskManagementListener
         $this->service->completeTask(
             Tasks\GoToSimplyBookSystemTask::IDENTIFIER
         );
+    }
+
+    /**
+     * Handle subscription data loaded event to update task status.
+     */
+    public function handleSubscriptionDataLoaded(array $arguments): void
+    {
+        $subscription = ($arguments['subscription_name'] ?? '');
+        if (empty($subscription)) {
+            return;
+        }
+
+        // Keep task open if the subscription is 'Trial'
+        if ($subscription === 'Trial') {
+            $this->service->openTask(
+                Tasks\UpgradeTask::IDENTIFIER
+            );
+        }
+
+        // Complete the task if the subscription is anything but 'Trial'
+        if ($subscription !== 'Trial') {
+            $this->service->completeTask(
+                Tasks\UpgradeTask::IDENTIFIER
+            );
+        }
     }
 
     /**

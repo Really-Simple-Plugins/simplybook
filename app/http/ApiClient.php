@@ -857,7 +857,14 @@ class ApiClient
             return [];
         }
 
-        return $this->api_call('admin/tariff/current', [], 'GET');
+        if ($cache = wp_cache_get('simplybook_subscription_data', 'simplybook')) {
+            return $cache;
+        }
+
+        $response = $this->api_call('admin/tariff/current', [], 'GET');
+
+        wp_cache_set('simplybook_subscription_data', $response, 'simplybook', MINUTE_IN_SECONDS);
+        return $response;
     }
 
     /**
