@@ -1,5 +1,6 @@
 import {forwardRef, useEffect, useState} from "react";
 import CheckboxInput from "../Inputs/CheckboxInput";
+import clsx from "clsx";
 import {__, sprintf } from "@wordpress/i18n";
 import Icon from "../Common/Icon";
 import LoginLink from "../Common/LoginLink";
@@ -32,47 +33,40 @@ const ListItem = forwardRef(
         return (
             <>
                 <div className="w-full flex items-center justify-between px-4 py-5 bg-gray-100 mb-4">
-                    <div className="flex items-center space-x-3">
-                        <div>
+                    <div className={clsx(upgrade ? "justify-start" : "justify-between", "flex flex-row items-center w-full space-x-3")} >
+                        <div className={clsx("flex items-center")}>
                             {domainFetched && !domainHasError && hasPicture &&
                                 <img className="w-15 h-15 max-w-[40px] max-h-[40px]" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
                             }
                             {(!domainFetched || domainHasError || !hasPicture) &&
                                 <div className="min-w-[40px] min-h-[40px] flex items-center justify-center">
                                     <Icon name="cart"/>
+                                    <div className="font-bold ml-2">
+                                        {item.name}
+                                    </div>
                                 </div>
                             }
                         </div>
-                        <div className="font-bold">{item.name}</div>
                         {domainFetched && !domainHasError &&
                             <LoginLink
-                                className={"text-black"} 
+                                className={"text-black flex items-center"} 
                                 page={link}
                             >
                                 {fullLabel}
                             </LoginLink>
                         }
                     </div>
-                    <div className="flex items-center">
-
-                        <div className="ml-4 relative">
-                            {domainFetched && !domainHasError && !upgrade &&
-                                <CheckboxInput
-                                    label={""}
-                                    id={item.id}
-                                    checked={visible}
-                                    onChange={(e) => onChange(e)}
-                                />
-                            }
+                    <div className="flex items-center flex-grow">
+                        <div className="relative">
                             {upgrade && <>
-                            <ButtonLink
-                                className={"bg-tertiary text-white"}
-                                btnVariant={"square-small"}
-                                target="_blank"
-                                loginLink="v2/r/payment-widget"
-                            >    
-                                {__("Upgrade", "simplybook")}
-                            </ButtonLink>
+                                <ButtonLink
+                                    className={"bg-tertiary text-white"}
+                                    btnVariant={"square-small"}
+                                    target="_blank"
+                                    loginLink="v2/r/payment-widget"
+                                >    
+                                    {__("Upgrade", "simplybook")}
+                                </ButtonLink>
                             </>}
                         </div>
                     </div>
