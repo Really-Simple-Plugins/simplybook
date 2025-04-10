@@ -73,7 +73,7 @@ const Bookings = () => {
                         ))}
                     </div>
                 </div>
-                {!isLoading && !hasError && (                    
+                {!isLoading && !hasError && (
                     <div className="mt-4 px-4">
                         {DataList.map((block, index) => (
                             <Fragment key={index}>
@@ -84,7 +84,7 @@ const Bookings = () => {
                 )}
             </BlockContent>
             <BlockFooter>
-                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square-ghost" loginLink="v2/r/bookings/">
+                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square-ghost" loginLink="v2/index/index">
                     {__("View Bookings", "simplybook")}
                 </ButtonLink>
             </BlockFooter>
