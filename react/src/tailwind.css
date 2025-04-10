@@ -46,8 +46,12 @@
     --bg-tertiary-dark: #061f32;
     --color-tertiary-hover: #e8eeff;
 
+    /* Text colors */
+    --color-simplybook-gray: #788291;
+
     /* Button colors */
     --color-button-blue: #5A6FA5;
+    --color-youtube: #f03;
 
     /* Border colors */
     --color-tertiary-border: #EFF4FF;
@@ -101,6 +105,19 @@ Form field container
 **/
 .form-field-inline {
     width: calc(1/2 * 95%)
+}
+
+/**
+======================================
+Tips & tricks
+======================================
+**/
+.tip-body {
+    transition: var(--ease-in-out);
+}
+
+.tip-body:hover .tip-inner p{
+    border-bottom: 1px solid var(--color-gray-300) !important;
 }
 
 /**
