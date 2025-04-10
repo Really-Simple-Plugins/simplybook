@@ -64,16 +64,20 @@ const Management = () => {
         hasError,
     } = useSubscriptionData();
 
+    const allowed: Record<string, string> = {
+        provider_limit: __('Provider', 'simplybook'),
+        sheduler_limit: __('Bookings', 'simplybook'),
+    };
+
     // Create an empty array to store the limits
     let selectedLimits = {};
 
     // Load the limits we want to show
     if (!isLoading && subscription) {
         const subscriptionObject = subscription?.limits;
-        const allowed = ['provider_limit', 'sheduler_limit'];
 
         selectedLimits = Object.keys(subscriptionObject)
-            .filter(key => allowed.includes(key))
+            .filter(key => key in allowed)
             .reduce((obj, key) => {
                 // @ts-ignore
                 obj[key] = subscriptionObject[key];
@@ -93,7 +97,7 @@ const Management = () => {
                     {!isLoading && selectedLimits && Object.entries(selectedLimits).map(([key, value]) => (
                         <SubscriptionDataList
                             key={key}
-                            title={__(`${key.replace('_limit', '').charAt(0).toUpperCase() + key.replace('_limit', '').slice(1)}`, "simplybook")}
+                            title={allowed[key]}
                             // @ts-ignore
                             remaining={value.rest}
                             // @ts-ignore
