@@ -11,7 +11,7 @@ import { useEffect, useRef } from "react";
 const FormFooter = ({
     onSubmit, 
     control,
-    hasSettings  
+    hasSettings 
 }) => {
     const { 
         isDirty,
@@ -41,17 +41,15 @@ const FormFooter = ({
                         {currentState.message}
                     </p>
                 )}
-
-                <Link onClick={() => {onBack(); return false;}}>
-                {__("Last URL", "simplybook")}
-                </Link>
-                <ButtonLink
-                    disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-                    btnVariant={'secondary'}
-                    onClick={onSubmit}
-                >    
-                    {__("Save", "simplybook")}
-                </ButtonLink>
+                {hasSettings && (
+                    <ButtonLink
+                        disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
+                        btnVariant={'secondary'}
+                        onClick={onSubmit}
+                    >    
+                        {__("Save", "simplybook")}
+                    </ButtonLink>
+                )}
             </div>
         </div>
     );
