@@ -89,6 +89,20 @@ class TaskManagementRepository
     }
 
     /**
+     * Remove a task by its ID from the repository
+     */
+    public function removeTaskById(string $taskId, bool $save = true): void
+    {
+        if (isset($this->tasks[$taskId])) {
+            unset($this->tasks[$taskId]);
+        }
+
+        if ($save) {
+            $this->saveTasksToDatabase();
+        }
+    }
+
+    /**
      * Update the status of a task if the task exists. If the task is required
      * and the status is set to 'dismissed', the status will not be updated.
      */
