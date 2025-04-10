@@ -22,7 +22,7 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
     return (
         <>
         {!isLoading && !hasError && (
-            <ul className={clsx("list-none flex gap-2", className)}>
+            <ul className={clsx("list-none flex flex-col  2xl:flex-row 2xl:justify-end 2xl:flex-wrap gap-2", className)}>
                 <ListWithIcon
                     iconColor={(expiresIn == 0 || isExpired) ? "red" : "var(--color-green-600)"}
                     iconName={isExpired ? "circle-xmark" : "circle-check"}
@@ -46,6 +46,7 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
                     {__('SMS Credits:', 'simplybook')} {smsRemaining}
                 </ListWithIcon>
                 <ListWithIcon
+
                     iconColor={bookingsRemaining <= 0 ? "red" : "var(--color-green-600)"}
                     iconName={bookingsRemaining <= 0 ? "circle-xmark" : "circle-check"}
                     iconSize="md"
