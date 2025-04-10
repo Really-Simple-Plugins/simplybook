@@ -8,7 +8,7 @@ import Icon from "../Common/Icon";
 import useOtherPluginsData from "../../hooks/useOtherPluginsData";
 import React from "react";
 import { OtherPlugin } from "../../types/OtherPlugin";
-import { ReactComponent as RspLogo } from "../../assets/svg/really-simple-plugins-logo.svg";
+import { ReactComponent as RspLogo } from "../../../../assets/img/really-simple-plugins-logo.svg";
 
 const OurPlugins = () => {
     const {plugins, fetched, runPluginAction, pluginActionNice} = useOtherPluginsData();
@@ -23,7 +23,7 @@ const OurPlugins = () => {
                 />
                 <div className="w-[200px]">
                     <RspLogo />
-                </div> 
+                </div>
             </div>
         {/* align list in middle of block */}
             <BlockContent className={"flex flex-col items-center px-4"}>
