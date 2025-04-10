@@ -14,7 +14,7 @@ const ListWithIcon: React.FC<ListWithIconProps> = ({
 }) => {
     return (
         <>
-            <li className={clsx("flex justify-center items-center text-sm font-medium mx-2", className)}>
+            <li className={clsx("flex justify-start items-center w-full lg:w-auto text-sm font-medium 2xl:justify-center   mx-2", className)}>
                 <Icon
                     className={iconClass}
                     name={iconName} 

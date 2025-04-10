@@ -10,5 +10,8 @@ export interface ButtonLinkProps {
     icon?: boolean;
     iconName?: string;
     iconSize?: string;
+    iconClass?: string;
+    iconStyle?: React.CSSProperties;
+    reverseIcon?: boolean;
     name?: string;
   }

@@ -12,7 +12,14 @@ import ButtonLink from "../Buttons/ButtonLink";
 
  */
 const ListItem = forwardRef(
-    ({ upgrade, link, item, label, ...props }, ref) => {
+    ({ 
+        upgrade, 
+        link, 
+        item, 
+        label, 
+        ...props 
+    }, ref) => {
+
         const [visible, setVisible] = useState(!!item?.is_visible || false);
         const onChange = (e) => {
             console.log('onChange', e.target.checked, "for id ", item.id);
@@ -20,7 +27,7 @@ const ListItem = forwardRef(
         };
         const { domain, domainFetched, hasError: domainHasError } = useDomainData();
         const hasPicture = domainFetched && item.picture_preview && item.picture_preview.length > 0;
-        const fullLabel = upgrade? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label.toLowerCase()) : __("Edit", "simplybook");
+        const fullLabel = upgrade ? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label.toLowerCase()) : __("Edit", "simplybook");
 
         return (
             <>
@@ -38,7 +45,10 @@ const ListItem = forwardRef(
                         </div>
                         <div className="font-bold">{item.name}</div>
                         {domainFetched && !domainHasError &&
-                            <LoginLink page={link}>
+                            <LoginLink
+                                className={"text-black"} 
+                                page={link}
+                            >
                                 {fullLabel}
                             </LoginLink>
                         }
@@ -56,7 +66,7 @@ const ListItem = forwardRef(
                             }
                             {upgrade && <>
                             <ButtonLink
-                                className={"bg-primary hover:bg-primary-hover hover:text-primary-dark"}
+                                className={"bg-tertiary text-white"}
                                 btnVariant={"square-small"}
                                 target="_blank"
                                 loginLink="v2/r/payment-widget"

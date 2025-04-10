@@ -1,7 +1,7 @@
 import clsx from "clsx";
 
 const BlockContent = ({ children, className = "" }) => {
-  return <div className={clsx(className,"p-5 flex-grow")}>{children}</div>;
+  return <div className={clsx("block-content flex-grow", className)}>{children}</div>;
 };
 
 BlockContent.displayName = "BlockContent";

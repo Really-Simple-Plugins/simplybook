@@ -6,6 +6,7 @@ import BlockContent from "../Blocks/BlockContent";
 import Tip from "./Partials/Tip";
 import {useQuery} from "@tanstack/react-query";
 import HttpClient from "../../api/requests/HttpClient";
+import ButtonLink from "../Buttons/ButtonLink";
 
 const TipsTricks = () => {
 
@@ -22,27 +23,40 @@ const TipsTricks = () => {
     );
 
     return (
-        <Block className={"col-span-6 row-span-1"}>
+        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-6"}>
             <BlockHeading
                 title={__("Tips & Tricks", "simplybook")}
                 controls={undefined}
             />
-            <BlockContent>
-                {loadingCompleted && (
-                    data.data.items.map((item: any, i: number) => (
-                        <Tip key={`trick-${i}`} title={item.title} link={item.link} content={item.content} />
-                    ))
-                )}
+            <BlockContent className="px-4 flex items-center">
+                <div className="flex flex-col justify-start gap-x-4">
+                    {loadingCompleted && (
+                        data.data.items.map((item: any, i: number) => (
+                            <Tip className="mb-2 w-[48%]" key={`trick-${i}`} title={item.title} link={item.link} content={item.content} />
+                        ))
+                    )}
+                </div>
             </BlockContent>
-            <BlockFooter>
-                {isLoading && (
-                    <div><p>{__("Loading...", "simplybook")}</p></div>
-                )}
-
-                {loadingCompleted && (<>
-                    <a href={data?.data.all ?? '#'} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("View All", "simplybook")}</a>
-                    <a href={data?.data.video_tutorials ?? '#'} target="_blank" rel="noopener noreferrer" className="simplybook-tips-tricks-all">{__("Video tutorials", "simplybook")}</a>
-                </>)}
+            <BlockFooter className="bg-gray-50">
+                <ButtonLink 
+                    className={"border-tertiary text-tertiary mr-4"} 
+                    icon={true}
+                    iconName="tips" 
+                    loginLink={data?.data.all ?? '#'} 
+                    btnVariant={"square-ghost"}
+                >
+                    {__("View All", "simplybook")}
+                </ButtonLink>
+                <ButtonLink 
+                    className={"border-youtube text-youtube"} 
+                    icon={true}
+                    iconName="youtube" 
+                    target="_blank"
+                    link="https://www.youtube.com/c/simplybookme-booking-system" 
+                    btnVariant={"square-ghost"}
+                >
+                    {__("View Video Tutorials", "simplybook")}
+                </ButtonLink>
             </BlockFooter>
         </Block>
     );

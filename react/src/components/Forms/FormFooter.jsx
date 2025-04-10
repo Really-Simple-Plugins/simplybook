@@ -4,9 +4,21 @@ import { __ } from "@wordpress/i18n";
 import { useFormState } from "react-hook-form";
 import Icon from "../Common/Icon";
 import useSettingsData from "../../hooks/useSettingsData";
+import ButtonLink from "../Buttons/ButtonLink";
+import { Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 
-function FormFooter({ onSubmit, control }) {
-    const { isDirty, isSubmitting, isValidating, isValid } = useFormState({
+const FormFooter = ({
+    onSubmit, 
+    control,
+    hasSettings 
+}) => {
+    const { 
+        isDirty,
+         isSubmitting,
+         isValidating, 
+         isValid 
+    } = useFormState({
         control,
     });
 
@@ -29,17 +41,20 @@ function FormFooter({ onSubmit, control }) {
                         {currentState.message}
                     </p>
                 )}
-                <ButtonInput
-                    onClick={onSubmit}
-                    disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-                >
-                    {__("Save", "simplybook")}
-                    {isSubmitting || isSavingSettings && <Icon className="ml-4" name="spinner" color="white"/>}
-                </ButtonInput>
+                {hasSettings && (
+                    <ButtonLink
+                        disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
+                        btnVariant={'secondary'}
+                        onClick={onSubmit}
+                    >    
+                        {__("Save", "simplybook")}
+                    </ButtonLink>
+                )}
             </div>
         </div>
     );
 }
 
 FormFooter.displayName = "FormFooter";
+
 export default FormFooter;
