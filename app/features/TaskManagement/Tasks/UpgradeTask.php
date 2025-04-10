@@ -2,9 +2,9 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class TestPremiumTask extends AbstractTask
+class UpgradeTask extends AbstractTask
 {
-    const IDENTIFIER = 'is_premium';
+    const IDENTIFIER = 'upgrade_from_trial';
 
     /**
      * @inheritDoc
@@ -21,7 +21,7 @@ class TestPremiumTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('This is a premium task!','simplybook');
+        return esc_html__('Upgrade your subscription!','simplybook');
     }
 
     /**
@@ -32,7 +32,7 @@ class TestPremiumTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Upgrade','simplybook'),
-            'link' => 'todo', // @jeroen add LoginLink functionality to task actions
+            'login_link' => 'v2/r/payment-widget#/',
         ];
     }
 }

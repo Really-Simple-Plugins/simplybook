@@ -18,6 +18,7 @@ class Event
     const HAS_SERVICES = 'has_services';
     const HAS_PROVIDERS = 'has_providers';
     const NAVIGATE_TO_SIMPLYBOOK = 'navigate_to_simplybook';
+    const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
 
     /**
      * Execute a WordPress event based on our constants.

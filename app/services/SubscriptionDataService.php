@@ -4,6 +4,7 @@ namespace SimplyBook\Services;
 
 use Carbon\Carbon;
 use SimplyBook\App;
+use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 
 class SubscriptionDataService
@@ -46,8 +47,13 @@ class SubscriptionDataService
             $subscriptionData['expire_in'] = $subscriptionData['expire_in'] + 1;
         }
 
-        $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
+        if (!empty($subscriptionData['subscription_name'])) {
+            Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, [
+                'subscription_name' => $subscriptionData['subscription_name'],
+            ]);
+        }
 
+        $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
         update_option('simplybook_subscription_data', $subscriptionData);
     }
 
