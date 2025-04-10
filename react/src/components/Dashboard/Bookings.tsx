@@ -40,14 +40,14 @@ const Bookings = () => {
         {
             title: __("Most popular provider", "simplybook"),
             key: "provider",
-            value: mostPopularProviderName ?? 'Provider not loaded',
-            uplift: mostPopularProviderBookings,
+            value: mostPopularProviderName ?? __('Loading', 'simplybook'),
+            bookings: mostPopularProviderBookings,
         },
         {
             title: __("Most popular service", "simplybook"),
             key: "service",
             value: mostPopularServiceName ?? 'Service not loaded',
-            uplift: mostPopularServiceBookings,
+            bookings: mostPopularServiceBookings,
         },
     ];
 
@@ -77,14 +77,14 @@ const Bookings = () => {
                     <div className="mt-4 px-4">
                         {DataList.map((block, index) => (
                             <Fragment key={index}>
-                                <MostPopular key={block.key} title={block.value} bookingAmount={block.uplift} />
+                                <MostPopular key={block.key} title={block.title} bookingAmount={block.bookings} />
                             </Fragment>
                         ))}
                     </div>
                 )}
             </BlockContent>
             <BlockFooter>
-                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square" loginLink="v2/r/bookings/">
+                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square-ghost" loginLink="v2/r/bookings/">
                     {__("View Bookings", "simplybook")}
                 </ButtonLink>
             </BlockFooter>
