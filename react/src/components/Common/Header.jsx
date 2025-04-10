@@ -72,14 +72,14 @@ const Header = () => {
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
-                    {!isExpired && expiresIn && subscriptionPlan && (
+                    {!isLoading && !isExpired && expiresIn && subscriptionPlan && (
                         <Label
                             labelVariant="trial"
                         >
                             {expireText}
                         </Label>
                     )}
-                    {isExpired && subscriptionPlan && (
+                    {!isLoading && isExpired && subscriptionPlan && (
                         <Label
                             labelVariant="trial-expired"
                         >
