@@ -7,7 +7,8 @@ import { Link } from "@tanstack/react-router";
 import Icon from "../Common/Icon";
 import useOtherPluginsData from "../../hooks/useOtherPluginsData";
 import React from "react";
-import {OtherPlugin} from "../../types/OtherPlugin";
+import { OtherPlugin } from "../../types/OtherPlugin";
+import rspLogo from "../../assets/svg/really-simple-plugins-logo.svg";
 
 const OurPlugins = () => {
     const {plugins, fetched, runPluginAction, pluginActionNice} = useOtherPluginsData();
@@ -30,10 +31,13 @@ const OurPlugins = () => {
                                 to={plugin.url}>
                                 {plugin.title}
                             </Link>
-                            <div className={"flex w-full text-sm"}>
+                            <div className={"flex text-black underline text-sm"}>
                                 {plugin.action === 'installed' && pluginActionNice(plugin.action)}
                                 {plugin.action !== 'installed' && <>
-                                    <a target="_blank" href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url}
+                                    <a 
+                                        className="text-black"
+                                        target="_blank" 
+                                        href={plugin.action !== 'upgrade-to-premium' ? '#' : plugin.url}
                                     onClick={(e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => runPluginAction({
                                         slug: plugin.slug,
                                         action: plugin.action,
