@@ -57,7 +57,7 @@ class DesignSettingsService
             return $cache;
         }
 
-        $designOptions = get_option($this->designOptionsKey);
+        $designOptions = get_option($this->designOptionsKey, []);
 
         wp_cache_set('design_settings', $designOptions, 'simplybook', 60);
         return $designOptions;
