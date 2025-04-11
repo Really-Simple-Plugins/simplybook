@@ -9,15 +9,14 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 
 const FormFooter = ({
-    onSubmit, 
+    onSubmit,
     control,
-    hasSettings 
 }) => {
-    const { 
+    const {
         isDirty,
          isSubmitting,
-         isValidating, 
-         isValid 
+         isValidating,
+         isValid
     } = useFormState({
         control,
     });
@@ -41,15 +40,13 @@ const FormFooter = ({
                         {currentState.message}
                     </p>
                 )}
-                {hasSettings && (
-                    <ButtonLink
-                        disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-                        btnVariant={'secondary'}
-                        onClick={onSubmit}
-                    >    
-                        {__("Save", "simplybook")}
-                    </ButtonLink>
-                )}
+                <ButtonLink
+                    disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
+                    btnVariant={'secondary'}
+                    onClick={onSubmit}
+                >
+                    {__("Save", "simplybook")}
+                </ButtonLink>
             </div>
         </div>
     );
