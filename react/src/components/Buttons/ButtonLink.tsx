@@ -48,7 +48,6 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     });
 
   };
-  console.log(disabled);
 
   let buttonVariants = clsx(
     // Base styles
