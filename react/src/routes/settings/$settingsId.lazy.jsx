@@ -104,11 +104,6 @@ function Settings() {
  * Extract form values for the current menu ID from the settings data. For
  * example, if the menu ID is "design", it will extract all settings with
  * menu_id === "design" and adds the key->value to the formValues object.
- *
- * @internal If a field has "subfields" the values of the subfields  should be
- * set via component attributes and not added to the formValues object. As an
- * example you can look at the 'theme' field with subfields for each theme.
- * Those theme_settings and its values are used on ThemeConfigGroupItem.
  */
 const extractFormValuesPerMenuId = (settings, menuId) => {
     // Extract default values from settings data where menu_id ===  settingsId
