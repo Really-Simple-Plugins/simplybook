@@ -33,15 +33,27 @@ const ListField = forwardRef(
             },
         };
 
+
         useEffect(() => {
             setListArray(sourceData[setting.source]?.data);
             setListFetched(sourceData[setting.source]?.fetched);
+
         }, [sourceData[setting.source]]);
+
+        const getEditLink = (id) => {
+            return (setting?.edit_link?.replace('{ID}', id) ?? setting.link);
+        }
 
         if (listFetched && !Array.isArray(listArray)) {
             return (
                 <>{sprintf(__("No %s found."), setting.label.toLowerCase())}</>
             );
+        }
+
+        if (listFetched && Array.isArray(listArray)) {
+            listArray.forEach(item => {
+                console.log('item.source', setting.source);
+            });
         }
 
         const premiumItem = {
@@ -57,7 +69,7 @@ const ListField = forwardRef(
                 )}
 
                 {listFetched && listArray.map((item) => (
-                    <ListItem upgrade={false} key={item.id+item.source} label={label} link={setting.link} item={item} />
+                    <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
                 <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
             </div>
