@@ -2,7 +2,6 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
-import {useEffect, useState} from "react";
 import TextInput from "../../components/Inputs/TextInput";
 import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
@@ -12,8 +11,8 @@ const path = "/onboarding/implementation";
 export const Route = createLazyFileRoute(path)({
 
   component: () => {
-      const { getValue, settings } = useSettingsData();
-      const [ implementationMethod, setImplementationMethod ] = useState('generated');
+      const { getValue } = useSettingsData();
+
       const {
           setCalendarPageName,
           bookingPageName,
@@ -22,12 +21,6 @@ export const Route = createLazyFileRoute(path)({
           calendarPageNameAvailable,
             bookingPageNameAvailable,
       } = useOnboardingData();
-
-      useEffect(() => {
-            let implementation = getValue("implementation");
-            console.log("Implementation current value: ", implementation);
-            setImplementationMethod(implementation);
-      }, [settings]);
 
       return (
       <OnboardingStep
@@ -44,7 +37,7 @@ export const Route = createLazyFileRoute(path)({
         }}
         rightColumn={
             <div className="relative w-full">
-                {implementationMethod === "manual" &&
+                {getValue('implementation') === "manual" &&
                     <div className={"my-6 text-center"}>
                         <h1 className={"text-3xl font-semibold text-black"}>{__("Implementation", "simplybook")}</h1>
                         <h2 className={"text-2xl text-gray-500 m-4"}>
@@ -59,7 +52,7 @@ export const Route = createLazyFileRoute(path)({
                         </div>
                     </div>
                 }
-                {implementationMethod !== "manual" &&
+                {getValue('implementation') !== "manual" &&
                     <div className={"my-6 text-center"}>
                         <h1 className={"text-3xl font-semibold text-black"}>{__("Implementation", "simplybook")}</h1>
                         <h2 className={"text-2xl text-gray-500 m-4"}>
