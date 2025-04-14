@@ -3,7 +3,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useMemo } from "react";
+import {useMemo} from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
@@ -35,13 +35,8 @@ function Settings() {
         [settings, settingsId],
     );
 
-    const currentFormDefaultValues = useMemo(
-        () => extractFormValuesPerMenuId(settings, settingsId),
-        [settings, settingsId],
-    );
-
     const currentFormValues = useMemo(
-        () => extractFormValuesPerMenuId(settings, settingsId, "value"),
+        () => extractFormValuesPerMenuId(settings, settingsId),
         [settings, settingsId],
     );
 
@@ -60,8 +55,7 @@ function Settings() {
         formState: { isDirty },
         getValues,
     } = useForm({
-        defaultValues: currentFormDefaultValues,
-        values: currentFormValues,
+        defaultValues: currentFormValues,
     });
 
     useBlocker({
@@ -95,7 +89,7 @@ function Settings() {
                 <FormFooter
                     onSubmit={handleSubmit((formData) => {
                         saveSettings(formData).then(() => {
-                            reset(currentFormDefaultValues);
+                            reset(formData);
                         });
                     })}
                     control={control}
@@ -106,12 +100,23 @@ function Settings() {
     );
 }
 
-const extractFormValuesPerMenuId = (settings, menuId, key = "default") => {
+/**
+ * Extract form values for the current menu ID from the settings data. For
+ * example, if the menu ID is "design", it will extract all settings with
+ * menu_id === "design" and adds the key->value to the formValues object.
+ *
+ * @internal If a field has "subfields" the values of the subfields  should be
+ * set via component attributes and not added to the formValues object. As an
+ * example you can look at the 'theme' field with subfields for each theme.
+ * Those theme_settings and its values are used on ThemeConfigGroupItem.
+ */
+const extractFormValuesPerMenuId = (settings, menuId) => {
     // Extract default values from settings data where menu_id ===  settingsId
     const formValues = {};
     settings.forEach((setting) => {
         if (setting.menu_id === menuId) {
-            formValues[setting.id] = setting[key];
+            let defaultValue = (setting['default'] ?? '');
+            formValues[setting.id] = (setting['value'] ?? defaultValue);
         }
     });
 
