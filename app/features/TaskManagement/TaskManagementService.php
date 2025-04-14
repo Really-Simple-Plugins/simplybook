@@ -55,7 +55,7 @@ class TaskManagementService
         $deletableTasksList = $this->repository->getAllTasks();
 
         foreach ($tasks as $task) {
-            $this->repository->upgradeTask($task);
+            $this->repository->upgradeTask($task, false);
 
             // Current tasks is not deletable so remove it from the list
             unset($deletableTasksList[$task->getId()]);
@@ -63,10 +63,26 @@ class TaskManagementService
 
         // If list still contains tasks, the upgrade requests them to be removed
         if (!empty($deletableTasksList)) {
-            $this->removeTasks($deletableTasksList, false);
+            $this->removeDeletableTasksAfterUpgrade($deletableTasksList, false);
         }
 
         $this->repository->saveTasksToDatabase();
+    }
+
+    /**
+     * Remove tasks that are no longer present in our Task Object list. Such
+     * tasks are now a __PHP_Incomplete_Class and do not implement the
+     * TaskInterface. Because of this we cannot use the task classes.
+     */
+    private function removeDeletableTasksAfterUpgrade(array $deletableTasksList, bool $save = true): void
+    {
+        foreach ($deletableTasksList as $taskId => $deletedTask) {
+            $this->repository->removeTaskById($taskId, $save);
+        }
+
+        if ($save) {
+            $this->repository->saveTasksToDatabase();
+        }
     }
 
     /**

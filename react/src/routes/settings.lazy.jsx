@@ -2,6 +2,8 @@ import { createLazyFileRoute, Link, Outlet } from "@tanstack/react-router";
 import Header from "../components/Common/Header";
 import ErrorBoundary from "../components/Common/ErrorBoundary";
 import SettingsMenu from "../components/Settings/SettingsMenu";
+import NotificationSidebar from "../components/Settings/Partials/NotificationSidebar";
+import NotificationBox from "../components/Dashboard/Partials/NotificationBox";
 
 export const Route = createLazyFileRoute("/settings")({
   component: () => <Settings />,
@@ -21,7 +23,9 @@ const Settings = () => {
               <Outlet />
             </ErrorBoundary>
           </div>
-          <div className="max-w-sm flex-1">Hello from settings!</div>
+          <NotificationSidebar>
+            <NotificationBox />
+          </NotificationSidebar>
         </div>
       </div>
     </>

@@ -4,80 +4,119 @@ import { __ } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import { Fragment } from "react";
-import Plugin from "./Partials/Plugin";
 import Manage from "./Partials/Manage";
+import SubscriptionDataList from "./Partials/SubscriptionDataList";
+import useSubscriptionData from "../../hooks/useSubscriptionData";
 
-// @TODO: Split up into multiple components?
 
 const DataList = [
-  {
-    title: __("Providers", "simplybook"),
-    link: "/settings/providers",
-    buttonText: __("View", "simplybook"),
-    btnVariant: "primary",
-  },
-  {
-    title: __("Services", "simplybook"),
-    link: "/settings/services",
-    buttonText: __("View", "simplybook"),
-    btnVariant: "primary",
-  },
-  {
-    title: __("Bookings", "simplybook"),
-    link: "/settings",
-    buttonText: __("View", "simplybook"),
-    btnVariant: "primary",
-  },
-  {
-    title: __("SMS Gateway", "simplybook"),
-    link: "v2/management/#plugins/sms",
-    buttonText: __("Upgrade", "simplybook"),
-    btnVariant: "primary",
-    isPlugin:true,
-    id: "sms",
-  },
-  {
-    title: __("Membership", "simplybook"),
-    link: "v2/management/#plugins/membership",
-    buttonText: __("Upgrade", "simplybook"),
-    btnVariant: "primary",
-    isPlugin:true,
-    id: "memberships"
-  },
-  {
-    title: __("Paid Events", "simplybook"),
-    link: "management/#plugins/paid_events",
-    buttonText: __("Upgrade", "simplybook"),
-    btnVariant: "primary",
-    isPlugin:true,
-    id: "paid_events",
-  },
+    {
+        title: __("Providers", "simplybook"),
+        link: "/settings/providers",
+        buttonText: __("View", "simplybook"),
+        btnVariant: "primary",
+    },
+    {
+        title: __("Services", "simplybook"),
+        link: "/settings/services",
+        buttonText: __("View", "simplybook"),
+        btnVariant: "primary",
+    },
+    {
+        title: __("Bookings", "simplybook"),
+        link: "/settings",
+        buttonText: __("View", "simplybook"),
+        btnVariant: "primary",
+    },
+    {
+        title: __("SMS Gateway", "simplybook"),
+        link: "v2/management/#plugins/sms",
+        buttonText: __("Upgrade", "simplybook"),
+        btnVariant: "primary",
+        isPlugin:true,
+        id: "sms",
+    },
+    {
+        title: __("Membership", "simplybook"),
+        link: "v2/management/#plugins/membership",
+        buttonText: __("Upgrade", "simplybook"),
+        btnVariant: "primary",
+        isPlugin:true,
+        id: "memberships"
+    },
+    {
+        title: __("Paid Events", "simplybook"),
+        link: "management/#plugins/paid_events",
+        buttonText: __("Upgrade", "simplybook"),
+        btnVariant: "primary",
+        isPlugin:true,
+        id: "paid_events",
+    },
 ];
 
-
 const Management = () => {
-  return (
-    <Block className={"col-span-3 row-span-2"}>
-      <BlockHeading
-        title={__("Management", "simplybook")}
-        controls={undefined}
-      />
-      <BlockContent className={"px-0 py-0"}>
-        <div>
-          {DataList.map((block, index) => (
-              <Fragment key={index}>
-                {block.isPlugin ? (
-                    <Plugin title={block.title} link={block.link} id={block.id}/>
-                ) : (
-                    <Manage title={block.title} link={block.link} buttonText={block.buttonText} />
-                )}
-              </Fragment>
-          ))}
-        </div>
-      </BlockContent>
-      <BlockFooter>{""}</BlockFooter>
-    </Block>
-  );
+
+    // Load the subscription data
+    const {
+        subscription,
+        smsRemaining,
+        isLoading,
+        hasError,
+    } = useSubscriptionData();
+
+    const allowedSubscriptionDataLimits: Record<string, string> = {
+        provider_limit: __('Provider', 'simplybook'),
+        sheduler_limit: __('Bookings', 'simplybook'),
+    };
+
+    // Create an empty array to store the limits
+    let selectedLimits = {};
+
+    // Load the limits we want to show
+    if (!isLoading && subscription) {
+        const subscriptionObject = subscription?.limits;
+
+        selectedLimits = Object.keys(subscriptionObject)
+            .filter(key => key in allowedSubscriptionDataLimits)
+            .reduce((obj, key) => {
+                // @ts-ignore
+                obj[key] = subscriptionObject[key];
+                return obj;
+            }, {});
+
+    }
+
+    return (
+        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2  xl:col-span-4"}>
+            <BlockHeading
+                title={__("Management", "simplybook")}
+                controls={undefined}
+            />
+            <BlockContent className={"px-0 py-0"}>
+                <div>
+                    {!isLoading && selectedLimits && Object.entries(selectedLimits).map(([key, value]) => (
+                        <SubscriptionDataList
+                            key={key}
+                            title={allowedSubscriptionDataLimits[key]}
+                            // @ts-ignore
+                            remaining={value.rest}
+                            // @ts-ignore
+                            total={value.total}
+                            isLoading={isLoading}
+                        />
+                    ))}
+                    {DataList.map((block, index) => (
+                        <Fragment key={index}>
+                            {block.isPlugin && (
+                                <Manage title={block.title} link={block.link} buttonText={block.buttonText} />
+                            )}
+                        </Fragment>
+                    ))}
+                </div>
+            </BlockContent>
+            <BlockFooter>{""}</BlockFooter>
+        </Block>
+    );
 };
 
 Management.displayName = "Management";

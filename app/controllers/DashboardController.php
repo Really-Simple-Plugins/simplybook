@@ -23,11 +23,22 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard']);
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueueDashboardStyles']);
+        add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
 
+        // Redirect on the activation hook, but do it after anything else.
+        add_action('simplybook_activation', [$this, 'maybeRedirectToDashboard'], 9999);
+    }
+
+    /**
+     * Enqueue the SimplyBook Dashicon style, which makes dashicons-simplybook
+     * available in the admin area. Also used by our Gutenberg block.
+     */
+    public function enqueueSimplyBookDashiconStyle(): void
+    {
+        $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
+        wp_enqueue_style('simplybook-font', $iconCss);
     }
 
     /**
@@ -55,18 +66,19 @@ class DashboardController implements ControllerInterface
          * Filter: simplybook_menu_position
          * Can be used to change the position of the menu item in the admin menu.
          * @param int $menuPosition
-         * @return int
+         * @return int Default 59 to be positioned after "wp-menu-separator" and
+         * before "Appearance".
          */
-        $menuPosition = apply_filters('simplybook_menu_position', 3);
+        $menuPosition = apply_filters('simplybook_menu_position', 59);
 
         $pageHookSuffix = add_menu_page(
-            esc_html__('Bookings', 'simplybook'),
-            esc_html__('Bookings', 'simplybook'),
+            esc_html__('SimplyBook.me', 'simplybook'),
+            esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
             'simplybook',
             [$this, 'renderReactApp'],
-            'dashicons-calendar-alt',
-            $menuPosition
+            'dashicons-simplybook',
+            $menuPosition,
         );
 
         add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
@@ -112,6 +124,10 @@ class DashboardController implements ControllerInterface
         if (empty($chunkTranslation)) {
             return;
         }
+
+        // Enqueue SimplyBook Widget script for preview functionality
+        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
+        wp_enqueue_script('simplybookMePl_widget_scripts');
 
         wp_enqueue_script(
             'simplybook',

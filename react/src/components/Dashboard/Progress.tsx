@@ -6,6 +6,7 @@ import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
 import {Task} from "../../types/Task";
+import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
 
 const getStatusStyles = (status: string) => {
     switch (status) {
@@ -37,7 +38,7 @@ const Progress = () => {
 
     if (isLoading || hasError) {
         return (
-            <Block className="col-span-6 row-span-2">
+            <Block className="col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-4">
                 <BlockHeading title={__("Progress", "simplybook")} controls={undefined} />
                 <BlockContent>
                     <div className="text-center py-8 text-gray-500">
@@ -49,7 +50,7 @@ const Progress = () => {
     }
 
     return (
-        <Block className="col-span-6 row-span-2">
+        <Block className="col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2  xl:col-span-4">
             <BlockHeading
                 title={__("Progress", "simplybook")}
                 controls={
@@ -136,14 +137,13 @@ const Progress = () => {
                     ))}
                 </div>
             </BlockContent>
-            <BlockFooter>
-                <div className="flex justify-between text-sm text-gray-500">
-
-                </div>
+            <BlockFooter className="flex w-full justify-start 2xl:justify-end text-sm text-gray-500">
+                <SubscriptionDataListHorizontal />
             </BlockFooter>
         </Block>
     );
 };
 
 Progress.displayName = "Progress";
+
 export default Progress;

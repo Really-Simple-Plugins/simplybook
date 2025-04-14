@@ -41,26 +41,13 @@ class OnboardingService
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
 
-        $this->update_option('email', $submittedEmailAddress );
-        $this->update_option('terms-and-conditions', $adminAgreesToTerms);
+        $this->update_option('email', $submittedEmailAddress, true);
+        $this->update_option('terms-and-conditions', $adminAgreesToTerms, true);
 
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
         $message = ($success ? '' : esc_html__('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
 
         return $this->sendHttpResponse([], $success, $message);
-    }
-
-    /**
-     * Store the admin's choice for receiving tips and tricks
-     */
-    public function storeTipsAndTricksChoice(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
-        $adminWantsTipsAndTricks = $storage->getBoolean('tips-and-tricks');
-
-        $this->update_option('tips-and-tricks', $adminWantsTipsAndTricks);
-
-        return $this->sendHttpResponse();
     }
 
     /**

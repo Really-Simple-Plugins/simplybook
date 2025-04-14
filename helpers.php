@@ -5,31 +5,6 @@
  * new or existing traits so we can remove this file prior to release.
  */
 
-if ( ! function_exists( 'simplybook_has_admin_access' ) ) {
-    /**
-     * Check if current request is authenticated, which is in case:
-     * - user is logged in and has manage_options capability
-     * - this is a REST API request and user is logged in
-     * - this is a WPCLI request
-     * - this is a cron request
-     *
-     * This ensures that auto updates can run, and cron jobs can complete.
-     *
-     * @deprecated Use HasAllowlistControl::adminAccessAllowed() instead
-     * @return bool
-     */
-    function simplybook_has_admin_access(): bool
-    {
-        //during activation, we need to allow access
-        if ( get_option('simplybook_run_activation') ) {
-            return true;
-        }
-        $wpcli = defined( 'WP_CLI' ) && WP_CLI;
-        return ( is_admin() && current_user_can('simplybook_manage') )
-            || simplybook_is_logged_in_rest() || wp_doing_cron() || $wpcli;
-    }
-}
-
 if ( ! function_exists( 'simplybook_is_logged_in_rest' ) ) {
     /**
      * Check if current request is authenticated, for a REST API request

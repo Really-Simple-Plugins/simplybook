@@ -1,4 +1,4 @@
-import ButtonInput from "../../Inputs/ButtonInput";
+import ButtonLink from "../../Buttons/ButtonLink";
 import React from "react";
 interface ManageProps {
     title: string;
@@ -9,10 +9,10 @@ const Manage: React.FC<ManageProps> = ({ title, link, buttonText }) => {
     return (
         <>
             <>
-                <div className={"grid grid-cols-[1fr_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50"}>
-                    <div className={"text-sm"}>{title}</div>
+                <div className={"flex justify-between items-center gap-4 p-4 odd:bg-white even:bg-gray-50"}>
+                    <div className="text-base">{title}</div>
                     <div className={"flex justify-end"}>
-                        <ButtonInput link={{ to: link }} size={"sm"} btnVariant={"tertiary"}>{buttonText}</ButtonInput>
+                        <ButtonLink className={"border-primary text-primary"} icon={false} link={link} btnVariant={"ghost"}>{buttonText}</ButtonLink>
                     </div>
                 </div>
             </>

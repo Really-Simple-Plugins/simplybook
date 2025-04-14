@@ -67,5 +67,7 @@ node_modules
 psd
 thumb
 sketch
+react/build
+react/.npmrc
 
 *storybook.log

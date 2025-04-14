@@ -16,18 +16,6 @@ const useSettingsData = () => {
     const client = new HttpClient();
 
     /**
-     * Transform data to ensure boolean values for checkboxes.
-     */
-    const transformData = (data) => {
-        return data.map((field) => {
-            if (field.type === "checkbox") {
-                field.value = !!field.value;
-            }
-            return field;
-        });
-    };
-
-    /**
      * Fetch settings fields using Tanstack Query.
      */
     const query = useQuery({
@@ -36,13 +24,10 @@ const useSettingsData = () => {
             withValues: true,
         }).post(),
         staleTime: 1000 * 60 * 5, // 5 minutes
-        initialData: transformData(
-            window.simplybook && window.simplybook.settings_fields,
-        ),
+        initialData: window.simplybook?.settings_fields,
         retry: 0,
         select: function (data) {
-            let fields = (data?.data ?? data);
-            return transformData(fields);
+            return (data?.data ?? data);
         }
     });
 
@@ -62,7 +47,7 @@ const useSettingsData = () => {
      */
     const setValue = (id, value) => {
         queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
-            return oldResponse.map((field) =>
+            return oldResponse?.data?.map((field) =>
                 field.id === id ? { ...field, value } : field,
             );
         });
@@ -75,7 +60,7 @@ const useSettingsData = () => {
         // Post new settings
         mutationFn: async (data) => {
             let settings = await client.setRoute(saveSettingsRoute).setPayload(data).post();
-            return transformData(settings?.data);
+            return settings?.data;
         },
         // Mutate current settings to show updated values
         onSuccess: (data) => {

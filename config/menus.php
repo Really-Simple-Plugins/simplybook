@@ -22,26 +22,35 @@ return [
     'providers' => [
         'id' => 'providers',
         'title' => __('Providers', 'simplybook'),
+        'has_settings' => false,
     ],
     'services' => [
         'id' => 'services',
         'title' => __('Services', 'simplybook'),
+        'has_settings' => false,
     ],
     'design' => [
         'id' => 'design',
         'title' => __('Design', 'simplybook'),
         'groups' => [
             [
-                'id' => 'design',
-                'title' => __('Design', 'simplybook'),
+                'id' => 'main',
+                'title' => __('Main settings', 'simplybook'),
+                'has_preview' => true,
             ],
             [
-                'id' => 'widget',
-                'title' => __('Widget', 'simplybook'),
+                'id' => 'theme',
+                'title' => __('Theme settings', 'simplybook'),
+                'has_preview' => true,
             ],
             [
-                'id' => 'palettes',
-                'title' => __('Palettes', 'simplybook'),
+                'id' => 'reviews',
+                'title' => __('Reviews shortcode', 'simplybook'),
+            ],
+            [
+                'id' => 'booking',
+                'title' => __('Booking button shortcode', 'simplybook'),
+                'help' => __('The booking button shortcode can be placed anywhere in the page and it will automatically be added to the outermost edges of that page.', 'simplybook'),
             ],
         ],
     ],

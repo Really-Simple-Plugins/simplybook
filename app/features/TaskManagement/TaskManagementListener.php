@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use SimplyBook\Helpers\Event;
+
 class TaskManagementListener
 {
     private TaskManagementService $service;
@@ -13,18 +15,88 @@ class TaskManagementListener
 
     public function listen(): void
     {
-        add_action('simplybook_company_registered', [$this, 'handleCompanyRegistered'], 10, 2);
-        add_action('simplybook_save_design_section', [$this, 'handleDesignSettingsSaved']);
+        add_action('simplybook_event_' . Event::EMPTY_SERVICES, [$this, 'handleEmptyServices']);
+        add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
+        add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
+        add_action('simplybook_event_' . Event::HAS_PROVIDERS, [$this, 'handleHasProviders']);
+        add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
+        add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
+        add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
     /**
-     * Handle the company registered event to update task status.
+     * Handle the empty services event to update task status.
      */
-    public function handleCompanyRegistered(string $domain, int $companyId): void
+    public function handleEmptyServices(): void
+    {
+        $this->service->openTask(
+            Tasks\AddServiceTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle the empty providers event to update task status.
+     */
+    public function handleEmptyProviders(): void
+    {
+        $this->service->openTask(
+            Tasks\AddProviderTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle the has services event to update task status.
+     */
+    public function handleHasServices(): void
     {
         $this->service->completeTask(
             Tasks\AddServiceTask::IDENTIFIER
         );
+    }
+
+    /**
+     * Handle the has providers event to update task status.
+     */
+    public function handleHasProviders(): void
+    {
+        $this->service->completeTask(
+            Tasks\AddProviderTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle navigation to SimplyBook event to update task status.
+     */
+    public function handleNavigateToSimplyBook(): void
+    {
+        $this->service->completeTask(
+            Tasks\GoToSimplyBookSystemTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle subscription data loaded event to update task status.
+     */
+    public function handleSubscriptionDataLoaded(array $arguments): void
+    {
+        $subscription = ($arguments['subscription_name'] ?? '');
+        if (empty($subscription)) {
+            return;
+        }
+
+        // Keep task open if the subscription is 'Trial'
+        if ($subscription === 'Trial') {
+            $this->service->openTask(
+                Tasks\UpgradeTask::IDENTIFIER
+            );
+        }
+
+        // Complete the task if the subscription is anything but 'Trial'
+        if ($subscription !== 'Trial') {
+            $this->service->completeTask(
+                Tasks\UpgradeTask::IDENTIFIER
+            );
+        }
     }
 
     /**

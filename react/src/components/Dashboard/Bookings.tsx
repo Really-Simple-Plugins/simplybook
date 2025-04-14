@@ -5,8 +5,9 @@ import BlockContent from "../Blocks/BlockContent";
 import BlockFooter from "../Blocks/BlockFooter";
 import {Fragment} from "react";
 import Icon from "../Common/Icon";
-import LoginLink from "../Common/LoginLink";
 import useStatisticsData from "../../hooks/useStatisticsData";
+import ButtonLink from "../Buttons/ButtonLink";
+import MostPopular from "./Partials/MostPopular";
 
 const Bookings = () => {
 
@@ -25,12 +26,12 @@ const Bookings = () => {
     const FeaturedBlocks = [
         {
             title: __("Today", "simplybook"),
-            value: bookingsToday ?? '...',
+            value: bookingsToday ?? __('Loading', 'simplybook'),
             icon: "user-group",
         },
         {
             title: __("This week", "simplybook"),
-            value: bookingsThisWeek ?? '...',
+            value: bookingsThisWeek ?? __('Loading', 'simplybook'),
             icon: "user-group",
         },
     ];
@@ -38,19 +39,20 @@ const Bookings = () => {
     const DataList = [
         {
             title: __("Most popular provider", "simplybook"),
-            value: mostPopularProviderName ?? '...',
-            uplift: mostPopularProviderBookings,
-            icon: "trophy",
+            key: "provider",
+            value: mostPopularProviderName ?? __('Loading', 'simplybook'),
+            bookings: mostPopularProviderBookings,
         },
         {
             title: __("Most popular service", "simplybook"),
-            value: mostPopularServiceName ?? '...',
-            uplift: mostPopularServiceBookings,
-            icon: "trophy",
+            key: "service",
+            value: mostPopularServiceName ?? 'Service not loaded',
+            bookings: mostPopularServiceBookings,
         },
     ];
+
     return (
-        <Block className={"col-span-3 row-span-2"}>
+        <Block className={"col-span-12 sm:col-span-6 xl:col-span-4 2xl:col-span-3 2xl:row-span-2"}>
             <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
             <BlockContent className={"px-0 py-0"}>
                 <div className={"flex flex-col bg-tertiary-light"}>
@@ -63,36 +65,28 @@ const Bookings = () => {
                                 }
                             >
                                 <Icon name={block.icon} size={"2x"} />
-                                <div className={"my-2 text-2xl font-extrabold"}>
+                                <div className={"text-sm my-4"}>{block.title}</div>
+                                <div className={" text-2xl font-extrabold"}>
                                     {block.value}
                                 </div>
-                                <div className={"text-xs"}>{block.title}</div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div>
-                    {DataList.map((block, index) => (
-                        <Fragment key={index}>
-                            <div className={"grid grid-cols-[auto_1fr_auto_auto] items-center gap-4 px-5 py-3 odd:bg-white even:bg-gray-50"}>
-                                <div className="flex items-center justify-center">
-                                    <Icon name={block.icon} />
-                                </div>
-                                <div className={"text-sm"}>{block.title}</div>
-                                <div className={"text-green-500 text-l font-bold"}>
-                                    {block.uplift && <>{block.uplift}%</>}
-                                </div>
-                                <div className={"font-bold"}>
-                                    {block.value && <>{block.value}</>}
-                                </div>
-                            </div>
-                        </Fragment>
-                    ))}
-                </div>
+                {!isLoading && !hasError && (
+                    <div className="mt-4 px-4">
+                        {DataList.map((block, index) => (
+                            <Fragment key={index}>
+                                <MostPopular key={block.key} title={block.title} bookingAmount={block.bookings} />
+                            </Fragment>
+                        ))}
+                    </div>
+                )}
             </BlockContent>
             <BlockFooter>
-                <LoginLink className="" isButton={true} btnVariant="secondary" page="v2/r/payment-widget/">{__('View' +
-                    ' Bookings', 'simplybook')}</LoginLink>
+                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square-ghost" loginLink="v2/index/index">
+                    {__("View Bookings", "simplybook")}
+                </ButtonLink>
             </BlockFooter>
         </Block>
     );

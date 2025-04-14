@@ -1,24 +1,47 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
+/**
+ * Import the icon packages you want to use
+ * Look at https://docs.fontawesome.com/web/use-with/react/add-icons for more information
+ *
+ * the authentication for FA is in the .npmrc which should only
+ * be visible local and not pushed to main/production
+ */
+import {
+  fas,
   faCircle,
   faSquareArrowUpRight,
   faSpinner,
   faChevronDown,
-    faChevronUp,
-    faCheck,
-    faInfoCircle,
-    faTimes,
-    faTrophy,
-    faUserGroup,
-    faEye,
-    faBullhorn,
-    faClock,
-    faShoppingCart,
+  faChevronUp,
+  faCheck,
+  faInfoCircle,
+  faTimes,
+  faTrophy,
+  faUserGroup,
+  faEye,
+  faBullhorn,
+  faClock,
+  faSupport,
+  faShoppingCart,
+  faCircleCheck,
+  faCircleXmark,
+  faArrowUpRightFromSquare,
+  faLinesLeaning
  } from "@fortawesome/free-solid-svg-icons";
+
+ import { 
+  faGlobe 
+} from "@fortawesome/pro-regular-svg-icons";
+
+ import { 
+  faYoutube 
+} from "@fortawesome/free-brands-svg-icons";
 
 // Map your icons to keys for easy referencing
 const iconMap = {
     "square-arrow-up-right": faSquareArrowUpRight,
+    "circle-check": faCircleCheck,
+    "circle-xmark": faCircleXmark,
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
@@ -29,9 +52,13 @@ const iconMap = {
     "user-group": faUserGroup,
     "eye": faEye,
     "bullhorn": faBullhorn,
+    "support": faGlobe,
     "clock": faClock,
     "circle": faCircle,
     "cart": faShoppingCart,
+    "target-blank": faArrowUpRightFromSquare,
+    "youtube": faYoutube,
+    "tips": faLinesLeaning
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

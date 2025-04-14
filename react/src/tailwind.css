@@ -14,10 +14,9 @@
 @source "../safelist.txt";
 
 @theme {
-    /* Define new container width */
 
     /* Box-shadow */
-    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);;
+    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
 
     /* Define custom font sizes */
     --text-label: 1rem;
@@ -25,20 +24,39 @@
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
-    /* Define custom colors */
+    /* Error colors */
+    --color-succes: #2CE37B;
+    --color-succes-light: #EAFAF3;
+
+    /* Primary colors */
     --bg-primary-light: #b3e4f9;
     --bg-primary: #06adef;
     --bg-primary-dark: #055b78;
+    --color-primary-hover: #0589bd;
+    --color-primary-lighter: #F0F4FE;
     
+    /* Secondary colors */
     --bg-secondary-light: #ffb3c1;
     --bg-secondary: #ff3259;
     --bg-secondary-dark: #950c28;
 
+    /* Tertiary colors */
     --bg-tertiary-light: #f0f4fe;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
+    --color-tertiary-hover: #e8eeff;
 
-    /* Overwrite base colors */
+    /* Text colors */
+    --color-simplybook-gray: #788291;
+
+    /* Button colors */
+    --color-button-blue: #5A6FA5;
+    --color-youtube: #f03;
+
+    /* Border colors */
+    --color-tertiary-border: #EFF4FF;
+
+    /* Hover colors */
     --color-gray-200: rgba(218, 218, 218, 0.5);
 
     /* Max width */
@@ -53,6 +71,7 @@ Text styles
 small {
     font-size: var(--text-base);
 }
+ 
 /**
 ======================================
 Base styles
@@ -90,6 +109,19 @@ Form field container
 
 /**
 ======================================
+Tips & tricks
+======================================
+**/
+.tip-body {
+    transition: var(--ease-in-out);
+}
+
+.tip-body:hover .tip-inner p{
+    border-bottom: 1px solid var(--color-gray-300) !important;
+}
+
+/**
+======================================
 Input global styles
 ======================================
 **/
@@ -111,7 +143,7 @@ Input global styles
             border-style: var(--tw-border-style);
             border-width: 2px;
             box-shadow: var(--shadow-md);
-            line-height: 2rem;
+            line-height: 1.5;
     }
 }
 

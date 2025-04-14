@@ -12,6 +12,16 @@ class AddServiceTask extends AbstractTask
     protected bool $required = true;
 
     /**
+     * This task is completed by default, that is because services are added
+     * during onboarding. Only when the "get services" request returns empty
+     * will this task be opened.
+     */
+    public function __construct()
+    {
+        $this->setStatus(self::STATUS_COMPLETED);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getText(): string

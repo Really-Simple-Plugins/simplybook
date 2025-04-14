@@ -4,8 +4,8 @@ import useOnboardingData from "./useOnboardingData";
 import { useState} from "react";
 
 const useWaitForRegistrationCallback = () => {
-    const { setOnboardingCompleted } = useOnboardingData();
-    const [ pollingEnabled, setPollingEnabled ] = useState(true);
+    const {onboardingCompleted, setOnboardingCompleted} = useOnboardingData();
+    const [ pollingEnabled, setPollingEnabled ] = useState(!onboardingCompleted);
     const [ queryData, setQueryData ] = useState({ status: "waiting" });
     const [ count, setCount ] = useState(0);
     const { data, refetch, isFetching } = useQuery({

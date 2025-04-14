@@ -8,7 +8,7 @@ type BlockProps = {
 
 const Block = memo(({ className = "", children }: BlockProps) => {
   return (
-    <div className={clsx(className, "bg-white shadow-md rounded-xl flex flex-col")}>
+    <div className={clsx("bg-white shadow-md rounded-xl flex flex-col", className)}>
       {children}
     </div>
   );

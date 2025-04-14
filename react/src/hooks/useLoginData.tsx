@@ -3,7 +3,9 @@ import { LoginData } from "../types/LoginData";
 import HttpClient from "../api/requests/HttpClient";
 
 const defaultLoginData: LoginData = {
-    simplybook_dashboard_url: "",
+    data: {
+        simplybook_dashboard_url: "",
+    }
 };
 
 const useLoginData = () => {

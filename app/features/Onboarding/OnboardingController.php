@@ -33,11 +33,6 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this->service, 'storeEmailAddress'],
         ];
 
-        $routes['onboarding/tipstricks'] = [
-            'methods' => 'POST',
-            'callback' => [$this->service, 'storeTipsAndTricksChoice'],
-        ];
-
         $routes['onboarding/company_registration'] = [
             'methods' => 'POST',
             'callback' => [$this, 'registerCompanyAtSimplyBook'],
@@ -132,6 +127,7 @@ class OnboardingController implements FeatureInterface
 
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
     }
+
 
     /**
      * Generate default shortcode pages
@@ -246,7 +242,7 @@ class OnboardingController implements FeatureInterface
     {
         $responseStorage = new Storage($response);
 
-        App::provide('client')->saveAuthenticationData(
+        App::provide('client')->setDuringOnboardingFlag(true)->saveAuthenticationData(
             $responseStorage->getString('token'),
             $responseStorage->getString('refresh_token'),
             $parsedDomain,

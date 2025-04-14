@@ -3,6 +3,7 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
+use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -10,6 +11,7 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 class DomainEndpoint implements SingleEndpointInterface
 {
     use LegacySave;
+    use LegacyLoad;
     use HasRestAccess;
     use HasAllowlistControl;
 
@@ -47,7 +49,7 @@ class DomainEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $domain = $this->get_option('domain');
+        $domain = $this->get_domain();
         $companyLoginPath = App::provide('client')->get_company_login();
 
         return $this->sendHttpResponse([

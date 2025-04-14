@@ -15,6 +15,8 @@ trait LegacyLoad {
 	public $fields = [];
 	public $values_loaded = false;
 
+    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
+
     /**
      * Get a field by ID
      * @param string $id
@@ -107,33 +109,13 @@ trait LegacyLoad {
     }
 
     /**
-     * Get array of fields of a specific type. Also loads the values
-     *
-     * @param string $attribute
-     * @param string $attribute_value
-     * @return array
-     */
-    public function get_fields_by_attribute(string $attribute, string $attribute_value ): array
-    {
-        $fields = $this->fields();
-        $fields_of_type = [];
-        foreach ( $fields as $field ) {
-            if ( !isset( $field[ $attribute ] ) ) {
-                continue;
-            }
-            $fields_of_type[] = $field;
-        }
-        return $fields_of_type;
-    }
-
-    /**
      * Get fields array for the settings
      *
      * @param bool $load_values
      *
      * @return array
      */
-    public function fields( bool $load_values = false ): array
+    public function fields(bool $load_values = false): array
     {
 		$reload_fields = false;
 		if ( $load_values && !$this->values_loaded ) {
@@ -171,7 +153,7 @@ trait LegacyLoad {
                     $value          = $this->get_option( $field['id'], $field['default'] );
                     $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
                 }
-                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'] );
+                $fields[ $key ] = apply_filters( 'simplybook_field', $field, $field['id'], $groupID );
             }
         }
 
@@ -212,5 +194,13 @@ trait LegacyLoad {
 		$menus = apply_filters( 'simplybook_menus_values', $menus );
 		return array_values( $menus );
 	}
+
+    /**
+     * Helper method to easily retrieve the correct SimplyBook (API) domain
+     */
+    public function get_domain()
+    {
+        return ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
+    }
 
 }
