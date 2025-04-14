@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 
@@ -16,10 +15,10 @@ class DesignSettingsController implements ControllerInterface
 
     public function register()
     {
-        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
         add_action('simplybook_save_design_settings', [$this, 'saveSettings']);
         add_filter('simplybook_public_theme_list', [$this, 'insertDesignThemeSettings']);
         add_filter('simplybook_field', [$this, 'insertDesignSettings'], 10, 3);
+        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
     }
 
     /**
@@ -94,7 +93,8 @@ class DesignSettingsController implements ControllerInterface
         }
 
         $designSettings = $this->service->getDesignOptions();
-        if (empty($designSettings[$id])) {
+
+        if (!isset($designSettings[$id])) {
             return $field;
         }
 
