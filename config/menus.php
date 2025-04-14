@@ -22,10 +22,12 @@ return [
     'providers' => [
         'id' => 'providers',
         'title' => __('Providers', 'simplybook'),
+        'has_settings' => false,
     ],
     'services' => [
         'id' => 'services',
         'title' => __('Services', 'simplybook'),
+        'has_settings' => false,
     ],
     'design' => [
         'id' => 'design',
