@@ -76,7 +76,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                 setValue(id, fieldValue);
             });
         }
-        await saveSettings(settings);
     };
 
     let defaultValue = setting.value || setting.default;

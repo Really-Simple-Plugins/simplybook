@@ -24,34 +24,14 @@ const useSettingsData = () => {
             withValues: true,
         }).post(),
         staleTime: 1000 * 60 * 5, // 5 minutes
-        initialData: window.simplybook?.settings_fields,
+        initialData: {
+            data: window.simplybook?.settings_fields
+        },
         retry: 0,
         select: function (data) {
             return (data?.data ?? data);
         }
     });
-
-    /**
-     * Get value for a specific setting field
-     * @param id
-     * @returns {*}
-     */
-    const getValue = (id) => {
-        return query?.data.find((field) => field.id === id)?.value;
-    };
-
-    /**
-     * Set value for a specific setting field
-     * @param id
-     * @param value
-     */
-    const setValue = (id, value) => {
-        queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
-            return oldResponse?.data?.map((field) =>
-                field.id === id ? { ...field, value } : field,
-            );
-        });
-    };
 
     /**
      * Save settings mutation
@@ -72,6 +52,31 @@ const useSettingsData = () => {
             queryClient.invalidateQueries({queryKey: [getSettingsQueryKey]});
         },
     });
+
+    /**
+     * Get value for a specific setting field
+     * @param id
+     * @returns {*}
+     */
+    const getValue = (id) => {
+        return query?.data.find((field) => field.id === id)?.value;
+    };
+
+    /**
+     * Set value for a specific setting field
+     * @param id
+     * @param value
+     * @returns {*} The updated settings data
+     */
+    const setValue = (id, value) => {
+        let newSettings = query?.data?.map((field) =>
+            field.id === id ? { ...field, value } : field,
+        );
+
+        if (newSettings) {
+            saveSettings(newSettings);
+        }
+    };
 
     return {
         settings: query?.data,
