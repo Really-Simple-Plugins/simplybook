@@ -14,13 +14,13 @@ class LoginUrlService
 
     /**
      * Returns de SimplyBook dashboard URL containing the company path and the
-     * SimplyBook domain.
+     * SimplyBook domain WITHOUT trailing slash.
      */
     public function getDashboardUrl(): string
     {
         $simplyBookDomain = $this->get_domain();
         $simplyBookCompanyPath = App::provide('client')->get_company_login();
-        return "https://$simplyBookCompanyPath.secure.$simplyBookDomain/";
+        return "https://$simplyBookCompanyPath.secure.$simplyBookDomain";
     }
 
     /**
@@ -58,7 +58,7 @@ class LoginUrlService
 
     /**
      * Method fetches a new login URL for the user and stores it in the options.
-     * Returns the login URL containing the login hash.
+     * Returns the login URL containing the login hash WITHOUT trailing slash.
      */
     protected function fetchNewAutomaticLoginUrl(): string
     {
@@ -73,6 +73,6 @@ class LoginUrlService
 
         update_option(self::LOGIN_URL_CREATION_DATE_OPTION, $loginUrlCreationDate, false);
 
-        return $loginUrlValue;
+        return untrailingslashit($loginUrlValue);
     }
 }
