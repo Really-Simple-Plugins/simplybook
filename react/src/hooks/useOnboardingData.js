@@ -182,7 +182,6 @@ const useOnboardingData = () => {
                         "sb_company_label_color",
                         "booking_nav_bg_color",
                     ],
-                    // disabled: !localOnboardingCompleted,
                 },
                 {
                     id: "sb_busy",
@@ -191,7 +190,6 @@ const useOnboardingData = () => {
                     default: "#DD3649",
                     inline_group: "widget",
                     save_on_change: true,
-                    // disabled: !localOnboardingCompleted,
                 },
                 {
                     id: "sb_available",
@@ -200,7 +198,6 @@ const useOnboardingData = () => {
                     default: "#DD3649",
                     inline_group: "widget",
                     save_on_change: true,
-                    // disabled: !localOnboardingCompleted,
                 },
             ],
         },
@@ -224,12 +221,6 @@ const useOnboardingData = () => {
                             value: "manual",
                             label: __("Shortcode", "simplybook"),
                             description: __("Do it yourself", "simplybook"),
-                        },
-                        {
-                            value: "premium",
-                            label: __("Templates", "simplybook"),
-                            description: __("Premium", "simplybook"),
-                            is_premium: true,
                         },
                     ],
                 },
