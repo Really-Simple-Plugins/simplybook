@@ -57,7 +57,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
       'bg-tertiary text-white hover:bg-tertiary-dark ' : btnVariant == 'secondary',
       'border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary',
       'border-black border-2 bg-transparent text-black ml-4' : btnVariant == 'ghost',
-      'border-primary text-primary rounded-md py-2 px-6 text-base': btnVariant == 'square-ghost',
+      'border-primary border-2 text-primary rounded-md py-2 px-6 text-base': btnVariant == 'square-ghost',
       'rounded-md py-2 px-6 text-white text-sm': btnVariant == 'square-small',
       'rounded-md py-2 px-6 text-white text-sm bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary': btnVariant == 'square-small-tertiary',
     }
