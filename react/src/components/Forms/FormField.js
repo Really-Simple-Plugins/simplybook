@@ -12,12 +12,11 @@ import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
-import CopyTextField from "../Fields/CopyTextField";
 import ThemeField from "../Fields/ThemeField";
 
 const fieldComponents = {
     text: TextField,
-    copy: CopyTextField,
+    copy: (props) => <TextField copyField={true} {...props} />,
     api: TextField,
     hidden: HiddenField,
     checkbox: CheckboxField,
