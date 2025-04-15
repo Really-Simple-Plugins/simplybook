@@ -11,7 +11,7 @@ export const Route = createLazyFileRoute(path)({
   component: () => (
         <>
           <LeftColumn
-            className={"col-span-6"}
+            className={"flex-col col-span-6"}
           >
             <div className={"text-center"}>
               <h2 className={"mt-2 text-lg font-light text-black"}>
@@ -27,7 +27,7 @@ export const Route = createLazyFileRoute(path)({
             />
           </LeftColumn>
           <RightColumn
-            className={"flex flex-col justify-center col-span-6"}
+            className={"flex-col justify-center col-span-6"}
           >
             <div className="flex flex-col items-center pb-4">
               <VideoFrame

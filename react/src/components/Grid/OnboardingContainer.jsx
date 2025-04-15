@@ -7,8 +7,8 @@ const OnboardingContainer = ({
     children 
 }) => {
     return (
-        <div className={clsx(className, "onboarding-container w-full h-full flex flex-col items-center bg-white py-20")}>
-            <div className="grid grid-cols-12 gap-24 w-full px-8">
+        <div className={clsx(className, "onboarding-container w-full min-h-[80svh] flex flex-col items-center justify-center bg-white py-20")}>
+            <div className="xl:grid xl:grid-cols-12 xl:gap-24 w-full px-8 flex flex-col">
                 {children}
             </div>
         </div>
