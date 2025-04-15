@@ -30,10 +30,18 @@ export const Route = createLazyFileRoute(path)({
                 primaryButton={{
                     label: __("Continue Configuration", "simplybook"),
                     navigateTo: "/settings/general",
+                    modifyData: (data) => {
+                        data.skip_implementation = false;
+                        return data;
+                    }
                 }}
                 secondaryButton={{
                     label: __("Skip and go to Dashboard", "simplybook"),
                     navigateTo: "/",
+                    modifyData: (data) => {
+                        data.skip_implementation = true;
+                        return data;
+                    }
                 }}
                 rightColumn={
                     <div className="relative w-full">

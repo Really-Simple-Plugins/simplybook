@@ -73,6 +73,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'sendSmsToUser'],
         ];
 
+        $routes['onboarding/finish_onboarding'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'finishOnboarding'],
+        ];
+
         return $routes;
     }
 
@@ -149,9 +154,7 @@ class OnboardingController implements FeatureInterface
 
         $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
 
-        if ($pagesCreatedSuccessfully) {
-            $this->service->setOnboardingCompleted();
-        }
+        $this->service->setOnboardingCompleted();
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
@@ -276,6 +279,19 @@ class OnboardingController implements FeatureInterface
 
         return new \WP_REST_Response([
             'message' => 'Successfully requested SMS code',
+        ], 200);
+    }
+
+    /**
+     * Method is used to finish the onboarding process. It is called when the
+     * user has completed the onboarding process and wants to finish it.
+     */
+    public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $this->service->setOnboardingCompleted();
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully finished onboarding!',
         ], 200);
     }
 }

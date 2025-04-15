@@ -9,6 +9,7 @@ import useSettingsData from "./useSettingsData";
 import { useState } from "react";
 import generatePages from "../api/endpoints/onBoarding/generatePages";
 import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
+import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
 
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
@@ -228,16 +229,26 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
+                if (data.skip_implementation === true) {
+                    let skipped = await finishOnboarding({data});
+                    return (skipped.status === "success");
+                }
+
                 if (getValue("implementation") === "generated") {
                     const data = {
                         bookingPageUrl: bookingPageUrl,
                         calendarPageUrl: calendarPageUrl,
                     };
                     let response = await generatePages({ data });
-                    if (response.status !== "success") {
-                        return false;
-                    }
+                    return (response.status === "success");
                 }
+
+                if (getValue("implementation") === "manual") {
+                    let finished = await finishOnboarding({data});
+                    return (finished.status === "success");
+                }
+
+                return false;
             },
         },
     ];
