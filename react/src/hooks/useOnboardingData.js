@@ -225,6 +225,12 @@ const useOnboardingData = () => {
                             label: __("Shortcode", "simplybook"),
                             description: __("Do it yourself", "simplybook"),
                         },
+                        {
+                            value: "premium",
+                            label: __("Templates", "simplybook"),
+                            description: __("Premium", "simplybook"),
+                            is_premium: true,
+                        },
                     ],
                 },
             ],
