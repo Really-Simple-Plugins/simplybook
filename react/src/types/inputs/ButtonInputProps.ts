@@ -5,7 +5,7 @@ export type ButtonInputProps = {
     to: string;
     from?: string;
   };
-  btnVariant?: "primary" | "secondary" | "tertiary";
+  btnVariant?: "primary" | "secondary" | "tertiary" | "premium";
   disabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;
