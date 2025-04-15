@@ -16,6 +16,20 @@ const useOnboardingData = () => {
     const [calendarPageNameAvailable, setCalendarPageNameAvailable] = useState(false);
     const [bookingPageNameAvailable, setBookingPageNameAvailable] = useState(false);
 
+    let mappedCountries = {
+        NL: "Netherlands",
+        DE: "Germany",
+        AT: "Austria",
+        BE: "Belgium",
+    }
+
+    if (simplybook?.simplybook_countries) {
+        mappedCountries = Object.entries(simplybook.simplybook_countries).reduce((acc, [code, name]) => {
+            acc[code] = name;
+            return acc;
+        }, {});
+    }
+
     const steps = [
         {
             id: 1,
@@ -117,12 +131,8 @@ const useOnboardingData = () => {
                     id: "country",
                     type: "select",
                     label: __("Country", "simplybook"),
-                    options: [
-                        { value: "NL", label: __("Netherlands", "simplybook") },
-                        { value: "DE", label: __("Germany", "simplybook") },
-                        { value: "BE", label: __("Belgium", "simplybook") },
-                        { value: "US", label: __("United States", "simplybook") },
-                    ],
+                    value: 'NL',
+                    options: mappedCountries,
                 },
             ],
             beforeSubmit: async (data) => {
