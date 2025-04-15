@@ -229,11 +229,6 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                if (data.skip_implementation === true) {
-                    let skipped = await finishOnboarding({data});
-                    return (skipped.status === "success");
-                }
-
                 if (getValue("implementation") === "generated") {
                     const data = {
                         bookingPageUrl: bookingPageUrl,
