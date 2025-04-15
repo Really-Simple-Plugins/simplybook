@@ -50,10 +50,20 @@ const Header = () => {
                         )}
                         {__("Dashboard", "simplybook")}
                     </Link>
-                    <LoginLink className={linkClassName} page="client">
+                    <LoginLink 
+                        iconName="square-arrow-up-right"
+                        iconClass="px-2"
+                        className={linkClassName} 
+                        page="client"
+                    >
                         {__("Clients", "simplybook")}
                     </LoginLink>
-                    <LoginLink className={linkClassName} page="index/index">
+                    <LoginLink 
+                        iconName="square-arrow-up-right"
+                        iconClass="px-2"
+                        className={linkClassName} 
+                        page="index/index"
+                    >
                         {__("Calendar", "simplybook")}
                     </LoginLink>
                     <Link to="/settings/general" className={linkClassName}>
