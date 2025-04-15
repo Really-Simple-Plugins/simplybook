@@ -6,18 +6,18 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
 const LoginLink = ({
-    className,
-    page,
+    className = "",
+    page = "",
     isButton = false,
     size="md",
     btnVariant="primary",
-    children,
-    icon,
+    children = "",
+    icon = false,
     iconName = "",
     iconSize = "",
     iconClass = "",
     iconStyle = "",
-    onClick,
+    onClick = () => {},
     reverseIcon = false,
 }) => {
 
