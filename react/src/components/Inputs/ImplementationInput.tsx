@@ -48,11 +48,6 @@ const ImplementationInput: React.FC<ImplementationInputProps> = ({
                     {option.description && (
                         <span className="text-sm text-gray-500 mt-1">{option.description}</span>
                     )}
-                    {option.is_premium && (
-                        <span className="absolute -top-6 -right-12 cursor-pointer">
-                            <LoginLink className={"cursor-pointer bg-tertiary"} disabled={false} isButton={true} btnVariant='premium' page="client" >{__('Premium', 'simplybook')}</LoginLink>
-                        </span>
-                    )}
                 </button>
             ))}
         </div>
