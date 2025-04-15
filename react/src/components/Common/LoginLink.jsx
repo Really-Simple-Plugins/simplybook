@@ -12,6 +12,7 @@ const LoginLink = ({
     size="md",
     btnVariant="primary",
     children = "",
+    disabled = false,
     icon = false,
     iconName = "",
     iconSize = "",
