@@ -7,7 +7,6 @@ import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
-import CopyTextField from "../../components/Fields/CopyTextField";
 
 const path = "/onboarding/implementation";
 
@@ -56,6 +55,7 @@ export const Route = createLazyFileRoute(path)({
                             <TextInput 
                                 className="w-full p-4 mb-8" 
                                 clickToSelect={true} 
+                                disabled={true}
                                 value="[simplybook_widget]"
                             />
                             <div className="text-base text-gray-600">
