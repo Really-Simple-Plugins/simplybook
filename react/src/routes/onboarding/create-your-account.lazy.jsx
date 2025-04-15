@@ -16,7 +16,7 @@ function CreateLoginAccount() {
   return( 
     <>
       <LeftColumn
-        className={"col-span-5"}
+        className={"flex-col col-span-5"}
       >
         <div className={"text-center"}>
           <h1 className={"text-3xl font-semibold text-black mb-4"}>
