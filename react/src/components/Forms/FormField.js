@@ -16,7 +16,6 @@ import ThemeField from "../Fields/ThemeField";
 
 const fieldComponents = {
     text: TextField,
-    copy: (props) => <TextField copyField={true} {...props} />,
     api: TextField,
     hidden: HiddenField,
     checkbox: CheckboxField,
@@ -137,6 +136,7 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                             fieldState={fieldState}
                             required={setting.required}
                             label={setting.label}
+                            copyField={setting.copy_field}
                             disabled={props.settingsIsUpdating || setting.disabled}
                             context={setting.context}
                             help={setting.help}
