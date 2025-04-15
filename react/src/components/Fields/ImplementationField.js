@@ -10,7 +10,7 @@ const ImplementationField = ({ options, value, onChange, ...props }) => {
         onChange(value);
     }
     return (
-        <div className="p-6">
+        <div className="w-full mb-8">
             <ImplementationInput
                 options={options}
                 value={actualValue}

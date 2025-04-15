@@ -6,7 +6,7 @@ const RightColumn = ({
     children 
 }) => {
     return (
-        <div className={clsx(className, "right-column")}>
+        <div className={clsx("right-column w-full flex", className)}>
             {children}
         </div>
     )

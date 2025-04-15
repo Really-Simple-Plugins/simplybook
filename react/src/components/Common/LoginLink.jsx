@@ -50,16 +50,19 @@ const LoginLink = ({
 
     };
 
+
     // Apply conditional classes
-    const externalLinkClass = onboardingCompleted
-        ? ""
-        : "pointer-events-none opacity-50 cursor-not-allowed";
+    const externalLinkClass = disabled
+        ? "pointer-events-none opacity-50 cursor-not-allowed"
+        : "";
+
+    // Combine the classes together
     const combinedClassName = `${externalLinkClass}${className} `;
 
     if (isButton) {
         return (
             <ButtonInput
-                disabled={!onboardingCompleted}
+                disabled={disabled}
                 label={children}
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
@@ -74,7 +77,7 @@ const LoginLink = ({
     return (
         <a
             href="#"
-            className={`${className} ${externalLinkClass}`}
+            className={combinedClassName}
             onClick={(e) => loginTo(e, page)}
         >
             {children}

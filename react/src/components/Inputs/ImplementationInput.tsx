@@ -15,9 +15,9 @@ interface ImplementationInputProps {
 }
 
 const ImplementationInput: React.FC<ImplementationInputProps> = ({
-                                                                     options,
-                                                                     value,
-                                                                     onChange,
+    options,
+    value,
+    onChange,
                                                                  }) => {
     const handleOnChange = (e: MouseEvent<HTMLButtonElement>, value: string, option: Option) => {
         e.preventDefault();
@@ -34,8 +34,8 @@ const ImplementationInput: React.FC<ImplementationInputProps> = ({
                 <button
                     key={option.value}
                     onClick={(e) => handleOnChange(e, option.value, option )}
-                    className={`relative flex flex-col items-center justify-center p-4 rounded-lg border  text-center 
-            transition duration-300 ease-in-out 
+                    className={`relative flex flex-col items-start justify-start p-4 rounded-lg border text-center 
+            transition duration-300 ease-in-out w-full 
             ${
                         option.is_premium
                             ? "bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed"
@@ -47,11 +47,6 @@ const ImplementationInput: React.FC<ImplementationInputProps> = ({
                     <span className="text-lg font-medium">{option.label}</span>
                     {option.description && (
                         <span className="text-sm text-gray-500 mt-1">{option.description}</span>
-                    )}
-                    {option.is_premium && (
-                        <span className="absolute -top-3 -right-5 cursor-pointer">
-                            <LoginLink className={"cursor-pointer"} isButton={true} btnVariant='premium' page="client" >{__('Premium', 'simplybook')}</LoginLink>
-                        </span>
                     )}
                 </button>
             ))}

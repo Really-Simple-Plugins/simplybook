@@ -192,7 +192,6 @@ const useOnboardingData = () => {
                         "sb_company_label_color",
                         "booking_nav_bg_color",
                     ],
-                    // disabled: !localOnboardingCompleted,
                 },
                 {
                     id: "sb_busy",
@@ -201,7 +200,6 @@ const useOnboardingData = () => {
                     default: "#DD3649",
                     inline_group: "widget",
                     save_on_change: true,
-                    // disabled: !localOnboardingCompleted,
                 },
                 {
                     id: "sb_available",
@@ -210,7 +208,6 @@ const useOnboardingData = () => {
                     default: "#DD3649",
                     inline_group: "widget",
                     save_on_change: true,
-                    // disabled: !localOnboardingCompleted,
                 },
             ],
         },
