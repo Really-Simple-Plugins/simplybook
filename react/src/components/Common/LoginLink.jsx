@@ -1,5 +1,6 @@
 import React from "react";
 import Icon from "./Icon";
+import clsx from "clsx";
 import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
@@ -10,7 +11,14 @@ const LoginLink = ({
     isButton = false,
     size="md",
     btnVariant="primary",
-    children
+    children,
+    icon,
+    iconName = "",
+    iconSize = "",
+    iconClass = "",
+    iconStyle = "",
+    onClick,
+    reverseIcon = false,
 }) => {
 
     const {fetchLinkData} = useLoginData();
@@ -70,7 +78,9 @@ const LoginLink = ({
             onClick={(e) => loginTo(e, page)}
         >
             {children}
-            <Icon name="square-arrow-up-right" className="px-2" />
+            {icon || iconName && (
+                <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
+            )}
         </a>
     );
 };
