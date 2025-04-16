@@ -40,7 +40,7 @@ trait LegacyLoad {
      * @param $default
      * @return mixed
      */
-    public function get_option(string $key)
+    public function get_option(string $key, bool $parseField = true)
     {
         global $simplybook_cache;
         if ( !empty($simplybook_cache) ) {
@@ -51,6 +51,9 @@ trait LegacyLoad {
         }
 
         $value = $options[$key] ?? false;
+        if ($parseField === false) {
+            return $value;
+        }
 
         $field = $this->get_field_by_id($key);
         if ( !$field ) {
@@ -197,10 +200,13 @@ trait LegacyLoad {
 
     /**
      * Helper method to easily retrieve the correct SimplyBook (API) domain
+     * @param bool $validate Is used on {@see get_option} to parse the domain
+     * field from the fields' config. Sometimes we do not want this to prevent
+     * translation errors while loading the fields.
      */
-    public function get_domain()
+    public function get_domain(bool $validate = true)
     {
-        return ($this->get_option('domain') ?: $this->newSimplyBookUserDomain);
+        return ($this->get_option('domain', $validate) ?: $this->newSimplyBookUserDomain);
     }
 
 }

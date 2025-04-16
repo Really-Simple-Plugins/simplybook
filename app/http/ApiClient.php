@@ -125,7 +125,12 @@ class ApiClient
     protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = true): string
     {
         $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
-        $domain = $companyDomain ?: $this->get_domain();
+
+        // Prevent fields config from being loaded before the init hook. In this
+        // case we do not need to validate by default.
+        $validateBasedOnDomainConfig = did_action('init');
+
+        $domain = $companyDomain ?: $this->get_domain($validateBasedOnDomainConfig);
 
         return $base . $domain . '/' . $path;
     }
@@ -325,6 +330,7 @@ class ApiClient
         $data = array(
             'refresh_token' => $refresh_token,
         );
+
         if ( $type === 'admin' ){
             $path = 'admin/auth/refresh-token';
             $headers = $this->get_headers(false );
@@ -334,7 +340,7 @@ class ApiClient
             $headers = $this->get_headers(true );
         }
 
-        $request = wp_remote_post( $this->endpoint( $path ), array(
+        $request = wp_remote_post($this->endpoint( $path ), array(
             'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
