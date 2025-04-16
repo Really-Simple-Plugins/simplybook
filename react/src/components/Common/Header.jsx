@@ -16,17 +16,9 @@ const Header = () => {
     const { isLoading: tasksLoading, getRemainingTasks } = useTaskData();
     const tasksOpen = getRemainingTasks().length;
 
-    /**
-     * 
-     * @param {*} to 
-     * @param {*} fuzzy 
-     * @returns 
-     * 
-     * We use this hook to check if the current route is active on subpages
-     */
-    const useIsRouteActive = (to, fuzzy = true) => {
-        const matchRoute = useMatchRoute()
-        return matchRoute({ to, fuzzy })
+    const isRouteActive = (route, includeSubRoutes = true) => {
+        const matchRoute = useMatchRoute();
+        return matchRoute({ to: route, fuzzy: includeSubRoutes }) !== false;
     }
 
 
@@ -59,7 +51,7 @@ const Header = () => {
                 <div className="flex items-center">
                     <Link 
                         to="/" 
-                        className={linkClassName}
+                        className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
                     >
                         {!tasksLoading && tasksOpen > 0 && (
                             <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
@@ -76,7 +68,7 @@ const Header = () => {
                     </LoginLink>
                     <Link 
                         to="/settings/general" 
-                        className={useIsRouteActive('/settings') ? linkClassName + " active" : linkClassName}
+                        className={linkClassName + (isRouteActive('/settings') ? " active" : "")}
                     >
                         {__("Settings", "simplybook")}
                     </Link>
