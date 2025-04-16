@@ -1,8 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../../assets/img/logo.svg";
 import LoginLink from "./LoginLink";
 import { __ } from "@wordpress/i18n";
-import {useEffect} from "react";
+import {act, useEffect} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import useTaskData from "../../hooks/useTaskData";
@@ -15,6 +15,20 @@ const Header = () => {
     const { subscriptionPlan, expiresIn, isExpired, isLoading, hasError } = useSubscriptionData();
     const { isLoading: tasksLoading, getRemainingTasks } = useTaskData();
     const tasksOpen = getRemainingTasks().length;
+
+    /**
+     * 
+     * @param {*} to 
+     * @param {*} fuzzy 
+     * @returns 
+     * 
+     * We use this hook to check if the current route is active on subpages
+     */
+    const useIsRouteActive = (to, fuzzy = true) => {
+        const matchRoute = useMatchRoute()
+        return matchRoute({ to, fuzzy })
+    }
+
 
     useEffect(() => {
         if (
@@ -31,6 +45,7 @@ const Header = () => {
     }, [onboardingCompleted]);
 
     const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative";
+
     const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
 
     return (
@@ -42,7 +57,10 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className="flex items-center">
-                    <Link to="/" className={linkClassName}>
+                    <Link 
+                        to="/" 
+                        className={linkClassName}
+                    >
                         {!tasksLoading && tasksOpen > 0 && (
                             <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
                                 {tasksOpen}
@@ -56,7 +74,10 @@ const Header = () => {
                     <LoginLink className={linkClassName} page="index/index">
                         {__("Calendar", "simplybook")}
                     </LoginLink>
-                    <Link to="/settings/general" className={linkClassName}>
+                    <Link 
+                        to="/settings/general" 
+                        className={useIsRouteActive('/settings') ? linkClassName + " active" : linkClassName}
+                    >
                         {__("Settings", "simplybook")}
                     </Link>
                 </div>
