@@ -67,7 +67,7 @@ const LoginLink = ({
                 label={children}
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
-                btnVariant={btnVariant}
+                btnVarisant={btnVariant}
                 size={size}
             >
                 {children}
@@ -82,7 +82,7 @@ const LoginLink = ({
             onClick={(e) => loginTo(e, page)}
         >
             {children}
-            {icon || iconName && (
+            {icon && (
                 <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
             )}
         </a>
