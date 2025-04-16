@@ -55,7 +55,7 @@ const ListItem = forwardRef(
                         {!upgrade && domainFetched && !domainHasError &&
                             <LoginLink
                                 icon={true}
-                                // iconName="square-arrow-up-right"
+                                iconName="square-arrow-up-right"
                                 iconClass="px-2"
                                 className={"text-black flex items-center"} 
                                 page={link}
