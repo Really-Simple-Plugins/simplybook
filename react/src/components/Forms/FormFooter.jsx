@@ -42,7 +42,7 @@ const FormFooter = ({
                 )}
                 <ButtonLink
                     disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-                    btnVariant={'secondary'}
+                    btnVariant={'secondary-small'}
                     onClick={onSubmit}
                 >
                     {__("Save", "simplybook")}

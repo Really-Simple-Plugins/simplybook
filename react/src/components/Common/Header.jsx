@@ -87,8 +87,9 @@ const Header = () => {
                         </Label>
                     )}
                     <ButtonLink
+                        linkClassName="text-primary"
                         className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
-                        btnVariant="ghost"
+                        btnVariant="ghost-small"
                         target="_blank"
                         loginLink="v2/r/payment-widget#/"
                     >
