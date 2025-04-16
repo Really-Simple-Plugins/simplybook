@@ -165,6 +165,7 @@ class Plugin
             new Controllers\DesignSettingsController(
                 new Services\DesignSettingsService()
             ),
+            new Controllers\ServicesController(),
         ]);
     }
 

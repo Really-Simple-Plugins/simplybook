@@ -92,10 +92,10 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->cleanup_callback_url();
 
         /**
-         * Action: simplybook_company_registered
-         * @hooked SimplyBook\Listeners\TaskManagementListener::listen()
+         * Action: simplybook_after_company_registered
+         * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
          */
-        do_action('simplybook_company_registered', $storage->getString('domain'), $storage->getInt('company_id'));
+        do_action('simplybook_after_company_registered', $storage->getString('domain'), $storage->getInt('company_id'));
 
         return new \WP_REST_Response([
             'message' => 'Successfully registered company for current WordPress website.',

@@ -821,6 +821,48 @@ class ApiClient
     }
 
     /**
+     * Update service based on service ID. Make sure to pass at least the
+     * mandatory fields: duration and is_visible, besides of course the ID.
+     */
+    public function updateService(string $serviceId, array $updatedData): array
+    {
+        $mandatoryFields = [
+            'duration',
+            'is_visible',
+        ];
+
+        foreach ($mandatoryFields as $field) {
+            if (!isset($updatedData[$field])) {
+                throw new \InvalidArgumentException("Missing mandatory field: $field");
+            }
+        }
+
+        $endpoint = $this->endpoint('admin/services/' . sanitize_text_field($serviceId));
+        $response = wp_safe_remote_request($endpoint, [
+            'method' => 'PUT',
+            'headers' => $this->get_headers(true, 'admin'),
+            'body' => json_encode($updatedData),
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($response->get_error_code())
+                ->setData($response->get_error_data());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode !== 200) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($responseCode)
+                ->setData($response->get_error_data());
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
+    }
+
+    /**
      * Get list of Simplybook providers
      */
     public function get_providers(): array {

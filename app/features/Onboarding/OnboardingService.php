@@ -23,10 +23,10 @@ class OnboardingService
     /**
      * Set the onboarding as completed in the general options without autoload
      */
-    public function setOnboardingCompleted(): void
+    public function setOnboardingCompleted(): bool
     {
         $this->setOnboardingStep(5);
-        update_option('simplybook_onboarding_completed', true, false);
+        return update_option('simplybook_onboarding_completed', true, false);
     }
 
     /**
