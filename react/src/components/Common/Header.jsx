@@ -1,8 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useMatchRoute } from "@tanstack/react-router";
 import { ReactComponent as Logo } from "../../../../assets/img/logo.svg";
 import LoginLink from "./LoginLink";
 import { __ } from "@wordpress/i18n";
-import {useEffect} from "react";
+import {act, useEffect} from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import useTaskData from "../../hooks/useTaskData";
@@ -15,6 +15,12 @@ const Header = () => {
     const { subscriptionPlan, expiresIn, isExpired, isLoading, hasError } = useSubscriptionData();
     const { isLoading: tasksLoading, getRemainingTasks } = useTaskData();
     const tasksOpen = getRemainingTasks().length;
+
+    const isRouteActive = (route, includeSubRoutes = true) => {
+        const matchRoute = useMatchRoute();
+        return matchRoute({ to: route, fuzzy: includeSubRoutes }) !== false;
+    }
+
 
     useEffect(() => {
         if (
@@ -31,6 +37,7 @@ const Header = () => {
     }, [onboardingCompleted]);
 
     const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative";
+
     const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
 
     return (
@@ -42,7 +49,10 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className="flex items-center">
-                    <Link to="/" className={linkClassName}>
+                    <Link 
+                        to="/" 
+                        className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
+                    >
                         {!tasksLoading && tasksOpen > 0 && (
                             <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
                                 {tasksOpen}
@@ -66,7 +76,10 @@ const Header = () => {
                     >
                         {__("Calendar", "simplybook")}
                     </LoginLink>
-                    <Link to="/settings/general" className={linkClassName}>
+                    <Link 
+                        to="/settings/general" 
+                        className={linkClassName + (isRouteActive('/settings') ? " active" : "")}
+                    >
                         {__("Settings", "simplybook")}
                     </Link>
                 </div>
@@ -97,8 +110,9 @@ const Header = () => {
                         </Label>
                     )}
                     <ButtonLink
+                        linkClassName="text-primary"
                         className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
-                        btnVariant="ghost"
+                        btnVariant="ghost-small"
                         target="_blank"
                         loginLink="v2/r/payment-widget#/"
                     >

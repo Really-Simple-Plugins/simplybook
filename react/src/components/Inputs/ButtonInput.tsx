@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@tanstack/react-router";
 import { clsx } from "clsx";
 import { ButtonInputProps } from "../../types/inputs/ButtonInputProps";
 
@@ -11,19 +10,25 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
   type,
   children,
   onClick,
-  btnVariant,
+  btnVariant = "primary",
   disabled = false,
 }) => {
   let buttonVariants = clsx(
     // Base styles
-    "transition-all duration-200 p-4 cursor-pointer",
+    "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 cursor-pointer",
     {
-      'rounded-full  bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'primary',
-      'rounded-full  bg-tertiary text-white hover:bg-tertiary-dark ' : btnVariant == 'secondary',
-      'rounded-full  border-2 border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary',
-    },
-    {
-     'opacity-50 cursor-not-allowed ': disabled
+      'bg-primary text-white hover:bg-primary-dark !p-4 text-base' : btnVariant == 'primary',
+      'bg-primary text-white hover:bg-primary-dark ' : btnVariant == 'primary-small',
+      'bg-secondary text-white hover:bg-secondary-dark !p-4 text-base' : btnVariant == 'secondary',
+      'bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'secondary-small',
+      'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary !p-4 text-base': btnVariant == 'tertiary',
+      'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary': btnVariant == 'tertiary-small',
+      'border-2 border-black bg-transparent !p-4 text-base' : btnVariant == 'ghost',
+      'border-2 border-black bg-transparent' : btnVariant == 'ghost-small',
+      'bg-primary text-white rounded-md hover:bg-primary-dark !p-4 text-base': btnVariant == 'square',
+      'rounded-md text-white': btnVariant == 'square-small',
+      'border-2 border-primary text-primary rounded-md !p-4 text-base': btnVariant == 'square-ghost',
+      'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
     }
   );
 

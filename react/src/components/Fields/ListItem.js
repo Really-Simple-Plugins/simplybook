@@ -68,7 +68,8 @@ const ListItem = forwardRef(
                         <div className="relative">
                             {upgrade && <>
                                 <ButtonLink
-                                    btnVariant={"square-small-tertiary"}
+                                    className={"bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary"}
+                                    btnVariant={"square-small"}
                                     target="_blank"
                                     loginLink="v2/r/payment-widget"
                                 >    

@@ -145,7 +145,7 @@ const OnboardingStep = ({
                         <ButtonField
                             className="w-full"
                             showLoader={disabled}
-                            btnVariant="primary"
+                            btnVariant="secondary"
                             label={primaryButton.label}
                             context={bottomText}
                             disabled={disabled}
