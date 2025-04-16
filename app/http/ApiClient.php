@@ -569,8 +569,7 @@ class ApiClient
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
-//                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
-                    'callback_url' => 'https://webhook.site/2538ea4f-49ce-4798-886f-aead1a5740bc',
+                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
         ) );
