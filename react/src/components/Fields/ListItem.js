@@ -38,9 +38,11 @@ const ListItem = forwardRef(
                             {domainFetched && !domainHasError && hasPicture &&
                                 <img className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
                             }
-                            <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
-                                {item.name.charAt(0).toUpperCase()}
-                            </div>
+                            {domainFetched && !domainHasError &&!hasPicture &&                            
+                                <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
+                                    {item.name.charAt(0).toUpperCase()}
+                                </div>
+                            }
                             <div className="font-bold ml-4">
                                 {item.name}
                             </div>
@@ -52,7 +54,8 @@ const ListItem = forwardRef(
                         )}
                         {!upgrade && domainFetched && !domainHasError &&
                             <LoginLink
-                                iconName="square-arrow-up-right"
+                                icon={true}
+                                // iconName="square-arrow-up-right"
                                 iconClass="px-2"
                                 className={"text-black flex items-center"} 
                                 page={link}
