@@ -18,7 +18,14 @@ const SettingsMenuItem = React.memo(({ item }) => {
 
   if ( isExternalLink ) {
     return (
-        <LoginLink className={menuItemClassName} page={to} >{item.title}</LoginLink>
+        <LoginLink 
+          iconName="square-arrow-up-right"
+          iconClass="px-2"
+          className={menuItemClassName} 
+          page={to} 
+        >
+          {item.title}
+        </LoginLink>
     )
   }
 

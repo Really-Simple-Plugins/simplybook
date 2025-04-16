@@ -25,7 +25,12 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
     <>
         {!isLoading && (
             <div className={clsx("flex justify-between items-center p-4", className)}>
-                <LoginLink className={linkClassName} page="providers">
+                <LoginLink 
+                    iconName="square-arrow-up-right"
+                    iconClass="px-2"
+                    className={linkClassName} 
+                    page="providers"
+                >
                     {__(`${title}`, "simplybook")}
                 </LoginLink>
                 <Label labelVariant="ghost" className={labelClassName}>
