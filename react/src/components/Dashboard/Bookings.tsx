@@ -84,7 +84,15 @@ const Bookings = () => {
                 )}
             </BlockContent>
             <BlockFooter>
-                <ButtonLink className="!border-button-blue !text-button-blue flex-row-reverse" icon={true} iconName="target-blank" iconClass="fa-regular" reverseIcon={true}  btnVariant="square-ghost" loginLink="v2/index/index">
+                <ButtonLink 
+                    className="!border-button-blue !text-button-blue flex-row-reverse" 
+                    icon={true} 
+                    iconName="target-blank" 
+                    iconClass="fa-regular" 
+                    reverseIcon={true}  
+                    btnVariant="square-ghost-small" 
+                    loginLink="v2/index/index"
+                >
                     {__("View Bookings", "simplybook")}
                 </ButtonLink>
             </BlockFooter>

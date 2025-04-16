@@ -63,7 +63,7 @@ const AuthenticationField = forwardRef(
 
                 <ButtonLink
                     id={inputId}
-                    btnVariant="secondary"
+                    btnVariant="tertiary-small"
                     aria-invalid={!!fieldState?.error?.message}
                     label={__("Log out", "simplybook")}
                     onClick={handleLogoutClick}

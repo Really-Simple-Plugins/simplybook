@@ -41,7 +41,7 @@ const TipsTricks = () => {
                 <ButtonLink 
                     className={"border-tertiary text-tertiary mr-4"} 
                     loginLink={data?.data.all ?? '#'} 
-                    btnVariant={"square-ghost"}
+                    btnVariant={"square-ghost-small"}
                 >
                     {__("View All", "simplybook")}
                 </ButtonLink>
