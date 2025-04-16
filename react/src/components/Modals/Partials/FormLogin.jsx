@@ -160,14 +160,14 @@ const formLogin = ({
                 />
                 <ButtonInput
                     className="mt-4 mb-4"
-                    btnVariant="primary"
+                    btnVariant="secondary"
                     type="submit"
                     disabled={setDisabled}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
                 <ButtonInput
-                    btnVariant="secondary"
+                    btnVariant="tertiary"
                     type="button"
                     onClick={onClose}
                 >
