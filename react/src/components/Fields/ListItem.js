@@ -38,7 +38,7 @@ const ListItem = forwardRef(
                             {domainFetched && !domainHasError && hasPicture &&
                                 <img className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
                             }
-                            {domainFetched && !domainHasError &&!hasPicture &&                            
+                            {domainFetched && !domainHasError && !hasPicture &&                            
                                 <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
                                     {item.name.charAt(0).toUpperCase()}
                                 </div>
