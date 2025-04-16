@@ -20,6 +20,11 @@ const path = require('path');
 
 const filePath = path.join(__dirname, 'node_modules', '@tanstack', 'router-plugin', 'dist', 'cjs', 'logger.cjs');
 
+// Check if the file exists
+if (!fs.existsSync(filePath)) {
+    return; // No file found that needs fixing
+}
+
 fs.readFile(filePath, 'utf8', (err, data) => {
     if (err) {
         console.error('Error reading file:', err);
