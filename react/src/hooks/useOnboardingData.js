@@ -224,8 +224,8 @@ const useOnboardingData = () => {
                     options: [
                         {
                             value: "generated",
-                            label: __("Generated", "simplybook"),
-                            description: __("Generate pages.", "simplybook"),
+                            label: __("Simple", "simplybook"),
+                            description: __("Generate pages", "simplybook"),
                         },
                         {
                             value: "manual",
