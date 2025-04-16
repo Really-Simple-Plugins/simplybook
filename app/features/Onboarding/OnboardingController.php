@@ -288,10 +288,15 @@ class OnboardingController implements FeatureInterface
      */
     public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
     {
-        $this->service->setOnboardingCompleted();
+        $code = 200;
+        $message = esc_html__('Successfully finished onboarding!', 'simplybook');
 
-        return new \WP_REST_Response([
-            'message' => 'Successfully finished onboarding!',
-        ], 200);
+        $success = $this->service->setOnboardingCompleted();
+        if (!$success) {
+            $message = esc_html__('An error occurred while finishing the onboarding process', 'simplybook');
+            $code = 500;
+        }
+
+        return $this->service->sendHttpResponse([], $success, $message, $code);
     }
 }
