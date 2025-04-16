@@ -232,13 +232,12 @@
     --bg-secondary-light: #ffb3c1;
     --bg-secondary: #ff3259;
     --bg-secondary-dark: #950c28;
-    --bg-tertiary-light: #D9E3FD;
+    --bg-tertiary-light: #f0f4fe;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
     --color-tertiary-hover: #e8eeff;
     --color-simplybook-gray: #788291;
     --color-button-blue: #5A6FA5;
-    --color-youtube: #f03;
     --color-tertiary-border: #EFF4FF;
     --container-8xl: 125rem;
   }
@@ -567,6 +566,9 @@
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
+  .h-15 {
+    height: calc(var(--spacing) * 15);
+  }
   .h-20 {
     height: calc(var(--spacing) * 20);
   }
@@ -591,8 +593,11 @@
   .max-h-48 {
     max-height: calc(var(--spacing) * 48);
   }
-  .max-h-\[48px\] {
-    max-height: 48px;
+  .max-h-\[40px\] {
+    max-height: 40px;
+  }
+  .min-h-\[40px\] {
+    min-height: 40px;
   }
   .min-h-\[80svh\] {
     min-height: 80svh;
@@ -636,6 +641,9 @@
   .w-10 {
     width: calc(var(--spacing) * 10);
   }
+  .w-15 {
+    width: calc(var(--spacing) * 15);
+  }
   .w-20 {
     width: calc(var(--spacing) * 20);
   }
@@ -669,8 +677,8 @@
   .max-w-8xl {
     max-width: var(--container-8xl);
   }
-  .max-w-\[48px\] {
-    max-width: 48px;
+  .max-w-\[40px\] {
+    max-width: 40px;
   }
   .max-w-md {
     max-width: var(--container-md);
@@ -692,6 +700,9 @@
   }
   .min-w-20 {
     min-width: calc(var(--spacing) * 20);
+  }
+  .min-w-\[40px\] {
+    min-width: 40px;
   }
   .min-w-\[140px\] {
     min-width: 140px;
@@ -987,9 +998,6 @@
   .border-transparent {
     border-color: transparent;
   }
-  .border-youtube {
-    border-color: var(--color-youtube);
-  }
   .\!bg-transparent {
     background-color: transparent !important;
   }
@@ -1019,6 +1027,9 @@
   }
   .bg-green-500 {
     background-color: var(--color-green-500);
+  }
+  .bg-primary {
+    background-color: #06adef;
   }
   .bg-primary-lighter {
     background-color: var(--color-primary-lighter);
@@ -1070,6 +1081,9 @@
   }
   .bg-yellow-900 {
     background-color: var(--color-yellow-900);
+  }
+  .\!p-4 {
+    padding: calc(var(--spacing) * 4) !important;
   }
   .p-1 {
     padding: calc(var(--spacing) * 1);
@@ -1297,9 +1311,6 @@
   }
   .text-yellow-900 {
     color: var(--color-yellow-900);
-  }
-  .text-youtube {
-    color: var(--color-youtube);
   }
   .lowercase {
     text-transform: lowercase;
@@ -1581,6 +1592,13 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-gray-200);
+      }
+    }
+  }
+  .hover\:bg-primary-dark {
+    &:hover {
+      @media (hover: hover) {
+        background-color: #055b78;
       }
     }
   }
