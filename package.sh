@@ -15,7 +15,15 @@ EXCLUDES=(
   "--exclude=.gitignore"
   "--exclude=.wp-env.json"
   "--exclude=package.sh"
-)
+);
+
+# First make sure React build is up to date
+printf "Making sure React build is up to date... \n"
+cd "${ROOT_DIR}"/react || exit
+npm install
+npm run build
+npm run build:css
+cd "${ROOT_DIR}" || exit
 
 # Clean up any previous build artifacts
 rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
