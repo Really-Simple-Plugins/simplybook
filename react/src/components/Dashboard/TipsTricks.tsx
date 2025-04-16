@@ -40,8 +40,6 @@ const TipsTricks = () => {
             <BlockFooter className="bg-gray-50">
                 <ButtonLink 
                     className={"border-tertiary text-tertiary mr-4"} 
-                    icon={true}
-                    iconName="tips" 
                     loginLink={data?.data.all ?? '#'} 
                     btnVariant={"square-ghost-small"}
                 >
