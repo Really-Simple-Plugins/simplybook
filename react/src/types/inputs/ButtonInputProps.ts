@@ -5,7 +5,20 @@ export type ButtonInputProps = {
     to: string;
     from?: string;
   };
-  btnVariant?: "primary" | "secondary" | "tertiary" | undefined;
+  btnVariant?: 
+  | "primary" 
+  | "primary-small" 
+  | "secondary" 
+  | "secondary-small" 
+  | "tertiary" 
+  | "tertiary-small" 
+  | "ghost" 
+  | "ghost-small" 
+  | "square" 
+  | "square-ghost" 
+  | "square-ghost-small" 
+  | "square-small" 
+  | undefined;
   disabled?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;
