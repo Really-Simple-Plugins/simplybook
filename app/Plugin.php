@@ -91,6 +91,7 @@ class Plugin
      */
     public static function uninstall()
     {
+        // todo - cleanup options table
     }
 
     /**
