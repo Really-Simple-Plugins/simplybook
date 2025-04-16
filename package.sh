@@ -1,31 +1,42 @@
 #!/bin/bash
 
-# Get the directory of the current script
-PLUGIN_ROOT=$(dirname "$0")
+# Determine the path where this script is located
+ROOT_DIR=$(dirname "$0")
 
-# Current Directory Name
-PLUGIN_NAME=${PLUGIN_ROOT##*/};
+# Extract folder name to use as plugin name
+PLUGIN_NAME=${ROOT_DIR##*/};
 
-# Just in case remove previous packaging
+# List of patterns or folders to exclude from rsync copy
+EXCLUDES=(
+  "--exclude=react/node_modules"
+  "--exclude=assets/block/node_modules"
+  "--exclude=vendor"
+  "--exclude=.git"
+  "--exclude=.gitignore"
+  "--exclude=.wp-env.json"
+  "--exclude=package.sh"
+)
+
+# Clean up any previous build artifacts
 rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
 
-# Copy the plugin to /tmp while excluding node_modules folders
+# Copy the plugin to /tmp while excluding the EXCLUDES list
 printf "Copying %s to /tmp \n" "${PLUGIN_NAME}"
-rsync -av --exclude='react/node_modules' --exclude='assets/block/node_modules' . /tmp/"${PLUGIN_NAME}"
+rsync -a -q "${EXCLUDES[@]}" . /tmp/"${PLUGIN_NAME}"
+
+# Change to the temporary directory
 cd /tmp/"${PLUGIN_NAME}" || exit
 
-printf "Removing old vendor and git folders \n"
-rm -rf ./vendor ./.git ./.gitignore
-
-printf "Installing dependencies \n"
+printf "Installing composer packages (production only)... \n"
 composer install --no-dev --optimize-autoloader
 
-printf "Turn on extended globbing that gives us the correct syntax options \n"
-shopt -s extglob
+# Strip out files that are not meant to be shipped
+printf "Cleaning up dev-related files... \n"
+rm -rf ./composer.json ./composer.lock
 
-# Edit here to remove files from package
-printf "Remove development files \n"
-rm -rf ./composer.json ./composer.lock ./.wp-env.json ./package.sh
+# Enable extended pattern matching for glob operations like !(pattern)
+printf "Enabling extended glob patterns... \n"
+shopt -s extglob
 
 # Remove everything from react folder except src and build folder
 printf "Cleanup react app \n"
@@ -40,4 +51,4 @@ rm -rf ..?* .[!.]* !(src|build)
 cd /tmp/ || exit
 zip -rqT "${PLUGIN_NAME}".zip "${PLUGIN_NAME}"/
 
-printf "Done! Archive %s generated! \n" "${PLUGIN_NAME}.zip"
+echo "✅ All done! Your package '${PLUGIN_NAME}.zip' is ready."
