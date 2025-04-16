@@ -569,7 +569,8 @@ class ApiClient
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
-                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+//                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+                    'callback_url' => 'https://webhook.site/2538ea4f-49ce-4798-886f-aead1a5740bc',
                 ]
             ),
         ) );
@@ -818,6 +819,48 @@ class ApiClient
 
         wp_cache_set('simplybook_services', $services, 'simplybook', MINUTE_IN_SECONDS);
         return $services;
+    }
+
+    /**
+     * Update service based on service ID. Make sure to pass at least the
+     * mandatory fields: duration and is_visible, besides of course the ID.
+     */
+    public function updateService(string $serviceId, array $updatedData): array
+    {
+        $mandatoryFields = [
+            'duration',
+            'is_visible',
+        ];
+
+        foreach ($mandatoryFields as $field) {
+            if (!isset($updatedData[$field])) {
+                throw new \InvalidArgumentException("Missing mandatory field: $field");
+            }
+        }
+
+        $endpoint = $this->endpoint('admin/services/' . sanitize_text_field($serviceId));
+        $response = wp_safe_remote_request($endpoint, [
+            'method' => 'PUT',
+            'headers' => $this->get_headers(true, 'admin'),
+            'body' => json_encode($updatedData),
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($response->get_error_code())
+                ->setData($response->get_error_data());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode !== 200) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($responseCode)
+                ->setData($response->get_error_data());
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
     }
 
     /**
