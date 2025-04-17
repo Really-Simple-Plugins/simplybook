@@ -39,7 +39,7 @@ function CreateLoginAccount() {
                         FrameWrapperClass="h-[350px] aspect-w-16 aspect-h-9 mb-8"
                         className="w-full h-full"
                         src="https://www.youtube.com/embed/qgMn9dKJAt4"
-                        title="How to get started with SimplyBook.me"
+                        title={__("How to get started with SimplyBook.me", "simplybook")}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         refPolicy="strict-origin-when-cross-origin"
                     />
