@@ -15,7 +15,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
 }) => {
     let buttonVariants = clsx(
         // Base styles
-        "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 cursor-pointer",
+        "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1",
         {
             'bg-primary text-white hover:bg-primary-dark !p-4 text-base' : btnVariant == 'primary',
             'bg-primary text-white hover:bg-primary-dark ' : btnVariant == 'primary-small',
@@ -29,6 +29,10 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             'rounded-md text-white': btnVariant == 'square-small',
             'border-2 border-primary text-primary rounded-md !p-4 text-base': btnVariant == 'square-ghost',
             'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
+
+            // Disabled styles
+            'opacity-50 cursor-not-allowed': disabled,
+            'cursor-pointer': !disabled,
         }
     );
 
