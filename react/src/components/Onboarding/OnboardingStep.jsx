@@ -40,7 +40,7 @@ const OnboardingStep = ({
         getValues,
         reset,
         trigger,
-        formState: { isDirty, errors },
+        formState: { isDirty, errors, isValid, isValidating },
     } = useForm({
         defaultValues: defaultData,
         values: data,
@@ -49,7 +49,11 @@ const OnboardingStep = ({
     const { getValue } = useSettingsData();
     const [companyName, setCompanyName] = useState("");
     const currentStep = getCurrentStep(path);
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(!isValid);
+
+    useEffect(() => {
+        setDisabled(!isValid);
+    }, [isValid]);
 
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
@@ -107,8 +111,6 @@ const OnboardingStep = ({
 
         setDisabled(false);
 
-
-
         if (buttonType === "primary" && primaryButton.navigateTo) {
             navigate({ to: primaryButton.navigateTo });
         } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
@@ -144,24 +146,28 @@ const OnboardingStep = ({
                         {customHtml}
                         <ButtonField
                             className="w-full"
-                            showLoader={disabled}
+                            showLoader={isValidating}
                             btnVariant="secondary"
                             label={primaryButton.label}
                             context={bottomText}
-                            disabled={disabled}
-                            onClick={handleSubmit((data) => onSubmit(data, "primary"))}
+                            button={{
+                                disabled: disabled,
+                                onClick: handleSubmit((data) => onSubmit(data, "primary")),
+                            }}
                         />
                         {secondaryButton && (
                             <ButtonField
                                 btnVariant="tertiary"
-                                disabled={disabled}
                                 label={secondaryButton.label}
-                                onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
+                                button={{
+                                    disabled: disabled,
+                                    onClick: handleSubmit((data) => onSubmit(data, "secondary")),
+                                }}
                             />
                         )}
                     </form>
                 </div>
-                <Error 
+                <Error
                     errorHeading={__("Something went wrong...", "simplybook")}
                     error={apiError}
                 />
