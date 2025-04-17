@@ -59,15 +59,16 @@ const OnboardingStep = ({
 
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
-        if (currentValue === undefined && initialValue) {
-            setValue(fieldKey, initialValue, {
-                shouldValidate: true,
+        if (currentValue) {
+            return setValueCallback(currentValue);
+        }
+
+        if (initialValue) {
+            return setValue(fieldKey, initialValue, {
+                shouldValidate: true
             });
         }
-        if (setValueCallback) {
-            setValueCallback(currentValue !== undefined ? currentValue : initialValue || "");
-        }
-    };
+    }
 
     if (syncFieldConfig) {
         syncFieldState(syncFieldConfig.key, syncFieldConfig.value, syncFieldConfig.setValue);
