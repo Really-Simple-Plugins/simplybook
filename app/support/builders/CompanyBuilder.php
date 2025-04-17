@@ -11,6 +11,7 @@ class CompanyBuilder
     public string $service = '';
     public string $country = '';
     public string $zip = '';
+    public bool $terms = false;
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
@@ -83,6 +84,12 @@ class CompanyBuilder
     public function setZip(string $zip): CompanyBuilder
     {
         $this->zip = strtolower(str_replace(' ', '', trim(sanitize_text_field($zip))));
+        return $this;
+    }
+
+    public function setTerms(string $terms): CompanyBuilder
+    {
+        $this->terms = $terms;
         return $this;
     }
 
