@@ -12,6 +12,7 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+    private array $asArray = [];
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
@@ -95,7 +96,11 @@ class CompanyBuilder
 
     public function toArray(): array
     {
-        return [
+        if (!empty($this->asArray)) {
+            return $this->asArray;
+        }
+
+        $this->asArray = [
             'email' => $this->email,
             'category' => $this->category,
             'company_name' => $this->company_name,
@@ -105,7 +110,10 @@ class CompanyBuilder
             'service' => $this->service,
             'country' => $this->country,
             'zip' => $this->zip,
+            'terms_accepted' => $this->terms,
         ];
+
+        return $this->asArray;
     }
 
     /**
