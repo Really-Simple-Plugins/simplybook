@@ -52,6 +52,7 @@ const OnboardingStep = ({
     const [disabled, setDisabled] = useState(!isValid);
 
     useEffect(() => {
+        console.log('validation', isValid);
         setDisabled(!isValid);
     }, [isValid]);
 
@@ -167,10 +168,12 @@ const OnboardingStep = ({
                         )}
                     </form>
                 </div>
-                <Error
-                    errorHeading={__("Something went wrong...", "simplybook")}
-                    error={apiError}
-                />
+                {apiError && (
+                    <Error
+                        errorHeading={__("Something went wrong...", "simplybook")}
+                        error={apiError}
+                    />
+                )}
             </div>
             <div className="col-span-4 col-start-7 row-span-2 my-12">
                 {rightColumn}
