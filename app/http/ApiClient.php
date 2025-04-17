@@ -762,10 +762,16 @@ class ApiClient
             return new ApiResponseDTO(true, esc_html__('Email successfully confirmed.', 'simplybook'));
         }
 
-        throw (new ApiException(
-            esc_html__('Unknown error encountered while confirming your email. Please try again.')
-        ))->setData([
+        $codeIsValid = true;
+        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.');
+        if (isset($response->message) && str_contains($response->message, 'not valid')) {
+            $errorMessage = esc_html__('This confirmation code is not valid.', 'simplybook');
+            $codeIsValid = false;
+        }
+
+        throw (new ApiException($errorMessage))->setData([
             'message' => $response->message,
+            'valid' => $codeIsValid,
         ]);
     }
 
