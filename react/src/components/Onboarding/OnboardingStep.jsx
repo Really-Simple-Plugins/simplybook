@@ -18,6 +18,7 @@ const OnboardingStep = ({
     customHtml = null,
     syncFieldConfig,
 }) => {
+
     const {
         getURLForStep,
         getCurrentStepId,
@@ -51,18 +52,22 @@ const OnboardingStep = ({
     const currentStep = getCurrentStep(path);
     const [disabled, setDisabled] = useState(!isValid);
 
+    // Set disabled state based on isValid
+    useEffect(() => {
+        setDisabled(!isValid);
+    }, [isValid]);
+
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
-        if (currentValue) {
-            setValueCallback(currentValue);
-        }
-
-        if (initialValue) {
+        if (currentValue === undefined && initialValue) {
             setValue(fieldKey, initialValue, {
-                shouldValidate: true
+                shouldValidate: true,
             });
         }
-    }
+        if (setValueCallback) {
+            setValueCallback(currentValue !== undefined ? currentValue : initialValue || "");
+        }
+    };
 
     if (syncFieldConfig) {
         syncFieldState(syncFieldConfig.key, syncFieldConfig.value, syncFieldConfig.setValue);

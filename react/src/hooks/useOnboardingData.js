@@ -166,21 +166,13 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                if (!data.recaptchaToken) {
-                    console.log("missing recaptchatoken, cancel submit");
-                    setApiError(__('Recaptcha is required', 'simplybook'));
-                    return false;
-                }
-                console.log("found recaptcha token ", data.recaptchaToken);
-                console.log("confirm email step");
-                console.log(data);
                 let response = await confirmEmail({ data });
                 if (response.status !== "success") {
-                    console.log("setting api error to ", response.message);
                     setApiError(response.message);
                     return false;
                 }
                 setApiError("");
+                return true;
             },
         },
         {

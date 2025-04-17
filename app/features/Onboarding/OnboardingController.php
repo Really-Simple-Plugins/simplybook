@@ -125,13 +125,32 @@ class OnboardingController implements FeatureInterface
      */
     public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
+        $error = '';
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
-        $response = App::provide('client')->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
+        if ($storage->isEmpty('recaptchaToken')) {
+            // wp_kses_post to allow apostrophe in the message
+            $error = wp_kses_post(__('Please verify you\'re not a robot.', 'simplybook'));
+        }
 
-        $step = ($response->success ? 3 : 2);
-        $this->service->setCompletedStep($step);
+        if ($storage->isEmpty('confirmation-code')) {
+            $error = esc_html__('Please enter the confirmation code.', 'simplybook');
+        }
 
+        if (!empty($error)) {
+            return $this->service->sendHttpResponse([], false, $error);
+        }
+
+        try {
+            $response = App::provide('client')->confirm_email(
+                $storage->getInt('confirmation-code'),
+                $storage->getString('recaptchaToken')
+            );
+        } catch (ApiException $e) {
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+        }
+
+        $this->service->setCompletedStep(3);
         return $this->service->sendHttpResponse([], $response->success, $response->message);
     }
 

@@ -576,7 +576,7 @@ class ApiClient
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
-        ) );
+        ));
 
         if (is_wp_error($request)) {
             throw (new ApiException(
@@ -633,7 +633,7 @@ class ApiClient
         }
 
         throw (new ApiException(
-            esc_html__('Something went wrong while registering your company. Please try again.')
+            esc_html__('Unknown error encountered while registering your company. Please try again.')
         ))->setData([
             'message' => $response->message,
             'data' => get_object_vars($response->data),
@@ -716,30 +716,25 @@ class ApiClient
     }
 
     /**
-     * Registers a company with the API
-     *
-     * @param int $email_code
-     * @param string $recaptcha_token
-     *
-     * @return ApiResponseDTO
+     * Confirm email for the company registration based on the email code and
+     * the recaptcha token.
+     * @throws ApiException
      */
-    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO {
-        if ( !$this->user_can_manage() ) {
-            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
+    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
+    {
+        if ($this->user_can_manage() === false) {
+            throw new ApiException(
+                esc_html__('You are not authorized to do this.', 'simplybook')
+            );
         }
 
-        //check if the company registration was started
-        if ( !get_option("simplybook_company_registration_start_time") ) {
-            $this->log("Company registration not started yet");
-            return new ApiResponseDTO( false, __('Complete the previous, company registration step first.', 'simplybook') );
+        // If the company registration is not started someone tries to submit
+        // the email confirm step without first completing the registration.
+        if (get_option("simplybook_company_registration_start_time") === false) {
+            throw new ApiException(
+                esc_html__('Something went wrong, are you sure you started the company registration?', 'simplybook')
+            );
         }
-
-        error_log("confirming email with body:");
-        error_log(print_r(				[
-            'company_login' => $this->get_company_login(),
-            'confirmation_code' => $email_code,
-            'recaptcha' => $recaptcha_token,
-        ], true));
 
         $request = wp_remote_post( $this->endpoint( 'simplybook/company/confirm' ), array(
             'headers' => $this->get_headers( true ),
@@ -752,23 +747,26 @@ class ApiClient
                     'recaptcha' => $recaptcha_token,
                 ]
             ),
-        ) );
+        ));
 
-        error_log("email confirmation response");
-        error_log( print_r($request,true) );
-
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->success) ) {
-                error_log("email confirmation success, please wait for the callback.");
-                return new ApiResponseDTO( true, __('Email successfully confirmed.', 'simplybook') );
-            } else {
-                $this->log("Error during email confirmation: ".$request->message);
-                return new ApiResponseDTO( false, $request->message);
-            }
-        } else {
-            return new ApiResponseDTO( false, __('Error email confirmation.', 'simplybook')." ".$request->get_error_message() );
+        if (is_wp_error($request)) {
+            throw (new ApiException(
+                esc_html__('Something went wrong while confirming your email. Please try again.'))
+            )->setData([
+                'error' => $request->get_error_message(),
+            ]);
         }
+
+        $response = json_decode(wp_remote_retrieve_body($request));
+        if (isset($response->success)) {
+            return new ApiResponseDTO(true, esc_html__('Email successfully confirmed.', 'simplybook'));
+        }
+
+        throw (new ApiException(
+            esc_html__('Unknown error encountered while confirming your email. Please try again.')
+        ))->setData([
+            'message' => $response->message,
+        ]);
     }
 
     /**
