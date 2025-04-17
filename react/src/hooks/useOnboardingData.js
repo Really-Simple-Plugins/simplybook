@@ -16,6 +16,7 @@ const useOnboardingData = () => {
     const [calendarPageNameAvailable, setCalendarPageNameAvailable] = useState(false);
     const [bookingPageNameAvailable, setBookingPageNameAvailable] = useState(false);
 
+    // Fallback countries
     let mappedCountries = {
         NL: "Netherlands",
         DE: "Germany",
@@ -58,6 +59,7 @@ const useOnboardingData = () => {
                     setApiError(response.message);
                     return false;
                 }
+                return true;
             },
         },
         {
