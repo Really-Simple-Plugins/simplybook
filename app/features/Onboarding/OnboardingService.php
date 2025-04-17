@@ -1,5 +1,6 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasRestAccess;
@@ -26,6 +27,7 @@ class OnboardingService
     public function setOnboardingCompleted(): bool
     {
         $this->setOnboardingStep(5);
+        $this->clearTemporaryData();
         return update_option('simplybook_onboarding_completed', true, false);
     }
 
@@ -34,18 +36,20 @@ class OnboardingService
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        sleep(1);
-
         $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
 
-        $this->update_option('email', $submittedEmailAddress, true);
-        $this->update_option('terms-and-conditions', $adminAgreesToTerms, true);
-
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
         $message = ($success ? '' : esc_html__('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
+
+        if ($success) {
+            $this->setTemporaryData([
+                'email' => $submittedEmailAddress,
+                'terms_accepted' => $adminAgreesToTerms,
+            ]);
+        }
 
         return $this->sendHttpResponse([], $success, $message);
     }
@@ -113,5 +117,34 @@ class OnboardingService
         }
 
         return [$domain, $login];
+    }
+
+    /**
+     * Method can be used to set temporary data for the onboarding process.
+     */
+    public function setTemporaryData(array $data): void
+    {
+        $options = get_option('simplybook_temporary_onboarding_data', []);
+        $options = array_merge($options, $data);
+        update_option('simplybook_temporary_onboarding_data', $options, false);
+    }
+
+    /**
+     * Method can be used to retrieve temporary data for the onboarding process.
+     * Returns the array of data as a Storage object for easier access.
+     */
+    public function getTemporaryDataStorage(): Storage
+    {
+        return new Storage(
+            get_option('simplybook_temporary_onboarding_data', [])
+        );
+    }
+
+    /**
+     * Method should be used to clear the temporary data for the onboarding.
+     */
+    public function clearTemporaryData(): void
+    {
+        delete_option('simplybook_temporary_onboarding_data');
     }
 }
