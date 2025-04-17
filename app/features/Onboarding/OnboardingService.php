@@ -1,5 +1,6 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
@@ -32,6 +33,23 @@ class OnboardingService
     }
 
     /**
+     * This method should be called after a successful company registration.
+     * In that case the data given should be based on the data returned in the
+     * ApiResponseDTO from the successful {@see ApiClient::register_company()}
+     */
+    public function finishCompanyRegistration(array $data)
+    {
+        $responseDataStorage = new Storage($data);
+
+        update_option("simplybook_company_registration_start_time", time(), false);
+        update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
+        update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
+        $this->update_option('company_id', $responseDataStorage->getInt('company_id'));
+
+        $this->setOnboardingStep(3);
+    }
+
+    /**
      * Store given email address when the user agrees to the terms
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
@@ -47,7 +65,7 @@ class OnboardingService
         if ($success) {
             $this->setTemporaryData([
                 'email' => $submittedEmailAddress,
-                'terms_accepted' => $adminAgreesToTerms,
+                'terms' => $adminAgreesToTerms,
             ]);
         }
 

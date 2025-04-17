@@ -12,7 +12,9 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+
     private array $asArray = [];
+    private int $defaultCategory = 8; // Default category is 8: "Other category"
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
@@ -42,7 +44,7 @@ class CompanyBuilder
 
     public function setCategory(int $category): CompanyBuilder
     {
-        $this->category = (int) $category;
+        $this->category = ($category < 1 ? $this->defaultCategory : $category);
         return $this;
     }
 
@@ -110,7 +112,7 @@ class CompanyBuilder
             'service' => $this->service,
             'country' => $this->country,
             'zip' => $this->zip,
-            'terms_accepted' => $this->terms,
+            'terms' => $this->terms,
         ];
 
         return $this->asArray;
@@ -132,5 +134,14 @@ class CompanyBuilder
     public function isValid(): bool
     {
         return count($this->toArray()) == count(array_filter($this->toArray()));
+    }
+
+    /**
+     * Method to get the invalid fields. It will return an array of keys that
+     * are empty.
+     */
+    public function getInvalidFields(): array
+    {
+        return array_keys(array_filter($this->toArray(), fn($value) => empty($value)));
     }
 }

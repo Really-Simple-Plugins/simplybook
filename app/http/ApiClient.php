@@ -11,6 +11,8 @@ use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Http\DTO\ApiResponseDTO;
+use SimplyBook\Exceptions\ApiException;
+use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\RestDataException;
 
 /**
@@ -506,51 +508,47 @@ class ApiClient
 
     /**
      * Registers a company with the API
-     *
-     * @return ApiResponseDTO
+     * @internal method can be recursive a maximum of 3 times in one minute
+     * @throws ApiException
      */
-    public function register_company(): ApiResponseDTO {
+    public function register_company(): ApiResponseDTO
+    {
+        if ($this->user_can_manage() === false) {
+            throw new ApiException(
+                esc_html__('You are not authorized to do this.', 'simplybook')
+            );
+        }
 
-        if ( !$this->user_can_manage() ) {
-            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
+        if (get_transient('simply_book_attempt_count') > 3) {
+            throw new ApiException(
+                esc_html__('Too many attempts to register company, please try again in a minute.', 'simplybook')
+            );
         }
 
         //check if we have a token
-        if ( !$this->token_is_valid() ) {
-            error_log("invalid public token");
+        if ($this->token_is_valid() === false) {
             $this->get_public_token();
         }
 
-        if ( get_transient('simply_book_attempt_count') >3 ) {
-            $this->log("Too many attempts to register company");
-            return new ApiResponseDTO( false, __('Too many attempts, please try again later.', 'simplybook') );
+        $companyData = $this->get_company();
+        $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
+
+        if ($sanitizedCompany->isValid() === false) {
+            throw (new ApiException(
+                esc_html__('Please fill in all company data.', 'simplybook')
+            ))->setData([
+                'invalid_fields' => $sanitizedCompany->getInvalidFields(),
+            ]);
         }
 
-        $email = sanitize_email( $this->get_company('email') );
         $callback_url = $this->generate_callback_url();
-        $category = (int) $this->get_company('category');
-        $category =  $category < 1 ? 8 : $category; //default other category
-        $random_password = wp_generate_password( 24, false );
-        $company_name = sanitize_text_field( $this->get_company('company_name') );
-        //strip off
-        //get a description using the WordPress get_bloginfo function
-        $description = $this->get_description();
-        $phone = sanitize_text_field( $this->get_company('phone') );
-        $city = sanitize_text_field( $this->get_company('city') );
-        $address = sanitize_text_field( $this->get_company('address') );
-        $country = $this->sanitize_country( $this->get_company('country') );
-        //no spaces allowed in zip
-        $zip = (string) $this->get_company('zip');
-        $zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
+        $random_password = wp_generate_password(24, false);
         $company_login = $this->get_company_login();
-        error_log("company login $company_login");
-        if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
-            $this->log("Missing fields for company registration");
-            $this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
-            return new ApiResponseDTO( false, __('Missing fields for company registration. Please fill out all fields.', 'simplybook') );
-        }
 
-        $coordinates = $this->get_coordinates($address, $zip, $city, $country);
+        $coordinates = $this->get_coordinates(
+            $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
+        );
+
         $request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
             'headers' => $this->get_headers( true ),
             'timeout' => 15,
@@ -558,20 +556,20 @@ class ApiClient
             'body' => json_encode(
                 [
                     'company_login' => $company_login,
-                    'email' => $email,
-                    'name' => $company_name,
-                    'description' => $description,
-                    'phone' => $phone,
-                    'city' => $city,
-                    'address1' => $address,
-                    'zip' => $zip,
+                    'email' => $sanitizedCompany->email,
+                    'name' => $sanitizedCompany->company_name,
+                    'description' => $this->get_description(),
+                    'phone' => $sanitizedCompany->phone,
+                    'city' => $sanitizedCompany->city,
+                    'address1' => $sanitizedCompany->address,
+                    'zip' => $sanitizedCompany->zip,
                     "lat" => $coordinates['lat'],
                     "lng" => $coordinates['lng'],
                     "timezone" => $this->get_timezone_string(),
-                    "country_id" => $country,
+                    "country_id" => $sanitizedCompany->country,
                     "password" => $random_password,
                     "retype_password" => $random_password,
-                    'categories' => [$category],
+                    'categories' => [$sanitizedCompany->category],
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
@@ -579,70 +577,68 @@ class ApiClient
                 ]
             ),
         ) );
-        error_log("company registration response");
-        error_log(print_r($request,true));
 
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->recaptcha_site_key) && $request->success ) {
-                delete_option('simplybook_company_registration_error' );
-                error_log(print_r($request,true));
-                update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
-                update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
-                $this->update_option( 'company_id', (int) $request->company_id, $this->duringOnboardingFlag );
-                update_option("simplybook_company_registration_start_time", time(), false);
-                //successful registered
-                return new ApiResponseDTO( true );
-
-            } else {
-                if ( str_contains( $request->message, 'Token Expired')) {
-                    error_log("token expired, refresh");
-                    //invalid token, refresh.
-                    set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
-                    $this->refresh_token();
-                    return $this->register_company();
-                }
-                error_log(print_r($request->data, true));
-                if ( isset($request->data->company_login) &&
-                    in_array('The field contains illegal words',$request->data->company_login)
-                ) {
-                    error_log("company login contains illegal words, generate new one");
-                    delete_option('simplybook_company_login');
-                    return $this->register_company();
-                }
-
-                if ( isset($request->data->name) &&
-                    in_array('The field contains illegal words', $request->data->name)
-                ) {
-                    error_log("company name contains illegal words, go one step back and report issue");
-                    return new ApiResponseDTO( false, __('The company name contains illegal words. Please change the company name.', 'simplybook') );
-                }
-
-                if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
-                    error_log("company login already exists");
-                    //company login already exists. We will be assuming for now that the user is here by accident.
-                    //we return a success and exit.
-                    //@todo update existing data instead of just returning.
-                    return new ApiResponseDTO( true );
-                }
-
-                $this->log("Error during company registration: ".$request->message);
-                //get first property of $request->data
-                $error = '';
-                $fields        = get_object_vars( $request->data );
-                if ( $fields && is_array($fields) ) {
-                    $error_messages = reset( $fields );
-                    $error = $error_messages[0] ?? '';
-                }
-
-                return new ApiResponseDTO( false, $request->message.' '.$error );
-            }
-
-        } else {
-            //retrieve the wp_error message
-            $this->log("Error during company registration: ".$request->get_error_message());
-            return new ApiResponseDTO( false, __('Error during company registration.', 'simplybook')." ".$request->get_error_message() );
+        if (is_wp_error($request)) {
+            throw (new ApiException(
+                esc_html__('Something went wrong while registering your company. Please try again.'))
+            )->setData([
+                'error' => $request->get_error_message(),
+            ]);
         }
+
+        $response = json_decode(wp_remote_retrieve_body($request));
+        $companySuccessfullyRegistered = (
+            isset($response->recaptcha_site_key) && isset($response->success) && $response->success
+        );
+
+        if ($companySuccessfullyRegistered) {
+            return new ApiResponseDTO(true, esc_html__('Company successfully registered.', 'simplybook'), 200, [
+                'recaptcha_site_key' => $response->recaptcha_site_key,
+                'recaptcha_version' => $response->recaptcha_version,
+                'company_id' => $response->company_id,
+            ]);
+        }
+
+        // When unsuccessful due to token expiration, we refresh and try again
+        if (str_contains($response->message, 'Token Expired')) {
+            $currentAttemptCount = get_transient('simply_book_attempt_count') ?: 0;
+            set_transient('simply_book_attempt_count', ($currentAttemptCount + 1), MINUTE_IN_SECONDS);
+            $this->refresh_token();
+            return $this->register_company();
+        }
+
+        // We generate a company_login dynamically, but because SimplyBook has
+        // very strict checks this company_login might be invalid. In this case
+        // we delete the company_login and try again.
+        if (isset($response->data->company_login) &&
+            (
+                in_array('The field contains illegal words', $response->data->company_login)
+                || in_array('login_reserved', $response->data->company_login)
+            )
+        ) {
+            delete_option('simplybook_company_login');
+            return $this->register_company();
+        }
+
+        // Company name contains illegal words, user should be notified.
+        if (isset($response->data->name) &&
+            in_array('The field contains illegal words', $response->data->name)
+        ) {
+            throw (new ApiException(
+                esc_html__('The company name is not allowed. Please change the company name.', 'simplybook')
+            ))->setData([
+                'name' => $response->data->name,
+                'message' => $response->message,
+            ]);
+        }
+
+        throw (new ApiException(
+            esc_html__('Something went wrong while registering your company. Please try again.')
+        ))->setData([
+            'message' => $response->message,
+            'data' => get_object_vars($response->data),
+        ]);
+
     }
 
     /**

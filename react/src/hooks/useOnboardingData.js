@@ -70,11 +70,13 @@ const useOnboardingData = () => {
                     id: "company_name",
                     type: "text",
                     label: "Company name",
+                    required: true,
                 },
                 {
                     id: "category",
                     type: "select",
                     style: "inline",
+                    required: true,
                     inline_group: true,
                     label: __("Business category", "simplybook"),
                     options: [
@@ -97,6 +99,7 @@ const useOnboardingData = () => {
                     type: "text",
                     style: "inline",
                     label: __("What service do you provide?", "simplybook"),
+                    required: true,
                 },
                 {
                     id: "phone",
@@ -107,31 +110,35 @@ const useOnboardingData = () => {
                         regex: "^\\+?[0-9\\s\\-().]+$",
                         message: __("Please enter a valid phone number", "simplybook"),
                     },
+                    required: true,
                 },
                 {
                     id: "address",
                     type: "text",
                     style: "inline",
                     label: __("Address", "simplybook"),
+                    required: true,
                 },
                 {
                     id: "zip",
                     type: "text",
                     style: "inline",
                     label: __("Postal Code", "simplybook"),
+                    required: true,
                 },
                 {
                     id: "city",
                     type: "text",
                     style: "inline",
                     label: __("City", "simplybook"),
+                    required: true,
                 },
                 {
                     id: "country",
                     type: "select",
                     label: __("Country", "simplybook"),
-                    value: 'NL',
                     options: mappedCountries,
+                    required: true,
                 },
             ],
             beforeSubmit: async (data) => {
@@ -155,6 +162,7 @@ const useOnboardingData = () => {
                     id: "confirmation-code",
                     type: "text",
                     label: __("Confirmation Code", "simplybook"),
+                    required: true,
                 },
             ],
             beforeSubmit: async (data) => {

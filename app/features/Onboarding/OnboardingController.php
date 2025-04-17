@@ -6,6 +6,7 @@ use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
 
@@ -93,15 +94,29 @@ class OnboardingController implements FeatureInterface
             $storage->all()
         );
 
+        $tempDataStorage = $this->service->getTemporaryDataStorage();
+        $tempEmail = $tempDataStorage->getString('email', get_option('admin_email'));
+        $tempTerms = $tempDataStorage->getBoolean('terms', true);
+
+        $companyBuilder->setEmail($tempEmail);
+        $companyBuilder->setTerms($tempTerms);
+
         $this->service->storeCompanyData($companyBuilder);
 
-        // Register it
-        $response = App::provide('client')->register_company();
+        if ($companyBuilder->isValid() === false) {
+            return $this->service->sendHttpResponse([
+                'invalid_fields' => $companyBuilder->getInvalidFields(),
+            ], false, esc_html__('Please fill in all fields.', 'simplybook'));
+        }
 
-        //store step, to start with on return of user.
-        $step = ($response->success ? 3 : 1);
-        $this->service->setOnboardingStep($step);
+        try {
+            // Register the company
+            $response = App::provide('client')->register_company();
+        } catch (ApiException $e) {
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+        }
 
+        $this->service->finishCompanyRegistration($response->data);
         return $this->service->sendHttpResponse([], $response->success, $response->message);
     }
 

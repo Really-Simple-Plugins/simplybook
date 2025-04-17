@@ -82,7 +82,7 @@ trait LegacyLoad {
      * @param $default
      * @return mixed
      */
-    public function get_company(string $key)
+    public function get_company(string $key = '')
     {
         global $simplybook_company_cache;
         if ( !empty($simplybook_company_cache) ) {
@@ -92,7 +92,11 @@ trait LegacyLoad {
             $simplybook_company_cache = $company;
         }
 
-        return $company[$key] ?? false;
+        if (empty($key)) {
+            return $company;
+        }
+
+        return $company[$key] ?? [];
     }
 
     /**
