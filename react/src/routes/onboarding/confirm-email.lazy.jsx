@@ -78,7 +78,7 @@ export const Route = createLazyFileRoute(path)({
                             value: confirmationCode,
                             setValue: setConfirmationCode
                         }}
-                        customHtml={<div id="recaptcha_container" className="mt-4" ref={recaptchaContainerRef}></div>}
+                        customHtml={<div id="recaptcha_container" className="my-4" ref={recaptchaContainerRef}></div>}
                         primaryButton={{
                             label: __("Verify Email", "simplybook"),
                             disabled: true,
