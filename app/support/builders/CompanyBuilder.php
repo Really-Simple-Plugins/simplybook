@@ -124,4 +124,13 @@ class CompanyBuilder
     {
         return 'set' . str_replace('_', '', ucwords($property, '_'));
     }
+
+    /**
+     * Method to check if the object is valid. It will check if any value is
+     * empty.
+     */
+    public function isValid(): bool
+    {
+        return count($this->toArray()) == count(array_filter($this->toArray()));
+    }
 }
