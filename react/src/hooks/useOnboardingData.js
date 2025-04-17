@@ -53,14 +53,11 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                console.log("submit email step");
                 let response = await registerEmail({ data });
                 if (response.status !== "success") {
-                    console.log("setting api error to ", response.message);
                     setApiError(response.message);
                     return false;
                 }
-                console.log(data);
             },
         },
         {
