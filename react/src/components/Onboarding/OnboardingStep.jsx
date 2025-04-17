@@ -51,11 +51,6 @@ const OnboardingStep = ({
     const currentStep = getCurrentStep(path);
     const [disabled, setDisabled] = useState(!isValid);
 
-    useEffect(() => {
-        console.log('validation', isValid);
-        setDisabled(!isValid);
-    }, [isValid]);
-
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
         if (currentValue) {

@@ -110,7 +110,6 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            // Register the company
             $response = App::provide('client')->register_company();
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
@@ -130,8 +129,8 @@ class OnboardingController implements FeatureInterface
 
         $response = App::provide('client')->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
 
-        $step = ($response->success ? 4 : 3);
-        $this->service->setOnboardingStep($step);
+        $step = ($response->success ? 3 : 2);
+        $this->service->setCompletedStep($step);
 
         return $this->service->sendHttpResponse([], $response->success, $response->message);
     }
@@ -147,7 +146,6 @@ class OnboardingController implements FeatureInterface
 
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
     }
-
 
     /**
      * Generate default shortcode pages

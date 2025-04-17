@@ -17,7 +17,7 @@ class OnboardingService
     /**
      * Store the onboarding step in the general options without autoload
      */
-    public function setOnboardingStep(int $step): void
+    public function setCompletedStep(int $step): void
     {
         update_option('simplybook_completed_step', $step, false);
     }
@@ -27,7 +27,7 @@ class OnboardingService
      */
     public function setOnboardingCompleted(): bool
     {
-        $this->setOnboardingStep(5);
+        $this->setCompletedStep(5);
         $this->clearTemporaryData();
         return update_option('simplybook_onboarding_completed', true, false);
     }
@@ -46,7 +46,7 @@ class OnboardingService
         update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
         $this->update_option('company_id', $responseDataStorage->getInt('company_id'));
 
-        $this->setOnboardingStep(3);
+        $this->setCompletedStep(2);
     }
 
     /**
