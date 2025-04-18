@@ -28,7 +28,6 @@ class TaskManagementController implements FeatureInterface
 
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
-//        $this->upgradeTasks();
     }
 
     /**
