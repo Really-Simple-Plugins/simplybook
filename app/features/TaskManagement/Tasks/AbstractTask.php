@@ -191,7 +191,8 @@ abstract class AbstractTask implements TaskInterface
         return [
             'id' => $this->getId(),
             'text' => $this->getText(),
-            'status' => $this->isPremium() ? 'premium' : $this->getStatus(),
+            'status' => $this->getStatus(),
+            'premium' => $this->isPremium(),
             'type' => $this->isRequired() ? 'required' : 'optional',
             'action' => $this->getAction(),
         ];
