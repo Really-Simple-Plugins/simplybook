@@ -4,6 +4,15 @@ import { TaskData } from "../types/TaskData";
 import HttpClient from "../api/requests/HttpClient";
 
 const useTaskData = () => {
+
+    const statusPriority = {
+        urgent: 0,
+        open: 10,
+        premium: 20,
+        completed: 30,
+        dismissed: 40,
+    };
+
     const queryClient = useQueryClient();
 
     const getTasksRoute = 'get_tasks';
@@ -27,10 +36,19 @@ const useTaskData = () => {
     }
 
     /**
-     * Extract the tasks from the response for easy access.
+     * Extract the tasks from the response for easy access. And sort them by
+     * priority.
      * @type {Task[]}
      */
-    const tasks: Task[] = Array.isArray(response?.data) ? response?.data : [];
+    let tasks: Task[] = [];
+    if (Array.isArray(response?.data)) {
+        tasks = response?.data.map((task: Task) => {
+            return {
+                ...task,
+                priority: (statusPriority[task.status]) ?? 69,
+            };
+        }).sort((a: Task, b: Task) => a.priority - b.priority);
+    }
 
     /**
      * Handles the mutation for dismissing a task.
