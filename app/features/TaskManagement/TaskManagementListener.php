@@ -101,20 +101,63 @@ class TaskManagementListener
     {
         $subscription = ($arguments['subscription_name'] ?? '');
         $isExpired = ($arguments['is_expired'] ?? false);
+        $limits = ($arguments['limits'] ?? []);
 
-        if (empty($subscription) || $subscription !== 'Trial') {
-            return;
+        if (!empty($subscription) && $subscription === 'Trial') {
+            if ($isExpired) {
+                $this->service->openTask(
+                    Tasks\TrialExpiredTask::IDENTIFIER
+                );
+            }
+
+            if ($isExpired === false) {
+                $this->service->hideTask(
+                    Tasks\TrialExpiredTask::IDENTIFIER
+                );
+            }
         }
 
-        if ($isExpired) {
-            $this->service->openTask(
-                Tasks\TrialExpiredTask::IDENTIFIER
+        $this->handleSubscriptionLimits($limits);
+    }
+
+    /**
+     * Handle subscription limits to update task status.
+     */
+    private function handleSubscriptionLimits(array $limits): void
+    {
+        foreach ($limits as $limit) {
+            if (empty($limit['key'])) {
+                continue;
+            }
+
+            $amountLeftForLimit = ($limit['rest'] ?? 0);
+
+            switch ($limit['key']) {
+                case 'sheduler_limit':
+                    $this->handleShedulerLimit($amountLeftForLimit);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handle the sheduler limit to update task status. The sheduler limit is
+     * the limits associated with the number of bookings that can be made.
+     *
+     * @internal typo in 'sheduler' is on purpose as the typo is in the API
+     * response as well.
+     */
+    private function handleShedulerLimit(int $amountLeft): void
+    {
+        if ($amountLeft <= 1) {
+            $this->service->flagTaskUrgent(
+                Tasks\MaximumBookingsTask::IDENTIFIER
             );
         }
 
-        if ($isExpired === false) {
+        if ($amountLeft > 1) {
             $this->service->hideTask(
-                Tasks\TrialExpiredTask::IDENTIFIER
+                Tasks\MaximumBookingsTask::IDENTIFIER
             );
         }
     }

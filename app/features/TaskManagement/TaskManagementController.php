@@ -28,6 +28,7 @@ class TaskManagementController implements FeatureInterface
 
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
+//        $this->upgradeTasks();
     }
 
     /**
@@ -51,6 +52,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\GoToSimplyBookSystemTask(),
             new Tasks\CustomizeDesignTask(),
             new Tasks\TrialExpiredTask(),
+            new Tasks\MaximumBookingsTask(),
         ];
 
         return array_filter($pluginTasks, function ($task) {
