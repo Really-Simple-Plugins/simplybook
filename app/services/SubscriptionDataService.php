@@ -124,10 +124,7 @@ class SubscriptionDataService
      */
     private function dispatchDataLoaded(array $subscriptionData): void
     {
-        Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, [
-            'subscription_name' => ($subscriptionData['subscription_name'] ?? ''),
-            'is_expired' => ($subscriptionData['is_expired'] ?? false),
-        ]);
+        Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, $subscriptionData);
     }
 
 }
