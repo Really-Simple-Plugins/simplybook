@@ -23,7 +23,7 @@ const ColorPickerField = forwardRef(
 
         const [color, setColor] = useState(defaultColor);
         useEffect(() => {
-            if (props.value !== color) {
+            if (props.value && props.value !== color) {
                 setColor(props.value);
             }
         }, [props.value]);
