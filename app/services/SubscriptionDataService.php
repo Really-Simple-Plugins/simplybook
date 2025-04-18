@@ -78,7 +78,6 @@ class SubscriptionDataService
     {
         $cacheName = 'simplybook_subscription_data_all_' . ($strict ? 'strict' : 'non-strict');
         if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            $this->dispatchDataLoaded($cache);
             return $cache;
         }
 
