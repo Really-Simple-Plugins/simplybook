@@ -578,6 +578,9 @@
   .h-\[20px\] {
     height: 20px;
   }
+  .h-\[70vh\] {
+    height: 70vh;
+  }
   .h-\[350px\] {
     height: 350px;
   }
@@ -1209,6 +1212,10 @@
   .leading-5 {
     --tw-leading: calc(var(--spacing) * 5);
     line-height: calc(var(--spacing) * 5);
+  }
+  .leading-none {
+    --tw-leading: 1;
+    line-height: 1;
   }
   .font-bold {
     --tw-font-weight: var(--font-weight-bold);

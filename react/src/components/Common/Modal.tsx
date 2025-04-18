@@ -38,14 +38,14 @@ const Modal: React.FC<ModalProps> = ({ title, closeButton, isOpen, onClose, chil
             <div id="modal-overlay" className="modal-background bg-black/50 cursor-pointer inset-0 absolute"></div>
             <div id="modal-body" className="bg-white p-6 rounded shadow-lg z-60 cursor-default relative w-[50vw] h-auto overflow-y-scroll">
                 {title && (
-                    <div id="modal-header">
+                    <div id="modal-header" className={"leading-none"}>
                         <h2>{title}</h2>
                     </div>
                 )}
                 {children}
                 <div id="modal-footer">
                     <button
-                        className="bg-secondary text-white rounded px-4 py-2 mt-4 hover:bg-secondary-dark cursor-pointer"
+                        className="bg-secondary text-white rounded px-4 py-2 hover:bg-secondary-dark cursor-pointer"
                         onClick={onClose}
                     >
                         {closeButton || __('Close', 'simplybook')}
