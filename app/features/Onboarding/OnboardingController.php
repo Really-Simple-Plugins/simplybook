@@ -207,6 +207,14 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
+        $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
+        $bookingPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('bookingPageUrl'));
+        if (!$calendarPageIsAvailable || !$bookingPageIsAvailable) {
+            return $this->service->sendHttpResponse([], false, esc_html__(
+                'Both page titles should be available if you choose to generate pages.', 'simplybook'
+            ));
+        }
+
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
         $bookingPageName = StringUtility::convertUrlToTitle($storage->getUrl('bookingPageUrl'));
 

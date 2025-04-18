@@ -223,13 +223,24 @@ const useOnboardingData = () => {
                         bookingPageUrl: bookingPageUrl,
                         calendarPageUrl: calendarPageUrl,
                     };
-                    let response = await generatePages({ data });
-                    return (response.status === "success");
+
+                    let pagesResponse = await generatePages({ data });
+                    if (pagesResponse.status !== "success") {
+                        setApiError(pagesResponse.message);
+                        return false;
+                    }
+
+                    return true;
                 }
 
                 if (getValue("implementation") === "manual") {
-                    let finished = await finishOnboarding({data});
-                    return (finished.status === "success");
+                    let finishResponse = await finishOnboarding({data});
+                    if (finishResponse.status !== "success") {
+                        setApiError(finishResponse.message);
+                        return false;
+                    }
+
+                    return true;
                 }
 
                 return false;
@@ -340,6 +351,10 @@ const useOnboardingData = () => {
             queryClient.invalidateQueries(["onboarding_data"]);
         },
     });
+
+    useEffect(() => {
+        setApiError('');
+    }, [getValue('implementation')]);
 
     return {
         steps,

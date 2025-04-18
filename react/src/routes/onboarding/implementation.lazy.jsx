@@ -24,6 +24,10 @@ export const Route = createLazyFileRoute(path)({
             bookingPageNameAvailable,
         } = useOnboardingData();
 
+        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
+        let pagesShouldBeCreated = (getValue('implementation') === "generated");
+        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
+
         return (
             <>
                 <LeftColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-6 col-span-12 xl:col-start-2"}>
@@ -34,7 +38,7 @@ export const Route = createLazyFileRoute(path)({
                         <h1 className={"text-3xl font-semibold text-black mb-4"}>
                             {__("Implement SimplyBook.me", "simplybook")}
                         </h1>
-                    </div>                     
+                    </div>
                     <OnboardingStep
                         path={path}
                         company
@@ -42,6 +46,7 @@ export const Route = createLazyFileRoute(path)({
                         primaryButton={{
                             label: __("Continue configuration", "simplybook"),
                             navigateTo: "/settings/general",
+                            disabled: buttonDisabled,
                         }}
                     />
                 </LeftColumn>
@@ -53,22 +58,26 @@ export const Route = createLazyFileRoute(path)({
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>
                                     {__("Use the below shortcode in a page to show the widget.", "simplybook")}
                                 </h2>
-                                <TextInput 
-                                    className="w-full p-4 mb-8" 
-                                    clickToSelect={true} 
+                                <TextInput
+                                    className="w-full p-4 mb-8"
+                                    clickToSelect={true}
                                     disabled={true}
                                     value="[simplybook_widget]"
                                 />
+                                {/*
+
+                                Removed as long we do not have documentation to link to
+
                                 <div className="text-base text-gray-600">
                                     <Icon name="info" color="green" className="mr-2"/>
                                     {__("About using shortcodes", "simplybook")}
                                     &nbsp;<a className="underline" href="https://simplybook.me" target="_blank"
                                             rel="noreferrer">{__("Read more", "simplybook")}</a>
-                                </div>
+                                </div> */}
                             </>
                         }
-                        {getValue('implementation') !== "manual" &&
-                            <>                    
+                        {getValue('implementation') === "generated" &&
+                            <>
                                 <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>
                                     {__("SimplyBook.me will generate the following pages automatically", "simplybook")}
@@ -89,15 +98,19 @@ export const Route = createLazyFileRoute(path)({
                                     {!bookingPageNameAvailable &&
                                         <Icon name="times" color="red" className="ml-2 self-center"/>}
                                 </div>
+                                {/*
+
+                                Removed as long we do not have documentation to link to
+
                                 <div className="text-base text-gray-600">
                                     <Icon name="info" color="green" className="mr-2"/>
                                     {__("Generating pages for SimplyBook.me", "simplybook")}
                                     &nbsp;<a className="underline" href="https://simplybook.me" target="_blank"
                                             rel="noreferrer">{__("Read more", "simplybook")}</a>
-                                </div>
+                                </div> */}
                             </>
-                        }   
-                    </div>           
+                        }
+                    </div>
                 </RightColumn>
             </>
         );
