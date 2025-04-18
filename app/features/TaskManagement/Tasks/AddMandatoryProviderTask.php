@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AddProviderTask extends AbstractTask
+class AddMandatoryProviderTask extends AbstractTask
 {
     const IDENTIFIER = 'add_provider';
 
@@ -26,7 +26,7 @@ class AddProviderTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Add your first provider','simplybook');
+        return esc_html__('Please configure at least one Service Provider','simplybook');
     }
 
     /**

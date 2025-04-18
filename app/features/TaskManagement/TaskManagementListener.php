@@ -29,8 +29,8 @@ class TaskManagementListener
      */
     public function handleEmptyServices(): void
     {
-        $this->service->openTask(
-            Tasks\AddServiceTask::IDENTIFIER
+        $this->service->flagTaskUrgent(
+            Tasks\AddMandatoryServiceTask::IDENTIFIER
         );
     }
 
@@ -39,8 +39,8 @@ class TaskManagementListener
      */
     public function handleEmptyProviders(): void
     {
-        $this->service->openTask(
-            Tasks\AddProviderTask::IDENTIFIER
+        $this->service->flagTaskUrgent(
+            Tasks\AddMandatoryProviderTask::IDENTIFIER
         );
     }
 
@@ -50,7 +50,7 @@ class TaskManagementListener
     public function handleHasServices(): void
     {
         $this->service->completeTask(
-            Tasks\AddServiceTask::IDENTIFIER
+            Tasks\AddMandatoryServiceTask::IDENTIFIER
         );
     }
 
@@ -60,7 +60,7 @@ class TaskManagementListener
     public function handleHasProviders(): void
     {
         $this->service->completeTask(
-            Tasks\AddProviderTask::IDENTIFIER
+            Tasks\AddMandatoryProviderTask::IDENTIFIER
         );
     }
 

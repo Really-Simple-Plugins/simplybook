@@ -44,8 +44,8 @@ class TaskManagementController implements FeatureInterface
     {
         // Add new tasks here
         $pluginTasks = [
-            new Tasks\AddServiceTask(),
-            new Tasks\AddProviderTask(),
+            new Tasks\AddMandatoryServiceTask(),
+            new Tasks\AddMandatoryProviderTask(),
             new Tasks\GoToSimplyBookSystemTask(),
             new Tasks\CustomizeDesignTask(),
             new Tasks\UpgradeTask(),

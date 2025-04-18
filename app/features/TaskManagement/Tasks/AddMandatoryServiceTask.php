@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AddServiceTask extends AbstractTask
+class AddMandatoryServiceTask extends AbstractTask
 {
     const IDENTIFIER = 'add_service';
 
@@ -26,7 +26,7 @@ class AddServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Add your first service','simplybook');
+        return esc_html__('Please configure at least one Service','simplybook');
     }
 
     /**
