@@ -126,6 +126,14 @@ class TaskManagementService
     }
 
     /**
+     * Hide a task by setting the status to 'hidden'
+     */
+    public function hideTask(string $taskId): void
+    {
+        $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_HIDDEN);
+    }
+
+    /**
      * Complete a task by setting the status to 'completed'
      */
     public function completeTask(string $taskId): void

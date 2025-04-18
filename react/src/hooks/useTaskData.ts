@@ -8,9 +8,9 @@ const useTaskData = () => {
     const statusPriority = {
         urgent: 0,
         open: 10,
-        premium: 20,
-        completed: 30,
-        dismissed: 40,
+        completed: 20,
+        dismissed: 30,
+        hidden: 40,
     };
 
     const queryClient = useQueryClient();
@@ -48,6 +48,10 @@ const useTaskData = () => {
                 priority: (statusPriority[task.status]) ?? 69,
             };
         }).sort((a: Task, b: Task) => a.priority - b.priority);
+
+        // Just to be sure we do this here too, but they shouldn't be in the
+        // response anyway.
+        tasks = tasks.filter((task: Task) => task.status !== "hidden");
     }
 
     /**
@@ -74,7 +78,7 @@ const useTaskData = () => {
      */
     const getRemainingTasks = () => {
         return tasks.filter((task: Task) =>
-            ["open", "urgent", "premium"].includes(task.status),
+            ["open", "urgent"].includes(task.status),
         );
     };
 

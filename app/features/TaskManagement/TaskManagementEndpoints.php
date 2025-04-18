@@ -51,7 +51,7 @@ class TaskManagementEndpoints
     {
         $allTasksAsArray = array_map(function ($task) {
             return $task->toArray();
-        }, $this->service->getAllTasks());
+        }, $this->service->getAllTasks(true));
 
         return $this->sendHttpResponse(
             array_values($allTasksAsArray) // Keys should be removed

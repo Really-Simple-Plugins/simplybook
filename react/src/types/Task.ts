@@ -1,7 +1,7 @@
 export interface Task {
     id: string;
     text: string;
-    status: "open" | "urgent" | "premium" | "completed" | "dismissed";
+    status: "open" | "urgent" | "completed" | "dismissed" | "hidden";
     type: "required" | "optional";
     priority: number;
     action?: {

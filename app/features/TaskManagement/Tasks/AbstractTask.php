@@ -11,6 +11,7 @@ abstract class AbstractTask implements TaskInterface
     const STATUS_DISMISSED = 'dismissed';
     const STATUS_COMPLETED = 'completed';
     const STATUS_PREMIUM = 'premium';
+    const STATUS_HIDDEN = 'hidden';
 
     /**
      * Override this constant to define the identifier of the task. This
@@ -111,7 +112,8 @@ abstract class AbstractTask implements TaskInterface
             self::STATUS_URGENT,
             self::STATUS_DISMISSED,
             self::STATUS_COMPLETED,
-            self::STATUS_PREMIUM
+            self::STATUS_PREMIUM,
+            self::STATUS_HIDDEN,
         ];
         if (!in_array($status, $knownStatuses)) {
             return; // Not allowed
@@ -155,6 +157,14 @@ abstract class AbstractTask implements TaskInterface
     public function completed(): void
     {
         $this->status = self::STATUS_COMPLETED;
+    }
+
+    /**
+     * Hide the task by setting the status to 'hidden'
+     */
+    public function hide(): void
+    {
+        $this->status = self::STATUS_HIDDEN;
     }
 
     /**
