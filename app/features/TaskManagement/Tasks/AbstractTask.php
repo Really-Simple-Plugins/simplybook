@@ -7,6 +7,7 @@ use SimplyBook\Interfaces\TaskInterface;
 abstract class AbstractTask implements TaskInterface
 {
     const STATUS_OPEN = 'open';
+    const STATUS_URGENT = 'urgent';
     const STATUS_DISMISSED = 'dismissed';
     const STATUS_COMPLETED = 'completed';
     const STATUS_PREMIUM = 'premium';
@@ -49,7 +50,7 @@ abstract class AbstractTask implements TaskInterface
      * property is not set. The {@see getStatus()} method will therefore return
      * the default status 'open'. If you want to set a different default status
      * use the {@see setStatus()} method in the construct of the task. See
-     * {@see AddProviderTask} for an example.
+     * {@see AddMandatoryProviderTask} for an example.
      */
     private string $status;
 
@@ -105,7 +106,13 @@ abstract class AbstractTask implements TaskInterface
      */
     public function setStatus(string $status): void
     {
-        $knownStatuses = [self::STATUS_OPEN, self::STATUS_DISMISSED, self::STATUS_COMPLETED, self::STATUS_PREMIUM];
+        $knownStatuses = [
+            self::STATUS_OPEN,
+            self::STATUS_URGENT,
+            self::STATUS_DISMISSED,
+            self::STATUS_COMPLETED,
+            self::STATUS_PREMIUM
+        ];
         if (!in_array($status, $knownStatuses)) {
             return; // Not allowed
         }
@@ -119,6 +126,14 @@ abstract class AbstractTask implements TaskInterface
     public function open(): void
     {
         $this->status = self::STATUS_OPEN;
+    }
+
+    /**
+     * Set the task to 'urgent' status
+     */
+    public function urgent(): void
+    {
+        $this->status = self::STATUS_URGENT;
     }
 
     /**

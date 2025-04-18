@@ -118,6 +118,14 @@ class TaskManagementService
     }
 
     /**
+     * Set the task to 'urgent' status
+     */
+    public function flagTaskUrgent(string $taskId): void
+    {
+        $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_URGENT);
+    }
+
+    /**
      * Complete a task by setting the status to 'completed'
      */
     public function completeTask(string $taskId): void
