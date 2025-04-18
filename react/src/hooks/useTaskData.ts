@@ -91,8 +91,9 @@ const useTaskData = () => {
         const completed = tasks.filter(
             (task: Task) => task.status === "dismissed" || task.status === "completed",
         ).length;
-        const actualPercentage = Math.round((completed / total) * 80);
-        return 20 + actualPercentage;
+
+        const actualPercentage = Math.round((completed / total) * 100);
+        return actualPercentage;
     };
 
     return {
