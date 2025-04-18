@@ -29,6 +29,12 @@ class OnboardingService
     {
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
+
+        $completedPreviously = get_option('simplybook_onboarding_completed', false);
+        if ($completedPreviously) {
+            return true;
+        }
+
         return update_option('simplybook_onboarding_completed', true, false);
     }
 
