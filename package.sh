@@ -1,10 +1,23 @@
 #!/bin/bash
 
 # Determine the path where this script is located
-ROOT_DIR=$(dirname "$0")
+ROOT_DIR=$(realpath "$(dirname "$0")")
 
 # Extract folder name to use as plugin name
 PLUGIN_NAME=${ROOT_DIR##*/};
+
+# Ask the user to confirm or set the plugin name
+printf "Detected plugin name: %s \n" "${PLUGIN_NAME}"
+read -p "Do you want to use this for the package? (y/n): " CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+  read -p "Please enter the correct plugin name: " PLUGIN_NAME
+  if [[ -z "$PLUGIN_NAME" ]]; then
+    echo "Error: Plugin name cannot be empty."
+    exit 1
+  fi
+fi
+
+printf "Using %s for the zip file. \n" "${PLUGIN_NAME}"
 
 # List of patterns or folders to exclude from rsync copy
 EXCLUDES=(
@@ -30,7 +43,7 @@ rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
 
 # Copy the plugin to /tmp while excluding the EXCLUDES list
 printf "Copying %s to /tmp \n" "${PLUGIN_NAME}"
-rsync -a -q "${EXCLUDES[@]}" . /tmp/"${PLUGIN_NAME}"
+rsync -a -q "${EXCLUDES[@]}" ./ /tmp/"${PLUGIN_NAME}"
 
 # Change to the temporary directory
 cd /tmp/"${PLUGIN_NAME}" || exit
