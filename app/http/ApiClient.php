@@ -873,7 +873,8 @@ class ApiClient
     /**
      * Get list of Simplybook providers
      */
-    public function get_providers(): array {
+    public function get_providers(): array
+    {
         if ( !$this->company_registration_complete() ){
             return [];
         }
@@ -937,106 +938,17 @@ class ApiClient
         if ( !$this->company_registration_complete() ){
             return [];
         }
-//		paid_events
-        //memberships
-        //sms
-        $array = [
-            "event_field",
-            "status",
-            "paid_events",
-            "description",
-            "event_category",
-            "news",
-            "google_analytics",
-            "facebookImage",
-            "google_calendar_export",
-            "user_license",
-            "promo",
-            "custom_css",
-            "advanced_notification",
-            "multiple_booking",
-            "group_booking",
-            "any_unit",
-            "location",
-            "secure",
-            "contact_widget",
-            "api",
-            "financial_dashboard",
-            "limit_bookings",
-            "approve_booking",
-            "back_to_site",
-            "data_security",
-            "unit_colors",
-            "recap",
-            "counter",
-            "hipaa",
-            "fixed_time",
-            "cancelation_policy",
-            "gallery",
-            "flexible_template",
-            "smtp",
-            "client_login",
-            "membership",
-            "custom_domain",
-            "enterprise",
-            "client_soap",
-            "sms",
-            "classes",
-            "import_clients",
-            "social_gallery",
-            "paid_attributes",
-            "product",
-            "google_authenticator",
-            "facebook_bot",
-            "voice_booking",
-            "client_soap_crypt",
-            "promotion",
-            "google_translate",
-            "strict_password",
-            "google_tag_manager",
-            "pos",
-            "static_page",
-            "package",
-            "zapier",
-            "google_business",
-            "line_bot",
-            "facebook_business",
-            "deposit_paid_events",
-            "kiosk",
-            "reschedule_booking",
-            "slots_count",
-            "resources",
-            "tickets",
-            "client_field",
-            "online_meeting",
-            "saml",
-            "waiting_list",
-            "pwa",
-            "external_booking_validator",
-            "tickets_qr_code",
-            "vaccination",
-            "custom_email",
-            "tracking",
-            "medical_test",
-            "cloud_storage",
-            "telegram_notifications",
-            "bonus_system",
-            "line_liff",
-            "look_busy",
-            "google_reviews",
-            "booking_restriction",
-            "time_before_service",
-            "tips",
-            "tags",
-            "campaign",
-            "react_widget",
-            "classpass"
-        ];
 
+        if ($cache = wp_cache_get('simplybook_special_feature_plugins', 'simplybook')) {
+            return $cache;
+        }
 
+        $response = $this->api_call('admin/plugins', [], 'GET');
+        $plugins = $response['data'] ?? [];
 
-        $plugins = $this->api_call('admin/plugins', [], 'GET');
+        Event::dispatch(Event::SPECIAL_FEATURES_LOADED, $plugins);
 
+        wp_cache_set('simplybook_special_feature_plugins', $plugins, 'simplybook', MINUTE_IN_SECONDS);
         return $plugins;
     }
 

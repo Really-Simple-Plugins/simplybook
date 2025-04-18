@@ -21,6 +21,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::HAS_PROVIDERS, [$this, 'handleHasProviders']);
         add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
         add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
+        add_action('simplybook_event_' . Event::SPECIAL_FEATURES_LOADED, [$this, 'handleSpecialFeaturesLoaded']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -158,6 +159,44 @@ class TaskManagementListener
         if ($amountLeft > 1) {
             $this->service->hideTask(
                 Tasks\MaximumBookingsTask::IDENTIFIER
+            );
+        }
+    }
+
+    /**
+     * Handle the special features loaded event to update task status.
+     */
+    public function handleSpecialFeaturesLoaded(array $specialFeatures): void
+    {
+        foreach ($specialFeatures as $plugin) {
+            if (empty($plugin['key'])) {
+                continue;
+            }
+
+            switch ($plugin['key']) {
+                case 'paid_events':
+                    $this->handlePaidEventsSpecialFeature($plugin);
+                    break;
+            }
+        }
+    }
+
+    /**
+     * Handle the paid events special feature to update task status.
+     */
+    private function handlePaidEventsSpecialFeature(array $plugin): void
+    {
+        $pluginIsTurnedOn = ($plugin['is_turned_on'] ?? false);
+
+        if ($pluginIsTurnedOn) {
+            $this->service->completeTask(
+                Tasks\AcceptPaymentsTask::IDENTIFIER
+            );
+        }
+
+        if ($pluginIsTurnedOn === false) {
+            $this->service->openTask(
+                Tasks\AcceptPaymentsTask::IDENTIFIER
             );
         }
     }
