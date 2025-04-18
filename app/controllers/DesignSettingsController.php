@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 
@@ -15,6 +16,7 @@ class DesignSettingsController implements ControllerInterface
 
     public function register()
     {
+        add_action('simplybook_save_onboarding_widget_style', [$this, 'saveOnboardingWidgetStyle']);
         add_action('simplybook_save_design_settings', [$this, 'saveSettings']);
         add_filter('simplybook_public_theme_list', [$this, 'insertDesignThemeSettings']);
         add_filter('simplybook_field', [$this, 'insertDesignSettings'], 10, 3);
@@ -29,6 +31,32 @@ class DesignSettingsController implements ControllerInterface
         if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
             $this->service->handleLegacyDesignUpgrade();
         }
+    }
+
+    /**
+     * Process the save action for the widget style. Save the widget style
+     * fields in the simplybook_design_settings option.
+     * @hooked \SimplyBook\Features\Onboarding\OnboardingController::saveColorsToDesignSettings
+     * @throws \Exception
+     */
+    public function saveOnboardingWidgetStyle(Storage $colorStorage): bool
+    {
+        $fallbackPrimary = '#33bb60';
+        $fallbackSecondary = '#d1e9c6';
+        $fallbackActive = '#d3e0f1';
+
+        $widgetStyleSettings = [
+            'theme_settings' => [
+                'booking_nav_bg_color' => $colorStorage->getString('primary_color', $fallbackPrimary),
+                'sb_company_label_color' => $colorStorage->getString('primary_color', $fallbackPrimary),
+                'btn_color_1' => $colorStorage->getString('primary_color', $fallbackPrimary),
+                'sb_base_color' => $colorStorage->getString('secondary_color', $fallbackSecondary),
+                'sb_busy' => $colorStorage->getString('secondary_color', $fallbackSecondary),
+                'sb_available' => $colorStorage->getString('active_color', $fallbackActive),
+            ]
+        ];
+
+        return $this->saveSettings($widgetStyleSettings);
     }
 
     /**

@@ -10,6 +10,7 @@ import { useState } from "react";
 import generatePages from "../api/endpoints/onBoarding/generatePages";
 import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
 import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
+import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
 
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
@@ -182,37 +183,15 @@ const useOnboardingData = () => {
         {
             id: 4,
             path: "/onboarding/style-widget",
-            fields: [
-                {
-                    id: "sb_base_color",
-                    type: "colorpicker",
-                    label: __("Primary", "simplybook"),
-                    default: "#DD3649",
-                    inline_group: "widget",
-                    save_on_change: true,
-                    mapping: [
-                        "btn_color_1",
-                        "sb_company_label_color",
-                        "booking_nav_bg_color",
-                    ],
-                },
-                {
-                    id: "sb_busy",
-                    type: "colorpicker",
-                    label: __("Secondary", "simplybook"),
-                    default: "#DD3649",
-                    inline_group: "widget",
-                    save_on_change: true,
-                },
-                {
-                    id: "sb_available",
-                    type: "colorpicker",
-                    label: __("Active", "simplybook"),
-                    default: "#DD3649",
-                    inline_group: "widget",
-                    save_on_change: true,
-                },
-            ],
+            beforeSubmit: async (data) => {
+                await saveWidgetStyle({
+                    primary_color: data.primary_color,
+                    secondary_color: data.secondary_color,
+                    active_color: data.active_color,
+                });
+                return true;
+            },
+            fields: [], // On purpose. All fields are in style-widget.lazy.jsx
         },
         {
             id: 5,

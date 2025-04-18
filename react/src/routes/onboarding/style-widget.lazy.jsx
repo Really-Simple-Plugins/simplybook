@@ -5,8 +5,8 @@ import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import {useState} from "react";
 import ColorPickerField from "../../components/Fields/ColorPickerField";
-import ButtonField from "../../components/Fields/ButtonField";
 import useOnboardingData from "../../hooks/useOnboardingData";
+import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
@@ -71,15 +71,17 @@ export const Route = createLazyFileRoute(path)({
                             }}
                         />
                     </div>
-                    <ButtonField
-                        className="w-full"
-                        btnVariant="secondary"
-                        label={__('Next step', 'simplybook')}
-                        button={{
+                    <OnboardingStep
+                        path={path}
+                        primaryButton={{
                             disabled: !onboardingCompleted,
-                            // onClick: handleSubmit((data) => onSubmit(data, "primary")),
-                            // todo: on submit we should save these colors to the theme settings
-                            // todo: disabled should be false when company is registered
+                            label: __('Next step', 'simplybook'),
+                            modifyData: (data) => {
+                                data.primary_color = primaryColor;
+                                data.secondary_color = secondaryColor;
+                                data.active_color = activeColor;
+                                return data;
+                            }
                         }}
                     />
                 </LeftColumn>

@@ -141,7 +141,7 @@ const OnboardingStep = ({
 
     return (
         <>
-            <div className="w-full col-span-4 col-start-3 my-12 flex flex-col text-black">
+            <div className={`w-full col-span-4 col-start-3 ${currentStep.fields?.length ? "my-12" : ""} flex flex-col text-black`}>
                 <div className={"flex flex-col"}>
                     <form className="flex flex-wrap justify-between">
                         <FormFieldWrapper fields={currentStep.fields} control={control}/>
@@ -153,7 +153,7 @@ const OnboardingStep = ({
                             label={primaryButton.label}
                             context={bottomText}
                             button={{
-                                disabled: disabled,
+                                disabled: (primaryButton.disabled ?? disabled),
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />

@@ -49,6 +49,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'confirmEmailWithSimplyBook'],
         ];
 
+        $routes['onboarding/save_widget_style'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'saveColorsToDesignSettings'],
+        ];
+
         $routes['onboarding/is_page_title_available'] = [
             'methods' => 'POST',
             'callback' => [$this, 'checkIfPageTitleIsAvailable'],
@@ -152,6 +157,35 @@ class OnboardingController implements FeatureInterface
 
         $this->service->setCompletedStep(3);
         return $this->service->sendHttpResponse([], $response->success, $response->message);
+    }
+
+    /**
+     * Collect saved widget style settings, format them as design settings and
+     * pass them to the DesignSettingsController by calling the
+     * simplybook_save_onboarding_widget_style action.
+     */
+    public function saveColorsToDesignSettings(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        /**
+         * This action is used to save the widget style settings in the
+         * simplybook_design_settings option.
+         * @hooked SimplyBook\Features\DesignSettings\DesignSettingsController::saveWidgetStyle
+         */
+        try {
+            do_action('simplybook_save_onboarding_widget_style', $storage);
+        } catch (\Exception $e) {
+            return $this->service->sendHttpResponse([
+                'message' => $e->getMessage(),
+            ], false, esc_html__(
+                'Something went wrong while saving the widget style settings. Please try again.', 'simplybook'
+            ));
+        }
+
+        return $this->service->sendHttpResponse([], true, esc_html__(
+            'Successfully saved widget style settings', 'simplybook'
+        ));
     }
 
     /**
