@@ -100,21 +100,21 @@ class TaskManagementListener
     public function handleSubscriptionDataLoaded(array $arguments): void
     {
         $subscription = ($arguments['subscription_name'] ?? '');
-        if (empty($subscription)) {
+        $isExpired = ($arguments['is_expired'] ?? false);
+
+        if (empty($subscription) || $subscription !== 'Trial') {
             return;
         }
 
-        // Keep task open if the subscription is 'Trial'
-        if ($subscription === 'Trial') {
+        if ($isExpired) {
             $this->service->openTask(
-                Tasks\UpgradeTask::IDENTIFIER
+                Tasks\TrialExpiredTask::IDENTIFIER
             );
         }
 
-        // Complete the task if the subscription is anything but 'Trial'
-        if ($subscription !== 'Trial') {
-            $this->service->completeTask(
-                Tasks\UpgradeTask::IDENTIFIER
+        if ($isExpired === false) {
+            $this->service->hideTask(
+                Tasks\TrialExpiredTask::IDENTIFIER
             );
         }
     }

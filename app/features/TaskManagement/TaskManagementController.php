@@ -50,7 +50,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\AddAllProvidersTask(),
             new Tasks\GoToSimplyBookSystemTask(),
             new Tasks\CustomizeDesignTask(),
-            new Tasks\UpgradeTask(),
+            new Tasks\TrialExpiredTask(),
         ];
 
         return array_filter($pluginTasks, function ($task) {
