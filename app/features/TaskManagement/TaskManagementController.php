@@ -46,6 +46,8 @@ class TaskManagementController implements FeatureInterface
         $pluginTasks = [
             new Tasks\AddMandatoryServiceTask(),
             new Tasks\AddMandatoryProviderTask(),
+            new Tasks\AddAllServicesTask(),
+            new Tasks\AddAllProvidersTask(),
             new Tasks\GoToSimplyBookSystemTask(),
             new Tasks\CustomizeDesignTask(),
             new Tasks\UpgradeTask(),

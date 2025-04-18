@@ -820,7 +820,9 @@ class ApiClient
             return $services;
         }
 
-        Event::dispatch(Event::HAS_SERVICES);
+        Event::dispatch(Event::HAS_SERVICES, [
+            'count' => count($services),
+        ]);
 
         wp_cache_set('simplybook_services', $services, 'simplybook', MINUTE_IN_SECONDS);
         return $services;
@@ -888,7 +890,9 @@ class ApiClient
             return $providers;
         }
 
-        Event::dispatch(Event::HAS_PROVIDERS);
+        Event::dispatch(Event::HAS_PROVIDERS, [
+            'count' => count($providers),
+        ]);
 
         wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
         return $providers;

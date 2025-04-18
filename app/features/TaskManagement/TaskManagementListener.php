@@ -47,21 +47,41 @@ class TaskManagementListener
     /**
      * Handle the has services event to update task status.
      */
-    public function handleHasServices(): void
+    public function handleHasServices(array $arguments): void
     {
-        $this->service->completeTask(
-            Tasks\AddMandatoryServiceTask::IDENTIFIER
-        );
+        $servicesAmount = ($arguments['count'] ?? 1);
+
+        if ($servicesAmount === 1) {
+            $this->service->completeTask(
+                Tasks\AddMandatoryServiceTask::IDENTIFIER
+            );
+        }
+
+        if ($servicesAmount > 1) {
+            $this->service->completeTask(
+                Tasks\AddAllServicesTask::IDENTIFIER
+            );
+        }
     }
 
     /**
      * Handle the has providers event to update task status.
      */
-    public function handleHasProviders(): void
+    public function handleHasProviders(array $arguments): void
     {
-        $this->service->completeTask(
-            Tasks\AddMandatoryProviderTask::IDENTIFIER
-        );
+        $providersAmount = ($arguments['count'] ?? 1);
+
+        if ($providersAmount === 1) {
+            $this->service->completeTask(
+                Tasks\AddMandatoryProviderTask::IDENTIFIER
+            );
+        }
+
+        if ($providersAmount > 1) {
+            $this->service->completeTask(
+                Tasks\AddAllProvidersTask::IDENTIFIER
+            );
+        }
     }
 
     /**
