@@ -1,8 +1,9 @@
-import { forwardRef, useEffect, useState } from "react";
+import {forwardRef, useEffect, useMemo, useState} from "react";
 import ColorPicker from "../Inputs/ColorPicker";
 import FieldWrapper from "../Forms/FieldWrapper";
 import * as Popover from '@radix-ui/react-popover';
 import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
+import debounce from "lodash.debounce"; // You can use lodash's debounce function
 
 /**
  * ColorPickerField component
@@ -16,12 +17,11 @@ import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCa
  * @return {JSX.Element}
  */
 const ColorPickerField = forwardRef(
-    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, ...props }, ref) => {
-        const defaultColor = setting.value || setting.default;
-        const {isPolling } = useWaitForRegistrationCallback();
+    ({ setting, fieldState, label, help, context, className, onChange, defaultValue, setColorOnClose, ...props }, ref) => {
+
+        const [color, setColor] = useState((setting.value || setting.default));
         const [popoverOpen, setPopoverOpen] = useState(false);
 
-        const [color, setColor] = useState(defaultColor);
         useEffect(() => {
             if (props.value && props.value !== color) {
                 setColor(props.value);
@@ -29,19 +29,25 @@ const ColorPickerField = forwardRef(
         }, [props.value]);
 
         const handlePopoverOpenChange = (open) => {
-            // Prevent Popover from closing if `isPolling` is true
-            if (!isPolling) {
-                setPopoverOpen(open);
+            setPopoverOpen(open);
+
+            if (!open && setColorOnClose) {
+                setColorOnClose(color);
             }
         };
 
-        const ColorPickerElement = ({ label }) => {
-            const handleColorChange = (color, event) => {
-                setColor(color);
+        const handleColorChange = (color, event) => {
+            setColor(color);
+
+            if (onChange) {
                 onChange(color);
             }
+        }
+
+        const ColorPickerElement = ({ label }) => {
 
             let disabledClass = setting.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
+
             return (
                 <Popover.Root
                     open={popoverOpen} onOpenChange={handlePopoverOpenChange}
@@ -54,9 +60,7 @@ const ColorPickerField = forwardRef(
                             {label}
                         </div>
                     </Popover.Trigger>
-                    <Popover.Portal
-
-                    >
+                    <Popover.Portal>
                         <Popover.Content >
                             <ColorPicker colorValue={color} onChangeComplete={handleColorChange} />
                         </Popover.Content>
