@@ -47,7 +47,7 @@ class DesignSettingsService
     public function getDesignConfiguration()
     {
         if (empty($this->config)) {
-            $this->config = App::fields()->get('design')->getConfig();
+            $this->config = App::fields()->get('design');
             return $this->config;
         }
 
@@ -104,7 +104,6 @@ class DesignSettingsService
             unset($legacyDesignSettings[$legacyKey]);
         }
 
-        // todo - "server" is also a legacy key, do we want to keep it?
         unset($legacyDesignSettings['predefined']);
 
         update_option($this->designOptionsKey, $legacyDesignSettings);
