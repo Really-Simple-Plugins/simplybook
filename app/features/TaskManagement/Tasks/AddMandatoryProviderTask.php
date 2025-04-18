@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class AddMandatoryProviderTask extends AbstractTask
 {
-    const IDENTIFIER = 'add_provider';
+    const IDENTIFIER = 'add_mandatory_provider';
 
     /**
      * @inheritDoc
