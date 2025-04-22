@@ -81,7 +81,7 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         // Create data for a preview-widget
         if ($isPreviewForDesignSettings) {
-            $widgetSettings = $storage->add('server', $this->getServerURL())->delete([
+            $widgetSettings = $storage->set('server', $this->getServerURL())->delete([
                 'nonce',
                 'settings_section',
             ])->all();
