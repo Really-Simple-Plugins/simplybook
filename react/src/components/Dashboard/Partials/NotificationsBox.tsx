@@ -43,9 +43,12 @@ const NotificationsBox = () => {
         );
     }, [settingsId]);
 
+    let hasNotifications = (!isLoading && !hasError && (noticesForCurrentRoute.length > 0));
+    let noNotifications = (!isLoading && !hasError && (noticesForCurrentRoute.length === 0));
+
     return (
         <>
-            {!isLoading && !hasError && noticesForCurrentRoute.map((notice) => (
+            {hasNotifications && noticesForCurrentRoute.map((notice) => (
                 <div className={"notification-box " + getNotificationClasses(notice.type)} key={notice.id}>
                     <a
                         onClick={(e) => toggleNotification()}
@@ -78,7 +81,7 @@ const NotificationsBox = () => {
                 </div>
             ))}
 
-            {!noticesForCurrentRoute && !isLoading && !hasError && (
+            {noNotifications && (
                 <div className="notification-box">
                     <p className="text-sm text-gray-500">{__('You currently have no notifications.', 'simplybook')}</p>
                 </div>
