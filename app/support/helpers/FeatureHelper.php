@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Helpers;
 
-use SimplyBook\App;
 use SimplyBook\Utility\StringUtility;
 
 /**
@@ -37,6 +36,14 @@ class FeatureHelper
      * TaskManagement feature is enabled when the onboarding is completed.
      */
     private static function isTaskManagementEnabled(): bool
+    {
+        return get_option('simplybook_onboarding_completed', false);
+    }
+
+    /**
+     * Notifications feature is enabled when the onboarding is completed.
+     */
+    private static function isNotificationsEnabled(): bool
     {
         return get_option('simplybook_onboarding_completed', false);
     }

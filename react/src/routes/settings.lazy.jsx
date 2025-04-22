@@ -3,7 +3,7 @@ import Header from "../components/Common/Header";
 import ErrorBoundary from "../components/Common/ErrorBoundary";
 import SettingsMenu from "../components/Settings/SettingsMenu";
 import NotificationSidebar from "../components/Settings/Partials/NotificationSidebar";
-import NotificationBox from "../components/Dashboard/Partials/NotificationBox";
+import NotificationsBox from "../components/Dashboard/Partials/NotificationsBox";
 
 export const Route = createLazyFileRoute("/settings")({
   component: () => <Settings />,
@@ -24,7 +24,7 @@ const Settings = () => {
             </ErrorBoundary>
           </div>
           <NotificationSidebar>
-            <NotificationBox />
+            <NotificationsBox />
           </NotificationSidebar>
         </div>
       </div>
