@@ -6,28 +6,28 @@ import NotificationSidebar from "../components/Settings/Partials/NotificationSid
 import NotificationsBox from "../components/Dashboard/Partials/NotificationsBox";
 
 export const Route = createLazyFileRoute("/settings")({
-  component: () => <Settings />,
+    component: () => <Settings />,
 });
 
 const Settings = () => {
-  return (
-    <>
-      <Header />
-      <div className="mx-auto flex max-w-screen-2xl">
-        <div className="m-5 flex w-full gap-5">
-          <div className={"max-w-xs flex-1"}>
-            <SettingsMenu />
-          </div>
-          <div className="flex flex-1 flex-col">
-            <ErrorBoundary>
-              <Outlet />
-            </ErrorBoundary>
-          </div>
-          <NotificationSidebar>
-            <NotificationsBox />
-          </NotificationSidebar>
-        </div>
-      </div>
-    </>
-  );
+    return (
+        <>
+            <Header />
+            <div className="mx-auto flex max-w-screen-2xl">
+                <div className="m-5 flex w-full gap-5">
+                    <div className={"max-w-xs flex-1"}>
+                        <SettingsMenu />
+                    </div>
+                    <div className="flex flex-1 flex-col">
+                        <ErrorBoundary>
+                            <Outlet />
+                        </ErrorBoundary>
+                    </div>
+                    <NotificationSidebar>
+                        <NotificationsBox />
+                    </NotificationSidebar>
+                </div>
+            </div>
+        </>
+    );
 };
