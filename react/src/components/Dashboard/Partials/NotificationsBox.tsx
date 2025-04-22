@@ -16,10 +16,17 @@ const NotificationsBox = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [noticesForCurrentRoute, setNoticesForCurrentRoute] = useState<Notice[]>([]);
 
-    const openNotification = () => {
+    /**
+     * Open the notification box when closed, closes the notification box when
+     */
+    const toggleNotification = () => {
         setIsOpen(!isOpen);
     }
 
+    /**
+     * Get the correct notice style based on the type of notice.
+     * @param notificationType
+     */
     const getNotificationClasses = (notificationType: string) => {
         return clsx(
             "flex flex-col p-6 bg-green-100 rounded-md shadow-sm",
@@ -41,7 +48,7 @@ const NotificationsBox = () => {
             {!isLoading && !hasError && noticesForCurrentRoute.map((notice) => (
                 <div className={"notification-box " + getNotificationClasses(notice.type)} key={notice.id}>
                     <a
-                        onClick={(e) => openNotification()}
+                        onClick={(e) => toggleNotification()}
                         className="flex flex-row justify-between items-baseline cursor-pointer ease-in-out"
                     >
                         <h3 className="m-0">{notice.title}</h3>
