@@ -2,17 +2,15 @@ import React from "react";
 import LoginLink from "../../Common/LoginLink";
 import { __ } from "@wordpress/i18n";
 import Label from "../../Common/Label";
-import clsx from "clsx";
 import { SubscriptionDataListProps } from "../../../types/subscriptiondata/SubscriptionDataListProps";
 
 const linkClassName = "text-base relative text-tertiary border-b-4 border-transparent [&.active]:border-tertiary focus:outline-hidden";
 
 const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
-    className,
     title,
     remaining,
     total,
-    isLoading
+    page,
 }) => {
 
     const labelClassName = (
@@ -22,23 +20,19 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
     );
 
     return (
-    <>
-        {!isLoading && (
-            <div className={clsx("flex justify-between items-center p-4", className)}>
-                <LoginLink 
-                    iconName="square-arrow-up-right"
-                    iconClass="px-2"
-                    className={linkClassName} 
-                    page="providers"
-                >
-                    {__(`${title}`, "simplybook")}
-                </LoginLink>
-                <Label labelVariant="ghost" className={labelClassName}>
-                    {remaining} / {total}
-                </Label>
-            </div>
-        )}
-    </>
+        <>
+            <LoginLink
+                iconName="square-arrow-up-right"
+                iconClass="px-2"
+                className={linkClassName}
+                page={page}
+            >
+                {__(`${title}`, "simplybook")}
+            </LoginLink>
+            <Label labelVariant="ghost" className={labelClassName}>
+                {remaining} / {total}
+            </Label>
+        </>
     );
 }
 

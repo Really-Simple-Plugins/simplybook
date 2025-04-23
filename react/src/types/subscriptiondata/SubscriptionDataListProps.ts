@@ -3,5 +3,5 @@ export interface SubscriptionDataListProps {
     title?: string;
     remaining: number;
     total: number;
-    isLoading: boolean;
+    page: string;
 }
