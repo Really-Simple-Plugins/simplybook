@@ -24,7 +24,7 @@ return [
     ],
     'Notifications' => [
         'enabled' => FeatureHelper::isEnabled('notifications'),
-        'inScope' => true, // todo - only on our dashboard
+        'inScope' => is_admin() || simplybook_is_wp_json_request(),
         'pro' => false,
         'priorityFiles' => [
             'Notices/AbstractNotice',
