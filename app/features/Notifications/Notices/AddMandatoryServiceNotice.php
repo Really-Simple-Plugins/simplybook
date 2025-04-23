@@ -2,16 +2,16 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-class AddMandatoryProviderNotice extends AbstractNotice
+class AddMandatoryServiceNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'add_mandatory_provider';
+    const IDENTIFIER = 'add_mandatory_service';
 
     /**
      * @inheritDoc
      */
     public function getTitle(): string
     {
-        return esc_html__('No Providers configured', 'simplybook');
+        return esc_html__('No services configured', 'simplybook');
     }
 
     /**
@@ -19,7 +19,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service Provider', 'simplybook');
+        return esc_html__('Please configure at least one Service', 'simplybook');
     }
 
     /**
@@ -35,7 +35,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getRoute(): string
     {
-        return 'providers';
+        return 'services';
     }
 
     /**
@@ -44,8 +44,8 @@ class AddMandatoryProviderNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => esc_html__('Add Service Provider', 'simplybook'),
-            'login_link' => '/v2/management/#providers/edit/details/add',
+            'text' => esc_html__('Add Service', 'simplybook'),
+            'login_link' => '/v2/management/#services/edit/details/add',
         ];
     }
 }

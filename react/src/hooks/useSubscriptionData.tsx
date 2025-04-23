@@ -24,7 +24,7 @@ const useSubscriptionData = () => {
     }
 
     if (response?.data?.limits?.provider_limit && response?.data?.limits?.provider_limit.rest === 0) {
-        triggerNotificationById('add_mandatory_provider');
+        triggerNotificationById('maxed_out_providers');
     }
 
     return {

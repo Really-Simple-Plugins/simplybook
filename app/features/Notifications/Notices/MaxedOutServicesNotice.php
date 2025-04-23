@@ -2,16 +2,16 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-class AddMandatoryProviderNotice extends AbstractNotice
+class MaxedOutServicesNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'add_mandatory_provider';
+    const IDENTIFIER = 'maxed_out_services';
 
     /**
      * @inheritDoc
      */
     public function getTitle(): string
     {
-        return esc_html__('No Providers configured', 'simplybook');
+        return esc_html__('Maximum number of Services reached', 'simplybook');
     }
 
     /**
@@ -19,7 +19,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service Provider', 'simplybook');
+        return esc_html__('Please upgrade your plan to configure more Services, or delete existing services if you want to add new services.', 'simplybook');
     }
 
     /**
@@ -27,7 +27,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getType(): string
     {
-        return self::TYPE_WARNING;
+        return self::TYPE_INFO;
     }
 
     /**
@@ -35,7 +35,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getRoute(): string
     {
-        return 'providers';
+        return 'services';
     }
 
     /**
@@ -44,8 +44,8 @@ class AddMandatoryProviderNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => esc_html__('Add Service Provider', 'simplybook'),
-            'login_link' => '/v2/management/#providers/edit/details/add',
+            'text' => esc_html__('Upgrade now', 'simplybook'),
+            'login_link' => '/v2/r/payment-widget',
         ];
     }
 }
