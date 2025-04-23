@@ -23,7 +23,7 @@ const useSubscriptionData = () => {
         console.error('Error fetching subscription data: ', error.message);
     }
 
-    if (response?.data?.limits?.provider_limit && response?.data?.limits?.provider_limit.rest === 0) {
+    if (response?.data?.limits?.provider_limit?.rest === 0) {
         triggerNotificationById('maxed_out_providers');
     }
 
