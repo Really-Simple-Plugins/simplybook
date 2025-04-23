@@ -16,6 +16,12 @@ const NotificationsBox = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [currentNotifications, setCurrentNotifications] = useState<Notice[]>([]);
 
+    /**
+     * We only want to show the notifications that are related to the current
+     * settings page. We remove notices with a route that does not match the
+     * current settings page. Effect runs when user changes the settings page
+     * or when a notification is triggered somewhere in the app.
+     */
     useEffect(() => {
         setCurrentNotifications(
             activeNotifications.filter((notice: Notice) => notice.route === settingsId)
@@ -35,7 +41,7 @@ const NotificationsBox = () => {
      */
     const getNotificationClasses = (notificationType: string) => {
         return clsx(
-            "flex flex-col p-6 bg-green-100 rounded-md shadow-sm",
+            "flex flex-col p-6 rounded-md shadow-sm",
             {
                 "bg-red-100": notificationType === 'warning',
                 "bg-blue-100": notificationType === 'info',
