@@ -26,11 +26,13 @@ import {
   faCircleCheck,
   faCircleXmark,
   faArrowUpRightFromSquare,
-  faLinesLeaning
+  faLinesLeaning,
  } from "@fortawesome/free-solid-svg-icons";
 
  import { 
-  faGlobe 
+  faGlobe,
+  faFileSlash,
+  faFileCircleXmark
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
@@ -39,6 +41,7 @@ import {
 
 // Map your icons to keys for easy referencing
 const iconMap = {
+    "retry": faFileCircleXmark,
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
     "circle-xmark": faCircleXmark,
