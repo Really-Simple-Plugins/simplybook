@@ -3,20 +3,38 @@ import {Notice} from "../types/Notice";
 import useNotificationsData from "../hooks/useNotificationsData";
 
 /**
+ * Default values for the notification context. This is used to create a
+ * default context value that can be used when the provider is not
+ * available. As of writing this can be the case when we are on
+ * the Dashboard page.
+ */
+const NotificationContextStub = {
+    activeNotifications: [],
+    getNotification: () => {
+        return undefined;
+    },
+    triggerNotification: () => {
+        return false;
+    },
+    triggerNotificationById: () => {
+        return false;
+    },
+    getAllNotifications: () => {
+        return false;
+    },
+}
+
+/**
  * Set up a context for notifications.
  */
-const NotificationContext = createContext<Record<string, any> | undefined>(undefined);
+const NotificationContext = createContext<Record<string, any> | typeof NotificationContextStub>(NotificationContextStub);
 
 /**
  * Custom hook to use the notification context. This hook will throw an error
  * if used outside the NotificationProvider.
  */
 export const useNotifications = () => {
-    const context = useContext(NotificationContext);
-    if (!context) {
-        throw new Error("useNotifications must be used within a NotificationProvider");
-    }
-    return context;
+    return useContext(NotificationContext);
 };
 
 /**
