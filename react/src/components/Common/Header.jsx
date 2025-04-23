@@ -49,8 +49,8 @@ const Header = () => {
                     </Link>
                 </div>
                 <div className="flex items-center">
-                    <Link 
-                        to="/" 
+                    <Link
+                        to="/"
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
                     >
                         {!tasksLoading && tasksOpen > 0 && (
@@ -60,24 +60,24 @@ const Header = () => {
                         )}
                         {__("Dashboard", "simplybook")}
                     </Link>
-                    <LoginLink 
+                    <LoginLink
                         iconName="square-arrow-up-right"
                         iconClass="px-2"
-                        className={linkClassName} 
+                        className={linkClassName}
                         page="client"
                     >
                         {__("Clients", "simplybook")}
                     </LoginLink>
-                    <LoginLink 
+                    <LoginLink
                         iconName="square-arrow-up-right"
                         iconClass="px-2"
-                        className={linkClassName} 
+                        className={linkClassName}
                         page="index/index"
                     >
                         {__("Calendar", "simplybook")}
                     </LoginLink>
-                    <Link 
-                        to="/settings/general" 
+                    <Link
+                        to="/settings/general"
                         className={linkClassName + (isRouteActive('/settings') ? " active" : "")}
                     >
                         {__("Settings", "simplybook")}
@@ -95,7 +95,7 @@ const Header = () => {
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
                 <div className="float-right ml-auto flex items-center gap-6 px-4">
-                    {!isLoading && !isExpired && expiresIn && subscriptionPlan && (
+                    {!isLoading && !isExpired && subscriptionPlan && (
                         <Label
                             labelVariant="trial"
                         >
