@@ -113,6 +113,24 @@ Form field container
 
 /**
 ======================================
+Design settings
+======================================
+**/
+.theme-config-group-color {
+    margin: 1.5rem auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.theme-config-group-color > .theme-config-field {
+    width: 100%;
+    grid-column: span 1;
+}
+/**
+======================================
 Tips & tricks
 ======================================
 **/
