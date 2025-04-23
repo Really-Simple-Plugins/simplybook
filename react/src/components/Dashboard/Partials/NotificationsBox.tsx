@@ -2,19 +2,25 @@ import React, {useEffect, useState} from "react";
 import clsx from "clsx";
 import Icon from "../../Common/Icon";
 import { Link } from "@tanstack/react-router";
-import useNotificationsData from "../../../hooks/useNotificationsData";
-import {Route} from "../../../routes/settings.lazy";
 import {__} from "@wordpress/i18n";
 import LoginLink from "../../Common/LoginLink";
+import { useNotifications } from '../../../context/NotificationContext';
 import {Notice} from "../../../types/Notice";
+import {Route} from "../../../routes/settings/$settingsId.lazy";
 
 const NotificationsBox = () => {
 
-    const { settingsId } = Route.useParams();
-    const { getNoticesForRoute, isLoading, hasError, message } = useNotificationsData();
+    const {settingsId} = Route.useParams();
+    const {activeNotifications} = useNotifications();
 
     const [isOpen, setIsOpen] = useState(false);
-    const [noticesForCurrentRoute, setNoticesForCurrentRoute] = useState<Notice[]>([]);
+    const [currentNotifications, setCurrentNotifications] = useState<Notice[]>([]);
+
+    useEffect(() => {
+        setCurrentNotifications(
+            activeNotifications.filter((notice: Notice) => notice.route === settingsId)
+        )
+    }, [settingsId, activeNotifications]);
 
     /**
      * Open the notification box when closed, closes the notification box when
@@ -37,18 +43,12 @@ const NotificationsBox = () => {
         );
     };
 
-    useEffect(() => {
-        setNoticesForCurrentRoute(
-            getNoticesForRoute(settingsId)
-        );
-    }, [settingsId]);
-
-    let hasNotifications = (!isLoading && !hasError && (noticesForCurrentRoute.length > 0));
-    let noNotifications = (!isLoading && !hasError && (noticesForCurrentRoute.length === 0));
+    let hasNotifications = (currentNotifications.length > 0);
+    let noNotifications = (currentNotifications.length === 0);
 
     return (
         <>
-            {hasNotifications && noticesForCurrentRoute.map((notice) => (
+            {hasNotifications && currentNotifications.map((notice : Notice) => (
                 <div className={"notification-box " + getNotificationClasses(notice.type)} key={notice.id}>
                     <a
                         onClick={(e) => toggleNotification()}
