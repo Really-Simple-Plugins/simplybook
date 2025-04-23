@@ -54,7 +54,7 @@ const Calendar = (
     }
 
     return (
-        <div id="sbw_z0hg2i_calendar" style={{height: "1200px"}}></div>
+        <div id="sbw_z0hg2i_calendar" className=" w-full -mt-20" style={{height: "1200px"}}></div>
     );
 }
 export default Calendar;
