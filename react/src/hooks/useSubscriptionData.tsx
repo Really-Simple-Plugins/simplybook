@@ -2,9 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import useOnboardingData from "./useOnboardingData";
 import { SubscriptionData } from "../types/SubscriptionData";
 import HttpClient from "../api/requests/HttpClient";
+import {useNotifications} from "../context/NotificationContext";
 
 const useSubscriptionData = () => {
     const { onboardingCompleted } = useOnboardingData();
+    const { triggerNotificationById } = useNotifications();
 
     const route = 'subscription_data';
     const client = new HttpClient(route);
@@ -19,6 +21,10 @@ const useSubscriptionData = () => {
 
     if (error !== null) {
         console.error('Error fetching subscription data: ', error.message);
+    }
+
+    if (response?.data?.limits?.provider_limit?.rest === 0) {
+        triggerNotificationById('maxed_out_providers');
     }
 
     return {

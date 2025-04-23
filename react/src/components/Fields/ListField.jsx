@@ -50,12 +50,6 @@ const ListField = forwardRef(
             );
         }
 
-        if (listFetched && Array.isArray(listArray)) {
-            listArray.forEach(item => {
-                console.log('item.source', setting.source);
-            });
-        }
-
         const premiumItem = {
             id: "upgrade",
             name: setting.premiumText,
