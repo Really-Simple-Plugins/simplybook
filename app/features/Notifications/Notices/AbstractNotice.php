@@ -6,9 +6,6 @@ use SimplyBook\Interfaces\NoticeInterface;
 
 abstract class AbstractNotice implements NoticeInterface
 {
-    const STATUS_OPEN = 'open';
-    const STATUS_HIDDEN = 'hidden';
-
     const TYPE_INFO = 'info';
     const TYPE_WARNING = 'warning';
 
@@ -25,28 +22,11 @@ abstract class AbstractNotice implements NoticeInterface
     protected string $version;
 
     /**
-     * Override this property to define if the Notice should be reactivated when
-     * the Notice is upgraded. This is useful for Notices that are dismissed by the
-     * user but should be reactivated when the Notice is upgraded to a new
-     * version.
-     */
-    protected bool $reactivateOnUpgrade;
-
-    /**
      * Use this property to define if the Notice is a premium Notice. This is used
      * as an alternative status when reading the Notice as an array. Useful for
      * the UI.
      */
     protected bool $premium;
-
-    /**
-     * By default, a Notice is active on construct. This is because the $status
-     * property is not set. The {@see getStatus()} method will therefore return
-     * the default status 'open'. If you want to set a different default status
-     * use the {@see setStatus()} method in the construct of the Notice. See
-     * {@see AddMandatoryProviderNotice} for an example.
-     */
-    private string $status;
 
     /**
      * Override this method to define the title that should be displayed to the
@@ -88,41 +68,9 @@ abstract class AbstractNotice implements NoticeInterface
     /**
      * @inheritDoc
      */
-    public function getStatus(): string
-    {
-        return $this->status ?? self::STATUS_OPEN;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function reactivateOnUpgrade(): bool
-    {
-        return $this->reactivateOnUpgrade ?? false;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getAction(): array
     {
         return [];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function setStatus(string $status): void
-    {
-        $knownStatuses = [
-            self::STATUS_OPEN,
-            self::STATUS_HIDDEN,
-        ];
-        if (!in_array($status, $knownStatuses)) {
-            return; // Not allowed
-        }
-
-        $this->status = $status;
     }
 
     /**
@@ -133,22 +81,6 @@ abstract class AbstractNotice implements NoticeInterface
     public function getType(): string
     {
         return self::TYPE_INFO;
-    }
-
-    /**
-     * Activate the Notice by setting the status to 'open'
-     */
-    public function open(): void
-    {
-        $this->status = self::STATUS_OPEN;
-    }
-
-    /**
-     * Hide the Notice by setting the status to 'hidden'
-     */
-    public function hide(): void
-    {
-        $this->status = self::STATUS_HIDDEN;
     }
 
     /**
@@ -168,7 +100,6 @@ abstract class AbstractNotice implements NoticeInterface
             'id' => $this->getId(),
             'title' => $this->getTitle(),
             'text' => $this->getText(),
-            'status' => $this->getStatus(),
             'premium' => $this->isPremium(),
             'type' => $this->getType(),
             'route' => $this->getRoute(),
