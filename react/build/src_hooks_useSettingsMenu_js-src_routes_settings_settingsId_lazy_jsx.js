@@ -195,7 +195,6 @@ __webpack_require__.r(__webpack_exports__);
 const registerCompany = async ({
   data = true
 }) => {
-  console.log("calling registerCompany api", data);
   return await (0,_requests_request__WEBPACK_IMPORTED_MODULE_0__["default"])("onboarding/company_registration", "POST", {
     data
   });
@@ -330,7 +329,6 @@ const fetchRequest = async (path, method = "POST", data = {}, url) => {
     method,
     data
   };
-  const test_url = "simplybook/v1/settings/get_fields";
   // resolve or reject
   return await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()(args);
 };
@@ -4202,14 +4200,10 @@ const useOnboardingData = () => {
       required: true
     }],
     beforeSubmit: async data_0 => {
-      console.log("submit information check step");
-      console.log(data_0);
       let response_0 = await (0,_api_endpoints_onBoarding_registerCompany__WEBPACK_IMPORTED_MODULE_4__["default"])({
         data: data_0
       });
-      console.log("registercompany response ", response_0);
       if (response_0.status !== "success") {
-        console.log("setting api error to ", response_0.message);
         setApiError(response_0.message);
         return false;
       }

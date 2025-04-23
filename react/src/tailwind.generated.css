@@ -235,7 +235,6 @@
     --bg-tertiary-light: #D9E3FD;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
-    --color-tertiary-hover: #e8eeff;
     --color-simplybook-gray: #788291;
     --color-button-blue: #5A6FA5;
     --color-tertiary-border: #EFF4FF;
@@ -433,6 +432,9 @@
   .-mt-4 {
     margin-top: calc(var(--spacing) * -4);
   }
+  .-mt-20 {
+    margin-top: calc(var(--spacing) * -20);
+  }
   .mt-1 {
     margin-top: calc(var(--spacing) * 1);
   }
@@ -450,6 +452,9 @@
   }
   .mt-8 {
     margin-top: calc(var(--spacing) * 8);
+  }
+  .mt-12 {
+    margin-top: calc(var(--spacing) * 12);
   }
   .mt-\[0\.5rem\] {
     margin-top: 0.5rem;
@@ -477,6 +482,9 @@
   }
   .mb-8 {
     margin-bottom: calc(var(--spacing) * 8);
+  }
+  .mb-12 {
+    margin-bottom: calc(var(--spacing) * 12);
   }
   .ml-1 {
     margin-left: calc(var(--spacing) * 1);
@@ -762,9 +770,6 @@
   .grid-cols-12 {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
-  .grid-cols-\[1fr_auto\] {
-    grid-template-columns: 1fr auto;
-  }
   .grid-cols-\[110px_1fr_auto_2em\] {
     grid-template-columns: 110px 1fr auto 2em;
   }
@@ -925,10 +930,6 @@
     border-top-style: var(--tw-border-style);
     border-top-width: 1px;
   }
-  .border-b-2 {
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 2px;
-  }
   .border-b-4 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 4px;
@@ -985,9 +986,6 @@
   }
   .border-tertiary-border {
     border-color: var(--color-tertiary-border);
-  }
-  .border-tertiary-hover {
-    border-color: var(--color-tertiary-hover);
   }
   .border-transparent {
     border-color: transparent;
@@ -1102,9 +1100,6 @@
   }
   .p-\[0\.5rem\] {
     padding: 0.5rem;
-  }
-  .p-\[5px\] {
-    padding: 5px;
   }
   .px-0 {
     padding-inline: calc(var(--spacing) * 0);
