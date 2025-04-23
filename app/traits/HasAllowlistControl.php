@@ -37,11 +37,17 @@ trait HasAllowlistControl
      */
     public function restRequestIsAllowed(): bool
     {
-        $validRequest = (
+        $validWpJsonRequest = (
             isset($_SERVER['REQUEST_URI'])
             && (strpos($_SERVER['REQUEST_URI'], '/simplybook/v') !== false)
         );
-        if ($validRequest === false) {
+
+        $validPlainPermalinksRequest = (
+            isset($_GET['rest_route'])
+            && (strpos($_GET['rest_route'], 'simplybook/v') !== false)
+        );
+
+        if ($validWpJsonRequest === false && $validPlainPermalinksRequest === false) {
             return false;
         }
 
