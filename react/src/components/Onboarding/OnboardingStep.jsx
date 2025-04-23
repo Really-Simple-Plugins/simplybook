@@ -8,6 +8,8 @@ import FormFieldWrapper from "../Forms/FormFieldWrapper";
 import {useEffect, useState} from "react";
 import Error from "../Errors/Error";
 import ButtonLink from "../Buttons/ButtonLink";
+import registerEmail from "../../api/endpoints/onBoarding/registerEmail";
+import retryOnboarding from "../../api/endpoints/onBoarding/retryOnboarding";
 const OnboardingStep = ({
     path,
     title,
@@ -135,10 +137,19 @@ const OnboardingStep = ({
         }
     }, [getValue("company_name")]);
 
-    const restartOnboarding = () => {
-        // Ensure the onboarding is set back to incomplete
+    /**
+     * Submit a request to retry the onboarding process. Under the hood this
+     * means we are deleting all old simplybook data. On success, we navigate
+     * back to step 1.
+     */
+    const restartOnboarding = async () => {
+        let response = await retryOnboarding();
+        if (response.status !== "success") {
+            setApiError(response.message);
+            return false;
+        }
         setOnboardingCompleted(false);
-        // To do create request that also resets the data on the dashboard page
+        await navigate({to: getURLForStep(1)});
     }
 
     return (
@@ -160,16 +171,15 @@ const OnboardingStep = ({
                             }}
                         />
                         {currentStepId > 1 && currentStepId < 4 && (
-                            <ButtonLink 
+                            <ButtonLink
                                 iconName="retry"
                                 linkClassName="w-full"
                                 className="w-full border-tertiary text-tertiary"
                                 btnVariant="ghost"
-                                link={getURLForStep(1)}
                                 onClick={restartOnboarding}
                             >
                                 {__("Retry registration", "simplybook")}
-                            </ButtonLink>   
+                            </ButtonLink>
                         )}
                         {secondaryButton && (
                             <ButtonField

@@ -84,6 +84,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'finishOnboarding'],
         ];
 
+        $routes['onboarding/retry_onboarding'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'retryOnboarding'],
+        ];
+
         return $routes;
     }
 
@@ -372,5 +377,21 @@ class OnboardingController implements FeatureInterface
         }
 
         return $this->service->sendHttpResponse([], $success, $message, $code);
+    }
+
+    /**
+     * Method is used to retry the onboarding process. It is called when the
+     * user has completed the onboarding process and wants to retry it.
+     */
+    public function retryOnboarding(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $success = $this->service->delete_all_options();
+        $message = esc_html__('Successfully removed all previous data.', 'simplybook');
+
+        if (!$success) {
+            $message = esc_html__('An error occurred while trying to remove previous data.', 'simplybook');
+        }
+
+        return $this->service->sendHttpResponse([], $success, $message);
     }
 }
