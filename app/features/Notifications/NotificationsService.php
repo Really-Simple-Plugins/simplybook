@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Interfaces\NoticeInterface;
-use SimplyBook\Features\Notifications\Notices\AbstractNotice;
 
 class NotificationsService
 {
@@ -99,21 +98,5 @@ class NotificationsService
         if ($save) {
             $this->repository->saveNoticesToDatabase();
         }
-    }
-
-    /**
-     * Open a Notice by setting the status to 'open'
-     */
-    public function openNotice(string $noticeId): void
-    {
-        $this->repository->updateNoticeStatus($noticeId, AbstractNotice::STATUS_OPEN);
-    }
-
-    /**
-     * Hide a Notice by setting the status to 'hidden'
-     */
-    public function hideNotice(string $noticeId): void
-    {
-        $this->repository->updateNoticeStatus($noticeId, AbstractNotice::STATUS_HIDDEN);
     }
 }
