@@ -168,7 +168,7 @@ const OnboardingStep = ({
                                 link={getURLForStep(1)}
                                 // onClick={restartOnboarding}
                             >
-                                {__("Restart the onboarding", "simplybook")}
+                                {__("Retryonboarding", "simplybook")}
                             </ButtonLink>   
                         )}
                         {secondaryButton && (
