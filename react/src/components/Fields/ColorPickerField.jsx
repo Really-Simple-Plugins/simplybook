@@ -49,40 +49,42 @@ const ColorPickerField = forwardRef(
             let disabledClass = setting.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer';
 
             return (
-                <Popover.Root
-                    open={popoverOpen} onOpenChange={handlePopoverOpenChange}
-                >
-                    <Popover.Trigger
-                        className='p-[5px] w-full mr-2 bg-transparent rounded-md border border-gray-400 min-w-[140px] text-base'
+                <>
+                    <Popover.Root
+                        open={popoverOpen} onOpenChange={handlePopoverOpenChange}
                     >
-                        <div className={disabledClass+" whitespace-nowrap min-w-5 flex p-1.5 gap-3.5 items-center"}>
-                            <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{ backgroundColor: color }}></div>
-                            {label}
-                        </div>
-                    </Popover.Trigger>
-                    <Popover.Portal>
-                        <Popover.Content >
-                            <ColorPicker colorValue={color} onChangeComplete={handleColorChange} />
-                        </Popover.Content>
-                    </Popover.Portal>
-                </Popover.Root>
+                        <Popover.Trigger
+                            className='p-1 w-full bg-transparent rounded-md border border-gray-400 min-w-[140px] text-base'
+                        >
+                            <div className={disabledClass+" whitespace-nowrap min-w-5 flex p-1.5 gap-3.5 items-center"}>
+                                <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{ backgroundColor: color }}></div>
+                                {label}
+                            </div>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                            <Popover.Content >
+                                <ColorPicker colorValue={color} onChangeComplete={handleColorChange} />
+                            </Popover.Content>
+                        </Popover.Portal>
+                    </Popover.Root>
+                </>
             )
         }
 
         return (
-            <FieldWrapper
-                label=''
-                help={help}
-                error={fieldState?.error?.message}
-                context={context}
-                className={className}
-                inputId={setting.id}
-                required={props.required}
-            >
-                <div className="">
-                    <ColorPickerElement setting={setting} label={label} />
-                </div>
-            </FieldWrapper>
+            <>
+                <FieldWrapper
+                    label=''
+                    help={help}
+                    error={fieldState?.error?.message}
+                    context={context}
+                    className={className}
+                    inputId={setting.id}
+                    required={props.required}
+                >
+                <ColorPickerElement setting={setting} label={label} />
+                </FieldWrapper>
+            </>
         );
     },
 );
