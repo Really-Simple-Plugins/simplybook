@@ -30,7 +30,7 @@ return
             'type'     => 'text',
             'copy_field' => true,
             'disabled' => true,
-            'label'    => __('Booking button shortcode', 'simplybook'),
+            'label'    => __('Booking button widget', 'simplybook'),
             'default'  => '[simplybook_booking_button]',
         ],
     ];
