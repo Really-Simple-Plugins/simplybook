@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import {__} from "@wordpress/i18n";
 import Modal from "../Common/Modal";
 import useWidgetData from "../../hooks/useWidgetData";
+import ButtonLink from "../Buttons/ButtonLink";
 
 type PreviewButtonInputProps = {
     disabled?: boolean;
@@ -63,13 +64,13 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
 
     return (
         <>
-            <button
-                type="button"
+            <ButtonLink
+                btnVariant="primary-small"
                 onClick={onClick}
                 className={localClassName}
             >
                 {__('Preview', 'simplybook')}
-            </button>
+            </ButtonLink>
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeModal}

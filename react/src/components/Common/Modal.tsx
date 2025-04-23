@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import {__} from "@wordpress/i18n";
+import ButtonLink from "../Buttons/ButtonLink";
 
 type ModalProps = {
     title?: string,
@@ -44,12 +45,13 @@ const Modal: React.FC<ModalProps> = ({ title, closeButton, isOpen, onClose, chil
                 )}
                 {children}
                 <div id="modal-footer">
-                    <button
-                        className="bg-secondary text-white rounded px-4 py-2 hover:bg-secondary-dark cursor-pointer"
+                    <ButtonLink
+                        className="bg-secondary hover:bg-secondary-dark text-white w-20"
+                        btnVariant="square-small"
                         onClick={onClose}
                     >
                         {closeButton || __('Close', 'simplybook')}
-                    </button>
+                    </ButtonLink>
                 </div>
             </div>
         </div>
