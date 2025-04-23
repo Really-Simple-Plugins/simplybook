@@ -47,11 +47,7 @@ class SubscriptionDataService
             $subscriptionData['expire_in'] = $subscriptionData['expire_in'] + 1;
         }
 
-        if (!empty($subscriptionData['subscription_name'])) {
-            Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, [
-                'subscription_name' => $subscriptionData['subscription_name'],
-            ]);
-        }
+        $this->dispatchDataLoaded($subscriptionData);
 
         $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
         update_option('simplybook_subscription_data', $subscriptionData);
@@ -91,6 +87,7 @@ class SubscriptionDataService
         }
 
         if ($strict === false) {
+            $this->dispatchDataLoaded($subscriptionData);
             wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
             return $subscriptionData;
         }
@@ -100,6 +97,7 @@ class SubscriptionDataService
             return [];
         }
 
+        $this->dispatchDataLoaded($subscriptionData);
         wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
         return $subscriptionData;
     }
@@ -118,6 +116,14 @@ class SubscriptionDataService
         $limits = $subscriptionData['limits'];
         $subscriptionData['limits'] = array_column($limits, null, 'key');
         return $subscriptionData;
+    }
+
+    /**
+     * Helper method to easily dispatch the subscription data loaded event.
+     */
+    private function dispatchDataLoaded(array $subscriptionData): void
+    {
+        Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, $subscriptionData);
     }
 
 }

@@ -8,14 +8,16 @@ import useTaskData from "../../hooks/useTaskData";
 import {Task} from "../../types/Task";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
 
-const getStatusStyles = (status: string) => {
+const getStatusStyles = (status: string, premium: boolean) => {
+    if (premium) {
+        return 'bg-tertiary text-white';
+    }
+
     switch (status) {
         case 'open':
             return 'bg-yellow-400 text-black';
         case 'urgent':
             return 'bg-red-800 text-white';
-        case 'premium':
-            return 'bg-tertiary text-white';
         case 'completed':
             return 'bg-green-500 text-white';
         default:
@@ -100,8 +102,8 @@ const Progress = () => {
                         >
                             {/* Status pill - fixed width */}
                             <div>
-                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status)}`}>
-                  {task.status.charAt(0).toUpperCase() + task.status.slice(1)}
+                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium)}`}>
+                  {task.premium ? 'Premium' : (task.status.charAt(0).toUpperCase() + task.status.slice(1))}
                 </span>
                             </div>
 

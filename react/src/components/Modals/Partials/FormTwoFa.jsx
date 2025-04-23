@@ -133,7 +133,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                         </ButtonInput>
                         <ButtonInput
                             className=""
-                            btnVariant="secondary"
+                            btnVariant="tertiary"
                             type="submit"
                             onClick={onClose}
                         >

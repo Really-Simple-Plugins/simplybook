@@ -33,7 +33,7 @@
     --bg-primary: #06adef;
     --bg-primary-dark: #055b78;
     --color-primary-hover: #0589bd;
-    --color-primary-lighter: #F0F4FE;
+    --color-primary-lighter: #F8FCFE;
     
     /* Secondary colors */
     --bg-secondary-light: #ffb3c1;
@@ -41,7 +41,7 @@
     --bg-secondary-dark: #950c28;
 
     /* Tertiary colors */
-    --bg-tertiary-light: #f0f4fe;
+    --bg-tertiary-light: #D9E3FD;
     --bg-tertiary: #0c3052;
     --bg-tertiary-dark: #061f32;
     --color-tertiary-hover: #e8eeff;
@@ -77,6 +77,10 @@ small {
 Base styles
 ======================================
 **/
+h1, h2, h3, h4, h5 h6 {
+    margin: 0; /* Disable default padding throughout the plugin*/
+}
+
 h1 { font-size: var(--text-3xl);}
 h2 { font-size: var(--text-2xl);}
 h3 { font-size: var(--text-xl);}
@@ -134,6 +138,7 @@ Input global styles
     }
 
     .input-base {
+            position: relative;
             font-size: var(--text-base);
             max-width: 100%;
             width: 100%;

@@ -11,8 +11,10 @@ class DesignSettingsService
     use LegacySave;
 
     /**
-     * The configuration for the design settings. This is used to validate
-     * the settings.
+     * Property to cache the configuration for the design settings. Do not use
+     * this property directly, instead us the method
+     * {@see getDesignConfiguration} to be sure you get the latest
+     * configuration.
      */
     protected array $config = [];
 
@@ -39,11 +41,17 @@ class DesignSettingsService
     ];
 
     /**
-     * Set the config on instantiation.
+     * Get the configuration for the design settings. This is used to validate
+     * the settings.
      */
-    public function __construct()
+    public function getDesignConfiguration()
     {
-        $this->config = App::fields()->get('design');
+        if (empty($this->config)) {
+            $this->config = App::fields()->get('design');
+            return $this->config;
+        }
+
+        return $this->config;
     }
 
     /**
@@ -96,7 +104,6 @@ class DesignSettingsService
             unset($legacyDesignSettings[$legacyKey]);
         }
 
-        // todo - "server" is also a legacy key, do we want to keep it?
         unset($legacyDesignSettings['predefined']);
 
         update_option($this->designOptionsKey, $legacyDesignSettings);
@@ -146,12 +153,14 @@ class DesignSettingsService
     {
         $errors = [];
 
+        $designConfiguration = $this->getDesignConfiguration();
+
         foreach ($settings as $key => $value) {
-            if (empty($this->config[$key])) {
+            if (empty($designConfiguration[$key])) {
                 continue; // No config so no validating. We manage the config so this is safe enough.
             }
 
-            $config = $this->config[$key];
+            $config = $designConfiguration[$key];
 
             // No type so no validating. We manage the config so this is safe enough.
             if (empty($config['type'])) {

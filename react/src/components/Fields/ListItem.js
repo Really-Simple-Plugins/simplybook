@@ -33,22 +33,30 @@ const ListItem = forwardRef(
         return (
             <>
                 <div className="w-full flex items-center justify-between px-4 py-5 bg-gray-100 mb-4">
-                    <div className={clsx(upgrade ? "justify-start" : "justify-between", "flex flex-row items-center w-full space-x-3")} >
+                    <div className={clsx(upgrade ? "justify-start" : "justify-between", "flex flex-row items-center w-full space-x-3 text-base")} >
                         <div className={clsx("flex items-center")}>
                             {domainFetched && !domainHasError && hasPicture &&
-                                <img className="w-15 h-15 max-w-[40px] max-h-[40px]" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
+                                <img className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
                             }
-                            {(!domainFetched || domainHasError || !hasPicture) &&
-                                <div className="min-w-[40px] min-h-[40px] flex items-center justify-center">
-                                    <Icon name="cart"/>
-                                    <div className="font-bold ml-2">
-                                        {item.name}
-                                    </div>
+                            {domainFetched && !domainHasError && !hasPicture &&                            
+                                <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
+                                    {item.name.charAt(0).toUpperCase()}
                                 </div>
                             }
+                            <div className="font-bold ml-4">
+                                {item.name}
+                            </div>
                         </div>
-                        {domainFetched && !domainHasError &&
+                        {upgrade &&(
+                            <p>
+                                {fullLabel}
+                            </p>
+                        )}
+                        {!upgrade && domainFetched && !domainHasError &&
                             <LoginLink
+                                icon={true}
+                                iconName="square-arrow-up-right"
+                                iconClass="px-2"
                                 className={"text-black flex items-center"} 
                                 page={link}
                             >
@@ -60,7 +68,7 @@ const ListItem = forwardRef(
                         <div className="relative">
                             {upgrade && <>
                                 <ButtonLink
-                                    className={"bg-tertiary text-white"}
+                                    className={"bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary"}
                                     btnVariant={"square-small"}
                                     target="_blank"
                                     loginLink="v2/r/payment-widget"

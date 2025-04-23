@@ -18,6 +18,7 @@ const OnboardingStep = ({
     customHtml = null,
     syncFieldConfig,
 }) => {
+
     const {
         getURLForStep,
         getCurrentStepId,
@@ -40,7 +41,7 @@ const OnboardingStep = ({
         getValues,
         reset,
         trigger,
-        formState: { isDirty, errors },
+        formState: { isDirty, errors, isValid, isValidating },
     } = useForm({
         defaultValues: defaultData,
         values: data,
@@ -49,16 +50,21 @@ const OnboardingStep = ({
     const { getValue } = useSettingsData();
     const [companyName, setCompanyName] = useState("");
     const currentStep = getCurrentStep(path);
-    const [disabled, setDisabled] = useState(false);
+    const [disabled, setDisabled] = useState(!isValid);
+
+    // Set disabled state based on isValid
+    useEffect(() => {
+        setDisabled(!isValid);
+    }, [isValid]);
 
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
         if (currentValue) {
-            setValueCallback(currentValue);
+            return setValueCallback(currentValue);
         }
 
         if (initialValue) {
-            setValue(fieldKey, initialValue, {
+            return setValue(fieldKey, initialValue, {
                 shouldValidate: true
             });
         }
@@ -107,8 +113,6 @@ const OnboardingStep = ({
 
         setDisabled(false);
 
-
-
         if (buttonType === "primary" && primaryButton.navigateTo) {
             navigate({ to: primaryButton.navigateTo });
         } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
@@ -137,34 +141,40 @@ const OnboardingStep = ({
 
     return (
         <>
-            <div className="col-span-4 col-start-3 my-12 flex flex-col text-black">
+            <div className={`w-full col-span-4 col-start-3 ${currentStep.fields?.length ? "my-12" : ""} flex flex-col text-black`}>
                 <div className={"flex flex-col"}>
                     <form className="flex flex-wrap justify-between">
                         <FormFieldWrapper fields={currentStep.fields} control={control}/>
                         {customHtml}
                         <ButtonField
                             className="w-full"
-                            showLoader={disabled}
-                            btnVariant="primary"
+                            showLoader={isValidating}
+                            btnVariant="secondary"
                             label={primaryButton.label}
                             context={bottomText}
-                            disabled={disabled}
-                            onClick={handleSubmit((data) => onSubmit(data, "primary"))}
+                            button={{
+                                disabled: (primaryButton.disabled ?? disabled),
+                                onClick: handleSubmit((data) => onSubmit(data, "primary")),
+                            }}
                         />
                         {secondaryButton && (
                             <ButtonField
                                 btnVariant="tertiary"
-                                disabled={disabled}
                                 label={secondaryButton.label}
-                                onClick={handleSubmit((data) => onSubmit(data, "secondary"))}
+                                button={{
+                                    disabled: disabled,
+                                    onClick: handleSubmit((data) => onSubmit(data, "secondary")),
+                                }}
                             />
                         )}
                     </form>
                 </div>
-                <Error 
-                    errorHeading={__("Something went wrong...", "simplybook")}
-                    error={apiError}
-                />
+                {apiError && (
+                    <Error
+                        errorHeading={__("Something went wrong...", "simplybook")}
+                        error={apiError}
+                    />
+                )}
             </div>
             <div className="col-span-4 col-start-7 row-span-2 my-12">
                 {rightColumn}

@@ -11,12 +11,12 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
   return (
     <>
       <aside className="w-1/4">
-          <h2 className="text-lg font-bold border-b-2 pb-2 border-tertiary-hover">{__("Notifications", "simplybook")}</h2>
+          <h2 className="text-lg font-bold pb-2">{__("Notifications", "simplybook")}</h2>
           <div className="notification-feed">
             {children}
           </div>
       </aside>
-    </> 
+    </>
   );
 }
 

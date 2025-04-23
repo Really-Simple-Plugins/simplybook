@@ -6,6 +6,7 @@ use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
 
@@ -48,6 +49,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'confirmEmailWithSimplyBook'],
         ];
 
+        $routes['onboarding/save_widget_style'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'saveColorsToDesignSettings'],
+        ];
+
         $routes['onboarding/is_page_title_available'] = [
             'methods' => 'POST',
             'callback' => [$this, 'checkIfPageTitleIsAvailable'],
@@ -73,6 +79,11 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'sendSmsToUser'],
         ];
 
+        $routes['onboarding/finish_onboarding'] = [
+            'methods' => 'POST',
+            'callback' => [$this, 'finishOnboarding'],
+        ];
+
         return $routes;
     }
 
@@ -88,15 +99,28 @@ class OnboardingController implements FeatureInterface
             $storage->all()
         );
 
+        $tempDataStorage = $this->service->getTemporaryDataStorage();
+        $tempEmail = $tempDataStorage->getString('email', get_option('admin_email'));
+        $tempTerms = $tempDataStorage->getBoolean('terms', true);
+
+        $companyBuilder->setEmail($tempEmail);
+        $companyBuilder->setTerms($tempTerms);
+
         $this->service->storeCompanyData($companyBuilder);
 
-        // Register it
-        $response = App::provide('client')->register_company();
+        if ($companyBuilder->isValid() === false) {
+            return $this->service->sendHttpResponse([
+                'invalid_fields' => $companyBuilder->getInvalidFields(),
+            ], false, esc_html__('Please fill in all fields.', 'simplybook'));
+        }
 
-        //store step, to start with on return of user.
-        $step = ($response->success ? 3 : 1);
-        $this->service->setOnboardingStep($step);
+        try {
+            $response = App::provide('client')->register_company();
+        } catch (ApiException $e) {
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+        }
 
+        $this->service->finishCompanyRegistration($response->data);
         return $this->service->sendHttpResponse([], $response->success, $response->message);
     }
 
@@ -106,14 +130,62 @@ class OnboardingController implements FeatureInterface
      */
     public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
+        $error = '';
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
-        $response = App::provide('client')->confirm_email($storage->getInt('confirmation-code'), $storage->getString('recaptchaToken'));
+        if ($storage->isEmpty('recaptchaToken')) {
+            // wp_kses_post to allow apostrophe in the message
+            $error = wp_kses_post(__('Please verify you\'re not a robot.', 'simplybook'));
+        }
 
-        $step = ($response->success ? 4 : 3);
-        $this->service->setOnboardingStep($step);
+        if ($storage->isEmpty('confirmation-code')) {
+            $error = esc_html__('Please enter the confirmation code.', 'simplybook');
+        }
 
+        if (!empty($error)) {
+            return $this->service->sendHttpResponse([], false, $error);
+        }
+
+        try {
+            $response = App::provide('client')->confirm_email(
+                $storage->getInt('confirmation-code'),
+                $storage->getString('recaptchaToken')
+            );
+        } catch (ApiException $e) {
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+        }
+
+        $this->service->setCompletedStep(3);
         return $this->service->sendHttpResponse([], $response->success, $response->message);
+    }
+
+    /**
+     * Collect saved widget style settings, format them as design settings and
+     * pass them to the DesignSettingsController by calling the
+     * simplybook_save_onboarding_widget_style action.
+     */
+    public function saveColorsToDesignSettings(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        /**
+         * This action is used to save the widget style settings in the
+         * simplybook_design_settings option.
+         * @hooked SimplyBook\Features\DesignSettings\DesignSettingsController::saveWidgetStyle
+         */
+        try {
+            do_action('simplybook_save_onboarding_widget_style', $storage);
+        } catch (\Exception $e) {
+            return $this->service->sendHttpResponse([
+                'message' => $e->getMessage(),
+            ], false, esc_html__(
+                'Something went wrong while saving the widget style settings. Please try again.', 'simplybook'
+            ));
+        }
+
+        return $this->service->sendHttpResponse([], true, esc_html__(
+            'Successfully saved widget style settings', 'simplybook'
+        ));
     }
 
     /**
@@ -128,13 +200,20 @@ class OnboardingController implements FeatureInterface
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
     }
 
-
     /**
      * Generate default shortcode pages
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+
+        $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
+        $bookingPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('bookingPageUrl'));
+        if (!$calendarPageIsAvailable || !$bookingPageIsAvailable) {
+            return $this->service->sendHttpResponse([], false, esc_html__(
+                'Both page titles should be available if you choose to generate pages.', 'simplybook'
+            ));
+        }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
         $bookingPageName = StringUtility::convertUrlToTitle($storage->getUrl('bookingPageUrl'));
@@ -149,9 +228,7 @@ class OnboardingController implements FeatureInterface
 
         $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
 
-        if ($pagesCreatedSuccessfully) {
-            $this->service->setOnboardingCompleted();
-        }
+        $this->service->setOnboardingCompleted();
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
@@ -277,5 +354,23 @@ class OnboardingController implements FeatureInterface
         return new \WP_REST_Response([
             'message' => 'Successfully requested SMS code',
         ], 200);
+    }
+
+    /**
+     * Method is used to finish the onboarding process. It is called when the
+     * user has completed the onboarding process and wants to finish it.
+     */
+    public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $code = 200;
+        $message = esc_html__('Successfully finished onboarding!', 'simplybook');
+
+        $success = $this->service->setOnboardingCompleted();
+        if (!$success) {
+            $message = esc_html__('An error occurred while finishing the onboarding process', 'simplybook');
+            $code = 500;
+        }
+
+        return $this->service->sendHttpResponse([], $success, $message, $code);
     }
 }

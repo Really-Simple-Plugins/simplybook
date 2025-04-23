@@ -1,122 +1,51 @@
-import React, { useEffect, useState } from "react";
+import {useEffect} from "react";
 import CalendarLoading from "./CalendarLoading";
-import useOnboardingData from "../../hooks/useOnboardingData";
 import useWidgetData from "../../hooks/useWidgetData";
-import useSettingsData from "../../hooks/useSettingsData";
 import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
 
-const Calendar = () => {
-    const { widgetScript, invalidateAndRefetchWidgetScript } = useWidgetData();
-
-    const { isSavingSettings, settings } = useSettingsData();
-    const { onboardingCompleted } = useOnboardingData();
-    const { startPolling, pollingEnabled, isPolling } = useWaitForRegistrationCallback();
-    const [isLoadingScript, setIsLoadingScript] = useState(false);
-
-    const runInlineScript = async () => {
-        let targetObj = document.createElement("script");
-        targetObj.id = "simplybook-inline-script";
-        let script = widgetScript.replaceAll('DOMContentLoaded', 'customDOMContentLoaded');
-        console.log("updated script: ", script);
-        targetObj.innerHTML = script;
-        try {
-            document.head.appendChild(targetObj);
-            const customEvent = new Event("customDOMContentLoaded");
-            document.dispatchEvent(customEvent);
-            document.removeEventListener("DOMContentLoaded", instantiateSimplybookWidget);
-        } catch (exception) {
-            throw "Something went wrong " + exception + " while loading " + script;
-        }
+const Calendar = (
+    {
+        primary,
+        secondary,
+        active,
+        onboardingCompleted
     }
+) => {
+    const {createPreviewWidget} = useWidgetData();
+    const {startPolling, pollingEnabled, pollingSuccess} = useWaitForRegistrationCallback();
 
     useEffect(() => {
-        if (pollingEnabled) {
-            console.log("polling already enabled, exit");
-            return;
+        if (pollingEnabled === false) {
+            startPolling();
         }
-        console.log("start polling");
-        startPolling();
     }, [onboardingCompleted]);
 
-    const setupPreview = async () => {
-        if (isLoadingScript) {
-            return;
+    useEffect(() => {
+        if (pollingSuccess) {
+            runInlineScript(primary, secondary, active);
         }
-        setIsLoadingScript(true);
+    }, [primary, secondary, active, pollingSuccess]);
 
-        clearInlineScript();
-        let script = document.head.querySelector('#simplybook-src-script');
-        if (script) {
-            console.log("Script already loaded, run inline script");
-            await runInlineScript();
-            setIsLoadingScript(false);
-        } else {
-            console.log("Script not loaded, load it now");
-            script = document.createElement("script");
-            script.id = "simplybook-src-script";
-            script.src = "https://simplybook.me/v2/widget/widget.js";
-            script.onload = async () => {
-                console.log("src Script loaded successfully!");
-                await runInlineScript();
-                setIsLoadingScript(false);
-            };
-            document.head.appendChild(script);
-        }
+    const runInlineScript = (primaryColor, secondaryColor, activeColor) => {
+        createPreviewWidget({
+            'onboarding': true,
+            'primary': primaryColor,
+            'secondary': secondaryColor,
+            'active': activeColor,
+        }).then((response) => {
+
+            let inlineScriptElement = document.createElement('script');
+            inlineScriptElement.id = 'simplybook-preview-widget-script';
+            inlineScriptElement.innerHTML = response.data.widget;
+
+            document.head.appendChild(inlineScriptElement);
+
+            // Dispatch custom element to load the widget
+            document.dispatchEvent(
+                new CustomEvent('loadSimplyBookPreviewWidget')
+            );
+        });
     }
-
-    const clearInlineScript = () => {
-        const inlineScript = document.head.querySelector('#simplybook-inline-script');
-        if (inlineScript) {
-            console.log("removing inline script");
-            document.head.removeChild(inlineScript);
-        }
-    };
-
-    useEffect(() => {
-        console.log("useeffect for preview setup",
-            "onboardingcompleted", onboardingCompleted,
-            "isSavingSettings", isSavingSettings,
-            "widgetScript.length", widgetScript?.length
-        );
-
-        if (!onboardingCompleted) {
-            return;
-        }
-
-        if (!widgetScript || widgetScript.length === 0) {
-            return;
-        }
-
-        setupPreview();
-
-        return () => {
-            const srcScript = document.head.querySelector('#simplybook-src-script');
-            if (srcScript) {
-                document.head.removeChild(srcScript);
-            }
-            clearInlineScript();
-        };
-    }, [widgetScript, onboardingCompleted]);
-
-    useEffect(() => {
-        console.log("settings, isSavingSettings, onboardingcompleted UseEffect ",
-            isSavingSettings,
-            onboardingCompleted,
-        );
-
-        if (!onboardingCompleted) {
-            console.log("onboarding not completed, do not reload script");
-            return;
-        }
-
-        if (isSavingSettings) {
-            console.log("saving settings, do not reload script");
-            return;
-        }
-
-        console.log("invalidate and refetch widget script");
-        invalidateAndRefetchWidgetScript();
-    }, [isSavingSettings, onboardingCompleted, settings]);
 
     if (!onboardingCompleted) {
         return (
@@ -125,7 +54,7 @@ const Calendar = () => {
     }
 
     return (
-        <div className="h-full" id="sbw_z0hg2i_calendar"></div>
+        <div id="sbw_z0hg2i_calendar" style={{height: "1200px"}}></div>
     );
 }
 export default Calendar;

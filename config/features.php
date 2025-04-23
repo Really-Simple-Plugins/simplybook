@@ -22,4 +22,12 @@ return [
             'Tasks/AbstractTask',
         ],
     ],
+    'Notifications' => [
+        'enabled' => FeatureHelper::isEnabled('notifications'),
+        'inScope' => true, // todo - only on our dashboard
+        'pro' => false,
+        'priorityFiles' => [
+            'Notices/AbstractNotice',
+        ],
+    ],
 ];

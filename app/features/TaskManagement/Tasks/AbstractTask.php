@@ -7,9 +7,11 @@ use SimplyBook\Interfaces\TaskInterface;
 abstract class AbstractTask implements TaskInterface
 {
     const STATUS_OPEN = 'open';
+    const STATUS_URGENT = 'urgent';
     const STATUS_DISMISSED = 'dismissed';
     const STATUS_COMPLETED = 'completed';
     const STATUS_PREMIUM = 'premium';
+    const STATUS_HIDDEN = 'hidden';
 
     /**
      * Override this constant to define the identifier of the task. This
@@ -49,7 +51,7 @@ abstract class AbstractTask implements TaskInterface
      * property is not set. The {@see getStatus()} method will therefore return
      * the default status 'open'. If you want to set a different default status
      * use the {@see setStatus()} method in the construct of the task. See
-     * {@see AddProviderTask} for an example.
+     * {@see AddMandatoryProviderTask} for an example.
      */
     private string $status;
 
@@ -105,7 +107,14 @@ abstract class AbstractTask implements TaskInterface
      */
     public function setStatus(string $status): void
     {
-        $knownStatuses = [self::STATUS_OPEN, self::STATUS_DISMISSED, self::STATUS_COMPLETED, self::STATUS_PREMIUM];
+        $knownStatuses = [
+            self::STATUS_OPEN,
+            self::STATUS_URGENT,
+            self::STATUS_DISMISSED,
+            self::STATUS_COMPLETED,
+            self::STATUS_PREMIUM,
+            self::STATUS_HIDDEN,
+        ];
         if (!in_array($status, $knownStatuses)) {
             return; // Not allowed
         }
@@ -119,6 +128,14 @@ abstract class AbstractTask implements TaskInterface
     public function open(): void
     {
         $this->status = self::STATUS_OPEN;
+    }
+
+    /**
+     * Set the task to 'urgent' status
+     */
+    public function urgent(): void
+    {
+        $this->status = self::STATUS_URGENT;
     }
 
     /**
@@ -140,6 +157,14 @@ abstract class AbstractTask implements TaskInterface
     public function completed(): void
     {
         $this->status = self::STATUS_COMPLETED;
+    }
+
+    /**
+     * Hide the task by setting the status to 'hidden'
+     */
+    public function hide(): void
+    {
+        $this->status = self::STATUS_HIDDEN;
     }
 
     /**
@@ -166,7 +191,8 @@ abstract class AbstractTask implements TaskInterface
         return [
             'id' => $this->getId(),
             'text' => $this->getText(),
-            'status' => $this->isPremium() ? 'premium' : $this->getStatus(),
+            'status' => $this->getStatus(),
+            'premium' => $this->isPremium(),
             'type' => $this->isRequired() ? 'required' : 'optional',
             'action' => $this->getAction(),
         ];

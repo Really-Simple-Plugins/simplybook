@@ -44,11 +44,16 @@ class TaskManagementController implements FeatureInterface
     {
         // Add new tasks here
         $pluginTasks = [
-            new Tasks\AddServiceTask(),
-            new Tasks\AddProviderTask(),
+            new Tasks\AddMandatoryServiceTask(),
+            new Tasks\AddMandatoryProviderTask(),
+            new Tasks\AddAllServicesTask(),
+            new Tasks\AddAllProvidersTask(),
             new Tasks\GoToSimplyBookSystemTask(),
             new Tasks\CustomizeDesignTask(),
-            new Tasks\UpgradeTask(),
+            new Tasks\TrialExpiredTask(),
+            new Tasks\MaximumBookingsTask(),
+            new Tasks\InstallAppTask(),
+            new Tasks\AcceptPaymentsTask(),
         ];
 
         return array_filter($pluginTasks, function ($task) {

@@ -91,6 +91,7 @@ class Plugin
      */
     public static function uninstall()
     {
+        // todo - cleanup options table
     }
 
     /**
@@ -164,6 +165,7 @@ class Plugin
             new Controllers\DesignSettingsController(
                 new Services\DesignSettingsService()
             ),
+            new Controllers\ServicesController(),
         ]);
     }
 

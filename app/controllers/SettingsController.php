@@ -52,9 +52,6 @@ class SettingsController implements ControllerInterface
         if ( empty($this->get_option('country') ) ) {
             $options['country'] = $this->getCountryByLocale();
         }
-        if ( empty($this->get_option('palette') ) ) {
-            $options['palette'] = 'custom';
-        }
         update_option('simplybook_options', $options);
     }
 

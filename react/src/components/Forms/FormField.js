@@ -12,12 +12,10 @@ import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
-import CopyTextField from "../Fields/CopyTextField";
 import ThemeField from "../Fields/ThemeField";
 
 const fieldComponents = {
     text: TextField,
-    copy: CopyTextField,
     api: TextField,
     hidden: HiddenField,
     checkbox: CheckboxField,
@@ -76,7 +74,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                 setValue(id, fieldValue);
             });
         }
-        await saveSettings(settings);
     };
 
     let defaultValue = setting.value || setting.default;
@@ -139,6 +136,7 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                             fieldState={fieldState}
                             required={setting.required}
                             label={setting.label}
+                            copyField={setting.copy_field}
                             disabled={props.settingsIsUpdating || setting.disabled}
                             context={setting.context}
                             help={setting.help}

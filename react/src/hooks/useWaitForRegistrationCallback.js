@@ -8,6 +8,8 @@ const useWaitForRegistrationCallback = () => {
     const [ pollingEnabled, setPollingEnabled ] = useState(!onboardingCompleted);
     const [ queryData, setQueryData ] = useState({ status: "waiting" });
     const [ count, setCount ] = useState(0);
+    const [pollingSuccess, setPollingSuccess] = useState(false);
+
     const { data, refetch, isFetching } = useQuery({
         queryKey: ["registration_callback_status"],
         initialData: { status: "waiting" },
@@ -25,6 +27,7 @@ const useWaitForRegistrationCallback = () => {
             setQueryData(res.data);
             if (res.data.status==='completed'){
                 setPollingEnabled(false);
+                setPollingSuccess(true);
                 setOnboardingCompleted(true);
             }
 
@@ -45,7 +48,8 @@ const useWaitForRegistrationCallback = () => {
     return {
         startPolling: () => setPollingEnabled(true),
         pollingEnabled,
-        isPolling: isFetching
+        isPolling: isFetching,
+        pollingSuccess,
     };
 };
 export default useWaitForRegistrationCallback;

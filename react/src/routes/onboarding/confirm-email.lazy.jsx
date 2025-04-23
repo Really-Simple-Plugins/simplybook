@@ -76,12 +76,13 @@ export const Route = createLazyFileRoute(path)({
                         syncFieldConfig={{
                             key: "confirmation-code",
                             value: confirmationCode,
-                            setValue: setConfirmationCode
+                            setValue: (value) => {
+                                setConfirmationCode(value);
+                            },
                         }}
-                        customHtml={<div id="recaptcha_container" className="mt-4" ref={recaptchaContainerRef}></div>}
+                        customHtml={<div id="recaptcha_container" className="my-4" ref={recaptchaContainerRef}></div>}
                         primaryButton={{
-                            label: __("Verify Email", "simplybook"),
-                            disabled: true,
+                            label: __("Verify email", "simplybook"),
                             showLoader: true
                         }}
                     />

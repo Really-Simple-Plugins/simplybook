@@ -1,5 +1,6 @@
 import React, {forwardRef, InputHTMLAttributes, useEffect, useState} from "react";
 import clsx from "clsx";
+import DOMPurify from "dompurify";
 
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
@@ -47,8 +48,10 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                 />
                 <div className={clsx(checkBoxClasses, className)}></div>
                 {label && (
-                    <span className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}>
-                        {label}
+                    <span
+                        className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(label)}}
+                    >
                     </span>
                 )}
             </label>

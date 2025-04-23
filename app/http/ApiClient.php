@@ -11,6 +11,8 @@ use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Http\DTO\ApiResponseDTO;
+use SimplyBook\Exceptions\ApiException;
+use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\RestDataException;
 
 /**
@@ -125,7 +127,12 @@ class ApiClient
     protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = true): string
     {
         $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
-        $domain = $companyDomain ?: $this->get_domain();
+
+        // Prevent fields config from being loaded before the init hook. In this
+        // case we do not need to validate by default.
+        $validateBasedOnDomainConfig = did_action('init');
+
+        $domain = $companyDomain ?: $this->get_domain($validateBasedOnDomainConfig);
 
         return $base . $domain . '/' . $path;
     }
@@ -325,6 +332,7 @@ class ApiClient
         $data = array(
             'refresh_token' => $refresh_token,
         );
+
         if ( $type === 'admin' ){
             $path = 'admin/auth/refresh-token';
             $headers = $this->get_headers(false );
@@ -334,7 +342,7 @@ class ApiClient
             $headers = $this->get_headers(true );
         }
 
-        $request = wp_remote_post( $this->endpoint( $path ), array(
+        $request = wp_remote_post($this->endpoint( $path ), array(
             'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
@@ -500,51 +508,47 @@ class ApiClient
 
     /**
      * Registers a company with the API
-     *
-     * @return ApiResponseDTO
+     * @internal method can be recursive a maximum of 3 times in one minute
+     * @throws ApiException
      */
-    public function register_company(): ApiResponseDTO {
+    public function register_company(): ApiResponseDTO
+    {
+        if ($this->user_can_manage() === false) {
+            throw new ApiException(
+                esc_html__('You are not authorized to do this.', 'simplybook')
+            );
+        }
 
-        if ( !$this->user_can_manage() ) {
-            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
+        if (get_transient('simply_book_attempt_count') > 3) {
+            throw new ApiException(
+                esc_html__('Too many attempts to register company, please try again in a minute.', 'simplybook')
+            );
         }
 
         //check if we have a token
-        if ( !$this->token_is_valid() ) {
-            error_log("invalid public token");
+        if ($this->token_is_valid() === false) {
             $this->get_public_token();
         }
 
-        if ( get_transient('simply_book_attempt_count') >3 ) {
-            $this->log("Too many attempts to register company");
-            return new ApiResponseDTO( false, __('Too many attempts, please try again later.', 'simplybook') );
+        $companyData = $this->get_company();
+        $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
+
+        if ($sanitizedCompany->isValid() === false) {
+            throw (new ApiException(
+                esc_html__('Please fill in all company data.', 'simplybook')
+            ))->setData([
+                'invalid_fields' => $sanitizedCompany->getInvalidFields(),
+            ]);
         }
 
-        $email = sanitize_email( $this->get_company('email') );
         $callback_url = $this->generate_callback_url();
-        $category = (int) $this->get_company('category');
-        $category =  $category < 1 ? 8 : $category; //default other category
-        $random_password = wp_generate_password( 24, false );
-        $company_name = sanitize_text_field( $this->get_company('company_name') );
-        //strip off
-        //get a description using the WordPress get_bloginfo function
-        $description = $this->get_description();
-        $phone = sanitize_text_field( $this->get_company('phone') );
-        $city = sanitize_text_field( $this->get_company('city') );
-        $address = sanitize_text_field( $this->get_company('address') );
-        $country = $this->sanitize_country( $this->get_company('country') );
-        //no spaces allowed in zip
-        $zip = (string) $this->get_company('zip');
-        $zip = sanitize_text_field( strtolower(str_replace(' ', '', trim( $zip ) ) ) );
+        $random_password = wp_generate_password(24, false);
         $company_login = $this->get_company_login();
-        error_log("company login $company_login");
-        if ( empty($country) || empty($email) || empty($phone) || empty($company_name) || empty($city) || empty($address) || empty($zip) ) {
-            $this->log("Missing fields for company registration");
-            $this->log("email: $email, phone: $phone, company_name: $company_name, description: $description, city: $city, address: $address, zip: $zip");
-            return new ApiResponseDTO( false, __('Missing fields for company registration. Please fill out all fields.', 'simplybook') );
-        }
 
-        $coordinates = $this->get_coordinates($address, $zip, $city, $country);
+        $coordinates = $this->get_coordinates(
+            $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
+        );
+
         $request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
             'headers' => $this->get_headers( true ),
             'timeout' => 15,
@@ -552,91 +556,89 @@ class ApiClient
             'body' => json_encode(
                 [
                     'company_login' => $company_login,
-                    'email' => $email,
-                    'name' => $company_name,
-                    'description' => $description,
-                    'phone' => $phone,
-                    'city' => $city,
-                    'address1' => $address,
-                    'zip' => $zip,
+                    'email' => $sanitizedCompany->email,
+                    'name' => $sanitizedCompany->company_name,
+                    'description' => $this->get_description(),
+                    'phone' => $sanitizedCompany->phone,
+                    'city' => $sanitizedCompany->city,
+                    'address1' => $sanitizedCompany->address,
+                    'zip' => $sanitizedCompany->zip,
                     "lat" => $coordinates['lat'],
                     "lng" => $coordinates['lng'],
                     "timezone" => $this->get_timezone_string(),
-                    "country_id" => $country,
+                    "country_id" => $sanitizedCompany->country,
                     "password" => $random_password,
                     "retype_password" => $random_password,
-                    'categories' => [$category],
+                    'categories' => [$sanitizedCompany->category],
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
-        ) );
-        error_log("company registration response");
-        error_log(print_r($request,true));
+        ));
 
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->recaptcha_site_key) && $request->success ) {
-                delete_option('simplybook_company_registration_error' );
-                error_log(print_r($request,true));
-                update_option( 'simplybook_recaptcha_site_key', sanitize_text_field( $request->recaptcha_site_key) );
-                update_option( 'simplybook_recaptcha_version', sanitize_text_field( $request->recaptcha_version ) );
-                $this->update_option( 'company_id', (int) $request->company_id, $this->duringOnboardingFlag );
-                update_option("simplybook_company_registration_start_time", time(), false);
-                //successful registered
-                return new ApiResponseDTO( true );
-
-            } else {
-                if ( str_contains( $request->message, 'Token Expired')) {
-                    error_log("token expired, refresh");
-                    //invalid token, refresh.
-                    set_transient('simply_book_attempt_count', get_transient('simply_book_attempt_count') + 1, MINUTE_IN_SECONDS);
-                    $this->refresh_token();
-                    return $this->register_company();
-                }
-                error_log(print_r($request->data, true));
-                if ( isset($request->data->company_login) &&
-                    in_array('The field contains illegal words',$request->data->company_login)
-                ) {
-                    error_log("company login contains illegal words, generate new one");
-                    delete_option('simplybook_company_login');
-                    return $this->register_company();
-                }
-
-                if ( isset($request->data->name) &&
-                    in_array('The field contains illegal words', $request->data->name)
-                ) {
-                    error_log("company name contains illegal words, go one step back and report issue");
-                    return new ApiResponseDTO( false, __('The company name contains illegal words. Please change the company name.', 'simplybook') );
-                }
-
-                if ( isset($request->data->company_login) && in_array('login_reserved',$request->data->company_login) ) {
-                    error_log("company login already exists");
-                    //company login already exists. We will be assuming for now that the user is here by accident.
-                    //we return a success and exit.
-                    //@todo update existing data instead of just returning.
-                    return new ApiResponseDTO( true );
-                }
-
-                $this->log("Error during company registration: ".$request->message);
-                //get first property of $request->data
-                $error = '';
-                $fields        = get_object_vars( $request->data );
-                if ( $fields && is_array($fields) ) {
-                    $error_messages = reset( $fields );
-                    $error = $error_messages[0] ?? '';
-                }
-
-                return new ApiResponseDTO( false, $request->message.' '.$error );
-            }
-
-        } else {
-            //retrieve the wp_error message
-            $this->log("Error during company registration: ".$request->get_error_message());
-            return new ApiResponseDTO( false, __('Error during company registration.', 'simplybook')." ".$request->get_error_message() );
+        if (is_wp_error($request)) {
+            throw (new ApiException(
+                esc_html__('Something went wrong while registering your company. Please try again.'))
+            )->setData([
+                'error' => $request->get_error_message(),
+            ]);
         }
+
+        $response = json_decode(wp_remote_retrieve_body($request));
+        $companySuccessfullyRegistered = (
+            isset($response->recaptcha_site_key) && isset($response->success) && $response->success
+        );
+
+        if ($companySuccessfullyRegistered) {
+            return new ApiResponseDTO(true, esc_html__('Company successfully registered.', 'simplybook'), 200, [
+                'recaptcha_site_key' => $response->recaptcha_site_key,
+                'recaptcha_version' => $response->recaptcha_version,
+                'company_id' => $response->company_id,
+            ]);
+        }
+
+        // When unsuccessful due to token expiration, we refresh and try again
+        if (str_contains($response->message, 'Token Expired')) {
+            $currentAttemptCount = get_transient('simply_book_attempt_count') ?: 0;
+            set_transient('simply_book_attempt_count', ($currentAttemptCount + 1), MINUTE_IN_SECONDS);
+            $this->refresh_token();
+            return $this->register_company();
+        }
+
+        // We generate a company_login dynamically, but because SimplyBook has
+        // very strict checks this company_login might be invalid. In this case
+        // we delete the company_login and try again.
+        if (isset($response->data->company_login) &&
+            (
+                in_array('The field contains illegal words', $response->data->company_login)
+                || in_array('login_reserved', $response->data->company_login)
+            )
+        ) {
+            delete_option('simplybook_company_login');
+            return $this->register_company();
+        }
+
+        // Company name contains illegal words, user should be notified.
+        if (isset($response->data->name) &&
+            in_array('The field contains illegal words', $response->data->name)
+        ) {
+            throw (new ApiException(
+                esc_html__('The company name is not allowed. Please change the company name.', 'simplybook')
+            ))->setData([
+                'name' => $response->data->name,
+                'message' => $response->message,
+            ]);
+        }
+
+        throw (new ApiException(
+            esc_html__('Unknown error encountered while registering your company. Please try again.')
+        ))->setData([
+            'message' => $response->message,
+            'data' => get_object_vars($response->data),
+        ]);
+
     }
 
     /**
@@ -714,30 +716,25 @@ class ApiClient
     }
 
     /**
-     * Registers a company with the API
-     *
-     * @param int $email_code
-     * @param string $recaptcha_token
-     *
-     * @return ApiResponseDTO
+     * Confirm email for the company registration based on the email code and
+     * the recaptcha token.
+     * @throws ApiException
      */
-    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO {
-        if ( !$this->user_can_manage() ) {
-            return new ApiResponseDTO( false, __('You are not authorized to do this.', 'simplybook') );
+    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
+    {
+        if ($this->user_can_manage() === false) {
+            throw new ApiException(
+                esc_html__('You are not authorized to do this.', 'simplybook')
+            );
         }
 
-        //check if the company registration was started
-        if ( !get_option("simplybook_company_registration_start_time") ) {
-            $this->log("Company registration not started yet");
-            return new ApiResponseDTO( false, __('Complete the previous, company registration step first.', 'simplybook') );
+        // If the company registration is not started someone tries to submit
+        // the email confirm step without first completing the registration.
+        if (get_option("simplybook_company_registration_start_time") === false) {
+            throw new ApiException(
+                esc_html__('Something went wrong, are you sure you started the company registration?', 'simplybook')
+            );
         }
-
-        error_log("confirming email with body:");
-        error_log(print_r(				[
-            'company_login' => $this->get_company_login(),
-            'confirmation_code' => $email_code,
-            'recaptcha' => $recaptcha_token,
-        ], true));
 
         $request = wp_remote_post( $this->endpoint( 'simplybook/company/confirm' ), array(
             'headers' => $this->get_headers( true ),
@@ -750,23 +747,32 @@ class ApiClient
                     'recaptcha' => $recaptcha_token,
                 ]
             ),
-        ) );
+        ));
 
-        error_log("email confirmation response");
-        error_log( print_r($request,true) );
-
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->success) ) {
-                error_log("email confirmation success, please wait for the callback.");
-                return new ApiResponseDTO( true, __('Email successfully confirmed.', 'simplybook') );
-            } else {
-                $this->log("Error during email confirmation: ".$request->message);
-                return new ApiResponseDTO( false, $request->message);
-            }
-        } else {
-            return new ApiResponseDTO( false, __('Error email confirmation.', 'simplybook')." ".$request->get_error_message() );
+        if (is_wp_error($request)) {
+            throw (new ApiException(
+                esc_html__('Something went wrong while confirming your email. Please try again.'))
+            )->setData([
+                'error' => $request->get_error_message(),
+            ]);
         }
+
+        $response = json_decode(wp_remote_retrieve_body($request));
+        if (isset($response->success)) {
+            return new ApiResponseDTO(true, esc_html__('Email successfully confirmed.', 'simplybook'));
+        }
+
+        $codeIsValid = true;
+        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.');
+        if (isset($response->message) && str_contains($response->message, 'not valid')) {
+            $errorMessage = esc_html__('This confirmation code is not valid.', 'simplybook');
+            $codeIsValid = false;
+        }
+
+        throw (new ApiException($errorMessage))->setData([
+            'message' => $response->message,
+            'valid' => $codeIsValid,
+        ]);
     }
 
     /**
@@ -814,16 +820,61 @@ class ApiClient
             return $services;
         }
 
-        Event::dispatch(Event::HAS_SERVICES);
+        Event::dispatch(Event::HAS_SERVICES, [
+            'count' => count($services),
+        ]);
 
         wp_cache_set('simplybook_services', $services, 'simplybook', MINUTE_IN_SECONDS);
         return $services;
     }
 
     /**
+     * Update service based on service ID. Make sure to pass at least the
+     * mandatory fields: duration and is_visible, besides of course the ID.
+     */
+    public function updateService(string $serviceId, array $updatedData): array
+    {
+        $mandatoryFields = [
+            'duration',
+            'is_visible',
+        ];
+
+        foreach ($mandatoryFields as $field) {
+            if (!isset($updatedData[$field])) {
+                throw new \InvalidArgumentException("Missing mandatory field: $field");
+            }
+        }
+
+        $endpoint = $this->endpoint('admin/services/' . sanitize_text_field($serviceId));
+        $response = wp_safe_remote_request($endpoint, [
+            'method' => 'PUT',
+            'headers' => $this->get_headers(true, 'admin'),
+            'body' => json_encode($updatedData),
+            'timeout' => 15,
+            'sslverify' => true,
+        ]);
+
+        if (is_wp_error($response)) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($response->get_error_code())
+                ->setData($response->get_error_data());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode !== 200) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($responseCode)
+                ->setData($response->get_error_data());
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
+    }
+
+    /**
      * Get list of Simplybook providers
      */
-    public function get_providers(): array {
+    public function get_providers(): array
+    {
         if ( !$this->company_registration_complete() ){
             return [];
         }
@@ -840,7 +891,9 @@ class ApiClient
             return $providers;
         }
 
-        Event::dispatch(Event::HAS_PROVIDERS);
+        Event::dispatch(Event::HAS_PROVIDERS, [
+            'count' => count($providers),
+        ]);
 
         wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
         return $providers;
@@ -885,106 +938,17 @@ class ApiClient
         if ( !$this->company_registration_complete() ){
             return [];
         }
-//		paid_events
-        //memberships
-        //sms
-        $array = [
-            "event_field",
-            "status",
-            "paid_events",
-            "description",
-            "event_category",
-            "news",
-            "google_analytics",
-            "facebookImage",
-            "google_calendar_export",
-            "user_license",
-            "promo",
-            "custom_css",
-            "advanced_notification",
-            "multiple_booking",
-            "group_booking",
-            "any_unit",
-            "location",
-            "secure",
-            "contact_widget",
-            "api",
-            "financial_dashboard",
-            "limit_bookings",
-            "approve_booking",
-            "back_to_site",
-            "data_security",
-            "unit_colors",
-            "recap",
-            "counter",
-            "hipaa",
-            "fixed_time",
-            "cancelation_policy",
-            "gallery",
-            "flexible_template",
-            "smtp",
-            "client_login",
-            "membership",
-            "custom_domain",
-            "enterprise",
-            "client_soap",
-            "sms",
-            "classes",
-            "import_clients",
-            "social_gallery",
-            "paid_attributes",
-            "product",
-            "google_authenticator",
-            "facebook_bot",
-            "voice_booking",
-            "client_soap_crypt",
-            "promotion",
-            "google_translate",
-            "strict_password",
-            "google_tag_manager",
-            "pos",
-            "static_page",
-            "package",
-            "zapier",
-            "google_business",
-            "line_bot",
-            "facebook_business",
-            "deposit_paid_events",
-            "kiosk",
-            "reschedule_booking",
-            "slots_count",
-            "resources",
-            "tickets",
-            "client_field",
-            "online_meeting",
-            "saml",
-            "waiting_list",
-            "pwa",
-            "external_booking_validator",
-            "tickets_qr_code",
-            "vaccination",
-            "custom_email",
-            "tracking",
-            "medical_test",
-            "cloud_storage",
-            "telegram_notifications",
-            "bonus_system",
-            "line_liff",
-            "look_busy",
-            "google_reviews",
-            "booking_restriction",
-            "time_before_service",
-            "tips",
-            "tags",
-            "campaign",
-            "react_widget",
-            "classpass"
-        ];
 
+        if ($cache = wp_cache_get('simplybook_special_feature_plugins', 'simplybook')) {
+            return $cache;
+        }
 
+        $response = $this->api_call('admin/plugins', [], 'GET');
+        $plugins = $response['data'] ?? [];
 
-        $plugins = $this->api_call('admin/plugins', [], 'GET');
+        Event::dispatch(Event::SPECIAL_FEATURES_LOADED, $plugins);
 
+        wp_cache_set('simplybook_special_feature_plugins', $plugins, 'simplybook', MINUTE_IN_SECONDS);
         return $plugins;
     }
 

@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import Manage from "./Partials/Manage";
 import SubscriptionDataList from "./Partials/SubscriptionDataList";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
+import Plugin from "./Partials/Plugin";
 
 
 const DataList = [
@@ -46,7 +47,7 @@ const DataList = [
     },
     {
         title: __("Paid Events", "simplybook"),
-        link: "management/#plugins/paid_events",
+        link: "v2/management/#plugins/paid_events",
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
@@ -64,6 +65,7 @@ const Management = () => {
         hasError,
     } = useSubscriptionData();
 
+    // Services is missing here as we do not receive the limits for it
     const allowedSubscriptionDataLimits: Record<string, string> = {
         provider_limit: __('Provider', 'simplybook'),
         sheduler_limit: __('Bookings', 'simplybook'),

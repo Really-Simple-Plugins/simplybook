@@ -29,9 +29,18 @@ class TaskManagementRepository
      * Retrieve all registered tasks
      * @return TaskInterface[]
      */
-    public function getAllTasks(): array
+    public function getAllTasks(bool $strict = false): array
     {
-        return $this->tasks;
+        $tasks = $this->tasks;
+
+        // If strict mode is enabled, remove tasks that are hidden
+        if ($strict) {
+            $tasks = array_filter($tasks, function ($task) {
+                return $task->getStatus() !== AbstractTask::STATUS_HIDDEN;
+            });
+        }
+
+        return $tasks;
     }
 
     /**

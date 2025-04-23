@@ -2,9 +2,9 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class UpgradeTask extends AbstractTask
+class TrialExpiredTask extends AbstractTask
 {
-    const IDENTIFIER = 'upgrade_from_trial';
+    const IDENTIFIER = 'trial_expired';
 
     /**
      * @inheritDoc
@@ -17,11 +17,22 @@ class UpgradeTask extends AbstractTask
     protected bool $premium = true;
 
     /**
+     * This task is hidden by default, that is because a trial period is
+     * created during onboarding and thus still valid. We do not want to show
+     * this task at all before the trial period is over so we use the hidden
+     * status.
+     */
+    public function __construct()
+    {
+        $this->setStatus(self::STATUS_HIDDEN);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getText(): string
     {
-        return esc_html__('Upgrade your subscription!','simplybook');
+        return esc_html__('Your Trial period has expired! Please consider all premium features!', 'simplybook');
     }
 
     /**

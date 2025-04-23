@@ -25,7 +25,7 @@ const OnboardingHeader = ({
             {isModalOpen && <SignInModal onClose={toggleModal}/>}
             <div className="flex flex-row justify-between w-full px-4">
                 <Logo className="w-40 py-8" />
-                <div className="flex items-center">
+                <div className="flex items-center text-base">
                     <span className={"m-5 text-black"}>
                         {__("Already got an account?", "simplybook")}
                     </span>

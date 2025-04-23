@@ -13,7 +13,7 @@ export const Label = ({
  }: LabelProps) => {
 
     // Base styles
-    const baseStyles = "py-2 px-2 min-w-20 text-center text-base rounded-md font-semibold";
+    const baseStyles = "py-1 px-2 min-w-20 text-center text-sm rounded-md font-semibold";
     const labelStyles = {
         "border-2 border-blac text-xs " : labelVariant === 'ghost',
         "bg-succes-light text-succes" : labelVariant === 'trial',

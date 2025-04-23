@@ -3,6 +3,7 @@ import * as Select from "@radix-ui/react-select";
 import Icon from "../Common/Icon";
 import { SelectOption } from "../../types/inputs/SelectOption";
 import { SelectInputProps } from "../../types/inputs/SelectInputProps";
+import {__} from "@wordpress/i18n";
 
 /**
  * Styled select input component
@@ -29,6 +30,12 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 ref={ref} // Forward the ref if needed
                 {...props}
             >
+                {!value && (
+                    <option value="" disabled>
+                        - {__("Select an option", "simplybook")} -
+                    </option>
+                )}
+
                 {normalizedOptions.map((option) => (
                     <option key={option.key ? option.key : option.value} value={option.value}>
                         {option.label}

@@ -9,11 +9,12 @@ import useLoginData from "../../hooks/useLoginData";
 const ButtonLink: React.FC<ButtonLinkProps> = ({
     className = "",
     children,
+    link = "",
+    linkClassName = "",
     btnVariant,
     disabled = false,
     target,
     loginLink = "",
-    link = "",
     icon = false,
     iconName = "",
     iconSize = "",
@@ -51,14 +52,24 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
   let buttonVariants = clsx(
     // Base styles
-    "flex items-center justify-center rounded-full transition-all duration-200 px-4 py-2 cursor-pointer border-2 hover:brightness-50",
+    "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1",
     {
-      'bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'primary',
-      'bg-tertiary text-white hover:bg-tertiary-dark ' : btnVariant == 'secondary',
-      'border-tertiary bg-transparent text-black hover:bg-tertiary-light ': btnVariant == 'tertiary',
-      'border-black bg-transparent text-black ml-4' : btnVariant == 'ghost',
-      'border-primary text-primary rounded-md py-2 px-6 text-base': btnVariant == 'square-ghost',
-      'rounded-md py-2 px-6 text-white text-sm': btnVariant == 'square-small',
+      'bg-primary text-white hover:bg-primary-dark !p-4 text-base' : btnVariant == 'primary',
+      'bg-primary text-white hover:bg-primary-dark ' : btnVariant == 'primary-small',
+      'bg-secondary text-white hover:bg-secondary-dark !p-4 text-base' : btnVariant == 'secondary',
+      'bg-secondary text-white hover:bg-secondary-dark ' : btnVariant == 'secondary-small',
+      'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary !p-4 text-base': btnVariant == 'tertiary',
+      'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary': btnVariant == 'tertiary-small',
+      'border-2 border-black bg-transparent !p-4 text-base' : btnVariant == 'ghost',
+      'border-2 border-black bg-transparent' : btnVariant == 'ghost-small',
+      'bg-primary text-white rounded-md hover:bg-primary-dark !p-4 text-base': btnVariant == 'square',
+      'rounded-md text-white': btnVariant == 'square-small',
+      'border-2 border-primary text-primary rounded-md !p-4 text-base': btnVariant == 'square-ghost',
+      'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
+
+        // Disabled styles
+        'opacity-50 cursor-not-allowed pointer-events-none': disabled,
+        'cursor-pointer': !disabled,
     }
   );
 
@@ -72,7 +83,12 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
   return (
     <>
-    <Link to={link} onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick} target={target} className="text-base text-tertiary font-semibold">
+    <Link
+      className={clsx(linkClassName, "text-sm font-semibold")}
+      to={link}
+      onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick}
+      target={target}
+      >
       <div className={clsx(disabled ? disabledClass + buttonVariants  : buttonVariants, className)}>
           {icon &&
             <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />

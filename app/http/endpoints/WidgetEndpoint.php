@@ -72,18 +72,28 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         $isPreviewForDesignSettings = ($storage->getString('settings_section') === 'design_settings');
         $isPreviewBasedOnSettings = ($storage->getString('settings_section') !== 'design_settings');
+        $isPreviewDuringOnboarding = ($storage->getBoolean('onboarding') === true);
 
         // This is probably always used as a fallback
-        if ($isPreviewBasedOnSettings) {
+        if ($isPreviewBasedOnSettings && !$isPreviewDuringOnboarding) {
             $widgetSettings = $this->getWidgetSettings();
         }
 
         // Create data for a preview-widget
         if ($isPreviewForDesignSettings) {
-            $widgetSettings = $storage->add('server', $this->getServerURL())->delete([
+            $widgetSettings = $storage->set('server', $this->getServerURL())->delete([
                 'nonce',
                 'settings_section',
             ])->all();
+        }
+
+        // Create data for a preview-widget during onboarding
+        if ($isPreviewDuringOnboarding) {
+            $widgetSettings = $this->getFallbackSettings(
+                $storage->getString('primary'),
+                $storage->getString('secondary'),
+                $storage->getString('active'),
+            );
         }
 
         try {

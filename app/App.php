@@ -157,7 +157,18 @@ final class App
         $data = [];
 
         if (is_dir($path)) {
-            foreach (glob($path . '/*.php') as $file) {
+
+            // This makes sure that if the dir contains another dir, it will
+            // load the files in that dir as well.
+            $iterator = new \RecursiveIteratorIterator(
+                new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)
+            );
+
+            foreach ($iterator as $file) {
+                if (pathinfo($file, PATHINFO_EXTENSION) !== 'php') {
+                    continue;
+                }
+
                 $fileData = require $file;
 
                 if ($prefixWithFileName) {

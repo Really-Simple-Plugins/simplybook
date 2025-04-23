@@ -6,7 +6,6 @@ import request from "../../requests/request";
  * @return {Promise<void>}
  */
 const registerEmail = async ({ data = true }) => {
-    console.log("calling registerEmail api", data);
     return await request("onboarding/register_email", "POST", { data });
 };
 

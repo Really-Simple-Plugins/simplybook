@@ -184,6 +184,7 @@ class WidgetScriptBuilder
     private function getWidgetSettings(): array
     {
         $widgetSettings = $this->widgetSettings;
+        $widgetSettings['predefined'] = [];
 
         foreach ($this->acceptedAttributes as $attribute) {
             if (isset($this->attributes[$attribute])) {

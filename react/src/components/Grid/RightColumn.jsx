@@ -1,12 +1,16 @@
 
 import clsx from "clsx"
 
-const RightColumn = ({ 
+const RightColumn = ({
     className,
-    children 
+    style,
+    children
 }) => {
     return (
-        <div className={clsx(className, "right-column")}>
+        <div
+            className={clsx("right-column w-full flex", className)}
+            style={style}
+        >
             {children}
         </div>
     )

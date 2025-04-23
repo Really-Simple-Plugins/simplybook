@@ -4,6 +4,15 @@ import { TaskData } from "../types/TaskData";
 import HttpClient from "../api/requests/HttpClient";
 
 const useTaskData = () => {
+
+    const statusPriority = {
+        urgent: 0,
+        open: 10,
+        completed: 20,
+        dismissed: 30,
+        hidden: 40,
+    };
+
     const queryClient = useQueryClient();
 
     const getTasksRoute = 'get_tasks';
@@ -27,10 +36,23 @@ const useTaskData = () => {
     }
 
     /**
-     * Extract the tasks from the response for easy access.
+     * Extract the tasks from the response for easy access. And sort them by
+     * priority.
      * @type {Task[]}
      */
-    const tasks: Task[] = Array.isArray(response?.data) ? response?.data : [];
+    let tasks: Task[] = [];
+    if (Array.isArray(response?.data)) {
+        tasks = response?.data.map((task: Task) => {
+            return {
+                ...task,
+                priority: (statusPriority[task.status]) ?? 69,
+            };
+        }).sort((a: Task, b: Task) => a.priority - b.priority);
+
+        // Just to be sure we do this here too, but they shouldn't be in the
+        // response anyway.
+        tasks = tasks.filter((task: Task) => task.status !== "hidden");
+    }
 
     /**
      * Handles the mutation for dismissing a task.
@@ -56,7 +78,7 @@ const useTaskData = () => {
      */
     const getRemainingTasks = () => {
         return tasks.filter((task: Task) =>
-            ["open", "urgent", "premium"].includes(task.status),
+            ["open", "urgent"].includes(task.status),
         );
     };
 
@@ -69,8 +91,9 @@ const useTaskData = () => {
         const completed = tasks.filter(
             (task: Task) => task.status === "dismissed" || task.status === "completed",
         ).length;
-        const actualPercentage = Math.round((completed / total) * 80);
-        return 20 + actualPercentage;
+
+        const actualPercentage = Math.round((completed / total) * 100);
+        return actualPercentage;
     };
 
     return {

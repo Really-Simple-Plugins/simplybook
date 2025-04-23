@@ -238,6 +238,7 @@ class DashboardController implements ControllerInterface
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 // 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => App::env('simplybook.domains'),
+                'simplybook_countries' => App::fields()->get('countries'),
             ]
         );
     }

@@ -37,25 +37,13 @@ const TipsTricks = () => {
                     )}
                 </div>
             </BlockContent>
-            <BlockFooter className="bg-gray-50">
+            <BlockFooter>
                 <ButtonLink 
                     className={"border-tertiary text-tertiary mr-4"} 
-                    icon={true}
-                    iconName="tips" 
                     loginLink={data?.data.all ?? '#'} 
-                    btnVariant={"square-ghost"}
+                    btnVariant={"square-ghost-small"}
                 >
                     {__("View All", "simplybook")}
-                </ButtonLink>
-                <ButtonLink 
-                    className={"border-youtube text-youtube"} 
-                    icon={true}
-                    iconName="youtube" 
-                    target="_blank"
-                    link="https://www.youtube.com/c/simplybookme-booking-system" 
-                    btnVariant={"square-ghost"}
-                >
-                    {__("View Video Tutorials", "simplybook")}
                 </ButtonLink>
             </BlockFooter>
         </Block>

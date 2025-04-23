@@ -16,7 +16,7 @@ class GoToSimplyBookSystemTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Go to your SimplyBook system!','simplybook');
+        return esc_html__('Discover the full functionality on simplybook.me', 'simplybook');
     }
 
     /**

@@ -1,5 +1,7 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
+use SimplyBook\Http\ApiClient;
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasRestAccess;
@@ -15,7 +17,7 @@ class OnboardingService
     /**
      * Store the onboarding step in the general options without autoload
      */
-    public function setOnboardingStep(int $step): void
+    public function setCompletedStep(int $step): void
     {
         update_option('simplybook_completed_step', $step, false);
     }
@@ -23,10 +25,34 @@ class OnboardingService
     /**
      * Set the onboarding as completed in the general options without autoload
      */
-    public function setOnboardingCompleted(): void
+    public function setOnboardingCompleted(): bool
     {
-        $this->setOnboardingStep(5);
-        update_option('simplybook_onboarding_completed', true, false);
+        $this->setCompletedStep(5);
+        $this->clearTemporaryData();
+
+        $completedPreviously = get_option('simplybook_onboarding_completed', false);
+        if ($completedPreviously) {
+            return true;
+        }
+
+        return update_option('simplybook_onboarding_completed', true, false);
+    }
+
+    /**
+     * This method should be called after a successful company registration.
+     * In that case the data given should be based on the data returned in the
+     * ApiResponseDTO from the successful {@see ApiClient::register_company()}
+     */
+    public function finishCompanyRegistration(array $data)
+    {
+        $responseDataStorage = new Storage($data);
+
+        update_option("simplybook_company_registration_start_time", time(), false);
+        update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
+        update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
+        $this->update_option('company_id', $responseDataStorage->getInt('company_id'));
+
+        $this->setCompletedStep(2);
     }
 
     /**
@@ -34,18 +60,20 @@ class OnboardingService
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        sleep(1);
-
         $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
 
-        $this->update_option('email', $submittedEmailAddress, true);
-        $this->update_option('terms-and-conditions', $adminAgreesToTerms, true);
-
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
         $message = ($success ? '' : esc_html__('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
+
+        if ($success) {
+            $this->setTemporaryData([
+                'email' => $submittedEmailAddress,
+                'terms' => $adminAgreesToTerms,
+            ]);
+        }
 
         return $this->sendHttpResponse([], $success, $message);
     }
@@ -113,5 +141,34 @@ class OnboardingService
         }
 
         return [$domain, $login];
+    }
+
+    /**
+     * Method can be used to set temporary data for the onboarding process.
+     */
+    public function setTemporaryData(array $data): void
+    {
+        $options = get_option('simplybook_temporary_onboarding_data', []);
+        $options = array_merge($options, $data);
+        update_option('simplybook_temporary_onboarding_data', $options, false);
+    }
+
+    /**
+     * Method can be used to retrieve temporary data for the onboarding process.
+     * Returns the array of data as a Storage object for easier access.
+     */
+    public function getTemporaryDataStorage(): Storage
+    {
+        return new Storage(
+            get_option('simplybook_temporary_onboarding_data', [])
+        );
+    }
+
+    /**
+     * Method should be used to clear the temporary data for the onboarding.
+     */
+    public function clearTemporaryData(): void
+    {
+        delete_option('simplybook_temporary_onboarding_data');
     }
 }

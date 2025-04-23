@@ -1,16 +1,24 @@
 import React from "react";
 import Icon from "./Icon";
+import clsx from "clsx";
 import ButtonInput from "../Inputs/ButtonInput";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useLoginData from "../../hooks/useLoginData";
 
 const LoginLink = ({
-    className,
-    page,
+    className = "",
+    page = "",
     isButton = false,
     size="md",
     btnVariant="primary",
-    children
+    children = "",
+    disabled = false,
+    iconName = "",
+    iconSize = "",
+    iconClass = "",
+    iconStyle = "",
+    onClick = () => {},
+    reverseIcon = false,
 }) => {
 
     const {fetchLinkData} = useLoginData();
@@ -42,20 +50,23 @@ const LoginLink = ({
 
     };
 
+
     // Apply conditional classes
-    const externalLinkClass = onboardingCompleted
-        ? ""
-        : "pointer-events-none opacity-50 cursor-not-allowed";
+    const externalLinkClass = disabled
+        ? "pointer-events-none opacity-50 cursor-not-allowed"
+        : "";
+
+    // Combine the classes together
     const combinedClassName = `${externalLinkClass}${className} `;
 
     if (isButton) {
         return (
             <ButtonInput
-                disabled={!onboardingCompleted}
+                disabled={disabled}
                 label={children}
                 onClick={(e) => loginTo(e, page)}
                 className={combinedClassName}
-                btnVariant={btnVariant}
+                btnVarisant={btnVariant}
                 size={size}
             >
                 {children}
@@ -66,11 +77,13 @@ const LoginLink = ({
     return (
         <a
             href="#"
-            className={`${className} ${externalLinkClass}`}
+            className={combinedClassName}
             onClick={(e) => loginTo(e, page)}
         >
             {children}
-            <Icon name="square-arrow-up-right" className="px-2" />
+            {iconName.length > 0 && (
+                <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
+            )}
         </a>
     );
 };
