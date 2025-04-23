@@ -10,7 +10,7 @@ const BlockHeading = ({ title, controls, className = "", help = "" }) => {
                 {controls}
             </div>
             {help && (
-                <div className="px-5 py-2 text-sm text-gray-500">
+                <div className="px-4 pb-4 text-sm text-gray-500">
                     {help}
                 </div>
             )}
