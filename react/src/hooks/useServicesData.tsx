@@ -1,12 +1,7 @@
 import {useQuery} from "@tanstack/react-query";
 import HttpClient from "../api/requests/HttpClient";
 import {useNotifications} from "../context/NotificationContext";
-/**
- * Custom hook for managing settings data using Tanstack Query.
- * This hook provides functions to fetch and update settings.
- *
- * @returns {Object} - An object containing settings data, update function, and status flags.
- */
+
 const useServicesData = (): object => {
 
     const { triggerNotificationById } = useNotifications();
