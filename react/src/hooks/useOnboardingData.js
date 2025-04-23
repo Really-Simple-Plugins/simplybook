@@ -147,12 +147,8 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                console.log("submit information check step");
-                console.log(data);
                 let response = await registerCompany({ data });
-                console.log("registercompany response ", response);
                 if (response.status !== "success") {
-                    console.log("setting api error to ", response.message);
                     setApiError(response.message);
                     return false;
                 }
@@ -247,6 +243,7 @@ const useOnboardingData = () => {
             },
         },
     ];
+
     const [bookingPageUrl, setBookingPageUrl] = useState(
         simplybook.site_url + "/" + __("my-booking", "simplybook"),
     );
