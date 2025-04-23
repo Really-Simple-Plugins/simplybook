@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
 import { __, _n, sprintf } from "@wordpress/i18n";
@@ -7,6 +7,8 @@ import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
 import {Task} from "../../types/Task";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
+import {Link} from "@tanstack/react-router";
+import LoginLink from "../Common/LoginLink";
 
 const getStatusStyles = (status: string, premium: boolean) => {
     if (premium) {
@@ -114,13 +116,21 @@ const Progress = () => {
 
                             {/* Action button */}
                             <div>
-                                {task.action && (
-                                    <a
-                                        href={task.action.link}
+                                {task.action && task.action.text && task.action.link && (
+                                    <Link
+                                        to={task.action.link}
                                         className="text-tertiary hover:text-tertiary/80 text-sm underline"
                                     >
                                         {task.action.text}
-                                    </a>
+                                    </Link>
+                                )}
+                                {task.action && task.action.text && task.action.login_link && (
+                                    <LoginLink
+                                        page={task.action.login_link}
+                                        className="text-tertiary hover:text-tertiary/80 text-sm underline"
+                                    >
+                                        {task.action.text}
+                                    </LoginLink>
                                 )}
                             </div>
 

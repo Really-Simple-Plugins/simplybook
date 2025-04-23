@@ -7,6 +7,7 @@ export interface Task {
     priority: number;
     action?: {
         text: string;
-        link: string;
+        link?: string;
+        login_link?: string;
     };
 }
