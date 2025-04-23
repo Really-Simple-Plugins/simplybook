@@ -138,7 +138,6 @@ const OnboardingStep = ({
     const restartOnboarding = () => {
         // Ensure the onboarding is set back to incomplete
         setOnboardingCompleted(false);
-        
         // To do create request that also resets the data on the dashboard page
     }
 
@@ -162,13 +161,14 @@ const OnboardingStep = ({
                         />
                         {currentStepId > 1 && currentStepId < 4 && (
                             <ButtonLink 
+                                iconName="retry"
                                 linkClassName="w-full"
                                 className="w-full border-tertiary text-tertiary"
                                 btnVariant="ghost"
                                 link={getURLForStep(1)}
-                                // onClick={restartOnboarding}
+                                onClick={restartOnboarding}
                             >
-                                {__("Retry onboarding", "simplybook")}
+                                {__("Retry registration", "simplybook")}
                             </ButtonLink>   
                         )}
                         {secondaryButton && (
