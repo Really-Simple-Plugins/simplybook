@@ -7,6 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Carbon\Carbon;
 use SimplyBook\Helpers\Event;
+use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyHelper;
@@ -25,11 +26,24 @@ class ApiClient
     use LegacyHelper;
 
     protected JsonRpcClient $jsonRpcClient;
+
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
      * middle of the onboarding process.
      */
     private bool $duringOnboardingFlag = false;
+
+    /**
+     * Key for the {@see authenticationFailedFlag} property.
+     */
+    protected string $authenticationFailedFlagKey = 'simplybook_authentication_failed_flag';
+
+    /**
+     * Flag to use when the authentication failed indefinitely. This is used to
+     * prevent us retrying again and again. This flag is possibly true when a
+     * refresh token is outdated AND the user has changed their password.
+     */
+    protected bool $authenticationFailedFlag = false;
 
     protected string $_commonCacheKey = '_v13';
     protected array $_avLanguages = [
@@ -40,6 +54,13 @@ class ApiClient
 
     public function __construct(JsonRpcClient $client)
     {
+        $this->jsonRpcClient = $client;
+
+        if (get_option($this->authenticationFailedFlagKey)) {
+            $this->authenticationFailedFlag = true;
+            return;
+        }
+
         //if we have a token, check if it needs to be refreshed
         if ( !$this->get_token('public') ) {
             $this->get_public_token();
@@ -53,7 +74,6 @@ class ApiClient
             }
         }
 
-        $this->jsonRpcClient = $client;
 
 //		$recently_loaded = get_transient('simplybook_recently_loaded');
 //		if ( !$recently_loaded ) {
@@ -335,11 +355,11 @@ class ApiClient
 
         if ( $type === 'admin' ){
             $path = 'admin/auth/refresh-token';
-            $headers = $this->get_headers(false );
+            $headers = $this->get_headers(false);
             $data['company'] = $this->get_company_login();
         } else {
             $path = 'simplybook/auth/refresh-token';
-            $headers = $this->get_headers(true );
+            $headers = $this->get_headers(true);
         }
 
         $request = wp_remote_post($this->endpoint( $path ), array(
@@ -351,14 +371,56 @@ class ApiClient
             ),
         ) );
 
-        if ( ! is_wp_error( $request ) ) {
-            $response_code = wp_remote_retrieve_response_code( $request );
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( $response_code === 401 && $type==='public' ) {
-                error_log("unauthorized, get fresh $type token");
-                $this->get_public_token();
+        $response_code = wp_remote_retrieve_response_code( $request );
+
+        if (($response_code === 401) && ($type === 'public')) {
+            $this->get_public_token();
+            return;
+        }
+
+        // If token is 'admin' and the refresh request was "unauthorized" we
+        // need to login again.
+        if (($response_code === 401) && ($type === 'admin')) {
+            if ($this->authenticationFailedFlag) {
+                return; // Dont even try again.
+            }
+
+            $validateBasedOnDomainConfig = did_action('init');
+            $domain = $this->get_domain($validateBasedOnDomainConfig);
+
+            $companyData = $this->get_company();
+            $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
+
+            try {
+                $response = $this->authenticateExistingUser(
+                    $domain,
+                    $this->get_company_login(),
+                    $sanitizedCompany->email,
+                    $this->decrypt_string($sanitizedCompany->password)
+                );
+            } catch (\Exception $e) {
+                // Their password probably changed. Stop trying to refresh.
+                update_option($this->authenticationFailedFlagKey, true);
+                $this->log('Error during token refresh: ' . $e->getMessage());
                 return;
             }
+
+            $responseStorage = new Storage($response);
+            $this->setDuringOnboardingFlag(true); // Allows saving stale fields
+            $this->saveAuthenticationData(
+                $responseStorage->getString('token'),
+                $responseStorage->getString('refresh_token'),
+                $domain,
+                $this->get_company_login(),
+                $responseStorage->getInt('company_id'),
+            );
+
+            return;
+        }
+
+        if ( ! is_wp_error( $request ) ) {
+            $request = json_decode( wp_remote_retrieve_body( $request ) );
+
             error_log(print_r("refresh token response for type $type",true));
             error_log(print_r($request,true));
             if ( isset($request->token) ) {
@@ -542,7 +604,6 @@ class ApiClient
         }
 
         $callback_url = $this->generate_callback_url();
-        $random_password = wp_generate_password(24, false);
         $company_login = $this->get_company_login();
 
         $coordinates = $this->get_coordinates(
@@ -567,8 +628,8 @@ class ApiClient
                     "lng" => $coordinates['lng'],
                     "timezone" => $this->get_timezone_string(),
                     "country_id" => $sanitizedCompany->country,
-                    "password" => $random_password,
-                    "retype_password" => $random_password,
+                    "password" => $this->decrypt_string($sanitizedCompany->password),
+                    "retype_password" => $this->decrypt_string($sanitizedCompany->password),
                     'categories' => [$sanitizedCompany->category],
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
@@ -982,7 +1043,12 @@ class ApiClient
      * @return array
      */
 
-    protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array {
+    protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array
+    {
+        if ($this->authenticationFailedFlag) {
+            return []; // Prevent us even trying.
+        }
+
         error_log( "api call for $path" );
         //with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
         //with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
@@ -1388,6 +1454,10 @@ class ApiClient
      */
     public function getThemeList(): array
     {
+        if ($this->authenticationFailedFlag) {
+            return []; // Prevent us even trying.
+        }
+
         if ($cache = wp_cache_get('simplybook_theme_list', 'simplybook')) {
             return $cache;
         }
@@ -1428,6 +1498,10 @@ class ApiClient
      */
     public function getTimelineList(): array
     {
+        if ($this->authenticationFailedFlag) {
+            return []; // Prevent us even trying.
+        }
+
         if ($cache = wp_cache_get('simplybook_timeline_list', 'simplybook')) {
             return $cache;
         }
