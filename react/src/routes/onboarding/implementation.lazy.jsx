@@ -50,7 +50,6 @@ export const Route = createLazyFileRoute(path)({
                     </div>
                     <OnboardingStep
                         path={path}
-                        company
                         title={__("Implement SimplyBook.me", "simplybook")}
                         primaryButton={{
                             label: __("Continue configuration", "simplybook"),
