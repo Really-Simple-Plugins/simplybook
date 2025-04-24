@@ -11,24 +11,23 @@ import ButtonLink from "../Buttons/ButtonLink";
 const DataList = [
     {
         title: __("Providers", "simplybook"),
-        link: "/settings/providers",
-        buttonText: __("View", "simplybook"),
-        btnVariant: "primary",
+        link: "/v2/management/#providers",
         id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
     /* {
         title: __("Services", "simplybook"),
-        link: "/settings/services",
-        buttonText: __("View", "simplybook"),
-        btnVariant: "primary",
+        link: "/v2/management/#services",
         // id: "does not exist in subscription data yet"
     }, */
     {
         title: __("Bookings", "simplybook"),
-        link: "/settings",
-        buttonText: __("View", "simplybook"),
-        btnVariant: "primary",
+        link: "v2/index/index",
         id: "sheduler_limit", // Data from useSubscriptionData is found on ID
+    },
+    {
+        title: __("SMS Credits", "simplybook"),
+        link: "/v2/r/payment-widget#/products",
+        id: "sms_limit", // Data from useSubscriptionData is found on ID
     },
     {
         title: __("SMS Gateway", "simplybook"),
