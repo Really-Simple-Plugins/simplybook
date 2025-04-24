@@ -90,7 +90,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
       onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick}
       target={target}
       >
-      <div className={clsx(buttonVariants,  reverseClass, disabledClass, className)}>
+      <div className={clsx(buttonVariants, reverseClass, disabledClass, className)}>
           {iconName &&
             <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
           }
