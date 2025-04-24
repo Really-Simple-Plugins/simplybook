@@ -344,8 +344,6 @@ const useOnboardingData = () => {
         const checkAvailability = async () => {
             if (simplybook.is_onboarding_completed || query?.data?.onboardingCompleted) return;
 
-            console.log('are we from here?');
-
             setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
             setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
         };
