@@ -160,7 +160,7 @@ const OnboardingStep = ({
                         <FormFieldWrapper fields={currentStep.fields} control={control}/>
                         {customHtml}
                         <ButtonField
-                            className="w-full"
+                            className="w-full mt-4"
                             showLoader={isValidating}
                             btnVariant="secondary"
                             label={primaryButton.label}

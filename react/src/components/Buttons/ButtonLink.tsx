@@ -73,7 +73,8 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     }
   );
 
-  const disabledClass = 'opacity-50 cursor-not-allowed';
+  const disabledClass = disabled ? 'opacity-50 cursor-not-allowed' : "";
+  const reverseClass = reverseIcon ? 'flex-row-reverse' : 'flex-row';
 
 
 
@@ -84,12 +85,12 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
   return (
     <>
     <Link
-      className={clsx(linkClassName, "text-sm font-semibold")}
+      className={clsx(linkClassName,"text-sm font-semibold")}
       to={link}
       onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick}
       target={target}
       >
-      <div className={clsx(disabled ? disabledClass + buttonVariants  : buttonVariants, className)}>
+      <div className={clsx(buttonVariants, reverseClass, disabledClass, className)}>
           {iconName &&
             <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
           }

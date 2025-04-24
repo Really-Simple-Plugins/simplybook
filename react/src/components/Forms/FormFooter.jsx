@@ -5,18 +5,20 @@ import { useFormState } from "react-hook-form";
 import Icon from "../Common/Icon";
 import useSettingsData from "../../hooks/useSettingsData";
 import ButtonLink from "../Buttons/ButtonLink";
+import PreviewButtonInput from "../Inputs/PreviewButton";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 
 const FormFooter = ({
     onSubmit,
     control,
+    getValues
 }) => {
     const {
         isDirty,
-         isSubmitting,
-         isValidating,
-         isValid
+        isSubmitting,
+        isValidating,
+        isValid
     } = useFormState({
         control,
     });
@@ -34,12 +36,13 @@ const FormFooter = ({
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
             <FormScrollProgressLine />
-            <div className="flex flex-row justify-end gap-2 items-center p-5">
+            <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
                     <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
                         {currentState.message}
                     </p>
                 )}
+                <PreviewButtonInput btnVariant={'tertiary-small'} getValues={getValues}></PreviewButtonInput>
                 <ButtonLink
                     disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
                     btnVariant={'secondary-small'}

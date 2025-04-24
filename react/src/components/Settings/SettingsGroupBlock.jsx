@@ -18,11 +18,6 @@ const SettingsGroupBlock = memo(
                         <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues} reset={reset}/>
                     </div>
                 </BlockContent>
-                {group.has_preview && (
-                    <BlockFooter className="rounded-xl bg-gray-50">
-                        <PreviewButtonInput btnVariant="tertiary" getValues={getValues}></PreviewButtonInput>
-                    </BlockFooter>
-                )}
             </Block>
         );
     },

@@ -45,10 +45,10 @@ const Header = () => {
             <div className="mx-auto px-5 flex items-baseline max-w-screen-2xl">
                 <div className="self-center">
                     <Link to="/">
-                        <Logo className=" w-40 px-5 py-2" />
+                        <Logo className=" w-40 mr-4" />
                     </Link>
                 </div>
-                <div className="flex items-center">
+                <div className="flex items-center mr-4">
                     <Link
                         to="/"
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
@@ -84,7 +84,7 @@ const Header = () => {
                     </Link>
                 </div>
                 <ButtonLink
-                    className={"border-tertiary-border border-2 bg-tertiary-light hover:border-primary-border ml-4 "}
+                    className={"border-tertiary-border border-2 bg-tertiary-light hover:bg-tertiary hover:text-white hover:border-primary-border focus:border-tertiary"}
                     target="_blank"
                     link="https://help.simplybook.me/index.php/Help_Center"
                     icon={true}
