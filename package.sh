@@ -1,23 +1,31 @@
 #!/bin/bash
 
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+RESET='\033[0m' # Reset color
+
 # Determine the path where this script is located
 ROOT_DIR=$(realpath "$(dirname "$0")")
 
 # Extract folder name to use as plugin name
-PLUGIN_NAME=${ROOT_DIR##*/};
+PLUGIN_NAME=${ROOT_DIR##*/}
 
 # Ask the user to confirm or set the plugin name
-printf "Detected plugin name: %s \n" "${PLUGIN_NAME}"
-read -p "Do you want to use this for the package? (y/n): " CONFIRM
+printf "${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
+read -p "$(printf "${BLUE}Do you want to use this for the package? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
-  read -p "Please enter the correct plugin name: " PLUGIN_NAME
+  read -p "$(printf "${BLUE}Please enter the correct plugin name: ${RESET}")" PLUGIN_NAME
   if [[ -z "$PLUGIN_NAME" ]]; then
-    echo "Error: Plugin name cannot be empty."
+    printf "${RED}Error: Plugin name cannot be empty.${RESET}\n"
     exit 1
   fi
 fi
 
-printf "Using %s for the zip file. \n" "${PLUGIN_NAME}"
+printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} for the zip file.${RESET}\n\n" "${PLUGIN_NAME}"
 
 # List of patterns or folders to exclude from rsync copy
 EXCLUDES=(
@@ -28,48 +36,65 @@ EXCLUDES=(
   "--exclude=.gitignore"
   "--exclude=.wp-env.json"
   "--exclude=package.sh"
-);
+)
 
 # First make sure React build is up to date
-printf "Making sure React build is up to date... \n"
+printf "${BLUE}Making sure React build is up to date...${RESET}\n"
 cd "${ROOT_DIR}"/react || exit
 npm install
 npm run build
 npm run build:css
 cd "${ROOT_DIR}" || exit
 
+printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
+
 # Clean up any previous build artifacts
+printf "${BLUE}Cleaning up previous build artifacts...${RESET}\n"
 rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
 
+printf "${GREEN}✅ Clean!${RESET}\n\n"
+
 # Copy the plugin to /tmp while excluding the EXCLUDES list
-printf "Copying %s to /tmp \n" "${PLUGIN_NAME}"
+printf "${BLUE}Copying %s to /tmp...${RESET}\n" "${PLUGIN_NAME}"
 rsync -a -q "${EXCLUDES[@]}" ./ /tmp/"${PLUGIN_NAME}"
+
+printf "${GREEN}✅ Copied!${RESET}\n\n"
 
 # Change to the temporary directory
 cd /tmp/"${PLUGIN_NAME}" || exit
 
-printf "Installing composer packages (production only)... \n"
+printf "${BLUE}Installing composer packages (production only)...${RESET}\n\n"
 composer install --no-dev --optimize-autoloader
 
+printf "\n${GREEN}✅ Packages installed for production!${RESET}\n\n"
+
 # Strip out files that are not meant to be shipped
-printf "Cleaning up dev-related files... \n"
+printf "${BLUE}Cleaning up dev-related files...${RESET}\n"
 rm -rf ./composer.json ./composer.lock
 
+printf "${GREEN}✅ Clean!${RESET}\n\n"
+
 # Enable extended pattern matching for glob operations like !(pattern)
-printf "Enabling extended glob patterns... \n"
+printf "${BLUE}Enabling extended glob patterns...${RESET}\n"
 shopt -s extglob
 
+printf "${GREEN}✅ Glob operations are now supported!${RESET}\n\n"
+
 # Remove everything from react folder except src and build folder
-printf "Cleanup react app \n"
+printf "${BLUE}Cleaning up React app...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/react || exit
 rm -rf ..?* .[!.]* !(src|build)
 
+printf "${GREEN}✅ Clean!${RESET}\n\n"
+
 # Remove everything from Gutenberg block except src and build folder
-printf "Cleanup Gutenberg block \n"
+printf "${BLUE}Cleaning up Gutenberg block...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/assets/block || exit
 rm -rf ..?* .[!.]* !(src|build)
+
+printf "${GREEN}✅ Clean!${RESET}\n\n"
 
 cd /tmp/ || exit
 zip -rqT "${PLUGIN_NAME}".zip "${PLUGIN_NAME}"/
 
-echo "✅ All done! Your package '${PLUGIN_NAME}.zip' is ready."
+printf "${GREEN}✅ All done! Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n" "${PLUGIN_NAME}"
