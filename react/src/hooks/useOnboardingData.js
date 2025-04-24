@@ -226,6 +226,7 @@ const useOnboardingData = () => {
                         return false;
                     }
 
+                    updateOnboardingCompleted(true);
                     return true;
                 }
 
@@ -236,6 +237,7 @@ const useOnboardingData = () => {
                         return false;
                     }
 
+                    updateOnboardingCompleted(true);
                     return true;
                 }
 
@@ -303,17 +305,6 @@ const useOnboardingData = () => {
         debouncedSetCalendarPageName(pageName);
     };
 
-    useEffect(() => {
-        const checkAvailability = async () => {
-            if (simplybook.is_onboarding_completed) return;
-
-            setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
-            setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
-        };
-
-        checkAvailability();
-    }, []);
-
     const query = useQuery({
         queryKey: ["onboarding_data"],
         initialData: {
@@ -348,6 +339,17 @@ const useOnboardingData = () => {
             queryClient.invalidateQueries(["onboarding_data"]);
         },
     });
+
+    useEffect(() => {
+        const checkAvailability = async () => {
+            if (simplybook.is_onboarding_completed || query?.data?.onboardingCompleted) return;
+
+            setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
+            setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
+        };
+
+        checkAvailability();
+    }, []);
 
     useEffect(() => {
         setApiError('');
