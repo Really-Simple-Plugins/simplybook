@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Traits;
 
+use SimplyBook\App;
+
 trait HasWidget
 {
     use LegacyLoad;
@@ -14,6 +16,20 @@ trait HasWidget
     {
         $designSettings = get_option('simplybook_design_settings', []);
         $designSettings['server'] = $this->getServerURL();
+
+        $configCanBeLoaded = (doing_action('init') || did_action('init'));
+        if (!$configCanBeLoaded) {
+            return $designSettings; // Prevents translation issues
+        }
+
+        // Add default values from the design config
+        $designConfig = App::fields()->get('design');
+        foreach ($designConfig as $setting => $config) {
+            if (!isset($designSettings[$setting]) && isset($config['default'])) {
+                $designSettings[$setting] = $config['default'];
+            }
+        }
+
         return $designSettings;
     }
 
