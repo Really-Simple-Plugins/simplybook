@@ -68,6 +68,7 @@ psd
 thumb
 sketch
 react/build
+react/build/*
 react/.npmrc
 
 *storybook.log

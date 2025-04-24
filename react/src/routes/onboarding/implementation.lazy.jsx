@@ -16,6 +16,7 @@ export const Route = createLazyFileRoute(path)({
         const { getValue } = useSettingsData();
 
         const {
+            getCurrentStep,
             setCalendarPageName,
             bookingPageName,
             setBookingPageName,
@@ -24,9 +25,17 @@ export const Route = createLazyFileRoute(path)({
             bookingPageNameAvailable,
         } = useOnboardingData();
 
+        let stepSettings = getCurrentStep(path);
+        let implementationField = stepSettings.fields.find((field) => field.id === "implementation");
+
         let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
         let pagesShouldBeCreated = (getValue('implementation') === "generated");
         let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
+
+        let chosenOption = implementationField?.default;
+        if (getValue('implementation') !== false) {
+            chosenOption = getValue('implementation');
+        }
 
         return (
             <>
@@ -52,7 +61,7 @@ export const Route = createLazyFileRoute(path)({
                 </LeftColumn>
                 <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-4 col-span-12 relative w-full"}>
                     <div className={"flex flex-col flex-wrap items-center my-10 text-center h-full"}>
-                        {getValue('implementation') === "manual" &&
+                        {(chosenOption === "manual") &&
                             <>
                                 <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>
@@ -76,7 +85,7 @@ export const Route = createLazyFileRoute(path)({
                                 </div> */}
                             </>
                         }
-                        {getValue('implementation') === "generated" &&
+                        {(chosenOption === "generated") &&
                             <>
                                 <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>

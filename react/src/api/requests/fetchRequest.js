@@ -10,7 +10,6 @@ import apiFetch from "@wordpress/api-fetch";
  */
 const fetchRequest = async (path, method = "POST", data = {}, url) => {
   const args = { path, method, data };
-  const test_url = "simplybook/v1/settings/get_fields";
   // resolve or reject
   return await apiFetch(args);
 };

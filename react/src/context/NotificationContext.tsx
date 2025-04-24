@@ -1,4 +1,4 @@
-import React, {createContext, useContext, useState} from "react";
+import React, {createContext, useContext, useEffect, useState} from "react";
 import {Notice} from "../types/Notice";
 import useNotificationsData from "../hooks/useNotificationsData";
 
@@ -46,6 +46,23 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
 
     const {allNotices, isLoading} = useNotificationsData();
     const [activeNotifications, setActiveNotifications] = useState<Notice[]>([]);
+
+    /**
+     * Find notices that are active by default and add them to the
+     * activeNotifications state. This will show these notifications without
+     * needing a client side trigger.
+     */
+    useEffect(() => {
+        if (!allNotices) return;
+
+        const active = allNotices.filter((item: Notice) => item.active);
+        if (active.length > 0) {
+            setActiveNotifications((prev) => {
+                const newNotices = active.filter((item: Notice) => !prev.some((n: Notice) => n.id === item.id));
+                return [...prev, ...newNotices];
+            });
+        }
+    }, [allNotices]);
 
     /**
      * Get specific notice object from the list of all notices by id.

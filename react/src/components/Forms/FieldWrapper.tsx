@@ -24,8 +24,8 @@ const FieldWrapper = memo(({
     ].filter(Boolean).join(" ");
 
     const contentClasses = [
-        "flex w-full flex-col",
-        reverseLabel ? "flex-col-reverse" : ""
+        "flex flex-col w-full",
+        reverseLabel ? "flex-col-reverse" : "",
     ].filter(Boolean).join(" ");
 
     return (

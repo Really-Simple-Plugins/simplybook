@@ -7,6 +7,9 @@ import useSettingsData from "../../hooks/useSettingsData";
 import FormFieldWrapper from "../Forms/FormFieldWrapper";
 import {useEffect, useState} from "react";
 import Error from "../Errors/Error";
+import ButtonLink from "../Buttons/ButtonLink";
+import registerEmail from "../../api/endpoints/onBoarding/registerEmail";
+import retryOnboarding from "../../api/endpoints/onBoarding/retryOnboarding";
 const OnboardingStep = ({
     path,
     title,
@@ -30,7 +33,8 @@ const OnboardingStep = ({
         recaptchaToken,
         apiError,
         setApiError,
-        onboardingCompleted
+        onboardingCompleted,
+        setOnboardingCompleted
     } = useOnboardingData();
     const navigate = useNavigate();
     const {
@@ -50,6 +54,7 @@ const OnboardingStep = ({
     const { getValue } = useSettingsData();
     const [companyName, setCompanyName] = useState("");
     const currentStep = getCurrentStep(path);
+    const currentStepId = getCurrentStepId(path);
     const [disabled, setDisabled] = useState(!isValid);
 
     // Set disabled state based on isValid
@@ -73,15 +78,6 @@ const OnboardingStep = ({
     if (syncFieldConfig) {
         syncFieldState(syncFieldConfig.key, syncFieldConfig.value, syncFieldConfig.setValue);
     }
-
-    //onload of this component, check completed step simplybook.completed_step and navigate to the next step if it's above 0
-    useEffect(() => {
-        let currentStep = getCurrentStepId(path);
-        let completedStepNext = parseInt(simplybook.completed_step) + 1 ;
-        if ( completedStepNext > 1 && completedStepNext > currentStep) {
-            navigate({ to: getURLForStep(completedStepNext) });
-        }
-    }, []);
 
     const onSubmit = async (formData, buttonType = "primary") => {
         setApiError(null);
@@ -122,6 +118,8 @@ const OnboardingStep = ({
         } else {
             let currentStep = getCurrentStep(path);
 
+            // navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
+
             // There are 5 onboarding steps, but the in de currentStep.id is 0 based so 0 = onboarding step 1
             // If the onboarding already is completed, skip steps 1, 2 3 and 4, and continue from step 5
             if (currentStep.id <=3 && onboardingCompleted ) {
@@ -138,6 +136,21 @@ const OnboardingStep = ({
             setCompanyName(companyName);
         }
     }, [getValue("company_name")]);
+
+    /**
+     * Submit a request to retry the onboarding process. Under the hood this
+     * means we are deleting all old simplybook data. On success, we navigate
+     * back to step 1.
+     */
+    const restartOnboarding = async () => {
+        let response = await retryOnboarding();
+        if (response.status !== "success") {
+            setApiError(response.message);
+            return false;
+        }
+        setOnboardingCompleted(false);
+        await navigate({to: getURLForStep(1)});
+    }
 
     return (
         <>
@@ -157,6 +170,17 @@ const OnboardingStep = ({
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />
+                        {currentStepId > 1 && currentStepId < 4 && (
+                            <ButtonLink
+                                iconName="retry"
+                                linkClassName="w-full"
+                                className="w-full border-tertiary text-tertiary"
+                                btnVariant="ghost"
+                                onClick={restartOnboarding}
+                            >
+                                {__("Retry registration", "simplybook")}
+                            </ButtonLink>
+                        )}
                         {secondaryButton && (
                             <ButtonField
                                 btnVariant="tertiary"

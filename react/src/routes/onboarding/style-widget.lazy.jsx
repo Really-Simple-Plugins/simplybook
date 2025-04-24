@@ -25,9 +25,7 @@ export const Route = createLazyFileRoute(path)({
 
         return (
             <>
-                <LeftColumn
-                    className={"flex-col col-span-6"}
-                >
+                <LeftColumn className={"items-center flex-col flex-wrap justify-start xl:col-span-6 col-span-12 xl:col-start-2"}>
                     <div className={"text-center"}>
                         <h2 className={"mt-2 text-lg font-light text-black"}>
                             {__("What's your style?", "simplybook")}
@@ -36,8 +34,9 @@ export const Route = createLazyFileRoute(path)({
                             {__("Next Step: Finish", "simplybook")}
                         </h1>
                     </div>
-                    <div className={"flex flex-wrap justify-center my-4"}>
+                    <div className={"flex flex-wrap justify-center mt-12 mb-12"}>
                         <ColorPickerField
+                            className="mr-4"
                             label={__('Primary', 'simplybook')}
                             setting={{
                                 value: primaryColor,
@@ -49,6 +48,7 @@ export const Route = createLazyFileRoute(path)({
                             }}
                         />
                         <ColorPickerField
+                            className="mr-4"
                             label={__('Secondary', 'simplybook')}
                             setting={{
                                 value: secondaryColor,
@@ -70,6 +70,7 @@ export const Route = createLazyFileRoute(path)({
                                 setActiveColor(value);
                             }}
                         />
+                        <p className={"m-0 text-sm text-gray-600"}>{__("More customisation available under settings", "simplybook")}</p>
                     </div>
                     <OnboardingStep
                         path={path}
@@ -85,10 +86,7 @@ export const Route = createLazyFileRoute(path)({
                         }}
                     />
                 </LeftColumn>
-                <RightColumn
-                    className={"flex-col justify-center col-span-5"}
-                    style={{marginTop: "-100px"}}
-                >
+                <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-4 col-span-12 relative w-full"}>
                     <Calendar
                         primary={primaryColor}
                         secondary={secondaryColor}

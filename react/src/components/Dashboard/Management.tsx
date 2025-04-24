@@ -3,12 +3,10 @@ import BlockHeading from "../Blocks/BlockHeading";
 import { __ } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
-import { Fragment } from "react";
-import Manage from "./Partials/Manage";
 import SubscriptionDataList from "./Partials/SubscriptionDataList";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
-import Plugin from "./Partials/Plugin";
-
+import useSpecialFeaturesData from "../../hooks/useSpecialFeaturesData";
+import ButtonLink from "../Buttons/ButtonLink";
 
 const DataList = [
     {
@@ -16,18 +14,21 @@ const DataList = [
         link: "/settings/providers",
         buttonText: __("View", "simplybook"),
         btnVariant: "primary",
+        id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
-    {
+    /* {
         title: __("Services", "simplybook"),
         link: "/settings/services",
         buttonText: __("View", "simplybook"),
         btnVariant: "primary",
-    },
+        // id: "does not exist in subscription data yet"
+    }, */
     {
         title: __("Bookings", "simplybook"),
         link: "/settings",
         buttonText: __("View", "simplybook"),
         btnVariant: "primary",
+        id: "sheduler_limit", // Data from useSubscriptionData is found on ID
     },
     {
         title: __("SMS Gateway", "simplybook"),
@@ -58,35 +59,10 @@ const DataList = [
 const Management = () => {
 
     // Load the subscription data
-    const {
-        subscription,
-        smsRemaining,
-        isLoading,
-        hasError,
-    } = useSubscriptionData();
+    const {subscription, isLoading: subscriptionDataLoading, hasError: subscriptionDataHasError} = useSubscriptionData();
+    const {isPluginActive, isLoading: specialFeaturesLoading, hasError: specialFeaturesHasError} = useSpecialFeaturesData();
 
-    // Services is missing here as we do not receive the limits for it
-    const allowedSubscriptionDataLimits: Record<string, string> = {
-        provider_limit: __('Provider', 'simplybook'),
-        sheduler_limit: __('Bookings', 'simplybook'),
-    };
-
-    // Create an empty array to store the limits
-    let selectedLimits = {};
-
-    // Load the limits we want to show
-    if (!isLoading && subscription) {
-        const subscriptionObject = subscription?.limits;
-
-        selectedLimits = Object.keys(subscriptionObject)
-            .filter(key => key in allowedSubscriptionDataLimits)
-            .reduce((obj, key) => {
-                // @ts-ignore
-                obj[key] = subscriptionObject[key];
-                return obj;
-            }, {});
-
-    }
+    let subscriptionLimits = subscription?.limits || {};
 
     return (
         <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2  xl:col-span-4"}>
@@ -96,23 +72,28 @@ const Management = () => {
             />
             <BlockContent className={"px-0 py-0"}>
                 <div>
-                    {!isLoading && selectedLimits && Object.entries(selectedLimits).map(([key, value]) => (
-                        <SubscriptionDataList
-                            key={key}
-                            title={allowedSubscriptionDataLimits[key]}
-                            // @ts-ignore
-                            remaining={value.rest}
-                            // @ts-ignore
-                            total={value.total}
-                            isLoading={isLoading}
-                        />
-                    ))}
                     {DataList.map((block, index) => (
-                        <Fragment key={index}>
-                            {block.isPlugin && (
-                                <Manage title={block.title} link={block.link} buttonText={block.buttonText} />
+                        <div key={index} className={"odd:bg-white even:bg-gray-50 flex justify-between items-center p-4"}>
+                            {block.isPlugin && !specialFeaturesHasError && !isPluginActive(block.id) && (
+                                <>
+                                    <div className="text-base">{block.title}</div>
+                                    <div className={"flex justify-end"}>
+                                        <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
+                                    </div>
+                                </>
                             )}
-                        </Fragment>
+                            {!block.isPlugin && !subscriptionDataHasError && (Object.keys(subscriptionLimits).length > 0) && (
+                                <SubscriptionDataList
+                                    title={block.title}
+                                    // @ts-ignore
+                                    remaining={subscriptionLimits?.[block.id]?.rest}
+                                    // @ts-ignore
+                                    total={subscriptionLimits?.[block.id]?.total}
+                                    // @ts-ignore
+                                    page={subscriptionLimits?.[block.id]?.link}
+                                />
+                            )}
+                        </div>
                     ))}
                 </div>
             </BlockContent>

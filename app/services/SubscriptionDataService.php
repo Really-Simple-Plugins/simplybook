@@ -37,7 +37,7 @@ class SubscriptionDataService
      * @uses processDataAndIdentifyLimits to create associative array of limits
      * which in turn helps the {@see search} method for retrieving data.
      */
-    public function save(array $subscriptionData): void
+    public function save(array $subscriptionData): array
     {
         $subscriptionData['updated_at_utc'] = Carbon::now('UTC')->toDateTimeString();
 
@@ -51,6 +51,8 @@ class SubscriptionDataService
 
         $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
         update_option('simplybook_subscription_data', $subscriptionData);
+
+        return $subscriptionData;
     }
 
     /**
