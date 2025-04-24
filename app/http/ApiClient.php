@@ -58,7 +58,6 @@ class ApiClient
 
         if (get_option($this->authenticationFailedFlagKey)) {
             $this->authenticationFailedFlag = true;
-            Event::dispatch(Event::AUTH_FAILED);
             return;
         }
 
@@ -410,6 +409,7 @@ class ApiClient
                     $this->decrypt_string($sanitizedCompany->password)
                 );
             } catch (\Exception $e) {
+                Event::dispatch(Event::AUTH_FAILED);
                 // Their password probably changed. Stop trying to refresh.
                 update_option($this->authenticationFailedFlagKey, true);
                 $this->log('Error during token refresh: ' . $e->getMessage());
