@@ -16,7 +16,7 @@ class FailedAuthenticationTask extends AbstractTask
      */
     public function __construct()
     {
-        $this->setStatus(self::STATUS_URGENT);
+        $this->setStatus(self::STATUS_HIDDEN);
     }
 
     /**

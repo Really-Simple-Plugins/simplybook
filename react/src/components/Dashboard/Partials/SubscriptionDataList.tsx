@@ -14,7 +14,7 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
 }) => {
 
     const labelClassName = (
-        remaining < 0 ? "border-red-600 text-red-600" : (
+        remaining <= 0 ? "border-red-600 text-red-600" : (
             remaining > total ?  "border-red-600 text-red-600" : "border-green-600 text-green-600"
         )
     );
@@ -30,7 +30,7 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
                 {__(`${title}`, "simplybook")}
             </LoginLink>
             <Label labelVariant="ghost" className={labelClassName}>
-                {remaining} / {total}
+                {total - remaining} / {total}
             </Label>
         </>
     );

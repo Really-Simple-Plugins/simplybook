@@ -58,6 +58,7 @@ class ApiClient
 
         if (get_option($this->authenticationFailedFlagKey)) {
             $this->authenticationFailedFlag = true;
+            Event::dispatch(Event::AUTH_FAILED);
             return;
         }
 

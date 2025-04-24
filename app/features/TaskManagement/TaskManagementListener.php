@@ -22,6 +22,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
         add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
         add_action('simplybook_event_' . Event::SPECIAL_FEATURES_LOADED, [$this, 'handleSpecialFeaturesLoaded']);
+        add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -199,6 +200,16 @@ class TaskManagementListener
                 Tasks\AcceptPaymentsTask::IDENTIFIER
             );
         }
+    }
+
+    /**
+     * Handle the failed authentication event to update task status.
+     */
+    public function handleFailedAuthentication(): void
+    {
+        $this->service->flagTaskUrgent(
+            Tasks\FailedAuthenticationTask::IDENTIFIER
+        );
     }
 
     /**
