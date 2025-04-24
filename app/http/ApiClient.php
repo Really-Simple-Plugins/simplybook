@@ -83,6 +83,16 @@ class ApiClient
     }
 
     /**
+     * Helper method for easy access to the authentication failed flag. Can be
+     * useful if somewhere in the App this value is needed. For example
+     * {@see \SimplyBook\Features\TaskManagement\Tasks\FailedAuthenticationTask}
+     */
+    public function authenticationHasFailed(): bool
+    {
+        return $this->authenticationFailedFlag;
+    }
+
+    /**
      * Set the during onboarding flag
      */
     public function setDuringOnboardingFlag(bool $flag): ApiClient
