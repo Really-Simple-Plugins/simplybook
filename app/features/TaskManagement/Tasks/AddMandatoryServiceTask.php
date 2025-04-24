@@ -37,7 +37,7 @@ class AddMandatoryServiceTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Add service','simplybook'),
-            'link' => '#/settings/services',
+            'link' => 'settings/services',
         ];
     }
 }
