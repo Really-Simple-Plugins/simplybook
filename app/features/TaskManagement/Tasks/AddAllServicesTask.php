@@ -20,7 +20,7 @@ class AddAllServicesTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Please add all your services','simplybook');
+        return esc_html__('Have you added all your Services?','simplybook');
     }
 
     /**
