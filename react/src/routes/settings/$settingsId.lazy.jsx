@@ -87,6 +87,7 @@ function Settings() {
 
             {formHasSettings && (
                 <FormFooter
+                    getValues={getValues}
                     onSubmit={handleSubmit((formData) => {
                         saveSettings(formData).then(() => {
                             reset(formData);
