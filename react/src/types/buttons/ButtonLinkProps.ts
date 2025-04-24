@@ -14,6 +14,7 @@ export interface ButtonLinkProps {
     | "square-ghost" 
     | "square-ghost-small" 
     | "square-small" 
+    | string
     | undefined;
     disabled?: boolean;
     target?: string;
