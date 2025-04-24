@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { __ } from "@wordpress/i18n";
 import { useForm, Controller, set } from "react-hook-form";
 import TextField from "../../Fields/TextField";
@@ -8,6 +9,7 @@ import ButtonInput from "../../Inputs/ButtonInput";
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
 import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
+import Error from "../../Errors/Error";
 
 const formLogin = ({
     onClose,
@@ -22,7 +24,13 @@ const formLogin = ({
         /**
          * We use React Hook Form to handle client-side validation for the main login
         */
-        const { control, register, handleSubmit, formState: { errors, isValid }, watch } = useForm({
+        const { 
+            control, 
+            register, 
+            handleSubmit, 
+            formState: { errors, isValid }, 
+            watch 
+        } = useForm({
             mode: "onChange",
             defaultValues: {
                 company_domain: domain,
@@ -31,6 +39,7 @@ const formLogin = ({
                 user_password: ""
             }
         });
+
 
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
@@ -53,6 +62,9 @@ const formLogin = ({
 
             logUserIn(formData);
         });
+
+        
+        const [errorMessage, setErrorMessage] = useState("");
 
         /**
          * Checks if the filled input credentials comply and sends an API call to SimplyBook
@@ -84,7 +96,8 @@ const formLogin = ({
                 window.location.href = "/wp-admin/admin.php?page=simplybook";
 
             } catch (error) {
-                console.error(error);
+                setErrorMessage(error.message);
+                console.log(error); // Still log the error
             }
         };
 
@@ -158,6 +171,12 @@ const formLogin = ({
                         />
                     )}
                 />
+                {errorMessage && 
+                    <Error 
+                        errorHeading={__("Something went wrong", "simplybook")} 
+                        error={errorMessage} 
+                    />
+                }
                 <ButtonInput
                     className="mt-4 mb-4"
                     btnVariant="secondary"
