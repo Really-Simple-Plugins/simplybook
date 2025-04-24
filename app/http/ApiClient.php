@@ -1324,36 +1324,46 @@ class ApiClient
             throw new \Exception($response->get_error_message());
         }
 
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         $responseCode = wp_remote_retrieve_response_code($response);
+
         if ($responseCode != 200) {
-            throw new \Exception('Authentication failed with code ' . $responseCode);
+            throw (new RestDataException(
+                esc_html__('Failed logging in, please verify your credentials.', 'simplybook')
+            ))->setResponseCode(500)->setData([
+                'response_code' => $responseCode,
+                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown error', 'simplybook')),
+            ]);
         }
 
-        $response = json_decode(wp_remote_retrieve_body($response), true);
-        if (!isset($response['token'])) {
-            throw new \Exception('Authentication failed with no token');
+        if (!isset($responseBody['token'])) {
+            throw (new RestDataException(
+                esc_html__('Login failed! Please try again later.', 'simplybook')
+            ))->setResponseCode(500)->setData([
+                'response_code' => $responseCode,
+                'response_message' => esc_html__('Invalid response from SimplyBook.', 'simplybook'),
+            ]);
         }
 
-        if (isset($response['require2fa'], $response['auth_session_id']) && ($response['require2fa'] === true)) {
+        if (isset($responseBody['require2fa'], $responseBody['auth_session_id']) && ($responseBody['require2fa'] === true)) {
             throw (new RestDataException('Two FA Required'))
-                ->setResponseCode(200) // todo - 200 is needed due to how to "request" now works in React :/
+                ->setResponseCode(200)
                 ->setData([
                     'require2fa' => true,
-                    'auth_session_id' => $response['auth_session_id'],
+                    'auth_session_id' => $responseBody['auth_session_id'],
                     'company_login' => $companyLogin,
                     'user_login' => $userLogin,
                     'domain' => $companyDomain,
-                    'allowed2fa_providers' => $this->get2FaProvidersWithLabel(($response['allowed2fa_providers'] ?? ['ga'])),
+                    'allowed2fa_providers' => $this->get2FaProvidersWithLabel(($responseBody['allowed2fa_providers'] ?? ['ga'])),
                 ]);
         }
 
-        return $response;
+        return $responseBody;
     }
 
     /**
      * Process two-factor authentication with the API. If successful, the token is stored in the options.
-     *
-     * @throws \Exception
+     * @throws \Exception|RestDataException
      */
     public function processTwoFaAuthenticationRequest(string $companyDomain, string $companyLogin, string $sessionId, string $twoFaType, string $twoFaCode): array
     {
@@ -1378,12 +1388,22 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-            throw new \Exception('2fa Authentication failed with code ' . $responseCode);
+            throw (new RestDataException(
+                esc_html__('Failed two factor authentication, please verify your credentials.', 'simplybook')
+            ))->setData([
+                'response_code' => $responseCode,
+                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown 2FA error', 'simplybook')),
+            ]);
         }
 
         $response = json_decode(wp_remote_retrieve_body($response), true);
         if (!isset($response['token'])) {
-            throw new \Exception('2fa Authentication failed with no token');
+            throw (new RestDataException(
+                esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
+            ))->setData([
+                'response_code' => $responseCode,
+                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.', 'simplybook'),
+            ]);
         }
 
         return $response;

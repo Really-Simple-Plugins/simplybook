@@ -172,6 +172,21 @@ class Storage extends Dot
     }
 
     /**
+     * Returns a boolean if the value of one of the keys is considered empty.
+     * @param array<TKey>|int|string|null $keys
+     */
+    public function isOneEmpty($keys = []): bool
+    {
+        foreach ($keys as $key) {
+            if ($this->isEmpty($key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Filter key.
      * @return mixed
      * @see http://php.net/manual/en/function.filter-var.php

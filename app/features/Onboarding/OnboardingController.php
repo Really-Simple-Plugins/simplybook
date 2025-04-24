@@ -265,23 +265,27 @@ class OnboardingController implements FeatureInterface
         $userLogin = $storage->getString('user_login');
         $userPassword = $storage->getString('user_password');
 
+        if ($storage->isOneEmpty(['company_domain', 'company_login', 'user_login', 'user_password'])) {
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'));
+        }
+
         try {
             $response = App::provide('client')->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
-            return new \WP_REST_Response([
+            return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
                 'data' => $e->getData(),
-            ], $e->getResponseCode());
+            ], false, $e->getMessage(), $e->getResponseCode());
         } catch (\Exception $e) {
-            return new \WP_REST_Response([
+            return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], 400);
+            ], false, esc_html__('Unknown error occurred, please verify your credentials.', 'simplybook'), 500);
         }
 
         $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
 
         return new \WP_REST_Response([
-            'message' => 'Successfully authenticated user',
+            'message' => esc_html__('Login successful.', 'simplybook'),
         ], 200);
     }
 
@@ -296,6 +300,10 @@ class OnboardingController implements FeatureInterface
         $companyLogin = $storage->getString('company_login');
         $companyDomain = $storage->getString('domain');
 
+        if ($storage->isOneEmpty(['company_login', 'domain', 'auth_session_id', 'two_fa_type', 'two_fa_code'])) {
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'));
+        }
+
         try {
             $response = App::provide('client')->processTwoFaAuthenticationRequest(
                 $companyDomain,
@@ -304,10 +312,15 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('two_fa_type'),
                 $storage->getString('two_fa_code'),
             );
-        } catch (\Exception $e) {
-            return new \WP_REST_Response([
+        } catch (RestDataException $e) {
+            return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], 400);
+                'data' => $e->getData(),
+            ], false, $e->getMessage()); // Default code 200 because React side still used request() here
+        } catch (\Exception $e) {
+            return $this->service->sendHttpResponse([
+                'message' => $e->getMessage(),
+            ], false, esc_html__('Unknown error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
         }
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
