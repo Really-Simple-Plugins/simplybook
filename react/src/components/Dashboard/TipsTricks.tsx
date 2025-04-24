@@ -39,7 +39,9 @@ const TipsTricks = () => {
             </BlockContent>
             <BlockFooter>
                 <ButtonLink 
-                    className={"border-tertiary text-tertiary mr-4"} 
+                    reverseIcon={true}
+                    iconName="target-blank"
+                    className={"border-sb-blue text-sb-blue"} 
                     loginLink={data?.data.all ?? '#'} 
                     btnVariant={"square-ghost-small"}
                 >

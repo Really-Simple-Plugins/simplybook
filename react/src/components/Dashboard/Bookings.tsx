@@ -85,7 +85,7 @@ const Bookings = () => {
             </BlockContent>
             <BlockFooter>
                 <ButtonLink 
-                    className="!border-button-blue !text-button-blue flex-row-reverse" 
+                    className="!border-sb-blue !text-sb-blue flex-row-reverse" 
                     icon={true} 
                     iconName="target-blank" 
                     iconClass="fa-regular" 
