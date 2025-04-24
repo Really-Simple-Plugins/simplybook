@@ -12,6 +12,7 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+    public string $password = ''; // Should be encrypted
 
     private array $asArray = [];
     private int $defaultCategory = 8; // Default category is 8: "Other category"
@@ -96,6 +97,12 @@ class CompanyBuilder
         return $this;
     }
 
+    public function setPassword(string $password): CompanyBuilder
+    {
+        $this->password = sanitize_text_field($password);
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!empty($this->asArray)) {
@@ -113,6 +120,7 @@ class CompanyBuilder
             'country' => $this->country,
             'zip' => $this->zip,
             'terms' => $this->terms,
+            'password' => $this->password, // Should be encrypted
         ];
 
         return $this->asArray;

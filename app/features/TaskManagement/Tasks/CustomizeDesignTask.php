@@ -27,7 +27,7 @@ class CustomizeDesignTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Design settings','simplybook'),
-            'link' => '#/settings/design',
+            'link' => 'settings/design',
         ];
     }
 }

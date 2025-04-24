@@ -50,6 +50,15 @@ abstract class AbstractNotice implements NoticeInterface
     abstract public function getRoute(): string;
 
     /**
+     * Override this method to set the notice as active based on a server-side
+     * condition. By default, the notice is not active.
+     */
+    public function isActive(): bool
+    {
+        return false;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getId(): string
@@ -98,6 +107,7 @@ abstract class AbstractNotice implements NoticeInterface
     {
         return [
             'id' => $this->getId(),
+            'active' => $this->isActive(),
             'title' => $this->getTitle(),
             'text' => $this->getText(),
             'premium' => $this->isPremium(),

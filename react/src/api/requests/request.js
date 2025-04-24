@@ -14,6 +14,7 @@ import { API_BASE_PATH, NONCE } from "../config";
 const request = async (path, method = "POST", data = {}) => {
   const args = { path, method, data };
 
+
   args.path =
     API_BASE_PATH +
     args.path +

@@ -37,7 +37,7 @@ class AddMandatoryProviderTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Add provider','simplybook'),
-            'link' => '#/settings/providers',
+            'link' => 'settings/providers',
         ];
     }
 }

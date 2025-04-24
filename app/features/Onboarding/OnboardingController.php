@@ -111,6 +111,12 @@ class OnboardingController implements FeatureInterface
         $companyBuilder->setEmail($tempEmail);
         $companyBuilder->setTerms($tempTerms);
 
+        $companyBuilder->setPassword(
+            $this->service->encrypt_string(
+                wp_generate_password(24, false)
+            )
+        );
+
         $this->service->storeCompanyData($companyBuilder);
 
         if ($companyBuilder->isValid() === false) {
