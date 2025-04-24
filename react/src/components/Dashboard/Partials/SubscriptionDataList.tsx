@@ -30,7 +30,7 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
                 {__(`${title}`, "simplybook")}
             </LoginLink>
             <Label labelVariant="ghost" className={labelClassName}>
-                {remaining} / {total}
+                {total - remaining} / {total}
             </Label>
         </>
     );
