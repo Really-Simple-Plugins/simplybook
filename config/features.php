@@ -16,7 +16,7 @@ return [
     ],
     'TaskManagement' => [
         'enabled' => FeatureHelper::isEnabled('task_management'),
-        'inScope' => is_admin() || simplybook_is_wp_json_request(),
+        'inScope' => true, // Should be able to listen everywhere
         'pro' => false,
         'priorityFiles' => [
             'Tasks/AbstractTask',
@@ -24,7 +24,7 @@ return [
     ],
     'Notifications' => [
         'enabled' => FeatureHelper::isEnabled('notifications'),
-        'inScope' => is_admin() || simplybook_is_wp_json_request(),
+        'inScope' => true, // Should be able to listen everywhere
         'pro' => false,
         'priorityFiles' => [
             'Notices/AbstractNotice',
