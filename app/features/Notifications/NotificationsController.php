@@ -44,6 +44,7 @@ class NotificationsController implements FeatureInterface
             new Notices\MaxedOutProvidersNotice(),
             new Notices\AddMandatoryServiceNotice(),
             new Notices\MaxedOutServicesNotice(),
+            new Notices\FailedAuthenticationNotice(),
         ];
 
         return array_filter($pluginNotices, function ($notice) {
