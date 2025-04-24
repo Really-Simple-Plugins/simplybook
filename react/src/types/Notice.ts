@@ -2,6 +2,7 @@ export interface Notice {
     id: string;
     title: string;
     text: string;
+    active: boolean;
     status: "open" | "hidden";
     type: "info" | "warning";
     route: string;
