@@ -426,6 +426,9 @@ class ApiClient
                 $responseStorage->getInt('company_id'),
             );
 
+            Event::dispatch(Event::AUTH_SUCCEEDED);
+
+            $this->setDuringOnboardingFlag(false); // Revert previous action
             return;
         }
 
@@ -443,6 +446,7 @@ class ApiClient
                 $expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
                 $expires = $request->expires_in ?? 3600;
                 update_option($expires_option, time() + $expires);
+                Event::dispatch(Event::AUTH_SUCCEEDED);
             } else {
                 $this->log("Error during token refresh");
             }
