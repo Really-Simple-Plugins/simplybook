@@ -149,7 +149,7 @@ const Progress = () => {
                     ))}
                 </div>
             </BlockContent>
-            <BlockFooter className="flex w-full justify-start 2xl:justify-end text-sm text-gray-500">
+            <BlockFooter className="flex w-full justify-start 2xl:justify-end text-sm text-gray-500 mt-4">
                 <SubscriptionDataListHorizontal />
             </BlockFooter>
         </Block>
