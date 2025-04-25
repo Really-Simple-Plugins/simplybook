@@ -2,6 +2,7 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\App;
+use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
@@ -238,6 +239,10 @@ class OnboardingController implements FeatureInterface
             ->insert();
 
         $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
+
+        if ($pagesCreatedSuccessfully) {
+            Event::dispatch(Event::CALENDAR_PUBLISHED);
+        }
 
         $this->service->setOnboardingCompleted();
 

@@ -70,7 +70,6 @@ export const Route = createLazyFileRoute(path)({
                                 setActiveColor(value);
                             }}
                         />
-                        <p className={"m-0 text-sm text-gray-600"}>{__("More customisation available under settings", "simplybook")}</p>
                     </div>
                     <OnboardingStep
                         path={path}

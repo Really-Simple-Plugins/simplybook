@@ -2,6 +2,7 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
+use SimplyBook\Helpers\Event;
 use SimplyBook\Traits\HasWidget;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
@@ -23,6 +24,10 @@ class WidgetController implements ControllerInterface
      */
     public function renderCalendarWidget(array $attributes = []): string
     {
+        if (!is_admin()) {
+            Event::dispatch(Event::CALENDAR_PUBLISHED);
+        }
+
         return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i_calendar');
     }
 
