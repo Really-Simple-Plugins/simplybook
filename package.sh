@@ -39,7 +39,7 @@ EXCLUDES=(
 )
 
 # First make sure React build is up to date
-printf "${BLUE}Making sure React build is up to date...${RESET}\n"
+printf "${BLUE}Making sure React build is up to date in your local environment before copying...${RESET}\n"
 cd "${ROOT_DIR}"/react || exit
 npm install
 npm run build
@@ -49,10 +49,10 @@ cd "${ROOT_DIR}" || exit
 printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
 
 # Clean up any previous build artifacts
-printf "${BLUE}Cleaning up previous build artifacts...${RESET}\n"
+printf "${BLUE}Cleaning up previous package artifacts in /tmp...${RESET}\n"
 rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
 
-printf "${GREEN}✅ Clean!${RESET}\n\n"
+printf "${GREEN}✅ /tmp is clean!${RESET}\n\n"
 
 # Copy the plugin to /tmp while excluding the EXCLUDES list
 printf "${BLUE}Copying %s to /tmp...${RESET}\n" "${PLUGIN_NAME}"
