@@ -37,7 +37,7 @@ const TipsTricks = () => {
                     )}
                 </div>
             </BlockContent>
-            <BlockFooter>
+            <BlockFooter className="pt-4">
                 <ButtonLink 
                     reverseIcon={true}
                     iconName="target-blank"
