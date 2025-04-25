@@ -7,9 +7,12 @@ class PublishWidgetTask extends AbstractTask
     const IDENTIFIER = 'publish_widget_on_frontend';
 
     /**
-     * @inheritDoc
+     * Not required as tracking the task is difficult. For example: if someone
+     * logs into an existing account, the task will be shown. But in that
+     * scenario we are not certain if the user has already published
+     * the widget or not.
      */
-    protected bool $required = true;
+    protected bool $required = false;
 
     public function __construct()
     {
