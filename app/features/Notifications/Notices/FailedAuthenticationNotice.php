@@ -8,12 +8,11 @@ class FailedAuthenticationNotice extends AbstractNotice
 {
     const IDENTIFIER = 'failed_authentication';
 
-    /**
-     * @inheritDoc
-     */
-    public function isActive(): bool
+    public function __construct()
     {
-        return App::provide('client')->authenticationHasFailed();
+        $this->setActive(
+            App::provide('client')->authenticationHasFailed()
+        );
     }
 
     /**
@@ -29,7 +28,10 @@ class FailedAuthenticationNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('We’ve lost connection to your SimplyBook account. Please log out and sign in again to reconnect.', 'simplybook');
+        return esc_html__(
+            'We’ve lost connection to your SimplyBook account. Please log out and sign in again to reconnect.',
+            'simplybook'
+        );
     }
 
     /**

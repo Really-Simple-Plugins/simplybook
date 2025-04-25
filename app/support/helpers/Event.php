@@ -21,6 +21,7 @@ class Event
     const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
     const SPECIAL_FEATURES_LOADED = 'special_features_loaded';
     const AUTH_FAILED = 'auth_failed';
+    const AUTH_SUCCEEDED = 'auth_succeeded';
     const CALENDAR_PUBLISHED = 'calendar_published';
 
     /**
