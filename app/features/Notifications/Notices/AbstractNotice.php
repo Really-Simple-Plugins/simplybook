@@ -29,6 +29,13 @@ abstract class AbstractNotice implements NoticeInterface
     protected bool $premium;
 
     /**
+     * Use this property to define if the Notice is active based on a
+     * server-side condition. By default, a notice can activate based on a
+     * client-side condition.
+     */
+    protected bool $active;
+
+    /**
      * Override this method to define the title that should be displayed to the
      * user in the Notices dashboard component
      * @abstract
@@ -50,12 +57,22 @@ abstract class AbstractNotice implements NoticeInterface
     abstract public function getRoute(): string;
 
     /**
+     * Use this method to set the notice as active based on a server-side
+     * condition. By default, a notice can activate based on a client-side
+     * condition.
+     */
+    public function setActive(bool $state = false): void
+    {
+        $this->active = $state;
+    }
+
+    /**
      * Override this method to set the notice as active based on a server-side
      * condition. By default, the notice is not active.
      */
     public function isActive(): bool
     {
-        return false;
+        return $this->active ?? false;
     }
 
     /**

@@ -9,6 +9,7 @@ class NotificationsController implements FeatureInterface
 {
     private NotificationsEndpoints $endpoints;
     private NotificationsService $service;
+    private NotificationListener $listener;
 
     public function __construct()
     {
@@ -17,11 +18,13 @@ class NotificationsController implements FeatureInterface
         );
 
         $this->endpoints = new NotificationsEndpoints($this->service);
+        $this->listener = new NotificationListener($this->service);
     }
 
     public function register()
     {
         $this->endpoints->register();
+        $this->listener->listen();
 
         $this->initiateNotices();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeNotices']);
@@ -45,6 +48,7 @@ class NotificationsController implements FeatureInterface
             new Notices\AddMandatoryServiceNotice(),
             new Notices\MaxedOutServicesNotice(),
             new Notices\FailedAuthenticationNotice(),
+            new Notices\PublishWidgetNotice(),
         ];
 
         return array_filter($pluginNotices, function ($notice) {
