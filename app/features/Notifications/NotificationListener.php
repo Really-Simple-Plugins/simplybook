@@ -18,6 +18,7 @@ class NotificationListener
         add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_event_' . Event::AUTH_SUCCEEDED, [$this, 'handleSucceededAuthentication']);
         add_action('simplybook_event_' . Event::CALENDAR_PUBLISHED, [$this, 'handleCalendarPublished']);
+        add_action('simplybook_event_' . Event::PUBLISH_WIDGET_TASK_DISMISSED, [$this, 'dismissPublishWidgetNotice']);
     }
 
     /**
@@ -44,6 +45,16 @@ class NotificationListener
      * Handle the calendar published event to update task status.
      */
     public function handleCalendarPublished(): void
+    {
+        $this->service->deactivate(
+            Notices\PublishWidgetNotice::IDENTIFIER
+        );
+    }
+
+    /**
+     * Dismiss the publish-widget-notice.
+     */
+    public function dismissPublishWidgetNotice(): void
     {
         $this->service->deactivate(
             Notices\PublishWidgetNotice::IDENTIFIER

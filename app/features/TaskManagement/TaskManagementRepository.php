@@ -2,8 +2,10 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use SimplyBook\Helpers\Event;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
+use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;
 
 class TaskManagementRepository
 {
@@ -124,6 +126,10 @@ class TaskManagementRepository
 
         if ($task->isRequired() && $status === AbstractTask::STATUS_DISMISSED) {
             return; // Not allowed
+        }
+
+        if ($taskId === PublishWidgetTask::IDENTIFIER) {
+            Event::dispatch(Event::PUBLISH_WIDGET_TASK_DISMISSED);
         }
 
         $task->setStatus($status);
