@@ -13,9 +13,9 @@ export const Route = createLazyFileRoute(path)({
 
     component: () => {
 
-        const defaultPrimary = '#33bb60';
-        const defaultSecondary = '#d1e9c6';
-        const defaultActive = '#d3e0f1';
+        const defaultPrimary = '#FF3259';
+        const defaultSecondary = '#000000';
+        const defaultActive = '#055B78';
 
         const [primaryColor, setPrimaryColor] = useState(defaultPrimary);
         const [secondaryColor, setSecondaryColor] = useState(defaultSecondary);

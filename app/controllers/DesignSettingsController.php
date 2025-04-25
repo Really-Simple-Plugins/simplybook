@@ -41,9 +41,9 @@ class DesignSettingsController implements ControllerInterface
      */
     public function saveOnboardingWidgetStyle(Storage $colorStorage): bool
     {
-        $fallbackPrimary = '#33bb60';
-        $fallbackSecondary = '#d1e9c6';
-        $fallbackActive = '#d3e0f1';
+        $fallbackPrimary = '#FF3259';
+        $fallbackSecondary = '#000000';
+        $fallbackActive = '#055B78';
 
         $widgetStyleSettings = [
             'theme_settings' => [

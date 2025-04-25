@@ -37,7 +37,7 @@ trait HasWidget
      * Get fallback settings for the widget. These are used if the user has not
      * set any preferences in the widget settings page.
      */
-    protected function getFallbackSettings(string $primary = '#33bb60', string $secondary = '#d1e9c6', string $active = '#d3e0f1'): array
+    protected function getFallbackSettings(string $primary = '#FF3259', string $secondary = '#000000', string $active = '#055B78'): array
     {
         return [
             'server' => $this->getServerURL(),
