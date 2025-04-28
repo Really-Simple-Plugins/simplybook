@@ -15,6 +15,8 @@ trait LegacyLoad {
 	public $fields = [];
 	public $values_loaded = false;
 
+    public $counter = 0;
+
     protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
 
     /**
@@ -26,7 +28,7 @@ trait LegacyLoad {
     {
         $fields = $this->fields();
         foreach ( $fields as $field ) {
-            if ( $field['id'] === $id ) {
+            if (isset($field['id']) && $field['id'] === $id ) {
                 return $field;
             }
         }
@@ -124,6 +126,7 @@ trait LegacyLoad {
      */
     public function fields(bool $load_values = false): array
     {
+
 		$reload_fields = false;
 		if ( $load_values && !$this->values_loaded ) {
 			$reload_fields = true;
@@ -138,7 +141,8 @@ trait LegacyLoad {
 		}
 
         $fields = [];
-        $fieldsConfig = App::fields()->all();
+        // Countries is not loaded here because we do not need it by default
+        $fieldsConfig = App::fields()->delete('countries')->all();
         $fieldsConfig = apply_filters( 'simplybook_fields', $fieldsConfig );
 
         foreach ( $fieldsConfig as $groupID => $fieldGroup ) {
