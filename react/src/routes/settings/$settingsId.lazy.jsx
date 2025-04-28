@@ -3,7 +3,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useMemo } from "react";
+import {useEffect, useMemo} from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
@@ -57,6 +57,12 @@ function Settings() {
     } = useForm({
         defaultValues: currentFormValues,
     });
+
+    // Reset the form values when the settingsId changes. This fixes the issue
+    // that form values still contain data from a different settings tab.
+    useEffect(() => {
+        reset(currentFormValues);
+    }, [settingsId, currentFormValues, reset]);
 
     useBlocker({
         shouldBlockFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
