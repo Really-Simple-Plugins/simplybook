@@ -41,8 +41,6 @@ class Plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
-
-        do_action('simplybook_plugin_loaded');
     }
 
     /**
@@ -84,6 +82,7 @@ class Plugin
      */
     public function deactivation()
     {
+        // Silence is golden
     }
 
     /**
@@ -91,7 +90,8 @@ class Plugin
      */
     public static function uninstall()
     {
-        // todo - cleanup options table
+        $uninstallInstance = new Helpers\Uninstall();
+        $uninstallInstance->handlePluginUninstall();
     }
 
     /**
