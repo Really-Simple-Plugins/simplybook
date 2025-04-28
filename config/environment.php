@@ -27,6 +27,7 @@ return [
         'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
         'widget_script_version' => '1.3.0',
+        'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
