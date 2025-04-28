@@ -14,6 +14,16 @@ ROOT_DIR=$(realpath "$(dirname "$0")")
 # Extract folder name to use as plugin name
 PLUGIN_NAME=${ROOT_DIR##*/}
 
+# Abort if any function (except extended glob) is not installed from this script
+REQUIRED_COMMANDS=("rsync" "composer" "zip" "npm" "shopt")
+
+for cmd in "${REQUIRED_COMMANDS[@]}"; do
+  if ! command -v "$cmd" &> /dev/null; then
+    printf "${RED}Error: command \"%s\" is not installed. Please install it and try again.${RESET}\n" "$cmd"
+    exit 1
+  fi
+done
+
 # Ask the user to confirm or set the plugin name
 printf "${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
 read -p "$(printf "${BLUE}Do you want to use this for the package? ${RESET}(y/n):")" CONFIRM
@@ -36,6 +46,9 @@ EXCLUDES=(
   "--exclude=.gitignore"
   "--exclude=.wp-env.json"
   "--exclude=package.sh"
+  "--exclude=.idea"
+  "--exclude=.vscode"
+  "--exclude=.DS_Store"
 )
 
 # First make sure React build is up to date
