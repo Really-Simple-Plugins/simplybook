@@ -192,7 +192,19 @@ class WidgetScriptBuilder
             }
         }
 
+        if (empty($widgetSettings['server'])) {
+            $widgetSettings['server'] = $this->getDemoWidgetServerUrl();
+        }
+
         return $widgetSettings;
+    }
+
+    /**
+     * Get the demo widget server URL
+     */
+    private function getDemoWidgetServerUrl(): string
+    {
+        return App::env('simplybook.demo_widget_server_url');
     }
 
 }

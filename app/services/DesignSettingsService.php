@@ -330,6 +330,11 @@ class DesignSettingsService
         // execution time when the server URL is not set.
         $domain = $this->get_domain(false);
         $login = get_option('simplybook_company_login', '');
+
+        if (empty($login)) {
+            return '';
+        }
+
         return "https://$login.$domain";
     }
 
