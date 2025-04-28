@@ -66,6 +66,10 @@ class DesignSettingsService
         }
 
         $designOptions = get_option($this->designOptionsKey, []);
+        if (!is_array($designOptions)) {
+            $designOptions = [];
+        }
+
         $designOptions['server'] = $this->getServerURL();
 
         $configCanBeLoaded = (doing_action('init') || did_action('init'));
