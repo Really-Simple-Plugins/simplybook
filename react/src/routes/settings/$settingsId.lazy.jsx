@@ -3,7 +3,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import {useMemo} from "react";
+import { useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
@@ -109,10 +109,27 @@ function Settings() {
 const extractFormValuesPerMenuId = (settings, menuId) => {
     // Extract default values from settings data where menu_id ===  settingsId
     const formValues = {};
+
     settings.forEach((setting) => {
+
         if (setting.menu_id === menuId) {
-            let defaultValue = (setting['default'] ?? '');
-            formValues[setting.id] = (setting['value'] ?? defaultValue);
+
+            // If the setting has sub_settings, merge them into formValues
+            if (setting?.sub_settings) {
+                Object.entries(setting.sub_settings).forEach(([key, sub_setting]) => {
+
+                    if (!formValues[setting.id]) {
+                        formValues[setting.id] = {};
+                    }
+
+                    let defaultValue = (sub_setting['default'] ?? '');
+                    formValues[setting.id][key] = (sub_setting['value'] ?? defaultValue);
+
+                });
+            } else {
+                let defaultValue = (setting['default'] ?? '');
+                formValues[setting.id] = (setting['value'] ?? defaultValue);
+            }
         }
     });
 
