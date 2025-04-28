@@ -59,8 +59,8 @@ function Settings() {
     });
 
     useBlocker({
-        blockerFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
-        condition: isDirty,
+        shouldBlockFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
+        disabled: !isDirty,
     });
 
     return (
