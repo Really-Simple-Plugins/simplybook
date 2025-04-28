@@ -63,7 +63,7 @@ return
             'type'     => 'checkbox',
             'label'    => __('Clear the session of each widget initialization', 'simplybook'),
             'disabled' => false,
-            'default'  => 0,
+            'default'  => true,
         ],
         'reviews_count' => [
             'id'       => 'reviews_count',
@@ -161,6 +161,96 @@ return
                 'Display timeline sidebar' => __('Display calendar layout sidebar'),
                 'Image fit mode' => __('Image scale mode', 'simplybook'),
             ],
+        ],
+        'theme_settings' => [
+            'id' => 'theme_settings',
+            'menu_id' => 'design',
+            'group_id' => 'theme',
+            'type' => 'hidden',
+            'sub_settings' => [
+                'timeline_show_end_time' => [
+                    'id' => 'timeline_show_end_time',
+                    'default' => false,
+                ],
+                'timeline_hide_unavailable' => [
+                    'id' => 'timeline_hide_unavailable',
+                    'default' => true,
+                ],
+                'hide_past_days' => [
+                    'id' => 'hide_past_days',
+                    'default' => false,
+                ],
+                'hide_img_mode' => [
+                    'id' => 'hide_img_mode',
+                    'default' => true,
+                ],
+                'show_sidebar' => [
+                    'id' => 'show_sidebar',
+                    'default' => true,
+                ],
+                'timeline_modern_display' => [
+                    'id' => 'timeline_modern_display',
+                    'default' => 'as_slots',
+                ],
+                'display_item_mode' => [
+                    'id' => 'display_item_mode',
+                    'default' => 'block',
+                ],
+                'sb_base_color' => [
+                    'id' => 'sb_base_color',
+                    'default' => '#000000',
+                    'is_secondary' => true,
+                ],
+                'booking_nav_bg_color' => [
+                    'id' => 'booking_nav_bg_color',
+                    'default' => '#FF3259',
+                    'is_primary' => true,
+                ],
+                'body_bg_color' => [
+                    'id' => 'body_bg_color',
+                    'default' => '#f7f7f7',
+                ],
+                'dark_font_color' => [
+                    'id' => 'dark_font_color',
+                    'default' => '#494949',
+                ],
+                'light_font_color' => [
+                    'id' => 'light_font_color',
+                    'default' => '#ffffff',
+                ],
+                'btn_color_1' => [
+                    'id' => 'btn_color_1',
+                    'default' => '#FF3259',
+                    'is_primary' => true,
+                ],
+                'sb_company_label_color' => [
+                    'id' => 'sb_company_label_color',
+                    'default' => '#FF3259',
+                    'is_primary' => true,
+                ],
+                'sb_busy' => [
+                    'id' => 'sb_busy',
+                    'default' => '#000000',
+                    'is_secondary' => true,
+                ],
+                'sb_available' => [
+                    'id' => 'sb_available',
+                    'default' => '#055B78',
+                    'is_active' => true,
+                ],
+                'sb_review_image' => [
+                    'id' => 'sb_review_image',
+                    'default' => '',
+                ],
+                'hide_company_label' => [
+                    'id' => 'hide_company_label',
+                    'default' => false,
+                ],
+                'link_color' => [
+                    'id' => 'link_color',
+                    'default' => '#e49092',
+                ],
+            ]
         ],
         'settings_section' => [
             'id'       => 'settings_section',
