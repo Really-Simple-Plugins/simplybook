@@ -3,11 +3,14 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Helpers\Storage;
+use SimplyBook\Traits\HasWidget;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 
 class DesignSettingsController implements ControllerInterface
 {
+    use HasWidget;
+
     protected DesignSettingsService $service;
 
     public function __construct(DesignSettingsService $service) {
@@ -16,11 +19,10 @@ class DesignSettingsController implements ControllerInterface
 
     public function register()
     {
+        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
         add_action('simplybook_save_onboarding_widget_style', [$this, 'saveOnboardingWidgetStyle']);
         add_action('simplybook_save_design_settings', [$this, 'saveSettings']);
-        add_filter('simplybook_public_theme_list', [$this, 'insertDesignThemeSettings']);
         add_filter('simplybook_field', [$this, 'insertDesignSettings'], 10, 3);
-        add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
     }
 
     /**
@@ -41,19 +43,15 @@ class DesignSettingsController implements ControllerInterface
      */
     public function saveOnboardingWidgetStyle(Storage $colorStorage): bool
     {
-        $fallbackPrimary = '#FF3259';
-        $fallbackSecondary = '#000000';
-        $fallbackActive = '#055B78';
-
         $widgetStyleSettings = [
-            'theme_settings' => [
-                'booking_nav_bg_color' => $colorStorage->getString('primary_color', $fallbackPrimary),
-                'sb_company_label_color' => $colorStorage->getString('primary_color', $fallbackPrimary),
-                'btn_color_1' => $colorStorage->getString('primary_color', $fallbackPrimary),
-                'sb_base_color' => $colorStorage->getString('secondary_color', $fallbackSecondary),
-                'sb_busy' => $colorStorage->getString('secondary_color', $fallbackSecondary),
-                'sb_available' => $colorStorage->getString('active_color', $fallbackActive),
-            ]
+            'theme_settings' => array_filter([ // Remove empty values, defaults will then be used from design.php config
+                'booking_nav_bg_color' => $colorStorage->getString('primary_color'),
+                'sb_company_label_color' => $colorStorage->getString('primary_color'),
+                'btn_color_1' => $colorStorage->getString('primary_color'),
+                'sb_base_color' => $colorStorage->getString('secondary_color'),
+                'sb_busy' => $colorStorage->getString('secondary_color'),
+                'sb_available' => $colorStorage->getString('active_color'),
+            ])
         ];
 
         return $this->saveSettings($widgetStyleSettings);
@@ -78,41 +76,9 @@ class DesignSettingsController implements ControllerInterface
     }
 
     /**
-     * Insert the design settings into the theme list. The theme list is
-     * retrieved from the SimplyBook API and contains a list of theme objects
-     * with their own respective configs. The design settings from our database
-     * are inserted into these configs based on the key of the config.
-     */
-    public function insertDesignThemeSettings(array $themeList): array
-    {
-        $designSettings = $this->service->getDesignOptions();
-
-        // Only continue if these values exist
-        if (empty($designSettings)
-            || empty($designSettings['theme_settings'])
-            || empty($themeList['themes'])
-        ) {
-            return $themeList;
-        }
-
-        foreach ($designSettings['theme_settings'] as $settingKey => $settingValue) {
-            foreach ($themeList['themes'] as $theme) {
-                if (empty($theme->config) || empty($theme->config->{$settingKey})) {
-                    continue;
-                }
-                $theme->config->{$settingKey}->value = $settingValue;
-            }
-        }
-
-        return $themeList;
-    }
-
-    /**
      * Each field id will be saved as a key->value pair in the settings. Which
      * means we can set the value of the field accordingly. Fields that pass
      * this method can be found in config/fields
-     * @internal This does NOT work for dynamic theme_settings. Those are added
-     * by {@see insertDesignThemeSettings}
      */
     public function insertDesignSettings(array $field, string $id, string $group): array
     {
@@ -123,6 +89,20 @@ class DesignSettingsController implements ControllerInterface
         $designSettings = $this->service->getDesignOptions();
 
         if (!isset($designSettings[$id])) {
+            return $field;
+        }
+
+        // If sub_settings are set we will add the value of this sub_setting
+        // instead of adding a value to the parent field. See theme_settings
+        // in design.php for an example.
+        if (!empty($field['sub_settings'])) {
+            $field['sub_settings'] = array_map(function ($subField) use ($designSettings, $id) {
+                if (isset($designSettings[$id][$subField['id']])) {
+                    $subField['value'] = $designSettings[$id][$subField['id']];
+                }
+                return $subField;
+            }, $field['sub_settings']);
+
             return $field;
         }
 
