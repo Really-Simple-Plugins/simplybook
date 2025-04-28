@@ -3,14 +3,19 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
 use SimplyBook\Helpers\Event;
-use SimplyBook\Traits\HasWidget;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\DesignSettingsService;
 
 class WidgetController implements ControllerInterface
 {
-    use HasWidget;
+    protected DesignSettingsService $service;
+
+    public function __construct(DesignSettingsService $service)
+    {
+        $this->service = $service;
+    }
 
     public function register()
     {
@@ -57,7 +62,7 @@ class WidgetController implements ControllerInterface
             $builder = new WidgetScriptBuilder();
             $builder->setWidgetType($widgetType)
                 ->setAttributes($attributes)
-                ->setWidgetSettings($this->getWidgetSettings())
+                ->setWidgetSettings($this->service->getDesignOptions())
                 ->withHTML();
 
             if (!empty($wrapperID)) {

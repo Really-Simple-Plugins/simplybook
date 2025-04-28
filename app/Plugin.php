@@ -160,7 +160,9 @@ class Plugin
                 new Services\CapabilityService(),
             ),
             new Controllers\ScheduleController(),
-            new Controllers\WidgetController(),
+            new Controllers\WidgetController(
+                new Services\DesignSettingsService()
+            ),
             new Controllers\BlockController(),
             new Controllers\DesignSettingsController(
                 new Services\DesignSettingsService()
@@ -183,7 +185,9 @@ class Plugin
             new Http\Endpoints\ServicesEndpoint(),
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),
-            new Http\Endpoints\WidgetEndpoint(),
+            new Http\Endpoints\WidgetEndpoint(
+                new Services\DesignSettingsService()
+            ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
             new Http\Endpoints\CompanyRegistrationEndpoint(),

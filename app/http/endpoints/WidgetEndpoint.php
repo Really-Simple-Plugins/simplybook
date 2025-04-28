@@ -1,20 +1,26 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Traits\HasWidget;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
+use SimplyBook\Services\DesignSettingsService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class WidgetEndpoint implements MultiEndpointInterface
 {
-    use HasWidget;
     use HasRestAccess;
     use HasAllowlistControl;
 
     const ROUTE = 'get_widget';
+
+    protected DesignSettingsService $service;
+
+    public function __construct(DesignSettingsService $service)
+    {
+        $this->service = $service;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -49,7 +55,7 @@ class WidgetEndpoint implements MultiEndpointInterface
         try {
             $builder = new WidgetScriptBuilder();
             $content = $builder->setWidgetType('calendar')
-                ->setWidgetSettings($this->getWidgetSettings())
+                ->setWidgetSettings($this->service->getDesignOptions())
                 ->build();
         } catch (BuilderException $e) {
             $content = '';
@@ -76,12 +82,12 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         // This is probably always used as a fallback
         if ($isPreviewBasedOnSettings && !$isPreviewDuringOnboarding) {
-            $widgetSettings = $this->getWidgetSettings();
+            $widgetSettings = $this->service->getDesignOptions();
         }
 
         // Create data for a preview-widget
         if ($isPreviewForDesignSettings) {
-            $widgetSettings = $storage->set('server', $this->getServerURL())->delete([
+            $widgetSettings = $storage->set('server', $this->service->getServerURL())->delete([
                 'nonce',
                 'settings_section',
             ])->all();
@@ -89,7 +95,7 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         // Create data for a preview-widget during onboarding
         if ($isPreviewDuringOnboarding) {
-            $widgetSettings = $this->getFallbackSettings(
+            $widgetSettings = $this->service->getFallbackSettings(
                 $storage->getString('primary'),
                 $storage->getString('secondary'),
                 $storage->getString('active'),

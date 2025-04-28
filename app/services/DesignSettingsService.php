@@ -66,6 +66,15 @@ class DesignSettingsService
         }
 
         $designOptions = get_option($this->designOptionsKey, []);
+        $designOptions['server'] = $this->getServerURL();
+
+        $configCanBeLoaded = (doing_action('init') || did_action('init'));
+        if ($configCanBeLoaded === false) {
+            return $designOptions; // Prevents translation issues, dont cache
+        }
+
+        // Append default values from the design config, prioritize saved values
+        $designOptions = array_merge($this->getDefaultDesignSettings(), $designOptions);
 
         wp_cache_set('design_settings', $designOptions, 'simplybook', 60);
         return $designOptions;
@@ -138,7 +147,7 @@ class DesignSettingsService
                 continue;
             }
 
-            $currentSettings[$key] = sanitize_text_field($value) ?: '0';
+            $currentSettings[$key] = sanitize_text_field($value) ?: false;
         }
 
         return $currentSettings;
@@ -232,6 +241,92 @@ class DesignSettingsService
         }
 
         return true;
+    }
+
+    /**
+     * Get fallback settings for the widget. These are based on the default
+     * values from the design.php config file. Colors can be set when the widget
+     * is loaded in the onboarding {@see WidgetEndpoint::getPreviewWidget}
+     *
+     * @internal ONLY use this method if the user has not set any preferences
+     * yet. This can be the case in the onboarding process.
+     */
+    public function getFallbackSettings(string $primary = '', string $secondary = '', string $active = ''): array
+    {
+        $defaultDesignSettings = $this->getDefaultDesignSettings($primary, $secondary, $active);
+        return array_merge($defaultDesignSettings, [
+            'server' => $this->getServerURL(),
+            'theme' => 'default',
+            'predefined' => [],
+        ]);
+    }
+
+    /**
+     * Get the default design settings from the design.php config file. The
+     * color parameters can be used to override the default values for primary,
+     * secondary and active colors. This is used in the onboarding process when
+     * the user sets colors for the widget.
+     *
+     * @internal Do NOT use this method before the `init` hook.
+     */
+    private function getDefaultDesignSettings(string $primary = '', string $secondary = '', string $active = ''): array
+    {
+        $designConfig = App::fields()->get('design');
+        $defaultDesignSettings = [];
+        foreach ($designConfig as $settingID => $config) {
+
+            if (isset($config['default'])) {
+                $defaultDesignSettings[$settingID] = $config['default'];
+            }
+
+            // This could be the theme_settings config for example
+            if (isset($config['sub_settings'])) {
+                foreach ($config['sub_settings'] as $subSetting) {
+                    if (empty($subSetting['id'])) {
+                        continue;
+                    }
+
+                    $subSettingID = $subSetting['id'];
+
+                    // First set the default value from the config
+                    if (isset($subSetting['default'])) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $subSetting['default'];
+                    }
+
+                    // Override sub setting value when marked as primary and
+                    // primary color is set
+                    if (isset($subSetting['is_primary']) && $subSetting['is_primary'] && !empty($primary)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $primary;
+                    }
+
+                    // Override sub setting value when marked as secondary and
+                    // secondary color is set
+                    if (isset($subSetting['is_secondary']) && $subSetting['is_secondary'] && !empty($secondary)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $secondary;
+                    }
+
+                    // Override sub setting value when marked as active and
+                    // active color is set
+                    if (isset($subSetting['is_active']) && $subSetting['is_active'] && !empty($active)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $active;
+                    }
+                }
+            }
+        }
+
+        return $defaultDesignSettings;
+    }
+
+    /**
+     * Get the server URL
+     */
+    public function getServerURL(): string
+    {
+        // Setting the validation to false prevents exceeding the maximum
+        // execution time when the server URL is not set.
+        $domain = $this->get_domain(false);
+        $login = get_option('simplybook_company_login', '');
+        return "https://$login.$domain";
     }
 
 }

@@ -3,14 +3,11 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Helpers\Storage;
-use SimplyBook\Traits\HasWidget;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 
 class DesignSettingsController implements ControllerInterface
 {
-    use HasWidget;
-
     protected DesignSettingsService $service;
 
     public function __construct(DesignSettingsService $service) {
