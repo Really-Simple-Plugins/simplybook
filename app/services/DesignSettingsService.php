@@ -151,7 +151,7 @@ class DesignSettingsService
                 continue;
             }
 
-            $currentSettings[$key] = sanitize_text_field($value) ?: false;
+            $currentSettings[$key] = (is_bool($value) ? $value : sanitize_text_field($value));
         }
 
         return $currentSettings;
