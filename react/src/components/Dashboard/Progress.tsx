@@ -119,7 +119,7 @@ const Progress = () => {
                                 {task.action && task.action.text && task.action.link && (
                                     <Link
                                         to={task.action.link}
-                                        target={task.action?.target ?? '_blank'}
+                                        target={task.action?.target ?? '_self'}
                                         className="text-tertiary hover:text-tertiary/80 text-sm underline"
                                     >
                                         {task.action.text}
