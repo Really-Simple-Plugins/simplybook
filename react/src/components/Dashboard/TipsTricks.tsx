@@ -43,7 +43,7 @@ const TipsTricks = () => {
                     iconName="target-blank"
                     className={"border-sb-blue text-sb-blue"} 
                     link={'https://help.simplybook.me/index.php/Help_Center'} 
-                    target="_blank"
+                    target={"_blank"}
                     btnVariant={"square-ghost-small"}
                 >
                     {__("View All", "simplybook")}

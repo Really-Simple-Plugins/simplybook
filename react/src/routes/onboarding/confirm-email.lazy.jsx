@@ -68,7 +68,7 @@ export const Route = createLazyFileRoute(path)({
                             {__("Lets get you verified!", "simplybook")}
                         </h2>
                         <h1 className={"text-3xl font-semibold text-black mb-4"}>
-                            {__("Fill in the authentication code sent in your email", "simplybook")}
+                            {__("Fill in the authentication code sent to your email", "simplybook")}
                         </h1>
                     </div>
                     <OnboardingStep
