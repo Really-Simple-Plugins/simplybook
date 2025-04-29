@@ -141,8 +141,7 @@ trait LegacyLoad {
 		}
 
         $fields = [];
-        // Countries is not loaded here because we do not need it by default
-        $fieldsConfig = App::fields()->delete('countries')->all();
+        $fieldsConfig = App::fields()->all();
         $fieldsConfig = apply_filters( 'simplybook_fields', $fieldsConfig );
 
         foreach ( $fieldsConfig as $groupID => $fieldGroup ) {

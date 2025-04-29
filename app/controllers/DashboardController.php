@@ -236,7 +236,7 @@ class DashboardController implements ControllerInterface
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => App::env('simplybook.domains'),
-                'simplybook_countries' => App::fields()->get('countries'),
+                'simplybook_countries' => App::countries(),
             ]
         );
     }
