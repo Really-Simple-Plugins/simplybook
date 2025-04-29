@@ -42,13 +42,13 @@ const Header = () => {
 
     return (
         <div className="bg-white ">
-            <div className="mx-auto pl-10 pr-5 flex items-baseline max-w-screen-2xl">
+            <header className="mx-auto pl-10 pr-5 flex items-baseline max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
                     </Link>
                 </div>
-                <div className="flex items-center mr-4">
+                <div className="header-navigation flex items-center mr-4 order-6 justify-center w-full pt-4 xl:order-0 xl:justify-normal xl:w-auto xl:p-0">
                     <Link
                         to="/"
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
@@ -119,7 +119,7 @@ const Header = () => {
                         {__("Upgrade", "simplybook")}
                     </ButtonLink>
                 </div>
-            </div>
+            </header>
         </div>
     );
 };
