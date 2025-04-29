@@ -21,7 +21,7 @@ const OnboardingHeader = ({
     };
 
     return (
-        <header className={clsx(className, "flex w-full items-center justify-between")}>
+        <header className={clsx(className, "flex w-full items-center justify-between max-w-screen-2xl")}>
             {isModalOpen && <SignInModal onClose={toggleModal}/>}
             <div className="flex flex-row justify-between w-full px-4">
                 <Logo className="w-40 py-8" />
