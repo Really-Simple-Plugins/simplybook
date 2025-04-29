@@ -87,7 +87,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
     <Link
       className={clsx(linkClassName,"text-sm font-semibold")}
       to={link}
-      onClick={loginLink ? (e) => loginTo(e, loginLink) : onClick}
+      onClick={loginLink.length > 0 ? (e) => loginTo(e, loginLink) : onClick}
       target={target}
       >
       <div className={clsx(buttonVariants, reverseClass, disabledClass, className)}>
