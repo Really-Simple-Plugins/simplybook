@@ -58,13 +58,15 @@ function Settings() {
         defaultValues: currentFormValues,
     });
 
-    const {proceed, status} = useBlocker({
-        shouldBlockFn: ({ next }) => {
+    useBlocker({
+        shouldBlockFn: () => {
             if (!isDirty) {
-                return false;
+                return false; // Dont block
             }
 
-            const shouldLeave = confirm('Are you sure you want to leave?\nYour changes will be lost.');
+            const shouldLeave = window.confirm(
+                __('You have unsaved changes. Are you sure you want to leave?\n\nYour changes will be lost.', 'simplybook'),
+            );
 
             if (shouldLeave) {
                 reset(currentFormValues, {
@@ -72,8 +74,8 @@ function Settings() {
                 });
             }
 
-            return !shouldLeave
-          }
+            return !shouldLeave;
+        }
     });
 
     return (
