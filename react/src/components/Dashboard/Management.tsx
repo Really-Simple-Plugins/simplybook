@@ -64,7 +64,7 @@ const Management = () => {
     let subscriptionLimits = subscription?.limits || {};
 
     return (
-        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2  xl:col-span-4"}>
+        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2 xl:col-span-3"}>
             <BlockHeading
                 title={__("Management", "simplybook")}
                 controls={undefined}

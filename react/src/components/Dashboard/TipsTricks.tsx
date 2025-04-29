@@ -37,12 +37,12 @@ const TipsTricks = () => {
                     )}
                 </div>
             </BlockContent>
-            <BlockFooter className="pt-4">
-                <ButtonLink
+            <BlockFooter className="pt-2">
+                <ButtonLink 
                     reverseIcon={true}
                     iconName="target-blank"
-                    className={"border-sb-blue text-sb-blue"}
-                    link={data?.data.all ?? '#'}
+                    className={"border-sb-blue text-sb-blue"} 
+                    link={data?.data.all ?? '#'} 
                     target={"_blank"}
                     btnVariant={"square-ghost-small"}
                 >

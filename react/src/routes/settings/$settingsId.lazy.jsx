@@ -85,7 +85,7 @@ function Settings() {
     });
 
     return (
-        <form>
+        <form className="col-span-12 lg:col-span-6">
             {currentForm.groups?.map((group) => {
                 const isLastGroup = lastGroup.id === group.id;
                 const currentGroupFields = currentFormFields.filter(

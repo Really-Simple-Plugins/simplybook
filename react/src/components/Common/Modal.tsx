@@ -45,13 +45,20 @@ const Modal: React.FC<ModalProps> = ({ title, closeButton, isOpen, onClose, chil
                 )}
                 {children}
                 <div id="modal-footer">
-                    <ButtonLink
+                    <button 
+                        type="button"
+                        className={"flex items-center justify-center transition-all duration-200 px-3 py-1 rounded-md text-white text-sm font-bold cursor-pointer  flex-row bg-secondary hover:bg-secondary-dark w-20"} 
+                        onClick={onClose}
+                    >
+                        {__('Close', 'simplybook')}   
+                    </button>
+                    {/* <ButtonLink
                         className="bg-secondary hover:bg-secondary-dark text-white w-20"
                         btnVariant="square-small"
                         onClick={onClose}
                     >
                         {closeButton || __('Close', 'simplybook')}
-                    </ButtonLink>
+                    </ButtonLink> */}
                 </div>
             </div>
         </div>

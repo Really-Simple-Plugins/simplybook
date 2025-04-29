@@ -1,4 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
@@ -104,15 +104,12 @@ export const Route = createLazyFileRoute(path)({
                                     {!calendarPageNameAvailable &&
                                         <Icon name="times" color="red" className="ml-2 self-center"/>}
                                 </div>
-                                {/*
-
-                                Removed as long we do not have documentation to link to
-
-                                <div className="text-base text-gray-600">
-                                    <Icon name="info" color="green" className="mr-2"/>
-                                    {__("Generating pages for SimplyBook.me", "simplybook")}
-                                    &nbsp;<a className="underline" href="https://simplybook.me" target="_blank"
-                                            rel="noreferrer">{__("Read more", "simplybook")}</a>
+                                {/* <div className="text-base text-gray-600">
+                                    <Icon name="info" color="green" className="mr-3"/>
+                                    {__("Generating pages for SimplyBook.me ", "simplybook")} 
+                                    <Link className="text-gray-600 underline" href="https://simplybook.me" target="_blank" rel="noreferrer">
+                                        {__("Read more", "simplybook")}
+                                    </Link>
                                 </div> */}
                             </>
                         }

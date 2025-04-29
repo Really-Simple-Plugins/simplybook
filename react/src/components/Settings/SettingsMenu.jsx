@@ -25,7 +25,7 @@ const SettingsMenu = () => {
   }
 
   return (
-    <Block colSpan={3} rowSpan={4} className="max-w-xs flex-1 pb-2">
+    <Block className="col-span-12 lg:col-span-3 flex-1 pb-2 h-max">
       <BlockHeading title={__("Settings", "simplybook")} controls={null} />
       <div className="flex flex-col justify-start">
         {menu.map((item) => (

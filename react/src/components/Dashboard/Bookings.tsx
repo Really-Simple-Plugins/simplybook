@@ -52,7 +52,7 @@ const Bookings = () => {
     ];
 
     return (
-        <Block className={"col-span-12 sm:col-span-6 xl:col-span-4 2xl:col-span-3 2xl:row-span-2"}>
+        <Block className={"col-span-12 sm:col-span-6 xl:col-span-3 2xl:col-span-3 2xl:row-span-2"}>
             <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
             <BlockContent className={"px-0 py-0"}>
                 <div className={"flex flex-col bg-tertiary-light"}>
