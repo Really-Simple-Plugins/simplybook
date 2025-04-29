@@ -140,7 +140,7 @@ const Progress = () => {
                                 {task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (
                                     <button
                                         onClick={() => dismissTask(task.id)}
-                                        className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center"
+                                        className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
                                     >
                                         ×
                                     </button>
