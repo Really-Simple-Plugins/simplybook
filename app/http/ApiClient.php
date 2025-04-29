@@ -877,7 +877,6 @@ class ApiClient
      *
      * @return array
      */
-
     public function get_services(): array {
         if ( !$this->company_registration_complete() ){
             return [];
@@ -886,7 +885,6 @@ class ApiClient
         if ($cache = wp_cache_get('simplybook_services', 'simplybook')) {
             return $cache;
         }
-
 
         $response = $this->api_call('admin/services', [], 'GET');
         $services = $response['data'] ?? [];
