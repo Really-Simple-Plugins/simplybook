@@ -19,7 +19,7 @@ const Error = ({
             </p>
             {resolve && (
                 <Link
-                    className="mt-2 text-red-500 underline"
+                    className="mt-2 text-red-500 underline block"
                     onClick={resolve?.callback}
                 >
                     {resolve?.label}

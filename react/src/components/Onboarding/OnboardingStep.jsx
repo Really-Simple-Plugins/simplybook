@@ -188,7 +188,7 @@ const OnboardingStep = ({
                         error={apiError}
                         resolve={{
                             callback: restartOnboarding,
-                            label: __("Or try again from the beginning", "simplybook"),
+                            label: __("Or restart the onboarding", "simplybook"),
                         }}
                     />
                 )}
