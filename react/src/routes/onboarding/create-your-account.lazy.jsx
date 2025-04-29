@@ -16,7 +16,7 @@ function CreateLoginAccount() {
     return(
         <>
             <LeftColumn
-                className={"flex-col col-span-5"}
+                className={"flex-col col-span-5 col-start-2"}
             >
                 <div className={"text-center"}>
                     <h1 className={"text-3xl font-semibold text-black mb-4"}>
@@ -32,7 +32,7 @@ function CreateLoginAccount() {
                 />
             </LeftColumn>
             <RightColumn
-                className={"col-span-6"}
+                className={"col-span-5"}
             >
                 <div className="pb-4">
                     <VideoFrame
