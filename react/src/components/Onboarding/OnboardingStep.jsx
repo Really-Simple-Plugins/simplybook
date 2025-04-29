@@ -170,17 +170,6 @@ const OnboardingStep = ({
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />
-                        {currentStepId > 1 && currentStepId < 4 && (
-                            <ButtonLink
-                                iconName="retry"
-                                linkClassName="w-full"
-                                className="w-full border-tertiary text-tertiary"
-                                btnVariant="ghost"
-                                onClick={restartOnboarding}
-                            >
-                                {__("Retry registration", "simplybook")}
-                            </ButtonLink>
-                        )}
                         {secondaryButton && (
                             <ButtonField
                                 btnVariant="tertiary"
@@ -197,6 +186,10 @@ const OnboardingStep = ({
                     <Error
                         errorHeading={__("Something went wrong...", "simplybook")}
                         error={apiError}
+                        resolve={{
+                            callback: restartOnboarding,
+                            label: __("Or try again from the beginning", "simplybook"),
+                        }}
                     />
                 )}
             </div>
