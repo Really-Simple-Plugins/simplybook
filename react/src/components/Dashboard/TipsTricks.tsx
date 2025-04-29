@@ -42,7 +42,7 @@ const TipsTricks = () => {
                     reverseIcon={true}
                     iconName="target-blank"
                     className={"border-sb-blue text-sb-blue"} 
-                    link={'https://help.simplybook.me/index.php/Help_Center'} 
+                    link={data?.data.all ?? '#'} 
                     target={"_blank"}
                     btnVariant={"square-ghost-small"}
                 >
