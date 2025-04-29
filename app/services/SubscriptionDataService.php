@@ -46,11 +46,10 @@ class SubscriptionDataService
             $subscriptionData['expire_in'] = $subscriptionData['expire_in'] + 1;
         }
 
-        $this->dispatchDataLoaded($subscriptionData);
-
         $subscriptionData = $this->processDataAndIdentifyLimits($subscriptionData);
         update_option('simplybook_subscription_data', $subscriptionData);
 
+        $this->dispatchDataLoaded($subscriptionData);
         return $subscriptionData;
     }
 
