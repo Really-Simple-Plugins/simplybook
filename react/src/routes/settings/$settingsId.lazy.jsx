@@ -64,7 +64,7 @@ function Settings() {
                 return false;
             }
 
-            const shouldLeave = confirm('Are you sure you want to leave?')
+            const shouldLeave = confirm('Are you sure you want to leave?\nYour changes will be lost.');
 
             if (shouldLeave) {
                 reset(currentFormValues, {
