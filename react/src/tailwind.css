@@ -90,6 +90,8 @@ select,
 textarea,
 button,
 .checkbox-field,
+.radio-field,
+.notification-box,
 a {
     &:focus {
         outline: 2px solid var(--color-primary-hover);
