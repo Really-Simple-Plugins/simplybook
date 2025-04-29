@@ -65,8 +65,23 @@ function Settings() {
     }, [settingsId, currentFormValues, reset]);
 
     useBlocker({
-        shouldBlockFn: () => window.confirm(__("You have unsaved changes. Are you sure you want to leave?","simplybook")),
-        disabled: !isDirty,
+        shouldBlockFn: () => {
+            if (!isDirty) {
+                return false; // Dont block
+            }
+
+            const shouldLeave = window.confirm(
+                __('You have unsaved changes. Are you sure you want to leave?\n\nYour changes will be lost.', 'simplybook'),
+            );
+
+            if (shouldLeave) {
+                reset(currentFormValues, {
+                    keepDirty: false,
+                });
+            }
+
+            return !shouldLeave;
+        }
     });
 
     return (
