@@ -35,7 +35,7 @@ class PublishWidgetTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Show shortcodes','simplybook'),
-            'login_link' => 'settings/general',
+            'link' => 'settings/general',
         ];
     }
 }
