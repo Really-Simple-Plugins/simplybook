@@ -19,11 +19,8 @@ export const Route = createLazyFileRoute(path)({
         const {
             getCurrentStep,
             setCalendarPageName,
-            bookingPageName,
-            setBookingPageName,
             calendarPageName,
             calendarPageNameAvailable,
-            bookingPageNameAvailable,
             checkAvailability,
         } = useOnboardingData();
 
@@ -43,9 +40,8 @@ export const Route = createLazyFileRoute(path)({
             chosenOption = getValue('implementation');
         }
 
-        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
         let pagesShouldBeCreated = (chosenOption === "generated");
-        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
+        let buttonDisabled = (pagesShouldBeCreated && (calendarPageNameAvailable === false));
 
         return (
             <>
@@ -98,7 +94,7 @@ export const Route = createLazyFileRoute(path)({
                             <>
                                 <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>
-                                    {__("SimplyBook.me will generate the following pages automatically", "simplybook")}
+                                    {__("SimplyBook.me will generate the following page automatically", "simplybook")}
                                 </h2>
                                 <div className="w-full flex items-center mb-8">
                                     <TextInput className="p-4 flex-grow" value={calendarPageName}
@@ -106,14 +102,6 @@ export const Route = createLazyFileRoute(path)({
                                     {calendarPageNameAvailable &&
                                         <Icon name="check" color="green" className="ml-2 self-center"/>}
                                     {!calendarPageNameAvailable &&
-                                        <Icon name="times" color="red" className="ml-2 self-center"/>}
-                                </div>
-                                <div className="w-full flex items-center mb-8">
-                                    <TextInput className="p-4 flex-grow" value={bookingPageName}
-                                            onChange={(e) => setBookingPageName(e.target.value)}/>
-                                    {bookingPageNameAvailable &&
-                                        <Icon name="check" color="green" className="ml-2 self-center"/>}
-                                    {!bookingPageNameAvailable &&
                                         <Icon name="times" color="red" className="ml-2 self-center"/>}
                                 </div>
                                 {/*
