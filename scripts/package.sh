@@ -5,17 +5,31 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
-CYAN='\033[0;36m'
-RESET='\033[0m' # Reset color
+RESET='\033[0m'
 
-# Determine the path where this script is located
-ROOT_DIR=$(realpath "$(dirname "$0")")
+# Determine the root directory of the project
+ROOT_DIR=$(realpath "$(dirname "$0")/..")
 
 # Extract folder name to use as plugin name
 PLUGIN_NAME=${ROOT_DIR##*/}
 
+# Ask user to confirm they want to execute this script with an explanation of what it does
+printf "${BLUE}This script will create a zip package of the plugin for distribution.${RESET}\n"
+printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files ${RESET}\n"
+read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+  printf "${RED}Aborting...${RESET}\n"
+  exit 1
+fi
+
 # Abort if any function (except extended glob) is not installed from this script
-REQUIRED_COMMANDS=("rsync" "composer" "zip" "npm" "shopt")
+REQUIRED_COMMANDS=(
+  "rsync"
+  "composer"
+  "zip"
+  "npm"
+  "shopt"
+)
 
 for cmd in "${REQUIRED_COMMANDS[@]}"; do
   if ! command -v "$cmd" &> /dev/null; then
@@ -45,7 +59,7 @@ EXCLUDES=(
   "--exclude=.git"
   "--exclude=.gitignore"
   "--exclude=.wp-env.json"
-  "--exclude=package.sh"
+  "--exclude=scripts"
   "--exclude=.idea"
   "--exclude=.vscode"
   "--exclude=.DS_Store"
