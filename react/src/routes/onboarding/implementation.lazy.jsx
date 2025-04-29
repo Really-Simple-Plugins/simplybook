@@ -117,13 +117,13 @@ export const Route = createLazyFileRoute(path)({
                                         <Icon name="times" color="red" className="ml-2 self-center"/>}
                                 </div>
                                 
-                                <div className="text-base text-gray-600">
+                                {/* <div className="text-base text-gray-600">
                                     <Icon name="info" color="green" className="mr-3"/>
                                     {__("Generating pages for SimplyBook.me ", "simplybook")} 
                                     <Link className="text-gray-600 underline" href="https://simplybook.me" target="_blank" rel="noreferrer">
                                         {__("Read more", "simplybook")}
                                     </Link>
-                                </div>
+                                </div> */}
                             </>
                         }
                     </div>
