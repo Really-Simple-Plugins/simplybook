@@ -52,7 +52,7 @@ const ListField = forwardRef(
 
         const premiumItem = {
             id: "upgrade",
-            name: setting.premiumText,
+            name: (setting?.premiumText ?? ''),
             picture_preview: "",
         };
 
@@ -65,7 +65,9 @@ const ListField = forwardRef(
                 {listFetched && listArray.map((item) => (
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
-                <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
+                {setting.premiumText && (
+                    <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
+                )}
             </div>
         );
     },
