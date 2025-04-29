@@ -15,7 +15,6 @@ import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
     const [calendarPageNameAvailable, setCalendarPageNameAvailable] = useState(false);
-    const [bookingPageNameAvailable, setBookingPageNameAvailable] = useState(false);
 
     // Fallback countries
     let mappedCountries = {
@@ -203,7 +202,7 @@ const useOnboardingData = () => {
                         {
                             value: "generated",
                             label: __("Simple", "simplybook"),
-                            description: __("Generate pages", "simplybook"),
+                            description: __("Generate page", "simplybook"),
                         },
                         {
                             value: "manual",
@@ -216,7 +215,6 @@ const useOnboardingData = () => {
             beforeSubmit: async (data) => {
                 if (getValue("implementation") === "generated") {
                     const data = {
-                        bookingPageUrl: bookingPageUrl,
                         calendarPageUrl: calendarPageUrl,
                     };
 
@@ -246,9 +244,6 @@ const useOnboardingData = () => {
         },
     ];
 
-    const [bookingPageUrl, setBookingPageUrl] = useState(
-        simplybook.site_url + "/" + __("my-booking", "simplybook"),
-    );
     const [calendarPageUrl, setCalendarPageUrl] = useState(
         simplybook.site_url + "/" + __("calendar", "simplybook"),
     );
@@ -272,14 +267,6 @@ const useOnboardingData = () => {
         }
     });
 
-    const debouncedSetBookingPageName = useCallback(
-        debounce(async (pageName) =>
-            setBookingPageNameAvailable(
-                await checkPageTitleAvailability(pageName)
-            ), 500), // 500ms delay
-        [],
-    );
-
     const debouncedSetCalendarPageName = useCallback(
         debounce(async (pageName) =>
             setCalendarPageNameAvailable(
@@ -295,11 +282,6 @@ const useOnboardingData = () => {
         return response.status === "success";
     }
 
-    const handleBookingPageNameChange = (pageName) => {
-        setBookingPageUrl(pageName);
-        debouncedSetBookingPageName(pageName);
-    };
-
     const handleCalendarPageNameChange = (pageName) => {
         setCalendarPageUrl(pageName);
         debouncedSetCalendarPageName(pageName);
@@ -312,7 +294,6 @@ const useOnboardingData = () => {
             ...prefilledData,
             onboardingCompleted: simplybook.is_onboarding_completed, // Include onboardingCompleted
             calendarPageNameAvailable: calendarPageNameAvailable,
-            bookingPageNameAvailable: bookingPageNameAvailable,
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
@@ -342,7 +323,6 @@ const useOnboardingData = () => {
 
     const checkAvailability = async () => {
         setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
-        setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
     };
 
     useEffect(() => {
@@ -363,12 +343,9 @@ const useOnboardingData = () => {
         setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
         onboardingCompleted: query.data?.onboardingCompleted || false, // Use query data
         setOnboardingCompleted: (value) => updateOnboardingCompleted(value), // Use mutation
-        setBookingPageName: (pageName) => handleBookingPageNameChange(pageName),
         setCalendarPageName: (pageName) => handleCalendarPageNameChange(pageName),
-        bookingPageName: bookingPageUrl,
         calendarPageName: calendarPageUrl,
         calendarPageNameAvailable: calendarPageNameAvailable,
-        bookingPageNameAvailable: bookingPageNameAvailable,
         apiError,
         setApiError,
         checkAvailability,

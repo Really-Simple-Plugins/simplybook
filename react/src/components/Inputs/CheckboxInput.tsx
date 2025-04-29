@@ -50,7 +50,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                 {label && (
                     <span
                         className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}
-                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(label)}}
+                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(label, {ADD_ATTR: ['target']})}}
                     >
                     </span>
                 )}

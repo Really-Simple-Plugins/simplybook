@@ -28,6 +28,7 @@ class InstallAppTask extends AbstractTask
             'type' => 'button',
             'text' => esc_html__('More info','simplybook'),
             'link' => 'https://simplybook.me/en/app_client-app_admin-app',
+            'target' => '_blank',
         ];
     }
 }
