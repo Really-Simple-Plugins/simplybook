@@ -42,7 +42,8 @@ const TipsTricks = () => {
                     reverseIcon={true}
                     iconName="target-blank"
                     className={"border-sb-blue text-sb-blue"} 
-                    loginLink={data?.data.all ?? '#'} 
+                    link={'https://help.simplybook.me/index.php/Help_Center'} 
+                    target="_blank"
                     btnVariant={"square-ghost-small"}
                 >
                     {__("View All", "simplybook")}
