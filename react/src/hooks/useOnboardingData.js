@@ -340,16 +340,10 @@ const useOnboardingData = () => {
         },
     });
 
-    useEffect(() => {
-        const checkAvailability = async () => {
-            if (simplybook.is_onboarding_completed || query?.data?.onboardingCompleted) return;
-
-            setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
-            setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
-        };
-
-        checkAvailability();
-    }, []);
+    const checkAvailability = async () => {
+        setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
+        setBookingPageNameAvailable(await checkPageTitleAvailability(bookingPageUrl));
+    };
 
     useEffect(() => {
         setApiError('');
@@ -377,6 +371,7 @@ const useOnboardingData = () => {
         bookingPageNameAvailable: bookingPageNameAvailable,
         apiError,
         setApiError,
+        checkAvailability,
     };
 };
 

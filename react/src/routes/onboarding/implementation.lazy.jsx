@@ -7,6 +7,7 @@ import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
+import {useEffect} from "react";
 
 const path = "/onboarding/implementation";
 
@@ -23,19 +24,28 @@ export const Route = createLazyFileRoute(path)({
             calendarPageName,
             calendarPageNameAvailable,
             bookingPageNameAvailable,
+            checkAvailability,
         } = useOnboardingData();
+
+        /**
+         * On boot check the availability of the current calendar and booking
+         * page names
+         */
+        useEffect(() => {
+            checkAvailability();
+        }, []);
 
         let stepSettings = getCurrentStep(path);
         let implementationField = stepSettings.fields.find((field) => field.id === "implementation");
-
-        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
-        let pagesShouldBeCreated = (getValue('implementation') === "generated");
-        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
 
         let chosenOption = implementationField?.default;
         if (getValue('implementation') !== false) {
             chosenOption = getValue('implementation');
         }
+
+        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
+        let pagesShouldBeCreated = (chosenOption === "generated");
+        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
 
         return (
             <>
