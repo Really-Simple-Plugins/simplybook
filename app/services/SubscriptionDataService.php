@@ -28,8 +28,7 @@ class SubscriptionDataService
     public function restore(): array
     {
         $subscriptionData = $this->fetch();
-        $this->save($subscriptionData);
-        return $subscriptionData;
+        return $this->save($subscriptionData);
     }
 
     /**
