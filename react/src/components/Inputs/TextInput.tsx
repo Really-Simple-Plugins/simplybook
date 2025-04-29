@@ -53,7 +53,7 @@ const TextInput: React.FC<TextInputProps> = ({
 
     const copySpanClass = "absolute cursor-pointer right-[0.5rem] top-5.5 transform -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold";
     const textInputClass = "input-base copy-input";
-    const disabledClass = 'bg-gray-200 border-gray-200 text-gray-400 cursor-not-allowed';
+    const disabledClass = 'bg-gray-200 border-gray-200 text-black-600 cursor-not-allowed';
 
     return (
         <>
