@@ -133,12 +133,15 @@ class TaskManagementListener
                 continue;
             }
 
+            $maxAmountForLimit = ($limit['total'] ?? 0);
             $amountLeftForLimit = ($limit['rest'] ?? 0);
 
             switch ($limit['key']) {
                 case 'sheduler_limit':
                     $this->handleShedulerLimit($amountLeftForLimit);
                     break;
+                case 'provider_limit':
+                    $this->handleProviderLimit($amountLeftForLimit, $maxAmountForLimit);
             }
         }
     }
@@ -161,6 +164,32 @@ class TaskManagementListener
         if ($amountLeft > 1) {
             $this->service->hideTask(
                 Tasks\MaximumBookingsTask::IDENTIFIER
+            );
+        }
+    }
+
+    /**
+     * Handle the provider limit to update task status.
+     */
+    private function handleProviderLimit(int $amountLeft, int $maxAmount): void
+    {
+        $amountUsed = ($maxAmount - $amountLeft);
+
+        if ($amountLeft === 0) {
+            $this->service->flagTaskUrgent(
+                Tasks\MaxedOutProvidersTask::IDENTIFIER
+            );
+        }
+
+        if ($amountLeft > 1) {
+            $this->service->hideTask(
+                Tasks\MaxedOutProvidersTask::IDENTIFIER
+            );
+        }
+
+        if ($amountUsed > 1) {
+            $this->service->completeTask(
+                Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
     }

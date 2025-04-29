@@ -56,6 +56,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\InstallAppTask(),
             new Tasks\AcceptPaymentsTask(),
             new Tasks\FailedAuthenticationTask(),
+            new Tasks\MaxedOutProvidersTask(),
         ];
 
         return array_filter($pluginTasks, function ($task) {
