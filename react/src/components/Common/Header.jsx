@@ -36,7 +36,7 @@ const Header = () => {
         }
     }, [onboardingCompleted]);
 
-    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative";
+    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300";
 
     const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
 
