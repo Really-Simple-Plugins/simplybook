@@ -1,4 +1,4 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
@@ -19,11 +19,8 @@ export const Route = createLazyFileRoute(path)({
         const {
             getCurrentStep,
             setCalendarPageName,
-            bookingPageName,
-            setBookingPageName,
             calendarPageName,
             calendarPageNameAvailable,
-            bookingPageNameAvailable,
             checkAvailability,
         } = useOnboardingData();
 
@@ -43,9 +40,8 @@ export const Route = createLazyFileRoute(path)({
             chosenOption = getValue('implementation');
         }
 
-        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
         let pagesShouldBeCreated = (chosenOption === "generated");
-        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
+        let buttonDisabled = (pagesShouldBeCreated && (calendarPageNameAvailable === false));
 
         return (
             <>
@@ -98,7 +94,7 @@ export const Route = createLazyFileRoute(path)({
                             <>
                                 <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
                                 <h2 className={"text-lg font-light text-black m-0 mb-6"}>
-                                    {__("SimplyBook.me will generate the following pages automatically", "simplybook")}
+                                    {__("SimplyBook.me will generate the following page automatically", "simplybook")}
                                 </h2>
                                 <div className="w-full flex items-center mb-8">
                                     <TextInput className="p-4 flex-grow" value={calendarPageName}
@@ -108,23 +104,12 @@ export const Route = createLazyFileRoute(path)({
                                     {!calendarPageNameAvailable &&
                                         <Icon name="times" color="red" className="ml-2 self-center"/>}
                                 </div>
-                                <div className="w-full flex items-center mb-8">
-                                    <TextInput className="p-4 flex-grow" value={bookingPageName}
-                                            onChange={(e) => setBookingPageName(e.target.value)}/>
-                                    {bookingPageNameAvailable &&
-                                        <Icon name="check" color="green" className="ml-2 self-center"/>}
-                                    {!bookingPageNameAvailable &&
-                                        <Icon name="times" color="red" className="ml-2 self-center"/>}
-                                </div>
-                                {/*
-
-                                Removed as long we do not have documentation to link to
-
-                                <div className="text-base text-gray-600">
-                                    <Icon name="info" color="green" className="mr-2"/>
-                                    {__("Generating pages for SimplyBook.me", "simplybook")}
-                                    &nbsp;<a className="underline" href="https://simplybook.me" target="_blank"
-                                            rel="noreferrer">{__("Read more", "simplybook")}</a>
+                                {/* <div className="text-base text-gray-600">
+                                    <Icon name="info" color="green" className="mr-3"/>
+                                    {__("Generating pages for SimplyBook.me ", "simplybook")} 
+                                    <Link className="text-gray-600 underline" href="https://simplybook.me" target="_blank" rel="noreferrer">
+                                        {__("Read more", "simplybook")}
+                                    </Link>
                                 </div> */}
                             </>
                         }

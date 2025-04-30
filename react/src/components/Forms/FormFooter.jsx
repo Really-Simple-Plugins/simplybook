@@ -38,11 +38,14 @@ const FormFooter = ({
             <FormScrollProgressLine />
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
-                    <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
+                    <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2 p-0 m-0 mr-2`}>
                         {currentState.message}
                     </p>
                 )}
-                <PreviewButtonInput btnVariant={'tertiary-small'} getValues={getValues}></PreviewButtonInput>
+                <PreviewButtonInput 
+                    btnVariant={'tertiary-small'} 
+                    getValues={getValues}>   
+                </PreviewButtonInput>
                 <ButtonLink
                     disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
                     btnVariant={'secondary-small'}

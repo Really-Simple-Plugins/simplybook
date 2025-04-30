@@ -10,7 +10,7 @@ const NotificationSidebar: React.FC<NotificationSidebarProps> = ({
 
   return (
     <>
-      <aside className={clsx("w-1/4", className)}>
+      <aside className={clsx("col-span-12 lg:col-span-3", className)}>
       <div className="sticky top-16">
           <h2 className="text-lg font-bold pb-2 border-b-1 border-[#e6e6e6]">{__("Notifications", "simplybook")}</h2>
           <div className="notification-feed">

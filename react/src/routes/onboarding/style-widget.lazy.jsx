@@ -25,7 +25,7 @@ export const Route = createLazyFileRoute(path)({
 
         return (
             <>
-                <LeftColumn className={"items-center flex-col flex-wrap justify-start xl:col-span-6 col-span-12 xl:col-start-2"}>
+                <LeftColumn className={"items-center flex-col flex-wrap justify-start xl:col-span-5 col-span-12 xl:col-start-2"}>
                     <div className={"text-center"}>
                         <h2 className={"mt-2 text-lg font-light text-black"}>
                             {__("What's your style?", "simplybook")}
@@ -85,7 +85,7 @@ export const Route = createLazyFileRoute(path)({
                         }}
                     />
                 </LeftColumn>
-                <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-4 col-span-12 relative w-full"}>
+                <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-5 col-span-12 relative w-full"}>
                     <Calendar
                         primary={primaryColor}
                         secondary={secondaryColor}

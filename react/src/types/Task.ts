@@ -9,5 +9,6 @@ export interface Task {
         text: string;
         link?: string;
         login_link?: string;
+        target?: string;
     };
 }

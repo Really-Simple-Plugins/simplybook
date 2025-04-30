@@ -54,7 +54,7 @@ const Progress = () => {
     }
 
     return (
-        <Block className="col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2  xl:col-span-4">
+        <Block className="col-span-12 sm:col-span-12 2xl:col-span-6 2xl:row-span-2  xl:col-span-6">
             <BlockHeading
                 title={__("Progress", "simplybook")}
                 controls={
@@ -119,6 +119,7 @@ const Progress = () => {
                                 {task.action && task.action.text && task.action.link && (
                                     <Link
                                         to={task.action.link}
+                                        target={task.action?.target ?? '_self'}
                                         className="text-tertiary hover:text-tertiary/80 text-sm underline"
                                     >
                                         {task.action.text}
@@ -139,7 +140,7 @@ const Progress = () => {
                                 {task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (
                                     <button
                                         onClick={() => dismissTask(task.id)}
-                                        className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center"
+                                        className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
                                     >
                                         ×
                                     </button>

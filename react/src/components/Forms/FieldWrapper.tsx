@@ -42,7 +42,9 @@ const FieldWrapper = memo(({
                     </Label.Root>
                 )}
                 {help && (
-                    <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
+                    <p className="pb-1 text-xs italic font-light text-gray-600">
+                        {help}
+                    </p>
                 )}
                 {type!=='checkbox' && children}
             </div>

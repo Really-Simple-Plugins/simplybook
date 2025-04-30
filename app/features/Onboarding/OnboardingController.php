@@ -220,27 +220,21 @@ class OnboardingController implements FeatureInterface
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
-        $bookingPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('bookingPageUrl'));
-        if (!$calendarPageIsAvailable || !$bookingPageIsAvailable) {
+        if (!$calendarPageIsAvailable) {
             return $this->service->sendHttpResponse([], false, esc_html__(
-                'Both page titles should be available if you choose to generate pages.', 'simplybook'
+                'Calendar page title should be available if you choose to generate this page.', 'simplybook'
             ));
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
-        $bookingPageName = StringUtility::convertUrlToTitle($storage->getUrl('bookingPageUrl'));
 
         $calendarPageID = (new PageBuilder())->setTitle($calendarPageName)
             ->setContent('[simplybook_widget]')
             ->insert();
 
-        $bookingPageID = (new PageBuilder())->setTitle($bookingPageName)
-            ->setContent('[simplybook_booking_button]')
-            ->insert();
+        $pageCreatedSuccessfully = ($calendarPageID !== -1);
 
-        $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
-
-        if ($pagesCreatedSuccessfully) {
+        if ($pageCreatedSuccessfully) {
             Event::dispatch(Event::CALENDAR_PUBLISHED);
         }
 
@@ -248,8 +242,7 @@ class OnboardingController implements FeatureInterface
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
-            'booking_page_id' => $bookingPageID,
-        ], $pagesCreatedSuccessfully);
+        ], $pageCreatedSuccessfully);
     }
 
     /**
