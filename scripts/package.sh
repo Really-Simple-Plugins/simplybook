@@ -43,9 +43,10 @@ done
 # Ask user to confirm executing this script with an explanation of what it does
 printf "${BLUE}This script will create a zip package of the plugin for distribution.${RESET}\n"
 printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files. ${RESET}\n"
+printf "${BLUE}After the packaging of the plugin you have the option to sync translations from- and upload the package to, the translation server.${RESET}\n"
 read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
-  printf "${RED}Aborting...${RESET}\n"
+  printf "${RED}Aborted${RESET}\n"
   exit 1
 fi
 

@@ -111,3 +111,6 @@ zip -rqT "${PLUGIN_NAME}.zip" "${PLUGIN_NAME}"/ > /dev/null 2>&1 || {
   printf "${RED}Error: Failed to zip the updated package.${RESET}\n"
   exit 1
 }
+
+# Success message
+printf "${GREEN}✅ Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n\n" "${PLUGIN_NAME}"
