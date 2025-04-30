@@ -13,9 +13,9 @@ ROOT_DIR=$(realpath "$(dirname "$0")/..")
 # Extract folder name to use as plugin name
 PLUGIN_NAME=${ROOT_DIR##*/}
 
-# Ask user to confirm they want to execute this script with an explanation of what it does
+# Ask user to confirm executing this script with an explanation of what it does
 printf "${BLUE}This script will create a zip package of the plugin for distribution.${RESET}\n"
-printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files ${RESET}\n"
+printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files. ${RESET}\n"
 read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
   printf "${RED}Aborting...${RESET}\n"
@@ -39,7 +39,7 @@ for cmd in "${REQUIRED_COMMANDS[@]}"; do
 done
 
 # Ask the user to confirm or set the plugin name
-printf "${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
+printf "\n${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
 read -p "$(printf "${BLUE}Do you want to use this for the package? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
   read -p "$(printf "${BLUE}Please enter the correct plugin name: ${RESET}")" PLUGIN_NAME
@@ -124,4 +124,17 @@ printf "${GREEN}✅ Clean!${RESET}\n\n"
 cd /tmp/ || exit
 zip -rqT "${PLUGIN_NAME}".zip "${PLUGIN_NAME}"/
 
-printf "${GREEN}✅ All done! Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n" "${PLUGIN_NAME}"
+printf "${GREEN}✅ Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n\n" "${PLUGIN_NAME}"
+
+# Ask the user if the package need to be uploaded to translate.really-simple-plugins.com
+read -p "$(printf "${BLUE}Do you want to upload the package to translate.really-simple-plugins.com? ${RESET}(y/n):")" CONFIRM
+if [[ "$CONFIRM" == "y" ]]; then
+  # Execute the upload script in "${ROOT_DIR}"/scripts
+  cd "${ROOT_DIR}"/scripts || {
+    printf "${RED}Error: Failed to change directory to find the upload scripts.${RESET}\n"
+    exit 1
+  }
+
+  printf "\n${BLUE}Starting the upload script now.${RESET}\n"
+  bash ./upload.sh "${PLUGIN_NAME}"
+fi
