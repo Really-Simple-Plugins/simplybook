@@ -21,7 +21,7 @@ TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 
 ## Ask user to confirm executing this script with an explanation of what it does
 printf "\n${BLUE}This script will upload the packaged plugin from your /tmp folder to the translation server.${RESET}\n"
-printf "${BLUE}It will remove any existing zip file on the translation server and unzip the new one.${RESET}\n"
+printf "${BLUE}It will remove any existing zip file, unzip the new one and backup any existing plugin with the same name on the translation server.${RESET}\n"
 read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
   printf "${RED}Aborted${RESET}\n"
