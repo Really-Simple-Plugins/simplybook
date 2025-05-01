@@ -27,7 +27,7 @@ if [ -z "${TEXT_DOMAIN}" ]; then
   printf "${BLUE}Detected text domain: ${YELLOW}%s${RESET}\n" "${TEXT_DOMAIN}"
   read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n):")" CONFIRM
   if [[ "$CONFIRM" != "y" ]]; then
-    printf "${RED}Aborted${RESET}\n"
+    printf "${RED}Aborted${RESET}\n\n"
     exit 1
   fi
 
@@ -41,7 +41,7 @@ printf "\n${BLUE}This script will download the translations from the translation
 printf "${BLUE}The unzipped package will be sought in your /tmp directory.${RESET}\n"
 read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
-  printf "${RED}Aborted${RESET}\n"
+  printf "${RED}Aborted${RESET}\n\n"
   exit 1
 fi
 
@@ -58,7 +58,7 @@ printf "\n${GREEN}Translation script started...${RESET}\n\n"
 # index.php and .pot files
 printf "${BLUE}Cleaning up language folder of package, just to be sure...${RESET}\n"
 find "${PACKAGE_PATH}/${LANGUAGE_PATH}" -type f ! -name 'index.php' ! -name '*.pot' -delete || {
-  printf "${RED}Error: Failed to remove files from the language folder.${RESET}\n"
+  printf "${RED}Error: Failed to remove files from the language folder.${RESET}\n\n"
   exit 1
 }
 
@@ -68,7 +68,7 @@ printf "${GREEN}✅ Clean!${RESET}\n\n"
 # path of the package
 printf "${BLUE}Downloading .po files...${RESET}\n"
 scp "${SSH_LOGIN}":"${REMOTE_WP_CONTENT_PATH}/plugins/${PLUGIN_NAME}/${LANGUAGE_PATH}/*.po" "${PACKAGE_PATH}/${LANGUAGE_PATH}" > /dev/null 2>&1 || {
-  printf "${RED}Error: Failed to download .po files.${RESET}\n"
+  printf "${RED}Error: Failed to download .po files.${RESET}\n\n"
   exit 1
 }
 
@@ -79,7 +79,7 @@ printf "${GREEN}✅ Downloaded ${FILE_COUNT} .po file%s!${RESET}\n\n" "$( [ "$FI
 # Changing directory to the language path of the package
 printf "${BLUE}Changing directory to ${PACKAGE_PATH}/${LANGUAGE_PATH}${RESET}\n"
 cd "${PACKAGE_PATH}/${LANGUAGE_PATH}" || {
-  printf "${RED}Error: Failed to change directory.${RESET}\n"
+  printf "${RED}Error: Failed to change directory.${RESET}\n\n"
   exit 1
 }
 
@@ -88,7 +88,7 @@ printf "${GREEN}✅ Current directory changed.${RESET}\n\n"
 # Use WP-CLI to create .json files from the .po files
 printf "${BLUE}Creating .json files from the .po files...${RESET}\n"
 wp i18n make-json ./*.po > /dev/null 2>&1 || {
-  printf "${RED}Error: Failed to create .json files from the .po files.${RESET}\n"
+  printf "${RED}Error: Failed to create .json files from the .po files.${RESET}\n\n"
   exit 1
 }
 
@@ -97,7 +97,7 @@ printf "${GREEN}✅ Done!${RESET}\n\n"
 # Use WP-CLI to create .mo files from the .po files
 printf "${BLUE}Creating .mo files from the .po files...${RESET}\n"
 wp i18n make-mo ./*.po > /dev/null 2>&1 || {
-  printf "${RED}Error: Failed to create .mo files from the .po files.${RESET}\n"
+  printf "${RED}Error: Failed to create .mo files from the .po files.${RESET}\n\n"
   exit 1
 }
 
@@ -117,13 +117,13 @@ printf "${BLUE}Zipping the updated package...${RESET}\n"
 
 # Change directory to /tmp first
 cd /tmp/ || {
-  printf "${RED}Error: Failed to change directory to find the package.${RESET}\n"
+  printf "${RED}Error: Failed to change directory to find the package.${RESET}\n\n"
   exit 1
 }
 
 # Zip the package
 zip -rqT "${PLUGIN_NAME}.zip" "${PLUGIN_NAME}"/ > /dev/null 2>&1 || {
-  printf "${RED}Error: Failed to zip the updated package.${RESET}\n"
+  printf "${RED}Error: Failed to zip the updated package.${RESET}\n\n"
   exit 1
 }
 
