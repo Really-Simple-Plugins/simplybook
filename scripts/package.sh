@@ -94,7 +94,10 @@ printf "${GREEN}✅ /tmp is clean!${RESET}\n\n"
 
 # Copy the plugin to /tmp while excluding the EXCLUDES list
 printf "${BLUE}Copying %s to /tmp...${RESET}\n" "${PLUGIN_NAME}"
-rsync -a -q "${EXCLUDES[@]}" ./ /tmp/"${PLUGIN_NAME}"
+rsync -a -q "${EXCLUDES[@]}" ./ /tmp/"${PLUGIN_NAME}" || {
+  printf "${RED}Error: Failed to copy plugin to /tmp.${RESET}\n"
+  exit 1
+}
 
 printf "${GREEN}✅ Copied!${RESET}\n\n"
 
@@ -102,19 +105,28 @@ printf "${GREEN}✅ Copied!${RESET}\n\n"
 cd /tmp/"${PLUGIN_NAME}" || exit
 
 printf "${BLUE}Installing composer packages (production only)...${RESET}\n\n"
-composer install --no-dev --optimize-autoloader
+composer install --no-dev --optimize-autoloader || {
+  printf "${RED}Error: Failed to install composer packages.${RESET}\n"
+  exit 1
+}
 
 printf "\n${GREEN}✅ Packages installed for production!${RESET}\n\n"
 
 # Strip out files that are not meant to be shipped
 printf "${BLUE}Cleaning up dev-related files...${RESET}\n"
-rm -rf ./composer.json ./composer.lock
+rm -rf ./composer.json ./composer.lock || {
+  printf "${RED}Error: Failed to remove dev-related files.${RESET}\n"
+  exit 1
+}
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
 # Enable extended pattern matching for glob operations like !(pattern)
 printf "${BLUE}Enabling extended glob patterns...${RESET}\n"
-shopt -s extglob
+shopt -s extglob || {
+  printf "${RED}Error: Failed to enable extended glob patterns.${RESET}\n"
+  exit 1
+}
 
 printf "${GREEN}✅ Glob operations are now supported!${RESET}\n\n"
 
@@ -138,7 +150,10 @@ read -p "$(printf "${BLUE}Do you want to create a new translations template (.po
 if [[ "$CONFIRM" == "y" ]]; then
   # Executing WP CLI with (temporarily) an unlimited memory limit
   printf "\n${BLUE}Scanning plugin and creating a new .pot file... (this may take a while)${RESET}\n"
-  php -d memory_limit=-1 $(which wp) i18n make-pot "${ROOT_DIR}" "${ROOT_DIR}/assets/languages/${TEXT_DOMAIN}.pot"
+  php -d memory_limit=-1 $(which wp) i18n make-pot "${ROOT_DIR}" "${ROOT_DIR}/assets/languages/${TEXT_DOMAIN}.pot" || {
+    printf "${RED}Error: Failed to create .pot file.${RESET}\n"
+    exit 1
+  }
 
   printf "${GREEN}✅ New .pot file created!${RESET}\n\n"
 else

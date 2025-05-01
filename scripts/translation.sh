@@ -69,7 +69,6 @@ cd "${PACKAGE_PATH}/${LANGUAGE_PATH}" || {
 
 printf "${GREEN}✅ Current directory changed.${RESET}\n\n"
 
-
 # Use WP-CLI to create .json files from the .po files
 printf "${BLUE}Creating .json files from the .po files...${RESET}\n"
 wp i18n make-json ./*.po > /dev/null 2>&1 || {
