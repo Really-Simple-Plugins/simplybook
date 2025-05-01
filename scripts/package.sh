@@ -151,7 +151,7 @@ if [[ "$CONFIRM" == "y" ]]; then
 
   printf "${GREEN}✅ New .pot file created!${RESET}\n\n"
 else
-  printf "${YELLOW}Skipping .pot file creation.${RESET}\n\n"
+  printf "${ORANGE}Skipping .pot file creation.${RESET}\n\n"
 fi
 
 # Zip te package
@@ -185,3 +185,6 @@ if [[ "$CONFIRM" == "y" ]]; then
   printf "\n${BLUE}Starting the upload script now.${RESET}\n"
   bash ./upload.sh "${PLUGIN_NAME}"
 fi
+
+# State that the script has finished
+printf "\n${GREEN}✅ Finished!${RESET}\n"
