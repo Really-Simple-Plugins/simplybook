@@ -38,7 +38,7 @@
     --bg-primary-dark: #055b78;
     --color-primary-hover: #0589bd;
     --color-primary-lighter: #F8FCFE;
-    
+
     /* Secondary colors */
     --bg-secondary-light: #ffb3c1;
     --bg-secondary: #ff3259;
@@ -86,21 +86,7 @@ WP style overwrites
 ======================================
 **/
 #wpcontent {
-    margin-left: 0 !important;
-}
-
-#wpfooter {
-    margin-left: 0 !important;
-}
-
-.folded {
-    #wpcontent {
-        margin-left: 0 !important;
-    }
-
-    #wpfooter {
-        margin-left: 0 !important;
-    }
+    padding-left: 0 !important;
 }
 
 /**
@@ -129,7 +115,7 @@ Text styles
 small {
     font-size: var(--text-base);
 }
- 
+
 /**
 ======================================
 Base styles
@@ -187,7 +173,7 @@ Design settings
     justify-content: space-between;
 
     @media screen and (max-width: 40rem) {
-        grid-template-columns: repeat(1, minmax(0, 1fr)); 
+        grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 }
 
@@ -218,7 +204,7 @@ Input global styles
     label {
         font-size: var(--text-label);
         font-weight: var(--font-weight-medium);
-        margin-bottom: 0.5rem; 
+        margin-bottom: 0.5rem;
     }
 
     .input-base {
@@ -235,7 +221,3 @@ Input global styles
             line-height: 1.5;
     }
 }
-
-
-
-
