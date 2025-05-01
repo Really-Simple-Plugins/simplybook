@@ -3,10 +3,12 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import {useEffect, useMemo} from "react";
+import { useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
+import { ToastContainer } from 'react-toastify';
+import ToastNotice from "../../components/Errors/ToastNotice";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -29,6 +31,8 @@ function Settings() {
     const { settingsId } = Route.useParams();
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
+    const toastNotice = new ToastNotice();
+
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -107,17 +111,46 @@ function Settings() {
             })}
 
             {formHasSettings && (
-                <FormFooter
-                    getValues={getValues}
-                    onSubmit={handleSubmit((formData) => {
-                        saveSettings(formData).then(() => {
-                            reset(formData);
-                        });
-                    })}
-                    control={control}
-                />
-            )}
+                <>
+                    <FormFooter
+                        getValues={getValues}
+                        onSubmit={handleSubmit((formData) => {
+                            saveSettings(formData)
+                            .then(() => {
+                                reset(formData);        
+                                toastNotice
+                                .setMessage("Settings saved")
+                                .setType("success")
+                                .render();          
+                            }).catch((response) => {
+                                const errorList = response?.data?.errors;
 
+                                if (errorList) {
+                                    errorList.map((error) => {
+                                        toastNotice
+                                        .setMessage(`${error.message}`)
+                                        .setType("error")
+                                        .render();
+                                    });
+                                }
+                            });
+                        })}
+                        control={control}
+                    />
+                    <ToastContainer
+                        toastClassName={"rounded-xl"}
+                        position="bottom-right"
+                        autoClose={5000}
+                        hideProgressBar={true}
+                        newestOnTop={false}
+                        closeOnClick
+                        rtl={false}
+                        pauseOnFocusLoss
+                        pauseOnHover
+                    />
+                </>
+            )}
+            
         </form>
     );
 }
