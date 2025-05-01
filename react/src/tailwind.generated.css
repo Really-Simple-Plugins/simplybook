@@ -1935,18 +1935,7 @@
   }
 }
 #wpcontent {
-  margin-left: 0 !important;
-}
-#wpfooter {
-  margin-left: 0 !important;
-}
-.folded {
-  #wpcontent {
-    margin-left: 0 !important;
-  }
-  #wpfooter {
-    margin-left: 0 !important;
-  }
+  padding-left: 0 !important;
 }
 input,
 select,
@@ -2230,7 +2219,3 @@ h3 {
     opacity: 0.5;
   }
 }
-
-
-
-
