@@ -9,12 +9,13 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css";
 
+/* load the safelist */
+@import "../node_modules/react-toastify/dist/ReactToastify.css";
 
 /* load the safelist */
 @source "../safelist.txt";
 
 @theme {
-
     /* Box-shadow */
     --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
 
@@ -24,7 +25,10 @@
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
-    /* Error colors */
+    /* Notice colors */
+    --color-warning: var(--color-yellow-400);
+    --color-warning-light: var(--color-yellow-100);
+
     --color-succes: var(--color-green-500);
     --color-succes-light: #EAFAF3;
 
@@ -63,6 +67,17 @@
     /* Max width */
     --breakpoint-2xl: 104rem;
     --container-8xl: 125rem;
+}
+/**
+======================================
+Root overwriites 
+
+Use to define or change global styles
+======================================
+**/
+:root {
+    /* Toastify */
+    --toastify-toast-min-height: 3rem;
 }
 
 /**
