@@ -35,12 +35,21 @@ class Plugin
 
         $this->registerConstants();
 
+        add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
+    }
+
+    /**
+     * Load the plugin text domain for translations
+     */
+    public function loadPluginTextDomain()
+    {
+        load_plugin_textdomain('simplybook', false, App::env('plugin.lang'));
     }
 
     /**

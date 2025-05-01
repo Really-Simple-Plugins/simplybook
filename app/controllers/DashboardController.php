@@ -130,18 +130,21 @@ class DashboardController implements ControllerInterface
         wp_enqueue_script('simplybookMePl_widget_scripts');
 
         wp_enqueue_script(
-            'simplybook',
+            'simplybook-main-script',
             App::env('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
             ($chunkTranslation['dependencies'] ?? ''),
             ($chunkTranslation['version'] ?? ''),
             true
         );
 
+        wp_set_script_translations('simplybook-main-script', 'simplybook', App::env('plugin.lang_path'));
+
         wp_localize_script(
-            'simplybook',
+            'simplybook-main-script',
             'simplybook',
             $this->localizedReactSettings($chunkTranslation)
         );
+
     }
 
     /**
@@ -187,7 +190,7 @@ class DashboardController implements ControllerInterface
             wp_register_script($chunkHandle, $chunkSource, [], true);
 
             //as there is no pro version of this plugin, no need to declare a path
-            $localeData = load_script_textdomain($chunkHandle, 'simplybook', false);
+            $localeData = load_script_textdomain($chunkHandle, 'simplybook', App::env('plugin.lang_path'));
             if (!empty($localeData)) {
                 $jsonTranslations[] = $localeData;
             }
