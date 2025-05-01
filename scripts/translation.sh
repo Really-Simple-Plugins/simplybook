@@ -3,18 +3,34 @@
 # Retrieve the defined constants from the constants.sh file
 source "./constants.sh"
 
-# Get plugin name from first argument
+# Get plugin name from first argument or ask the user to confirm the detected
+# plugin name
 PLUGIN_NAME="$1";
 if [ -z "${PLUGIN_NAME}" ]; then
-  printf "${RED}Error: Please provide the name of the plugin as the first argument of the script.${RESET}\n"
-  exit 1
+  PLUGIN_NAME=${ROOT_DIR##*/}
+
+  printf "\n${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
+  read -p "$(printf "${BLUE}Please confirm this is the correct plugin name. ${RESET}(y/n):")" CONFIRM
+  if [[ "$CONFIRM" != "y" ]]; then
+    printf "${RED}Aborted${RESET}\n"
+    exit 1
+  fi
+
 fi
 
-# Get text domain from the second argument
+# Get text domain from the second argument or ask the user to confirm the
+# detected text domain
 TEXT_DOMAIN="$2";
 if [ -z "${TEXT_DOMAIN}" ]; then
-  printf "${RED}Error: Please provide the text domain as the second argument of the script.${RESET}\n"
-  exit 1
+  TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | xargs)
+
+  printf "${BLUE}Detected text domain: ${YELLOW}%s${RESET}\n" "${TEXT_DOMAIN}"
+  read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n):")" CONFIRM
+  if [[ "$CONFIRM" != "y" ]]; then
+    printf "${RED}Aborted${RESET}\n"
+    exit 1
+  fi
+
 fi
 
 # Setup script specific constants

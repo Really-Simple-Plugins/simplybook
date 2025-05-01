@@ -50,31 +50,25 @@ if [[ "$CONFIRM" != "y" ]]; then
   exit 1
 fi
 
-# Ask the user to confirm or set the plugin name
+# Ask the user to confirm the plugin name
 printf "\n${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
-read -p "$(printf "${BLUE}Do you want to use this for the package? ${RESET}(y/n):")" CONFIRM
+read -p "$(printf "${BLUE}Please confirm this is the correct plugin name. ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
-  read -p "$(printf "${BLUE}Please enter the correct plugin name: ${RESET}")" PLUGIN_NAME
-  if [[ -z "$PLUGIN_NAME" ]]; then
-    printf "${RED}Error: Plugin name cannot be empty.${RESET}\n"
-    exit 1
-  fi
+  printf "${RED}Aborted${RESET}\n"
+  exit 1
 fi
 
-printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} for the zip file.${RESET}\n\n" "${PLUGIN_NAME}"
+printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} for the package of the plugin.${RESET}\n\n" "${PLUGIN_NAME}"
 
-# Ask the user to confirm or set the text domain
+# Ask the user to confirm the text domain
 printf "${BLUE}Detected text domain: ${YELLOW}%s${RESET}\n" "${TEXT_DOMAIN}"
-read -p "$(printf "${BLUE}Do you want to use this for the translations? ${RESET}(y/n):")" CONFIRM
+read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
-  read -p "$(printf "${BLUE}Please enter the correct text domain: ${RESET}")" TEXT_DOMAIN
-  if [[ -z "$TEXT_DOMAIN" ]]; then
-    printf "${RED}Error: Text domain cannot be empty.${RESET}\n"
-    exit 1
-  fi
+  printf "${RED}Aborted${RESET}\n"
+  exit 1
 fi
 
-printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} for the translations.${RESET}\n\n" "${TEXT_DOMAIN}"
+printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} as the text domain.${RESET}\n\n" "${TEXT_DOMAIN}"
 
 # First make sure React build is up to date
 printf "${BLUE}Making sure React build is up to date in your local environment before copying...${RESET}\n"

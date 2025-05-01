@@ -3,11 +3,19 @@
 # Retrieve the defined constants from the constants.sh file
 source "./constants.sh"
 
-# Get plugin name from first argument
+# Get plugin name from first argument or ask the user to confirm the detected
+# plugin name
 PLUGIN_NAME="$1";
 if [ -z "${PLUGIN_NAME}" ]; then
-  printf "${RED}Error: Please provide the name of the plugin as the first argument of the script.${RESET}\n"
-  exit 1
+  PLUGIN_NAME=${ROOT_DIR##*/}
+
+  printf "\n${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
+  read -p "$(printf "${BLUE}Please confirm this is the correct plugin name. ${RESET}(y/n):")" CONFIRM
+  if [[ "$CONFIRM" != "y" ]]; then
+    printf "${RED}Aborted${RESET}\n"
+    exit 1
+  fi
+
 fi
 
 # Setup script specific constants
