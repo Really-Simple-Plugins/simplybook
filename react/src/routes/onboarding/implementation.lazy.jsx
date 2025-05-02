@@ -1,7 +1,6 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
-import debounce from "lodash.debounce";
 import { __ } from "@wordpress/i18n";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
@@ -10,7 +9,7 @@ import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
-import isPageTitleAvailable from "../../api/endpoints/onBoarding/isPageTitleAvailable";
+import usePageAvailability from "../../hooks/usePageAvailability";
 
 const path = "/onboarding/implementation";
 
@@ -19,51 +18,11 @@ export const Route = createLazyFileRoute(path)({
         const { getValue } = useSettingsData();
         const { updateData, getCurrentStep } = useOnboardingData();
 
-        const [calendarPageAvailable, setCalendarPageAvailable] = useState(false);
-        const [calendarPageUrl, setCalendarPageUrl] = useState(
-            simplybook.site_url + "/" + __("calendar", "simplybook")
-        );
-
-        /**
-         * This method checks if a given page title is available.
-         */
-        const checkPageUrlAvailability = async (pageUrl) => {
-            const response = await isPageTitleAvailable({ data: { url: pageUrl } });
-            return response.status === "success";
-        };
-
-        /**
-         * Debounced setter to avoid firing API calls on every keystroke.
-         */
-        const debouncedCheckAvailability = useCallback(
-            debounce(async (pageUrl) => {
-                setCalendarPageAvailable(await checkPageUrlAvailability(pageUrl));
-            }, 500),
-            []
-        );
-
-        /**
-         * Handles calendar page URL input changes and triggers debounced
-         * availability check.
-         */
-        const handleCalendarPageUrlChange = (pageUrl) => {
-            setCalendarPageUrl(pageUrl);
-            debouncedCheckAvailability(pageUrl);
-        };
-
-        /**
-         * Immediate availability check used on boot.
-         */
-        const checkInitialAvailability = async () => {
-            setCalendarPageAvailable(await checkPageUrlAvailability(calendarPageUrl));
-        };
-
-        /**
-         * On mount, check if the default calendar page URL is available.
-         */
-        useEffect(() => {
-            checkInitialAvailability();
-        }, []);
+        const {
+            pageUrl: calendarPageUrl,
+            pageAvailable: calendarPageAvailable,
+            setPageUrl: setCalendarPageUrl
+        } = usePageAvailability(simplybook.site_url + "/" + __("calendar", "simplybook"));
 
         /**
          * Update onboarding data whenever the calendarPageUrl changes.
@@ -154,7 +113,7 @@ export const Route = createLazyFileRoute(path)({
                                     <TextInput
                                         className="p-4 flex-grow"
                                         value={calendarPageUrl}
-                                        onChange={(e) => handleCalendarPageUrlChange(e.target.value)}
+                                        onChange={(e) => setCalendarPageUrl(e.target.value)}
                                     />
                                     <Icon
                                         name={calendarPageAvailable ? "check" : "times"}
