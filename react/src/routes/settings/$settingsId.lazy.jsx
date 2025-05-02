@@ -7,7 +7,6 @@ import { useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
-import { ToastContainer } from 'react-toastify';
 import ToastNotice from "../../components/Errors/ToastNotice";
 
 const useSettingsLoader = (settingsId) => {
@@ -88,6 +87,38 @@ function Settings() {
         }
     });
 
+    /**
+     * Method to call when settings are saved successfully. Pass the formData
+     * to reset the form values to the current state of the form. The method
+     * also shows a success message using the ToastNotice component.
+     */
+    const handleSavedSettings = (formData) => {
+        reset(formData);
+        toastNotice.setMessage(
+            __('Settings saved successfully', 'simplybook')
+        ).setType("success").render();
+    }
+
+    /**
+     * Method to handle errors when saving settings. The method checks if
+     * the response contains errors and shows them using the ToastNotice
+     * component. If the response does not contain errors, it logs the
+     * response to the console.
+     */
+    const handleCaughtErrorInSaveSettings = (response) => {
+        const errorList = response?.data?.errors;
+
+        if (!errorList) {
+            return console.error('Error saving settings:', response);
+        }
+
+        errorList.map((error) => {
+            toastNotice.setMessage(
+                error.message
+            ).setType("error").render();
+        });
+    }
+
     return (
         <form className="col-span-12 lg:col-span-6">
             {currentForm.groups?.map((group) => {
@@ -115,42 +146,16 @@ function Settings() {
                     <FormFooter
                         getValues={getValues}
                         onSubmit={handleSubmit((formData) => {
-                            saveSettings(formData)
-                            .then(() => {
-                                reset(formData);        
-                                toastNotice
-                                .setMessage("Settings saved")
-                                .setType("success")
-                                .render();          
+                            saveSettings(formData).then(() => {
+                                return handleSavedSettings(formData);
                             }).catch((response) => {
-                                const errorList = response?.data?.errors;
-
-                                if (errorList) {
-                                    errorList.map((error) => {
-                                        toastNotice
-                                        .setMessage(`${error.message}`)
-                                        .setType("error")
-                                        .render();
-                                    });
-                                }
+                                return handleCaughtErrorInSaveSettings(response);
                             });
                         })}
                         control={control}
                     />
-                    <ToastContainer
-                        toastClassName={"rounded-xl"}
-                        position="bottom-right"
-                        autoClose={3000}
-                        hideProgressBar={true}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        pauseOnHover
-                    />
                 </>
             )}
-            
         </form>
     );
 }
