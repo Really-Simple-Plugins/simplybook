@@ -213,21 +213,7 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                if (getValue("implementation") === "generated") {
-                    const data = {
-                        calendarPageUrl: calendarPageUrl,
-                    };
-
-                    let pagesResponse = await generatePages({ data });
-                    if (pagesResponse.status !== "success") {
-                        setApiError(pagesResponse.message);
-                        return false;
-                    }
-
-                    updateOnboardingCompleted(true);
-                    return true;
-                }
-
+                // User selecteded "manual" implementation
                 if (getValue("implementation") === "manual") {
                     let finishResponse = await finishOnboarding({data});
                     if (finishResponse.status !== "success") {
@@ -239,7 +225,20 @@ const useOnboardingData = () => {
                     return true;
                 }
 
-                return false;
+                // User selected "generated" implementation or did not change
+                // the default value
+                const payload = {
+                    calendarPageUrl: calendarPageUrl,
+                };
+
+                let pagesResponse = await generatePages({payload});
+                if (pagesResponse.status !== "success") {
+                    setApiError(pagesResponse.message);
+                    return false;
+                }
+
+                updateOnboardingCompleted(true);
+                return true;
             },
         },
     ];

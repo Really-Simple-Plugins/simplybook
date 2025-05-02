@@ -217,7 +217,7 @@ class OnboardingController implements FeatureInterface
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'payload');
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
