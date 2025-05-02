@@ -1,5 +1,4 @@
-import {useCallback, useEffect} from "react";
-import debounce from "lodash.debounce"; // You can use lodash's debounce function
+import {useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import registerEmail from "../api/endpoints/onBoarding/registerEmail";
@@ -7,14 +6,15 @@ import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
-import generatePages from "../api/endpoints/onBoarding/generatePages";
-import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
-import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
 import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
+import generatePages from "../api/endpoints/onBoarding/generatePages";
+import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
 
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
-    const [calendarPageNameAvailable, setCalendarPageNameAvailable] = useState(false);
+    const [apiError, setApiError] = useState("");
+    const queryClient = useQueryClient();
+    const { settings } = useSettingsData();
 
     // Fallback countries
     let mappedCountries = {
@@ -29,6 +29,54 @@ const useOnboardingData = () => {
             acc[code] = name;
             return acc;
         }, {});
+    }
+
+    /**
+     * Method should be used the moment a user selects "Do it yourself" option
+     * in the implementation step. It will finish the onboarding process
+     * and set the onboardingCompleted flag to true.
+     */
+    const handleManualImplementation = async (data) => {
+        let finishResponse = await finishOnboarding({data});
+        if (finishResponse.status !== "success") {
+            setApiError(finishResponse.message);
+            return false;
+        }
+
+        updateOnboardingCompleted(true);
+        return true;
+    }
+
+    /**
+     * Method should be used the moment a user selects "Generate page" option
+     * in the implementation step. It will check if the calendar page URL
+     * is available and if it is, it will generate the pages.
+     */
+    const handleGeneratePagesImplementationChoice = async (data) => {
+        if (!data?.calendarPageUrl) {
+            setApiError(__('Please enter a valid calendar page URL', 'simplybook'));
+            return false;
+        }
+
+        if (!data?.calendarPageAvailable) {
+            setApiError(__('This calendar page URL is taken. Please choose another one.', 'simplybook'));
+            return false;
+        }
+
+        // User selected "generated" implementation or did not change
+        // the default value
+        const payload = {
+            calendarPageUrl: data.calendarPageUrl,
+        };
+
+        let pagesResponse = await generatePages({payload});
+        if (pagesResponse.status !== "success") {
+            setApiError(pagesResponse.message);
+            return false;
+        }
+
+        updateOnboardingCompleted(true);
+        return true;
     }
 
     const steps = [
@@ -213,42 +261,13 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                // User selecteded "manual" implementation
                 if (getValue("implementation") === "manual") {
-                    let finishResponse = await finishOnboarding({data});
-                    if (finishResponse.status !== "success") {
-                        setApiError(finishResponse.message);
-                        return false;
-                    }
-
-                    updateOnboardingCompleted(true);
-                    return true;
+                    return handleManualImplementation(data);
                 }
-
-                // User selected "generated" implementation or did not change
-                // the default value
-                const payload = {
-                    calendarPageUrl: calendarPageUrl,
-                };
-
-                let pagesResponse = await generatePages({payload});
-                if (pagesResponse.status !== "success") {
-                    setApiError(pagesResponse.message);
-                    return false;
-                }
-
-                updateOnboardingCompleted(true);
-                return true;
+                return handleGeneratePagesImplementationChoice(data);
             },
         },
     ];
-
-    const [calendarPageUrl, setCalendarPageUrl] = useState(
-        simplybook.site_url + "/" + __("calendar", "simplybook"),
-    );
-    const [apiError, setApiError] = useState("");
-    const queryClient = useQueryClient();
-    const { settings } = useSettingsData();
 
     // Create initial data object
     const initialData = {};
@@ -266,33 +285,13 @@ const useOnboardingData = () => {
         }
     });
 
-    const debouncedSetCalendarPageName = useCallback(
-        debounce(async (pageName) =>
-            setCalendarPageNameAvailable(
-                await checkPageTitleAvailability(pageName)
-            ), 500), // 500ms delay
-        [],
-    );
-
-    const checkPageTitleAvailability = async (pageName) => {
-        const response = await isPageTitleAvailable({
-            data: { url: pageName },
-        });
-        return response.status === "success";
-    }
-
-    const handleCalendarPageNameChange = (pageName) => {
-        setCalendarPageUrl(pageName);
-        debouncedSetCalendarPageName(pageName);
-    };
-
     const query = useQuery({
         queryKey: ["onboarding_data"],
         initialData: {
             ...initialData,
             ...prefilledData,
             onboardingCompleted: simplybook.is_onboarding_completed, // Include onboardingCompleted
-            calendarPageNameAvailable: calendarPageNameAvailable,
+            // calendarPageNameAvailable: calendarPageNameAvailable,
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
@@ -320,10 +319,6 @@ const useOnboardingData = () => {
         },
     });
 
-    const checkAvailability = async () => {
-        setCalendarPageNameAvailable(await checkPageTitleAvailability(calendarPageUrl));
-    };
-
     useEffect(() => {
         setApiError('');
     }, [getValue('implementation')]);
@@ -342,12 +337,12 @@ const useOnboardingData = () => {
         setRecaptchaToken: (token) => updateData({ recaptchaToken: token }),
         onboardingCompleted: query.data?.onboardingCompleted || false, // Use query data
         setOnboardingCompleted: (value) => updateOnboardingCompleted(value), // Use mutation
-        setCalendarPageName: (pageName) => handleCalendarPageNameChange(pageName),
-        calendarPageName: calendarPageUrl,
-        calendarPageNameAvailable: calendarPageNameAvailable,
+        // userSetCalendarPageUrl: (pageUrl) => handleCalendarPageUrlChange(pageUrl),
+        // calendarPageUrl,
+        // calendarPageNameAvailable,
         apiError,
         setApiError,
-        checkAvailability,
+        // checkAvailability,
     };
 };
 

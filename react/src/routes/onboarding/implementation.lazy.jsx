@@ -1,4 +1,5 @@
 import { createLazyFileRoute, Link } from "@tanstack/react-router";
+import debounce from "lodash.debounce"; // You can use lodash's debounce function
 import { __ } from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
@@ -7,7 +8,8 @@ import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
-import {useEffect} from "react";
+import {useCallback, useEffect, useState} from "react";
+import isPageTitleAvailable from "../../api/endpoints/onBoarding/isPageTitleAvailable";
 
 const path = "/onboarding/implementation";
 
@@ -15,14 +17,38 @@ export const Route = createLazyFileRoute(path)({
 
     component: () => {
         const { getValue } = useSettingsData();
+        const {updateData, getCurrentStep} = useOnboardingData();
 
-        const {
-            getCurrentStep,
-            setCalendarPageName,
-            calendarPageName,
-            calendarPageNameAvailable,
-            checkAvailability,
-        } = useOnboardingData();
+        const [calendarPageAvailable, setCalendarPageAvailable] = useState(false);
+        const [calendarPageUrl, setCalendarPageUrl] = useState(
+            simplybook.site_url + "/" + __("calendar", "simplybook"),
+        );
+
+        const debouncedSetCalendarPageName = useCallback(
+            debounce(async (pageName) =>
+                setCalendarPageAvailable(
+                    await checkPageTitleAvailability(pageName)
+                ), 500), // 500ms delay
+            [],
+        );
+
+        const checkPageTitleAvailability = async (pageName) => {
+            const response = await isPageTitleAvailable({
+                data: { url: pageName },
+            });
+            return response.status === "success";
+        }
+
+        const handleCalendarPageUrlChange = (pageUrl) => {
+            setCalendarPageUrl(pageUrl);
+            debouncedSetCalendarPageName(pageUrl);
+        };
+
+        const checkAvailability = async () => {
+            setCalendarPageAvailable(
+                await checkPageTitleAvailability(calendarPageUrl)
+            );
+        };
 
         /**
          * On boot check the availability of the current calendar and booking
@@ -31,6 +57,18 @@ export const Route = createLazyFileRoute(path)({
         useEffect(() => {
             checkAvailability();
         }, []);
+
+        useEffect(() => {
+            updateData({
+                calendarPageUrl: calendarPageUrl,
+            });
+        }, [calendarPageUrl]);
+
+        useEffect(() => {
+            updateData({
+                calendarPageAvailable: calendarPageAvailable,
+            });
+        }, [calendarPageAvailable]);
 
         let stepSettings = getCurrentStep(path);
         let implementationField = stepSettings.fields.find((field) => field.id === "implementation");
@@ -41,7 +79,7 @@ export const Route = createLazyFileRoute(path)({
         }
 
         let pagesShouldBeCreated = (chosenOption === "generated");
-        let buttonDisabled = (pagesShouldBeCreated && (calendarPageNameAvailable === false));
+        let buttonDisabled = (pagesShouldBeCreated && (calendarPageAvailable === false));
 
         return (
             <>
@@ -97,16 +135,20 @@ export const Route = createLazyFileRoute(path)({
                                     {__("SimplyBook.me will generate the following page automatically", "simplybook")}
                                 </h2>
                                 <div className="w-full flex items-center mb-8">
-                                    <TextInput className="p-4 flex-grow" value={calendarPageName}
-                                            onChange={(e) => setCalendarPageName(e.target.value)}/>
-                                    {calendarPageNameAvailable &&
-                                        <Icon name="check" color="green" className="ml-2 self-center"/>}
-                                    {!calendarPageNameAvailable &&
-                                        <Icon name="times" color="red" className="ml-2 self-center"/>}
+                                    <TextInput
+                                        className="p-4 flex-grow"
+                                        value={calendarPageUrl}
+                                        onChange={(e) => handleCalendarPageUrlChange(e.target.value)}
+                                    />
+                                    <Icon
+                                        name={calendarPageAvailable ? "check" : "times"}
+                                        color={calendarPageAvailable ? "green" : "red"}
+                                        className="ml-2 self-center"
+                                    />
                                 </div>
                                 {/* <div className="text-base text-gray-600">
                                     <Icon name="info" color="green" className="mr-3"/>
-                                    {__("Generating pages for SimplyBook.me ", "simplybook")} 
+                                    {__("Generating pages for SimplyBook.me ", "simplybook")}
                                     <Link className="text-gray-600 underline" href="https://simplybook.me" target="_blank" rel="noreferrer">
                                         {__("Read more", "simplybook")}
                                     </Link>
