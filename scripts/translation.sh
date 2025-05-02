@@ -3,6 +3,15 @@
 # Retrieve the defined constants from the constants.sh file
 source "./constants.sh"
 
+# Ask user to confirm executing this script with an explanation of what it does
+printf "\n${BLUE}This script will download the translations from the translations server and save them in your unzipped package.${RESET}\n"
+printf "${BLUE}The unzipped package will be sought in your /tmp directory.${RESET}\n"
+read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n): ")" CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+  printf "${RED}Aborted${RESET}\n\n"
+  exit 1
+fi
+
 # Get plugin name from first argument or ask the user to confirm the detected
 # plugin name
 PLUGIN_NAME="$1";
@@ -10,7 +19,7 @@ if [ -z "${PLUGIN_NAME}" ]; then
   PLUGIN_NAME=${ROOT_DIR##*/}
 
   printf "\n${BLUE}Detected plugin name: ${YELLOW}%s${RESET}\n" "${PLUGIN_NAME}"
-  read -p "$(printf "${BLUE}Please confirm this is the correct plugin name. ${RESET}(y/n):")" CONFIRM
+  read -p "$(printf "${BLUE}Please confirm this is the correct plugin name. ${RESET}(y/n): ")" CONFIRM
   if [[ "$CONFIRM" != "y" ]]; then
     printf "${RED}Aborted${RESET}\n"
     exit 1
@@ -24,8 +33,8 @@ TEXT_DOMAIN="$2";
 if [ -z "${TEXT_DOMAIN}" ]; then
   TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | xargs)
 
-  printf "${BLUE}Detected text domain: ${YELLOW}%s${RESET}\n" "${TEXT_DOMAIN}"
-  read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n):")" CONFIRM
+  printf "${BLUE}\nDetected text domain: ${YELLOW}%s${RESET}\n" "${TEXT_DOMAIN}"
+  read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n): ")" CONFIRM
   if [[ "$CONFIRM" != "y" ]]; then
     printf "${RED}Aborted${RESET}\n\n"
     exit 1
@@ -35,15 +44,6 @@ fi
 
 # Setup script specific constants
 PACKAGE_PATH="/tmp/${PLUGIN_NAME}"
-
-# Ask user to confirm executing this script with an explanation of what it does
-printf "\n${BLUE}This script will download the translations from the translations server and save them in your unzipped package.${RESET}\n"
-printf "${BLUE}The unzipped package will be sought in your /tmp directory.${RESET}\n"
-read -p "$(printf "${BLUE}Do you want to continue? ${RESET}(y/n):")" CONFIRM
-if [[ "$CONFIRM" != "y" ]]; then
-  printf "${RED}Aborted${RESET}\n\n"
-  exit 1
-fi
 
 # Check if the required package directory exist
 if [[ ! -d "${PACKAGE_PATH}" ]]; then
@@ -87,7 +87,7 @@ printf "${GREEN}✅ Current directory changed.${RESET}\n\n"
 
 # Use WP-CLI to create .json files from the .po files
 printf "${BLUE}Creating .json files from the .po files...${RESET}\n"
-wp i18n make-json ./*.po > /dev/null 2>&1 || {
+wp i18n make-json ./ > /dev/null 2>&1 || {
   printf "${RED}Error: Failed to create .json files from the .po files.${RESET}\n\n"
   exit 1
 }
@@ -96,7 +96,7 @@ printf "${GREEN}✅ Done!${RESET}\n\n"
 
 # Use WP-CLI to create .mo files from the .po files
 printf "${BLUE}Creating .mo files from the .po files...${RESET}\n"
-wp i18n make-mo ./*.po > /dev/null 2>&1 || {
+wp i18n make-mo ./ > /dev/null 2>&1 || {
   printf "${RED}Error: Failed to create .mo files from the .po files.${RESET}\n\n"
   exit 1
 }
