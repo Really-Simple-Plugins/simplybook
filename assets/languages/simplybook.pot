@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-04-30T09:21:14+00:00\n"
+"POT-Creation-Date: 2025-05-02T09:58:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -43,17 +43,9 @@ msgstr ""
 #: app/controllers/AdminController.php:30
 #: react/build/107.js:1
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:753
-#: react/build/src_routes_settings_lazy_jsx.js:1043
-#: react/build/src_routes_settings_lazy_jsx.js:4254
-#: react/build/src_routes_settings_lazy_jsx.js:4306
 #: react/src/components/Common/Header.jsx:83
 #: react/src/components/Settings/SettingsMenu.jsx:17
 #: react/src/components/Settings/SettingsMenu.jsx:29
-#: react/build/src_routes_index_lazy_jsx.js:380
-#: react/build/src_routes_settings_lazy_jsx.js:524
-#: react/build/src_routes_settings_lazy_jsx.js:2038
-#: react/build/src_routes_settings_lazy_jsx.js:2050
 msgid "Settings"
 msgstr ""
 
@@ -249,43 +241,15 @@ msgstr ""
 #: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:45
 #: app/features/TaskManagement/Tasks/TrialExpiredTask.php:45
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2445
-#: react/build/src_routes_index_lazy_jsx.js:773
-#: react/build/src_routes_index_lazy_jsx.js:2386
-#: react/build/src_routes_index_lazy_jsx.js:2393
-#: react/build/src_routes_index_lazy_jsx.js:2400
-#: react/build/src_routes_index_lazy_jsx.js:2439
-#: react/build/src_routes_index_lazy_jsx.js:3650
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2403
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2373
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2373
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2373
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2373
-#: react/build/src_routes_settings_lazy_jsx.js:1063
-#: react/build/src_routes_settings_lazy_jsx.js:2615
 #: react/src/components/Common/Header.jsx:119
 #: react/src/components/Fields/ListItem.js:76
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1066
-#: react/build/src_routes_index_lazy_jsx.js:416
-#: react/build/src_routes_index_lazy_jsx.js:1458
-#: react/build/src_routes_index_lazy_jsx.js:1466
-#: react/build/src_routes_index_lazy_jsx.js:1474
-#: react/build/src_routes_index_lazy_jsx.js:1487
-#: react/build/src_routes_index_lazy_jsx.js:1977
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1080
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1062
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1062
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1062
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1062
-#: react/build/src_routes_settings_lazy_jsx.js:560
-#: react/build/src_routes_settings_lazy_jsx.js:1227
 msgid "Upgrade"
 msgstr ""
 
@@ -305,84 +269,82 @@ msgstr ""
 msgid "Your Trial period has expired! Please consider all premium features!"
 msgstr ""
 
-#: app/http/ApiClient.php:595
-#: app/http/ApiClient.php:803
+#: app/http/ApiClient.php:574
+#: app/http/ApiClient.php:782
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: app/http/ApiClient.php:601
+#: app/http/ApiClient.php:580
 msgid "Too many attempts to register company, please try again in a minute."
 msgstr ""
 
-#: app/http/ApiClient.php:615
+#: app/http/ApiClient.php:594
 msgid "Please fill in all company data."
 msgstr ""
 
-#: app/http/ApiClient.php:671
+#: app/http/ApiClient.php:650
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/http/ApiClient.php:704
+#: app/http/ApiClient.php:683
 msgid "The company name is not allowed. Please change the company name."
 msgstr ""
 
-#: app/http/ApiClient.php:811
+#: app/http/ApiClient.php:790
 msgid "Something went wrong, are you sure you started the company registration?"
 msgstr ""
 
-#: app/http/ApiClient.php:838
+#: app/http/ApiClient.php:817
 msgid "Email successfully confirmed."
 msgstr ""
 
-#: app/http/ApiClient.php:844
+#: app/http/ApiClient.php:823
 msgid "This confirmation code is not valid."
 msgstr ""
 
-#: app/http/ApiClient.php:1334
+#: app/http/ApiClient.php:1313
 msgid "Failed logging in, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1337
+#: app/http/ApiClient.php:1316
 msgid "Unknown error"
 msgstr ""
 
-#: app/http/ApiClient.php:1343
+#: app/http/ApiClient.php:1322
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1346
+#: app/http/ApiClient.php:1325
 msgid "Invalid response from SimplyBook."
 msgstr ""
 
-#: app/http/ApiClient.php:1394
+#: app/http/ApiClient.php:1373
 msgid "Failed two factor authentication, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1397
+#: app/http/ApiClient.php:1376
 msgid "Unknown 2FA error"
 msgstr ""
 
-#: app/http/ApiClient.php:1404
+#: app/http/ApiClient.php:1383
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1407
+#: app/http/ApiClient.php:1386
 msgid "Invalid 2FA response from SimplyBook."
 msgstr ""
 
-#: app/http/ApiClient.php:1471
+#: app/http/ApiClient.php:1450
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1195
 #: react/src/components/Modals/SignInModal.jsx:15
-#: react/build/src_routes_onboarding_lazy_jsx.js:753
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/http/ApiClient.php:1472
+#: app/http/ApiClient.php:1451
 msgid "SMS"
 msgstr ""
 
-#: app/http/ApiClient.php:1478
+#: app/http/ApiClient.php:1457
 msgid "Unknown 2fa provider"
 msgstr ""
 
@@ -406,7 +368,7 @@ msgstr ""
 msgid "Error processing settings"
 msgstr ""
 
-#: app/managers/EndpointManager.php:136
+#: app/managers/EndpointManager.php:168
 msgid "Forbidden."
 msgstr ""
 
@@ -1413,22 +1375,22 @@ msgid "Booking button widget"
 msgstr ""
 
 #: config/fields/design.php:12
-#: config/fields/design.php:150
+#: config/fields/design.php:148
 msgid "Flexible"
 msgstr ""
 
 #: config/fields/design.php:13
-#: config/fields/design.php:148
+#: config/fields/design.php:146
 msgid "Modern"
 msgstr ""
 
 #: config/fields/design.php:14
-#: config/fields/design.php:146
+#: config/fields/design.php:144
 msgid "Flexible weekly"
 msgstr ""
 
 #: config/fields/design.php:15
-#: config/fields/design.php:151
+#: config/fields/design.php:149
 msgid "Slots weekly"
 msgstr ""
 
@@ -1437,12 +1399,12 @@ msgid "Modern Provider"
 msgstr ""
 
 #: config/fields/design.php:17
-#: config/fields/design.php:147
+#: config/fields/design.php:145
 msgid "Flexible Provider"
 msgstr ""
 
 #: config/fields/design.php:18
-#: config/fields/design.php:152
+#: config/fields/design.php:150
 msgid "Weekly classes"
 msgstr ""
 
@@ -1474,115 +1436,113 @@ msgstr ""
 msgid "Allow switch to ADA"
 msgstr ""
 
-#: config/fields/design.php:67
+#: config/fields/design.php:65
 msgid "Clear the session of each widget initialization"
 msgstr ""
 
-#: config/fields/design.php:76
+#: config/fields/design.php:74
 msgid "Add the reviews count"
 msgstr ""
 
-#: config/fields/design.php:84
+#: config/fields/design.php:82
 msgid "Hide the add reviews button"
 msgstr ""
 
-#: config/fields/design.php:92
+#: config/fields/design.php:90
 msgid "Title"
 msgstr ""
 
-#: config/fields/design.php:93
+#: config/fields/design.php:91
 msgid "Book now"
 msgstr ""
 
-#: config/fields/design.php:101
+#: config/fields/design.php:99
 msgid "Background color"
 msgstr ""
 
-#: config/fields/design.php:110
+#: config/fields/design.php:108
 msgid "Text color"
 msgstr ""
 
-#: config/fields/design.php:118
+#: config/fields/design.php:116
 msgid "Position"
 msgstr ""
 
-#: config/fields/design.php:121
+#: config/fields/design.php:119
 msgid "Top"
 msgstr ""
 
-#: config/fields/design.php:122
+#: config/fields/design.php:120
 msgid "Bottom"
 msgstr ""
 
-#: config/fields/design.php:123
+#: config/fields/design.php:121
 msgid "Left"
 msgstr ""
 
-#: config/fields/design.php:124
+#: config/fields/design.php:122
 msgid "Right"
 msgstr ""
 
-#: config/fields/design.php:132
+#: config/fields/design.php:130
 msgid "Position offset"
 msgstr ""
 
-#: config/fields/design.php:133
+#: config/fields/design.php:131
 msgid "Offset value in pixels, percentage or 'auto'. Calculated from the bottom or right side, based on the chosen position."
 msgstr ""
 
-#: config/fields/design.php:142
+#: config/fields/design.php:140
 msgid "Theme"
 msgstr ""
 
-#: config/fields/design.php:149
+#: config/fields/design.php:147
 msgid "Default"
 msgstr ""
 
-#: config/fields/design.php:153
+#: config/fields/design.php:151
 msgid "Daily classes"
 msgstr ""
 
-#: config/fields/design.php:154
+#: config/fields/design.php:152
 msgid "Modern provider"
 msgstr ""
 
-#: config/fields/design.php:155
+#: config/fields/design.php:153
 msgid "As slots"
 msgstr ""
 
-#: config/fields/design.php:156
+#: config/fields/design.php:154
 msgid "As table"
 msgstr ""
 
-#: config/fields/design.php:157
+#: config/fields/design.php:155
 msgid "Block"
 msgstr ""
 
-#: config/fields/design.php:158
+#: config/fields/design.php:156
 msgid "List"
 msgstr ""
 
-#: config/fields/design.php:159
+#: config/fields/design.php:157
 msgid "Single page"
 msgstr ""
 
-#: config/fields/design.php:160
+#: config/fields/design.php:158
 msgid "Display calendar"
 msgstr ""
 
-#: config/fields/design.php:161
+#: config/fields/design.php:159
 msgid "Base theme color"
 msgstr ""
 
-#: config/fields/design.php:165
+#: config/fields/design.php:163
 msgid "Image scale mode"
 msgstr ""
 
 #: config/fields/providers.php:13
 #: config/menus.php:24
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2366
-#: react/build/src_routes_index_lazy_jsx.js:1436
 msgid "Providers"
 msgstr ""
 
@@ -1625,8 +1585,6 @@ msgstr ""
 
 #: config/menus.php:59
 #: react/build/107.js:1
-#: react/build/src_routes_settings_lazy_jsx.js:7022
-#: react/build/src_routes_settings_lazy_jsx.js:3642
 msgid "Notifications"
 msgstr ""
 
@@ -1636,10 +1594,6 @@ msgstr ""
 
 #: config/menus.php:69
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2279
-#: react/build/src_routes_index_lazy_jsx.js:2376
-#: react/build/src_routes_index_lazy_jsx.js:1419
-#: react/build/src_routes_index_lazy_jsx.js:1446
 msgid "Bookings"
 msgstr ""
 
@@ -1653,15 +1607,9 @@ msgstr ""
 
 #: assets/block/build/index.js:75
 #: assets/block/src/edit.js:86
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6131
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6135
-#: react/build/src_routes_settings_lazy_jsx.js:6747
-#: react/build/src_routes_settings_lazy_jsx.js:6751
 #: assets/block/build/index.js:59
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3160
-#: react/build/src_routes_settings_lazy_jsx.js:3502
 msgid "Preview"
 msgstr ""
 
@@ -1795,508 +1743,208 @@ msgstr ""
 
 #: assets/block/build/index.js:327
 #: assets/block/src/setting.modal.js:78
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3831
-#: react/build/src_routes_settings_lazy_jsx.js:4001
-#: react/src/components/Forms/FormFooter.jsx:54
+#: react/src/components/Forms/FormFooter.jsx:55
 #: assets/block/build/index.js:295
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1790
-#: react/build/src_routes_settings_lazy_jsx.js:1951
 msgid "Save"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:5233
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:5269
-#: react/build/src_routes_index_lazy_jsx.js:1853
-#: react/build/src_routes_index_lazy_jsx.js:1889
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5150
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5186
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5093
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5129
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5037
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5073
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5051
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5087
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5031
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5067
-#: react/build/src_routes_settings_lazy_jsx.js:5687
-#: react/build/src_routes_settings_lazy_jsx.js:5723
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2676
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2711
-#: react/build/src_routes_index_lazy_jsx.js:1170
-#: react/build/src_routes_index_lazy_jsx.js:1205
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2760
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2795
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2687
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2722
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2720
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2755
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2683
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2718
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2698
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2733
-#: react/build/src_routes_settings_lazy_jsx.js:2951
-#: react/build/src_routes_settings_lazy_jsx.js:2986
 msgid "Route is not set"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:5266
-#: react/build/src_routes_index_lazy_jsx.js:1886
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5183
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5126
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5070
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5084
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5064
-#: react/build/src_routes_settings_lazy_jsx.js:5720
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2708
-#: react/build/src_routes_index_lazy_jsx.js:1202
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2792
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2719
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2752
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2715
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2730
-#: react/build/src_routes_settings_lazy_jsx.js:2983
 msgid "Payload is not set"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:5332
-#: react/build/src_routes_index_lazy_jsx.js:1952
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5249
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5192
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5136
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5150
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5130
-#: react/build/src_routes_settings_lazy_jsx.js:5786
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2771
-#: react/build/src_routes_index_lazy_jsx.js:1265
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2855
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2782
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2815
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2778
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2793
-#: react/build/src_routes_settings_lazy_jsx.js:3046
 msgid "An error occurred"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:792
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:666
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:636
-#: react/build/src_routes_settings_lazy_jsx.js:840
 #: react/src/components/Common/CalendarLoading.jsx:62
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:370
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:352
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:334
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:334
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:334
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:334
-#: react/build/src_routes_settings_lazy_jsx.js:402
 msgid "Please wait while your registration is being processed. This usually takes about 30 seconds."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:792
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:666
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:636
-#: react/build/src_routes_settings_lazy_jsx.js:840
 #: react/src/components/Common/CalendarLoading.jsx:65
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:373
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:355
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:337
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:337
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:337
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:337
-#: react/build/src_routes_settings_lazy_jsx.js:405
 msgid "This is taking a bit longer than expected. Please wait while we retry a few times."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:792
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:666
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:636
-#: react/build/src_routes_settings_lazy_jsx.js:840
 #: react/src/components/Common/CalendarLoading.jsx:69
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:377
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:359
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:341
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:341
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:341
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:341
-#: react/build/src_routes_settings_lazy_jsx.js:409
 msgid "We're sorry, but it seems there is a problem with your registration. Please try again later."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:801
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:675
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:645
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:645
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:645
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:645
-#: react/build/src_routes_settings_lazy_jsx.js:849
 #: react/src/components/Common/CalendarLoading.jsx:71
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:379
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:361
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:343
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:343
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:343
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:343
-#: react/build/src_routes_settings_lazy_jsx.js:411
 msgid "Please complete the onboarding first to register your account."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/932.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6221
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5944
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5887
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5831
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5845
-#: react/build/src_routes_onboarding_lazy_jsx.js:1756
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5825
-#: react/build/src_routes_settings_lazy_jsx.js:6837
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3207
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3204
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3131
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3164
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3127
-#: react/build/src_routes_onboarding_lazy_jsx.js:1043
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3142
-#: react/build/src_routes_settings_lazy_jsx.js:3549
 msgid "Select an option"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2323
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2281
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2251
-#: react/build/src_routes_settings_lazy_jsx.js:2493
 #: react/src/components/Fields/ListItem.js:31
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1021
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1035
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1017
-#: react/build/src_routes_settings_lazy_jsx.js:1182
 msgid "Get unlimited %s"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2323
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2281
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2251
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2251
-#: react/build/src_routes_settings_lazy_jsx.js:2493
 #: react/src/components/Fields/ListItem.js:31
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1021
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1035
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1017
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1017
-#: react/build/src_routes_settings_lazy_jsx.js:1182
 msgid "Edit"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2352
-#: react/build/src_routes_index_lazy_jsx.js:2258
-#: react/build/src_routes_index_lazy_jsx.js:2262
-#: react/build/src_routes_index_lazy_jsx.js:2268
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2310
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2280
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2280
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2280
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2280
-#: react/build/src_routes_settings_lazy_jsx.js:2522
 #: react/src/components/Fields/ListItem.js:39
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1029
-#: react/build/src_routes_index_lazy_jsx.js:1396
-#: react/build/src_routes_index_lazy_jsx.js:1401
-#: react/build/src_routes_index_lazy_jsx.js:1409
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1043
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1025
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1025
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1025
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1025
-#: react/build/src_routes_settings_lazy_jsx.js:1190
 msgid "Loading"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6050
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5861
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5804
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5748
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5762
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5742
-#: react/build/src_routes_settings_lazy_jsx.js:6666
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3113
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3157
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3084
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3117
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3080
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3095
-#: react/build/src_routes_settings_lazy_jsx.js:3455
 msgid "live"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6050
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:5861
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:5804
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:5748
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:5762
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:5742
-#: react/build/src_routes_settings_lazy_jsx.js:6666
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3113
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3157
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3084
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3117
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3080
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3095
-#: react/build/src_routes_settings_lazy_jsx.js:3455
 msgid "preview"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1295
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1253
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1223
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1223
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1223
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1223
-#: react/build/src_routes_settings_lazy_jsx.js:1465
 #: react/src/components/Fields/AuthenticationField.jsx:30
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:622
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:636
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:618
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:618
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:618
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:618
-#: react/build/src_routes_settings_lazy_jsx.js:783
 msgid "Are you sure you want to logout? All settings will be lost."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1335
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1342
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1293
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1300
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1263
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1270
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1263
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1270
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1263
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1270
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1263
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1270
-#: react/build/src_routes_settings_lazy_jsx.js:1505
-#: react/build/src_routes_settings_lazy_jsx.js:1512
 #: react/src/components/Fields/AuthenticationField.jsx:68
 #: react/src/components/Fields/AuthenticationField.jsx:71
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:660
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:663
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:674
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:677
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:656
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:659
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:656
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:659
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:656
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:659
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:656
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:659
-#: react/build/src_routes_settings_lazy_jsx.js:821
-#: react/build/src_routes_settings_lazy_jsx.js:824
 msgid "Log out"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3314
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3272
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3242
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3242
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3242
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3242
-#: react/build/src_routes_settings_lazy_jsx.js:3484
 #: react/src/components/Fields/ThemeField.jsx:80
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1512
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1526
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1508
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1508
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1508
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1508
-#: react/build/src_routes_settings_lazy_jsx.js:1673
 msgid "Error fetching theme settings. Please try again later."
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3466
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3424
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3394
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3394
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3394
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3394
-#: react/build/src_routes_settings_lazy_jsx.js:3636
 #: react/src/components/Forms/FormField.js:51
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1605
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1619
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1601
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1601
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1601
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1601
-#: react/build/src_routes_settings_lazy_jsx.js:1766
 msgid "This field is required"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3472
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3430
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3400
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3400
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3400
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3400
-#: react/build/src_routes_settings_lazy_jsx.js:3642
 #: react/src/components/Forms/FormField.js:58
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1612
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1626
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1608
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1608
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1608
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1608
-#: react/build/src_routes_settings_lazy_jsx.js:1773
 msgid "Invalid format"
 msgstr ""
 
@@ -2305,18 +1953,8 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:3822
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3792
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3720
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3792
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3720
 #: react/src/components/Forms/OnboardingForms.jsx:17
 #: react/src/components/Onboarding/OnboardingStep.jsx:19
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:1838
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1820
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1790
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1820
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1790
 msgid "Next"
 msgstr ""
 
@@ -2325,17 +1963,7 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4019
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3989
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3917
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3989
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3917
 #: react/src/components/Onboarding/OnboardingStep.jsx:187
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2006
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1988
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1958
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1988
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1958
 msgid "Something went wrong..."
 msgstr ""
 
@@ -2344,1456 +1972,802 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4023
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:3993
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:3921
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:3993
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:3921
 #: react/src/components/Onboarding/OnboardingStep.jsx:191
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2010
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:1992
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:1962
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:1992
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:1962
 msgid "Or restart the onboarding"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4109
-#: react/build/src_routes_index_lazy_jsx.js:1156
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4140
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4110
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4038
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4110
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4038
-#: react/build/src_routes_settings_lazy_jsx.js:4493
 #: react/src/hooks/useOnboardingData.js:42
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1902
-#: react/build/src_routes_index_lazy_jsx.js:651
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2066
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2048
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2018
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2048
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2018
-#: react/build/src_routes_settings_lazy_jsx.js:2147
 msgid "Email address"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4113
-#: react/build/src_routes_index_lazy_jsx.js:1160
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4144
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4114
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4042
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4114
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4042
-#: react/build/src_routes_settings_lazy_jsx.js:4497
 #: react/src/hooks/useOnboardingData.js:46
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1906
-#: react/build/src_routes_index_lazy_jsx.js:655
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2070
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2052
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2022
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2052
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2022
-#: react/build/src_routes_settings_lazy_jsx.js:2151
 msgid "Please enter a valid email address"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4119
-#: react/build/src_routes_index_lazy_jsx.js:1166
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4150
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4120
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4048
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4120
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4048
-#: react/build/src_routes_settings_lazy_jsx.js:4503
 #: react/src/hooks/useOnboardingData.js:54
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1914
-#: react/build/src_routes_index_lazy_jsx.js:663
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2078
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2060
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2030
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2060
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2030
-#: react/build/src_routes_settings_lazy_jsx.js:2159
 msgid "I agree to the %sterms and conditions%s"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4145
-#: react/build/src_routes_index_lazy_jsx.js:1192
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4176
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4146
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4074
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4146
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4074
-#: react/build/src_routes_settings_lazy_jsx.js:4529
 #: react/src/hooks/useOnboardingData.js:85
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1945
-#: react/build/src_routes_index_lazy_jsx.js:694
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2109
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2091
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2061
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2091
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2061
-#: react/build/src_routes_settings_lazy_jsx.js:2190
 msgid "Business category"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4148
-#: react/build/src_routes_index_lazy_jsx.js:1195
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4179
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4149
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4077
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4149
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4077
-#: react/build/src_routes_settings_lazy_jsx.js:4532
 #: react/src/hooks/useOnboardingData.js:87
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1947
-#: react/build/src_routes_index_lazy_jsx.js:696
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2111
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2093
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2063
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2093
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2063
-#: react/build/src_routes_settings_lazy_jsx.js:2192
 msgid "Beauty and wellness"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4151
-#: react/build/src_routes_index_lazy_jsx.js:1198
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4182
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4152
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4080
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4152
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4080
-#: react/build/src_routes_settings_lazy_jsx.js:4535
 #: react/src/hooks/useOnboardingData.js:88
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1948
-#: react/build/src_routes_index_lazy_jsx.js:697
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2112
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2094
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2064
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2094
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2064
-#: react/build/src_routes_settings_lazy_jsx.js:2193
 msgid "Sport and fitness"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4154
-#: react/build/src_routes_index_lazy_jsx.js:1201
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4185
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4155
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4083
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4155
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4083
-#: react/build/src_routes_settings_lazy_jsx.js:4538
 #: react/src/hooks/useOnboardingData.js:91
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1951
-#: react/build/src_routes_index_lazy_jsx.js:700
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2115
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2097
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2067
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2097
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2067
-#: react/build/src_routes_settings_lazy_jsx.js:2196
 msgid "Personal meetings and services"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4157
-#: react/build/src_routes_index_lazy_jsx.js:1204
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4188
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4158
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4086
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4158
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4086
-#: react/build/src_routes_settings_lazy_jsx.js:4541
 #: react/src/hooks/useOnboardingData.js:93
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1953
-#: react/build/src_routes_index_lazy_jsx.js:702
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2117
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2099
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2069
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2099
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2069
-#: react/build/src_routes_settings_lazy_jsx.js:2198
 msgid "Medical"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4160
-#: react/build/src_routes_index_lazy_jsx.js:1207
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4191
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4161
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4089
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4161
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4089
-#: react/build/src_routes_settings_lazy_jsx.js:4544
 #: react/src/hooks/useOnboardingData.js:94
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1954
-#: react/build/src_routes_index_lazy_jsx.js:703
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2118
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2100
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2070
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2100
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2070
-#: react/build/src_routes_settings_lazy_jsx.js:2199
 msgid "Events and entertainment"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4163
-#: react/build/src_routes_index_lazy_jsx.js:1210
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4194
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4164
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4092
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4164
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4092
-#: react/build/src_routes_settings_lazy_jsx.js:4547
 #: react/src/hooks/useOnboardingData.js:95
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1955
-#: react/build/src_routes_index_lazy_jsx.js:704
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2119
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2101
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2071
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2101
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2071
-#: react/build/src_routes_settings_lazy_jsx.js:2200
 msgid "Education"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4166
-#: react/build/src_routes_index_lazy_jsx.js:1213
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4197
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4167
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4095
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4167
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4095
-#: react/build/src_routes_settings_lazy_jsx.js:4550
 #: react/src/hooks/useOnboardingData.js:96
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1956
-#: react/build/src_routes_index_lazy_jsx.js:705
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2120
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2102
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2072
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2102
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2072
-#: react/build/src_routes_settings_lazy_jsx.js:2201
 msgid "Retailers"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4169
-#: react/build/src_routes_index_lazy_jsx.js:1216
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4200
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4170
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4098
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4170
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4098
-#: react/build/src_routes_settings_lazy_jsx.js:4553
 #: react/src/hooks/useOnboardingData.js:97
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1957
-#: react/build/src_routes_index_lazy_jsx.js:706
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2121
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2103
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2073
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2103
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2073
-#: react/build/src_routes_settings_lazy_jsx.js:2202
 msgid "Officials"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4172
-#: react/build/src_routes_index_lazy_jsx.js:1219
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4203
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4173
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4101
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4173
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4101
-#: react/build/src_routes_settings_lazy_jsx.js:4556
 #: react/src/hooks/useOnboardingData.js:98
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1958
-#: react/build/src_routes_index_lazy_jsx.js:707
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2122
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2104
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2074
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2104
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2074
-#: react/build/src_routes_settings_lazy_jsx.js:2203
 msgid "Other category"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4178
-#: react/build/src_routes_index_lazy_jsx.js:1225
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4209
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4179
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4107
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4179
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4107
-#: react/build/src_routes_settings_lazy_jsx.js:4562
 #: react/src/hooks/useOnboardingData.js:105
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1965
-#: react/build/src_routes_index_lazy_jsx.js:714
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2129
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2111
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2081
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2111
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2081
-#: react/build/src_routes_settings_lazy_jsx.js:2210
 msgid "What service do you provide?"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4184
-#: react/build/src_routes_index_lazy_jsx.js:1231
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4215
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4185
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4113
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4185
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4113
-#: react/build/src_routes_settings_lazy_jsx.js:4568
 #: react/src/hooks/useOnboardingData.js:112
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1972
-#: react/build/src_routes_index_lazy_jsx.js:721
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2136
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2118
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2088
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2118
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2088
-#: react/build/src_routes_settings_lazy_jsx.js:2217
 msgid "Phone"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4187
-#: react/build/src_routes_index_lazy_jsx.js:1234
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4218
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4188
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4116
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4188
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4116
-#: react/build/src_routes_settings_lazy_jsx.js:4571
 #: react/src/hooks/useOnboardingData.js:115
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1975
-#: react/build/src_routes_index_lazy_jsx.js:724
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2139
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2121
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2091
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2121
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2091
-#: react/build/src_routes_settings_lazy_jsx.js:2220
 msgid "Please enter a valid phone number"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4194
-#: react/build/src_routes_index_lazy_jsx.js:1241
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4225
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4195
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4123
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4195
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4123
-#: react/build/src_routes_settings_lazy_jsx.js:4578
 #: react/src/hooks/useOnboardingData.js:123
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1983
-#: react/build/src_routes_index_lazy_jsx.js:732
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2147
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2129
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2099
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2129
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2099
-#: react/build/src_routes_settings_lazy_jsx.js:2228
 msgid "Address"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4200
-#: react/build/src_routes_index_lazy_jsx.js:1247
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4231
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4201
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4129
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4201
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4129
-#: react/build/src_routes_settings_lazy_jsx.js:4584
 #: react/src/hooks/useOnboardingData.js:130
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1990
-#: react/build/src_routes_index_lazy_jsx.js:739
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2154
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2136
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2106
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2136
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2106
-#: react/build/src_routes_settings_lazy_jsx.js:2235
 msgid "Postal Code"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4206
-#: react/build/src_routes_index_lazy_jsx.js:1253
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4237
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4207
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4135
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4207
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4135
-#: react/build/src_routes_settings_lazy_jsx.js:4590
 #: react/src/hooks/useOnboardingData.js:137
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1997
-#: react/build/src_routes_index_lazy_jsx.js:746
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2161
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2143
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2113
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2143
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2113
-#: react/build/src_routes_settings_lazy_jsx.js:2242
 msgid "City"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4211
-#: react/build/src_routes_index_lazy_jsx.js:1258
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4242
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4212
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4140
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4212
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4140
-#: react/build/src_routes_settings_lazy_jsx.js:4595
 #: react/src/hooks/useOnboardingData.js:143
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2003
-#: react/build/src_routes_index_lazy_jsx.js:752
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2167
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2149
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2119
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2149
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2119
-#: react/build/src_routes_settings_lazy_jsx.js:2248
 msgid "Country"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4231
-#: react/build/src_routes_index_lazy_jsx.js:1278
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4262
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4232
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4160
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4232
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4160
-#: react/build/src_routes_settings_lazy_jsx.js:4615
 #: react/src/hooks/useOnboardingData.js:164
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2024
-#: react/build/src_routes_index_lazy_jsx.js:773
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2188
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2170
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2140
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2170
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2140
-#: react/build/src_routes_settings_lazy_jsx.js:2269
 msgid "Confirmation Code"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4268
-#: react/build/src_routes_index_lazy_jsx.js:1315
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4299
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4269
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4197
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4269
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4197
-#: react/build/src_routes_settings_lazy_jsx.js:4652
 #: react/src/hooks/useOnboardingData.js:204
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2064
-#: react/build/src_routes_index_lazy_jsx.js:813
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2228
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2210
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2180
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2210
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2180
-#: react/build/src_routes_settings_lazy_jsx.js:2309
 msgid "Simple"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4269
-#: react/build/src_routes_index_lazy_jsx.js:1316
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4300
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4270
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4198
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4270
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4198
-#: react/build/src_routes_settings_lazy_jsx.js:4653
 #: react/src/hooks/useOnboardingData.js:205
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2065
-#: react/build/src_routes_index_lazy_jsx.js:814
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2229
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2211
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2181
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2211
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2181
-#: react/build/src_routes_settings_lazy_jsx.js:2310
 msgid "Generate page"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4272
-#: react/build/src_routes_index_lazy_jsx.js:1319
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4303
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4273
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4201
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4273
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4201
-#: react/build/src_routes_settings_lazy_jsx.js:4656
 #: react/src/hooks/useOnboardingData.js:209
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2069
-#: react/build/src_routes_index_lazy_jsx.js:818
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2233
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2215
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2185
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2215
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2185
-#: react/build/src_routes_settings_lazy_jsx.js:2314
 msgid "Shortcode"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4273
-#: react/build/src_routes_index_lazy_jsx.js:1320
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4304
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4274
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4202
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4274
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4202
-#: react/build/src_routes_settings_lazy_jsx.js:4657
 #: react/src/hooks/useOnboardingData.js:210
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2070
-#: react/build/src_routes_index_lazy_jsx.js:819
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2234
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2216
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2186
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2216
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2186
-#: react/build/src_routes_settings_lazy_jsx.js:2315
 msgid "Do it yourself"
 msgstr ""
 
 #: react/build/18.js:1
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
 #: react/build/536.js:1
 #: react/build/747.js:1
 #: react/build/939.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4305
-#: react/build/src_routes_index_lazy_jsx.js:1352
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4336
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4306
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4234
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4306
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4234
-#: react/build/src_routes_settings_lazy_jsx.js:4689
 #: react/src/hooks/useOnboardingData.js:248
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2108
-#: react/build/src_routes_index_lazy_jsx.js:857
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2272
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2254
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2224
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2254
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2224
-#: react/build/src_routes_settings_lazy_jsx.js:2353
 msgid "calendar"
 msgstr ""
 
 #: react/build/18.js:1
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4857
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:23
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2565
 msgid "Create your free account"
 msgstr ""
 
 #: react/build/18.js:1
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4870
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:26
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2568
 msgid "100% free. No credit card needed."
 msgstr ""
 
 #: react/build/18.js:1
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4883
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:42
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2584
 msgid "How to get started with SimplyBook.me"
 msgstr ""
 
 #: react/build/18.js:1
 #: react/build/157.js:1
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4969
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4895
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4871
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:102
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:48
 #: react/src/routes/onboarding/information-check.lazy.jsx:43
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2662
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2590
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2585
 msgid "SimplyBook.me fits seamlessly into your business"
 msgstr ""
 
 #: react/build/18.js:1
 #: react/build/157.js:1
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4971
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:4910
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4873
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:105
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:51
 #: react/src/routes/onboarding/information-check.lazy.jsx:46
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2665
-#: react/build/src_routes_onboarding_create-your-account_lazy_jsx.js:2593
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2588
 msgid "It’s easy to keep your appointments in sync with the apps and plugins you need."
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:722
-#: react/build/src_routes_index_lazy_jsx.js:2715
-#: react/build/src_routes_settings_lazy_jsx.js:1012
-#: react/src/components/Common/Header.jsx:41
-#: react/build/src_routes_index_lazy_jsx.js:338
-#: react/build/src_routes_index_lazy_jsx.js:1552
-#: react/build/src_routes_settings_lazy_jsx.js:482
-msgid "days left"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:740
-#: react/build/src_routes_settings_lazy_jsx.js:1030
-#: react/src/components/Common/Header.jsx:61
-#: react/build/src_routes_index_lazy_jsx.js:358
-#: react/build/src_routes_settings_lazy_jsx.js:502
-msgid "Dashboard"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:745
-#: react/build/src_routes_settings_lazy_jsx.js:1035
-#: react/src/components/Common/Header.jsx:69
-#: react/build/src_routes_index_lazy_jsx.js:366
-#: react/build/src_routes_settings_lazy_jsx.js:510
-msgid "Clients"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:750
-#: react/build/src_routes_settings_lazy_jsx.js:1040
-#: react/src/components/Common/Header.jsx:77
-#: react/build/src_routes_index_lazy_jsx.js:374
-#: react/build/src_routes_settings_lazy_jsx.js:518
-msgid "Calendar"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:761
-#: react/build/src_routes_settings_lazy_jsx.js:1051
-#: react/src/components/Common/Header.jsx:95
-#: react/build/src_routes_index_lazy_jsx.js:392
-#: react/build/src_routes_settings_lazy_jsx.js:536
-msgid "Help Center"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:767
-#: react/build/src_routes_settings_lazy_jsx.js:1057
-#: react/src/components/Common/Header.jsx:109
-#: react/build/src_routes_index_lazy_jsx.js:406
-#: react/build/src_routes_settings_lazy_jsx.js:550
-msgid "is expired."
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/src_routes_settings_lazy_jsx.js:4263
-#: react/src/components/Settings/SettingsMenu.jsx:19
-#: react/build/src_routes_settings_lazy_jsx.js:2040
-msgid "Loading menu..."
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/src_routes_settings_lazy_jsx.js:4271
-#: react/src/components/Settings/SettingsMenu.jsx:20
-#: react/build/src_routes_settings_lazy_jsx.js:2041
-msgid "Error loading menu"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/src_routes_settings_lazy_jsx.js:4279
-#: react/src/components/Settings/SettingsMenu.jsx:21
-#: react/build/src_routes_settings_lazy_jsx.js:2042
-msgid "No menu items available"
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/src_routes_settings_lazy_jsx.js:6183
-#: react/build/src_routes_settings_lazy_jsx.js:3223
-msgid "You currently have no notifications."
-msgstr ""
-
-#: react/build/107.js:1
-#: react/build/155.js:1
 #: react/build/932.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:5566
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:6136
-#: react/build/src_routes_onboarding_lazy_jsx.js:991
-#: react/build/src_routes_onboarding_lazy_jsx.js:1151
-#: react/build/src_routes_settings_lazy_jsx.js:6063
-#: react/build/src_routes_settings_lazy_jsx.js:6752
 #: react/src/components/Modals/Partials/FormLogin.jsx:193
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:140
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2881
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3160
-#: react/build/src_routes_onboarding_lazy_jsx.js:582
-#: react/build/src_routes_onboarding_lazy_jsx.js:729
-#: react/build/src_routes_settings_lazy_jsx.js:3178
-#: react/build/src_routes_settings_lazy_jsx.js:3502
 msgid "Close"
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3704
-#: react/build/src_routes_settings_lazy_jsx.js:3874
-#: react/src/components/Forms/FormFooter.jsx:29
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1765
-#: react/build/src_routes_settings_lazy_jsx.js:1926
+#: react/src/components/Forms/FormFooter.jsx:30
 msgid "Saving..."
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3723
-#: react/build/src_routes_settings_lazy_jsx.js:3893
-#: react/src/components/Forms/FormFooter.jsx:30
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1766
-#: react/build/src_routes_settings_lazy_jsx.js:1927
+#: react/src/components/Forms/FormFooter.jsx:31
 msgid "Validating..."
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3743
-#: react/build/src_routes_settings_lazy_jsx.js:3913
-#: react/src/components/Forms/FormFooter.jsx:31
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1767
-#: react/build/src_routes_settings_lazy_jsx.js:1928
+#: react/src/components/Forms/FormFooter.jsx:32
 msgid "Form contains errors"
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:3762
-#: react/build/src_routes_settings_lazy_jsx.js:3932
-#: react/src/components/Forms/FormFooter.jsx:32
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:1768
-#: react/build/src_routes_settings_lazy_jsx.js:1929
+#: react/src/components/Forms/FormFooter.jsx:33
 msgid "You have unsaved changes"
 msgstr ""
 
+#: react/build/46.js:1
 #: react/build/107.js:1
-#: react/build/155.js:1
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:4995
-#: react/build/src_routes_settings_lazy_jsx.js:5449
-#: react/src/routes/settings/$settingsId.lazy.jsx:74
-#: react/build/src_hooks_useSettingsMenu_js-src_routes_settings_settingsId_lazy_jsx.js:2505
-#: react/build/src_routes_settings_lazy_jsx.js:2780
+#: react/src/routes/settings/$settingsId.lazy.jsx:77
 msgid ""
 "You have unsaved changes. Are you sure you want to leave?\n"
 "\n"
 "Your changes will be lost."
 msgstr ""
 
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/routes/settings/$settingsId.lazy.jsx:98
+msgid "Settings saved successfully"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:41
+msgid "days left"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:61
+msgid "Dashboard"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:69
+msgid "Clients"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:77
+msgid "Calendar"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:95
+msgid "Help Center"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Common/Header.jsx:109
+msgid "is expired."
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:19
+msgid "Loading menu..."
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:20
+msgid "Error loading menu"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:21
+msgid "No menu items available"
+msgstr ""
+
+#: react/build/107.js:1
+msgid "You currently have no notifications."
+msgstr ""
+
 #: react/build/157.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4934
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:68
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2628
 msgid "Lets get you verified!"
 msgstr ""
 
 #: react/build/157.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4936
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:71
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2631
 msgid "Fill in the authentication code sent to your email"
 msgstr ""
 
 #: react/build/157.js:1
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:4951
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:85
-#: react/build/src_routes_onboarding_confirm-email_lazy_jsx.js:2645
 msgid "Verify email"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4797
 #: react/src/routes/onboarding/style-widget.lazy.jsx:31
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2543
 msgid "What's your style?"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4799
 #: react/src/routes/onboarding/style-widget.lazy.jsx:34
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2546
 msgid "Next Step: Finish"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4803
 #: react/src/routes/onboarding/style-widget.lazy.jsx:40
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2552
 msgid "Primary"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4814
 #: react/src/routes/onboarding/style-widget.lazy.jsx:52
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2564
 msgid "Secondary"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4824
 #: react/src/routes/onboarding/style-widget.lazy.jsx:63
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2575
 msgid "Active"
 msgstr ""
 
 #: react/build/182.js:1
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:4837
 #: react/src/routes/onboarding/style-widget.lazy.jsx:78
-#: react/build/src_routes_onboarding_style-widget_lazy_jsx.js:2590
 msgid "Next step"
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4816
 #: react/src/routes/onboarding/implementation.lazy.jsx:51
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2563
 msgid "Almost there!"
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4818
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4820
 #: react/src/routes/onboarding/implementation.lazy.jsx:54
 #: react/src/routes/onboarding/implementation.lazy.jsx:59
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2566
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2571
 msgid "Implement SimplyBook.me"
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4822
 #: react/src/routes/onboarding/implementation.lazy.jsx:61
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2573
 msgid "Continue configuration"
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4833
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4842
 #: react/src/routes/onboarding/implementation.lazy.jsx:71
 #: react/src/routes/onboarding/implementation.lazy.jsx:95
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2583
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2607
 msgid "Implementation"
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4835
 #: react/src/routes/onboarding/implementation.lazy.jsx:73
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2585
 msgid "Use the below shortcode in a page to show the widget."
 msgstr ""
 
 #: react/build/536.js:1
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:4844
 #: react/src/routes/onboarding/implementation.lazy.jsx:97
-#: react/build/src_routes_onboarding_implementation_lazy_jsx.js:2609
 msgid "SimplyBook.me will generate the following page automatically"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2713
-#: react/build/src_routes_index_lazy_jsx.js:1552
 msgid "Your trial has expired"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2715
-#: react/build/src_routes_index_lazy_jsx.js:1552
 msgid "Trial:"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2830
-#: react/build/src_routes_index_lazy_jsx.js:1596
 msgid "No tasks available."
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2832
-#: react/build/src_routes_index_lazy_jsx.js:1598
 msgid "Loading tasks..."
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2838
-#: react/build/src_routes_index_lazy_jsx.js:2853
-#: react/build/src_routes_index_lazy_jsx.js:1601
-#: react/build/src_routes_index_lazy_jsx.js:1603
 msgid "Progress"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2861
-#: react/build/src_routes_index_lazy_jsx.js:1603
 msgid "All tasks"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2869
-#: react/build/src_routes_index_lazy_jsx.js:1603
 msgid "Remaining tasks"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2892
-#: react/build/src_routes_index_lazy_jsx.js:1603
 msgid "You're all set! Great job!"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2892
-#: react/build/src_routes_index_lazy_jsx.js:1603
 msgid "You're on your way. You still have %s task open."
 msgid_plural "You're on your way. You still have %s tasks open."
 msgstr[0] ""
 msgstr[1] ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2616
-#: react/build/src_routes_index_lazy_jsx.js:1527
 msgid "This week:"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2257
-#: react/build/src_routes_index_lazy_jsx.js:1395
 msgid "Today"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2261
-#: react/build/src_routes_index_lazy_jsx.js:1400
 msgid "This week"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2266
-#: react/build/src_routes_index_lazy_jsx.js:1407
 msgid "Most popular provider"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2271
-#: react/build/src_routes_index_lazy_jsx.js:1413
 msgid "Most popular service"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2323
-#: react/build/src_routes_index_lazy_jsx.js:1419
 msgid "View Bookings"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2380
-#: react/build/src_routes_index_lazy_jsx.js:1451
 msgid "SMS Credits"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2384
-#: react/build/src_routes_index_lazy_jsx.js:1456
 msgid "SMS Gateway"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2391
-#: react/build/src_routes_index_lazy_jsx.js:1464
 msgid "Membership"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2398
-#: react/build/src_routes_index_lazy_jsx.js:1472
 msgid "Paid Events"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2419
-#: react/build/src_routes_index_lazy_jsx.js:1485
 msgid "Management"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2992
-#: react/build/src_routes_index_lazy_jsx.js:1630
 msgid "Tips & Tricks"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3016
-#: react/build/src_routes_index_lazy_jsx.js:1630
 msgid "View All"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3645
-#: react/build/src_routes_index_lazy_jsx.js:1972
 msgid "Installed"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3646
-#: react/build/src_routes_index_lazy_jsx.js:1973
 msgid "Install"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3647
-#: react/build/src_routes_index_lazy_jsx.js:1974
 msgid "Activate"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3648
-#: react/build/src_routes_index_lazy_jsx.js:1975
 msgid "Activating..."
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:3649
-#: react/build/src_routes_index_lazy_jsx.js:1976
 msgid "Downloading..."
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2508
-#: react/build/src_routes_index_lazy_jsx.js:1511
 msgid "Our Plugins"
 msgstr ""
 
 #: react/build/747.js:1
-#: react/build/src_routes_index_lazy_jsx.js:2553
-#: react/build/src_routes_index_lazy_jsx.js:1516
 msgid "Loading..."
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1096
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:78
-#: react/build/src_routes_onboarding_lazy_jsx.js:667
 msgid "Select 2FA provider"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1123
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:102
-#: react/build/src_routes_onboarding_lazy_jsx.js:691
 msgid "Enter 2FA authentication code"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1126
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:105
-#: react/build/src_routes_onboarding_lazy_jsx.js:694
 msgid "Enter code"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1139
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:122
-#: react/build/src_routes_onboarding_lazy_jsx.js:711
 msgid "SMS Requested"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1139
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:122
-#: react/build/src_routes_onboarding_lazy_jsx.js:711
 msgid "Request SMS"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:987
-#: react/build/src_routes_onboarding_lazy_jsx.js:1146
 #: react/src/components/Modals/Partials/FormLogin.jsx:186
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:132
-#: react/build/src_routes_onboarding_lazy_jsx.js:575
-#: react/build/src_routes_onboarding_lazy_jsx.js:721
 msgid "Submit"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:920
 #: react/src/components/Modals/Partials/FormLogin.jsx:115
-#: react/build/src_routes_onboarding_lazy_jsx.js:504
 msgid "Company domain"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:942
-#: react/build/src_routes_onboarding_lazy_jsx.js:945
 #: react/src/components/Modals/Partials/FormLogin.jsx:135
 #: react/src/components/Modals/Partials/FormLogin.jsx:138
-#: react/build/src_routes_onboarding_lazy_jsx.js:524
-#: react/build/src_routes_onboarding_lazy_jsx.js:527
 msgid "Company login"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:958
-#: react/build/src_routes_onboarding_lazy_jsx.js:961
 #: react/src/components/Modals/Partials/FormLogin.jsx:151
 #: react/src/components/Modals/Partials/FormLogin.jsx:154
-#: react/build/src_routes_onboarding_lazy_jsx.js:540
-#: react/build/src_routes_onboarding_lazy_jsx.js:543
 msgid "Email"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:974
-#: react/build/src_routes_onboarding_lazy_jsx.js:977
 #: react/src/components/Modals/Partials/FormLogin.jsx:167
 #: react/src/components/Modals/Partials/FormLogin.jsx:170
-#: react/build/src_routes_onboarding_lazy_jsx.js:556
-#: react/build/src_routes_onboarding_lazy_jsx.js:559
 msgid "Password"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:980
 #: react/src/components/Modals/Partials/FormLogin.jsx:176
-#: react/build/src_routes_onboarding_lazy_jsx.js:565
 msgid "Something went wrong"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1229
 #: react/src/components/Modals/SignInModal.jsx:42
-#: react/build/src_routes_onboarding_lazy_jsx.js:780
 msgid "2FA authentication"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1229
 #: react/src/components/Modals/SignInModal.jsx:43
-#: react/build/src_routes_onboarding_lazy_jsx.js:781
 msgid "Please use your 2FA provider to sign in."
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1214
 #: react/src/components/Modals/SignInModal.jsx:24
-#: react/build/src_routes_onboarding_lazy_jsx.js:762
 msgid "Sign In"
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1214
 #: react/src/components/Modals/SignInModal.jsx:25
-#: react/build/src_routes_onboarding_lazy_jsx.js:763
 msgid "Please enter your SimplyBook credentials to sign in."
 msgstr ""
 
 #: react/build/932.js:1
-#: react/build/src_routes_onboarding_lazy_jsx.js:1416
 #: react/src/components/Onboarding/OnboardingHeader.jsx:30
-#: react/build/src_routes_onboarding_lazy_jsx.js:885
 msgid "Already got an account?"
 msgstr ""
 
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4852
 #: react/src/routes/onboarding/information-check.lazy.jsx:18
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2560
 msgid "Welcome to SimplyBook"
 msgstr ""
 
 #: react/build/939.js:1
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:4854
 #: react/src/routes/onboarding/information-check.lazy.jsx:21
-#: react/build/src_routes_onboarding_information-check_lazy_jsx.js:2563
 msgid "Fill in extra information for your account"
 msgstr ""
 
-#: react/build/index.js:68
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:44
-#: react/build/index.js:44
 msgid "Uh-oh! We stumbled upon an error."
 msgstr ""
 
-#: react/build/index.js:77
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:59
-#: react/build/index.js:59
 msgid "Copied"
 msgstr ""
 
-#: react/build/index.js:77
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:60
-#: react/build/index.js:60
 msgid "Copy Error"
 msgstr ""
 
-#: react/build/index.js:79
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:64
-#: react/build/index.js:64
 msgid "We're sorry for the trouble. Please take a moment to report this issue on the WordPress forums so we can work on fixing it. Here’s how you can report the issue:"
 msgstr ""
 
-#: react/build/index.js:81
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:72
-#: react/build/index.js:72
 msgid "Copy the error details by clicking the %s button above."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:84
 msgid "Navigate to the Support Forum."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:88
-#: react/build/index.js:88
 msgid "If you haven’t already, log in to your WordPress.org account or create a new account."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:95
-#: react/build/index.js:95
 msgid "Once logged in, click on %s under the Burst Statistics forum."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:104
-#: react/build/index.js:104
 msgid "Title: Mention %s along with a brief hint of the error."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:112
-#: react/build/index.js:112
 msgid "Description: Paste the copied error details and explain what you were doing when the error occurred."
 msgstr ""
 
-#: react/build/index.js:84
+#: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:119
-#: react/build/index.js:119
 msgid "Click %s to post your topic. Our team will look into the issue and provide assistance."
 msgstr ""
 
-#: react/build/src_routes_onboarding_lazy_jsx.js:1302
 #: react/src/components/Onboarding/OnboardingFooter.jsx:34
-#: react/build/src_routes_onboarding_lazy_jsx.js:832
 msgid "What can you do with SimplyBook.me?"
 msgstr ""
 
