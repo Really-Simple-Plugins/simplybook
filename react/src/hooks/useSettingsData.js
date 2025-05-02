@@ -39,13 +39,19 @@ const useSettingsData = () => {
     const { mutateAsync: saveSettings, isLoading: isSavingSettings } = useMutation({
         // Post new settings
         mutationFn: async (data) => {
-            let settings = await client.setRoute(saveSettingsRoute).setPayload(data).post();
-            return settings?.data;
+            return await client.setRoute(saveSettingsRoute).setPayload(data).post();
         },
         // Mutate current settings to show updated values
-        onSuccess: (data) => {
+        onSuccess: (response) => {
+            
+            // Catch error in a .catch block when calling saveSettings for
+            // specific error handling
+            if (response?.status !== 'success') {
+                throw response;
+            }
+
             queryClient.setQueryData([getSettingsQueryKey], (oldResponse) => {
-                return data ? [...data] : [];
+                return response?.data ? [...response?.data] : [];
             });
 
             // Do NOT "await" here: it results in showing default settings

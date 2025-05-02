@@ -3,10 +3,11 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import {useEffect, useMemo} from "react";
+import { useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
+import ToastNotice from "../../components/Errors/ToastNotice";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -29,6 +30,8 @@ function Settings() {
     const { settingsId } = Route.useParams();
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
+    const toastNotice = new ToastNotice();
+
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -84,6 +87,38 @@ function Settings() {
         }
     });
 
+    /**
+     * Method to call when settings are saved successfully. Pass the formData
+     * to reset the form values to the current state of the form. The method
+     * also shows a success message using the ToastNotice component.
+     */
+    const handleSavedSettings = (formData) => {
+        reset(formData);
+        toastNotice.setMessage(
+            __('Settings saved successfully', 'simplybook')
+        ).setType("success").render();
+    }
+
+    /**
+     * Method to handle errors when saving settings. The method checks if
+     * the response contains errors and shows them using the ToastNotice
+     * component. If the response does not contain errors, it logs the
+     * response to the console.
+     */
+    const handleCaughtErrorInSaveSettings = (response) => {
+        const errorList = response?.data?.errors;
+
+        if (!errorList) {
+            return console.error('Error saving settings:', response);
+        }
+
+        errorList.map((error) => {
+            toastNotice.setMessage(
+                error.message
+            ).setType("error").render();
+        });
+    }
+
     return (
         <form className="col-span-12 lg:col-span-6">
             {currentForm.groups?.map((group) => {
@@ -107,17 +142,20 @@ function Settings() {
             })}
 
             {formHasSettings && (
-                <FormFooter
-                    getValues={getValues}
-                    onSubmit={handleSubmit((formData) => {
-                        saveSettings(formData).then(() => {
-                            reset(formData);
-                        });
-                    })}
-                    control={control}
-                />
+                <>
+                    <FormFooter
+                        getValues={getValues}
+                        onSubmit={handleSubmit((formData) => {
+                            saveSettings(formData).then(() => {
+                                return handleSavedSettings(formData);
+                            }).catch((response) => {
+                                return handleCaughtErrorInSaveSettings(response);
+                            });
+                        })}
+                        control={control}
+                    />
+                </>
             )}
-
         </form>
     );
 }

@@ -27,6 +27,7 @@ import {
   faCircleXmark,
   faArrowUpRightFromSquare,
   faLinesLeaning,
+  faTriangleExclamation
  } from "@fortawesome/free-solid-svg-icons";
 
  import { 
@@ -45,6 +46,7 @@ const iconMap = {
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
     "circle-xmark": faCircleXmark,
+    "warning": faTriangleExclamation,
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
