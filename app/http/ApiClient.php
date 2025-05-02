@@ -57,7 +57,7 @@ class ApiClient
         $this->jsonRpcClient = $client;
 
         if (get_option($this->authenticationFailedFlagKey)) {
-            $this->authenticationFailedFlag = true;
+            $this->handleFailedAuthentication();
             return;
         }
 
@@ -90,6 +90,20 @@ class ApiClient
     public function authenticationHasFailed(): bool
     {
         return $this->authenticationFailedFlag;
+    }
+
+    /**
+     * Handle failed authentication. Sets the authentication failed flag to
+     * true and dispatches the event on init.
+     */
+    public function handleFailedAuthentication(): void
+    {
+        $this->authenticationFailedFlag = true;
+
+        // Dispatch after plugins_loaded so Event can be listened to
+        add_action('init', function() {
+            Event::dispatch(Event::AUTH_FAILED);
+        });
     }
 
     /**
