@@ -49,7 +49,7 @@ class Plugin
      */
     public function loadPluginTextDomain()
     {
-        load_plugin_textdomain('simplybook', false, App::env('plugin.lang'));
+        load_plugin_textdomain('simplybook');
     }
 
     /**

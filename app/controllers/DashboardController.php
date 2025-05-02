@@ -137,7 +137,7 @@ class DashboardController implements ControllerInterface
             true
         );
 
-        wp_set_script_translations('simplybook-main-script', 'simplybook', App::env('plugin.lang_path'));
+        wp_set_script_translations('simplybook-main-script', 'simplybook');
 
         wp_localize_script(
             'simplybook-main-script',
@@ -190,7 +190,7 @@ class DashboardController implements ControllerInterface
             wp_register_script($chunkHandle, $chunkSource, [], true);
 
             //as there is no pro version of this plugin, no need to declare a path
-            $localeData = load_script_textdomain($chunkHandle, 'simplybook', App::env('plugin.lang_path'));
+            $localeData = load_script_textdomain($chunkHandle, 'simplybook');
             if (!empty($localeData)) {
                 $jsonTranslations[] = $localeData;
             }
