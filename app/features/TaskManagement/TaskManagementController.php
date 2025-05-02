@@ -44,6 +44,7 @@ class TaskManagementController implements FeatureInterface
     {
         // Add new tasks here
         $pluginTasks = [
+            new Tasks\FailedAuthenticationTask(),
             new Tasks\PublishWidgetTask(),
             new Tasks\AddMandatoryServiceTask(),
             new Tasks\AddMandatoryProviderTask(),
@@ -55,7 +56,6 @@ class TaskManagementController implements FeatureInterface
             new Tasks\MaximumBookingsTask(),
             new Tasks\InstallAppTask(),
             new Tasks\AcceptPaymentsTask(),
-            new Tasks\FailedAuthenticationTask(),
             new Tasks\MaxedOutProvidersTask(),
         ];
 
