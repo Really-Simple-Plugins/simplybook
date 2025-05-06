@@ -11,6 +11,7 @@ return [
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). '/' . plugin_basename(dirname(__DIR__)) . '.php',
         'assets_path' => dirname(__DIR__).'/assets/',
+        'lang_path' => dirname(__DIR__).'/assets/languages/',
         'view_path' => dirname(__DIR__).'/app/views/',
         'feature_path' => dirname(__DIR__).'/app/features/',
         'react_path' => dirname(__DIR__).'/react',

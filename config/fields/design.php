@@ -53,9 +53,7 @@ return
 			'group_id' => 'main',
 			'type'     => 'checkbox',
 			'label'    => __('Allow switch to ADA', 'simplybook'),
-            'help'     => sprintf(
-                __('This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability.'),
-            ),
+            'help'     => __('This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability.'),
 			'disabled' => false,
 			'default'  => false,
 		],

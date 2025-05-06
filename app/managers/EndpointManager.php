@@ -86,10 +86,12 @@ final class EndpointManager
 
         foreach ($routes as $route => $data) {
             $version = ($data['version'] ?? $this->version);
+            $callback = ($data['callback'] ?? null);
+            $middleware = ($data['middleware'] ?? null);
 
             $arguments = [
                 'methods' => ($data['methods'] ?? 'GET'),
-                'callback' => ($data['callback'] ?? null),
+                'callback' => $this->callbackMiddleware($callback, $middleware),
                 'permission_callback' => ($data['permission_callback'] ?? [$this, 'defaultPermissionCallback']),
             ];
 
@@ -119,6 +121,36 @@ final class EndpointManager
          * ]
          */
         return apply_filters('simplybook_rest_routes', $this->routes);
+    }
+
+    /**
+     * This method is used to add middleware to the callback function. The
+     * middleware should be a callable function that takes a request as an
+     * argument and returns a response. The default middleware is to switch
+     * the user locale to the current user locale.
+     */
+    public function callbackMiddleware(?callable $callback, ?callable $middleware): callable
+    {
+        return function ($request) use ($callback, $middleware) {
+            if (is_callable($middleware)) {
+                $middleware($request);
+            } else {
+                $this->defaultMiddlewareCallback();
+            }
+
+            return $callback($request);
+        };
+    }
+
+    /**
+     * This method is used to switch the user locale to the current user locale.
+     * This is important because we will otherwise show the default site
+     * language to the user for the Tasks and Notifications. Those
+     * translations are created in PHP and not in JS.
+     */
+    private function defaultMiddlewareCallback(): void
+    {
+        switch_to_user_locale(get_current_user_id());
     }
 
     /**

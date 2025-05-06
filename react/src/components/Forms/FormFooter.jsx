@@ -8,6 +8,7 @@ import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import {ToastContainer} from "react-toastify";
 
 const FormFooter = ({
     onSubmit,
@@ -42,9 +43,9 @@ const FormFooter = ({
                         {currentState.message}
                     </p>
                 )}
-                <PreviewButtonInput 
-                    btnVariant={'tertiary-small'} 
-                    getValues={getValues}>   
+                <PreviewButtonInput
+                    btnVariant={'tertiary-small'}
+                    getValues={getValues}>
                 </PreviewButtonInput>
                 <ButtonLink
                     disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
@@ -54,6 +55,18 @@ const FormFooter = ({
                     {__("Save", "simplybook")}
                 </ButtonLink>
             </div>
+
+            <ToastContainer
+                toastClassName={"rounded-xl"}
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                pauseOnHover
+            />
         </div>
     );
 }
