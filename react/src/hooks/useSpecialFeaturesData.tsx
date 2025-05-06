@@ -26,7 +26,7 @@ const useSpecialFeaturesData = (): SpecialFeaturesData => {
     }
 
     const isPluginActive = (id: string): boolean => {
-        return response?.some((plugin) => plugin.id === id && plugin.is_turned_on) ?? false;
+        return response?.some((plugin) => plugin.id === id && plugin.is_active) ?? false;
     }
 
     return {
