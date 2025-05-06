@@ -20,7 +20,7 @@ const ThemeConfigGroupItem = forwardRef(({
             control={control}
             name={`theme_settings.${item.config_key}`}
             defaultValue={item.default_value}
-            render={({ field }) => {
+            render={({ field, fieldState }) => {
 
                 /**
                  * Skip rendering if the item is not visible or widget support
@@ -36,6 +36,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <CheckboxField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             className="theme-config-field"
@@ -51,6 +52,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <ColorPickerField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             className="theme-config-field"
@@ -62,6 +64,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <SelectField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             options={item.values}
