@@ -18,11 +18,17 @@ const MostPopular: React.FC<MostPopularProps> = ({
                     <p className="text-base font-semibold m-0">{title}</p>   
                 </span>
                 <div className="flex items-center justify-between w-full">
-                    <p className="text-base font-semibold m-0">{mostPopularName}</p>
-                    <div className="flex font-semibold">
-                        <p className="text-base m-0">{__("This week:", "simplybook")}</p>
-                        <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
-                    </div>
+                    {mostPopularName ? (
+                        <>
+                            <p className="text-base font-semibold m-0">{mostPopularName}</p>
+                            <div className="flex font-semibold">
+                                <p className="text-base m-0">{__("This week:", "simplybook")}</p>
+                                <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
+                            </div>
+                        </>
+                    ) : (
+                        <p className="text-base font-semibold m-0 text-gray-500 italic">{ __("No bookings yet...", "simplybook")}</p>
+                    )}
                 </div>
             </div>
         </>

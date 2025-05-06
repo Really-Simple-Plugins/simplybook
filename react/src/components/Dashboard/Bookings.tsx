@@ -40,13 +40,13 @@ const Bookings = () => {
         {
             title: __("Most popular provider", "simplybook"),
             key: "provider",
-            value: mostPopularProviderName ?? __('No popular provider found', 'simplybook'),
+            value: mostPopularProviderName,
             bookings: mostPopularProviderBookings,
         },
         {
             title: __("Most popular service", "simplybook"),
             key: "service",
-            value: mostPopularServiceName ?? 'No popular service found',
+            value: mostPopularServiceName,
             bookings: mostPopularServiceBookings,
         },
     ];
