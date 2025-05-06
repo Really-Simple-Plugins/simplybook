@@ -36,20 +36,22 @@ const Bookings = () => {
         },
     ];
 
-    const DataList = [
+    const MostPopularDataList = [
         {
             title: __("Most popular provider", "simplybook"),
             key: "provider",
-            value: mostPopularProviderName ?? __('Loading', 'simplybook'),
+            value: mostPopularProviderName ?? __('No popular provider found', 'simplybook'),
             bookings: mostPopularProviderBookings,
         },
         {
             title: __("Most popular service", "simplybook"),
             key: "service",
-            value: mostPopularServiceName ?? 'Service not loaded',
+            value: mostPopularServiceName ?? 'No popular service found',
             bookings: mostPopularServiceBookings,
         },
     ];
+
+    console.log(MostPopularDataList);
 
     return (
         <Block className={"col-span-12 sm:col-span-6 xl:col-span-3 2xl:col-span-3 2xl:row-span-2"}>
@@ -75,9 +77,14 @@ const Bookings = () => {
                 </div>
                 {!isLoading && !hasError && (
                     <div className="mt-4 px-4">
-                        {DataList.map((block, index) => (
+                        {MostPopularDataList.map((block, index) => (
                             <Fragment key={index}>
-                                <MostPopular key={block.key} title={block.title} bookingAmount={block.bookings} />
+                                <MostPopular 
+                                    key={block.key} 
+                                    title={block.title} 
+                                    mostPopularName={block.value}
+                                    bookingAmount={block.bookings} 
+                                />
                             </Fragment>
                         ))}
                     </div>
