@@ -28,7 +28,7 @@ export const Route = createLazyFileRoute(path)({
                 <LeftColumn className={"items-center flex-col flex-wrap justify-start xl:col-span-5 col-span-12 xl:col-start-2"}>
                     <div className={"text-center"}>
                         <h2 className={"mt-2 text-lg font-light text-black"}>
-                            {__("What's your style?", "simplybook")}
+                            {__("Select your company colors", "simplybook")}
                         </h2>
                         <h1 className={"text-3xl font-semibold text-black mb-4"}>
                             {__("Next Step: Finish", "simplybook")}
