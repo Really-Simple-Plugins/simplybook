@@ -43,7 +43,7 @@ const DataList = [
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
-        id: "memberships"
+        id: "membership"
     },
     {
         title: __("Paid Events", "simplybook"),
