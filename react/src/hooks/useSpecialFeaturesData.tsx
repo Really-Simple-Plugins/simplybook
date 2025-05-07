@@ -16,7 +16,7 @@ const useSpecialFeaturesData = () => {
     const {isLoading, error, data: response, refetch} = useQuery<SpecialFeaturesData>({
         queryKey: [route],
         queryFn: () => client.get(),
-        staleTime: 1000 * 60 * 60,
+        staleTime: 1000 * 60 * 60 * 24,
         retry: 0,
     });
 
