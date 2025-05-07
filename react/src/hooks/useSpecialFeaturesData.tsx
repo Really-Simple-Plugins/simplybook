@@ -24,16 +24,20 @@ const useSpecialFeaturesData = () => {
         console.error('Error fetching special features data:', error.message);
     } 
 
-    const isPluginActive = (id: string): boolean => {
+    const isPluginActive = (id: string) => {
 
-        const idExists = response?.data.some((plugin:any) => plugin.key === id);
+        const foundPlugin = response?.data.find((plugin:any) => plugin.key === id);
         
-        if(!idExists && !isLoading) {
+        if(!foundPlugin && !isLoading) {
             console.error(`Plugin with ID ${id} does not exist.`);
             return false;
         }
 
-        return response?.data.some((plugin:any) => plugin.key === id && plugin.is_active) ?? false;
+        if(foundPlugin) {
+            // @ts-ignore
+            return foundPlugin.is_active;
+        }
+
     }
 
     return {
