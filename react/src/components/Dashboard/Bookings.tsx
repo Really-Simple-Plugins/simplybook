@@ -61,7 +61,7 @@ const Bookings = () => {
                             <div
                                 key={index}
                                 className={
-                                    "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm transition duration-300 ease-in-out hover:border-tertiary hover:shadow-lg hover:cursor-pointer"
+                                    "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm"
                                 }
                             >
                                 <Icon name={block.icon} size={"2x"} />
