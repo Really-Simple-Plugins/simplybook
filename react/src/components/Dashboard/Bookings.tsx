@@ -51,8 +51,6 @@ const Bookings = () => {
         },
     ];
 
-    console.log(MostPopularDataList);
-
     return (
         <Block className={"col-span-12 sm:col-span-6 xl:col-span-3 2xl:col-span-3 2xl:row-span-2"}>
             <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
