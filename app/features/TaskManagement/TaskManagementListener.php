@@ -217,15 +217,15 @@ class TaskManagementListener
      */
     private function handlePaidEventsSpecialFeature(array $plugin): void
     {
-        $pluginIsTurnedOn = ($plugin['is_turned_on'] ?? false);
+        $pluginIsActive = ($plugin['is_active'] ?? false);
 
-        if ($pluginIsTurnedOn) {
+        if ($pluginIsActive) {
             $this->service->completeTask(
                 Tasks\AcceptPaymentsTask::IDENTIFIER
             );
         }
 
-        if ($pluginIsTurnedOn === false) {
+        if ($pluginIsActive === false) {
             $this->service->openTask(
                 Tasks\AcceptPaymentsTask::IDENTIFIER
             );
