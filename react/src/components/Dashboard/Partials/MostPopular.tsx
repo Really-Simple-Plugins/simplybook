@@ -22,7 +22,7 @@ const MostPopular: React.FC<MostPopularProps> = ({
                         <>
                             <p className="text-base font-semibold m-0">{mostPopularName}</p>
                             <div className="flex font-semibold">
-                                <p className="text-base m-0">{__("This week:", "simplybook")}</p>
+                                <p className="text-base m-0">{__("This week", "simplybook")}:</p>
                                 <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
                             </div>
                         </>
