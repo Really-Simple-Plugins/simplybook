@@ -24,12 +24,12 @@ const formLogin = ({
         /**
          * We use React Hook Form to handle client-side validation for the main login
         */
-        const { 
-            control, 
-            register, 
-            handleSubmit, 
-            formState: { errors, isValid }, 
-            watch 
+        const {
+            control,
+            register,
+            handleSubmit,
+            formState: { errors, isValid },
+            watch
         } = useForm({
             mode: "onChange",
             defaultValues: {
@@ -63,7 +63,7 @@ const formLogin = ({
             logUserIn(formData);
         });
 
-        
+
         const [errorMessage, setErrorMessage] = useState("");
 
         /**
@@ -148,10 +148,10 @@ const formLogin = ({
                         <TextField
                             {...field}
                             fieldState={fieldState}
-                            label={__("Email", "simplybook")}
+                            label={__("User login or email", "simplybook")}
                             setting="email"
                             type="email"
-                            placeholder={__("Email", "simplybook")}
+                            placeholder={__("User login or email", "simplybook")}
                         />
                     )}
                 />
@@ -171,10 +171,10 @@ const formLogin = ({
                         />
                     )}
                 />
-                {errorMessage && 
-                    <Error 
-                        errorHeading={__("Something went wrong", "simplybook")} 
-                        error={errorMessage} 
+                {errorMessage &&
+                    <Error
+                        errorHeading={__("Something went wrong", "simplybook")}
+                        error={errorMessage}
                     />
                 }
                 <ButtonInput
