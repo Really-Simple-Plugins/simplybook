@@ -76,7 +76,7 @@ const Progress = () => {
                 }
             />
             <BlockContent className="px-0 py-0">
-                <div className="px-5 py-4">
+                <div className="px-5 py-3">
                     <div className="w-full bg-gray-200 rounded-md h-5">
                         <div
                             className="bg-yellow-400 h-5 rounded-md transition-all duration-300"
@@ -86,21 +86,20 @@ const Progress = () => {
 
                 </div>
                 <div className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3">
-        <span className="font-bold text-3xl">
-           {completionPercentage}%
-          </span>
-                    <span className="text-base">
-            {remainingTasks.length === 0 && __("You're all set! Great job!", "simplybook")}
+                    <span className="font-bold text-2xl">
+                        {completionPercentage}%
+                    </span>
+                    <span className="text-lg">
+                        {remainingTasks.length === 0 && __("You're all set! Great job!", "simplybook")}
                         {remainingTasks.length>0 && sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", remainingTasks.length, "simplybook"), remainingTasks.length)}
-          </span>
+                    </span>
                 </div>
-
-                <div className="grid gap-1">
+                <div className="grid gap-1 content-start max-h-[275px] overflow-y-auto">
 
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
-                            className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50"
+                            className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-2 hover:bg-gray-50"
                         >
                             {/* Status pill - fixed width */}
                             <div>
