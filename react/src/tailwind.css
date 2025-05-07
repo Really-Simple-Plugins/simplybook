@@ -68,6 +68,7 @@
     --breakpoint-2xl: 104rem;
     --container-8xl: 125rem;
 }
+
 /**
 ======================================
 Root overwriites 
@@ -105,6 +106,17 @@ a {
     &:focus {
         outline: 2px solid var(--color-primary-hover);
     }
+}
+
+/**
+======================================
+Simplybook Body
+======================================
+**/
+#simplybook_app {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
 }
 
 /**
