@@ -25,6 +25,14 @@ const useSpecialFeaturesData = () => {
     } 
 
     const isPluginActive = (id: string): boolean => {
+
+        const idExists = response?.data.some((plugin:any) => plugin.key === id);
+        
+        if(!idExists && !isLoading) {
+            console.error(`Plugin with ID ${id} does not exist.`);
+            return false;
+        }
+
         return response?.data.some((plugin:any) => plugin.key === id && plugin.is_active) ?? false;
     }
 
