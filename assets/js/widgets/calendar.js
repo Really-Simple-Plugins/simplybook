@@ -1,5 +1,5 @@
-function instantiateSimplybookWidget() {
-    new SimplybookWidget({
+function instantiateSimplyBookWidget() {
+    new SimplyBookWidget({
         "widget_type": "iframe",
         "url": "{{ server }}",
         "theme": "{{ theme }}",
@@ -16,5 +16,5 @@ function instantiateSimplybookWidget() {
     });
 }
 
-document.addEventListener("DOMContentLoaded", instantiateSimplybookWidget);
-document.addEventListener("loadSimplyBookPreviewWidget", instantiateSimplybookWidget);
+document.addEventListener("DOMContentLoaded", instantiateSimplyBookWidget);
+document.addEventListener("loadSimplyBookPreviewWidget", instantiateSimplyBookWidget);

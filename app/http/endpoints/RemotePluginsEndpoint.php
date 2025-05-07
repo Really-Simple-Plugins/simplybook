@@ -8,10 +8,6 @@ use SimplyBook\Interfaces\SingleEndpointInterface;
 
 /**
  * Remote plugins are the plugins provided by the SimplyBook API.
- * @todo - If I look at google_reviews or telegram_notifications then this looks more like "Custom Features" or "Special Features". In that case "plugins" is a bit misleading.
- * @see https://help.simplybook.me/index.php/Google_Reviews_custom_feature
- * @see https://help.simplybook.me/index.php/Telegram_Notifications_custom_feature
- * @see \Simplybook_old\Api\Api::get_plugins
  */
 class RemotePluginsEndpoint implements SingleEndpointInterface
 {

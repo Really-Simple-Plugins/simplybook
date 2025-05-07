@@ -60,7 +60,7 @@ return [
                 // ],
                 // [
                 //     'title' => 'News & Updates',
-                //     'content' => 'Simplybook.me  newsletter: exciting new features and upcoming enhancements.',
+                //     'content' => 'SimplyBook.me  newsletter: exciting new features and upcoming enhancements.',
                 //     'link' => 'https://news.simplybook.me/ ',
                 // ],
                 // [

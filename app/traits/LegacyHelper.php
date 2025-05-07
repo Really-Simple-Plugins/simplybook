@@ -170,7 +170,7 @@ trait LegacyHelper {
      */
     public function log(  $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$prepend = 'Simplybook: ';
+			$prepend = 'SimplyBook.me: ';
             if ( is_array( $message ) || is_object( $message ) ) {
 				error_log( $prepend . print_r( $message, true ) );
 			} else {

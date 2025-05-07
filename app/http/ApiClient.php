@@ -852,7 +852,7 @@ class ApiClient
     }
 
     /**
-     * Get list of Simplybook services
+     * Get list of SimplyBook.me services
      *
      * @return array
      */
@@ -924,7 +924,7 @@ class ApiClient
     }
 
     /**
-     * Get list of Simplybook providers
+     * Get list of SimplyBook.me providers
      */
     public function get_providers(): array
     {
