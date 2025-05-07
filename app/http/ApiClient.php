@@ -1322,7 +1322,7 @@ class ApiClient
                 esc_html__('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid response from SimplyBook.', 'simplybook'),
+                'response_message' => esc_html__('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1383,7 +1383,7 @@ class ApiClient
                 esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.', 'simplybook'),
+                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1454,7 +1454,7 @@ class ApiClient
         $allowedProviders = [];
         foreach ($providerKeys as $provider) {
             $allowedProviders[$provider] = ($providerLabels[$provider] ??
-                esc_html__('Unknown 2fa provider', 'simplybook'));
+                esc_html__('Unknown 2FA provider', 'simplybook'));
         }
 
         return $allowedProviders;

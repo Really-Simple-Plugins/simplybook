@@ -149,7 +149,7 @@ return
                 'modern_week' => __('Slots weekly', 'simplybook'),
                 'grid_week' => __('Weekly classes', 'simplybook'),
                 'classes_plugin' => __('Daily classes', 'simplybook'),
-                'classes' => __('Modern provider', 'simplybook'),
+                'classes' => __('Modern Provider', 'simplybook'),
                 'as_slots' => __('As slots', 'simplybook'),
                 'as_table' => __('As table', 'simplybook'),
                 'block' => __('Block', 'simplybook'),

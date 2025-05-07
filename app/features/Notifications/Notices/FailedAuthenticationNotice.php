@@ -29,7 +29,7 @@ class FailedAuthenticationNotice extends AbstractNotice
     public function getText(): string
     {
         return esc_html__(
-            'We’ve lost connection to your SimplyBook account. Please log out and sign in again to reconnect.',
+            'We’ve lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect.',
             'simplybook'
         );
     }

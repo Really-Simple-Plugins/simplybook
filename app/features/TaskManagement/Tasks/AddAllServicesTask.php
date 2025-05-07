@@ -30,7 +30,7 @@ class AddAllServicesTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add services','simplybook'),
+            'text' => esc_html__('Add Services','simplybook'),
             'login_link' => '/v2/management/#services',
         ];
     }

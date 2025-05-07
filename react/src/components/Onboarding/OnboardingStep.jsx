@@ -184,7 +184,7 @@ const OnboardingStep = ({
                 </div>
                 {apiError && (
                     <Error
-                        errorHeading={__("Something went wrong...", "simplybook")}
+                        errorHeading={__("Something went wrong", "simplybook")}
                         error={apiError}
                         resolve={{
                             callback: restartOnboarding,
