@@ -7,26 +7,25 @@ import SpecialFeaturesData from "../types/SpecialFeaturesData";
  * This hook provides functions to fetch and update settings.
  *
  * @returns {Object} - An object containing settings data, update function, and status flags.
- */
-const useSpecialFeaturesData = (): SpecialFeaturesData => {
+ */    
+const useSpecialFeaturesData = () => {
 
     const route = 'get_plugins';
     const client = new HttpClient(route);
 
-    const {isLoading, error, data: response, refetch} = useQuery({
+    const {isLoading, error, data: response, refetch} = useQuery<SpecialFeaturesData>({
         queryKey: [route],
         queryFn: () => client.get(),
-        staleTime: 1000 * 60 * 60 * 24,
+        staleTime: 1000 * 60 * 60,
         retry: 0,
-        select: (data) => [...data],
     });
 
     if (error !== null) {
         console.error('Error fetching special features data:', error.message);
-    }
+    } 
 
     const isPluginActive = (id: string): boolean => {
-        return response?.some((plugin) => plugin.id === id && plugin.is_active) ?? false;
+        return response?.data.some((plugin:any) => plugin.key === id && plugin.is_active) ?? false;
     }
 
     return {
