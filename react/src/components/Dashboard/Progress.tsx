@@ -10,8 +10,8 @@ import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHoriz
 import {Link} from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
 
-const getStatusStyles = (status: string, premium: boolean) => {
-    if (premium) {
+const getStatusStyles = (status: string, premium: boolean, special_feature: boolean) => {
+    if (premium || special_feature) {
         return 'bg-tertiary text-white';
     }
 
@@ -104,9 +104,9 @@ const Progress = () => {
                         >
                             {/* Status pill - fixed width */}
                             <div>
-                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium)}`}>
-                  {task.premium ? 'Premium' : (task.status.charAt(0).toUpperCase() + task.status.slice(1))}
-                </span>
+                                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
+                                  {task.label}
+                                </span>
                             </div>
 
                             {/* Task text */}

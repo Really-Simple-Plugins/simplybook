@@ -43,9 +43,14 @@ const useTaskData = () => {
     let tasks: Task[] = [];
     if (Array.isArray(response?.data)) {
         tasks = response?.data.map((task: Task) => {
+            let priority = (statusPriority[task.status]) ?? 69;
+            if (task.premium || task.special_feature) {
+                priority = 15;
+            }
+
             return {
                 ...task,
-                priority: (statusPriority[task.status]) ?? 69,
+                priority: priority,
             };
         }).sort((a: Task, b: Task) => a.priority - b.priority);
 
@@ -92,8 +97,7 @@ const useTaskData = () => {
             (task: Task) => task.status === "dismissed" || task.status === "completed",
         ).length;
 
-        const actualPercentage = Math.round((completed / total) * 100);
-        return actualPercentage;
+        return Math.round((completed / total) * 100);
     };
 
     return {
