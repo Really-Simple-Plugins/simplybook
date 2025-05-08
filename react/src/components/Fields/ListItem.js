@@ -20,7 +20,7 @@ const ListItem = forwardRef(
 
         return (
             <>
-                <div className={clsx(upgrade ? "bg-gray-100" : "bg-gray-100", "w-full flex items-center justify-between px-4 py-5 mb-4")}>
+                <div className="w-full flex items-center justify-between px-4 py-5 mb-4 bg-gray-100">
                     <div className={clsx(upgrade ? "justify-start" : "justify-between", "flex flex-row items-center w-full space-x-3 text-base")} >
                         <div className={clsx("flex items-center")}>
                             {!upgrade && domainFetched && !domainHasError && hasPicture &&
@@ -32,8 +32,8 @@ const ListItem = forwardRef(
                                 </div>
                             }
                             {upgrade && (
-                                <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
-                                    <Icon name="chevron-up"/>
+                                <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-tertiary text-xs flex items-center justify-center overflow-hidden rounded-md font-bold text-white">
+                                    <Icon name="chevron-up" style={{color: "white"}} />
                                 </div>
                             )}
                             <div className="font-bold ml-4">
