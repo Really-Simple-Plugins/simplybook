@@ -1590,13 +1590,6 @@
       }
     }
   }
-  .hover\:border-primary-hover {
-    &:hover {
-      @media (hover: hover) {
-        border-color: var(--color-primary-hover);
-      }
-    }
-  }
   .hover\:bg-blue-600 {
     &:hover {
       @media (hover: hover) {
@@ -1671,13 +1664,6 @@
     &:hover {
       @media (hover: hover) {
         color: var(--color-gray-600);
-      }
-    }
-  }
-  .hover\:text-primary-hover {
-    &:hover {
-      @media (hover: hover) {
-        color: var(--color-primary-hover);
       }
     }
   }
