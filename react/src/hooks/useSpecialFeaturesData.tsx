@@ -26,18 +26,18 @@ const useSpecialFeaturesData = () => {
 
     const isPluginActive = (id: string) => {
 
+        if (isLoading || !response) {
+            return false;
+        }
+
         const foundPlugin = response?.data.find((plugin:any) => plugin.key === id);
         
-        if(!foundPlugin && !isLoading) {
+        if (!foundPlugin) {
             console.error(`Plugin with ID ${id} does not exist.`);
             return false;
         }
 
-        if(foundPlugin) {
-            // @ts-ignore
-            return foundPlugin.is_active;
-        }
-
+        return foundPlugin.is_active;
     }
 
     return {
