@@ -96,19 +96,16 @@ const Progress = () => {
                 </div>
 
                 <div className="grid gap-1">
-
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
-                            className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50"
+                            className="grid grid-cols-[110px_1fr_auto_2em] gap-10 items-center px-5 py-3 hover:bg-gray-50"
                         >
                             {/* Status pill - fixed width */}
-                            <div>
-                                <span className={`inline-block w-[100px] text-center px-3 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
-                                  {task.label}
-                                </span>
-                            </div>
-
+                            <span className={`inline-block w-[130px] text-center px-1 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
+                                {task.label}
+                            </span>
+  
                             {/* Task text */}
                             <div className={task.status === 'dismissed' ? 'text-gray-400 line-through' : ''}>
                                 {task.text}
@@ -134,7 +131,6 @@ const Progress = () => {
                                     </LoginLink>
                                 )}
                             </div>
-
                             {/* Dismiss button */}
                             <div className="text-right">
                                 {task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (
