@@ -14,11 +14,6 @@ const DataList = [
         link: "/v2/management/#providers",
         id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
-    /* {
-        title: __("Services", "simplybook"),
-        link: "/v2/management/#services",
-        // id: "does not exist in subscription data yet"
-    }, */
     {
         title: __("Bookings", "simplybook"),
         link: "v2/index/index",
@@ -43,7 +38,7 @@ const DataList = [
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
-        id: "memberships"
+        id: "membership"
     },
     {
         title: __("Paid Events", "simplybook"),
