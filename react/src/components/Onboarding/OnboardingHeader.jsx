@@ -14,7 +14,7 @@ const OnboardingHeader = ({
 
     const { getCurrentStepId } = useOnboardingData();
     const location = useLocation()
-    const currentStepId = (getCurrentStepId(location.pathname)) ?? 0;
+    const currentStepId = (getCurrentStepId(location.pathname) ?? 0);
     
     /**
      * Toggle the SignInModal
