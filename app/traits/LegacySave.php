@@ -53,21 +53,12 @@ trait LegacySave {
         return $value;
     }
 
-    public function upgrade_options_testing( $array ): void
-    {
-        foreach ( $array as $key => $value ) {
-            if ( $value !== false ) {
-                $this->update_option($key, $value);
-            }
-        }
-    }
-
     /**
-     * Upgrade the options to one single option
-     *
-     * @return void
+     * This method upgrades the legacy options from version 2.3 to the new
+     * format for the 3.0.0 version.
+     * @since 3.0.0
      */
-    public function upgrade_options(): void
+    public function upgrade_legacy_options(): void
     {
         $upgrade_keys = [
             'api_status',
@@ -75,25 +66,62 @@ trait LegacySave {
             'auth_datetime',
             'is_auth',
             'auth_data',
+            'flash_messages',
+            'widget_page_id',
+            'cached_keys',
+            'public_url',
+            'is_auth_ne',
         ];
+
         foreach ($upgrade_keys as $key) {
 
             $value = $this->get_config_obsolete($key);
-            if ( $value !== false ) {
-                if ( $key === 'api_status' ) {
-                    update_option('simplybook_api_status', $value);
-                } else
-                if ( $key === 'widget_settings' || $key === 'auth_data' ) {
-                    if ( is_array( $value ) ) {
-                        foreach ( $value as $key => $val) {
-                            $this->update_option($key, $val);
-                        }
-                    }
-                } else {
-                    $this->update_option($key, $value);
-                }
+
+            if ($key === 'is_auth') {
+                update_option('simplybook_onboarding_completed', true);
+                update_option('simplybook_completed_step', '5');
             }
+
+            if ( $key === 'auth_data' && is_array( $value ) ) {
+                $this->upgradeAuthData($value);
+            } else {
+                $this->update_option($key, $value);
+            }
+
             delete_option('simplybookMePl_' . $key);
+        }
+    }
+
+    /**
+     * This method VERY specifically upgrades the auth_data array from the
+     * legacy 2.3 version to the new 3.0 version. Never use it after.
+     * @since 3.0.0
+     */
+    private function upgradeAuthData(array $authData): void
+    {
+        if (!empty($authData['token'])) {
+            $this->update_token($authData['token'], 'admin');
+        }
+
+        if (!empty($authData['refresh_token'])) {
+            $this->update_token($authData['refresh_token'], 'admin', true);
+        }
+
+        if (!empty($authData['domain'])) {
+            $this->update_option('domain', $authData['domain'], true);
+        }
+
+        if (!empty($authData['login'])) {
+            $this->update_option('email', $authData['login'], true);
+        }
+
+        if (!empty($authData['company'])) {
+            update_option('simplybook_company_login', sanitize_text_field($authData['company']), false);
+        }
+
+        if (!empty($authData['refresh_time'])) {
+            $refreshExpiration = ((int) $authData['refresh_time'] + 3600);
+            update_option('simplybook_refresh_company_token_expiration', $refreshExpiration, false);
         }
     }
 
