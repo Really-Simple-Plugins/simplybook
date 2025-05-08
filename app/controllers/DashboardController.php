@@ -144,7 +144,6 @@ class DashboardController implements ControllerInterface
             'simplybook',
             $this->localizedReactSettings($chunkTranslation)
         );
-
     }
 
     /**
@@ -240,6 +239,7 @@ class DashboardController implements ControllerInterface
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => App::env('simplybook.domains'),
                 'simplybook_countries' => App::countries(),
+                'support' => App::env('simplybook.support'),
             ]
         );
     }
