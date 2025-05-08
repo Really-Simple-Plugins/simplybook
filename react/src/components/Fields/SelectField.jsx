@@ -30,6 +30,7 @@ const SelectField = forwardRef(
                 <SelectInput
                     id={inputId}
                     options={options}
+                    fieldState={fieldState}
                     aria-invalid={!!fieldState?.error?.message}
                     {...field} // Spread field to include onChange, onBlur, etc.
                     ref={ref} // Forward the ref if needed
