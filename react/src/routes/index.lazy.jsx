@@ -22,7 +22,7 @@ function Dashboard() {
           <Management />
           <TipsTricks />
           <OurPlugins />
-          <LiveAgent />
+          <LiveAgent style={"col-span-12 !bg-transparent shadow-none"}/>
         </div>
       </div>
     </>

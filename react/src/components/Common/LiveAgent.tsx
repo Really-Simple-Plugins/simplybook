@@ -1,6 +1,5 @@
 import { useEffect, useRef } from "react";
-
-const LiveAgent = () => {
+const LiveAgent = (props: { style: string }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -35,7 +34,7 @@ const LiveAgent = () => {
         };
     }, []);
 
-    return <div ref={containerRef} className={"col-span-12 !bg-transparent shadow-none"}></div>;
+    return <div ref={containerRef} className={props.style}></div>;
 };
 
 export default LiveAgent;
