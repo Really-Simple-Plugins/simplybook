@@ -225,13 +225,12 @@ class Plugin
      */
     public function checkForUpgrades(): void
     {
-        $previousVersion = (string) get_option('simplybook_current_version', false);
-        if ($previousVersion && version_compare($previousVersion, App::env('plugin.version'), '==')) {
-            return; // Nothing to do
-        }
+        // Last version that did not save the version in the database
+        $legacyVersion = '2.3';
+        $previousSavedVersion = (string) get_option('simplybook_current_version', $legacyVersion);
 
         // Action can be used by Controllers to hook into the upgrade process
-        do_action('simplybook_plugin_version_upgrade', $previousVersion, App::env('plugin.version'));
+        do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
         update_option('simplybook_current_version', App::env('plugin.version'), false);
     }
 }
