@@ -1,23 +1,25 @@
 # Copyright (C) 2025 Really Simple Plugins
-# This file is distributed under the same license as the SimplyBook plugin.
+# This file is distributed under the same license as the SimplyBook.me plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: SimplyBook 3.0.0\n"
+"Project-Id-Version: SimplyBook.me 3.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/simplybook\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-02T09:58:53+00:00\n"
+"POT-Creation-Date: 2025-05-08T07:32:30+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
 
 #. Plugin Name of the plugin
 #: simplybook.php
+#: app/controllers/DashboardController.php:75
+#: app/controllers/DashboardController.php:76
 #: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:29
-msgid "SimplyBook"
+msgid "SimplyBook.me"
 msgstr ""
 
 #. Plugin URI of the plugin
@@ -27,7 +29,7 @@ msgstr ""
 
 #. Description of the plugin
 #: simplybook.php
-msgid "SimplyBook.me plugin allows you to add the SimplyBook.me widget to your WordPress website."
+msgid "The SimplyBook.me plugin allows you to add the SimplyBook.me widget to your WordPress website."
 msgstr ""
 
 #. Author of the plugin
@@ -53,11 +55,6 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#: app/controllers/DashboardController.php:75
-#: app/controllers/DashboardController.php:76
-msgid "SimplyBook.me"
-msgstr ""
-
 #: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:14
 msgid "No Providers configured"
 msgstr ""
@@ -72,7 +69,7 @@ msgid "Add Service Provider"
 msgstr ""
 
 #: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:14
-msgid "No services configured"
+msgid "No Services configured"
 msgstr ""
 
 #: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:22
@@ -81,6 +78,7 @@ msgid "Please configure at least one Service"
 msgstr ""
 
 #: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:47
+#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
 msgid "Add Service"
 msgstr ""
 
@@ -89,7 +87,7 @@ msgid "Connection lost"
 msgstr ""
 
 #: app/features/Notifications/Notices/FailedAuthenticationNotice.php:31
-msgid "We’ve lost connection to your SimplyBook account. Please log out and sign in again to reconnect."
+msgid "We’ve lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect."
 msgstr ""
 
 #: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:14
@@ -110,7 +108,7 @@ msgid "Maximum number of Services reached"
 msgstr ""
 
 #: app/features/Notifications/Notices/MaxedOutServicesNotice.php:22
-msgid "Please upgrade your plan to configure more Services, or delete existing services if you want to add new services."
+msgid "Please upgrade your plan to configure more Services, or delete existing Services if you want to add more."
 msgstr ""
 
 #: app/features/Notifications/Notices/PublishWidgetNotice.php:19
@@ -176,12 +174,22 @@ msgstr ""
 msgid "Please enter a valid email address and accept the terms and conditions"
 msgstr ""
 
+#: app/features/TaskManagement/Tasks/AbstractTask.php:207
+msgid "Premium"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AbstractTask.php:211
+msgid "Special feature"
+msgstr ""
+
 #: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:24
 msgid "Accept payments via SimplyBook.me"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:34
+#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:34
 #: app/features/TaskManagement/Tasks/InstallAppTask.php:29
+#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:34
 msgid "More info"
 msgstr ""
 
@@ -190,7 +198,7 @@ msgid "Have you added all Service Providers?"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/AddAllProvidersTask.php:33
-msgid "Add providers"
+msgid "Add Providers"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/AddAllServicesTask.php:23
@@ -198,15 +206,11 @@ msgid "Have you added all your Services?"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/AddAllServicesTask.php:33
-msgid "Add services"
+msgid "Add Services"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/AddMandatoryProviderTask.php:39
-msgid "Add provider"
-msgstr ""
-
-#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
-msgid "Add service"
+msgid "Add Provider"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/CustomizeDesignTask.php:19
@@ -218,19 +222,23 @@ msgid "Design settings"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:27
-msgid "We’ve lost connection to your SimplyBook account. Reconnect by logging out via the general settings."
+msgid "We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings."
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:37
 msgid "General settings"
 msgstr ""
 
+#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:24
+msgid "Gather information from your clients upon booking"
+msgstr ""
+
 #: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:19
-msgid "Discover the full functionality on simplybook.me"
+msgid "Discover the full functionality on SimplyBook.me"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/InstallAppTask.php:19
-msgid "Install the Simplybook.me app for iOS or Android"
+msgid "Install the SimplyBook.me app for iOS or Android"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/MaxedOutProvidersTask.php:34
@@ -245,16 +253,20 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Common/Header.jsx:119
-#: react/src/components/Fields/ListItem.js:76
+#: react/src/components/Fields/ListItem.js:64
 msgid "Upgrade"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:35
 msgid "You have reached the maximum number of bookings for your plan"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:24
+msgid "Post your social media content and create ads"
 msgstr ""
 
 #: app/features/TaskManagement/Tasks/PublishWidgetTask.php:27
@@ -315,7 +327,7 @@ msgid "Login failed! Please try again later."
 msgstr ""
 
 #: app/http/ApiClient.php:1325
-msgid "Invalid response from SimplyBook."
+msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
 #: app/http/ApiClient.php:1373
@@ -331,7 +343,7 @@ msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
 #: app/http/ApiClient.php:1386
-msgid "Invalid 2FA response from SimplyBook."
+msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
 #: app/http/ApiClient.php:1450
@@ -345,7 +357,7 @@ msgid "SMS"
 msgstr ""
 
 #: app/http/ApiClient.php:1457
-msgid "Unknown 2fa provider"
+msgid "Unknown 2FA provider"
 msgstr ""
 
 #: app/http/endpoints/BlockEndpoints.php:121
@@ -373,7 +385,7 @@ msgid "Forbidden."
 msgstr ""
 
 #: app/services/DesignSettingsService.php:189
-msgid "Invalid value for setting:"
+msgid "Invalid value for setting"
 msgstr ""
 
 #: config/countries.php:6
@@ -1395,6 +1407,7 @@ msgid "Slots weekly"
 msgstr ""
 
 #: config/fields/design.php:16
+#: config/fields/design.php:152
 msgid "Modern Provider"
 msgstr ""
 
@@ -1504,10 +1517,6 @@ msgstr ""
 msgid "Daily classes"
 msgstr ""
 
-#: config/fields/design.php:152
-msgid "Modern provider"
-msgstr ""
-
 #: config/fields/design.php:153
 msgid "As slots"
 msgstr ""
@@ -1542,12 +1551,11 @@ msgstr ""
 
 #: config/fields/providers.php:13
 #: config/menus.php:24
-#: react/build/747.js:1
-msgid "Providers"
+msgid "Service Providers"
 msgstr ""
 
 #: config/fields/providers.php:14
-msgid "Want more providers?"
+msgid "Want more Service Providers?"
 msgstr ""
 
 #: config/fields/services.php:13
@@ -1755,8 +1763,8 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 msgid "Route is not set"
 msgstr ""
@@ -1766,8 +1774,8 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 msgid "Payload is not set"
 msgstr ""
@@ -1777,8 +1785,8 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 msgid "An error occurred"
 msgstr ""
@@ -1788,7 +1796,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Common/CalendarLoading.jsx:62
 msgid "Please wait while your registration is being processed. This usually takes about 30 seconds."
@@ -1799,7 +1807,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Common/CalendarLoading.jsx:65
 msgid "This is taking a bit longer than expected. Please wait while we retry a few times."
@@ -1810,7 +1818,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Common/CalendarLoading.jsx:69
 msgid "We're sorry, but it seems there is a problem with your registration. Please try again later."
@@ -1821,7 +1829,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Common/CalendarLoading.jsx:71
 msgid "Please complete the onboarding first to register your account."
@@ -1832,7 +1840,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/932.js:1
 #: react/build/939.js:1
 msgid "Select an option"
@@ -1843,32 +1851,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
-#: react/build/939.js:1
-#: react/src/components/Fields/ListItem.js:31
-msgid "Get unlimited %s"
-msgstr ""
-
-#: react/build/18.js:1
-#: react/build/46.js:1
-#: react/build/107.js:1
-#: react/build/157.js:1
-#: react/build/182.js:1
-#: react/build/536.js:1
-#: react/build/939.js:1
-#: react/src/components/Fields/ListItem.js:31
-msgid "Edit"
-msgstr ""
-
-#: react/build/18.js:1
-#: react/build/46.js:1
-#: react/build/107.js:1
-#: react/build/157.js:1
-#: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/components/Fields/ListItem.js:39
+#: react/src/components/Fields/ListItem.js:27
 msgid "Loading"
 msgstr ""
 
@@ -1877,7 +1863,18 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/ListItem.js:51
+msgid "Edit"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 msgid "live"
 msgstr ""
@@ -1887,7 +1884,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 msgid "preview"
 msgstr ""
@@ -1897,7 +1894,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Fields/AuthenticationField.jsx:30
 msgid "Are you sure you want to logout? All settings will be lost."
@@ -1908,7 +1905,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Fields/AuthenticationField.jsx:68
 #: react/src/components/Fields/AuthenticationField.jsx:71
@@ -1920,7 +1917,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Fields/ThemeField.jsx:80
 msgid "Error fetching theme settings. Please try again later."
@@ -1931,7 +1928,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Forms/FormField.js:51
 msgid "This field is required"
@@ -1942,7 +1939,7 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Forms/FormField.js:58
 msgid "Invalid format"
@@ -1951,7 +1948,7 @@ msgstr ""
 #: react/build/18.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Forms/OnboardingForms.jsx:17
 #: react/src/components/Onboarding/OnboardingStep.jsx:19
@@ -1961,16 +1958,18 @@ msgstr ""
 #: react/build/18.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
+#: react/build/932.js:1
 #: react/build/939.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:176
 #: react/src/components/Onboarding/OnboardingStep.jsx:187
-msgid "Something went wrong..."
+msgid "Something went wrong"
 msgstr ""
 
 #: react/build/18.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
 #: react/src/components/Onboarding/OnboardingStep.jsx:191
 msgid "Or restart the onboarding"
@@ -1981,10 +1980,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:42
+#: react/src/hooks/useOnboardingData.js:90
 msgid "Email address"
 msgstr ""
 
@@ -1993,10 +1992,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:46
+#: react/src/hooks/useOnboardingData.js:94
 msgid "Please enter a valid email address"
 msgstr ""
 
@@ -2005,10 +2004,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:54
+#: react/src/hooks/useOnboardingData.js:102
 msgid "I agree to the %sterms and conditions%s"
 msgstr ""
 
@@ -2017,10 +2016,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:85
+#: react/src/hooks/useOnboardingData.js:133
 msgid "Business category"
 msgstr ""
 
@@ -2029,10 +2028,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:87
+#: react/src/hooks/useOnboardingData.js:135
 msgid "Beauty and wellness"
 msgstr ""
 
@@ -2041,10 +2040,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:88
+#: react/src/hooks/useOnboardingData.js:136
 msgid "Sport and fitness"
 msgstr ""
 
@@ -2053,10 +2052,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:91
+#: react/src/hooks/useOnboardingData.js:139
 msgid "Personal meetings and services"
 msgstr ""
 
@@ -2065,10 +2064,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:93
+#: react/src/hooks/useOnboardingData.js:141
 msgid "Medical"
 msgstr ""
 
@@ -2077,10 +2076,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:94
+#: react/src/hooks/useOnboardingData.js:142
 msgid "Events and entertainment"
 msgstr ""
 
@@ -2089,10 +2088,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:95
+#: react/src/hooks/useOnboardingData.js:143
 msgid "Education"
 msgstr ""
 
@@ -2101,10 +2100,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:96
+#: react/src/hooks/useOnboardingData.js:144
 msgid "Retailers"
 msgstr ""
 
@@ -2113,10 +2112,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:97
+#: react/src/hooks/useOnboardingData.js:145
 msgid "Officials"
 msgstr ""
 
@@ -2125,10 +2124,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:98
+#: react/src/hooks/useOnboardingData.js:146
 msgid "Other category"
 msgstr ""
 
@@ -2137,10 +2136,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:105
+#: react/src/hooks/useOnboardingData.js:153
 msgid "What service do you provide?"
 msgstr ""
 
@@ -2149,10 +2148,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:112
+#: react/src/hooks/useOnboardingData.js:160
 msgid "Phone"
 msgstr ""
 
@@ -2161,10 +2160,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:115
+#: react/src/hooks/useOnboardingData.js:163
 msgid "Please enter a valid phone number"
 msgstr ""
 
@@ -2173,10 +2172,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:123
+#: react/src/hooks/useOnboardingData.js:171
 msgid "Address"
 msgstr ""
 
@@ -2185,10 +2184,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:130
+#: react/src/hooks/useOnboardingData.js:178
 msgid "Postal Code"
 msgstr ""
 
@@ -2197,10 +2196,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:137
+#: react/src/hooks/useOnboardingData.js:185
 msgid "City"
 msgstr ""
 
@@ -2209,10 +2208,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:143
+#: react/src/hooks/useOnboardingData.js:191
 msgid "Country"
 msgstr ""
 
@@ -2221,10 +2220,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:164
+#: react/src/hooks/useOnboardingData.js:212
 msgid "Confirmation Code"
 msgstr ""
 
@@ -2233,10 +2232,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:204
+#: react/src/hooks/useOnboardingData.js:252
 msgid "Simple"
 msgstr ""
 
@@ -2245,10 +2244,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:205
+#: react/src/hooks/useOnboardingData.js:253
 msgid "Generate page"
 msgstr ""
 
@@ -2257,10 +2256,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:209
+#: react/src/hooks/useOnboardingData.js:257
 msgid "Shortcode"
 msgstr ""
 
@@ -2269,10 +2268,10 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:210
+#: react/src/hooks/useOnboardingData.js:258
 msgid "Do it yourself"
 msgstr ""
 
@@ -2281,11 +2280,23 @@ msgstr ""
 #: react/build/107.js:1
 #: react/build/157.js:1
 #: react/build/182.js:1
-#: react/build/536.js:1
 #: react/build/747.js:1
+#: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/hooks/useOnboardingData.js:248
-msgid "calendar"
+#: react/src/hooks/useOnboardingData.js:57
+msgid "Please enter a valid calendar page URL"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:62
+msgid "This calendar page URL is taken. Please choose another one."
 msgstr ""
 
 #: react/build/18.js:1
@@ -2468,38 +2479,6 @@ msgstr ""
 msgid "Next step"
 msgstr ""
 
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:51
-msgid "Almost there!"
-msgstr ""
-
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:54
-#: react/src/routes/onboarding/implementation.lazy.jsx:59
-msgid "Implement SimplyBook.me"
-msgstr ""
-
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:61
-msgid "Continue configuration"
-msgstr ""
-
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:71
-#: react/src/routes/onboarding/implementation.lazy.jsx:95
-msgid "Implementation"
-msgstr ""
-
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:73
-msgid "Use the below shortcode in a page to show the widget."
-msgstr ""
-
-#: react/build/536.js:1
-#: react/src/routes/onboarding/implementation.lazy.jsx:97
-msgid "SimplyBook.me will generate the following page automatically"
-msgstr ""
-
 #: react/build/747.js:1
 msgid "Your trial has expired"
 msgstr ""
@@ -2539,15 +2518,15 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: react/build/747.js:1
-msgid "This week:"
+msgid "This week"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "No bookings yet..."
 msgstr ""
 
 #: react/build/747.js:1
 msgid "Today"
-msgstr ""
-
-#: react/build/747.js:1
-msgid "This week"
 msgstr ""
 
 #: react/build/747.js:1
@@ -2560,6 +2539,10 @@ msgstr ""
 
 #: react/build/747.js:1
 msgid "View Bookings"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Providers"
 msgstr ""
 
 #: react/build/747.js:1
@@ -2618,6 +2601,43 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:25
+msgid "calendar"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:59
+msgid "Almost there!"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:62
+#: react/src/routes/onboarding/implementation.lazy.jsx:67
+msgid "Implement SimplyBook.me"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:69
+msgid "Continue configuration"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:81
+#: react/src/routes/onboarding/implementation.lazy.jsx:107
+msgid "Implementation"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:84
+msgid "Use the below shortcode in a page to show the widget."
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:110
+msgid "SimplyBook.me will generate the following page automatically"
+msgstr ""
+
 #: react/build/932.js:1
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:78
 msgid "Select 2FA provider"
@@ -2663,18 +2683,13 @@ msgstr ""
 #: react/build/932.js:1
 #: react/src/components/Modals/Partials/FormLogin.jsx:151
 #: react/src/components/Modals/Partials/FormLogin.jsx:154
-msgid "Email"
+msgid "User login or email"
 msgstr ""
 
 #: react/build/932.js:1
 #: react/src/components/Modals/Partials/FormLogin.jsx:167
 #: react/src/components/Modals/Partials/FormLogin.jsx:170
 msgid "Password"
-msgstr ""
-
-#: react/build/932.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:176
-msgid "Something went wrong"
 msgstr ""
 
 #: react/build/932.js:1
@@ -2694,7 +2709,7 @@ msgstr ""
 
 #: react/build/932.js:1
 #: react/src/components/Modals/SignInModal.jsx:25
-msgid "Please enter your SimplyBook credentials to sign in."
+msgid "Please enter your SimplyBook.me credentials to sign in."
 msgstr ""
 
 #: react/build/932.js:1
@@ -2704,7 +2719,7 @@ msgstr ""
 
 #: react/build/939.js:1
 #: react/src/routes/onboarding/information-check.lazy.jsx:18
-msgid "Welcome to SimplyBook"
+msgid "Welcome to SimplyBook.me"
 msgstr ""
 
 #: react/build/939.js:1
@@ -2749,7 +2764,7 @@ msgstr ""
 
 #: react/build/index.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:95
-msgid "Once logged in, click on %s under the Burst Statistics forum."
+msgid "Once logged in, click on %s under the SimplyBook.me forum."
 msgstr ""
 
 #: react/build/index.js:1
