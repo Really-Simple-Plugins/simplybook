@@ -1,9 +1,10 @@
-import {forwardRef, useState} from "react";
+import React, {forwardRef} from "react";
 import clsx from "clsx";
-import {__, sprintf } from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import LoginLink from "../Common/LoginLink";
 import useDomainData from "../../hooks/useDomainData";
 import ButtonLink from "../Buttons/ButtonLink";
+import Icon from "../Common/Icon";
 
 const ListItem = forwardRef(
     ({
@@ -16,30 +17,29 @@ const ListItem = forwardRef(
 
         const { domain, domainFetched, hasError: domainHasError } = useDomainData();
         const hasPicture = domainFetched && item.picture_preview && item.picture_preview.length > 0;
-        const fullLabel = upgrade ? ' |  '+sprintf(__("Get unlimited %s", "simplybook"), label.toLowerCase()) : __("Edit", "simplybook");
 
         return (
             <>
-                <div className="w-full flex items-center justify-between px-4 py-5 bg-gray-100 mb-4">
+                <div className={clsx(upgrade ? "bg-gray-100" : "bg-gray-100", "w-full flex items-center justify-between px-4 py-5 mb-4")}>
                     <div className={clsx(upgrade ? "justify-start" : "justify-between", "flex flex-row items-center w-full space-x-3 text-base")} >
                         <div className={clsx("flex items-center")}>
-                            {domainFetched && !domainHasError && hasPicture &&
+                            {!upgrade && domainFetched && !domainHasError && hasPicture &&
                                 <img className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md" src={domain + item.picture_preview}  alt={__('Loading', 'simplybook')}/>
                             }
-                            {domainFetched && !domainHasError && !hasPicture &&
+                            {!upgrade && domainFetched && !domainHasError && !hasPicture &&
                                 <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
                                     {item.name.charAt(0).toUpperCase()}
                                 </div>
                             }
+                            {upgrade && (
+                                <div className="w-20 h-20 max-w-[48px] max-h-[48px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-md font-bold">
+                                    <Icon name="chevron-up"/>
+                                </div>
+                            )}
                             <div className="font-bold ml-4">
                                 {item.name}
                             </div>
                         </div>
-                        {upgrade &&(
-                            <p>
-                                {fullLabel}
-                            </p>
-                        )}
                         {!upgrade && domainFetched && !domainHasError &&
                             <LoginLink
                                 icon={true}
@@ -48,13 +48,13 @@ const ListItem = forwardRef(
                                 className={"text-black flex items-center"}
                                 page={link}
                             >
-                                {fullLabel}
+                                {__("Edit", "simplybook")}
                             </LoginLink>
                         }
                     </div>
-                    <div className="flex items-center flex-grow">
-                        <div className="relative">
-                            {upgrade && <>
+                    {upgrade && (
+                        <div className="flex items-center flex-grow">
+                            <div className="relative">
                                 <ButtonLink
                                     className={"bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary"}
                                     btnVariant={"square-small"}
@@ -63,11 +63,10 @@ const ListItem = forwardRef(
                                 >
                                     {__("Upgrade", "simplybook")}
                                 </ButtonLink>
-                            </>}
+                            </div>
                         </div>
-                    </div>
+                    )}
                 </div>
-
             </>
         );
     },
