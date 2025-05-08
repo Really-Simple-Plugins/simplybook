@@ -5,7 +5,6 @@ import Bookings from "../components/Dashboard/Bookings";
 import Management from "../components/Dashboard/Management";
 import TipsTricks from "../components/Dashboard/TipsTricks";
 import OurPlugins from "../components/Dashboard/OurPlugins";
-import LiveAgent from "../components/Common/LiveAgent";
 
 export const Route = createLazyFileRoute("/")({
   component: Dashboard,
@@ -22,7 +21,6 @@ function Dashboard() {
           <Management />
           <TipsTricks />
           <OurPlugins />
-          <LiveAgent style={"col-span-12 !bg-transparent shadow-none"}/>
         </div>
       </div>
     </>

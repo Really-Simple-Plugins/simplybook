@@ -34,7 +34,7 @@ const LiveAgent = (props: { style: string }) => {
         };
     }, []);
 
-    return <div ref={containerRef} className={props.style}></div>;
+    return <div ref={containerRef} className={"support-container " + (props.style ?? '')}></div>;
 };
 
 export default LiveAgent;
