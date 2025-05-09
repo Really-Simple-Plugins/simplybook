@@ -36,6 +36,7 @@ const OnboardingStep = ({
         onboardingCompleted,
         setOnboardingCompleted
     } = useOnboardingData();
+
     const navigate = useNavigate();
     const {
         watch,
@@ -45,11 +46,16 @@ const OnboardingStep = ({
         getValues,
         reset,
         trigger,
-        formState: { isDirty, errors, isValid, isValidating },
+        formState: { 
+            isDirty, 
+            errors, 
+            isValid, 
+            isValidating 
+        },
     } = useForm({
         defaultValues: defaultData,
         values: data,
-        mode: "onChange",
+        mode: "onTouched",
     });
     const { getValue } = useSettingsData();
     const [companyName, setCompanyName] = useState("");

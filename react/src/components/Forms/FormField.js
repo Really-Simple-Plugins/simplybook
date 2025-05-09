@@ -107,6 +107,27 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
         )
     }
 
+    /**
+     * Build the validation class based on the type of error message
+     */
+    const buildValidationClass = (invalidState) => {
+
+        const isInValidPattern = invalidState.type == "pattern" ? true : false;
+        const isInValidRequired = invalidState.type == "required" ? true : false;
+        // Set the base class
+        let invalidClass = "invalid-field";
+
+        if (isInValidRequired) {
+            invalidClass += "-required";
+        }
+
+        if (isInValidPattern) {
+            invalidClass += "-regex";
+        }
+
+        return invalidClass;
+    } 
+
     return (
         <ErrorBoundary>
             <Controller
@@ -115,6 +136,9 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                 rules={validationRules}
                 defaultValue={defaultValue}
                 render={({ field, fieldState }) => {
+                    const isError = fieldState?.error ? true : false;
+                    const validationClass = isError ? buildValidationClass(fieldState?.error) : "";
+
                     useEffect(() => {
 
                         let curValue = getValue(setting.id);
@@ -131,7 +155,8 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                     }, [field.value]);
                     return (
                         <FieldComponent
-                            className={setting.inline_group ? "inline-flex" : ""}
+                            {...props}
+                            className={props.className + " " + validationClass}
                             setting={setting}
                             fieldState={fieldState}
                             required={setting.required}
@@ -141,7 +166,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                             context={setting.context}
                             help={setting.help}
                             options={setting.options}
-                            {...props}
                             {...field}
                         />
                     );

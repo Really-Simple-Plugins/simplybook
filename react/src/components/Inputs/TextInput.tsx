@@ -51,9 +51,13 @@ const TextInput: React.FC<TextInputProps> = ({
     }
 
 
+    /**
+     * 
+     * Define different field classes
+    */
     const copySpanClass = "absolute cursor-pointer right-[0.5rem] top-5.5 transform -translate-y-1/2 rounded-md px-2 py-1 text-xs font-semibold";
-    const textInputClass = "input-base copy-input";
-    const disabledClass = 'bg-gray-200 border-gray-200 text-black-600 cursor-not-allowed';
+    const textInputClass = "input-base copy-input transition-[border-color] duration-300 ease-in-out";
+    const disabledClass = disabled ? 'bg-gray-200 border-gray-200 text-black-600 cursor-not-allowed' : '';
 
     return (
         <>
@@ -64,8 +68,7 @@ const TextInput: React.FC<TextInputProps> = ({
                 ref={ref}
                 type={type}
                 onClick={clickToSelect ? copyOnClick : undefined }
-                className={clsx(!disabled ? textInputClass+ " " + className : textInputClass + " " + disabledClass + " " + className)}
-                // className={`w-full rounded-md p-[0.5rem] shadow-md text-base border-2 border-gray-200 focus:border-tertiary focus:outline-hidden focus:ring disabled:cursor-not-allowed disabled:border-gray-200 disabled:bg-gray-200 ${className || ""}`}
+                className={clsx(textInputClass + " " + disabledClass + " " + className)}
                 {...props}
             />
             {clickToSelect && copiedFeedback && (
