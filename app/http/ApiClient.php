@@ -372,6 +372,7 @@ class ApiClient
                 Event::dispatch(Event::AUTH_FAILED);
                 // Their password probably changed. Stop trying to refresh.
                 update_option($this->authenticationFailedFlagKey, true);
+                $this->authenticationFailedFlag = true;
                 $this->log('Error during token refresh: ' . $e->getMessage());
                 return;
             }
@@ -521,19 +522,24 @@ class ApiClient
 
     /**
      * Check if authorization is valid and complete
-     *
-     * @return bool
      */
-    public function is_authorized(): bool {
+    public function isAuthenticated(): bool
+    {
         //check if we have a token
-        if ( !$this->token_is_valid('admin') ) {
+        if (!$this->token_is_valid('admin')) {
             $this->refresh_token('admin');
         }
 
-        //check if we have a company
-        if ( !$this->company_registration_complete() ) {
+        // Check if the flag is set
+        if ($this->authenticationFailedFlag) {
             return false;
         }
+
+        //check if we have a company
+        if (!$this->company_registration_complete()) {
+            return false;
+        }
+
         return true;
     }
 
