@@ -1,5 +1,5 @@
 function instantiateSimplyBookWidget() {
-    new SimplyBookWidget({
+    new SimplybookWidget({
         "widget_type": "iframe",
         "url": "{{ server }}",
         "theme": "{{ theme }}",
