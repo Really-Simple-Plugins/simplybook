@@ -38,7 +38,7 @@ const Calendar = (
             inlineScriptElement.id = 'simplybook-preview-widget-script';
             inlineScriptElement.innerHTML = response.data.widget;
 
-            document.head.appendChild(inlineScriptElement);
+            document.body.appendChild(inlineScriptElement);
 
             // Dispatch custom element to load the widget
             document.dispatchEvent(
