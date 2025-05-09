@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
-import { __, _n, sprintf } from "@wordpress/i18n";
+import {__, _n, sprintf} from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
@@ -29,7 +29,7 @@ const getStatusStyles = (status: string, premium: boolean, special_feature: bool
 
 const Progress = () => {
     const [showAll, setShowAll] = useState(false);
-    const { tasks, isLoading, hasError, dismissTask, getRemainingTasks, getCompletionPercentage } = useTaskData();
+    const {tasks, isLoading, hasError, dismissTask, getRemainingTasks, getCompletionPercentage} = useTaskData();
 
     const displayedTasks = showAll ? tasks : getRemainingTasks();
     const completionPercentage = getCompletionPercentage();
@@ -43,7 +43,7 @@ const Progress = () => {
     if (isLoading || hasError) {
         return (
             <Block className="col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-4">
-                <BlockHeading title={__("Progress", "simplybook")} controls={undefined} />
+                <BlockHeading title={__("Progress", "simplybook")} controls={undefined}/>
                 <BlockContent>
                     <div className="text-center py-8 text-gray-500">
                         <p>{defaultMessage}</p>
@@ -80,7 +80,7 @@ const Progress = () => {
                     <div className="w-full bg-gray-200 rounded-md h-5">
                         <div
                             className="bg-yellow-400 h-5 rounded-md transition-all duration-300"
-                            style={{ width: `${completionPercentage}%` }}
+                            style={{width: `${completionPercentage}%`}}
                         />
                     </div>
 
@@ -91,7 +91,7 @@ const Progress = () => {
           </span>
                     <span className="text-base">
             {remainingTasks.length === 0 && __("You're all set! Great job!", "simplybook")}
-                        {remainingTasks.length>0 && sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", remainingTasks.length, "simplybook"), remainingTasks.length)}
+                        {remainingTasks.length > 0 && sprintf(_n("You're on your way. You still have %s task open.", "You're on your way. You still have %s tasks open.", remainingTasks.length, "simplybook"), remainingTasks.length)}
           </span>
                 </div>
 
@@ -102,10 +102,11 @@ const Progress = () => {
                             className="grid grid-cols-[110px_1fr_auto_2em] gap-10 items-center px-5 py-3 hover:bg-gray-50"
                         >
                             {/* Status pill - fixed width */}
-                            <span className={`inline-block w-[130px] text-center px-1 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
+                            <span
+                                className={`inline-block w-[130px] text-center px-1 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
                                 {task.label}
                             </span>
-  
+
                             {/* Task text */}
                             <div className={task.status === 'dismissed' ? 'text-gray-400 line-through' : ''}>
                                 {task.text}
@@ -147,7 +148,7 @@ const Progress = () => {
                 </div>
             </BlockContent>
             <BlockFooter className="flex w-full justify-start 2xl:justify-end text-sm text-gray-500 mt-4">
-                <SubscriptionDataListHorizontal />
+                <SubscriptionDataListHorizontal/>
             </BlockFooter>
         </Block>
     );
