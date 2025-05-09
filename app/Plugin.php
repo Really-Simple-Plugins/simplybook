@@ -220,17 +220,22 @@ class Plugin
     /**
      * Fire an action when the plugin is upgraded from one version to another.
      * Hooked into simplybook_controllers_loaded to make sure Controllers can
-     * hook into simplybook_plugin_version_upgrade
+     * hook into simplybook_plugin_version_upgrade.
+     *
+     * @internal Note the starting underscore in the option name. This is to
+     * prevent the option from being deleted when a user logs out. As if
+     * it is a private SimplyBook option.
+     *
      * @uses do_action simplybook_plugin_version_upgrade
      */
     public function checkForUpgrades(): void
     {
         // Last version that did not save the version in the database
         $legacyVersion = '2.3';
-        $previousSavedVersion = (string) get_option('simplybook_current_version', $legacyVersion);
+        $previousSavedVersion = (string) get_option('_simplybook_current_version', $legacyVersion);
 
         // Action can be used by Controllers to hook into the upgrade process
         do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
-        update_option('simplybook_current_version', App::env('plugin.version'), false);
+        update_option('_simplybook_current_version', App::env('plugin.version'), false);
     }
 }

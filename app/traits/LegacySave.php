@@ -314,6 +314,9 @@ trait LegacySave {
     /**
      * Delete all WordPress options containing 'simplybook_' or 'simplybookMePl_'
      * Method can be used to log out a user.
+     *
+     * @internal We do NOT delete private SimplyBook options. Those should be
+     * formatted with a starting underscore. Like: '_simplybook_foobar'.
      */
     public function delete_all_options(): bool
     {
