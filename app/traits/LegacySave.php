@@ -63,17 +63,18 @@ trait LegacySave {
     public function upgrade_legacy_options(): void
     {
         $upgrade_keys = [
-            'api_status',
-            'domain',
-            'is_auth',
-            'is_auth_ne',
             'auth_data',
             'auth_datetime',
+            'is_auth',
+            'api_status',
+            'domain',
+            'is_auth_ne',
             'flash_messages',
             'widget_page_id',
             'widget_page_deleted',
             'cached_keys',
             'public_url',
+            'stop_promotions',
         ];
 
         foreach ($upgrade_keys as $key) {
@@ -82,8 +83,11 @@ trait LegacySave {
 
             switch ($key) {
                 case 'is_auth' :
-                    update_option('simplybook_onboarding_completed', true);
-                    update_option('simplybook_completed_step', '5');
+
+                    if ($value === true) {
+                        update_option('simplybook_onboarding_completed', true);
+                        update_option('simplybook_completed_step', '5');
+                    }
                     break;
 
                 case 'api_status' :
