@@ -1025,7 +1025,7 @@ class ApiClient
         error_log( "api call for $path" );
         //with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
         //with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
-        $apiStatus = get_option( 'api_status' );
+        $apiStatus = get_option( 'simplybook_api_status' );
         //get part of $path after last /
         $path_type = substr( $path, strrpos( $path, '/' ) + 1 );
 
@@ -1074,7 +1074,7 @@ class ApiClient
         }
 
         if ( $response_code === 200 ) {
-            update_option('api_status', [
+            update_option('simplybook_api_status', [
                 'status' => 'success',
                 'time' => time(),
             ]);
@@ -1105,7 +1105,7 @@ class ApiClient
             $this->log("Error during $path_type retrieval: ".$message);
             $msg = "response code: $response_code, response body: ".print_r($response_body,true);
 
-            update_option('api_status', array(
+            update_option('simplybook_api_status', array(
                 'status' => 'error',
                 'error' => $msg,
                 'time' => time(),
@@ -1246,7 +1246,7 @@ class ApiClient
      */
     private function api_is_ok(): bool
     {
-        $api_status = get_option('api_status');
+        $api_status = get_option('simplybook_api_status');
         if ( !isset($api_status['status']) ) {
             //nothing saved yet, assume ok.
             return true;
