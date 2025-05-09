@@ -126,7 +126,6 @@ trait LegacyLoad {
      */
     public function fields(bool $load_values = false): array
     {
-
 		$reload_fields = false;
 		if ( $load_values && !$this->values_loaded ) {
 			$reload_fields = true;
