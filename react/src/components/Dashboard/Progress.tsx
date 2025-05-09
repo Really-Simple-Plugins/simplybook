@@ -85,7 +85,7 @@ const Progress = () => {
                     </div>
 
                 </div>
-                <div className="grid grid-cols-[110px_1fr_auto_2em] gap-4 items-center px-5 py-3">
+                <div className="grid grid-cols-[130px_1fr_auto_2em] gap-4 items-center px-5 py-3">
         <span className="font-bold text-3xl">
            {completionPercentage}%
           </span>
@@ -99,7 +99,7 @@ const Progress = () => {
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
-                            className="grid grid-cols-[110px_1fr_auto_2em] gap-10 items-center px-5 py-3 hover:bg-gray-50"
+                            className="grid grid-cols-[130px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50"
                         >
                             {/* Status pill - fixed width */}
                             <span
