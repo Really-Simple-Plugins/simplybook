@@ -51,7 +51,7 @@ final class App
      */
     public static function menus(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -72,7 +72,7 @@ final class App
      */
     public static function related(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -93,7 +93,7 @@ final class App
      */
     public static function fields(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -114,7 +114,7 @@ final class App
      */
     public static function countries(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
         }
 
