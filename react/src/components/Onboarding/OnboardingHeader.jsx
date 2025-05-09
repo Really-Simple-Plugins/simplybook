@@ -7,19 +7,17 @@ import useOnboardingData from "../../hooks/useOnboardingData";
 import { useLocation } from "@tanstack/react-router";
 
 const OnboardingHeader = ({
-    className, 
-    signInLink 
+    className,
+    signInLink
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { getCurrentStepId } = useOnboardingData();
-    const location = useLocation()
+    const location = useLocation();
     const currentStepId = (getCurrentStepId(location.pathname) ?? 0);
-    
+
     /**
      * Toggle the SignInModal
-     * 
-     * @param {e} e 
      */
     const toggleModal = (e) => {
         e.preventDefault();
@@ -31,7 +29,7 @@ const OnboardingHeader = ({
             {isModalOpen && <SignInModal onClose={toggleModal}/>}
             <div className="flex flex-row justify-between w-full px-4">
                 <Logo className="w-40 py-8" />
-                {currentStepId < 4 && (                    
+                {currentStepId < 4 && (
                     <div className="flex items-center text-base">
                         <span className={"m-5 text-black"}>
                             {__("Already got an account?", "simplybook")}
