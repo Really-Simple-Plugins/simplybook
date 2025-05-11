@@ -29,8 +29,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 label: options[index],
             }));
 
-            const isFieldDirty = (fieldState?.isDirty ?? false);
-            const isEmptyClass = !isFieldDirty ? 'bg-gray-200 border-gray-200 text-black-600' : '';
+        const isEmptyClass = !value ? 'bg-gray-200 border-gray-200 text-black-600' : '';
 
         return (
             <select
