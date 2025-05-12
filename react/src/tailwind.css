@@ -199,18 +199,6 @@ Design settings
     width: 100%;
     grid-column: span 1;
 }
-/**
-======================================
-Tips & tricks
-======================================
-**/
-.tip-body {
-    transition: var(--ease-in-out);
-}
-
-.tip-body:hover .tip-inner p{
-    border-bottom: 1px solid var(--color-gray-300) !important;
-}
 
 /**
 ======================================
