@@ -116,17 +116,6 @@ a {
 
 /**
 ======================================
-Simplybook Body
-======================================
-**/
-#simplybook_app {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-}
-
-/**
-======================================
 Text styles
 ======================================
 **/
@@ -161,7 +150,7 @@ Onboarding styles
 **/
 .onboarding-body {
     height: 100%;
-    margin: 1svh;
+    margin: 1svh auto;
 }
 
 /**
