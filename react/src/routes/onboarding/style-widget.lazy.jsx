@@ -22,7 +22,6 @@ export const Route = createLazyFileRoute(path)({
         const [activeColor, setActiveColor] = useState(defaultActive);
 
         const {onboardingCompleted} = useOnboardingData();
-        const {isPolling} = useWaitForRegistrationCallback();
 
         return (
             <>
