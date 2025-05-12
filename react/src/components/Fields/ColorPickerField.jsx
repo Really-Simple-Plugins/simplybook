@@ -51,7 +51,7 @@ const ColorPickerField = forwardRef(
             return (
                 <>
                     <Popover.Root
-                        open={popoverOpen} onOpenChange={handlePopoverOpenChange}
+                        open={popoverOpen} onOpenChange={setting.disabled ? () => {} : handlePopoverOpenChange}
                     >
                         <Popover.Trigger
                             className='p-1 w-full bg-transparent rounded-md border border-gray-400 min-w-[140px] text-base'
