@@ -95,7 +95,10 @@ const Header = () => {
                 >
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
-                <div className="float-right ml-auto flex items-center gap-6 px-4">
+                <div className="
+                    py-6 w-full ml-auto flex items-center justify-between px-0 
+                    xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
+                ">
                     {!isLoading && !isExpired && subscriptionPlan && (
                         <Label
                             labelVariant="trial"
