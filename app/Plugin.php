@@ -230,17 +230,44 @@ class Plugin
      */
     public function checkForUpgrades(): void
     {
-        // Last version that did not save the version in the database
-        $legacyVersion = '2.3';
-        $previousSavedVersion = (string) get_option('_simplybook_current_version', $legacyVersion);
-
-        // No update.
+        $previousSavedVersion = (string) get_option('_simplybook_current_version', '');
         if ($previousSavedVersion === App::env('plugin.version')) {
-            return;
+            return; // Nothing to do
         }
 
+        // This could be one if-statement, but this makes it readable that we
+        // do not query the database if we do not need to.
+        if (empty($previousSavedVersion)) {
+            if ($this->isUpgradeFromLegacy()) {
+                $previousSavedVersion = '2.3';
+            }
+        }
+
+        // Trigger upgrade hook if we are upgrading from a previous version.
         // Action can be used by Controllers to hook into the upgrade process
-        do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
+        if (!empty($previousSavedVersion)) {
+            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
+        }
+
+        // Also makes sure $previousSavedVersion will only be empty one time
         update_option('_simplybook_current_version', App::env('plugin.version'), false);
     }
+
+    /**
+     * Check if the plugin is being upgraded from a legacy version.
+     */
+    private function isUpgradeFromLegacy(): bool
+    {
+        global $wpdb;
+
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s",
+                'simplybookMePl_%'
+            )
+        );
+
+        return $count > 0;
+    }
+
 }
