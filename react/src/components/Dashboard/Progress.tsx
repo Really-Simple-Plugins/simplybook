@@ -95,7 +95,7 @@ const Progress = () => {
           </span>
                 </div>
 
-                <div className="grid gap-1">
+                <div className="grid gap-1 h-[300px] overflow-y-auto">
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
