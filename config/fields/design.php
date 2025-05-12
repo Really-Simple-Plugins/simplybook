@@ -63,6 +63,7 @@ return
             'group_id' => 'main',
             'type'     => 'checkbox',
             'label'    => __('Clear the session of each widget initialization', 'simplybook'),
+            'help' => __('Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones.', 'simplybook'),
             'disabled' => false,
             'default'  => true,
         ],
