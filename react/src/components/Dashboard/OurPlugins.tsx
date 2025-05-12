@@ -29,8 +29,10 @@ const OurPlugins = () => {
             <BlockContent className={"flex flex-col items-center px-4"}>
                 {// @ts-ignore
                     fetched && plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin: OtherPlugin) => (
-                        <div key={plugin.url} className={"flex items-center justify-between gap-2 text-sm w-full mb-2 xl:flex-wrap"}>
-                            <div>
+                        <div key={plugin.url} className={
+                            "flex items-start xl:items-center justify-between gap-2 text-sm w-full mb-2 xl:flex-wrap"
+                        }>
+                            <div className=" w-[75%] xl:w-auto">
                                 <Icon name={"circle"} color={plugin.color}/>
                                 <Link
                                     className="text-black font-semibold ml-2"

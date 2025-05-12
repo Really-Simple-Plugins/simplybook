@@ -32,11 +32,11 @@ function CreateLoginAccount() {
                 />
             </LeftColumn>
             <RightColumn
-                className={"col-span-5"}
+                className={"col-span-5 justify-center"}
             >
                 <div className="pb-4">
                     <VideoFrame
-                        FrameWrapperClass="h-[350px] aspect-w-16 aspect-h-9 mb-8"
+                        FrameWrapperClass="aspect-w-16 aspect-h-9 mb-8"
                         className="w-full h-full"
                         src="https://www.youtube.com/embed/qgMn9dKJAt4"
                         title={__("How to get started with SimplyBook.me", "simplybook")}

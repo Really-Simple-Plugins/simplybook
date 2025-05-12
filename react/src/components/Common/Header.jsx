@@ -43,7 +43,7 @@ const Header = () => {
 
     return (
         <div className="bg-white ">
-            <header className="mx-auto pl-10 pr-5 flex items-baseline max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0">
+            <header className="mx-auto pl-10 pr-5 flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
@@ -95,7 +95,10 @@ const Header = () => {
                 >
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
-                <div className="float-right ml-auto flex items-center gap-6 px-4">
+                <div className="
+                    py-6 w-full ml-auto flex items-center justify-between px-0 
+                    xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
+                ">
                     {!isLoading && !isExpired && subscriptionPlan && (
                         <Label
                             labelVariant="trial"

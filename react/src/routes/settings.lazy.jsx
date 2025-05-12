@@ -14,7 +14,7 @@ const Settings = () => {
     return (
         <NotificationProvider>
             <Header />
-            <div className="mx-auto flex max-w-screen-2xl">
+            <div className="mx-auto flex max-w-screen-2xl w-full">
                 <div className="m-5 w-full grid grid-cols-12 gap-y-4 lg:gap-y-4 gap-x-4 px-4">
                         <SettingsMenu />
                         <ErrorBoundary>
