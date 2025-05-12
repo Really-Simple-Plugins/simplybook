@@ -255,6 +255,8 @@ class Plugin
 
     /**
      * Check if the plugin is being upgraded from a legacy version.
+     * @internal Ideally this method should be removed in the future.
+     * @since 3.0.0
      */
     private function isUpgradeFromLegacy(): bool
     {
