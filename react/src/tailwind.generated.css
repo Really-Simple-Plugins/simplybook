@@ -603,8 +603,8 @@
   .h-\[70vh\] {
     height: 70vh;
   }
-  .h-\[350px\] {
-    height: 350px;
+  .h-\[275px\] {
+    height: 275px;
   }
   .h-auto {
     height: auto;
@@ -624,11 +624,14 @@
   .max-h-\[48px\] {
     max-height: 48px;
   }
-  .min-h-\[80svh\] {
-    min-height: 80svh;
+  .min-h-\[75svh\] {
+    min-height: 75svh;
   }
   .min-h-full {
     min-height: 100%;
+  }
+  .w-0 {
+    width: calc(var(--spacing) * 0);
   }
   .w-1 {
     width: calc(var(--spacing) * 1);
@@ -681,8 +684,8 @@
   .w-\[50vw\] {
     width: 50vw;
   }
-  .w-\[130px\] {
-    width: 130px;
+  .w-\[75\%\] {
+    width: 75%;
   }
   .w-\[200px\] {
     width: 200px;
@@ -784,8 +787,11 @@
   .grid-cols-12 {
     grid-template-columns: repeat(12, minmax(0, 1fr));
   }
-  .grid-cols-\[130px_1fr_auto_2em\] {
-    grid-template-columns: 130px 1fr auto 2em;
+  .grid-cols-\[12px_1fr_auto_2em\] {
+    grid-template-columns: 12px 1fr auto 2em;
+  }
+  .grid-cols-\[80px_1fr_auto_2em\] {
+    grid-template-columns: 80px 1fr auto 2em;
   }
   .grid-rows-5 {
     grid-template-rows: repeat(5, minmax(0, 1fr));
@@ -900,6 +906,9 @@
   .rounded {
     border-radius: 0.25rem;
   }
+  .rounded-\[3rem\] {
+    border-radius: 3rem;
+  }
   .rounded-full {
     border-radius: calc(infinity * 1px);
   }
@@ -954,10 +963,6 @@
   .border-b-4 {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 4px;
-  }
-  .border-b-\[1px\] {
-    border-bottom-style: var(--tw-border-style);
-    border-bottom-width: 1px;
   }
   .border-l-4 {
     border-left-style: var(--tw-border-style);
@@ -1131,9 +1136,6 @@
   .px-0 {
     padding-inline: calc(var(--spacing) * 0);
   }
-  .px-1 {
-    padding-inline: calc(var(--spacing) * 1);
-  }
   .px-2 {
     padding-inline: calc(var(--spacing) * 2);
   }
@@ -1158,9 +1160,6 @@
   .py-1 {
     padding-block: calc(var(--spacing) * 1);
   }
-  .py-1\.5 {
-    padding-block: calc(var(--spacing) * 1.5);
-  }
   .py-2 {
     padding-block: calc(var(--spacing) * 2);
   }
@@ -1181,9 +1180,6 @@
   }
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
-  }
-  .py-20 {
-    padding-block: calc(var(--spacing) * 20);
   }
   .pt-2 {
     padding-top: calc(var(--spacing) * 2);
@@ -1245,6 +1241,9 @@
   }
   .text-\[0\.85rem\] {
     font-size: 0.85rem;
+  }
+  .text-\[0\.8125rem\] {
+    font-size: 0.8125rem;
   }
   .text-label {
     font-size: var(--text-label);
@@ -1673,6 +1672,13 @@
       }
     }
   }
+  .hover\:text-primary {
+    &:hover {
+      @media (hover: hover) {
+        color: #06adef;
+      }
+    }
+  }
   .hover\:text-tertiary {
     &:hover {
       @media (hover: hover) {
@@ -1691,6 +1697,13 @@
     &:hover {
       @media (hover: hover) {
         color: rgb(255 255 255 / 0.85);
+      }
+    }
+  }
+  .hover\:underline {
+    &:hover {
+      @media (hover: hover) {
+        text-decoration-line: underline;
       }
     }
   }
@@ -1790,9 +1803,24 @@
       grid-column-start: 2;
     }
   }
+  .xl\:block {
+    @media (width >= 80rem) {
+      display: block;
+    }
+  }
   .xl\:grid {
     @media (width >= 80rem) {
       display: grid;
+    }
+  }
+  .xl\:h-auto {
+    @media (width >= 80rem) {
+      height: auto;
+    }
+  }
+  .xl\:w-\[130px\] {
+    @media (width >= 80rem) {
+      width: 130px;
     }
   }
   .xl\:w-auto {
@@ -1805,9 +1833,24 @@
       grid-template-columns: repeat(12, minmax(0, 1fr));
     }
   }
+  .xl\:grid-cols-\[130px_1fr_auto_2em\] {
+    @media (width >= 80rem) {
+      grid-template-columns: 130px 1fr auto 2em;
+    }
+  }
   .xl\:flex-wrap {
     @media (width >= 80rem) {
       flex-wrap: wrap;
+    }
+  }
+  .xl\:items-center {
+    @media (width >= 80rem) {
+      align-items: center;
+    }
+  }
+  .xl\:justify-center {
+    @media (width >= 80rem) {
+      justify-content: center;
     }
   }
   .xl\:justify-normal {
@@ -1815,14 +1858,49 @@
       justify-content: normal;
     }
   }
+  .xl\:gap-6 {
+    @media (width >= 80rem) {
+      gap: calc(var(--spacing) * 6);
+    }
+  }
   .xl\:gap-24 {
     @media (width >= 80rem) {
       gap: calc(var(--spacing) * 24);
     }
   }
+  .xl\:rounded-md {
+    @media (width >= 80rem) {
+      border-radius: var(--radius-md);
+    }
+  }
   .xl\:p-0 {
     @media (width >= 80rem) {
       padding: calc(var(--spacing) * 0);
+    }
+  }
+  .xl\:px-1 {
+    @media (width >= 80rem) {
+      padding-inline: calc(var(--spacing) * 1);
+    }
+  }
+  .xl\:px-4 {
+    @media (width >= 80rem) {
+      padding-inline: calc(var(--spacing) * 4);
+    }
+  }
+  .xl\:py-0 {
+    @media (width >= 80rem) {
+      padding-block: calc(var(--spacing) * 0);
+    }
+  }
+  .xl\:py-1\.5 {
+    @media (width >= 80rem) {
+      padding-block: calc(var(--spacing) * 1.5);
+    }
+  }
+  .xl\:py-3 {
+    @media (width >= 80rem) {
+      padding-block: calc(var(--spacing) * 3);
     }
   }
   .xl\:pt-0 {
@@ -2593,7 +2671,7 @@ h3 {
 }
 .onboarding-body {
   height: 100%;
-  margin: 1svh;
+  margin: 1svh auto;
 }
 .form-field-inline {
   width: calc(1/2 * 97%);
@@ -2615,12 +2693,6 @@ h3 {
 .theme-config-group-color > .theme-config-field {
   width: 100%;
   grid-column: span 1;
-}
-.tip-body {
-  transition: var(--ease-in-out);
-}
-.tip-body:hover .tip-inner p {
-  border-bottom: 1px solid var(--color-gray-300) !important;
 }
 #simplybook_app {
   label {
