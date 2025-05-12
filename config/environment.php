@@ -25,7 +25,8 @@ return [
         'admin_url' => admin_url('admin.php?page=simplybook-integration'),
     ],
     'simplybook' => [
-        'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
+        'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
+        'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
@@ -47,7 +48,7 @@ return [
                 [
                     'title' => 'Customization',
                     'content' => 'Accept Payments Online ',
-                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature', // todo: use loginLink() method
+                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
                 ],
                 [
                     'title' => 'Marketing',

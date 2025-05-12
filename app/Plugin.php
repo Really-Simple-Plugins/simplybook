@@ -177,6 +177,7 @@ class Plugin
                 new Services\DesignSettingsService()
             ),
             new Controllers\ServicesController(),
+            new Controllers\ReviewController(),
         ]);
     }
 
