@@ -85,7 +85,10 @@ const Progress = () => {
                     </div>
 
                 </div>
-                <div className="grid grid-cols-[130px_1fr_auto_2em] gap-4 items-center px-5 py-3">
+                <div className="
+                    grid grid-cols-[80px_1fr_auto_2em] gap-4 items-center px-5 py-3
+                    xl:grid-cols-[130px_1fr_auto_2em]
+                ">
         <span className="font-bold text-3xl">
            {completionPercentage}%
           </span>
@@ -95,16 +98,19 @@ const Progress = () => {
           </span>
                 </div>
 
-                <div className="grid gap-1 h-[300px] overflow-y-auto">
+                <div className="grid gap-1 h-[275px] overflow-y-auto">
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
-                            className="grid grid-cols-[130px_1fr_auto_2em] gap-4 items-center px-5 py-3 hover:bg-gray-50"
-                        >
+                            className="
+                                grid grid-cols-[12px_1fr_auto_2em] gap-4 items-start px-5 py-3 
+                                hover:bg-gray-50
+                                xl:items-center xl:grid-cols-[130px_1fr_auto_2em]
+                            ">
                             {/* Status pill - fixed width */}
                             <span
-                                className={`inline-block w-[130px] text-center px-1 py-1.5 rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
-                                {task.label}
+                                className={`inline-block w-0 p-2 rounded-[3rem] xl:w-[130px] text-center xl:px-1 xl:py-1.5 xl:rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
+                                <span className="hidden xl:block">{task.label}</span>
                             </span>
 
                             {/* Task text */}
