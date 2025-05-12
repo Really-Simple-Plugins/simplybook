@@ -31,8 +31,8 @@ const Header = () => {
             !simplybook.debug
         ) {
             window.location.href = window.location.href.replace(
-                /page=simplybook.*/,
-                "page=simplybook#/onboarding/create-your-account",
+                /page=simplybook-integration.*/,
+                "page=simplybook-integration#/onboarding/create-your-account",
             );
         }
     }, [onboardingCompleted]);
