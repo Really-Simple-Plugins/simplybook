@@ -32,7 +32,7 @@ function CreateLoginAccount() {
                 />
             </LeftColumn>
             <RightColumn
-                className={"col-span-5"}
+                className={"col-span-5 justify-center"}
             >
                 <div className="pb-4">
                     <VideoFrame
