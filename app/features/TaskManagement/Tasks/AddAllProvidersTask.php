@@ -30,7 +30,7 @@ class AddAllProvidersTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add providers','simplybook'),
+            'text' => esc_html__('Add Providers','simplybook'),
             'login_link' => '/v2/management/#providers',
         ];
     }

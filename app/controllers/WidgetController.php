@@ -3,6 +3,7 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
 use SimplyBook\Helpers\Event;
+use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -10,6 +11,8 @@ use SimplyBook\Services\DesignSettingsService;
 
 class WidgetController implements ControllerInterface
 {
+    use LegacyLoad;
+
     protected DesignSettingsService $service;
 
     public function __construct(DesignSettingsService $service)
@@ -63,6 +66,9 @@ class WidgetController implements ControllerInterface
             $builder->setWidgetType($widgetType)
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
+                ->isAuthenticated(
+                    App::provide('client')->isAuthenticated()
+                )
                 ->withHTML();
 
             if (!empty($wrapperID)) {

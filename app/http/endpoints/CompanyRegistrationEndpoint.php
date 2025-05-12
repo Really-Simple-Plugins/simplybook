@@ -66,7 +66,6 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $client = App::provide('client');
         $storage = $this->retrieveHttpStorage($request);
 
         if ($storage->getBoolean('success') === false) {
@@ -80,8 +79,8 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
             ], 400);
         }
 
-        $client->update_token($storage->getString('token'), 'admin');
-        $client->update_token($storage->getString('refresh_token'), 'admin', true);
+        $this->update_token($storage->getString('token'), 'admin');
+        $this->update_token($storage->getString('refresh_token'), 'admin', true);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 

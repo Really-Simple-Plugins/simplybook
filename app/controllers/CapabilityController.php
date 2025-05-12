@@ -17,7 +17,7 @@ class CapabilityController implements ControllerInterface
     {
         add_action('simplybook_activation', [$this, 'handlePluginActivation']);
         add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
-        add_action('wp_initialize_site', array( $this, 'addCapabilityToNewSubsite'), 10 ,2);
+        add_action('wp_initialize_site', [$this, 'addCapabilityToNewSubsite'], 10, 2);
     }
 
     public function handlePluginActivation(): void

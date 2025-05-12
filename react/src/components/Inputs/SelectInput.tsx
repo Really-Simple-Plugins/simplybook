@@ -4,6 +4,7 @@ import Icon from "../Common/Icon";
 import { SelectOption } from "../../types/inputs/SelectOption";
 import { SelectInputProps } from "../../types/inputs/SelectInputProps";
 import {__} from "@wordpress/i18n";
+import clsx from "clsx";
 
 /**
  * Styled select input component
@@ -11,7 +12,14 @@ import {__} from "@wordpress/i18n";
  * @returns {JSX.Element} The rendered select component
  */
 const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
-    ({ name, value, onChange, options = [], ...props }, ref) => {
+    ({
+        name,
+        fieldState,
+        value,
+        onChange,
+        options = [],
+        ...props
+    }, ref) => {
         // Normalize options if it's an object
         const normalizedOptions: SelectOption[] = Array.isArray(options)
             ? options
@@ -21,9 +29,11 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 label: options[index],
             }));
 
+        const isEmptyClass = !value ? 'bg-gray-200 border-gray-200 text-black-600' : '';
+
         return (
             <select
-                className="input-base"
+                className={clsx("input-base", isEmptyClass)}
                 name={name}
                 value={value}
                 onChange={onChange} // Call the onChange prop

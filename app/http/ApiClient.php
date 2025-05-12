@@ -241,25 +241,6 @@ class ApiClient
     }
 
     /**
-     * get a token
-     *
-     * @param string $token
-     * @param string $type //public or admin
-     * @param bool $refresh
-     *
-     * @return void
-     */
-
-    public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
-        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
-        if ( $refresh ) {
-            $type = $type . '_refresh';
-        }
-        $token = $this->sanitize_token( $token );
-        update_option("simplybook_token_$type", $this->encrypt_string($token) );
-    }
-
-    /**
      * Get a token
      * @param string $type //public or admin
      * @param bool $refresh
@@ -391,6 +372,7 @@ class ApiClient
                 Event::dispatch(Event::AUTH_FAILED);
                 // Their password probably changed. Stop trying to refresh.
                 update_option($this->authenticationFailedFlagKey, true);
+                $this->authenticationFailedFlag = true;
                 $this->log('Error during token refresh: ' . $e->getMessage());
                 return;
             }
@@ -540,19 +522,24 @@ class ApiClient
 
     /**
      * Check if authorization is valid and complete
-     *
-     * @return bool
      */
-    public function is_authorized(): bool {
+    public function isAuthenticated(): bool
+    {
         //check if we have a token
-        if ( !$this->token_is_valid('admin') ) {
+        if (!$this->token_is_valid('admin')) {
             $this->refresh_token('admin');
         }
 
-        //check if we have a company
-        if ( !$this->company_registration_complete() ) {
+        // Check if the flag is set
+        if ($this->authenticationFailedFlag) {
             return false;
         }
+
+        //check if we have a company
+        if (!$this->company_registration_complete()) {
+            return false;
+        }
+
         return true;
     }
 
@@ -852,7 +839,7 @@ class ApiClient
     }
 
     /**
-     * Get list of Simplybook services
+     * Get list of SimplyBook.me services
      *
      * @return array
      */
@@ -924,7 +911,7 @@ class ApiClient
     }
 
     /**
-     * Get list of Simplybook providers
+     * Get list of SimplyBook.me providers
      */
     public function get_providers(): array
     {
@@ -1044,7 +1031,7 @@ class ApiClient
         error_log( "api call for $path" );
         //with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
         //with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
-        $apiStatus = get_option( 'api_status' );
+        $apiStatus = get_option( 'simplybook_api_status' );
         //get part of $path after last /
         $path_type = substr( $path, strrpos( $path, '/' ) + 1 );
 
@@ -1093,7 +1080,7 @@ class ApiClient
         }
 
         if ( $response_code === 200 ) {
-            update_option('api_status', [
+            update_option('simplybook_api_status', [
                 'status' => 'success',
                 'time' => time(),
             ]);
@@ -1124,7 +1111,7 @@ class ApiClient
             $this->log("Error during $path_type retrieval: ".$message);
             $msg = "response code: $response_code, response body: ".print_r($response_body,true);
 
-            update_option('api_status', array(
+            update_option('simplybook_api_status', array(
                 'status' => 'error',
                 'error' => $msg,
                 'time' => time(),
@@ -1265,7 +1252,7 @@ class ApiClient
      */
     private function api_is_ok(): bool
     {
-        $api_status = get_option('api_status');
+        $api_status = get_option('simplybook_api_status');
         if ( !isset($api_status['status']) ) {
             //nothing saved yet, assume ok.
             return true;
@@ -1322,7 +1309,7 @@ class ApiClient
                 esc_html__('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid response from SimplyBook.', 'simplybook'),
+                'response_message' => esc_html__('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1383,7 +1370,7 @@ class ApiClient
                 esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.', 'simplybook'),
+                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1454,7 +1441,7 @@ class ApiClient
         $allowedProviders = [];
         foreach ($providerKeys as $provider) {
             $allowedProviders[$provider] = ($providerLabels[$provider] ??
-                esc_html__('Unknown 2fa provider', 'simplybook'));
+                esc_html__('Unknown 2FA provider', 'simplybook'));
         }
 
         return $allowedProviders;

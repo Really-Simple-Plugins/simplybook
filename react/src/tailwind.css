@@ -25,12 +25,18 @@
     --text-2xl: 1.75rem;
     --text-3xl: 2.25rem;
 
-    /* Notice colors */
+    /* Succes colors */
+    --color-succes: var(--color-green-500);
+    --color-succes-light: #EAFAF3;
+
+    /* Warning colors */
     --color-warning: var(--color-yellow-400);
     --color-warning-light: var(--color-yellow-100);
 
-    --color-succes: var(--color-green-500);
-    --color-succes-light: #EAFAF3;
+    /* Warning colors */
+    --color-error: var(--color-red-400);
+    --color-error-light: var(--color-red-100);
+
 
     /* Primary colors */
     --bg-primary-light: #b3e4f9;
@@ -231,5 +237,17 @@ Input global styles
             border-width: 2px;
             box-shadow: var(--shadow-md);
             line-height: 1.5;
+    }
+}
+
+/**
+======================================
+Field validation
+======================================
+**/
+.invalid-field-regex {
+
+    input {
+        border-color: var(--color-error) !important;
     }
 }

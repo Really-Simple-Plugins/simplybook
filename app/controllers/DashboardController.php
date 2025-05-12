@@ -75,7 +75,7 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
-            'simplybook',
+            'simplybook-integration',
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
             $menuPosition,
@@ -127,7 +127,6 @@ class DashboardController implements ControllerInterface
 
         // Enqueue SimplyBook Widget script for preview functionality
         wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybookMePl_widget_scripts');
 
         wp_enqueue_script(
             'simplybook-main-script',
@@ -144,7 +143,6 @@ class DashboardController implements ControllerInterface
             'simplybook',
             $this->localizedReactSettings($chunkTranslation)
         );
-
     }
 
     /**
@@ -240,6 +238,7 @@ class DashboardController implements ControllerInterface
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => App::env('simplybook.domains'),
                 'simplybook_countries' => App::countries(),
+                'support' => App::env('simplybook.support'),
             ]
         );
     }

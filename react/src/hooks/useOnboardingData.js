@@ -159,7 +159,7 @@ const useOnboardingData = () => {
                     style: "inline",
                     label: __("Phone", "simplybook"),
                     validation: {
-                        regex: "^\\+?[0-9\\s\\-().]+$",
+                        regex: ["^[0-9\\s().\\-+]+$"],
                         message: __("Please enter a valid phone number", "simplybook"),
                     },
                     required: true,

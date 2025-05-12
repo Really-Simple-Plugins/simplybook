@@ -1,5 +1,7 @@
 <?php
 namespace SimplyBook\Traits;
+use SimplyBook\Helpers\Event;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -53,47 +55,102 @@ trait LegacySave {
         return $value;
     }
 
-    public function upgrade_options_testing( $array ): void
+    /**
+     * This method upgrades the legacy options from version 2.3 to the new
+     * format for the 3.0.0 version.
+     * @since 3.0.0
+     */
+    public function upgrade_legacy_options(): void
     {
-        foreach ( $array as $key => $value ) {
-            if ( $value !== false ) {
-                $this->update_option($key, $value);
+        $upgrade_keys = [
+            'auth_data',
+            'auth_datetime',
+            'is_auth',
+            'api_status',
+            'domain',
+            'is_auth_ne',
+            'flash_messages',
+            'widget_page_id',
+            'widget_page_deleted',
+            'cached_keys',
+            'public_url',
+            'stop_promotions',
+        ];
+
+        foreach ($upgrade_keys as $key) {
+
+            $value = $this->get_config_obsolete($key);
+
+            switch ($key) {
+                case 'is_auth' :
+
+                    if ($value === true) {
+                        update_option('simplybook_onboarding_completed', true);
+                        update_option('simplybook_completed_step', '5');
+                    }
+                    break;
+
+                case 'api_status' :
+                    update_option('simplybook_api_status', $value);
+                    break;
+
+                case 'widget_page_id' :
+                    if (!empty($value)) {
+                        Event::dispatch(Event::CALENDAR_PUBLISHED);
+                    }
+                    break;
+
+                case 'auth_data' :
+                    $this->upgradeAuthData($value);
+                    break;
+
+                default :
+                    break;
             }
+
+            delete_option('simplybookMePl_' . $key);
         }
     }
 
     /**
-     * Upgrade the options to one single option
-     *
-     * @return void
+     * This method VERY specifically upgrades the auth_data array from the
+     * legacy 2.3 version to the new 3.0 version. Never use it after.
+     * @param mixed $authData
+     * @since 3.0.0
      */
-    public function upgrade_options(): void
+    private function upgradeAuthData($authData): void
     {
-        $upgrade_keys = [
-            'api_status',
-            'domain',
-            'auth_datetime',
-            'is_auth',
-            'auth_data',
-        ];
-        foreach ($upgrade_keys as $key) {
+        if (!is_array($authData)) {
+            return;
+        }
 
-            $value = $this->get_config_obsolete($key);
-            if ( $value !== false ) {
-                if ( $key === 'api_status' ) {
-                    update_option('simplybook_api_status', $value);
-                } else
-                if ( $key === 'widget_settings' || $key === 'auth_data' ) {
-                    if ( is_array( $value ) ) {
-                        foreach ( $value as $key => $val) {
-                            $this->update_option($key, $val);
-                        }
-                    }
-                } else {
-                    $this->update_option($key, $value);
-                }
-            }
-            delete_option('simplybookMePl_' . $key);
+        if (!empty($authData['token'])) {
+            $this->update_token($authData['token'], 'admin');
+        }
+
+        if (!empty($authData['refresh_token'])) {
+            $this->update_token($authData['refresh_token'], 'admin', true);
+        }
+
+        if (!empty($authData['domain'])) {
+            $this->update_option('domain', $authData['domain'], true, [
+                'type' => 'hidden',
+            ]);
+        }
+
+        if (!empty($authData['login'])) {
+            $this->update_option('email', $authData['login'], true, [
+                'type' => 'hidden',
+            ]);
+        }
+
+        if (!empty($authData['company'])) {
+            update_option('simplybook_company_login', sanitize_text_field($authData['company']), false);
+        }
+
+        if (!empty($authData['refresh_time'])) {
+            $refreshExpiration = ((int) $authData['refresh_time'] + 3600);
+            update_option('simplybook_refresh_company_token_expiration', $refreshExpiration, false);
         }
     }
 
@@ -118,10 +175,16 @@ trait LegacySave {
      * Save data in the config
      * @param $key
      * @param $value
-     * @param bool $duringOnboarding Flag to indicate if the update is during
-     * onboarding. If false, stale fields will not be saved.
+     * @param bool $staleOverride Flag to indicate that you as a developer knows
+     * that the field is stale, and you want to save it anyway. This is used
+     * in the onboarding process for example. If false, stale fields
+     * will not be saved.
+     * @param array $config Use this to pass the field config, if empty the
+     * method will try to get the field from the config automatically. NOTE:
+     * this loads translations as well and can trigger the "jit" error.
+     * @return bool
      */
-    public function update_option($key, $value, bool $duringOnboarding = false): bool
+    public function update_option($key, $value, bool $staleOverride = false, array $config = []): bool
     {
         if ( !$this->user_can_manage() ) {
 			error_log("user cannot manage, exit update_option for $key");
@@ -129,7 +192,7 @@ trait LegacySave {
         }
 
         // Abort if the setting is marked as stale
-        if (in_array($key, $this->staleFields, true) && ($duringOnboarding === false)) {
+        if (in_array($key, $this->staleFields, true) && ($staleOverride === false)) {
             return false;
         }
 
@@ -137,22 +200,24 @@ trait LegacySave {
         $options = get_option('simplybook_options', []);
         //sanitize the value
 
-        //todo - parsing all fields like this for each save is quite heavy just to know the type
-        // todo - also this is redundant when used as in the OnboardingService
-        // todo - it IS the only way to get the field now as I nested the fields in its own group with the groupname equal to the filename
-        $field = $this->get_field_by_id($key);
+        if (empty($config)) {
+            //todo - parsing all fields like this for each save is quite heavy just to know the type
+            // todo - also this is redundant when used as in the OnboardingService
+            // todo - it IS the only way to get the field now as I nested the fields in its own group with the groupname equal to the filename
+            $config = $this->get_field_by_id($key);
 
-        //don't save if not found
-        if ( !$field ) {
-            error_log("field ".$key." not found in fields config");
-            return false;
+            //don't save if not found
+            if ( !$config ) {
+                error_log("field ".$key." not found in fields config");
+                return false;
+            }
         }
 
         // todo - usage of sanitize_field is redundant when used as in the OnboardingService
-        $value = $this->sanitize_field($value, $field['type'], ($field['regex'] ?? null));
+        $value = $this->sanitize_field($value, $config['type'], ($config['regex'] ?? null));
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
-        if ( $field['encrypt'] ) {
+        if ( $config['encrypt'] ) {
             $value = $this->encrypt_string($value);
         }
         $options[$key] = $value;
@@ -253,20 +318,26 @@ trait LegacySave {
     /**
      * Delete all WordPress options containing 'simplybook_' or 'simplybookMePl_'
      * Method can be used to log out a user.
+     *
+     * @param bool $private Can be used to delete private options too.
      */
-    public function delete_all_options(): bool
+    public function delete_all_options(bool $private = false): bool
     {
         if ( !$this->user_can_manage() ) {
             return false;
         }
 
         global $wpdb;
+        $query = "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s";
+        $params = ['simplybook_%', 'simplybookMePl_%'];
+
+        if ($private) {
+            $query .= " OR option_name LIKE %s";
+            $params[] = '_simplybook_%';
+        }
+
         $result = $wpdb->query(
-            $wpdb->prepare(
-                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
-                'simplybook_%',
-                'simplybookMePl_%'
-            )
+            $wpdb->prepare($query, ...$params)
         );
 
         return $result !== false;

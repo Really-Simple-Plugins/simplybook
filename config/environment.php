@@ -22,13 +22,19 @@ return [
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
         'views_url' => plugin_dir_url(__DIR__).'app/views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
-        'admin_url' => admin_url('admin.php?page=simplybook'),
+        'admin_url' => admin_url('admin.php?page=simplybook-integration'),
     ],
     'simplybook' => [
         'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
+        'support' => [
+            'enabled' => true,
+            'widget' => [
+                'url' => 'https://simply.ladesk.com/scripts/track.js',
+            ],
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
@@ -60,7 +66,7 @@ return [
                 // ],
                 // [
                 //     'title' => 'News & Updates',
-                //     'content' => 'Simplybook.me  newsletter: exciting new features and upcoming enhancements.',
+                //     'content' => 'SimplyBook.me  newsletter: exciting new features and upcoming enhancements.',
                 //     'link' => 'https://news.simplybook.me/ ',
                 // ],
                 // [

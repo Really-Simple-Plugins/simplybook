@@ -94,10 +94,15 @@ class BlockController implements ControllerInterface
 
     /**
      * Render the SimplyBook Widget block when the block is displayed on the
-     * front-end
+     * front-end. Empty values are removed from the attributes array, the "any"
+     * value is also removed from the attributes array.
      */
     public function addWidgetBlock(array $attributes = []): string
     {
+        $attributes = array_filter($attributes, function ($value) {
+            return !empty($value) && $value !== 'any';
+        });
+
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
     }
 

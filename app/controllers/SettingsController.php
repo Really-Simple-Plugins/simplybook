@@ -31,7 +31,7 @@ class SettingsController implements ControllerInterface
         // If someone upgrades from legacy version we need to upgrade the
         // existing options
         if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
-            $this->upgrade_options(); // todo - this comes from the old Save trait still
+            $this->upgrade_legacy_options();
         }
     }
 

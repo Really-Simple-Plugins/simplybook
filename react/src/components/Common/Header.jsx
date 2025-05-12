@@ -9,6 +9,7 @@ import useTaskData from "../../hooks/useTaskData";
 import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
 import Label from "./Label";
+import LiveAgent from "./LiveAgent";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
@@ -30,8 +31,8 @@ const Header = () => {
             !simplybook.debug
         ) {
             window.location.href = window.location.href.replace(
-                /page=simplybook.*/,
-                "page=simplybook#/onboarding/create-your-account",
+                /page=simplybook-integration.*/,
+                "page=simplybook-integration#/onboarding/create-your-account",
             );
         }
     }, [onboardingCompleted]);
@@ -109,15 +110,7 @@ const Header = () => {
                             {subscriptionPlan} {__("is expired.", "simplybook")}
                         </Label>
                     )}
-                    <ButtonLink
-                        linkClassName="text-primary"
-                        className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
-                        btnVariant="ghost-small"
-                        target="_blank"
-                        loginLink="v2/r/payment-widget#/"
-                    >
-                        {__("Upgrade", "simplybook")}
-                    </ButtonLink>
+                    <LiveAgent/>
                 </div>
             </header>
         </div>

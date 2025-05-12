@@ -24,7 +24,7 @@ class FailedAuthenticationTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('We’ve lost connection to your SimplyBook account. Reconnect by logging out via the general settings.','simplybook');
+        return esc_html__('We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings.','simplybook');
     }
 
     /**

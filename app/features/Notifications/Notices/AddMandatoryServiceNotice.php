@@ -11,7 +11,7 @@ class AddMandatoryServiceNotice extends AbstractNotice
      */
     public function getTitle(): string
     {
-        return esc_html__('No services configured', 'simplybook');
+        return esc_html__('No Services configured', 'simplybook');
     }
 
     /**

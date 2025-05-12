@@ -134,6 +134,25 @@ trait LegacyHelper {
     }
 
     /**
+     * get a token
+     *
+     * @param string $token
+     * @param string $type //public or admin
+     * @param bool $refresh
+     *
+     * @return void
+     */
+
+    public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
+        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
+        if ( $refresh ) {
+            $type = $type . '_refresh';
+        }
+        $token = $this->sanitize_token( $token );
+        update_option("simplybook_token_$type", $this->encrypt_string($token) );
+    }
+
+    /**
      * Check if this is an authenticated rest request
      *
      * @return bool
@@ -170,7 +189,7 @@ trait LegacyHelper {
      */
     public function log(  $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$prepend = 'Simplybook: ';
+			$prepend = 'SimplyBook.me: ';
             if ( is_array( $message ) || is_object( $message ) ) {
 				error_log( $prepend . print_r( $message, true ) );
 			} else {

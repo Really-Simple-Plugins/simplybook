@@ -15,7 +15,7 @@ class Uninstall
     {
         $instance = new self();
         if (method_exists($instance, 'delete_all_options')) {
-            $instance->delete_all_options();
+            $instance->delete_all_options(true);
         }
     }
 

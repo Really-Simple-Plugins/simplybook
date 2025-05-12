@@ -1,5 +1,4 @@
 import React from "react";
-import { Link } from "@tanstack/react-router";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
@@ -14,25 +13,27 @@ const SettingsMenu = () => {
   if (displayMessage) {
     return (
       <Block colSpan={3} rowSpan={4} className="max-w-xs flex-1 pb-2">
-        <BlockHeading title={__("Settings", "simplybook")} controls={null} />
-        <div className="flex flex-col justify-start">
-          {menuIsLoading && __("Loading menu...", "simplybook")}
-          {menuIsError && __("Error loading menu", "simplybook")}
-          {!menu && __("No menu items available", "simplybook")}
-        </div>
+          <BlockHeading title={__("Settings", "simplybook")} controls={null} />
+          <div className="flex flex-col justify-start">
+              {menuIsLoading && __("Loading menu...", "simplybook")}
+              {menuIsError && __("Error loading menu", "simplybook")}
+              {!menu && __("No menu items available", "simplybook")}
+          </div>
       </Block>
     );
   }
 
   return (
-    <Block className="col-span-12 lg:col-span-3 flex-1 pb-2 h-max">
-      <BlockHeading title={__("Settings", "simplybook")} controls={null} />
-      <div className="flex flex-col justify-start">
-        {menu.map((item) => (
-          <SettingsMenuItem key={item.id} item={item} />
-        ))}
-      </div>
-    </Block>
+    <div className="col-span-12 lg:col-span-3">
+        <Block className="flex-1 pb-2 h-max">
+            <BlockHeading title={__("Settings", "simplybook")} controls={null} />
+            <div className="flex flex-col justify-start">
+                {menu.map((item) => (
+                    <SettingsMenuItem key={item.id} item={item} />
+                ))}
+            </div>
+        </Block>
+    </div>
   );
 };
 

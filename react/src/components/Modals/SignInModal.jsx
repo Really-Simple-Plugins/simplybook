@@ -22,7 +22,7 @@ const SignInModal = ({onClose}) => {
                         <div className="flex flex-col items-center mb-8">
                             <Logo className="mx-4 w-65 py-2 my-4" />
                             <h2 className="my-4">{__("Sign In", "simplybook")}</h2>
-                            <small>{__("Please enter your SimplyBook credentials to sign in.", "simplybook")}</small>
+                            <small>{__("Please enter your SimplyBook.me credentials to sign in.", "simplybook")}</small>
                         </div>
                         <FormLogin
                             onClose={onClose}

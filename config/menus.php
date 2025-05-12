@@ -21,7 +21,7 @@ return [
     ],
     'providers' => [
         'id' => 'providers',
-        'title' => __('Providers', 'simplybook'),
+        'title' => __('Service Providers', 'simplybook'),
         'has_settings' => false,
     ],
     'services' => [

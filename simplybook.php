@@ -1,14 +1,14 @@
 <?php
 /**
- * @package SimplyBook
+ * @package SimplyBook.me
  * @author Really Simple Plugins
  * @copyright 2025 Really Simple Plugins
  * @license GPL-2.0-or-later
  *
  * @wordpress-plugin
- * Plugin Name: SimplyBook
+ * Plugin Name: SimplyBook.me
  * Plugin URI: https://help.simplybook.me/index.php/WordPress_plugn
- * Description: SimplyBook.me plugin allows you to add the SimplyBook.me widget to your WordPress website.
+ * Description: The SimplyBook.me plugin allows you to add the SimplyBook.me widget to your WordPress website.
  * Version: 3.0.0
  * Requires at least: 6.0
  * Requires PHP: 7.4

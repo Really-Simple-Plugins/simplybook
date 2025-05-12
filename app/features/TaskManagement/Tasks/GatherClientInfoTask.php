@@ -2,9 +2,9 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-class AcceptPaymentsTask extends AbstractTask
+class GatherClientInfoTask extends AbstractTask
 {
-    const IDENTIFIER = 'special_feature_accept_payments';
+    const IDENTIFIER = 'special_feature_gather_client_info';
 
     /**
      * @inheritDoc
@@ -21,7 +21,7 @@ class AcceptPaymentsTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Accept payments via SimplyBook.me','simplybook');
+        return esc_html__('Gather information from your clients upon booking', 'simplybook');
     }
 
     /**
@@ -32,7 +32,7 @@ class AcceptPaymentsTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('More info','simplybook'),
-            'login_link' => 'v2/management/#plugins/paid_events',
+            'login_link' => 'vv2/management/#additional-fields',
         ];
     }
 }
