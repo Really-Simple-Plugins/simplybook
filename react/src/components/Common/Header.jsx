@@ -43,7 +43,7 @@ const Header = () => {
 
     return (
         <div className="bg-white ">
-            <header className="mx-auto pl-10 pr-5 flex items-baseline max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0">
+            <header className="mx-auto pl-10 pr-5 flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
