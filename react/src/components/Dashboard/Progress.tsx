@@ -1,14 +1,15 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Block from "../Blocks/Block";
 import BlockHeading from "../Blocks/BlockHeading";
-import {__, _n, sprintf} from "@wordpress/i18n";
+import { __, _n, sprintf } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
-import {Task} from "../../types/Task";
+import { Task } from "../../types/Task";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
-import {Link} from "@tanstack/react-router";
+import { Link } from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
+import clsx from "clsx";
 
 const getStatusStyles = (status: string, premium: boolean, special_feature: boolean) => {
     if (premium || special_feature) {
@@ -86,7 +87,7 @@ const Progress = () => {
 
                 </div>
                 <div className="
-                    grid grid-cols-[80px_1fr_auto_2em] gap-4 items-center px-5 py-3
+                    grid grid-cols-[80px_1fr_auto_2em] gap-4 items-center px-5 py-4
                     xl:grid-cols-[130px_1fr_auto_2em]
                 ">
         <span className="font-bold text-3xl">
@@ -98,25 +99,30 @@ const Progress = () => {
           </span>
                 </div>
 
-                <div className="grid gap-1 h-[275px] overflow-y-auto">
+                <div className="grid gap-1 h-[275px] overflow-y-scroll">
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
                             className="
-                                grid grid-cols-[12px_1fr_auto_2em] gap-4 items-start px-5 py-3 
+                                h-10 grid grid-cols-[12px_1fr_auto_2em] gap-4 items-start px-5 py-1 
                                 hover:bg-gray-50
-                                xl:items-center xl:grid-cols-[130px_1fr_auto_2em]
+                                xl:h-auto  xl:justify-center xl:grid-cols-[130px_1fr_auto_2em] xl:py-3
                             ">
-                            {/* Status pill - fixed width */}
-                            <span
-                                className={`inline-block w-0 p-2 rounded-[3rem] xl:w-[130px] text-center xl:px-1 xl:py-1.5 xl:rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
-                                <span className="hidden xl:block">{task.label}</span>
-                            </span>
 
-                            {/* Task text */}
-                            <div className={task.status === 'dismissed' ? 'text-gray-400 line-through' : ''}>
-                                {task.text}
-                            </div>
+                                    {/* Status pill - fixed width */}
+                                    <span
+                                        className={`inline-block w-0 p-2 rounded-[3rem] xl:w-[130px] text-center xl:px-1 xl:py-1.5 xl:rounded-md text-xs font-medium ${getStatusStyles(task.status, task.premium, task.special_feature)}`}>
+                                        <span className="hidden xl:block">{task.label}</span>
+                                    </span>
+
+                                    {/* Task text */}
+                                    <div className={ clsx(
+                                        task.status === 'dismissed' ? 'text-gray-400 line-through' : '',
+                                        "text-[0.8125rem]"
+                                    )}>
+                                        {task.text}
+                                    </div>
+
 
                             {/* Action button */}
                             <div>
@@ -124,7 +130,7 @@ const Progress = () => {
                                     <Link
                                         to={task.action.link}
                                         target={task.action?.target ?? '_self'}
-                                        className="text-tertiary hover:text-tertiary/80 text-sm underline"
+                                        className="text-tertiary hover:text-tertiary/80 text-sm underline text-[0.8125rem]"
                                     >
                                         {task.action.text}
                                     </Link>
