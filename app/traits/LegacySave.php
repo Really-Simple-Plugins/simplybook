@@ -319,22 +319,25 @@ trait LegacySave {
      * Delete all WordPress options containing 'simplybook_' or 'simplybookMePl_'
      * Method can be used to log out a user.
      *
-     * @internal We do NOT delete private SimplyBook options. Those should be
-     * formatted with a starting underscore. Like: '_simplybook_foobar'.
+     * @param bool $private Can be used to delete private options too.
      */
-    public function delete_all_options(): bool
+    public function delete_all_options(bool $private = false): bool
     {
         if ( !$this->user_can_manage() ) {
             return false;
         }
 
         global $wpdb;
+        $query = "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s";
+        $params = ['simplybook_%', 'simplybookMePl_%'];
+
+        if ($private) {
+            $query .= " OR option_name LIKE %s";
+            $params[] = '_simplybook_%';
+        }
+
         $result = $wpdb->query(
-            $wpdb->prepare(
-                "DELETE FROM $wpdb->options WHERE option_name LIKE %s OR option_name LIKE %s",
-                'simplybook_%',
-                'simplybookMePl_%'
-            )
+            $wpdb->prepare($query, ...$params)
         );
 
         return $result !== false;
