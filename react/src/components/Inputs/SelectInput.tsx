@@ -12,13 +12,13 @@ import clsx from "clsx";
  * @returns {JSX.Element} The rendered select component
  */
 const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
-    ({ 
-        name, 
-        fieldState, 
-        value, 
-        onChange, 
-        options = [], 
-        ...props 
+    ({
+        name,
+        fieldState,
+        value,
+        onChange,
+        options = [],
+        ...props
     }, ref) => {
         // Normalize options if it's an object
         const normalizedOptions: SelectOption[] = Array.isArray(options)
@@ -29,9 +29,8 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 label: options[index],
             }));
 
-            const isFieldDirty = fieldState.isDirty;
-            const isEmptyClass = !isFieldDirty ? 'bg-gray-200 border-gray-200 text-black-600' : '';
-            
+        const isEmptyClass = !value ? 'bg-gray-200 border-gray-200 text-black-600' : '';
+
         return (
             <select
                 className={clsx("input-base", isEmptyClass)}
