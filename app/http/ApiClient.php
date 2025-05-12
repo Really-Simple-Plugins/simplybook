@@ -967,7 +967,17 @@ class ApiClient
             return [];
         }
 
-        return $this->api_call('admin/statistic', [], 'GET');
+        if ($cache = wp_cache_get('simplybook_statistics', 'simplybook')) {
+            return $cache;
+        }
+
+        $response = $this->api_call('admin/statistic', [], 'GET');
+        if (empty($response)) {
+            return [];
+        }
+
+        wp_cache_set('simplybook_statistics', $response, 'simplybook', MINUTE_IN_SECONDS);
+        return $response;
     }
 
     /**
