@@ -75,7 +75,7 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
-            'simplybook',
+            'simplybook-integration',
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
             $menuPosition,

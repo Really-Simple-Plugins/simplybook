@@ -241,7 +241,7 @@ class WidgetScriptBuilder
         if ($this->userCanManage()) {
             $message .= ' ' . sprintf(
                 esc_html__('You can configure the plugin settings to display your customized widget %shere%s.', 'simplybook'),
-                '<a href="' . esc_url(admin_url('admin.php?page=simplybook')) . '">',
+                '<a href="' . esc_url(App::env('plugin.admin_url')) . '">',
                 '</a>'
             );
         }

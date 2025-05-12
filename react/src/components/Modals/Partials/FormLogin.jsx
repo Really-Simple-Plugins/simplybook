@@ -93,7 +93,7 @@ const formLogin = ({
                     return;
                 }
 
-                window.location.href = "/wp-admin/admin.php?page=simplybook";
+                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
 
             } catch (error) {
                 setErrorMessage(error.message);

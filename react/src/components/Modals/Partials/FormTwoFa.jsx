@@ -45,7 +45,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
 
         if (response) {
             console.log("2FA successful:", response);
-            window.location.href = "/wp-admin/admin.php?page=simplybook";
+            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
             return;
         }
     });
