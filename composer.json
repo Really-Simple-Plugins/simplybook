@@ -51,12 +51,4 @@
             "automattic/jetpack-autoloader": true
         }
     },
-    "scripts": {
-        "pre-update-cmd": [
-        ],
-        "post-install-cmd": [
-        ],
-        "post-update-cmd": [
-        ]
-    }
 }
