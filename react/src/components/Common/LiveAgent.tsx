@@ -26,10 +26,6 @@ const LiveAgent = (props: { style?: string }) => {
         };
 
         document.head.appendChild(script);
-
-        return () => {
-            document.head.removeChild(script);
-        };
     }, []);
 
     const handleClick = () => {
