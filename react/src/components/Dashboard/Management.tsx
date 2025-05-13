@@ -84,7 +84,7 @@ const Management = () => {
                                     // @ts-ignore
                                     total={subscriptionLimits?.[block.id]?.total}
                                     // @ts-ignore
-                                    page={subscriptionLimits?.[block.id]?.link}
+                                    page={block.link}
                                 />
                             )}
                         </div>
