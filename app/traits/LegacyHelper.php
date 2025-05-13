@@ -89,8 +89,6 @@ trait LegacyHelper {
 			'post_content' => $content,
 			'post_status'  => 'publish',
 		);
-		error_log("create page $title");
-		error_log(print_r($page, true));
 
 		// Insert the post into the database
 		$page_id = wp_insert_post( $page );
@@ -191,8 +189,10 @@ trait LegacyHelper {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			$prepend = 'SimplyBook.me: ';
             if ( is_array( $message ) || is_object( $message ) ) {
+                /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log */
 				error_log( $prepend . print_r( $message, true ) );
 			} else {
+                /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log */
 				error_log( $prepend . $message );
 			}
         }

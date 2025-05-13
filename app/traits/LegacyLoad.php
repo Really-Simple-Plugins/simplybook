@@ -59,7 +59,6 @@ trait LegacyLoad {
 
         $field = $this->get_field_by_id($key);
         if ( !$field ) {
-            error_log("field $key not found");
             return false;
         }
 

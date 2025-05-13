@@ -277,14 +277,9 @@ class ApiClient
 
         if ( ! is_wp_error( $request ) ) {
             $request = json_decode( wp_remote_retrieve_body( $request ) );
-            error_log("retrieve token response" );
-            error_log( print_r($request,true) );
             if ( isset($request->token) ) {
                 delete_option('simplybook_token_error' );
-                error_log("setting token ".$request->token);
-                error_log("setting refresh token ".$request->refresh_token);
                 $expiration = time() + $request->expires_in;
-                error_log("set expiration to ".$expiration);
                 $this->update_token( $request->token );
                 $this->update_token( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
@@ -396,12 +391,8 @@ class ApiClient
         if ( ! is_wp_error( $request ) ) {
             $request = json_decode( wp_remote_retrieve_body( $request ) );
 
-            error_log(print_r("refresh token response for type $type",true));
-            error_log(print_r($request,true));
             if ( isset($request->token) ) {
                 delete_option('simplybook_token_error' );
-                error_log("updating $type token: $request->token");
-                error_log("updating $type refresh_token: $request->refresh_token");
                 $this->update_token( $request->token, $type );
                 $this->update_token( $request->refresh_token, $type, true );
                 $expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
@@ -1038,7 +1029,6 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
-        error_log( "api call for $path" );
         //with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
         //with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
         $apiStatus = get_option( 'simplybook_api_status' );
@@ -1070,18 +1060,13 @@ class ApiClient
                 'sslverify' => true,
                 'body'      => json_encode( $data ),
             ) );
-            error_log("POST response body for $path");
-            error_log(print_r($response_body, true));
         } else {
             //replace %5B with [ and %5D with ]
-            error_log("GET url: ".$this->endpoint( $path ));
             $args = [
                 'headers' => $this->get_headers( true, $token_type ),
                 $data,
             ];
             $response_body = wp_remote_get($this->endpoint( $path ), $args );
-            error_log("GET response body");
-            error_log(print_r($response_body, true));
         }
 
         $response_code = wp_remote_retrieve_response_code( $response_body );
@@ -1095,16 +1080,12 @@ class ApiClient
                 'time' => time(),
             ]);
             delete_option("simplybook_{$path_type}_error" );
-            error_log("request success for $path_type");
-            error_log(print_r($response,true));
             //update the persistent cache
             $cache = get_option('simplybook_persistent_cache', []);
             $cache[ $path_type ] = $response;
             update_option('simplybook_persistent_cache', $cache, false);
             return $response;
         } else {
-            error_log("$$$$$$$");
-            error_log(print_r($response, true));
             if ( isset($response['message'])) {
                 $message = $response['message'];
             } else if (isset($response->message)){
@@ -1113,7 +1094,6 @@ class ApiClient
                 $message = '';
             }
             if ( $attempt===1 &&  str_contains( $message, 'Token Expired')) {
-                error_log("refresh expired token, attempt $attempt");
                 //invalid token, refresh.
                 $this->refresh_token($token_type);
                 $this->api_call( $path, $data, $type, $attempt + 1 );
@@ -1237,6 +1217,11 @@ class ApiClient
 
     protected function _log($error)
     {
+        // Return if WP_DEBUG is not enabled
+        if ( !defined('WP_DEBUG') || !WP_DEBUG ) {
+            return;
+        }
+
         $fileTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $last4 = array_slice($fileTrace, 0, 4);
 
@@ -1251,9 +1236,9 @@ class ApiClient
                 return $item['file'] . ':' . $item['line'];
             }, $last4));
         $error .= "\n----------------------\n\n\n";
-        if ( defined('WP_DEBUG') && WP_DEBUG ) {
-            error_log($error);
-        }
+
+        /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log */
+        error_log($error);
     }
 
     /**
