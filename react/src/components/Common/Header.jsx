@@ -37,13 +37,13 @@ const Header = () => {
         }
     }, [onboardingCompleted]);
 
-    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300";
+    const linkClassName = "text-base px-5 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300";
 
     const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
 
     return (
         <div className="bg-white ">
-            <header className="mx-auto pl-10 pr-5 flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
+            <header className="mx-auto flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
