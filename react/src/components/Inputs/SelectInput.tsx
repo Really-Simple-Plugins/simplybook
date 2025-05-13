@@ -29,7 +29,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
                 label: options[index],
             }));
 
-        const isEmptyClass = !value ? 'bg-gray-200 border-gray-200 text-black-600' : '';
+        const isEmptyClass = !value ? 'border-gray-200 text-gray-500 italic' : '';
 
         return (
             <select
