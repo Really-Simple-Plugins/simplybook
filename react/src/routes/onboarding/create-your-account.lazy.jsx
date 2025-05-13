@@ -19,7 +19,7 @@ function CreateLoginAccount() {
                 className={"flex-col col-span-5 col-start-2"}
             >
                 <div className={"text-center"}>
-                    <h1 className={"text-3xl font-semibold text-black mb-4"}>
+                    <h1 className={"text-4xl font-semibold text-black mb-4"}>
                         {__("Create your free account", "simplybook")}
                     </h1>
                     <h2 className={"mt-2 text-lg font-light text-black"}>
