@@ -1099,11 +1099,13 @@ class ApiClient
                 $this->api_call( $path, $data, $type, $attempt + 1 );
             }
             $this->log("Error during $path_type retrieval: ".$message);
-            $msg = "response code: $response_code, response body: ".print_r($response_body,true);
+
+            /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
+            $msg = "response code: " . $response_code . ", response body: ".print_r($response_body,true);
 
             update_option('simplybook_api_status', array(
                 'status' => 'error',
-                'error' => $msg,
+                'error' => esc_sql($msg),
                 'time' => time(),
             ) );
             $this->_log($msg);
@@ -1222,15 +1224,18 @@ class ApiClient
             return;
         }
 
+        /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_debug_backtrace */
         $fileTrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
         $last4 = array_slice($fileTrace, 0, 4);
 
         if(!is_string($error)){
             @ob_start();
+            /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_var_dump */
             var_dump($error);
             $error = @ob_get_clean();
         }
 
+        /* phpcs:ignore WordPress.DateTime.RestrictedFunctions.date_date */
         $error = date('Y-m-d H:i:s') . ' ' . $error . "\n";
         $error .= "\n\n" . implode("\n", array_map(function ($item) {
                 return $item['file'] . ':' . $item['line'];
