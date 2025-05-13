@@ -89,7 +89,7 @@ const NotificationsBox = () => {
 
             {noNotifications && (
                 <div className="notification-box">
-                    <p className="text-sm text-gray-500">{__('You currently have no notifications.', 'simplybook')}</p>
+                    <p className="text-sm text-gray-400 italic">{__('You currently have no notifications.', 'simplybook')}</p>
                 </div>
             )}
         </>

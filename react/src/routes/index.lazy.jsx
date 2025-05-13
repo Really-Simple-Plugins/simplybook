@@ -14,8 +14,8 @@ function Dashboard() {
   return (
     <>
       <Header />
-      <div className="mx-auto flex max-w-screen-2xl w-full px-4">
-        <div className="m-5 grid min-h-full w-full grid-cols-12 gap-5">
+      <div className="mx-auto flex max-w-screen-2xl w-full">
+        <div className="mx-auto my-4 grid min-h-full w-full grid-cols-12 gap-5">
           <Progress />
           <Bookings />
           <Management />

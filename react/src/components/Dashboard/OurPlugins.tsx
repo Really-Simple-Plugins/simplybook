@@ -18,10 +18,10 @@ const OurPlugins = () => {
         <Block className={"col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-6 !bg-transparent shadow-none"}>
             <div className="flex justify-between items-center">
                 <BlockHeading
-                title={__("Our Plugins", "simplybook")}
+                title={__("Other Plugins", "simplybook")}
                 controls={undefined}
                 />
-                <div className="w-[200px]">
+                <div className="w-[185px]">
                     <RspLogo />
                 </div>
             </div>
@@ -35,7 +35,7 @@ const OurPlugins = () => {
                             <div className=" w-[75%] xl:w-auto">
                                 <Icon name={"circle"} color={plugin.color}/>
                                 <Link
-                                    className="text-black font-semibold ml-2"
+                                    className="text-black font-normal ml-2 hover:text-primary hover:underline"
                                     to={plugin.url}>
                                     {plugin.title}
                                 </Link>

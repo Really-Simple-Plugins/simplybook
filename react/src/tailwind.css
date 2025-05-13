@@ -20,10 +20,14 @@
     --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
 
     /* Define custom font sizes */
-    --text-label: 1rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.75rem;
-    --text-3xl: 2.25rem;
+    --text-xxs: 0.6825rem;
+    --text-base: 0.875rem;
+    --text-lg: 1rem;
+    --text-label: var(--text-base);
+    --text-xl: 1.125rem;
+    --text-2xl: 1.375rem;
+    --text-3xl: 1.5rem;
+    --text-4xl: 2rem;
 
     /* Succes colors */
     --color-succes: var(--color-green-500);
@@ -71,7 +75,7 @@
     --color-gray-200: rgba(218, 218, 218, 0.5);
 
     /* Max width */
-    --breakpoint-2xl: 104rem;
+    --breakpoint-2xl: clamp(300px,100% - 20px * 2,1600px);
     --container-8xl: 125rem;
 }
 
@@ -215,6 +219,28 @@ Input global styles
             box-shadow: var(--shadow-md);
             line-height: 1.5;
     }
+}
+
+/**
+======================================
+Scroll containers   
+======================================
+**/
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 10px;
+    background-color: var(--color-gray-300);
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-500);
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
 }
 
 /**

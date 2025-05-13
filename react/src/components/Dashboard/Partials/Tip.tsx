@@ -15,9 +15,9 @@ const Tip: React.FC<TipsProps> = ({
                 target={"_blank"}
                 to={link}
             >
-                <div className="tip-inner flex flex-row justify-start items-center text-base">
+                <div className="tip-inner flex flex-row justify-start items-center text-base mb-1">
                     <p className="
-                        transition-all duration-300 ease-in-out m-0 text-base text-[#333333]  py-1
+                        transition-all duration-300 ease-in-out m-0 text-base text-[#333333]
                         hover:text-primary hover:underline
                     ">
                         <span className={"font-bold  border-primary-light mr-2"}>

@@ -12,8 +12,8 @@ const MostPopular: React.FC<MostPopularProps> = ({
 }) => {
     return (
         <>
-            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 border-2 border-[#E1E7F5] p-4 bg-primary-lighter text-base font-bold" , className)}>
-                <span className="text-succes flex items-center w-full mb-2">
+            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 border-2 border-[#E1E7F5] p-3 bg-primary-lighter text-base font-bold" , className)}>
+                <span className="text-succes flex items-center w-full mb-1">
                     <Icon style={{ color: "var(--color-success)" }} name="trophy" size={"1x"} className="mr-2" />
                     <p className="text-base font-semibold m-0">{title}</p>   
                 </span>

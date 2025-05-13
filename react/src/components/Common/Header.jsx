@@ -37,13 +37,13 @@ const Header = () => {
         }
     }, [onboardingCompleted]);
 
-    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300";
+    const linkClassName = "text-base px-4 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300 hover:text-primary";
 
     const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
 
     return (
         <div className="bg-white ">
-            <header className="mx-auto pl-10 pr-5 flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
+            <header className="mx-auto flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
@@ -55,7 +55,7 @@ const Header = () => {
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
                     >
                         {!tasksLoading && tasksOpen > 0 && (
-                            <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
+                            <div className="notification-bubble flex items-center justify-center absolute -right-0.5 top-2.5 text-center text-xxs w-[18px] h-[18px]  text-white rounded-full bg-red-600 p-2">
                                 {tasksOpen}
                             </div>
                         )}

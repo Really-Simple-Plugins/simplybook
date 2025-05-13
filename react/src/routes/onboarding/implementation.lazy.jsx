@@ -58,7 +58,7 @@ export const Route = createLazyFileRoute(path)({
                         <h2 className="mb-2 text-lg font-light text-black">
                             {__("Almost there!", "simplybook")}
                         </h2>
-                        <h1 className="text-3xl font-semibold text-black mb-4">
+                        <h1 className="text-4xl font-semibold text-black mb-4">
                             {__("Implement SimplyBook.me", "simplybook")}
                         </h1>
                     </div>
