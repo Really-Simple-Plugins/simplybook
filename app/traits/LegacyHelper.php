@@ -151,21 +151,6 @@ trait LegacyHelper {
     }
 
     /**
-     * Check if this is an authenticated rest request
-     *
-     * @return bool
-     */
-    public function is_logged_in_rest(): bool
-    {
-        $is_settings_page_request = isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/simplybook/v1/' ) !== false;
-        if ( ! $is_settings_page_request ) {
-            return false;
-        }
-
-	    return $this->user_can_manage();
-    }
-
-    /**
      * Get the admin url
      *
      * @return string
