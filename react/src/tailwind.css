@@ -223,6 +223,28 @@ Input global styles
 
 /**
 ======================================
+Scroll containers   
+======================================
+**/
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 10px;
+    background-color: var(--color-gray-300);
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-500);
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+}
+
+/**
+======================================
 Field validation
 ======================================
 **/
