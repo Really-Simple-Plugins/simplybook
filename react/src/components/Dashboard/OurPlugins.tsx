@@ -21,7 +21,7 @@ const OurPlugins = () => {
                 title={__("Other Plugins", "simplybook")}
                 controls={undefined}
                 />
-                <div className="w-[200px]">
+                <div className="w-[185px]">
                     <RspLogo />
                 </div>
             </div>
