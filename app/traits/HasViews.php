@@ -26,7 +26,9 @@ trait HasViews
      */
     public function render(string $path, array $variables = [], string $extension = 'php'): void
     {
-        echo $this->view($path, $variables, $extension);
+        echo wp_kses_post(
+            $this->view($path, $variables, $extension)
+        );
     }
 
 }
