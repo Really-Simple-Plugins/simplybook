@@ -4,7 +4,7 @@ Contributors: simplybook, wimbraam, RogierLankhorst, hesseldejong
 Donate link: https://simplybook.me/
 Tags: Booking System, Scheduling system, Appointment System, Bookings, Appointment Plugin
 Requires at least: 6.0
-Tested up to: 6.6.1
+Tested up to: 6.6
 Requires PHP: 7.4
 Stable tag: 3.0.0
 License: GPLv2 or later
