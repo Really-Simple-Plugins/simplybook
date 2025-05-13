@@ -622,7 +622,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while registering your company. Please try again.'))
+                esc_html__('Something went wrong while registering your company. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -675,7 +675,7 @@ class ApiClient
         }
 
         throw (new ApiException(
-            esc_html__('Unknown error encountered while registering your company. Please try again.')
+            esc_html__('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message,
             'data' => get_object_vars($response->data),
@@ -793,7 +793,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while confirming your email. Please try again.'))
+                esc_html__('Something went wrong while confirming your email. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -805,7 +805,7 @@ class ApiClient
         }
 
         $codeIsValid = true;
-        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.');
+        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
         if (isset($response->message) && str_contains($response->message, 'not valid')) {
             $errorMessage = esc_html__('This confirmation code is not valid.', 'simplybook');
             $codeIsValid = false;
