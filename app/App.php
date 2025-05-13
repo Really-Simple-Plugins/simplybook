@@ -138,7 +138,7 @@ final class App
     public static function provide($key)
     {
         if (!self::$providers->has($key)) {
-            throw new \InvalidArgumentException("No {$key} available as a provided functionality.");
+            throw new \InvalidArgumentException("No " . esc_html($key) . " available as a provided functionality.");
         }
 
         return self::$providers->get($key);
@@ -173,7 +173,7 @@ final class App
     private static function dotFromPath(string $path, bool $prefixWithFileName = false): Dot
     {
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException("Unloadable configuration file {$path} provided.");
+            throw new \InvalidArgumentException("Unloadable configuration file " . esc_html($path) . " provided.");
         }
 
         $data = [];

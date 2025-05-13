@@ -52,7 +52,7 @@ class Event
     private static function validate(string $event): void
     {
         if (!defined('self::' . strtoupper($event))) {
-            throw new \InvalidArgumentException(sprintf('Invalid event name: %s', $event));
+            throw new \InvalidArgumentException(sprintf('Invalid event name: %s', esc_html($event)));
         }
     }
 }

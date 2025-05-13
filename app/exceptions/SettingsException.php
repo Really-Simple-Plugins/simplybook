@@ -28,7 +28,7 @@ class SettingsException extends \Exception
         foreach ($settingErrors as $fields) {
             foreach ($fields as $key => $errorData) {
                 if (!empty($this->acceptedErrorKeys) && !in_array($key, $this->acceptedErrorKeys)) {
-                    throw new \Exception('The key ' . $key . ' is not accepted in the data array.');
+                    throw new \Exception('The key ' . esc_html($key) . ' is not accepted in the data array.');
                 }
             }
         }
