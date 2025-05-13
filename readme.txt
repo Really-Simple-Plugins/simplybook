@@ -1,4 +1,4 @@
-=== SimplyBook.me - Online Booking System ===
+=== SimplyBook.me ===
 Contributors: simplybook, reallysimpleplugins
 Contributors: simplybook, wimbraam, RogierLankhorst, hesseldejong
 Donate link: https://simplybook.me/
