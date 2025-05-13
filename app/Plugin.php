@@ -261,6 +261,10 @@ class Plugin
      */
     private function isUpgradeFromLegacy(): bool
     {
+        if ($cache = wp_cache_get('simplybook_was_legacy_plugin_active', 'simplybook')) {
+            return $cache;
+        }
+
         global $wpdb;
 
         $count = $wpdb->get_var(
@@ -270,6 +274,7 @@ class Plugin
             )
         );
 
+        wp_cache_set('simplybook_was_legacy_plugin_active', ($count > 0), 'simplybook');
         return $count > 0;
     }
 
