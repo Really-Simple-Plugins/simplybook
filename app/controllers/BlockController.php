@@ -83,8 +83,7 @@ class BlockController implements ControllerInterface
         );
 
         //add widget.js script
-        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybookMePl_widget_scripts');
+        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), true);
 
         wp_register_style('simplybookMePl_widget_styles', $indexCss);
         wp_enqueue_style('simplybookMePl_widget_styles');

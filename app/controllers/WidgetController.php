@@ -89,7 +89,6 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybook_widget_scripts');
+        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), true);
     }
 }

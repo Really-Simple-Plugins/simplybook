@@ -38,7 +38,7 @@ class DashboardController implements ControllerInterface
     public function enqueueSimplyBookDashiconStyle(): void
     {
         $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
-        wp_enqueue_style('simplybook-font', $iconCss);
+        wp_enqueue_style('simplybook-font', $iconCss, [], App::env('plugin.version'));
     }
 
     /**
@@ -126,7 +126,13 @@ class DashboardController implements ControllerInterface
         }
 
         // Enqueue SimplyBook Widget script for preview functionality
-        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
+        wp_enqueue_script(
+            'simplybookMePl_widget_scripts',
+            App::env('simplybook.widget_script_url'),
+            [],
+            App::env('simplybook.widget_script_version'),
+            true
+        );
 
         wp_enqueue_script(
             'simplybook-main-script',
@@ -185,7 +191,7 @@ class DashboardController implements ControllerInterface
             $chunkHandle = str_replace('.js', '', $filename);
             // temporarily register the script, so we can get a translations object.
             $chunkSource = App::env('plugin.react_url') . '/build/' . $filename;
-            wp_register_script($chunkHandle, $chunkSource, [], true);
+            wp_register_script($chunkHandle, $chunkSource, [], App::env('plugin.version'), true);
 
             //as there is no pro version of this plugin, no need to declare a path
             $localeData = load_script_textdomain($chunkHandle, 'simplybook');
