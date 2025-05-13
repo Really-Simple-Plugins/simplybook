@@ -187,7 +187,6 @@ trait LegacySave {
     public function update_option($key, $value, bool $staleOverride = false, array $config = []): bool
     {
         if ( !$this->user_can_manage() ) {
-			error_log("user cannot manage, exit update_option for $key");
             return false;
         }
 
@@ -208,7 +207,6 @@ trait LegacySave {
 
             //don't save if not found
             if ( !$config ) {
-                error_log("field ".$key." not found in fields config");
                 return false;
             }
         }
@@ -337,6 +335,7 @@ trait LegacySave {
         }
 
         $result = $wpdb->query(
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $wpdb->prepare($query, ...$params)
         );
 
