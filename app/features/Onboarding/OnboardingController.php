@@ -2,7 +2,6 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\App;
-use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
@@ -10,6 +9,8 @@ use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;
+use SimplyBook\Features\Notifications\Notices\PublishWidgetNotice;
 
 class OnboardingController implements FeatureInterface
 {
@@ -235,7 +236,8 @@ class OnboardingController implements FeatureInterface
         $pageCreatedSuccessfully = ($calendarPageID !== -1);
 
         if ($pageCreatedSuccessfully) {
-            Event::dispatch(Event::CALENDAR_PUBLISHED);
+            update_option(PublishWidgetTask::COMPLETED_FLAG, true);
+            update_option(PublishWidgetNotice::COMPLETED_FLAG, true);
         }
 
         $this->service->setOnboardingCompleted();

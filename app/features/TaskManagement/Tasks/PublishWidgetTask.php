@@ -7,6 +7,13 @@ class PublishWidgetTask extends AbstractTask
     const IDENTIFIER = 'publish_widget_on_frontend';
 
     /**
+     * This option is used to track if the user has already created the widget
+     * on the front-end. Flag is one time use and is only used during the
+     * initial setup of the TaskManagement feature.
+     */
+    const COMPLETED_FLAG = 'simplybook_calendar_published_task_completed';
+
+    /**
      * Not required as tracking the task is difficult. For example: if someone
      * logs into an existing account, the task will be shown. But in that
      * scenario we are not certain if the user has already published
@@ -16,7 +23,13 @@ class PublishWidgetTask extends AbstractTask
 
     public function __construct()
     {
-        $this->setStatus(self::STATUS_URGENT);
+        $status = self::STATUS_URGENT;
+        if (get_option(self::COMPLETED_FLAG)) {
+            $status = self::STATUS_COMPLETED;
+            delete_option(self::COMPLETED_FLAG);
+        }
+
+        $this->setStatus($status);
     }
 
     /**
