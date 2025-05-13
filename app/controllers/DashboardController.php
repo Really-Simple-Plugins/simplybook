@@ -90,7 +90,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $this->render('admin/dashboard');
+        $this->render('admin/dashboard', [], 'html');
     }
 
     /**
