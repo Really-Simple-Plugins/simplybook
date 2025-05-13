@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
+use SimplyBook\Features\Onboarding\OnboardingController;
+
 class PublishWidgetTask extends AbstractTask
 {
     const IDENTIFIER = 'publish_widget_on_frontend';
@@ -10,6 +12,9 @@ class PublishWidgetTask extends AbstractTask
      * This option is used to track if the user has already created the widget
      * on the front-end. Flag is one time use and is only used during the
      * initial setup of the TaskManagement feature.
+     *
+     * @internal cannot be used in the {@see OnboardingController} because
+     * the feature is not loaded during onboarding.
      */
     const COMPLETED_FLAG = 'simplybook_calendar_published_task_completed';
 
@@ -24,6 +29,7 @@ class PublishWidgetTask extends AbstractTask
     public function __construct()
     {
         $status = self::STATUS_URGENT;
+
         if (get_option(self::COMPLETED_FLAG)) {
             $status = self::STATUS_COMPLETED;
             delete_option(self::COMPLETED_FLAG);

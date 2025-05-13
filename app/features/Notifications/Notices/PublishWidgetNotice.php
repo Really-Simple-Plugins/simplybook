@@ -10,12 +10,16 @@ class PublishWidgetNotice extends AbstractNotice
      * This option is used to track if the user has already created the widget
      * on the front-end. Flag is one time use and is only used during the
      * initial setup of the Notification feature.
+     *
+     * @internal cannot be used in the {@see OnboardingController} because
+     *  the feature is not loaded during onboarding.
      */
     const COMPLETED_FLAG = 'simplybook_calendar_published_notification_completed';
 
     public function __construct()
     {
         $active = true;
+
         if (get_option(self::COMPLETED_FLAG)) {
             $active = false;
             delete_option(self::COMPLETED_FLAG);

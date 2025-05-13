@@ -9,8 +9,6 @@ use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
-use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;
-use SimplyBook\Features\Notifications\Notices\PublishWidgetNotice;
 
 class OnboardingController implements FeatureInterface
 {
@@ -235,9 +233,10 @@ class OnboardingController implements FeatureInterface
 
         $pageCreatedSuccessfully = ($calendarPageID !== -1);
 
+        // These flags are deleted after its one time use in the Task and Notice
         if ($pageCreatedSuccessfully) {
-            update_option(PublishWidgetTask::COMPLETED_FLAG, true);
-            update_option(PublishWidgetNotice::COMPLETED_FLAG, true);
+            update_option('simplybook_calendar_published_notification_completed', true);
+            update_option('simplybook_calendar_published_task_completed', true);
         }
 
         $this->service->setOnboardingCompleted();
