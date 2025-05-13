@@ -33,7 +33,7 @@ class ReviewController implements ControllerInterface
     public function showLeaveReviewNotice(): void
     {
         if ($this->canRenderReviewNotice() === false) {
-//            return;
+            return;
         }
 
         $reviewMessage = sprintf(
