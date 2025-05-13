@@ -971,6 +971,9 @@
   .\!border-sb-blue {
     border-color: var(--color-sb-blue) !important;
   }
+  .border-\[\#0cadef\] {
+    border-color: #0cadef;
+  }
   .border-\[\#E1E7F5\] {
     border-color: #E1E7F5;
   }
@@ -1211,6 +1214,9 @@
   .text-right {
     text-align: right;
   }
+  .font-sans {
+    font-family: var(--font-sans);
+  }
   .text-2xl {
     font-size: var(--text-2xl);
     line-height: var(--tw-leading, var(--text-2xl--line-height));
@@ -1285,6 +1291,9 @@
   }
   .\!text-sb-blue {
     color: var(--color-sb-blue) !important;
+  }
+  .text-\[\#0cadef\] {
+    color: #0cadef;
   }
   .text-\[\#333\] {
     color: #333;

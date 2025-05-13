@@ -1,40 +1,51 @@
-import { useEffect, useRef } from "react";
-const LiveAgent = (props: { style: string }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
+import { useEffect, useState } from "react";
+import {__} from "@wordpress/i18n";
+
+const LiveAgent = (props: { style?: string }) => {
+    const [chatButton, setChatButton] = useState<any>(null);
 
     useEffect(() => {
-        // @ts-ignore - typescript does not recognize simplybook as a global
+        // @ts-ignore - TypeScript does not recognize simplybook as a global
         if (!window.simplybook?.support?.enabled) {
-            return;
-        }
-
-        if (!containerRef.current) {
-            console.error("Parent element not found.");
             return;
         }
 
         const script = document.createElement("script");
         script.id = "la_x2s6df8d";
         script.defer = true;
-        // @ts-ignore - typescript does not recognize simplybook as a global
-        script.src = window?.simplybook?.support?.widget?.url;
+        // @ts-ignore
+        script.src = window.simplybook.support.widget.url;
+
         script.onload = function () {
             // @ts-ignore
             if (window.LiveAgent) {
                 // @ts-ignore
-                window.LiveAgent.createButton('0r62zimg', script);
+                const btn = window.LiveAgent.createButton('0r62zimg', script);
+                setChatButton(btn);
             }
         };
 
-        containerRef.current.appendChild(script);
+        document.head.appendChild(script);
 
         return () => {
-            // Cleanup: Remove the script when the component is unmounted
-            containerRef.current?.removeChild(script);
+            document.head.removeChild(script);
         };
     }, []);
 
-    return <div ref={containerRef} className={"support-container " + (props.style ?? '')}></div>;
+    const handleClick = () => {
+        if (chatButton?.onClick) {
+            chatButton.onClick();
+        }
+    };
+
+    return (
+        <div
+            onClick={handleClick}
+            className="bg-transparent text-[#0cadef] font-bold px-3 py-1 rounded border-2 border-[#0cadef] cursor-pointer text-center font-sans"
+        >
+            {__('Live Help', 'simplybook')}
+        </div>
+    );
 };
 
 export default LiveAgent;
