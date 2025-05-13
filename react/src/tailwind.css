@@ -22,10 +22,12 @@
     /* Define custom font sizes */
     --text-xxs: 0.6825rem;
     --text-base: 0.875rem;
-    --text-label: 1rem;
+    --text-lg: 1rem;
+    --text-label: var(--text-base);
     --text-xl: 1.125rem;
-    --text-2xl: 1.75rem;
-    --text-3xl: 2.25rem;
+    --text-2xl: 1.375rem;
+    --text-3xl: 1.5rem;
+    --text-4xl: 2rem;
 
     /* Succes colors */
     --color-succes: var(--color-green-500);
