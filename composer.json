@@ -50,5 +50,5 @@
         "allow-plugins": {
             "automattic/jetpack-autoloader": true
         }
-    },
+    }
 }
