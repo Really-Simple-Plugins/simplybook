@@ -65,7 +65,7 @@ const Bookings = () => {
                                 }
                             >
                                 <Icon name={block.icon} size={"2x"} />
-                                <div className={"text-sm my-4"}>{block.title}</div>
+                                <div className={"text-sm my-2"}>{block.title}</div>
                                 <div className={" text-2xl font-extrabold"}>
                                     {block.value}
                                 </div>
