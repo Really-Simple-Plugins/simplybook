@@ -1,35 +1,4 @@
 <?php
-/**
- * @package SimplyBook global functions
- * @internal Add all used global functions here but refactor those to use
- * new or existing traits so we can remove this file prior to release.
- */
-
-if ( ! function_exists( 'simplybook_is_logged_in_rest' ) ) {
-    /**
-     * Check if current request is authenticated, for a REST API request
-     *
-     * @deprecated Use HasAllowlistControl::restRequestIsAllowed() instead
-     * @return bool
-     */
-    function simplybook_is_logged_in_rest(): bool
-    {
-        $valid_request = isset( $_SERVER['REQUEST_URI'] ) && str_contains($_SERVER['REQUEST_URI'], '/simplybook/v');
-        if ( ! $valid_request ) {
-            return false;
-        }
-
-        //if and the callback url is still active, we need to allow access so the simplybook callback can execute
-        $expires = get_option('simplybook_callback_url_expires' );
-        $callback_url = get_option('simplybook_callback_url', '' );
-        if ( $expires > time() && !empty( $callback_url ) && strpos( $_SERVER['REQUEST_URI'], 'company_registration/'.$callback_url ) !== false ) {
-            return true;
-        }
-
-        return is_user_logged_in() && current_user_can('simplybook_manage');
-    }
-}
-
 if (!function_exists('simplybookMePl_getAllowedHtmlEntities')) {
     function simplybookMePl_getAllowedHtmlEntities() {
         $allowedEnt = array(

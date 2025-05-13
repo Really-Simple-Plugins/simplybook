@@ -6,11 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Trait admin helper
- *
  * @since   3.0
- *
  */
-trait LegacyHelper {
+trait LegacyHelper
+{
+    use HasAllowlistControl;
+
     /**
      * Check manage capability
      *
@@ -26,10 +27,9 @@ trait LegacyHelper {
             return true;
         }
 
-		if ( simplybook_is_logged_in_rest() ) {
+		if ($this->restRequestIsAllowed()) {
 			return true;
 		}
-
 
         return current_user_can( 'simplybook_manage' );
     }
