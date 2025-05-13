@@ -18,7 +18,7 @@ const OurPlugins = () => {
         <Block className={"col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-6 !bg-transparent shadow-none"}>
             <div className="flex justify-between items-center">
                 <BlockHeading
-                title={__("Our Plugins", "simplybook")}
+                title={__("Other Plugins", "simplybook")}
                 controls={undefined}
                 />
                 <div className="w-[200px]">
