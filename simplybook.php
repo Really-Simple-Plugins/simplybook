@@ -14,6 +14,7 @@
  * Requires PHP: 7.4
  * Author: Really Simple Plugins
  * Author URI: https://really-simple-plugins.com
+ * License: GPL v2 or later
  * Text Domain: simplybook
  * Domain Path: /assets/languages
  */
