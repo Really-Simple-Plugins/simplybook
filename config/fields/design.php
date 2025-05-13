@@ -41,6 +41,7 @@ return
 			'type'     => 'checkbox',
             'label'    => __('RTL', 'simplybook'),
             'help'     => sprintf(
+                /* translators: %s - IS or IS NOT */
                 __('When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL.', 'simplybook'),
                 (is_rtl() ? 'IS' : 'IS NOT'),
             ),

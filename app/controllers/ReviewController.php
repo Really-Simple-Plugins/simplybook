@@ -36,8 +36,8 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        // translators: %s is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
         $reviewMessage = sprintf(
+            // translators: %s is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
             __('Hi, SimplyBook.me has helped you reach %d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s.', 'simplybook'),
             $this->getAmountOfBookings(),
             '<a href="' . App::env('simplybook.support_url') . '"  rel="noopener noreferrer"  target="_blank">',
