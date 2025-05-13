@@ -10,7 +10,7 @@ import ButtonLink from "../Buttons/ButtonLink";
 
 const DataList = [
     {
-        title: __("Providers", "simplybook"),
+        title: __("Service Providers", "simplybook"),
         link: "/v2/management/#providers",
         id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
