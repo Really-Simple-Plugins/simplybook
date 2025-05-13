@@ -41,7 +41,7 @@ const LiveAgent = (props: { style?: string }) => {
     return (
         <div
             onClick={handleClick}
-            className="bg-transparent text-[#0cadef] font-bold px-3 py-1 rounded border-2 border-[#0cadef] cursor-pointer text-center font-sans"
+            className="bg-transparent text-[#0cadef] font-bold px-3 py-1 rounded border-2 border-[#0cadef] cursor-pointer text-center"
         >
             {__('Live Help', 'simplybook')}
         </div>
