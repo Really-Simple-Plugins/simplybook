@@ -106,9 +106,9 @@ composer install --no-dev --optimize-autoloader || {
 
 printf "\n${GREEN}✅ Packages installed for production!${RESET}\n\n"
 
-# Strip out files that are not meant to be shipped
+# Strip out files that are not meant to be shipped (composer.json should be kept)
 printf "${BLUE}Cleaning up dev-related files...${RESET}\n"
-rm -rf ./composer.json ./composer.lock || {
+rm -rf ./composer.lock || {
   printf "${RED}Error: Failed to remove dev-related files.${RESET}\n"
   exit 1
 }
