@@ -1450,6 +1450,7 @@ class ApiClient
     /**
      * Get the list of themes available for the company
      * @uses \SimplyBook\Http\JsonRpcClient
+     * @throws \Exception
      */
     public function getThemeList(): array
     {
