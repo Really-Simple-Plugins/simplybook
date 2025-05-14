@@ -606,8 +606,8 @@
   .h-\[70vh\] {
     height: 70vh;
   }
-  .h-\[350px\] {
-    height: 350px;
+  .h-\[290px\] {
+    height: 290px;
   }
   .h-auto {
     height: auto;
@@ -1567,11 +1567,11 @@
       content: var(--tw-content);
     }
   }
-  .peer-checked\:after\:translate-x-4 {
+  .peer-checked\:after\:translate-x-\[1\.125rem\] {
     &:is(:where(.peer):checked ~ *) {
       &::after {
         content: var(--tw-content);
-        --tw-translate-x: calc(var(--spacing) * 4);
+        --tw-translate-x: 1.125rem;
         translate: var(--tw-translate-x) var(--tw-translate-y);
       }
     }
