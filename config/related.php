@@ -36,7 +36,7 @@ return [
             'create' => admin_url('admin.php?page=terms-conditions'),
             'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
             'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
-            'title' => 'Complianz - '. esc_html__("Terms & Conditions", "simplybook"),
+            'title' => 'Complianz - '. __("Terms & Conditions", "simplybook"),
             'color' => '#000000'
         ],
     ],
