@@ -27,12 +27,12 @@ const Bookings = () => {
         {
             title: __("Today", "simplybook"),
             value: bookingsToday ?? __('Loading', 'simplybook'),
-            icon: "user-group",
+            icon: "calendar-day",
         },
         {
             title: __("This week", "simplybook"),
             value: bookingsThisWeek ?? __('Loading', 'simplybook'),
-            icon: "user-group",
+            icon: "calendar-week",
         },
     ];
 
@@ -53,15 +53,15 @@ const Bookings = () => {
 
     return (
         <Block className={"col-span-12 sm:col-span-6 xl:col-span-3 2xl:col-span-3 2xl:row-span-2"}>
-            <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
+            <BlockHeading title={__("Planned bookings", "simplybook")} controls={undefined} />
             <BlockContent className={"px-0 py-0"}>
                 <div className={"flex flex-col bg-tertiary-light"}>
-                    <div className={"flex flex-row justify-between gap-4 px-4"}>
+                    <div className={"flex flex-row justify-between gap-4 px-5 py-4"}>
                         {FeaturedBlocks.map((block, index) => (
                             <div
                                 key={index}
                                 className={
-                                    "my-6 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-6 shadow-sm"
+                                    "my-2 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-4 shadow-sm"
                                 }
                             >
                                 <Icon name={block.icon} size={"2x"} />
