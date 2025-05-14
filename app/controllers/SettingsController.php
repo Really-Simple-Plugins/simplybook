@@ -49,7 +49,7 @@ class SettingsController implements ControllerInterface
         if ( empty($this->get_option('company_name') ) ) {
             $options['company_name'] = get_bloginfo( 'name' );
         }
-        if ( empty($this->get_option('country') ) ) {
+        if ( empty($this->get_option('country')) && !empty($this->getCountryByLocale()) ) {
             $options['country'] = $this->getCountryByLocale();
         }
         update_option('simplybook_options', $options);
@@ -63,6 +63,11 @@ class SettingsController implements ControllerInterface
     {
         $locale = get_locale();
         $locale = explode('_', $locale);
+
+        if ( count($locale) < 2 ) {
+            return '';
+        }
+
         return strtoupper( $locale[1] );
     }
 }
