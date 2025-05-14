@@ -98,7 +98,7 @@ const Progress = () => {
                     </span>
                 </div>
 
-                <div className="task-wrapper scroll-container h-[350px] mt-1 grid  overflow-y-auto content-start gap-2">
+                <div className="task-wrapper scroll-container h-[290px] mt-1 grid  overflow-y-auto content-start gap-2">
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
