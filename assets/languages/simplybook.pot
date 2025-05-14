@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-14T08:42:09+00:00\n"
+"POT-Creation-Date: 2025-05-14T10:53:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -411,16 +411,16 @@ msgstr ""
 msgid "Invalid value for setting"
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:239
+#: app/support/builders/WidgetScriptBuilder.php:243
 msgid "This is a demo SimplyBook.me widget."
 msgstr ""
 
 #. translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag
-#: app/support/builders/WidgetScriptBuilder.php:244
+#: app/support/builders/WidgetScriptBuilder.php:248
 msgid "You can configure the plugin settings to display your customized widget %1$shere%2$s."
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:251
+#: app/support/builders/WidgetScriptBuilder.php:255
 msgid "Notice"
 msgstr ""
 
@@ -1677,6 +1677,10 @@ msgstr ""
 
 #: config/related.php:16
 msgid "Lightweight plugin. Heavyweight security features."
+msgstr ""
+
+#: config/related.php:28
+msgid "Consent Management as it should be"
 msgstr ""
 
 #: config/related.php:39
