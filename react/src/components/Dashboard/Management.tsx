@@ -67,27 +67,33 @@ const Management = () => {
             <BlockContent className={"px-0 py-0"}>
                 <div>
                     {DataList.map((block, index) => (
-                        <div key={index} className={"odd:bg-white even:bg-gray-50 flex justify-between items-center p-4"}>
-                            {block.isPlugin && !specialFeaturesHasError && !isPluginActive(block.id) && (
+                        <>
+                            {!isPluginActive(block.id) && !specialFeaturesLoading && (
                                 <>
-                                    <div className="text-base">{block.title}</div>
-                                    <div className={"flex justify-end"}>
-                                        <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
+                                    <div key={index} className={"odd:bg-white even:bg-gray-50 flex justify-between items-center p-4"}>
+                                        {block.isPlugin && !specialFeaturesHasError && !isPluginActive(block.id) && (
+                                            <>
+                                                <div className="text-base">{block.title}</div>
+                                                <div className={"flex justify-end"}>
+                                                    <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
+                                                </div>
+                                            </>
+                                        )}
+                                        {!block.isPlugin && !subscriptionDataHasError && (Object.keys(subscriptionLimits).length > 0) && (
+                                            <SubscriptionDataList
+                                                title={block.title}
+                                                // @ts-ignore
+                                                remaining={subscriptionLimits?.[block.id]?.rest}
+                                                // @ts-ignore
+                                                total={subscriptionLimits?.[block.id]?.total}
+                                                // @ts-ignore
+                                                page={block.link}
+                                            />
+                                        )}
                                     </div>
                                 </>
                             )}
-                            {!block.isPlugin && !subscriptionDataHasError && (Object.keys(subscriptionLimits).length > 0) && (
-                                <SubscriptionDataList
-                                    title={block.title}
-                                    // @ts-ignore
-                                    remaining={subscriptionLimits?.[block.id]?.rest}
-                                    // @ts-ignore
-                                    total={subscriptionLimits?.[block.id]?.total}
-                                    // @ts-ignore
-                                    page={block.link}
-                                />
-                            )}
-                        </div>
+                        </>
                     ))}
                 </div>
             </BlockContent>
