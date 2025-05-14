@@ -1,5 +1,5 @@
 # Copyright (C) 2025 Really Simple Plugins
-# This file is distributed under the same license as the SimplyBook.me plugin.
+# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
 "Project-Id-Version: SimplyBook.me 3.0.0\n"
@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-12T13:50:12+00:00\n"
+"POT-Creation-Date: 2025-05-13T13:58:16+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -54,9 +54,13 @@ msgstr ""
 msgid "Support"
 msgstr ""
 
-#. translators: %s is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
+#. translators: %1$d is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
 #: app/controllers/ReviewController.php:41
-msgid "Hi, SimplyBook.me has helped you reach %d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s."
+msgid "Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s."
+msgstr ""
+
+#: app/controllers/ScheduleController.php:16
+msgid "Once every day"
 msgstr ""
 
 #: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:14
@@ -115,62 +119,62 @@ msgstr ""
 msgid "Please upgrade your plan to configure more Services, or delete existing Services if you want to add more."
 msgstr ""
 
-#: app/features/Notifications/Notices/PublishWidgetNotice.php:19
+#: app/features/Notifications/Notices/PublishWidgetNotice.php:36
 msgid "No booking widget detected!"
 msgstr ""
 
-#: app/features/Notifications/Notices/PublishWidgetNotice.php:27
+#: app/features/Notifications/Notices/PublishWidgetNotice.php:44
 msgid "It seems that you haven’t published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:126
-#: app/features/Onboarding/OnboardingController.php:267
-#: app/features/Onboarding/OnboardingController.php:302
+#: app/features/Onboarding/OnboardingController.php:125
+#: app/features/Onboarding/OnboardingController.php:268
+#: app/features/Onboarding/OnboardingController.php:303
 msgid "Please fill in all fields."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:150
+#: app/features/Onboarding/OnboardingController.php:149
 msgid "Please verify you're not a robot."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:154
+#: app/features/Onboarding/OnboardingController.php:153
 msgid "Please enter the confirmation code."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:193
+#: app/features/Onboarding/OnboardingController.php:192
 msgid "Something went wrong while saving the widget style settings. Please try again."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:198
+#: app/features/Onboarding/OnboardingController.php:197
 msgid "Successfully saved widget style settings"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:224
+#: app/features/Onboarding/OnboardingController.php:223
 msgid "Calendar page title should be available if you choose to generate this page."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:280
-#: app/features/Onboarding/OnboardingController.php:321
+#: app/features/Onboarding/OnboardingController.php:281
+#: app/features/Onboarding/OnboardingController.php:322
 msgid "Unknown error occurred, please verify your credentials."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:286
+#: app/features/Onboarding/OnboardingController.php:287
 msgid "Login successful."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:388
+#: app/features/Onboarding/OnboardingController.php:389
 msgid "Successfully finished onboarding!"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:392
+#: app/features/Onboarding/OnboardingController.php:393
 msgid "An error occurred while finishing the onboarding process"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:406
+#: app/features/Onboarding/OnboardingController.php:407
 msgid "Successfully removed all previous data."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:409
+#: app/features/Onboarding/OnboardingController.php:410
 msgid "An error occurred while trying to remove previous data."
 msgstr ""
 
@@ -272,11 +276,11 @@ msgstr ""
 msgid "Post your social media content and create ads"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:27
+#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:46
 msgid "Publish the booking widget on the front-end of your site."
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:37
+#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:56
 msgid "Show shortcodes"
 msgstr ""
 
@@ -284,82 +288,98 @@ msgstr ""
 msgid "Your Trial period has expired! Please consider all premium features!"
 msgstr ""
 
-#: app/http/ApiClient.php:561
-#: app/http/ApiClient.php:769
+#: app/http/ApiClient.php:552
+#: app/http/ApiClient.php:760
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: app/http/ApiClient.php:567
+#: app/http/ApiClient.php:558
 msgid "Too many attempts to register company, please try again in a minute."
 msgstr ""
 
-#: app/http/ApiClient.php:581
+#: app/http/ApiClient.php:572
 msgid "Please fill in all company data."
 msgstr ""
 
-#: app/http/ApiClient.php:637
+#: app/http/ApiClient.php:616
+msgid "Something went wrong while registering your company. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:628
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/http/ApiClient.php:670
+#: app/http/ApiClient.php:661
 msgid "The company name is not allowed. Please change the company name."
 msgstr ""
 
-#: app/http/ApiClient.php:777
+#: app/http/ApiClient.php:669
+msgid "Unknown error encountered while registering your company. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:768
 msgid "Something went wrong, are you sure you started the company registration?"
 msgstr ""
 
-#: app/http/ApiClient.php:804
+#: app/http/ApiClient.php:787
+msgid "Something went wrong while confirming your email. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:795
 msgid "Email successfully confirmed."
 msgstr ""
 
-#: app/http/ApiClient.php:810
+#: app/http/ApiClient.php:799
+msgid "Unknown error encountered while confirming your email. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:801
 msgid "This confirmation code is not valid."
 msgstr ""
 
-#: app/http/ApiClient.php:1310
+#: app/http/ApiClient.php:1300
 msgid "Failed logging in, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1313
+#: app/http/ApiClient.php:1303
 msgid "Unknown error"
 msgstr ""
 
-#: app/http/ApiClient.php:1319
+#: app/http/ApiClient.php:1309
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1322
+#: app/http/ApiClient.php:1312
 msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1370
+#: app/http/ApiClient.php:1360
 msgid "Failed two factor authentication, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1373
+#: app/http/ApiClient.php:1363
 msgid "Unknown 2FA error"
 msgstr ""
 
-#: app/http/ApiClient.php:1380
+#: app/http/ApiClient.php:1370
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1383
+#: app/http/ApiClient.php:1373
 msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1447
+#: app/http/ApiClient.php:1437
 #: react/build/843.js:1
 #: react/src/components/Modals/SignInModal.jsx:15
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/http/ApiClient.php:1448
+#: app/http/ApiClient.php:1438
 msgid "SMS"
 msgstr ""
 
-#: app/http/ApiClient.php:1454
+#: app/http/ApiClient.php:1444
 msgid "Unknown 2FA provider"
 msgstr ""
 
@@ -395,11 +415,12 @@ msgstr ""
 msgid "This is a demo SimplyBook.me widget."
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:243
-msgid "You can configure the plugin settings to display your customized widget %shere%s."
+#. translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag
+#: app/support/builders/WidgetScriptBuilder.php:244
+msgid "You can configure the plugin settings to display your customized widget %1$shere%2$s."
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:250
+#: app/support/builders/WidgetScriptBuilder.php:251
 msgid "Notice"
 msgstr ""
 
@@ -1414,37 +1435,37 @@ msgid "Booking button widget"
 msgstr ""
 
 #: config/fields/design.php:12
-#: config/fields/design.php:149
+#: config/fields/design.php:150
 msgid "Flexible"
 msgstr ""
 
 #: config/fields/design.php:13
-#: config/fields/design.php:147
+#: config/fields/design.php:148
 msgid "Modern"
 msgstr ""
 
 #: config/fields/design.php:14
-#: config/fields/design.php:145
+#: config/fields/design.php:146
 msgid "Flexible weekly"
 msgstr ""
 
 #: config/fields/design.php:15
-#: config/fields/design.php:150
+#: config/fields/design.php:151
 msgid "Slots weekly"
 msgstr ""
 
 #: config/fields/design.php:16
-#: config/fields/design.php:153
+#: config/fields/design.php:154
 msgid "Modern Provider"
 msgstr ""
 
 #: config/fields/design.php:17
-#: config/fields/design.php:146
+#: config/fields/design.php:147
 msgid "Flexible Provider"
 msgstr ""
 
 #: config/fields/design.php:18
-#: config/fields/design.php:151
+#: config/fields/design.php:152
 msgid "Weekly classes"
 msgstr ""
 
@@ -1468,124 +1489,138 @@ msgstr ""
 msgid "RTL"
 msgstr ""
 
-#: config/fields/design.php:44
+#. translators: %s - IS or IS NOT
+#: config/fields/design.php:45
 msgid "When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL."
 msgstr ""
 
-#: config/fields/design.php:55
+#: config/fields/design.php:56
 msgid "Allow switch to ADA"
 msgstr ""
 
-#: config/fields/design.php:56
+#: config/fields/design.php:57
 msgid "This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability."
 msgstr ""
 
-#: config/fields/design.php:65
+#: config/fields/design.php:66
 msgid "Clear the session of each widget initialization"
 msgstr ""
 
-#: config/fields/design.php:66
+#: config/fields/design.php:67
 msgid "Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones."
 msgstr ""
 
-#: config/fields/design.php:75
+#: config/fields/design.php:76
 msgid "Add the reviews count"
 msgstr ""
 
-#: config/fields/design.php:83
+#: config/fields/design.php:84
 msgid "Hide the add reviews button"
 msgstr ""
 
-#: config/fields/design.php:91
+#: config/fields/design.php:92
 msgid "Title"
 msgstr ""
 
-#: config/fields/design.php:92
+#: config/fields/design.php:93
 msgid "Book now"
 msgstr ""
 
-#: config/fields/design.php:100
+#: config/fields/design.php:101
 msgid "Background color"
 msgstr ""
 
-#: config/fields/design.php:109
+#: config/fields/design.php:110
 msgid "Text color"
 msgstr ""
 
-#: config/fields/design.php:117
+#: config/fields/design.php:118
 msgid "Position"
 msgstr ""
 
-#: config/fields/design.php:120
+#: config/fields/design.php:121
 msgid "Top"
 msgstr ""
 
-#: config/fields/design.php:121
+#: config/fields/design.php:122
 msgid "Bottom"
 msgstr ""
 
-#: config/fields/design.php:122
+#: config/fields/design.php:123
 msgid "Left"
 msgstr ""
 
-#: config/fields/design.php:123
+#: config/fields/design.php:124
 msgid "Right"
 msgstr ""
 
-#: config/fields/design.php:131
+#: config/fields/design.php:132
 msgid "Position offset"
 msgstr ""
 
-#: config/fields/design.php:132
+#: config/fields/design.php:133
 msgid "Offset value in pixels, percentage or 'auto'. Calculated from the bottom or right side, based on the chosen position."
 msgstr ""
 
-#: config/fields/design.php:141
+#: config/fields/design.php:142
 msgid "Theme"
 msgstr ""
 
-#: config/fields/design.php:148
+#: config/fields/design.php:149
 msgid "Default"
 msgstr ""
 
-#: config/fields/design.php:152
+#: config/fields/design.php:153
 msgid "Daily classes"
 msgstr ""
 
-#: config/fields/design.php:154
+#: config/fields/design.php:155
 msgid "As slots"
 msgstr ""
 
-#: config/fields/design.php:155
+#: config/fields/design.php:156
 msgid "As table"
 msgstr ""
 
-#: config/fields/design.php:156
+#: config/fields/design.php:157
 msgid "Block"
 msgstr ""
 
-#: config/fields/design.php:157
+#: config/fields/design.php:158
 msgid "List"
 msgstr ""
 
-#: config/fields/design.php:158
+#: config/fields/design.php:159
 msgid "Single page"
 msgstr ""
 
-#: config/fields/design.php:159
+#: config/fields/design.php:160
 msgid "Display calendar"
 msgstr ""
 
-#: config/fields/design.php:160
+#: config/fields/design.php:161
 msgid "Base theme color"
 msgstr ""
 
+#: config/fields/design.php:162
+msgid "Show only available time"
+msgstr ""
+
+#: config/fields/design.php:163
+msgid "Hide unavailable days on calendar"
+msgstr ""
+
 #: config/fields/design.php:164
+msgid "Display calendar layout sidebar"
+msgstr ""
+
+#: config/fields/design.php:165
 msgid "Image scale mode"
 msgstr ""
 
 #: config/fields/providers.php:13
 #: config/menus.php:24
+#: react/build/747.js:1
 msgid "Service Providers"
 msgstr ""
 
@@ -2446,6 +2481,11 @@ msgstr ""
 
 #: react/build/107.js:1
 #: react/build/747.js:1
+msgid "Live Help"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
 msgid "days left"
 msgstr ""
 
@@ -2601,10 +2641,6 @@ msgid "View Bookings"
 msgstr ""
 
 #: react/build/747.js:1
-msgid "Providers"
-msgstr ""
-
-#: react/build/747.js:1
 msgid "SMS Credits"
 msgstr ""
 
@@ -2653,7 +2689,7 @@ msgid "Downloading..."
 msgstr ""
 
 #: react/build/747.js:1
-msgid "Our Plugins"
+msgid "Other Plugins"
 msgstr ""
 
 #: react/build/747.js:1
