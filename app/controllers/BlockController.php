@@ -82,8 +82,9 @@ class BlockController implements ControllerInterface
             ]
         );
 
-        //add widget.js script
-        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), true);
+        // Add widget.js script in the header of the page. We need it to be
+        // Loaded as soon as possible, as our widgets are dependent on it.
+        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), false);
 
         wp_register_style('simplybookMePl_widget_styles', $indexCss, [], App::env('plugin.version'));
         wp_enqueue_style('simplybookMePl_widget_styles');

@@ -85,10 +85,11 @@ class WidgetController implements ControllerInterface
     }
 
     /**
-     * Enqueue the remote widget script
+     * Enqueue the remote widget script in the header. Its needed as soon as
+     * possible as the widgets are dependent on it.
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), true);
+        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), false);
     }
 }
