@@ -110,6 +110,10 @@ class WidgetScriptBuilder
         return $this;
     }
 
+    /**
+     * Set the authenticated flag. If set to false, the widget will be
+     * displayed as a demo widget.
+     */
     public function isAuthenticated(bool $authenticated): WidgetScriptBuilder
     {
         $this->isAuthenticated = $authenticated;
