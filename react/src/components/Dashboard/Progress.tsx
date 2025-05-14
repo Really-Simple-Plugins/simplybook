@@ -98,16 +98,19 @@ const Progress = () => {
                     </span>
                 </div>
 
-                <div className="task-wrapper scroll-container h-[290px] mt-1 grid  overflow-y-auto content-start gap-2">
+                <div className={clsx(
+                    "task-wrapper scroll-container h-[290px] mt-1 grid  overflow-y-auto content-start gap-2",
+                )}>
                     {displayedTasks.map((task: Task) => (
                         <div
                             key={task.id}
-                            className="
-                                task-item-inner
-                                h-6 flex items-center gap-4 px-5
-                                hover:bg-gray-50
-                                xl:h-auto  xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1
-                            ">
+                            className={clsx(
+                                remainingTasks.length > 7 ? "!mr-0" : !showAll ? "mr-[0.95rem]" : "",
+                                "task-item-inner",
+                                "h-6 flex items-center gap-4 pl-5 pr-1",
+                                "hover:bg-gray-50",
+                                "xl:h-auto  xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1"   
+                            )}>
 
                             {/* Status pill - fixed width */}
                             <span
@@ -133,7 +136,10 @@ const Progress = () => {
                                             <Link
                                                 to={task.action.link}
                                                 target={task.action?.target ?? '_self'}
-                                                className="text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]"
+                                                className={clsx(
+                                                    "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
+                                                    task.type === 'required' && "pr-6"
+                                                )}
                                             >
                                                 {task.action.text}
                                             </Link>
@@ -141,7 +147,10 @@ const Progress = () => {
                                         {task.action && task.action.text && task.action.login_link && (
                                             <LoginLink
                                                 page={task.action.login_link}
-                                                className="text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]"
+                                                className={clsx(
+                                                    "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
+                                                    task.type === 'required' && "pr-6"
+                                                )}
                                             >
                                                 {task.action.text}
                                             </LoginLink>
@@ -153,7 +162,7 @@ const Progress = () => {
                                         {task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status) && (
                                             <button
                                                 onClick={() => dismissTask(task.id)}
-                                                className="text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
+                                                className="ml-2 text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
                                             >
                                                 ×
                                             </button>
