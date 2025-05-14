@@ -34,7 +34,7 @@ const FieldWrapper = memo(({
                 {type==='checkbox' && children}
                 {label && (
                     <Label.Root
-                        className={"cursor-pointer pb-1 font-normal text-black text-label "}
+                        className={"cursor-pointer pb-1 font-medium text-black text-label "}
                         htmlFor={inputId}
                     >
                         {label}
