@@ -12,20 +12,16 @@ const MostPopular: React.FC<MostPopularProps> = ({
 }) => {
     return (
         <>
-            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 border-2 border-[#E1E7F5] p-3 bg-primary-lighter text-base font-bold" , className)}>
-                <span className="text-succes flex items-center w-full mb-1">
-                    <Icon style={{ color: "var(--color-success)" }} name="trophy" size={"1x"} className="mr-2" />
-                    <p className="text-base font-semibold m-0">{title}</p>   
-                </span>
-                <div className="flex items-center justify-between w-full">
+            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 last:mb-3 text-base font-bold px-4 " , className)}>
+                <div className="flex flex-wrap justify-between w-full items-start ">
                     {mostPopularName ? (
-                        <>
-                            <p className="text-base font-semibold m-0">{mostPopularName}</p>
-                            <div className="flex font-semibold">
-                                <p className="text-base m-0">{__("This week", "simplybook")}:</p>
+                        <div className="flex flex-wrap justify-between items-start w-full">
+                            <p className="text-succes text-xs font-semibold m-0 mb-1">{title}</p> 
+                            <div className="flex justify-between w-full">
+                                <p className="text-base font-medium m-0 ">{mostPopularName}</p>
                                 <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
                             </div>
-                        </>
+                        </div>
                     ) : (
                         <p className="text-base font-semibold m-0 text-gray-500 italic">{ __("No bookings yet...", "simplybook")}</p>
                     )}
