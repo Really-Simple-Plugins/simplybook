@@ -12,7 +12,7 @@ const MostPopular: React.FC<MostPopularProps> = ({
 }) => {
     return (
         <>
-            <div className={clsx("flex flex-wrap justify-between items-center rounded-md mb-4 last:mb-3 text-base font-bold px-4 " , className)}>
+            <div className={clsx("flex flex-wrap justify-between items-center mb-4 last:mb-3 text-base font-bold px-4 " , className)}>
                 <div className="flex flex-wrap justify-between w-full items-start ">
                     {mostPopularName ? (
                         <div className="flex flex-wrap justify-between items-start w-full">
