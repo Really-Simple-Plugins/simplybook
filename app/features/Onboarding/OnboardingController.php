@@ -427,6 +427,7 @@ class OnboardingController implements FeatureInterface
         }
 
         global $wpdb;
+
         // Search for "simplybook widget" with a maximum of 1 character in
         // between. This will match both the shortcode ([simplybook_widget])
         // and the Gutenberg block (<!-- wp:simplybook/widget -->).
