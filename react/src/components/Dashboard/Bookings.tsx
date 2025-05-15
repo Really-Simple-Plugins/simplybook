@@ -72,7 +72,7 @@ const Bookings = () => {
                     </div>
                 </div>
                 {!isLoading && !hasError && (
-                    <div className="mt-4 mx-4 bg-primary-lighter rounded-md border-1 border-[#E1E7F5]">
+                    <div className="mt-4 mx-5 bg-primary-lighter rounded-md border-1 border-[#E1E7F5]">
                         <span className="text-succes flex items-center w-full mb-3 px-4 py-3 border-b-[#E1E7F5] border-b-1">
                             <Icon 
                                 style={{ color: "var(--color-success)" }} 
