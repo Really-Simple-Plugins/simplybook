@@ -235,8 +235,7 @@ class OnboardingController implements FeatureInterface
 
         // These flags are deleted after its one time use in the Task and Notice
         if ($pageCreatedSuccessfully) {
-            update_option('simplybook_calendar_published_notification_completed', true);
-            update_option('simplybook_calendar_published_task_completed', true);
+            $this->service->setPublishWidgetCompleted();
         }
 
         $this->service->setOnboardingCompleted();
@@ -350,6 +349,7 @@ class OnboardingController implements FeatureInterface
             $responseStorage->getInt('company_id'),
         );
 
+        $this->validatePublishedWidget();
         $this->service->setOnboardingCompleted();
 
         return true;
@@ -411,5 +411,36 @@ class OnboardingController implements FeatureInterface
         }
 
         return $this->service->sendHttpResponse([], $success, $message);
+    }
+
+    /**
+     * Method is used to set a notification/task flag to true when it determines
+     * that there is a published post with the SimplyBook.me widget shortcode
+     * or the Gutenberg block.
+     */
+    public function validatePublishedWidget(): void
+    {
+        global $wpdb;
+
+        // Search for "simplybook widget" with a maximum of 1 character in
+        // between. This will match both the shortcode ([simplybook_widget])
+        // and the Gutenberg block (<!-- wp:simplybook/widget -->).
+        $pattern = 'simplybook.{0,1}widget';
+
+        // This direct SQL query is intentional, safe, and properly prepared.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+        $query = $wpdb->prepare("
+            SELECT 1
+            FROM {$wpdb->posts}
+            WHERE post_content REGEXP %s
+            LIMIT 1
+        ", $pattern);
+
+        $havePosts = (bool) $wpdb->get_var($query);
+        if (!$havePosts) {
+            return;
+        }
+
+        $this->service->setPublishWidgetCompleted();
     }
 }

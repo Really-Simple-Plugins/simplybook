@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
+use SimplyBook\Features\Onboarding\OnboardingService;
+
 class PublishWidgetNotice extends AbstractNotice
 {
     const IDENTIFIER = 'publish_widget_on_frontend';
@@ -9,7 +11,8 @@ class PublishWidgetNotice extends AbstractNotice
     /**
      * This option is used to track if the user has already created the widget
      * on the front-end. Flag is one time use and is only used during the
-     * initial setup of the Notification feature.
+     * initial setup of the Notification feature. Flag is set to true in
+     * {@see OnboardingService::setPublishWidgetCompleted}
      *
      * @internal cannot be used in the {@see OnboardingController} because
      *  the feature is not loaded during onboarding.
