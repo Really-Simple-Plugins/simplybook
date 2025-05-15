@@ -420,8 +420,13 @@ class OnboardingController implements FeatureInterface
      */
     public function validatePublishedWidget(): void
     {
-        global $wpdb;
+        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
+        if ($cache === true) {
+            $this->service->setPublishWidgetCompleted();
+            return;
+        }
 
+        global $wpdb;
         // Search for "simplybook widget" with a maximum of 1 character in
         // between. This will match both the shortcode ([simplybook_widget])
         // and the Gutenberg block (<!-- wp:simplybook/widget -->).
@@ -442,5 +447,6 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->service->setPublishWidgetCompleted();
+        wp_cache_set('simplybook_widget_published', true, 'simplybook');
     }
 }
