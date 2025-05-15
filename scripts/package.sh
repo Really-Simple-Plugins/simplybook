@@ -161,18 +161,21 @@ zip -rqT "${PLUGIN_NAME}".zip "${PLUGIN_NAME}"/
 
 printf "${GREEN}✅ Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n\n" "${PLUGIN_NAME}"
 
+# @internal This part is commented out because storing translation files in the
+# packaged plugin is not needed for WordPress.org plugins.
+
 # Ask the user if they want to retrieve translation files from
 # translate.really-simple-plugins.com and save them in the packaged plugin
-read -p "$(printf "${BLUE}Do you want to store translation files from translate.really-simple-plugins.com into the package? ${RESET}(y/n):")" CONFIRM
-if [[ "$CONFIRM" == "y" ]]; then
-  cd "${ROOT_DIR}"/scripts || {
-    printf "${RED}Error: Failed to change directory to find the translation script.${RESET}\n"
-    exit 1
-  }
-
-  printf "\n${BLUE}Starting the translation script now.${RESET}\n"
-  bash ./translation.sh "${PLUGIN_NAME}" "${TEXT_DOMAIN}"
-fi
+#read -p "$(printf "${BLUE}Do you want to store translation files from translate.really-simple-plugins.com into the package? ${RESET}(y/n):")" CONFIRM
+#if [[ "$CONFIRM" == "y" ]]; then
+#  cd "${ROOT_DIR}"/scripts || {
+#    printf "${RED}Error: Failed to change directory to find the translation script.${RESET}\n"
+#    exit 1
+#  }
+#
+#  printf "\n${BLUE}Starting the translation script now.${RESET}\n"
+#  bash ./translation.sh "${PLUGIN_NAME}" "${TEXT_DOMAIN}"
+#fi
 
 # Ask the user if the package need to be uploaded to translate.really-simple-plugins.com
 read -p "$(printf "${BLUE}Do you want to upload the package to translate.really-simple-plugins.com? ${RESET}(y/n):")" CONFIRM

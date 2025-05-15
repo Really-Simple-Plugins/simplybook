@@ -425,6 +425,9 @@
   .mx-4 {
     margin-inline: calc(var(--spacing) * 4);
   }
+  .mx-5 {
+    margin-inline: calc(var(--spacing) * 5);
+  }
   .mx-auto {
     margin-inline: auto;
   }
@@ -490,6 +493,9 @@
   }
   .mb-2 {
     margin-bottom: calc(var(--spacing) * 2);
+  }
+  .mb-3 {
+    margin-bottom: calc(var(--spacing) * 3);
   }
   .mb-4 {
     margin-bottom: calc(var(--spacing) * 4);
@@ -1036,6 +1042,9 @@
   }
   .border-transparent {
     border-color: transparent;
+  }
+  .border-b-\[\#E1E7F5\] {
+    border-bottom-color: #E1E7F5;
   }
   .\!bg-transparent {
     background-color: transparent !important;
@@ -1597,6 +1606,11 @@
         content: var(--tw-content);
         border-color: var(--color-white);
       }
+    }
+  }
+  .last\:mb-3 {
+    &:last-child {
+      margin-bottom: calc(var(--spacing) * 3);
     }
   }
   .odd\:bg-white {
