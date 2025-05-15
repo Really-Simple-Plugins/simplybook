@@ -33,7 +33,9 @@ import {
  import { 
   faGlobe,
   faFileSlash,
-  faFileCircleXmark
+  faFileCircleXmark,
+  faCalendarDay,
+  faCalendarWeek
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
@@ -42,6 +44,8 @@ import {
 
 // Map your icons to keys for easy referencing
 const iconMap = {
+    "calendar-day": faCalendarDay,
+    "calendar-week": faCalendarWeek,
     "retry": faFileCircleXmark,
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
