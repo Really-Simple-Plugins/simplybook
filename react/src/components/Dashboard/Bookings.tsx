@@ -38,13 +38,13 @@ const Bookings = () => {
 
     const MostPopularDataList = [
         {
-            title: __("Most popular provider", "simplybook"),
+            title: __("Service Provider", "simplybook"),
             key: "provider",
             value: mostPopularProviderName,
             bookings: mostPopularProviderBookings,
         },
         {
-            title: __("Most popular service", "simplybook"),
+            title: __("Service", "simplybook"),
             key: "service",
             value: mostPopularServiceName,
             bookings: mostPopularServiceBookings,
@@ -53,16 +53,14 @@ const Bookings = () => {
 
     return (
         <Block className={"col-span-12 sm:col-span-6 xl:col-span-3 2xl:col-span-3 2xl:row-span-2"}>
-            <BlockHeading title={__("Planned bookings", "simplybook")} controls={undefined} />
+            <BlockHeading title={__("Bookings", "simplybook")} controls={undefined} />
             <BlockContent className={"px-0 py-0"}>
                 <div className={"flex flex-col bg-tertiary-light"}>
                     <div className={"flex flex-row justify-between gap-4 px-5 py-4"}>
                         {FeaturedBlocks.map((block, index) => (
                             <div
                                 key={index}
-                                className={
-                                    "my-2 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-4 shadow-sm"
-                                }
+                                className={ "my-2 flex w-1/2 flex-col items-center justify-center rounded-lg border-2 border-transparent bg-white py-4 shadow-sm"}
                             >
                                 <Icon name={block.icon} size={"2x"} />
                                 <div className={"text-sm my-2"}>{block.title}</div>
@@ -74,7 +72,16 @@ const Bookings = () => {
                     </div>
                 </div>
                 {!isLoading && !hasError && (
-                    <div className="mt-4 px-4">
+                    <div className="mt-4 mx-4 bg-primary-lighter rounded-md border-1 border-[#E1E7F5]">
+                        <span className="text-succes flex items-center w-full mb-3 px-4 py-3 border-b-[#E1E7F5] border-b-1">
+                            <Icon 
+                                style={{ color: "var(--color-success)" }} 
+                                name="trophy" 
+                                size={"1x"} 
+                                className="mr-2" 
+                            />
+                            <p className="text-base font-semibold m-0">{__("Most popular", "simplybook")} - {__("Last 30 days", "simplybook")}</p>   
+                        </span>
                         {MostPopularDataList.map((block, index) => (
                             <Fragment key={index}>
                                 <MostPopular 
