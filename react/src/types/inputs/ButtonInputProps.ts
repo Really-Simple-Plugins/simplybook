@@ -20,5 +20,6 @@ export type ButtonInputProps = {
   | "square-small" 
   | undefined;
   disabled?: boolean;
+  buttonDisabledAttribute?: boolean;
 } & React.ButtonHTMLAttributes<HTMLButtonElement> &
   React.AnchorHTMLAttributes<HTMLAnchorElement>;

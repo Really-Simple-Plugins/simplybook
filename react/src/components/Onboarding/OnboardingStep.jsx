@@ -172,7 +172,8 @@ const OnboardingStep = ({
                             label={primaryButton.label}
                             context={bottomText}
                             button={{
-                                disabled: (primaryButton.disabled ?? disabled),
+                                buttonDisabledAttribute: false,
+                                disabled: disabled,
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />

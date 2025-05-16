@@ -12,6 +12,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
      onClick,
      btnVariant = "primary",
      disabled = false,
+     buttonDisabledAttribute = false
 }) => {
     let buttonVariants = clsx(
         // Base styles
@@ -46,6 +47,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             type={type}
             onClick={onClick}
             className={buttonVariants}
+            disabled={buttonDisabledAttribute}
         >
             {children}
         </button>
