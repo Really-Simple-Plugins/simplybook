@@ -24,6 +24,7 @@ const CheckboxField = forwardRef(
                 context={context}
                 className={className}
                 inputId={inputId}
+                fieldState={fieldState}
                 required={props.required}
                 type="checkbox"
             >

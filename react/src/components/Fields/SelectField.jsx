@@ -26,6 +26,7 @@ const SelectField = forwardRef(
                 className={className}
                 inputId={inputId}
                 required={props.required}
+                fieldState={fieldState}
             >
                 <SelectInput
                     id={inputId}

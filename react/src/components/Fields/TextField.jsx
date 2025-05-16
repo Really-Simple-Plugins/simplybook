@@ -39,6 +39,7 @@ const TextField = forwardRef(
         className={className}
         inputId={inputId}
         required={required}
+        fieldState={fieldState}
       >
         <TextInput
           name={name}
