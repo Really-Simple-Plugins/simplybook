@@ -3,6 +3,7 @@
 class CompanyBuilder
 {
     public string $email = '';
+    public string $user_login = '';
     public int $category = 0;
     public string $company_name = '';
     public string $phone = '';
@@ -103,6 +104,17 @@ class CompanyBuilder
         return $this;
     }
 
+    /**
+     * The user login is by default the email address. But a user can change
+     * this in the SimplyBook system, so for existing accounts this value
+     * can be different.
+     */
+    public function setUserLogin(string $user_login): CompanyBuilder
+    {
+        $this->user_login = sanitize_text_field($user_login);
+        return $this;
+    }
+
     public function toArray(): array
     {
         if (!empty($this->asArray)) {
@@ -111,6 +123,7 @@ class CompanyBuilder
 
         $this->asArray = [
             'email' => $this->email,
+            'user_login' => $this->user_login,
             'category' => $this->category,
             'company_name' => $this->company_name,
             'phone' => $this->phone,
@@ -137,7 +150,8 @@ class CompanyBuilder
 
     /**
      * Method to check if the object is valid. It will check if any value is
-     * empty.
+     * empty. Only use this during onboarding, that is where we ask for all the
+     * data. This method is not needed for login.
      */
     public function isValid(): bool
     {
@@ -146,7 +160,8 @@ class CompanyBuilder
 
     /**
      * Method to get the invalid fields. It will return an array of keys that
-     * are empty.
+     * are empty.Only use this during onboarding, that is where we ask for all the
+     *  data. This method is not needed for login.
      */
     public function getInvalidFields(): array
     {

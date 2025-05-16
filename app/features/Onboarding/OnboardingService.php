@@ -85,7 +85,8 @@ class OnboardingService
     {
         $options = get_option('simplybook_company_data', []);
 
-        foreach ($companyBuilder->toArray() as $key => $value) {
+        $companyData = array_filter($companyBuilder->toArray());
+        foreach ($companyData as $key => $value) {
             $options[$key] = $value;
         }
 

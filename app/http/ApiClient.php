@@ -364,7 +364,7 @@ class ApiClient
                 $response = $this->authenticateExistingUser(
                     $domain,
                     $this->get_company_login(),
-                    $sanitizedCompany->email,
+                    $sanitizedCompany->user_login,
                     $this->decrypt_string($sanitizedCompany->password)
                 );
             } catch (\Exception $e) {
@@ -1422,8 +1422,12 @@ class ApiClient
         $this->update_token($token, $tokenType);
         $this->update_token($refreshToken, $tokenType, true );
 
-        $this->update_option('domain', $companyDomain, $this->duringOnboardingFlag);
-        $this->update_option('company_id', $companyId, $this->duringOnboardingFlag);
+        $this->update_option('domain', $companyDomain, $this->duringOnboardingFlag, [
+            'type' => 'hidden',
+        ]);
+        $this->update_option('company_id', $companyId, $this->duringOnboardingFlag, [
+            'type' => 'hidden',
+        ]);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 

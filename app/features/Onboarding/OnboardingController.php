@@ -2,6 +2,7 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
@@ -109,6 +110,7 @@ class OnboardingController implements FeatureInterface
         $tempTerms = $tempDataStorage->getBoolean('terms', true);
 
         $companyBuilder->setEmail($tempEmail);
+        $companyBuilder->setUserLogin($tempEmail);
         $companyBuilder->setTerms($tempTerms);
 
         $companyBuilder->setPassword(
@@ -270,10 +272,19 @@ class OnboardingController implements FeatureInterface
         try {
             $response = App::provide('client')->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
+
+            $exceptionData = $e->getData();
+
+            // Data given was valid, so save it.
+            if (isset($exceptionData['require2fa']) && $exceptionData['require2fa'] === true) {
+                $this->saveLoginCompanyData($userLogin, $userPassword);
+            }
+
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-                'data' => $e->getData(),
+                'data' => $exceptionData,
             ], false, $e->getMessage(), $e->getResponseCode());
+
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -281,6 +292,7 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
+        $this->saveLoginCompanyData($userLogin, $userPassword);
 
         return new \WP_REST_Response([
             'message' => esc_html__('Login successful.', 'simplybook'),
@@ -353,6 +365,24 @@ class OnboardingController implements FeatureInterface
         $this->service->setOnboardingCompleted();
 
         return true;
+    }
+
+    /**
+     * Method is used to save valid user login and password for existing users.
+     * We already do this for users going through the onboarding in
+     * {@see registerCompanyAtSimplyBook}. This method ensures that we can
+     * re-authenticate an existing user when the connection to SimplyBook is
+     * lost. To see this fallback look at {@see ApiClient::refresh_token} on
+     * line 352.
+     */
+    protected function saveLoginCompanyData(string $userLogin, string $password)
+    {
+        $companyBuilder = new CompanyBuilder();
+        $companyBuilder->setUserLogin($userLogin)->setPassword(
+            $this->service->encrypt_string($password)
+        );
+
+        $this->service->storeCompanyData($companyBuilder);
     }
 
     /**
