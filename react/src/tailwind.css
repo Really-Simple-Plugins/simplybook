@@ -254,3 +254,11 @@ Field validation
         border-color: var(--color-error) !important;
     }
 }
+
+.invalid-field-required {
+
+    input,
+    select {
+        border-color: var(--color-error) !important;
+    }
+}
