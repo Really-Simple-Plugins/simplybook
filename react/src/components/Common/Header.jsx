@@ -39,7 +39,10 @@ const Header = () => {
 
     const linkClassName = "text-base px-4 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300 hover:text-primary";
 
-    const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    let expireText = subscriptionPlan;
+    if (subscriptionPlan.toUpperCase() === 'TRIAL' || (expiresIn < 30)) {
+        expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    }
 
     return (
         <div className="bg-white ">
@@ -96,7 +99,7 @@ const Header = () => {
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
                 <div className="
-                    py-6 w-full ml-auto flex items-center justify-between px-0 
+                    py-6 w-full ml-auto flex items-center justify-between px-0
                     xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
                 ">
                     {!isLoading && !isExpired && subscriptionPlan && (
