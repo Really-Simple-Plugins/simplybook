@@ -108,9 +108,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
         )
     }
 
-    // Load field validation
-    const { buildValidationClass } = useFieldValidation();
-
     return (
         <ErrorBoundary>
             <Controller
@@ -119,9 +116,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                 rules={validationRules}
                 defaultValue={defaultValue}
                 render={({ field, fieldState }) => {
-                    const isError = fieldState?.error ? true : false;
-                    const validationClass = isError ? buildValidationClass(fieldState?.error) : "";
-
                     useEffect(() => {
 
                         let curValue = getValue(setting.id);
@@ -139,7 +133,7 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                     return (
                         <FieldComponent
                             {...props}
-                            className={props.className + " " + validationClass}
+                            className={className}
                             setting={setting}
                             fieldState={fieldState}
                             required={setting.required}
