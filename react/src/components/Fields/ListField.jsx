@@ -3,6 +3,8 @@ import useServicesData from "../../hooks/useServicesData";
 import {__, sprintf } from "@wordpress/i18n";
 import ListItem from "./ListItem";
 import useProviderData from "../../hooks/useProviderData";
+import useSubscriptionData from "../../hooks/useSubscriptionData";
+
 /**
  * HiddenField component
  * @param {object} setting
@@ -16,11 +18,21 @@ import useProviderData from "../../hooks/useProviderData";
  * @return {JSX.Element}
  */
 const ListField = forwardRef(
-    ({ setting, field, fieldState, label, help, context, className, ...props }, ref) => {
+    ({ 
+        setting, 
+        field, 
+        fieldState, 
+        label, 
+        help, 
+        context, 
+        className, 
+        ...props 
+    }, ref) => {
         const {services, servicesFetched} = useServicesData();
         const {providers, providersFetched} = useProviderData();
         const [listArray, setListArray] = useState([]);
         const [listFetched, setListFetched] = useState(false);
+        const {subscription, isLoading: subscriptionDataLoading, hasError: subscriptionDataHasError, providersTotal: providersLimmit} = useSubscriptionData();
 
         const sourceData = {
             services: {
@@ -33,7 +45,10 @@ const ListField = forwardRef(
             },
         };
 
-
+        const isPremiumSubscription = (subscription?.subscription_name === 'Premium');
+        const amountOfProviders = sourceData?.providers?.data;
+        const surpassedLimit = (providersFetched ?? amountOfProviders.length >= providersLimmit);
+        
         useEffect(() => {
             setListArray(sourceData[setting.source]?.data);
             setListFetched(sourceData[setting.source]?.fetched);
@@ -65,7 +80,7 @@ const ListField = forwardRef(
                 {listFetched && listArray.map((item) => (
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
-                {setting.premiumText && (
+                {!isPremiumSubscription && providersFetched && surpassedLimit && (
                     <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
                 )}
             </div>
