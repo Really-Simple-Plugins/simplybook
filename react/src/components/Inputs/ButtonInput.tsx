@@ -46,7 +46,6 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             type={type}
             onClick={onClick}
             className={buttonVariants}
-            disabled={disabled}
         >
             {children}
         </button>
