@@ -323,8 +323,6 @@ class ApiClient
             return;
         }
 
-        //https://user-api-v2.wp.simplybook.ovh/admin/auth/refresh-token
-
         $data = array(
             'refresh_token' => $refresh_token,
         );
