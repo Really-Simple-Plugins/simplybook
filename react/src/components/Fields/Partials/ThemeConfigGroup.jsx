@@ -38,23 +38,22 @@ const ThemeConfigGroup = forwardRef(({
          * base_color, color, gradient, etc.
          */
         let colorTypeConditions = ['color', 'gradient'];
-        let configType = config.config_type;
-        if (colorTypeConditions.some(type => configType.includes(type))) {
-            configType = 'color';
+        if (colorTypeConditions.some(type => config.config_type.includes(type))) {
+            config.config_type = 'color';
         }
 
         /**
          * If the configType does not exist yet, create the array container for
          * it so we can push the config to it later.
          */
-        if (!groups[configType]) {
-            groups[configType] = [];
+        if (!groups[config.config_type]) {
+            groups[config.config_type] = [];
         }
 
         /**
          * Map select values to be translated.
          */
-        if (configType === 'select') {
+        if (config.config_type === 'select') {
             config.values = Object.entries(config.values).map(([key, value]) => ({
                 key : key,
                 value: value,
@@ -72,7 +71,7 @@ const ThemeConfigGroup = forwardRef(({
             config.config_title = (parentSetting?.translations[config.config_title] ?? config.config_title);
         }
 
-        groups[configType].push(config);
+        groups[config.config_type].push(config);
         return groups;
     }, {});
 
