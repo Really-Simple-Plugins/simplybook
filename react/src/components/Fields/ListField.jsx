@@ -32,26 +32,28 @@ const ListField = forwardRef(
         const {providers, providersFetched} = useProviderData();
         const [listArray, setListArray] = useState([]);
         const [listFetched, setListFetched] = useState(false);
-        const {subscription, isLoading: subscriptionDataLoading, hasError: subscriptionDataHasError, providersTotal: providersLimmit} = useSubscriptionData();
+        const [showUpsell, setShowUpsell] = useState(false);
+        // Load subscription
+        const {subscription, providersRemaining} = useSubscriptionData();
+        
 
         const sourceData = {
             services: {
                 fetched: servicesFetched,
                 data: services,
+                show_upsell: false,
             },
             providers: {
                 fetched: providersFetched,
                 data: providers,
+                show_upsell: (providersRemaining < 4),
             },
         };
 
-        const isPremiumSubscription = (subscription?.subscription_name === 'Premium');
-        const amountOfProviders = sourceData?.providers?.data;
-        const surpassedLimit = (providersFetched ?? amountOfProviders.length >= providersLimmit);
-        
         useEffect(() => {
             setListArray(sourceData[setting.source]?.data);
             setListFetched(sourceData[setting.source]?.fetched);
+            setShowUpsell(sourceData[setting.source]?.show_upsell);
 
         }, [sourceData[setting.source]]);
 
@@ -80,7 +82,7 @@ const ListField = forwardRef(
                 {listFetched && listArray.map((item) => (
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
-                {!isPremiumSubscription && providersFetched && surpassedLimit && (
+                {providersFetched && showUpsell && (
                     <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
                 )}
             </div>
