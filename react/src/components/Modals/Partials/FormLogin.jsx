@@ -11,6 +11,8 @@ import glue from "../../../api/helpers/glue";
 import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
 import Error from "../../Errors/Error";
 
+import useFieldValidation from "../../../hooks/useFieldValidation";
+
 const formLogin = ({
     onClose,
     setRequire2fa,
@@ -40,6 +42,8 @@ const formLogin = ({
             }
         });
 
+        // Load field validation
+        const { buildValidationClass } = useFieldValidation();
 
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
@@ -101,6 +105,8 @@ const formLogin = ({
             }
         };
 
+        
+
     return (
         <>
             <form className="flex flex-col relative" onSubmit={submitForm}>
@@ -108,7 +114,8 @@ const formLogin = ({
                     name="company_domain"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => (
+                    render={({ field, fieldState }) => { 
+                        return (
                         <SelectField
                             {...field}
                             fieldState={fieldState}
@@ -122,54 +129,66 @@ const formLogin = ({
                                 field.onChange(selectedValue); // Update form state
                             }}
                         />
-                    )}
+                    )}}
                 />
                 <Controller
                     name="company_login"
                     control={control}
                     rules={{ required: "Login needed" }}
-                    render={({ field, fieldState }) => (
+                    render={({ field, fieldState }) => { 
+                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : ""; 
+
+                        return (
                         <TextField
                             {...field}
+                            className={validationClass}
                             fieldState={fieldState}
                             label={__("Company login", "simplybook")}
                             setting="company_login"
                             type="text"
                             placeholder={__("Company login", "simplybook")}
                         />
-                    )}
+                    )}}
                 />
 
                 <Controller
                     name="user_login"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => (
+                    render={({ field, fieldState }) => { 
+                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : "";
+                        
+                        return (
                         <TextField
                             {...field}
+                            className={validationClass}
                             fieldState={fieldState}
                             label={__("User login or email", "simplybook")}
                             setting="email"
-                            type="email"
+                            type="text"
                             placeholder={__("User login or email", "simplybook")}
                         />
-                    )}
+                    )}}
                 />
 
                 <Controller
                     name="user_password"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => (
+                    render={({ field, fieldState }) => { 
+                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : "";
+                        
+                        return (
                         <TextField
                             {...field}
+                            className={validationClass}
                             fieldState={fieldState}
                             label={__("Password", "simplybook")}
                             setting="password"
                             type="password"
                             placeholder={__("Password", "simplybook")}
                         />
-                    )}
+                    )}}
                 />
                 {errorMessage &&
                     <Error
