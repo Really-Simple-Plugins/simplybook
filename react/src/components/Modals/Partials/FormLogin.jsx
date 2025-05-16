@@ -136,12 +136,10 @@ const formLogin = ({
                     control={control}
                     rules={{ required: "Login needed" }}
                     render={({ field, fieldState }) => { 
-                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : ""; 
 
                         return (
                         <TextField
                             {...field}
-                            className={validationClass}
                             fieldState={fieldState}
                             label={__("Company login", "simplybook")}
                             setting="company_login"
@@ -156,12 +154,10 @@ const formLogin = ({
                     control={control}
                     rules={{ required: true }}
                     render={({ field, fieldState }) => { 
-                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : "";
-                        
+
                         return (
                         <TextField
                             {...field}
-                            className={validationClass}
                             fieldState={fieldState}
                             label={__("User login or email", "simplybook")}
                             setting="email"
@@ -176,12 +172,10 @@ const formLogin = ({
                     control={control}
                     rules={{ required: true }}
                     render={({ field, fieldState }) => { 
-                        const validationClass = fieldState?.error ? buildValidationClass(fieldState?.error) : "";
                         
                         return (
                         <TextField
                             {...field}
-                            className={validationClass}
                             fieldState={fieldState}
                             label={__("Password", "simplybook")}
                             setting="password"
