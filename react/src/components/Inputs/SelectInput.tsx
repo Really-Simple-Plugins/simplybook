@@ -33,7 +33,7 @@ const SelectInput = React.forwardRef<HTMLSelectElement, SelectInputProps>(
 
         return (
             <select
-                className={clsx("input-base", isEmptyClass)}
+                className={clsx("input-base transition-[border-color] duration-300 ease-in-out", isEmptyClass)}
                 name={name}
                 value={value}
                 onChange={onChange} // Call the onChange prop
