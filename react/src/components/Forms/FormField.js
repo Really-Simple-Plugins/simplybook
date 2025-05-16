@@ -133,7 +133,7 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                     return (
                         <FieldComponent
                             {...props}
-                            className={className}
+                            className={props.className}
                             setting={setting}
                             fieldState={fieldState}
                             required={setting.required}
