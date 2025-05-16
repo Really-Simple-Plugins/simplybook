@@ -23,8 +23,12 @@ class WidgetController implements ControllerInterface
     public function register()
     {
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
-        add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
-        add_shortcode('simplybook_booking_button', [$this, 'renderBookingButton']);
+
+        // Removed since: NL14RSP2-219 - kept for reference
+        // add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
+
+        // Removed since: NL14RSP2-220 - kept for reference
+        // add_shortcode('simplybook_booking_button', [$this, 'renderBookingButton']);
     }
 
     /**

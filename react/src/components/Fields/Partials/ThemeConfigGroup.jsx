@@ -35,10 +35,11 @@ const ThemeConfigGroup = forwardRef(({
 
         /**
          * Normalize the color config_types. This will bundle values like:
-         * base_color, color, etc.
+         * base_color, color, gradient, etc.
          */
+        let colorTypeConditions = ['color', 'gradient'];
         let configType = config.config_type;
-        if (configType.includes('color')) {
+        if (colorTypeConditions.some(type => configType.includes(type))) {
             configType = 'color';
         }
 

@@ -52,6 +52,10 @@ class ApiClient
 
     protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
 
+    /**
+     * Construct is executed on plugins_loaded on purpose. This way even
+     * visitors can refresh invalid tokens.
+     */
     public function __construct(JsonRpcClient $client)
     {
         $this->jsonRpcClient = $client;

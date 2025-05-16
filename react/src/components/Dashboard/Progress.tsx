@@ -109,7 +109,7 @@ const Progress = () => {
                                 "task-item-inner",
                                 "h-6 flex items-center gap-4 pl-5 pr-1",
                                 "hover:bg-gray-50",
-                                "xl:h-auto  xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1"   
+                                "xl:h-auto  xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1"
                             )}>
 
                             {/* Status pill - fixed width */}
@@ -120,7 +120,7 @@ const Progress = () => {
 
 
                             <div className="
-                                flex justify-between w-full items-center  
+                                flex justify-between w-full items-center
                             ">
                                 {/* Task text */}
                                 <div className={ clsx(
@@ -128,10 +128,10 @@ const Progress = () => {
                                     "text-[0.8125rem] w-[70%]"
                                 )}>
                                     {task.text}
-                                </div>   
+                                </div>
                                 <div className="flex items-center justify-end">
                                     {/* Action button */}
-                                    <>                                    
+                                    <>
                                         {task.action && task.action.text && task.action.link && (
                                             <Link
                                                 to={task.action.link}
@@ -168,14 +168,14 @@ const Progress = () => {
                                             </button>
                                         )}
                                     </div>
-                                </div>                        
+                                </div>
                             </div>
                         </div>
                     ))}
                 </div>
             </BlockContent>
             <BlockFooter className="flex w-full justify-start 2xl:justify-end text-sm text-gray-500 mt-4">
-                <SubscriptionDataListHorizontal/>
+                <SubscriptionDataListHorizontal target='trial'/>
             </BlockFooter>
         </Block>
     );

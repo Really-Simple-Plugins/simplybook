@@ -43,15 +43,15 @@ return [
                 'title' => __('Theme settings', 'simplybook'),
                 'has_preview' => true,
             ],
-            [
-                'id' => 'reviews',
-                'title' => __('Reviews shortcode', 'simplybook'),
-            ],
-            [
-                'id' => 'booking',
-                'title' => __('Booking button widget', 'simplybook'),
-                'help' => __('The booking button shortcode can be placed anywhere in the page and it will automatically be added to the outermost edges of that page.', 'simplybook'),
-            ],
+//            [ // Removed since: NL14RSP2-219 - kept for reference
+//                'id' => 'reviews',
+//                'title' => __('Reviews shortcode', 'simplybook'),
+//            ],
+//            [ // Removed since: NL14RSP2-220 - kept for reference
+//                'id' => 'booking',
+//                'title' => __('Booking button widget', 'simplybook'),
+//                'help' => __('The booking button shortcode can be placed anywhere in the page and it will automatically be added to the outermost edges of that page.', 'simplybook'),
+//            ],
         ],
     ],
     'notifications' => [

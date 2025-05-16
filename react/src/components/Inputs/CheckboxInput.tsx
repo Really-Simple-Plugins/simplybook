@@ -33,7 +33,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
         );
 
         return (
-            <label className="checkbox-field relative inline-flex items-center cursor-pointer transition-[border-color] duration-300 ease-in-out">
+            <label className="checkbox-field w-max relative inline-flex items-center cursor-pointer transition-[border-color] duration-300 ease-in-out">
                 <input
                     type="checkbox"
                     checked={checked}
