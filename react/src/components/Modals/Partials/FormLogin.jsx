@@ -11,8 +11,6 @@ import glue from "../../../api/helpers/glue";
 import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
 import Error from "../../Errors/Error";
 
-import useFieldValidation from "../../../hooks/useFieldValidation";
-
 const formLogin = ({
     onClose,
     setRequire2fa,
