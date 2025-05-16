@@ -301,18 +301,25 @@ class ApiClient
      * @return void
      */
     public function refresh_token($type = 'public'): void {
+        if ($this->isRefreshLocked($type)) {
+            return;
+        }
+
         //check if we have a token
         $refresh_token = $this->get_token($type, true );
         if (!$refresh_token) {
+            $this->releaseRefreshLock($type);
             return;
         }
 
         if ( empty($refresh_token) ) {
             $this->get_public_token();
+            $this->releaseRefreshLock($type);
             return;
         }
 
         if ( $this->token_is_valid($type) ) {
+            $this->releaseRefreshLock($type);
             return;
         }
 
@@ -321,6 +328,10 @@ class ApiClient
         $data = array(
             'refresh_token' => $refresh_token,
         );
+
+        // Invalidate the one-time use token as we are about to use it for
+        // refreshing the token. This prevents re-use.
+        $this->update_token('', $type, true);
 
         if ( $type === 'admin' ){
             $path = 'admin/auth/refresh-token';
@@ -344,6 +355,7 @@ class ApiClient
 
         if (($response_code === 401) && ($type === 'public')) {
             $this->get_public_token();
+            $this->releaseRefreshLock($type);
             return;
         }
 
@@ -351,6 +363,7 @@ class ApiClient
         // need to login again.
         if (($response_code === 401) && ($type === 'admin')) {
             if ($this->authenticationFailedFlag) {
+                $this->releaseRefreshLock($type);
                 return; // Dont even try again.
             }
 
@@ -389,13 +402,14 @@ class ApiClient
             Event::dispatch(Event::AUTH_SUCCEEDED);
 
             $this->setDuringOnboardingFlag(false); // Revert previous action
+            $this->releaseRefreshLock($type);
             return;
         }
 
         if ( ! is_wp_error( $request ) ) {
             $request = json_decode( wp_remote_retrieve_body( $request ) );
 
-            if ( isset($request->token) ) {
+            if ( isset($request->token) && isset($request->refresh_token) ) {
                 delete_option('simplybook_token_error' );
                 $this->update_token( $request->token, $type );
                 $this->update_token( $request->refresh_token, $type, true );
@@ -409,6 +423,32 @@ class ApiClient
         } else {
             $this->log("Error during token refresh: ".$request->get_error_message());
         }
+
+        $this->releaseRefreshLock($type);
+    }
+
+    /**
+     * Check if the refresh function is locked for this type. Method also
+     * sets the lock for 10 seconds if it is not already set.
+     */
+    private function isRefreshLocked(string $type): bool
+    {
+        $lockKey = "simplybook_refresh_lock_{$type}";
+        if (get_transient($lockKey)) {
+            return true;
+        }
+
+        set_transient($lockKey, true, 10);
+        return false;
+    }
+
+    /**
+     * Release the refresh lock for this type.
+     */
+    private function releaseRefreshLock(string $type): void
+    {
+        $lockKey = "simplybook_refresh_lock_{$type}";
+        delete_transient($lockKey);
     }
 
     /**
