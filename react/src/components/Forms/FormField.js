@@ -13,6 +13,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
 import ThemeField from "../Fields/ThemeField";
+import useFieldValidation from "../../hooks/useFieldValidation";
 
 const fieldComponents = {
     text: TextField,
@@ -107,26 +108,8 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
         )
     }
 
-    /**
-     * Build the validation class based on the type of error message
-     */
-    const buildValidationClass = (invalidState) => {
-
-        const isInValidPattern = invalidState.type == "pattern" ? true : false;
-        const isInValidRequired = invalidState.type == "required" ? true : false;
-        // Set the base class
-        let invalidClass = "invalid-field";
-
-        if (isInValidRequired) {
-            invalidClass += "-required";
-        }
-
-        if (isInValidPattern) {
-            invalidClass += "-regex";
-        }
-
-        return invalidClass;
-    } 
+    // Load field validation
+    const { buildValidationClass } = useFieldValidation();
 
     return (
         <ErrorBoundary>
