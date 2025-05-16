@@ -18,24 +18,24 @@ import useSubscriptionData from "../../hooks/useSubscriptionData";
  * @return {JSX.Element}
  */
 const ListField = forwardRef(
-    ({ 
-        setting, 
-        field, 
-        fieldState, 
-        label, 
-        help, 
-        context, 
-        className, 
-        ...props 
+    ({
+        setting,
+        field,
+        fieldState,
+        label,
+        help,
+        context,
+        className,
+        ...props
     }, ref) => {
         const {services, servicesFetched} = useServicesData();
         const {providers, providersFetched} = useProviderData();
         const [listArray, setListArray] = useState([]);
         const [listFetched, setListFetched] = useState(false);
         const [showUpsell, setShowUpsell] = useState(false);
+
         // Load subscription
-        const {subscription, providersRemaining} = useSubscriptionData();
-        
+        const {providersRemaining} = useSubscriptionData();
 
         const sourceData = {
             services: {
@@ -54,7 +54,6 @@ const ListField = forwardRef(
             setListArray(sourceData[setting.source]?.data);
             setListFetched(sourceData[setting.source]?.fetched);
             setShowUpsell(sourceData[setting.source]?.show_upsell);
-
         }, [sourceData[setting.source]]);
 
         const getEditLink = (id) => {
