@@ -54,6 +54,8 @@ const Progress = () => {
         );
     }
 
+    console.log(tasks)
+
     return (
         <Block className="col-span-12 sm:col-span-12 2xl:col-span-6 2xl:row-span-2  xl:col-span-6">
             <BlockHeading
@@ -105,7 +107,7 @@ const Progress = () => {
                         <div
                             key={task.id}
                             className={clsx(
-                                remainingTasks.length > 7 ? "!mr-0" : !showAll ? "mr-[0.95rem]" : "",
+                                remainingTasks.length > 7 ? "!mr-0" : !showAll ? "mr-2" : "",
                                 "task-item-inner",
                                 "h-6 flex items-center gap-4 pl-5 pr-1",
                                 "hover:bg-gray-50",
@@ -138,7 +140,7 @@ const Progress = () => {
                                                 target={task.action?.target ?? '_self'}
                                                 className={clsx(
                                                     "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
-                                                    task.type === 'required' && "pr-6"
+                                                    (task.type === 'required' || task.type === 'optional' && task.status !== 'open') && "mr-8",
                                                 )}
                                             >
                                                 {task.action.text}
@@ -149,7 +151,7 @@ const Progress = () => {
                                                 page={task.action.login_link}
                                                 className={clsx(
                                                     "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
-                                                    task.type === 'required' && "pr-6"
+                                                    (task.type === 'required' || task.type === 'optional'&& task.status !== 'open') && "mr-8",
                                                 )}
                                             >
                                                 {task.action.text}
