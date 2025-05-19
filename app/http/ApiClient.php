@@ -307,12 +307,13 @@ class ApiClient
 
         //check if we have a token
         $refresh_token = $this->get_token($type, true );
-        if (!$refresh_token) {
+        if (empty($refresh_token) && $type === 'admin') {
             $this->releaseRefreshLock($type);
+            $this->automaticAuthenticationFallback($type);
             return;
         }
 
-        if ( empty($refresh_token) ) {
+        if (empty($refresh_token) && $type === 'public') {
             $this->get_public_token();
             $this->releaseRefreshLock($type);
             return;
@@ -360,47 +361,7 @@ class ApiClient
         // If token is 'admin' and the refresh request was "unauthorized" we
         // need to login again.
         if (($response_code === 401) && ($type === 'admin')) {
-            if ($this->authenticationFailedFlag) {
-                $this->releaseRefreshLock($type);
-                return; // Dont even try again.
-            }
-
-            $validateBasedOnDomainConfig = did_action('init');
-            $domain = $this->get_domain($validateBasedOnDomainConfig);
-
-            $companyData = $this->get_company();
-            $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
-
-            try {
-                $response = $this->authenticateExistingUser(
-                    $domain,
-                    $this->get_company_login(),
-                    $sanitizedCompany->user_login,
-                    $this->decrypt_string($sanitizedCompany->password)
-                );
-            } catch (\Exception $e) {
-                Event::dispatch(Event::AUTH_FAILED);
-                // Their password probably changed. Stop trying to refresh.
-                update_option($this->authenticationFailedFlagKey, true);
-                $this->authenticationFailedFlag = true;
-                $this->log('Error during token refresh: ' . $e->getMessage());
-                return;
-            }
-
-            $responseStorage = new Storage($response);
-            $this->setDuringOnboardingFlag(true); // Allows saving stale fields
-            $this->saveAuthenticationData(
-                $responseStorage->getString('token'),
-                $responseStorage->getString('refresh_token'),
-                $domain,
-                $this->get_company_login(),
-                $responseStorage->getInt('company_id'),
-            );
-
-            Event::dispatch(Event::AUTH_SUCCEEDED);
-
-            $this->setDuringOnboardingFlag(false); // Revert previous action
-            $this->releaseRefreshLock($type);
+            $this->automaticAuthenticationFallback($type);
             return;
         }
 
@@ -447,6 +408,58 @@ class ApiClient
     {
         $lockKey = "simplybook_refresh_lock_{$type}";
         delete_transient($lockKey);
+    }
+
+    /**
+     * Method is used as a fallback mechanism when the refresh token is invalid.
+     * This can happen when the user changes their password and the refresh
+     * token is invalidated. In this case we need to re-authenticate the
+     * user. Currently used when refreshing a token results in a 401
+     * error on when decrypting an existing token fails.
+     */
+    private function automaticAuthenticationFallback(string $type)
+    {
+        if ($this->authenticationFailedFlag) {
+            $this->releaseRefreshLock($type);
+            return; // Dont even try again.
+        }
+
+        $validateBasedOnDomainConfig = did_action('init');
+        $domain = $this->get_domain($validateBasedOnDomainConfig);
+
+        $companyData = $this->get_company();
+        $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
+
+        try {
+            $response = $this->authenticateExistingUser(
+                $domain,
+                $this->get_company_login(),
+                $sanitizedCompany->user_login,
+                $this->decrypt_string($sanitizedCompany->password)
+            );
+        } catch (\Exception $e) {
+            Event::dispatch(Event::AUTH_FAILED);
+            // Their password probably changed. Stop trying to refresh.
+            update_option($this->authenticationFailedFlagKey, true);
+            $this->authenticationFailedFlag = true;
+            $this->log('Error during token refresh: ' . $e->getMessage());
+            return;
+        }
+
+        $responseStorage = new Storage($response);
+        $this->setDuringOnboardingFlag(true); // Allows saving stale fields
+        $this->saveAuthenticationData(
+            $responseStorage->getString('token'),
+            $responseStorage->getString('refresh_token'),
+            $domain,
+            $this->get_company_login(),
+            $responseStorage->getInt('company_id'),
+        );
+
+        Event::dispatch(Event::AUTH_SUCCEEDED);
+
+        $this->setDuringOnboardingFlag(false); // Revert previous action
+        $this->releaseRefreshLock($type);
     }
 
     /**
