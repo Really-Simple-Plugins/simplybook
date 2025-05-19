@@ -79,9 +79,9 @@ const formLogin = ({
                     data
                 });
 
-                let response = request.data;
+                let response = request?.data;
 
-                if (response.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
+                if (response?.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
 
                     setAuthSessionId(response.data.auth_session_id);
                     setCompanyLogin(response.data.company_login);
