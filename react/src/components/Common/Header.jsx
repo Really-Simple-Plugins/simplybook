@@ -22,7 +22,6 @@ const Header = () => {
         return matchRoute({ to: route, fuzzy: includeSubRoutes }) !== false;
     }
 
-
     useEffect(() => {
         if (
             !onboardingCompleted &&
