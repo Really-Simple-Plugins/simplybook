@@ -82,16 +82,26 @@ const Bookings = () => {
                             />
                             <p className="text-base font-semibold m-0">{__("Most popular", "simplybook")} - {__("Last 30 days", "simplybook")}</p>   
                         </span>
-                        {MostPopularDataList.map((block, index) => (
-                            <Fragment key={index}>
-                                <MostPopular 
-                                    key={block.key} 
-                                    title={block.title} 
-                                    mostPopularName={block.value}
-                                    bookingAmount={block.bookings} 
-                                />
-                            </Fragment>
-                        ))}
+                        {(mostPopularProviderName === "" || mostPopularServiceName === "") ? (
+                           <p className="text-base font-semibold m-0 px-4 mb-3 text-gray-500 italic">{ __("No bookings yet...", "simplybook")}</p>  
+                        ) : (
+                            <>
+                                {MostPopularDataList.map((block, index) => (
+                                    <Fragment key={index}>
+                                        <MostPopular 
+                                            key={block.key} 
+                                            title={block.title} 
+                                            mostPopularName={block.value}
+                                            bookingAmount={block.bookings} 
+                                        />
+                                    </Fragment>
+                                ))}
+                            </>
+                        )}  
+
+
+                      
+
                     </div>
                 )}
             </BlockContent>
