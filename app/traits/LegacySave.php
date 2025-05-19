@@ -215,7 +215,7 @@ trait LegacySave {
         $value = $this->sanitize_field($value, $config['type'], ($config['regex'] ?? null));
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
-        if ( $config['encrypt'] ) {
+        if ($config['encrypt'] ?? false) {
             $value = $this->encrypt_string($value);
         }
         $options[$key] = $value;
