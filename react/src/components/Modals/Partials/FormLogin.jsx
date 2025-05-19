@@ -44,7 +44,7 @@ const formLogin = ({
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
         // Set the button disabled state
-        const setDisabled = (
+        const isDisabled = (
             watchFields.every((field) => field && field.trim() !== "") === false
         );
 
@@ -99,8 +99,6 @@ const formLogin = ({
                 console.log(error); // Still log the error
             }
         };
-
-        
 
     return (
         <>
@@ -183,7 +181,7 @@ const formLogin = ({
                     btnVariant="secondary"
                     type="submit"
                     disabled={false}
-                    haveDisabledStyling={setDisabled}
+                    haveDisabledStyling={isDisabled}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
