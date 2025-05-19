@@ -181,7 +181,6 @@ const formLogin = ({
                     btnVariant="secondary"
                     type="submit"
                     disabled={false}
-                    haveDisabledStyling={isDisabled}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>

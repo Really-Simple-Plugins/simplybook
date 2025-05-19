@@ -172,7 +172,6 @@ const OnboardingStep = ({
                             label={primaryButton.label ?? __("Next", "simplybook")}
                             context={bottomText}
                             button={{
-                                haveDisabledStyling: true,
                                 disabled: (primaryButton.disabled ?? disabled),
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
