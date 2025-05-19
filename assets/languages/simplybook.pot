@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-16T15:07:10+00:00\n"
+"POT-Creation-Date: 2025-05-19T08:28:11+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -1944,7 +1944,7 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/components/Forms/FormField.js:51
+#: react/src/components/Forms/FormField.js:52
 msgid "This field is required"
 msgstr ""
 
@@ -1955,7 +1955,7 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/components/Forms/FormField.js:58
+#: react/src/components/Forms/FormField.js:59
 msgid "Invalid format"
 msgstr ""
 
@@ -1966,6 +1966,7 @@ msgstr ""
 #: react/build/939.js:1
 #: react/src/components/Forms/OnboardingForms.jsx:17
 #: react/src/components/Onboarding/OnboardingStep.jsx:19
+#: react/src/components/Onboarding/OnboardingStep.jsx:172
 msgid "Next"
 msgstr ""
 
@@ -1975,8 +1976,8 @@ msgstr ""
 #: react/build/792.js:1
 #: react/build/843.js:1
 #: react/build/939.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:176
-#: react/src/components/Onboarding/OnboardingStep.jsx:193
+#: react/src/components/Modals/Partials/FormLogin.jsx:175
+#: react/src/components/Onboarding/OnboardingStep.jsx:194
 msgid "Something went wrong"
 msgstr ""
 
@@ -1985,7 +1986,7 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/components/Onboarding/OnboardingStep.jsx:197
+#: react/src/components/Onboarding/OnboardingStep.jsx:198
 msgid "Or restart the onboarding"
 msgstr ""
 
@@ -2351,7 +2352,7 @@ msgid "100% free. No credit card needed."
 msgstr ""
 
 #: react/build/18.js:1
-#: react/src/routes/onboarding/create-your-account.lazy.jsx:42
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:45
 msgid "How to get started with SimplyBook.me"
 msgstr ""
 
@@ -2359,8 +2360,8 @@ msgstr ""
 #: react/build/157.js:1
 #: react/build/939.js:1
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:102
-#: react/src/routes/onboarding/create-your-account.lazy.jsx:48
-#: react/src/routes/onboarding/information-check.lazy.jsx:43
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:51
+#: react/src/routes/onboarding/information-check.lazy.jsx:46
 msgid "SimplyBook.me fits seamlessly into your business"
 msgstr ""
 
@@ -2368,8 +2369,8 @@ msgstr ""
 #: react/build/157.js:1
 #: react/build/939.js:1
 #: react/src/routes/onboarding/confirm-email.lazy.jsx:105
-#: react/src/routes/onboarding/create-your-account.lazy.jsx:51
-#: react/src/routes/onboarding/information-check.lazy.jsx:46
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:54
+#: react/src/routes/onboarding/information-check.lazy.jsx:49
 msgid "It’s easy to keep your appointments in sync with the apps and plugins you need."
 msgstr ""
 
@@ -2710,25 +2711,25 @@ msgid "Submit"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:115
+#: react/src/components/Modals/Partials/FormLogin.jsx:114
 msgid "Company domain"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:135
-#: react/src/components/Modals/Partials/FormLogin.jsx:138
+#: react/src/components/Modals/Partials/FormLogin.jsx:134
+#: react/src/components/Modals/Partials/FormLogin.jsx:137
 msgid "Company login"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:151
-#: react/src/components/Modals/Partials/FormLogin.jsx:154
+#: react/src/components/Modals/Partials/FormLogin.jsx:150
+#: react/src/components/Modals/Partials/FormLogin.jsx:153
 msgid "User login or email"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:167
-#: react/src/components/Modals/Partials/FormLogin.jsx:170
+#: react/src/components/Modals/Partials/FormLogin.jsx:166
+#: react/src/components/Modals/Partials/FormLogin.jsx:169
 msgid "Password"
 msgstr ""
 
