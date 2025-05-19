@@ -100,6 +100,12 @@ trait LegacySave {
                     }
                     break;
 
+                case 'domain' :
+                    $this->update_option('domain', ($value ?: 'simplybook.me'), true, [
+                        'type' => 'hidden',
+                    ]);
+                    break;
+
                 case 'auth_data' :
                     $this->upgradeAuthData($value);
                     break;
@@ -130,12 +136,6 @@ trait LegacySave {
 
         if (!empty($authData['refresh_token'])) {
             $this->update_token($authData['refresh_token'], 'admin', true);
-        }
-
-        if (!empty($authData['domain'])) {
-            $this->update_option('domain', $authData['domain'], true, [
-                'type' => 'hidden',
-            ]);
         }
 
         if (!empty($authData['login'])) {
