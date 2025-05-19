@@ -35,7 +35,7 @@ const ButtonField = forwardRef(({
                     disabled={button?.disabled}
                     showLoader={button?.showLoader}
                     onClick={button?.onClick}
-                    buttonDisabledAttribute={button?.buttonDisabledAttribute}
+                    haveDisabledStyling={button?.haveDisabledStyling}
                     {...props}
                 >
                     {props.showLoader && <Icon color="white" name="spinner" size="1x" className="mr-2" />}

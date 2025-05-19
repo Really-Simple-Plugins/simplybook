@@ -169,11 +169,12 @@ const OnboardingStep = ({
                             className="w-full mt-4"
                             showLoader={isValidating}
                             btnVariant="secondary"
-                            label={primaryButton.label}
+                            label={primaryButton.label ?? __("Next", "simplybook")}
                             context={bottomText}
                             button={{
-                                buttonDisabledAttribute: false,
-                                disabled: disabled,
+                                // buttonDisabledAttribute: false,
+                                haveDisabledStyling: true,
+                                disabled: (primaryButton.disabled ?? disabled),
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />
