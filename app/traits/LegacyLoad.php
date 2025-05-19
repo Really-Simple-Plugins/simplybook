@@ -17,7 +17,7 @@ trait LegacyLoad {
 
     public $counter = 0;
 
-    protected string $newSimplyBookUserDomain = 'simplybook.it';
+    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
 
     /**
      * Get a field by ID
