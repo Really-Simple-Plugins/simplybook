@@ -40,9 +40,6 @@ const formLogin = ({
             }
         });
 
-        // Load field validation
-        const { buildValidationClass } = useFieldValidation();
-
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
@@ -112,8 +109,7 @@ const formLogin = ({
                     name="company_domain"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => { 
-                        return (
+                    render={({ field, fieldState }) => (
                         <SelectField
                             {...field}
                             fieldState={fieldState}
@@ -127,15 +123,13 @@ const formLogin = ({
                                 field.onChange(selectedValue); // Update form state
                             }}
                         />
-                    )}}
+                    )}
                 />
                 <Controller
                     name="company_login"
                     control={control}
                     rules={{ required: "Login needed" }}
-                    render={({ field, fieldState }) => { 
-
-                        return (
+                    render={({ field, fieldState }) => (
                         <TextField
                             {...field}
                             fieldState={fieldState}
@@ -144,34 +138,30 @@ const formLogin = ({
                             type="text"
                             placeholder={__("Company login", "simplybook")}
                         />
-                    )}}
+                    )}
                 />
 
                 <Controller
                     name="user_login"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => { 
-
-                        return (
+                    render={({ field, fieldState }) => (
                         <TextField
                             {...field}
                             fieldState={fieldState}
                             label={__("User login or email", "simplybook")}
                             setting="email"
-                            type="text"
+                            type="email"
                             placeholder={__("User login or email", "simplybook")}
                         />
-                    )}}
+                    )}
                 />
 
                 <Controller
                     name="user_password"
                     control={control}
                     rules={{ required: true }}
-                    render={({ field, fieldState }) => { 
-                        
-                        return (
+                    render={({ field, fieldState }) => (
                         <TextField
                             {...field}
                             fieldState={fieldState}
@@ -180,7 +170,7 @@ const formLogin = ({
                             type="password"
                             placeholder={__("Password", "simplybook")}
                         />
-                    )}}
+                    )}
                 />
                 {errorMessage &&
                     <Error
@@ -192,7 +182,8 @@ const formLogin = ({
                     className="mt-4 mb-4"
                     btnVariant="secondary"
                     type="submit"
-                    disabled={setDisabled}
+                    disabled={false}
+                    haveDisabledStyling={setDisabled}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
