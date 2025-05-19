@@ -32,8 +32,8 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
 
             // Disabled styles
-            'opacity-50 cursor-not-allowed': haveDisabledStyling,
-            'cursor-pointer': !haveDisabledStyling,
+            'opacity-50 cursor-not-allowed': haveDisabledStyling || disabled,
+            'cursor-pointer': !haveDisabledStyling || !disabled,
         }
     );
 
