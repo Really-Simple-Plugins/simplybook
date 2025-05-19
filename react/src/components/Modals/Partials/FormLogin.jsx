@@ -73,11 +73,13 @@ const formLogin = ({
                 let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
                 let data = { ...formData, nonce: NONCE };
 
-                let response = await apiFetch({
+                let request = await apiFetch({
                     path,
                     method: "POST",
                     data
                 });
+
+                let response = request.data;
 
                 if (response.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
 

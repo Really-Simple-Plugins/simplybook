@@ -101,6 +101,9 @@ return [
             ['key' => 'login:booking.names.uk', 'value' => 'login:booking.names.uk', 'label' => 'booking.names.uk'],
             ['key' => 'login:booking.lcn.uk', 'value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            // GET RID OF THIS LATER!!
+            ['key' => 'default:wp.simplybook.ovh', 'value' => 'default:wp.simplybook.ovh', 'label' => 'wp.simplybook.ovh'],
         ]
     ],
     'http' => [
