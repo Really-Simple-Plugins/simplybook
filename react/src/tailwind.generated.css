@@ -473,6 +473,9 @@
   .mt-12 {
     margin-top: calc(var(--spacing) * 12);
   }
+  .mt-26 {
+    margin-top: calc(var(--spacing) * 26);
+  }
   .\!mr-0 {
     margin-right: calc(var(--spacing) * 0) !important;
   }
@@ -1757,11 +1760,6 @@
       border-color: #0c3052;
     }
   }
-  .focus\:bg-gray-200 {
-    &:focus {
-      background-color: var(--color-gray-200);
-    }
-  }
   .focus\:ring-2 {
     &:focus {
       --tw-ring-shadow: var(--tw-ring-inset,) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color, currentColor);
@@ -2768,6 +2766,9 @@ h3 {
     box-shadow: var(--shadow-md);
     line-height: 1.5;
   }
+  .checkbox-field {
+    border: 2px solid transparent;
+  }
 }
 .scroll-container::-webkit-scrollbar {
   width: 8px;
@@ -2785,6 +2786,15 @@ h3 {
 }
 .invalid-field-regex {
   input {
+    border-color: var(--color-error) !important;
+  }
+}
+.invalid-field-required {
+  .checkbox-field {
+    border-color: var(--color-error) !important;
+  }
+  input,
+    select {
     border-color: var(--color-error) !important;
   }
 }
