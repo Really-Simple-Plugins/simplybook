@@ -126,7 +126,7 @@ const formLogin = ({
                 <Controller
                     name="company_login"
                     control={control}
-                    rules={{ required: "Login needed" }}
+                    rules={{ required: true }}
                     render={({ field, fieldState }) => (
                         <TextField
                             {...field}
