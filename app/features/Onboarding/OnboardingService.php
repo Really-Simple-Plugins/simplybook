@@ -50,7 +50,7 @@ class OnboardingService
         update_option("simplybook_company_registration_start_time", time(), false);
         update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
         update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
-        $this->update_option('company_id', $responseDataStorage->getInt('company_id'));
+        $this->update_option('company_id', $responseDataStorage->getInt('company_id'), true);
 
         $this->setCompletedStep(2);
     }
