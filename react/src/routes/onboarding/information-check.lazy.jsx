@@ -24,6 +24,9 @@ export const Route = createLazyFileRoute(path)({
             </div>
             <OnboardingStep
               path={path}
+              primaryButton={{
+                  disabled: false,
+              }}
             />
           </LeftColumn>
           <RightColumn
