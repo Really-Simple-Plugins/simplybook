@@ -3,6 +3,7 @@ import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import Error from "../Errors/Error";
 import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
+import useFieldValidation from "../../hooks/useFieldValidation";  
 
 const FieldWrapper = memo(({
        label,
@@ -15,12 +16,16 @@ const FieldWrapper = memo(({
        required = false,
        type="text",
        children,
+       fieldState
 }: FieldWrapperProps) => {
+
+    const { buildValidationClass } = useFieldValidation();
 
     const wrapperClasses = [
         "flex flex-col",
         className,
-        "mb-4"
+        "mb-4",
+        (fieldState?.error ? buildValidationClass(fieldState?.error) : ""),
     ].filter(Boolean).join(" ");
 
     const contentClasses = [

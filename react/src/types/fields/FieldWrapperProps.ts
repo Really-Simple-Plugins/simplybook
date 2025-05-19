@@ -9,4 +9,5 @@ export interface FieldWrapperProps {
     required?: boolean;
     children: React.ReactNode;
     type?: string;
+    fieldState?: any;
   }

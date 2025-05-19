@@ -12,7 +12,12 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
      onClick,
      btnVariant = "primary",
      disabled = false,
+     haveDisabledStyling = false,
 }) => {
+    if (disabled) {
+        haveDisabledStyling = true;
+    }
+    
     let buttonVariants = clsx(
         // Base styles
         "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1",
@@ -31,8 +36,8 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
 
             // Disabled styles
-            'opacity-50 cursor-not-allowed': disabled,
-            'cursor-pointer': !disabled,
+            'opacity-50 cursor-not-allowed': haveDisabledStyling,
+            'cursor-pointer': !haveDisabledStyling,
         }
     );
 

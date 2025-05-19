@@ -16,7 +16,13 @@ const FormFieldWrapper = ({ fields, control, getValues, reset }) => {
         <>
             {/* Fields without wrapper_id */}
             {fields.map((field) => (
-                <FormField className={field?.style == 'inline' ? 'form-field-inline' : 'w-full'} setting={field} key={field.id} control={control} reset={reset} />
+                <FormField 
+                    className={field?.style == 'inline' ? 'form-field-inline' : 'w-full'} 
+                    setting={field} 
+                    key={field.id} 
+                    control={control} 
+                    reset={reset}
+                />
             ))}
         </>
     );

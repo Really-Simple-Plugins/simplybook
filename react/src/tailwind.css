@@ -219,6 +219,10 @@ Input global styles
             box-shadow: var(--shadow-md);
             line-height: 1.5;
     }
+    
+    .checkbox-field {
+        border: 2px solid transparent;
+    }    
 }
 
 /**
@@ -251,6 +255,19 @@ Field validation
 .invalid-field-regex {
 
     input {
+        border-color: var(--color-error) !important;
+    }
+}
+
+.invalid-field-required {
+
+    /* The checbox field is a div and not an input, thus we need to target the div */
+    .checkbox-field {
+        border-color: var(--color-error) !important;
+    }
+
+    input,
+    select {
         border-color: var(--color-error) !important;
     }
 }

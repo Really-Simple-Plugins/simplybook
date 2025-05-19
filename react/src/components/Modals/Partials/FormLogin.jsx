@@ -40,12 +40,11 @@ const formLogin = ({
             }
         });
 
-
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
         // Set the button disabled state
-        const setDisabled = (
+        const isDisabled = (
             watchFields.every((field) => field && field.trim() !== "") === false
         );
 
@@ -127,7 +126,7 @@ const formLogin = ({
                 <Controller
                     name="company_login"
                     control={control}
-                    rules={{ required: "Login needed" }}
+                    rules={{ required: true }}
                     render={({ field, fieldState }) => (
                         <TextField
                             {...field}
@@ -181,7 +180,8 @@ const formLogin = ({
                     className="mt-4 mb-4"
                     btnVariant="secondary"
                     type="submit"
-                    disabled={setDisabled}
+                    disabled={false}
+                    haveDisabledStyling={isDisabled}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>

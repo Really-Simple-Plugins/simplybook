@@ -29,6 +29,9 @@ function CreateLoginAccount() {
                 </div>
                 <OnboardingStep
                     path={path}
+                    primaryButton={{
+                        disabled: false,
+                    }}
                 />
             </LeftColumn>
             <RightColumn
