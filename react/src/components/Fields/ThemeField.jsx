@@ -73,7 +73,7 @@ const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
                     control={control}
                     name={props?.setting?.id}
                     defaultValue={(props?.setting?.value ?? props?.setting?.default ?? "")}
-                    render={({ field }) => {
+                    render={({ field, fieldState }) => {
                         const selectedThemeObject = findSelectedThemeObject(field.value);
 
                         return (
@@ -86,6 +86,7 @@ const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
                                     help={props?.setting?.help}
                                     required={props?.setting?.required}
                                     disabled={isLoading}
+                                    fieldState={fieldState}
                                     className="w-full"
                                     onChange={(e) => {
                                         field.onChange(e.target.value);
