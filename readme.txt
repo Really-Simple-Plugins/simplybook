@@ -83,15 +83,16 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Screenshots ==
 
-1. Booking process (Select location)
-2. Booking process (Select category)
-3. Booking process (Select service)
-4. Booking process (Select provider)
-5. Booking process (Select date and time)
-6. Booking process (Fill in the details)
-7. Plugin config (in admin panel)
+1. The booking widget on the frontend of your site
+2. Booking widget - Confirmation step
+3. Simple configuration - Design your booking calendar in a few steps
+4. Keep track of your bookings via the simple plugin dashboard
+5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+
+= 3.0.0 =
+* Major refactor of the plugin.
 
 = 2.3 =
 * Fixed some bugs
