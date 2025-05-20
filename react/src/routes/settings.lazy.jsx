@@ -7,7 +7,6 @@ import NotificationSidebar from "../components/Settings/Partials/NotificationSid
 import NotificationsBox from "../components/Dashboard/Partials/NotificationsBox";
 import {NotificationProvider} from "../context/NotificationContext";
 
-
 export const Route = createLazyFileRoute("/settings")({
     component: () => <Settings />,
 });
@@ -21,10 +20,10 @@ const Settings = () => {
                     "my-4 w-full grid grid-cols-12 gap-y-4 gap-x-4",
                     "lg:gap-y-4"
                 )}>
-                        <SettingsMenu />
-                        <ErrorBoundary>
-                            <Outlet />
-                        </ErrorBoundary> 
+                    <SettingsMenu />
+                    <ErrorBoundary>
+                        <Outlet />
+                    </ErrorBoundary>
                     <NotificationSidebar>
                         <NotificationsBox />
                     </NotificationSidebar>
