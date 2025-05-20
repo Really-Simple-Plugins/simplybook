@@ -80,6 +80,22 @@ cd "${ROOT_DIR}" || exit
 
 printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
 
+# Secondly make sure the environment is set to 'production' in Plugin
+printf "${BLUE}Setting the environment to 'production' in Plugin class...${RESET}\n"
+# Check if the line exists first
+if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
+  # Perform the actual replacement
+  if sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"; then
+    printf "${GREEN}✅ Environment set to 'production'.${RESET}\n\n"
+  else
+    printf "${RED}❌ Error: sed command failed.${RESET}\n"
+    exit 1
+  fi
+else
+  printf "${RED}❌ Error: Environment line not found in Plugin.php.${RESET}\n"
+  exit 1
+fi
+
 # Clean up any previous build artifacts
 printf "${BLUE}Cleaning up previous package artifacts in /tmp...${RESET}\n"
 rm -rf /tmp/"${PLUGIN_NAME}" /tmp/"${PLUGIN_NAME}".zip "${PLUGIN_NAME}".zip
