@@ -34,6 +34,7 @@ class Plugin
         register_uninstall_hook(App::env('plugin.base_file'), 'SimplyBook\Plugin::uninstall');
 
         $this->registerConstants();
+        $this->registerEnvironment();
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
@@ -42,6 +43,19 @@ class Plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
+    }
+
+    /**
+     * Register the plugin environment. The value of the environment will
+     * determine which domain and public_key is used for the API calls. The
+     * default value is production and can be [production|development].
+     * See {@see config/environment.php} for the actual values.
+     */
+    public function registerEnvironment()
+    {
+        if (!defined('SIMPLYBOOK_ENV')) {
+            define('SIMPLYBOOK_ENV', 'production');
+        }
     }
 
     /**

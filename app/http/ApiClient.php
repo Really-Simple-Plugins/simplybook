@@ -39,6 +39,11 @@ class ApiClient
     protected string $authenticationFailedFlagKey = 'simplybook_authentication_failed_flag';
 
     /**
+     * The public key is used to fetch the public token.
+     */
+    protected string $public_key;
+
+    /**
      * Flag to use when the authentication failed indefinitely. This is used to
      * prevent us retrying again and again. This flag is possibly true when a
      * refresh token is outdated AND the user has changed their password.
@@ -50,15 +55,22 @@ class ApiClient
         'en', 'fr', 'es', 'de', 'ru', 'pl', 'it', 'uk', 'zh', 'cn', 'ko', 'ja', 'pt', 'br', 'nl'
     ];
 
-    protected string $public_key = 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB';
-
     /**
      * Construct is executed on plugins_loaded on purpose. This way even
      * visitors can refresh invalid tokens.
+     *
+     * @param JsonRpcClient $client
+     * @param array $environment Dependency: App::provide('simplybook_env')
+     * @throws \LogicException For developers.
      */
-    public function __construct(JsonRpcClient $client)
+    public function __construct(JsonRpcClient $client, array $environment)
     {
         $this->jsonRpcClient = $client;
+        $this->public_key = ($environment['public_key'] ?? '');
+
+        if (empty($this->public_key)) {
+            throw new \LogicException('Provide the public key in the environment');
+        }
 
         if (get_option($this->authenticationFailedFlagKey)) {
             $this->handleFailedAuthentication();
