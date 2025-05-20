@@ -2,6 +2,7 @@
 namespace SimplyBook\Providers;
 
 use SimplyBook\App;
+use SimplyBook\Utility\StringUtility;
 use SimplyBook\Interfaces\ProviderInterface;
 
 class Provider implements ProviderInterface
@@ -19,7 +20,7 @@ class Provider implements ProviderInterface
     public function provide(): void
     {
         foreach ($this->provides as $provide) {
-            $method = 'provide' . ucfirst($provide);
+            $method = 'provide' . StringUtility::snakeToUpperCamelCase($provide);
             if (method_exists($this, $method) === false) {
                 continue;
             }

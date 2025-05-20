@@ -36,6 +36,16 @@ return [
                 'url' => 'https://simply.ladesk.com/scripts/track.js',
             ],
         ],
+        'api' => [
+            'production' => [
+                'domain' => 'simplybook.it',
+                'public_key' => 'GWLAm1KkDD962jGUc26t7RamSaY3navt8uKcCNwlLrEqY6aRwOoGNGmW1H0YyLvW',
+            ],
+            'development' => [
+                'domain' => 'wp.simplybook.ovh',
+                'public_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
+            ],
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
@@ -102,8 +112,6 @@ return [
             ['key' => 'login:booking.lcn.uk', 'value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
             ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
-            // GET RID OF THIS LATER!!
-            ['key' => 'default:wp.simplybook.ovh', 'value' => 'default:wp.simplybook.ovh', 'label' => 'wp.simplybook.ovh'],
         ]
     ],
     'http' => [
