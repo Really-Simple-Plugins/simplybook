@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-19T08:28:11+00:00\n"
+"POT-Creation-Date: 2025-05-20T07:38:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -291,98 +291,98 @@ msgstr ""
 msgid "Your Trial period has expired! Please consider all premium features!"
 msgstr ""
 
-#: app/http/ApiClient.php:594
-#: app/http/ApiClient.php:802
+#: app/http/ApiClient.php:619
+#: app/http/ApiClient.php:827
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: app/http/ApiClient.php:600
+#: app/http/ApiClient.php:625
 msgid "Too many attempts to register company, please try again in a minute."
 msgstr ""
 
-#: app/http/ApiClient.php:614
+#: app/http/ApiClient.php:639
 msgid "Please fill in all company data."
 msgstr ""
 
-#: app/http/ApiClient.php:658
+#: app/http/ApiClient.php:683
 msgid "Something went wrong while registering your company. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:670
+#: app/http/ApiClient.php:695
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/http/ApiClient.php:703
+#: app/http/ApiClient.php:728
 msgid "The company name is not allowed. Please change the company name."
 msgstr ""
 
-#: app/http/ApiClient.php:711
+#: app/http/ApiClient.php:736
 msgid "Unknown error encountered while registering your company. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:810
+#: app/http/ApiClient.php:835
 msgid "Something went wrong, are you sure you started the company registration?"
 msgstr ""
 
-#: app/http/ApiClient.php:829
+#: app/http/ApiClient.php:854
 msgid "Something went wrong while confirming your email. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:837
+#: app/http/ApiClient.php:862
 msgid "Email successfully confirmed."
 msgstr ""
 
-#: app/http/ApiClient.php:841
+#: app/http/ApiClient.php:866
 msgid "Unknown error encountered while confirming your email. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:843
+#: app/http/ApiClient.php:868
 msgid "This confirmation code is not valid."
 msgstr ""
 
-#: app/http/ApiClient.php:1342
+#: app/http/ApiClient.php:1367
 msgid "Failed logging in, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1345
+#: app/http/ApiClient.php:1370
 msgid "Unknown error"
 msgstr ""
 
-#: app/http/ApiClient.php:1351
+#: app/http/ApiClient.php:1376
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1354
+#: app/http/ApiClient.php:1379
 msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1402
+#: app/http/ApiClient.php:1427
 msgid "Failed two factor authentication, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1405
+#: app/http/ApiClient.php:1430
 msgid "Unknown 2FA error"
 msgstr ""
 
-#: app/http/ApiClient.php:1412
+#: app/http/ApiClient.php:1437
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1415
+#: app/http/ApiClient.php:1440
 msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1483
+#: app/http/ApiClient.php:1508
 #: react/build/843.js:1
 #: react/src/components/Modals/SignInModal.jsx:15
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/http/ApiClient.php:1484
+#: app/http/ApiClient.php:1509
 msgid "SMS"
 msgstr ""
 
-#: app/http/ApiClient.php:1490
+#: app/http/ApiClient.php:1515
 msgid "Unknown 2FA provider"
 msgstr ""
 
@@ -1966,7 +1966,7 @@ msgstr ""
 #: react/build/939.js:1
 #: react/src/components/Forms/OnboardingForms.jsx:17
 #: react/src/components/Onboarding/OnboardingStep.jsx:19
-#: react/src/components/Onboarding/OnboardingStep.jsx:172
+#: react/src/components/Onboarding/OnboardingStep.jsx:185
 msgid "Next"
 msgstr ""
 
@@ -1976,8 +1976,8 @@ msgstr ""
 #: react/build/792.js:1
 #: react/build/843.js:1
 #: react/build/939.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:175
-#: react/src/components/Onboarding/OnboardingStep.jsx:194
+#: react/src/components/Modals/Partials/FormLogin.jsx:177
+#: react/src/components/Onboarding/OnboardingStep.jsx:206
 msgid "Something went wrong"
 msgstr ""
 
@@ -1986,7 +1986,7 @@ msgstr ""
 #: react/build/182.js:1
 #: react/build/792.js:1
 #: react/build/939.js:1
-#: react/src/components/Onboarding/OnboardingStep.jsx:198
+#: react/src/components/Onboarding/OnboardingStep.jsx:210
 msgid "Or restart the onboarding"
 msgstr ""
 
@@ -2377,7 +2377,7 @@ msgstr ""
 #: react/build/46.js:1
 #: react/build/107.js:1
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:193
+#: react/src/components/Modals/Partials/FormLogin.jsx:194
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:140
 msgid "Close"
 msgstr ""
@@ -2555,10 +2555,6 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: react/build/747.js:1
-msgid "No bookings yet..."
-msgstr ""
-
-#: react/build/747.js:1
 msgid "Today"
 msgstr ""
 
@@ -2580,6 +2576,10 @@ msgstr ""
 
 #: react/build/747.js:1
 msgid "Last 30 days"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "No bookings yet..."
 msgstr ""
 
 #: react/build/747.js:1
@@ -2705,31 +2705,31 @@ msgid "Request SMS"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:186
+#: react/src/components/Modals/Partials/FormLogin.jsx:187
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:132
 msgid "Submit"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:114
+#: react/src/components/Modals/Partials/FormLogin.jsx:116
 msgid "Company domain"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:134
-#: react/src/components/Modals/Partials/FormLogin.jsx:137
+#: react/src/components/Modals/Partials/FormLogin.jsx:136
+#: react/src/components/Modals/Partials/FormLogin.jsx:139
 msgid "Company login"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:150
-#: react/src/components/Modals/Partials/FormLogin.jsx:153
+#: react/src/components/Modals/Partials/FormLogin.jsx:152
+#: react/src/components/Modals/Partials/FormLogin.jsx:155
 msgid "User login or email"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:166
-#: react/src/components/Modals/Partials/FormLogin.jsx:169
+#: react/src/components/Modals/Partials/FormLogin.jsx:168
+#: react/src/components/Modals/Partials/FormLogin.jsx:171
 msgid "Password"
 msgstr ""
 
