@@ -39,9 +39,9 @@ class ApiClient
     protected string $authenticationFailedFlagKey = 'simplybook_authentication_failed_flag';
 
     /**
-     * The public key is used to fetch the public token.
+     * The key is used to fetch the public token for the current user.
      */
-    protected string $public_key;
+    protected string $app_key;
 
     /**
      * Flag to use when the authentication failed indefinitely. This is used to
@@ -66,10 +66,10 @@ class ApiClient
     public function __construct(JsonRpcClient $client, array $environment)
     {
         $this->jsonRpcClient = $client;
-        $this->public_key = ($environment['public_key'] ?? '');
+        $this->app_key = ($environment['app_key'] ?? '');
 
-        if (empty($this->public_key)) {
-            throw new \LogicException('Provide the public key in the environment');
+        if (empty($this->app_key)) {
+            throw new \LogicException('Provide the key of the application in the environment');
         }
 
         if (get_option($this->authenticationFailedFlagKey)) {
@@ -287,7 +287,7 @@ class ApiClient
             'sslverify' => true,
             'body' => json_encode(
                 array(
-                    'api_key' => $this->public_key,
+                    'api_key' => $this->app_key,
                 )),
         ) );
 

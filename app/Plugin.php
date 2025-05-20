@@ -47,7 +47,7 @@ class Plugin
 
     /**
      * Register the plugin environment. The value of the environment will
-     * determine which domain and public_key is used for the API calls. The
+     * determine which domain and app_key are used for the API calls. The
      * default value is production and can be [production|development].
      * See {@see config/environment.php} for the actual values.
      */
