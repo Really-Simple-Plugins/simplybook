@@ -74,45 +74,37 @@ const Bookings = () => {
                 {!isLoading && !hasError && (
                     <div className="mt-4 mx-5 bg-primary-lighter rounded-md border-1 border-[#E1E7F5]">
                         <span className="text-succes flex items-center w-full mb-3 px-4 py-3 border-b-[#E1E7F5] border-b-1">
-                            <Icon 
-                                style={{ color: "var(--color-success)" }} 
-                                name="trophy" 
-                                size={"1x"} 
-                                className="mr-2" 
+                            <Icon
+                                style={{ color: "var(--color-success)" }}
+                                name="trophy"
+                                size={"1x"}
+                                className="mr-2"
                             />
-                            <p className="text-base font-semibold m-0">{__("Most popular", "simplybook")} - {__("Last 30 days", "simplybook")}</p>   
+                            <p className="text-base font-semibold m-0">{__("Most popular", "simplybook")} - {__("Last 30 days", "simplybook")}</p>
                         </span>
-                        {(mostPopularProviderName === "" || mostPopularServiceName === "") ? (
-                           <p className="text-base font-semibold m-0 px-4 mb-3 text-gray-500 italic">{ __("No bookings yet...", "simplybook")}</p>  
-                        ) : (
-                            <>
-                                {MostPopularDataList.map((block, index) => (
-                                    <Fragment key={index}>
-                                        <MostPopular 
-                                            key={block.key} 
-                                            title={block.title} 
-                                            mostPopularName={block.value}
-                                            bookingAmount={block.bookings} 
-                                        />
-                                    </Fragment>
-                                ))}
-                            </>
-                        )}  
-
-
-                      
-
+                        <>
+                            {MostPopularDataList.map((block, index) => (
+                                <Fragment key={index}>
+                                    <MostPopular
+                                        key={block.key}
+                                        title={block.title}
+                                        mostPopularName={block.value}
+                                        bookingAmount={block.bookings}
+                                    />
+                                </Fragment>
+                            ))}
+                        </>
                     </div>
                 )}
             </BlockContent>
             <BlockFooter>
-                <ButtonLink 
-                    className="!border-sb-blue !text-sb-blue flex-row-reverse" 
-                    icon={true} 
-                    iconName="target-blank" 
-                    iconClass="fa-regular" 
-                    reverseIcon={true}  
-                    btnVariant="square-ghost-small" 
+                <ButtonLink
+                    className="!border-sb-blue !text-sb-blue flex-row-reverse"
+                    icon={true}
+                    iconName="target-blank"
+                    iconClass="fa-regular"
+                    reverseIcon={true}
+                    btnVariant="square-ghost-small"
                     loginLink="v2/index/index"
                 >
                     {__("View Bookings", "simplybook")}
