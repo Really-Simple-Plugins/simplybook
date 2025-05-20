@@ -155,7 +155,7 @@ class ApiClient
 
         // Prevent fields config from being loaded before the init hook. In this
         // case we do not need to validate by default.
-        $validateBasedOnDomainConfig = did_action('init');
+        $validateBasedOnDomainConfig = (did_action('init') > 0);
 
         $domain = $companyDomain ?: $this->get_domain($validateBasedOnDomainConfig);
 

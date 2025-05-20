@@ -9,9 +9,9 @@ use SimplyBook\Http\JsonRpcClient;
 class AppServiceProvider extends Provider
 {
     protected array $provides = [
+        'simplybook_env', // Prioritized so it can be used in other providers
         'request',
         'client',
-        'simplybook_env',
     ];
 
     /**
