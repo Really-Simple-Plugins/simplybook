@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-20T07:38:24+00:00\n"
+"POT-Creation-Date: 2025-05-21T11:44:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -2555,6 +2555,10 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: react/build/747.js:1
+msgid "Not yet calculated..."
+msgstr ""
+
+#: react/build/747.js:1
 msgid "Today"
 msgstr ""
 
@@ -2576,10 +2580,6 @@ msgstr ""
 
 #: react/build/747.js:1
 msgid "Last 30 days"
-msgstr ""
-
-#: react/build/747.js:1
-msgid "No bookings yet..."
 msgstr ""
 
 #: react/build/747.js:1
