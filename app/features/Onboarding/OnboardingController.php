@@ -2,7 +2,7 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\App;
-use SimplyBook\Helpers\Event;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Builders\PageBuilder;
 use SimplyBook\Utility\StringUtility;
@@ -110,6 +110,7 @@ class OnboardingController implements FeatureInterface
         $tempTerms = $tempDataStorage->getBoolean('terms', true);
 
         $companyBuilder->setEmail($tempEmail);
+        $companyBuilder->setUserLogin($tempEmail);
         $companyBuilder->setTerms($tempTerms);
 
         $companyBuilder->setPassword(
@@ -217,39 +218,33 @@ class OnboardingController implements FeatureInterface
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'payload');
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
-        $bookingPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('bookingPageUrl'));
-        if (!$calendarPageIsAvailable || !$bookingPageIsAvailable) {
+        if (!$calendarPageIsAvailable) {
             return $this->service->sendHttpResponse([], false, esc_html__(
-                'Both page titles should be available if you choose to generate pages.', 'simplybook'
+                'Calendar page title should be available if you choose to generate this page.', 'simplybook'
             ));
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
-        $bookingPageName = StringUtility::convertUrlToTitle($storage->getUrl('bookingPageUrl'));
 
         $calendarPageID = (new PageBuilder())->setTitle($calendarPageName)
             ->setContent('[simplybook_widget]')
             ->insert();
 
-        $bookingPageID = (new PageBuilder())->setTitle($bookingPageName)
-            ->setContent('[simplybook_booking_button]')
-            ->insert();
+        $pageCreatedSuccessfully = ($calendarPageID !== -1);
 
-        $pagesCreatedSuccessfully = (($calendarPageID !== -1) && ($bookingPageID !== -1));
-
-        if ($pagesCreatedSuccessfully) {
-            Event::dispatch(Event::CALENDAR_PUBLISHED);
+        // These flags are deleted after its one time use in the Task and Notice
+        if ($pageCreatedSuccessfully) {
+            $this->service->setPublishWidgetCompleted();
         }
 
         $this->service->setOnboardingCompleted();
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
-            'booking_page_id' => $bookingPageID,
-        ], $pagesCreatedSuccessfully);
+        ], $pageCreatedSuccessfully);
     }
 
     /**
@@ -277,10 +272,19 @@ class OnboardingController implements FeatureInterface
         try {
             $response = App::provide('client')->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
+
+            $exceptionData = $e->getData();
+
+            // Data given was valid, so save it.
+            if (isset($exceptionData['require2fa']) && $exceptionData['require2fa'] === true) {
+                $this->saveLoginCompanyData($userLogin, $userPassword);
+            }
+
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-                'data' => $e->getData(),
+                'data' => $exceptionData,
             ], false, $e->getMessage(), $e->getResponseCode());
+
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -288,6 +292,7 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
+        $this->saveLoginCompanyData($userLogin, $userPassword);
 
         return new \WP_REST_Response([
             'message' => esc_html__('Login successful.', 'simplybook'),
@@ -356,9 +361,28 @@ class OnboardingController implements FeatureInterface
             $responseStorage->getInt('company_id'),
         );
 
+        $this->validatePublishedWidget();
         $this->service->setOnboardingCompleted();
 
         return true;
+    }
+
+    /**
+     * Method is used to save valid user login and password for existing users.
+     * We already do this for users going through the onboarding in
+     * {@see registerCompanyAtSimplyBook}. This method ensures that we can
+     * re-authenticate an existing user when the connection to SimplyBook is
+     * lost. To see this fallback look at {@see ApiClient::refresh_token} on
+     * line 352.
+     */
+    protected function saveLoginCompanyData(string $userLogin, string $password)
+    {
+        $companyBuilder = new CompanyBuilder();
+        $companyBuilder->setUserLogin($userLogin)->setPassword(
+            $this->service->encrypt_string($password)
+        );
+
+        $this->service->storeCompanyData($companyBuilder);
     }
 
     /**
@@ -417,5 +441,43 @@ class OnboardingController implements FeatureInterface
         }
 
         return $this->service->sendHttpResponse([], $success, $message);
+    }
+
+    /**
+     * Method is used to set a notification/task flag to true when it determines
+     * that there is a published post with the SimplyBook.me widget shortcode
+     * or the Gutenberg block.
+     */
+    public function validatePublishedWidget(): void
+    {
+        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
+        if ($cache === true) {
+            $this->service->setPublishWidgetCompleted();
+            return;
+        }
+
+        global $wpdb;
+
+        // Search for "simplybook widget" with a maximum of 1 character in
+        // between. This will match both the shortcode ([simplybook_widget])
+        // and the Gutenberg block (<!-- wp:simplybook/widget -->).
+        $pattern = 'simplybook.{0,1}widget';
+
+        // This direct SQL query is intentional, safe, and properly prepared.
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
+        $query = $wpdb->prepare("
+            SELECT 1
+            FROM {$wpdb->posts}
+            WHERE post_content REGEXP %s
+            LIMIT 1
+        ", $pattern);
+
+        $havePosts = (bool) $wpdb->get_var($query);
+        if (!$havePosts) {
+            return;
+        }
+
+        $this->service->setPublishWidgetCompleted();
+        wp_cache_set('simplybook_widget_published', true, 'simplybook');
     }
 }

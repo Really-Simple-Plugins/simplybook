@@ -133,12 +133,15 @@ class TaskManagementListener
                 continue;
             }
 
+            $maxAmountForLimit = ($limit['total'] ?? 0);
             $amountLeftForLimit = ($limit['rest'] ?? 0);
 
             switch ($limit['key']) {
                 case 'sheduler_limit':
                     $this->handleShedulerLimit($amountLeftForLimit);
                     break;
+                case 'provider_limit':
+                    $this->handleProviderLimit($amountLeftForLimit, $maxAmountForLimit);
             }
         }
     }
@@ -166,6 +169,32 @@ class TaskManagementListener
     }
 
     /**
+     * Handle the provider limit to update task status.
+     */
+    private function handleProviderLimit(int $amountLeft, int $maxAmount): void
+    {
+        $amountUsed = ($maxAmount - $amountLeft);
+
+        if ($amountLeft === 0) {
+            $this->service->flagTaskUrgent(
+                Tasks\MaxedOutProvidersTask::IDENTIFIER
+            );
+        }
+
+        if ($amountLeft > 1) {
+            $this->service->hideTask(
+                Tasks\MaxedOutProvidersTask::IDENTIFIER
+            );
+        }
+
+        if ($amountUsed > 1) {
+            $this->service->completeTask(
+                Tasks\AddAllProvidersTask::IDENTIFIER
+            );
+        }
+    }
+
+    /**
      * Handle the special features loaded event to update task status.
      */
     public function handleSpecialFeaturesLoaded(array $specialFeatures): void
@@ -188,15 +217,15 @@ class TaskManagementListener
      */
     private function handlePaidEventsSpecialFeature(array $plugin): void
     {
-        $pluginIsTurnedOn = ($plugin['is_turned_on'] ?? false);
+        $pluginIsActive = ($plugin['is_active'] ?? false);
 
-        if ($pluginIsTurnedOn) {
+        if ($pluginIsActive) {
             $this->service->completeTask(
                 Tasks\AcceptPaymentsTask::IDENTIFIER
             );
         }
 
-        if ($pluginIsTurnedOn === false) {
+        if ($pluginIsActive === false) {
             $this->service->openTask(
                 Tasks\AcceptPaymentsTask::IDENTIFIER
             );

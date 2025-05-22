@@ -1,5 +1,7 @@
-import { createLazyFileRoute } from "@tanstack/react-router";
+import { createLazyFileRoute, Link } from "@tanstack/react-router";
 import { __ } from "@wordpress/i18n";
+import { useEffect } from "react";
+
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import useSettingsData from "../../hooks/useSettingsData";
 import TextInput from "../../components/Inputs/TextInput";
@@ -7,44 +9,56 @@ import Icon from "../../components/Common/Icon";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
+import usePageAvailability from "../../hooks/usePageAvailability";
 
 const path = "/onboarding/implementation";
 
 export const Route = createLazyFileRoute(path)({
-
     component: () => {
         const { getValue } = useSettingsData();
+        const { updateData, getCurrentStep } = useOnboardingData();
 
         const {
-            getCurrentStep,
-            setCalendarPageName,
-            bookingPageName,
-            setBookingPageName,
-            calendarPageName,
-            calendarPageNameAvailable,
-            bookingPageNameAvailable,
-        } = useOnboardingData();
+            pageUrl: calendarPageUrl,
+            pageAvailable: calendarPageAvailable,
+            setPageUrl: setCalendarPageUrl
+        } = usePageAvailability(simplybook.site_url + "/" + __("calendar", "simplybook"));
 
-        let stepSettings = getCurrentStep(path);
-        let implementationField = stepSettings.fields.find((field) => field.id === "implementation");
+        /**
+         * Update onboarding data whenever the calendarPageUrl changes.
+         */
+        useEffect(() => {
+            updateData({ calendarPageUrl });
+        }, [calendarPageUrl]);
 
-        let bothPagesAvailable = (calendarPageNameAvailable && bookingPageNameAvailable);
-        let pagesShouldBeCreated = (getValue('implementation') === "generated");
-        let buttonDisabled = (pagesShouldBeCreated && (bothPagesAvailable === false));
+        /**
+         * Update onboarding data whenever the calendarPageAvailable changes.
+         */
+        useEffect(() => {
+            updateData({ calendarPageAvailable });
+        }, [calendarPageAvailable]);
+
+        const stepSettings = getCurrentStep(path);
+        const implementationField = stepSettings.fields.find(
+            (field) => field.id === "implementation"
+        );
 
         let chosenOption = implementationField?.default;
-        if (getValue('implementation') !== false) {
-            chosenOption = getValue('implementation');
+        if (getValue("implementation") !== false) {
+            chosenOption = getValue("implementation");
         }
+
+        const pagesShouldBeCreated = (chosenOption === "generated");
+        const buttonDisabled = (pagesShouldBeCreated && !calendarPageAvailable);
 
         return (
             <>
-                <LeftColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-6 col-span-12 xl:col-start-2"}>
-                    <div className={"text-center"}>
-                        <h2 className={"mb-2 text-lg font-light text-black"}>
+                <LeftColumn className="items-center flex-col flex-wrap justify-center xl:col-span-6 col-span-12 xl:col-start-2">
+                    <div className="text-center">
+                        <h2 className="mb-2 text-lg font-light text-black">
                             {__("Almost there!", "simplybook")}
                         </h2>
-                        <h1 className={"text-3xl font-semibold text-black mb-4"}>
+                        <h1 className="text-4xl font-semibold text-black mb-4">
                             {__("Implement SimplyBook.me", "simplybook")}
                         </h1>
                     </div>
@@ -53,23 +67,26 @@ export const Route = createLazyFileRoute(path)({
                         title={__("Implement SimplyBook.me", "simplybook")}
                         primaryButton={{
                             label: __("Continue configuration", "simplybook"),
-                            navigateTo: "/", // Dashboard
+                            navigateTo: "/",
                             disabled: buttonDisabled,
                         }}
                     />
                 </LeftColumn>
-                <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-4 col-span-12 relative w-full"}>
-                    <div className={"flex flex-col flex-wrap items-center my-10 text-center h-full"}>
-                        {(chosenOption === "manual") &&
+
+                <RightColumn className="items-center flex-col flex-wrap justify-center xl:col-span-4 col-span-12 relative w-full">
+                    <div className="flex flex-col flex-wrap items-center my-10 text-center h-full">
+                        {chosenOption === "manual" && (
                             <>
-                                <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
-                                <h2 className={"text-lg font-light text-black m-0 mb-6"}>
+                                <h1 className="text-3xl font-semibold text-black m-0 mb-2">
+                                    {__("Implementation", "simplybook")}
+                                </h1>
+                                <h2 className="text-lg font-light text-black m-0 mb-6">
                                     {__("Use the below shortcode in a page to show the widget.", "simplybook")}
                                 </h2>
                                 <TextInput
                                     className="w-full p-4 mb-8"
-                                    clickToSelect={true}
-                                    disabled={true}
+                                    clickToSelect
+                                    disabled
                                     value="[simplybook_widget]"
                                 />
                                 {/*
@@ -83,41 +100,36 @@ export const Route = createLazyFileRoute(path)({
                                             rel="noreferrer">{__("Read more", "simplybook")}</a>
                                 </div> */}
                             </>
-                        }
-                        {(chosenOption === "generated") &&
+                        )}
+                        {chosenOption === "generated" && (
                             <>
-                                <h1 className={"text-3xl font-semibold text-black m-0 mb-2"}>{__("Implementation", "simplybook")}</h1>
-                                <h2 className={"text-lg font-light text-black m-0 mb-6"}>
-                                    {__("SimplyBook.me will generate the following pages automatically", "simplybook")}
+                                <h1 className="text-3xl font-semibold text-black m-0 mb-2">
+                                    {__("Implementation", "simplybook")}
+                                </h1>
+                                <h2 className="text-lg font-light text-black m-0 mb-6">
+                                    {__("SimplyBook.me will generate the following page automatically", "simplybook")}
                                 </h2>
                                 <div className="w-full flex items-center mb-8">
-                                    <TextInput className="p-4 flex-grow" value={calendarPageName}
-                                            onChange={(e) => setCalendarPageName(e.target.value)}/>
-                                    {calendarPageNameAvailable &&
-                                        <Icon name="check" color="green" className="ml-2 self-center"/>}
-                                    {!calendarPageNameAvailable &&
-                                        <Icon name="times" color="red" className="ml-2 self-center"/>}
+                                    <TextInput
+                                        className="p-4 flex-grow"
+                                        value={calendarPageUrl}
+                                        onChange={(e) => setCalendarPageUrl(e.target.value)}
+                                    />
+                                    <Icon
+                                        name={calendarPageAvailable ? "check" : "times"}
+                                        color={calendarPageAvailable ? "green" : "red"}
+                                        className="ml-2 self-center"
+                                    />
                                 </div>
-                                <div className="w-full flex items-center mb-8">
-                                    <TextInput className="p-4 flex-grow" value={bookingPageName}
-                                            onChange={(e) => setBookingPageName(e.target.value)}/>
-                                    {bookingPageNameAvailable &&
-                                        <Icon name="check" color="green" className="ml-2 self-center"/>}
-                                    {!bookingPageNameAvailable &&
-                                        <Icon name="times" color="red" className="ml-2 self-center"/>}
-                                </div>
-                                {/*
-
-                                Removed as long we do not have documentation to link to
-
-                                <div className="text-base text-gray-600">
-                                    <Icon name="info" color="green" className="mr-2"/>
-                                    {__("Generating pages for SimplyBook.me", "simplybook")}
-                                    &nbsp;<a className="underline" href="https://simplybook.me" target="_blank"
-                                            rel="noreferrer">{__("Read more", "simplybook")}</a>
+                                {/* <div className="text-base text-gray-600">
+                                    <Icon name="info" color="green" className="mr-3"/>
+                                    {__("Generating pages for SimplyBook.me ", "simplybook")}
+                                    <Link className="text-gray-600 underline" href="https://simplybook.me" target="_blank" rel="noreferrer">
+                                        {__("Read more", "simplybook")}
+                                    </Link>
                                 </div> */}
                             </>
-                        }
+                        )}
                     </div>
                 </RightColumn>
             </>

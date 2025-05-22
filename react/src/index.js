@@ -1,4 +1,5 @@
 import { render, createRoot } from "@wordpress/element";
+import {loadDynamicTranslations} from "./functions/loadDynamicTranslations";
 
 import {
   QueryClient,
@@ -58,17 +59,20 @@ const router = createRouter({
 
 // Lazy load dev tools
 const ReactQueryDevtools = React.lazy(() =>
-  import("@tanstack/react-query-devtools").then((d) => ({
-    default: d.ReactQueryDevtools,
-  })),
+    import("@tanstack/react-query-devtools").then((d) => ({
+      default: d.ReactQueryDevtools,
+    })),
 );
 
 document.addEventListener("DOMContentLoaded", () => {
   const container = document.getElementById("simplybook_app");
   if (container) {
+    // Load dynamic translations before rendering
+    loadDynamicTranslations();
+
     // Disable React Query's suspense by default
     config.defaultOptions.queries.suspense = false;
-    
+
     // Don't clear the container immediately
     const root = createRoot(container, {
       hydrate: true, // Tell React to hydrate instead of render
@@ -78,16 +82,16 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     root.render(
-      <React.StrictMode>
-        <QueryClientProvider client={queryClient}>
-          <RouterProvider router={router} />
-          {process.env.NODE_ENV === "development" && (
-            <React.Suspense>
-              <ReactQueryDevtools />
-            </React.Suspense>
-          )}
-        </QueryClientProvider>
-      </React.StrictMode>,
+        <React.StrictMode>
+          <QueryClientProvider client={queryClient}>
+            <RouterProvider router={router} />
+            {process.env.NODE_ENV === "development" && (
+                <React.Suspense>
+                  <ReactQueryDevtools />
+                </React.Suspense>
+            )}
+          </QueryClientProvider>
+        </React.StrictMode>,
     );
   }
 });

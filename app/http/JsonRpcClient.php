@@ -2,8 +2,6 @@
 
 namespace SimplyBook\Http;
 
-use Exception;
-
 /**
  * JSON-RPC Client class
  */
@@ -51,16 +49,16 @@ class JsonRpcClient
      * @param string $method
      * @param array $params
      * @return mixed
-     * @throws Exception
+     * @throws \Exception
      */
     public function __call(string $method, array $params)
     {
         if (empty($this->url)) {
-            throw new Exception('URL is not set');
+            throw new \Exception('URL is not set');
         }
 
         if (empty($this->contextOptions)) {
-            throw new Exception('Context options are not set');
+            throw new \Exception('Context options are not set');
         }
 
         $currentId = $this->requestId++;
@@ -77,10 +75,11 @@ class JsonRpcClient
         $result = json_decode($response, false);
 
         if ($result->id != $currentId) {
-            throw new Exception("Incorrect response id (request id: {$currentId}, response id: {$result->id})\n\nResponse: {$response}");
+            throw new \Exception('Incorrect response id (request id: ' . esc_html($currentId) . ', response id: ' . esc_html($result->id) . ')' . "\n\nResponse: " . esc_html($response));
         }
+
         if (isset($result->error) && $result->error) {
-            throw new Exception("Request error: {$result->error->message}");
+            throw new \Exception('Request error: ' . esc_html($result->error->message));
         }
 
         return $result->result;

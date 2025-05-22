@@ -11,6 +11,7 @@ return [
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). '/' . plugin_basename(dirname(__DIR__)) . '.php',
         'assets_path' => dirname(__DIR__).'/assets/',
+        'lang_path' => dirname(__DIR__).'/assets/languages/',
         'view_path' => dirname(__DIR__).'/app/views/',
         'feature_path' => dirname(__DIR__).'/app/features/',
         'react_path' => dirname(__DIR__).'/react',
@@ -21,12 +22,30 @@ return [
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
         'views_url' => plugin_dir_url(__DIR__).'app/views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
-        'admin_url' => admin_url('admin.php?page=simplybook'),
+        'admin_url' => admin_url('admin.php?page=simplybook-integration'),
     ],
     'simplybook' => [
-        'support_link' => 'https://wordpress.org/support/plugin/simplybook/',
+        'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
+        'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
         'widget_script_version' => '1.3.0',
+        'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
+        'support' => [
+            'enabled' => true,
+            'widget' => [
+                'url' => 'https://simply.ladesk.com/scripts/track.js',
+            ],
+        ],
+        'api' => [
+            'production' => [
+                'domain' => 'simplybook.it',
+                'app_key' => 'GWLAm1KkDD962jGUc26t7RamSaY3navt8uKcCNwlLrEqY6aRwOoGNGmW1H0YyLvW',
+            ],
+            'development' => [
+                'domain' => 'wp.simplybook.ovh',
+                'app_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
+            ],
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
@@ -39,7 +58,7 @@ return [
                 [
                     'title' => 'Customization',
                     'content' => 'Accept Payments Online ',
-                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature', // todo: use loginLink() method
+                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
                 ],
                 [
                     'title' => 'Marketing',
@@ -58,7 +77,7 @@ return [
                 // ],
                 // [
                 //     'title' => 'News & Updates',
-                //     'content' => 'Simplybook.me  newsletter: exciting new features and upcoming enhancements.',
+                //     'content' => 'SimplyBook.me  newsletter: exciting new features and upcoming enhancements.',
                 //     'link' => 'https://news.simplybook.me/ ',
                 // ],
                 // [
@@ -92,8 +111,7 @@ return [
             ['key' => 'login:booking.names.uk', 'value' => 'login:booking.names.uk', 'label' => 'booking.names.uk'],
             ['key' => 'login:booking.lcn.uk', 'value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
-            // GET RID OF THIS LATER!!
-            ['key' => 'default:wp.simplybook.ovh', 'value' => 'default:wp.simplybook.ovh', 'label' => 'wp.simplybook.ovh'],
+            ['key' => 'login:booking.register365.ie', 'value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
         ]
     ],
     'http' => [

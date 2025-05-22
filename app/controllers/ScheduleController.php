@@ -13,7 +13,7 @@ class ScheduleController implements ControllerInterface
     {
         $schedules['simplybook_daily'] = [
             'interval' => DAY_IN_SECONDS,
-            'display' => __('Once every day'),
+            'display' => __('Once every day', 'simplybook'),
         ];
 
         return $schedules;

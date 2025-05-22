@@ -8,6 +8,7 @@ import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import {ToastContainer} from "react-toastify";
 
 const FormFooter = ({
     onSubmit,
@@ -38,11 +39,14 @@ const FormFooter = ({
             <FormScrollProgressLine />
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
-                    <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2`}>
+                    <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2 p-0 m-0 mr-2`}>
                         {currentState.message}
                     </p>
                 )}
-                <PreviewButtonInput btnVariant={'tertiary-small'} getValues={getValues}></PreviewButtonInput>
+                <PreviewButtonInput
+                    btnVariant={'tertiary-small'}
+                    getValues={getValues}>
+                </PreviewButtonInput>
                 <ButtonLink
                     disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
                     btnVariant={'secondary-small'}
@@ -51,6 +55,18 @@ const FormFooter = ({
                     {__("Save", "simplybook")}
                 </ButtonLink>
             </div>
+
+            <ToastContainer
+                toastClassName={"rounded-xl"}
+                position="bottom-right"
+                autoClose={3000}
+                hideProgressBar={true}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                pauseOnHover
+            />
         </div>
     );
 }

@@ -3,6 +3,8 @@ import useServicesData from "../../hooks/useServicesData";
 import {__, sprintf } from "@wordpress/i18n";
 import ListItem from "./ListItem";
 import useProviderData from "../../hooks/useProviderData";
+import useSubscriptionData from "../../hooks/useSubscriptionData";
+
 /**
  * HiddenField component
  * @param {object} setting
@@ -16,28 +18,42 @@ import useProviderData from "../../hooks/useProviderData";
  * @return {JSX.Element}
  */
 const ListField = forwardRef(
-    ({ setting, field, fieldState, label, help, context, className, ...props }, ref) => {
+    ({
+        setting,
+        field,
+        fieldState,
+        label,
+        help,
+        context,
+        className,
+        ...props
+    }, ref) => {
         const {services, servicesFetched} = useServicesData();
         const {providers, providersFetched} = useProviderData();
         const [listArray, setListArray] = useState([]);
         const [listFetched, setListFetched] = useState(false);
+        const [showUpsell, setShowUpsell] = useState(false);
+
+        // Load subscription
+        const {providersRemaining} = useSubscriptionData();
 
         const sourceData = {
             services: {
                 fetched: servicesFetched,
                 data: services,
+                show_upsell: false,
             },
             providers: {
                 fetched: providersFetched,
                 data: providers,
+                show_upsell: (providersRemaining < 4),
             },
         };
-
 
         useEffect(() => {
             setListArray(sourceData[setting.source]?.data);
             setListFetched(sourceData[setting.source]?.fetched);
-
+            setShowUpsell(sourceData[setting.source]?.show_upsell);
         }, [sourceData[setting.source]]);
 
         const getEditLink = (id) => {
@@ -52,7 +68,7 @@ const ListField = forwardRef(
 
         const premiumItem = {
             id: "upgrade",
-            name: setting.premiumText,
+            name: (setting?.premiumText ?? ''),
             picture_preview: "",
         };
 
@@ -65,7 +81,9 @@ const ListField = forwardRef(
                 {listFetched && listArray.map((item) => (
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
-                <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
+                {providersFetched && showUpsell && (
+                    <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
+                )}
             </div>
         );
     },

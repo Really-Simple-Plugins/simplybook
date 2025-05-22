@@ -3,20 +3,32 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\App;
 use SimplyBook\Helpers\Event;
-use SimplyBook\Traits\HasWidget;
+use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\DesignSettingsService;
 
 class WidgetController implements ControllerInterface
 {
-    use HasWidget;
+    use LegacyLoad;
+
+    protected DesignSettingsService $service;
+
+    public function __construct(DesignSettingsService $service)
+    {
+        $this->service = $service;
+    }
 
     public function register()
     {
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
-        add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
-        add_shortcode('simplybook_booking_button', [$this, 'renderBookingButton']);
+
+        // Removed since: NL14RSP2-219 - kept for reference
+        // add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
+
+        // Removed since: NL14RSP2-220 - kept for reference
+        // add_shortcode('simplybook_booking_button', [$this, 'renderBookingButton']);
     }
 
     /**
@@ -57,7 +69,10 @@ class WidgetController implements ControllerInterface
             $builder = new WidgetScriptBuilder();
             $builder->setWidgetType($widgetType)
                 ->setAttributes($attributes)
-                ->setWidgetSettings($this->getWidgetSettings())
+                ->setWidgetSettings($this->service->getDesignOptions())
+                ->isAuthenticated(
+                    App::provide('client')->isAuthenticated()
+                )
                 ->withHTML();
 
             if (!empty($wrapperID)) {
@@ -74,11 +89,11 @@ class WidgetController implements ControllerInterface
     }
 
     /**
-     * Enqueue the remote widget script
+     * Enqueue the remote widget script in the header. Its needed as soon as
+     * possible as the widgets are dependent on it.
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybook_widget_scripts');
+        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), false);
     }
 }

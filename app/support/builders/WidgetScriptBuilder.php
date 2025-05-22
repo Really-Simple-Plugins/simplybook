@@ -3,10 +3,15 @@
 namespace SimplyBook\Builders;
 
 use SimplyBook\App;
+use SimplyBook\Traits\HasViews;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
 
 class WidgetScriptBuilder
 {
+    use HasViews;
+    use HasAllowlistControl;
+
     protected bool $withHTML = false;
     protected string $widgetType = '';
     protected string $widgetTemplate = '';
@@ -14,6 +19,7 @@ class WidgetScriptBuilder
     protected string $wrapperID = '';
     protected bool $hasWrapper = false;
     protected array $widgetSettings = [];
+    protected bool $isAuthenticated = true;
 
     protected array $acceptedWidgetTypes = [
         'calendar',
@@ -42,6 +48,10 @@ class WidgetScriptBuilder
 
         if ($this->withHTML) {
             return $this->getWrappedScriptHTML($script);
+        }
+
+        if ($this->isAuthenticated === false) {
+            return $this->getDemoWidgetAlert() . $script;
         }
 
         return $script;
@@ -91,9 +101,22 @@ class WidgetScriptBuilder
         return $this;
     }
 
+    /**
+     * Set with HTML flag.
+     */
     public function withHTML(): WidgetScriptBuilder
     {
         $this->withHTML = true;
+        return $this;
+    }
+
+    /**
+     * Set the authenticated flag. If set to false, the widget will be
+     * displayed as a demo widget.
+     */
+    public function isAuthenticated(bool $authenticated): WidgetScriptBuilder
+    {
+        $this->isAuthenticated = $authenticated;
         return $this;
     }
 
@@ -169,8 +192,13 @@ class WidgetScriptBuilder
     private function getWrappedScriptHTML(string $script): string
     {
         $content = '';
+
+        if ($this->isAuthenticated === false) {
+            $content = $this->getDemoWidgetAlert();
+        }
+
         if ($this->hasWrapper) {
-            $content = sprintf('<div id="%s"></div>', $this->wrapperID);
+            $content .= sprintf('<div id="%s"></div>', $this->wrapperID);
         }
 
         $content .= sprintf('<script type="text/javascript">%s</script>', $script);
@@ -192,7 +220,41 @@ class WidgetScriptBuilder
             }
         }
 
+        if (empty($widgetSettings['server'])) {
+            $widgetSettings['server'] = $this->getDemoWidgetServerUrl();
+        }
+
         return $widgetSettings;
+    }
+
+    /**
+     * Get the demo widget server URL
+     */
+    private function getDemoWidgetServerUrl(): string
+    {
+        return App::env('simplybook.demo_widget_server_url');
+    }
+
+    /**
+     * Get the demo widget alert HTML
+     */
+    private function getDemoWidgetAlert(): string
+    {
+        $message = esc_html__('This is a demo SimplyBook.me widget.', 'simplybook');
+
+        if ($this->userCanManage()) {
+            $message .= ' ' . sprintf(
+                /* translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag */
+                esc_html__('You can configure the plugin settings to display your customized widget %1$shere%2$s.', 'simplybook'),
+                '<a href="' . esc_url(App::env('plugin.admin_url')) . '">',
+                '</a>'
+            );
+        }
+
+        return $this->view('public/demo-alert', [
+            'title' => esc_html__('Notice', 'simplybook'),
+            'message' => $message,
+        ]);
     }
 
 }

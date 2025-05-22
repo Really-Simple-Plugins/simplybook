@@ -13,6 +13,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
      btnVariant = "primary",
      disabled = false,
 }) => {
+    
     let buttonVariants = clsx(
         // Base styles
         "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1",

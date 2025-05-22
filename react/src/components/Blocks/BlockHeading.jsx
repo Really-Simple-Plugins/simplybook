@@ -5,8 +5,8 @@ const BlockHeading = ({ title, controls, className = "", help = "" }) => {
 
     return (
         <>
-            <div className={clsx(className, "flex items-center justify-between p-4", titleSpacing)}>
-                <h2 className="text-lg font-bold m-0">{title}</h2>
+            <div className={clsx(className, "flex items-center justify-between px-4 py-5", titleSpacing)}>
+                <h2 className="text-lg font-semibold m-0">{title}</h2>
                 {controls}
             </div>
             {help && (

@@ -3,8 +3,8 @@
 class CapabilityService
 {
     /**
-     * The default WordPress roles that are suitable for the custom Simplybook
-     * capabilities.
+     * The default WordPress roles that are suitable for the custom
+     * SimplyBook.me capabilities.
      */
     protected array $defaultCapabilityRoles = [
         'administrator'

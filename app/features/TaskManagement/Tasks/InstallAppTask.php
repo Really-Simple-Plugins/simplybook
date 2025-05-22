@@ -16,7 +16,7 @@ class InstallAppTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Install the Simplybook.me app for iOS or Android','simplybook');
+        return esc_html__('Install the SimplyBook.me app for iOS or Android','simplybook');
     }
 
     /**
@@ -28,6 +28,7 @@ class InstallAppTask extends AbstractTask
             'type' => 'button',
             'text' => esc_html__('More info','simplybook'),
             'link' => 'https://simplybook.me/en/app_client-app_admin-app',
+            'target' => '_blank',
         ];
     }
 }

@@ -13,6 +13,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
 import ThemeField from "../Fields/ThemeField";
+import useFieldValidation from "../../hooks/useFieldValidation";
 
 const fieldComponents = {
     text: TextField,
@@ -131,7 +132,8 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                     }, [field.value]);
                     return (
                         <FieldComponent
-                            className={setting.inline_group ? "inline-flex" : ""}
+                            {...props}
+                            className={props.className}
                             setting={setting}
                             fieldState={fieldState}
                             required={setting.required}
@@ -141,7 +143,6 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                             context={setting.context}
                             help={setting.help}
                             options={setting.options}
-                            {...props}
                             {...field}
                         />
                     );

@@ -1,4 +1,4 @@
-import React, { forwardRef, useState, useEffect } from "react";
+import React, { forwardRef, useEffect, useMemo } from "react";
 import HttpClient from "../../api/requests/HttpClient";
 import {useQuery} from "@tanstack/react-query";
 import useOnboardingData from "../../hooks/useOnboardingData";
@@ -8,14 +8,13 @@ import { Controller } from "react-hook-form";
 import { __ } from "@wordpress/i18n";
 
 /**
- * ThemeConfigField component
+ * ThemeField component
  * @param {object} props - Props passed from parent component
  * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
  * @return {JSX.Element}
  */
 const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
-    const {onboardingCompleted} = useOnboardingData();
-    const [selectedTheme, setSelectedTheme] = useState(null);
+    const { onboardingCompleted } = useOnboardingData();
 
     /**
      * Setup HttpClient
@@ -35,18 +34,6 @@ const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
     });
 
     /**
-     * Set a default theme if none is selected and response data is available.
-     */
-    useEffect(() => {
-        if (!selectedTheme && response?.data?.length > 0) {
-            const defaultTheme = response.data.find(
-                (theme) => theme.name === (props?.setting?.value ?? props?.setting?.default)
-            );
-            setSelectedTheme(defaultTheme);
-        }
-    }, [response, props?.setting?.default]);
-
-    /**
      * Show error in the console for easy debugging
      */
     if (error !== null) {
@@ -54,24 +41,24 @@ const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
     }
 
     /**
-     * Map the selected theme options to the format required by SelectField
+     * Map the selected theme options to the format required by SelectField,
+     * memoize the data so we don't redo it on re-render.
      */
-    const mappedSelectedThemeOptions = response?.data?.map((theme) => ({
-        label: theme.title.charAt(0).toUpperCase() + theme.title.slice(1),
-        value: theme.name,
-        key: theme.id,
-    }));
+    const mappedSelectedThemeOptions = useMemo(() => {
+        return response?.data?.map((theme) => ({
+            label: theme.title.charAt(0).toUpperCase() + theme.title.slice(1),
+            value: theme.name,
+            key: theme.id,
+        })) ?? [];
+    }, [response]);
 
     /**
-     * Handle change event for the SelectField. We set the selected theme based
-     * on the selected value from the dropdown. With the .find method, we
-     * get the selected theme object from the response data instead of just the
-     * theme label/value from the select.
+     * Find the selected theme object in the response data based on the passed
+     * theme name.
      */
-    const setSelectedThemeOnChange = (e) => {
-        const selectedOnChange = response?.data?.find((theme) => theme.name === e.target.value);
-        setSelectedTheme(selectedOnChange);
-    }
+    const findSelectedThemeObject = (themeName) => {
+        return response?.data?.find((theme) => theme.name === themeName);
+    };
 
     return (
         <>
@@ -81,38 +68,42 @@ const ThemeField = forwardRef(({ control, reset, ...props }, ref) => {
                 </div>
             )}
 
-            {!isLoading && !error && selectedTheme && (
-                <>
-                    <Controller
-                        control={control}
-                        name={props?.setting?.id}
-                        defaultValue={selectedTheme?.name || ""}
-                        render={({ field }) => (
-                            <SelectField
-                                {...field}
-                                setting={props?.setting}
-                                options={mappedSelectedThemeOptions}
-                                label={props?.setting?.label}
-                                help={props?.setting?.help}
-                                required={props?.setting?.required}
-                                disabled={isLoading}
-                                className="w-full"
-                                onChange={(e) => {
-                                    field.onChange(e);
-                                    setSelectedThemeOnChange(e);
-                                }}
-                            />
-                        )}
-                    ></Controller>
+            {!isLoading && !error && response?.data && (
+                <Controller
+                    control={control}
+                    name={props?.setting?.id}
+                    defaultValue={(props?.setting?.value ?? props?.setting?.default ?? "")}
+                    render={({ field, fieldState }) => {
+                        const selectedThemeObject = findSelectedThemeObject(field.value);
 
-                    {selectedTheme?.config && (
-                        <ThemeConfigGroup
-                            control={control}
-                            parentSetting={props?.setting}
-                            selectedTheme={selectedTheme}
-                        />
-                    )}
-                </>
+                        return (
+                            <>
+                                <SelectField
+                                    {...field}
+                                    setting={props?.setting}
+                                    options={mappedSelectedThemeOptions}
+                                    label={props?.setting?.label}
+                                    help={props?.setting?.help}
+                                    required={props?.setting?.required}
+                                    disabled={isLoading}
+                                    fieldState={fieldState}
+                                    className="w-full"
+                                    onChange={(e) => {
+                                        field.onChange(e.target.value);
+                                    }}
+                                />
+
+                                {selectedThemeObject?.config && (
+                                    <ThemeConfigGroup
+                                        control={control}
+                                        parentSetting={props?.setting}
+                                        selectedTheme={selectedThemeObject}
+                                    />
+                                )}
+                            </>
+                        );
+                    }}
+                />
             )}
         </>
     );

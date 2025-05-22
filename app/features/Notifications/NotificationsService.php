@@ -3,6 +3,7 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Interfaces\NoticeInterface;
+use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 
 class NotificationsService
 {
@@ -98,5 +99,21 @@ class NotificationsService
         if ($save) {
             $this->repository->saveNoticesToDatabase();
         }
+    }
+
+    /**
+     * Activate a task by default.
+     */
+    public function activate(string $noticeID): void
+    {
+        $this->repository->toggleNoticeServerSide($noticeID, true);
+    }
+
+    /**
+     * Deactivate a task by default.
+     */
+    public function deactivate(string $noticeID): void
+    {
+        $this->repository->toggleNoticeServerSide($noticeID, false);
     }
 }

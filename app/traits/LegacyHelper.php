@@ -6,11 +6,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 /**
  * Trait admin helper
- *
  * @since   3.0
- *
  */
-trait LegacyHelper {
+trait LegacyHelper
+{
+    use HasAllowlistControl;
+
     /**
      * Check manage capability
      *
@@ -26,10 +27,9 @@ trait LegacyHelper {
             return true;
         }
 
-		if ( simplybook_is_logged_in_rest() ) {
+		if ($this->restRequestIsAllowed()) {
 			return true;
 		}
-
 
         return current_user_can( 'simplybook_manage' );
     }
@@ -89,8 +89,6 @@ trait LegacyHelper {
 			'post_content' => $content,
 			'post_status'  => 'publish',
 		);
-		error_log("create page $title");
-		error_log(print_r($page, true));
 
 		// Insert the post into the database
 		$page_id = wp_insert_post( $page );
@@ -134,18 +132,22 @@ trait LegacyHelper {
     }
 
     /**
-     * Check if this is an authenticated rest request
+     * get a token
      *
-     * @return bool
+     * @param string $token
+     * @param string $type //public or admin
+     * @param bool $refresh
+     *
+     * @return void
      */
-    public function is_logged_in_rest(): bool
-    {
-        $is_settings_page_request = isset( $_SERVER['REQUEST_URI'] ) && strpos( $_SERVER['REQUEST_URI'], '/simplybook/v1/' ) !== false;
-        if ( ! $is_settings_page_request ) {
-            return false;
-        }
 
-	    return $this->user_can_manage();
+    public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
+        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
+        if ( $refresh ) {
+            $type = $type . '_refresh';
+        }
+        $token = $this->sanitize_token( $token );
+        update_option("simplybook_token_$type", $this->encrypt_string($token) );
     }
 
     /**
@@ -165,15 +167,16 @@ trait LegacyHelper {
      * Log a message if WP_DEBUG is enabled
      *
      * @param string | object | array $message
-     *
      * @return void
      */
     public function log(  $message ): void {
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$prepend = 'Simplybook: ';
+			$prepend = 'SimplyBook.me: ';
             if ( is_array( $message ) || is_object( $message ) ) {
+                /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r */
 				error_log( $prepend . print_r( $message, true ) );
 			} else {
+                /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log */
 				error_log( $prepend . $message );
 			}
         }

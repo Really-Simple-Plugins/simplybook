@@ -34,15 +34,36 @@ class Plugin
         register_uninstall_hook(App::env('plugin.base_file'), 'SimplyBook\Plugin::uninstall');
 
         $this->registerConstants();
+        $this->registerEnvironment();
 
+        add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
+    }
 
-        do_action('simplybook_plugin_loaded');
+    /**
+     * Register the plugin environment. The value of the environment will
+     * determine which domain and app_key are used for the API calls. The
+     * default value is production and can be [production|development].
+     * See {@see config/environment.php} for the actual values.
+     */
+    public function registerEnvironment()
+    {
+        if (!defined('SIMPLYBOOK_ENV')) {
+            define('SIMPLYBOOK_ENV', 'production');
+        }
+    }
+
+    /**
+     * Load the plugin text domain for translations
+     */
+    public function loadPluginTextDomain()
+    {
+        load_plugin_textdomain('simplybook');
     }
 
     /**
@@ -84,6 +105,7 @@ class Plugin
      */
     public function deactivation()
     {
+        // Silence is golden
     }
 
     /**
@@ -91,7 +113,8 @@ class Plugin
      */
     public static function uninstall()
     {
-        // todo - cleanup options table
+        $uninstallInstance = new Helpers\Uninstall();
+        $uninstallInstance->handlePluginUninstall();
     }
 
     /**
@@ -160,12 +183,15 @@ class Plugin
                 new Services\CapabilityService(),
             ),
             new Controllers\ScheduleController(),
-            new Controllers\WidgetController(),
+            new Controllers\WidgetController(
+                new Services\DesignSettingsService()
+            ),
             new Controllers\BlockController(),
             new Controllers\DesignSettingsController(
                 new Services\DesignSettingsService()
             ),
             new Controllers\ServicesController(),
+            new Controllers\ReviewController(),
         ]);
     }
 
@@ -183,7 +209,9 @@ class Plugin
             new Http\Endpoints\ServicesEndpoint(),
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),
-            new Http\Endpoints\WidgetEndpoint(),
+            new Http\Endpoints\WidgetEndpoint(
+                new Services\DesignSettingsService()
+            ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
             new Http\Endpoints\CompanyRegistrationEndpoint(),
@@ -207,18 +235,62 @@ class Plugin
     /**
      * Fire an action when the plugin is upgraded from one version to another.
      * Hooked into simplybook_controllers_loaded to make sure Controllers can
-     * hook into simplybook_plugin_version_upgrade
+     * hook into simplybook_plugin_version_upgrade.
+     *
+     * @internal Note the starting underscore in the option name. This is to
+     * prevent the option from being deleted when a user logs out. As if
+     * it is a private SimplyBook option.
+     *
      * @uses do_action simplybook_plugin_version_upgrade
      */
     public function checkForUpgrades(): void
     {
-        $previousVersion = (string) get_option('simplybook_current_version', false);
-        if ($previousVersion && version_compare($previousVersion, App::env('plugin.version'), '==')) {
+        $previousSavedVersion = (string) get_option('_simplybook_current_version', '');
+        if ($previousSavedVersion === App::env('plugin.version')) {
             return; // Nothing to do
         }
 
+        // This could be one if-statement, but this makes it readable that we
+        // do not query the database if we do not need to.
+        if (empty($previousSavedVersion)) {
+            if ($this->isUpgradeFromLegacy()) {
+                $previousSavedVersion = '2.3';
+            }
+        }
+
+        // Trigger upgrade hook if we are upgrading from a previous version.
         // Action can be used by Controllers to hook into the upgrade process
-        do_action('simplybook_plugin_version_upgrade', $previousVersion, App::env('plugin.version'));
-        update_option('simplybook_current_version', App::env('plugin.version'), false);
+        if (!empty($previousSavedVersion)) {
+            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
+        }
+
+        // Also makes sure $previousSavedVersion will only be empty one time
+        update_option('_simplybook_current_version', App::env('plugin.version'), false);
     }
+
+    /**
+     * Check if the plugin is being upgraded from a legacy version.
+     * @internal Ideally this method should be removed in the future.
+     * @since 3.0.0
+     */
+    private function isUpgradeFromLegacy(): bool
+    {
+        if ($cache = wp_cache_get('simplybook_was_legacy_plugin_active', 'simplybook')) {
+            return $cache;
+        }
+
+        global $wpdb;
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        $count = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s",
+                'simplybookMePl_%'
+            )
+        );
+
+        wp_cache_set('simplybook_was_legacy_plugin_active', ($count > 0), 'simplybook');
+        return $count > 0;
+    }
+
 }

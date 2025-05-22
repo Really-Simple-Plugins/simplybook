@@ -46,7 +46,7 @@ class NotificationsEndpoints
     {
         $allNoticesAsArray = array_map(function ($notice) {
             return $notice->toArray();
-        }, $this->service->getAllNotices(true));
+        }, $this->service->getAllNotices());
 
         return $this->sendHttpResponse(
             array_values($allNoticesAsArray) // Keys should be removed

@@ -40,7 +40,7 @@ const AuthenticationField = forwardRef(
                 return;
             }
 
-            window.location.href = "/wp-admin/admin.php?page=simplybook";
+            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
         };
 
         return (

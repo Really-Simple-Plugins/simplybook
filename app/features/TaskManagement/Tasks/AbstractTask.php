@@ -40,11 +40,16 @@ abstract class AbstractTask implements TaskInterface
     protected bool $reactivateOnUpgrade;
 
     /**
-     * Use this property to define if the task is a premium task. This is used
-     * as an alternative status when reading the task as an array. Useful for
+     * Use this property to define if the task is a premium task. Useful for
      * the UI.
      */
     protected bool $premium;
+
+    /**
+     * Use this property to define if the task is related to a special feature
+     * or not. Useful for the UI.
+     */
+    protected bool $specialFeature;
 
     /**
      * By default, a task is active on construct. This is because the $status
@@ -184,6 +189,32 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * Reads if the task is related to a special feature
+     */
+    public function isSpecialFeature(): bool
+    {
+        return $this->specialFeature ?? false;
+    }
+
+    /**
+     * Build the label for the task. This is used to display the task in the
+     * tasks dashboard component. The label is used to indicate if the task
+     * is premium or a special feature. If not, the label reflects the status.
+     */
+    public function getLabel(): string
+    {
+        if ($this->isPremium()) {
+            return esc_html__('Premium', 'simplybook');
+        }
+
+        if ($this->isSpecialFeature()) {
+            return esc_html__('Special feature', 'simplybook');
+        }
+
+        return ucfirst($this->getStatus());
+    }
+
+    /**
      * @inheritDoc
      */
     public function toArray(): array
@@ -191,8 +222,10 @@ abstract class AbstractTask implements TaskInterface
         return [
             'id' => $this->getId(),
             'text' => $this->getText(),
+            'label' => $this->getLabel(),
             'status' => $this->getStatus(),
             'premium' => $this->isPremium(),
+            'special_feature' => $this->isSpecialFeature(),
             'type' => $this->isRequired() ? 'required' : 'optional',
             'action' => $this->getAction(),
         ];

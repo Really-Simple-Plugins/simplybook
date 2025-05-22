@@ -11,23 +11,26 @@ export const Route = createLazyFileRoute(path)({
   component: () => (
         <>
           <LeftColumn
-            className={"flex-col col-span-6"}
+            className={"flex-col col-span-5 col-start-2"}
           >
             <div className={"text-center"}>
               <h2 className={"mt-2 text-lg font-light text-black"}>
-                {__("Welcome to SimplyBook", "simplybook")}
+                {__("Welcome to SimplyBook.me", "simplybook")}
               </h2>
-              <h1 className={"text-3xl font-semibold text-black mb-4"}>
+              <h1 className={"text-4xl font-semibold text-black mb-4"}>
                 {__("Fill in extra information for your account", "simplybook")}
               </h1>
-    
-            </div>  
+
+            </div>
             <OnboardingStep
               path={path}
+              primaryButton={{
+                  disabled: false,
+              }}
             />
           </LeftColumn>
           <RightColumn
-            className={"flex-col justify-center col-span-6"}
+            className={"flex-col justify-center col-span-5"}
           >
             <div className="flex flex-col items-center pb-4">
               <VideoFrame

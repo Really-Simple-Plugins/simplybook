@@ -21,7 +21,9 @@ class Event
     const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
     const SPECIAL_FEATURES_LOADED = 'special_features_loaded';
     const AUTH_FAILED = 'auth_failed';
+    const AUTH_SUCCEEDED = 'auth_succeeded';
     const CALENDAR_PUBLISHED = 'calendar_published';
+    const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
 
     /**
      * Execute a WordPress event based on our constants.
@@ -50,7 +52,7 @@ class Event
     private static function validate(string $event): void
     {
         if (!defined('self::' . strtoupper($event))) {
-            throw new \InvalidArgumentException(sprintf('Invalid event name: %s', $event));
+            throw new \InvalidArgumentException(sprintf('Invalid event name: %s', esc_html($event)));
         }
     }
 }

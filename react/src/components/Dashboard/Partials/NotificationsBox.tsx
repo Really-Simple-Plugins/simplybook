@@ -41,7 +41,7 @@ const NotificationsBox = () => {
      */
     const getNotificationClasses = (notificationType: string) => {
         return clsx(
-            "flex flex-col p-6 rounded-md shadow-sm",
+            "flex flex-col p-5 rounded-lg shadow-sm",
             {
                 "bg-red-100": notificationType === 'warning',
                 "bg-blue-100": notificationType === 'info',
@@ -55,13 +55,13 @@ const NotificationsBox = () => {
     return (
         <>
             {hasNotifications && currentNotifications.map((notice : Notice) => (
-                <div className={"notification-box " + getNotificationClasses(notice.type)} key={notice.id}>
+                <div className={"notification-box my-4 " + getNotificationClasses(notice.type)} key={notice.id}>
                     <a
                         onClick={(e) => toggleNotification()}
                         className="flex flex-row justify-between items-baseline cursor-pointer ease-in-out"
                     >
-                        <h3 className="m-0">{notice.title}</h3>
-                        <Icon className={clsx({"rotate-180": isOpen})} size={"1.5x"} name="chevron-down" />
+                        <h3 className="m-0 text-base">{notice.title}</h3>
+                        <Icon className={clsx("ease-in-out duration-300" ,{"rotate-180": isOpen})} size={"1.5x"} name="chevron-down" />
                     </a>
                     <div className={clsx("notification-content overflow-hidden ease-in-out", {"max-h-0": isOpen})}>
                         <div className=" text-sm  py-4 mb-2">
@@ -89,7 +89,7 @@ const NotificationsBox = () => {
 
             {noNotifications && (
                 <div className="notification-box">
-                    <p className="text-sm text-gray-500">{__('You currently have no notifications.', 'simplybook')}</p>
+                    <p className="text-sm text-gray-400 italic">{__('You currently have no notifications.', 'simplybook')}</p>
                 </div>
             )}
         </>

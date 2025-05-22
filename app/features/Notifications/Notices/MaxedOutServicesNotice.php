@@ -19,7 +19,7 @@ class MaxedOutServicesNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please upgrade your plan to configure more Services, or delete existing services if you want to add new services.', 'simplybook');
+        return esc_html__('Please upgrade your plan to configure more Services, or delete existing Services if you want to add more.', 'simplybook');
     }
 
     /**

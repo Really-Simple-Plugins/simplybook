@@ -24,12 +24,12 @@ const formLogin = ({
         /**
          * We use React Hook Form to handle client-side validation for the main login
         */
-        const { 
-            control, 
-            register, 
-            handleSubmit, 
-            formState: { errors, isValid }, 
-            watch 
+        const {
+            control,
+            register,
+            handleSubmit,
+            formState: { errors, isValid },
+            watch
         } = useForm({
             mode: "onChange",
             defaultValues: {
@@ -40,12 +40,11 @@ const formLogin = ({
             }
         });
 
-
         // Update how we watch the fields
         const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
 
         // Set the button disabled state
-        const setDisabled = (
+        const isDisabled = (
             watchFields.every((field) => field && field.trim() !== "") === false
         );
 
@@ -63,7 +62,7 @@ const formLogin = ({
             logUserIn(formData);
         });
 
-        
+
         const [errorMessage, setErrorMessage] = useState("");
 
         /**
@@ -74,13 +73,15 @@ const formLogin = ({
                 let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
                 let data = { ...formData, nonce: NONCE };
 
-                let response = await apiFetch({
+                let request = await apiFetch({
                     path,
                     method: "POST",
                     data
                 });
 
-                if (response.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
+                let response = request?.data;
+
+                if (response?.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
 
                     setAuthSessionId(response.data.auth_session_id);
                     setCompanyLogin(response.data.company_login);
@@ -93,7 +94,7 @@ const formLogin = ({
                     return;
                 }
 
-                window.location.href = "/wp-admin/admin.php?page=simplybook";
+                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
 
             } catch (error) {
                 setErrorMessage(error.message);
@@ -127,7 +128,7 @@ const formLogin = ({
                 <Controller
                     name="company_login"
                     control={control}
-                    rules={{ required: "Login needed" }}
+                    rules={{ required: true }}
                     render={({ field, fieldState }) => (
                         <TextField
                             {...field}
@@ -148,10 +149,10 @@ const formLogin = ({
                         <TextField
                             {...field}
                             fieldState={fieldState}
-                            label={__("Email", "simplybook")}
+                            label={__("User login or email", "simplybook")}
                             setting="email"
                             type="email"
-                            placeholder={__("Email", "simplybook")}
+                            placeholder={__("User login or email", "simplybook")}
                         />
                     )}
                 />
@@ -171,17 +172,17 @@ const formLogin = ({
                         />
                     )}
                 />
-                {errorMessage && 
-                    <Error 
-                        errorHeading={__("Something went wrong", "simplybook")} 
-                        error={errorMessage} 
+                {errorMessage &&
+                    <Error
+                        errorHeading={__("Something went wrong", "simplybook")}
+                        error={errorMessage}
                     />
                 }
                 <ButtonInput
                     className="mt-4 mb-4"
                     btnVariant="secondary"
                     type="submit"
-                    disabled={setDisabled}
+                    disabled={false}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>

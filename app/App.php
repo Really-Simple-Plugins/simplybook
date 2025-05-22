@@ -13,6 +13,7 @@ final class App
     private static Dot $related;
     private static Dot $features;
     private static Dot $providers;
+    private static Dot $countries;
 
     /**
      * Static method to get data from the environment. Method ensures loading
@@ -50,7 +51,7 @@ final class App
      */
     public static function menus(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -71,7 +72,7 @@ final class App
      */
     public static function related(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -92,7 +93,7 @@ final class App
      */
     public static function fields(?string $key = null)
     {
-        if (doing_action('init') === false && did_action('init') === false) {
+        if (doing_action('init') === false && did_action('init') === 0) {
             throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
         }
 
@@ -101,6 +102,27 @@ final class App
         }
 
         return (empty($key) ? self::$fields : self::$fields->get($key));
+    }
+
+    /**
+     * Static method to get countries config for this plugin. Method ensures
+     * loading is only done once and just in time.
+     *
+     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
+     * @return mixed
+     * @throws \LogicException If the method is called before the init hook
+     */
+    public static function countries(?string $key = null)
+    {
+        if (doing_action('init') === false && did_action('init') === 0) {
+            throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
+        }
+
+        if (empty(self::$countries)) {
+            self::$countries = self::dotFromPath(dirname(__FILE__, 2).'/config/countries.php');
+        }
+
+        return (empty($key) ? self::$countries : self::$countries->get($key));
     }
 
     /**
@@ -116,7 +138,7 @@ final class App
     public static function provide($key)
     {
         if (!self::$providers->has($key)) {
-            throw new \InvalidArgumentException("No {$key} available as a provided functionality.");
+            throw new \InvalidArgumentException("No " . esc_html($key) . " available as a provided functionality.");
         }
 
         return self::$providers->get($key);
@@ -151,7 +173,7 @@ final class App
     private static function dotFromPath(string $path, bool $prefixWithFileName = false): Dot
     {
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException("Unloadable configuration file {$path} provided.");
+            throw new \InvalidArgumentException("Unloadable configuration file " . esc_html($path) . " provided.");
         }
 
         $data = [];

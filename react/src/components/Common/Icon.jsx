@@ -27,12 +27,15 @@ import {
   faCircleXmark,
   faArrowUpRightFromSquare,
   faLinesLeaning,
+  faTriangleExclamation
  } from "@fortawesome/free-solid-svg-icons";
 
  import { 
   faGlobe,
   faFileSlash,
-  faFileCircleXmark
+  faFileCircleXmark,
+  faCalendarDay,
+  faCalendarWeek
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
@@ -41,10 +44,13 @@ import {
 
 // Map your icons to keys for easy referencing
 const iconMap = {
+    "calendar-day": faCalendarDay,
+    "calendar-week": faCalendarWeek,
     "retry": faFileCircleXmark,
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
     "circle-xmark": faCircleXmark,
+    "warning": faTriangleExclamation,
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,

@@ -7,19 +7,20 @@ import {forwardRef} from "react";
 /**
  * ThemeConfigGroupItem component
  * @param {object} props - Props passed from parent component
- * @param {object} props.control - Control object from react-hook-form, without it, the field won't work
+ * @param {object} props.control - Control object from react-hook-form, without it, the field won't work. Will also
+ * be used for the value of the fields.
  * @type {React.ForwardRefExoticComponent<React.PropsWithoutRef<{readonly control?: *, readonly item?: *}> & React.RefAttributes<unknown>>}
  */
 const ThemeConfigGroupItem = forwardRef(({
      control,
      item,
- }, ref) => {
+}, ref) => {
     return (
         <Controller
             control={control}
             name={`theme_settings.${item.config_key}`}
-            defaultValue={item?.value ?? item.default_value}
-            render={({ field }) => {
+            defaultValue={item.default_value}
+            render={({ field, fieldState }) => {
 
                 /**
                  * Skip rendering if the item is not visible or widget support
@@ -35,6 +36,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <CheckboxField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             className="theme-config-field"
@@ -50,6 +52,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <ColorPickerField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             className="theme-config-field"
@@ -61,6 +64,7 @@ const ThemeConfigGroupItem = forwardRef(({
                     return (
                         <SelectField
                             {...field}
+                            fieldState={fieldState}
                             setting={item}
                             label={item.config_title}
                             options={item.values}

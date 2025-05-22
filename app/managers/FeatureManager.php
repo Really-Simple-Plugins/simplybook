@@ -104,7 +104,7 @@ final class FeatureManager
             }
 
             if (!class_exists($fullClassName)) {
-                throw new \LogicException("Dependency {$fullClassName} does not exist.");
+                throw new \LogicException("Dependency " . esc_html($fullClassName) . " does not exist.");
             }
 
             return new $fullClassName();

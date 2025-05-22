@@ -39,6 +39,7 @@ const TextField = forwardRef(
         className={className}
         inputId={inputId}
         required={required}
+        fieldState={fieldState}
       >
         <TextInput
           name={name}
@@ -46,7 +47,7 @@ const TextField = forwardRef(
           id={inputId}
           type={type}
           aria-invalid={!!fieldState?.error?.message}
-          clickToSelect={copyField}
+          clickToSelect={copyField ?? false}
           {...props}
         />
       </FieldWrapper>

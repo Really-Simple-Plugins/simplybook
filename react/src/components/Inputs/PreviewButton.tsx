@@ -65,13 +65,20 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
     };
 
     return (
-        <>
-            <ButtonLink
+        <>  
+            <button 
+                type="button"
+                className={"flex items-center justify-center rounded-full font-bold  text-sm transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary cursor-pointer flex-row"} 
+                onClick={onClick}
+            >
+                {__('Preview', 'simplybook')}   
+            </button>
+            {/* <ButtonLink
                 btnVariant={btnVariant}
                 onClick={onClick}
             >
                 {__('Preview', 'simplybook')}
-            </ButtonLink>
+            </ButtonLink> */}
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeModal}

@@ -31,7 +31,7 @@ class AdminController implements ControllerInterface
         array_unshift($links, $settings_link);
 
         //support
-        $support = '<a rel="noopener noreferrer" target="_blank" href="' . esc_attr(App::env('simplybook.support_link')) . '">' . esc_html__('Support', 'simplybook') . '</a>';
+        $support = '<a rel="noopener noreferrer" target="_blank" href="' . esc_attr(App::env('simplybook.support_url')) . '">' . esc_html__('Support', 'simplybook') . '</a>';
         array_unshift($links, $support);
 
         return $links;

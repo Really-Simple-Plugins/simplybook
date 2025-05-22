@@ -38,7 +38,7 @@ class DashboardController implements ControllerInterface
     public function enqueueSimplyBookDashiconStyle(): void
     {
         $iconCss = App::env('plugin.assets_url') . 'css/simplybook-icon.css';
-        wp_enqueue_style('simplybook-font', $iconCss);
+        wp_enqueue_style('simplybook-font', $iconCss, [], App::env('plugin.version'));
     }
 
     /**
@@ -75,7 +75,7 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
-            'simplybook',
+            'simplybook-integration',
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
             $menuPosition,
@@ -90,7 +90,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $this->render('admin/dashboard');
+        $this->render('admin/dashboard', [], 'html');
     }
 
     /**
@@ -126,19 +126,26 @@ class DashboardController implements ControllerInterface
         }
 
         // Enqueue SimplyBook Widget script for preview functionality
-        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybookMePl_widget_scripts');
+        wp_enqueue_script(
+            'simplybookMePl_widget_scripts',
+            App::env('simplybook.widget_script_url'),
+            [],
+            App::env('simplybook.widget_script_version'),
+            true
+        );
 
         wp_enqueue_script(
-            'simplybook',
+            'simplybook-main-script',
             App::env('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
             ($chunkTranslation['dependencies'] ?? ''),
             ($chunkTranslation['version'] ?? ''),
             true
         );
 
+        wp_set_script_translations('simplybook-main-script', 'simplybook');
+
         wp_localize_script(
-            'simplybook',
+            'simplybook-main-script',
             'simplybook',
             $this->localizedReactSettings($chunkTranslation)
         );
@@ -184,10 +191,10 @@ class DashboardController implements ControllerInterface
             $chunkHandle = str_replace('.js', '', $filename);
             // temporarily register the script, so we can get a translations object.
             $chunkSource = App::env('plugin.react_url') . '/build/' . $filename;
-            wp_register_script($chunkHandle, $chunkSource, [], true);
+            wp_register_script($chunkHandle, $chunkSource, [], App::env('plugin.version'), true);
 
             //as there is no pro version of this plugin, no need to declare a path
-            $localeData = load_script_textdomain($chunkHandle, 'simplybook', false);
+            $localeData = load_script_textdomain($chunkHandle, 'simplybook');
             if (!empty($localeData)) {
                 $jsonTranslations[] = $localeData;
             }
@@ -233,12 +240,11 @@ class DashboardController implements ControllerInterface
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
                 'is_onboarding_completed' => $this->onboarding_completed(),
-                // 'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
-                // 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => App::env('simplybook.domains'),
-                'simplybook_countries' => App::fields()->get('countries'),
+                'simplybook_countries' => App::countries(),
+                'support' => App::env('simplybook.support'),
             ]
         );
     }

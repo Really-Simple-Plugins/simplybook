@@ -10,15 +10,10 @@ import ButtonLink from "../Buttons/ButtonLink";
 
 const DataList = [
     {
-        title: __("Providers", "simplybook"),
+        title: __("Service Providers", "simplybook"),
         link: "/v2/management/#providers",
         id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
-    /* {
-        title: __("Services", "simplybook"),
-        link: "/v2/management/#services",
-        // id: "does not exist in subscription data yet"
-    }, */
     {
         title: __("Bookings", "simplybook"),
         link: "v2/index/index",
@@ -43,7 +38,7 @@ const DataList = [
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
-        id: "memberships"
+        id: "membership"
     },
     {
         title: __("Paid Events", "simplybook"),
@@ -63,38 +58,41 @@ const Management = () => {
 
     let subscriptionLimits = subscription?.limits || {};
 
+    // Use this function to filter active plugins from the DataList
+    const filterActivePlugin = (block: any) => {
+        return !(block.isPlugin && isPluginActive(block.id));
+    }
+
     return (
-        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2  xl:col-span-4"}>
+        <Block className={"col-span-12 sm:col-span-6 2xl:col-span-3 2xl:row-span-2 xl:col-span-3"}>
             <BlockHeading
                 title={__("Management", "simplybook")}
                 controls={undefined}
             />
             <BlockContent className={"px-0 py-0"}>
-                <div>
-                    {DataList.map((block, index) => (
-                        <div key={index} className={"odd:bg-white even:bg-gray-50 flex justify-between items-center p-4"}>
-                            {block.isPlugin && !specialFeaturesHasError && !isPluginActive(block.id) && (
-                                <>
-                                    <div className="text-base">{block.title}</div>
-                                    <div className={"flex justify-end"}>
-                                        <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
-                                    </div>
-                                </>
-                            )}
-                            {!block.isPlugin && !subscriptionDataHasError && (Object.keys(subscriptionLimits).length > 0) && (
-                                <SubscriptionDataList
-                                    title={block.title}
-                                    // @ts-ignore
-                                    remaining={subscriptionLimits?.[block.id]?.rest}
-                                    // @ts-ignore
-                                    total={subscriptionLimits?.[block.id]?.total}
-                                    // @ts-ignore
-                                    page={subscriptionLimits?.[block.id]?.link}
-                                />
-                            )}
-                        </div>
-                    ))}
-                </div>
+                {DataList.filter(filterActivePlugin).map((block, index) => (
+                    <div key={index} className={"odd:bg-white even:bg-gray-50 flex justify-between items-center p-4"}>
+                        {block.isPlugin && !specialFeaturesHasError && !specialFeaturesLoading && (
+                            <>
+                                <div className="text-base">{block.title}</div>
+                                <div className={"flex justify-end"}>
+                                    <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
+                                </div>
+                            </>
+                        )}
+                        {!block.isPlugin && !subscriptionDataHasError && (Object.keys(subscriptionLimits).length > 0) && (
+                            <SubscriptionDataList
+                                title={block.title}
+                                // @ts-ignore
+                                remaining={subscriptionLimits?.[block.id]?.rest}
+                                // @ts-ignore
+                                total={subscriptionLimits?.[block.id]?.total}
+                                // @ts-ignore
+                                page={block.link}
+                            />
+                        )}
+                    </div>
+                ))}
             </BlockContent>
             <BlockFooter>{""}</BlockFooter>
         </Block>

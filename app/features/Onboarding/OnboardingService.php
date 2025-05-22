@@ -50,7 +50,7 @@ class OnboardingService
         update_option("simplybook_company_registration_start_time", time(), false);
         update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
         update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
-        $this->update_option('company_id', $responseDataStorage->getInt('company_id'));
+        $this->update_option('company_id', $responseDataStorage->getInt('company_id'), true);
 
         $this->setCompletedStep(2);
     }
@@ -85,7 +85,8 @@ class OnboardingService
     {
         $options = get_option('simplybook_company_data', []);
 
-        foreach ($companyBuilder->toArray() as $key => $value) {
+        $companyData = array_filter($companyBuilder->toArray());
+        foreach ($companyData as $key => $value) {
             $options[$key] = $value;
         }
 
@@ -170,5 +171,15 @@ class OnboardingService
     public function clearTemporaryData(): void
     {
         delete_option('simplybook_temporary_onboarding_data');
+    }
+
+    /**
+     * Use this method to set the "publish widget" notice and task as completed.
+     * These flags are deleted after its one time use in the Task and Notice.
+     */
+    public function setPublishWidgetCompleted(bool $completed = true): void
+    {
+        update_option('simplybook_calendar_published_notification_completed', $completed);
+        update_option('simplybook_calendar_published_task_completed', $completed);
     }
 }

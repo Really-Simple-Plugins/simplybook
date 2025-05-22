@@ -93,7 +93,7 @@ class ErrorBoundary extends Component {
             <li>
               {sprintf(
                 __(
-                  "Once logged in, click on %s under the Burst Statistics forum.",
+                  "Once logged in, click on %s under the SimplyBook.me forum.",
                   "simplybook",
                 ),
                 '"Create Topic"',

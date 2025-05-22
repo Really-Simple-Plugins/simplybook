@@ -62,13 +62,13 @@ export const Route = createLazyFileRoute(path)({
 
         return (
             <>
-                <LeftColumn className={"flex flex-col justify-center col-span-6"}>
+                <LeftColumn className={"flex flex-col justify-center col-span-5 col-start-2"}>
                     <div className={"text-center"}>
                         <h2 className={"mt-2 text-lg font-light text-black"}>
                             {__("Lets get you verified!", "simplybook")}
                         </h2>
-                        <h1 className={"text-3xl font-semibold text-black mb-4"}>
-                            {__("Fill in the authentication code sent in your email", "simplybook")}
+                        <h1 className={"text-4xl font-semibold text-black mb-4"}>
+                            {__("Fill in the authentication code sent to your email", "simplybook")}
                         </h1>
                     </div>
                     <OnboardingStep
@@ -87,7 +87,7 @@ export const Route = createLazyFileRoute(path)({
                         }}
                     />
                 </LeftColumn>
-                <RightColumn className={"flex flex-col justify-center col-span-6"}>
+                <RightColumn className={"flex flex-col justify-center col-span-5"}>
                     <div className="flex flex-col items-center pb-4">
                         <VideoFrame
                             FrameWrapperClass="h-full w-full aspect-w-16 aspect-h-9 mb-8"

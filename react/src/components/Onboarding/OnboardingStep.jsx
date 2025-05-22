@@ -36,6 +36,7 @@ const OnboardingStep = ({
         onboardingCompleted,
         setOnboardingCompleted
     } = useOnboardingData();
+
     const navigate = useNavigate();
     const {
         watch,
@@ -45,11 +46,17 @@ const OnboardingStep = ({
         getValues,
         reset,
         trigger,
-        formState: { isDirty, errors, isValid, isValidating },
+        formState: {
+            isDirty,
+            errors,
+            isValid,
+            isValidating,
+            touchedFields,
+        },
     } = useForm({
         defaultValues: defaultData,
         values: data,
-        mode: "onChange",
+        mode: "onTouched",
     });
     const { getValue } = useSettingsData();
     const [companyName, setCompanyName] = useState("");
@@ -62,15 +69,27 @@ const OnboardingStep = ({
         setDisabled(!isValid);
     }, [isValid]);
 
+    /**
+     * Synchronize the field state with the initial value, this is used to
+     * retain the confirmation code after the state is updated when the
+     * recaptcha check is completed in confirm-email.lazy.jsx
+     *
+     * @internal To prevent us resetting the field value when the user empties
+     * the field, we check if the field has been touched. If it has been
+     * touched, we don't reset the value to the initial value.
+     */
     const syncFieldState = (fieldKey, initialValue, setValueCallback) => {
         let currentValue = getValues(fieldKey);
-        if (currentValue) {
+        let hasBeenTouched = touchedFields[fieldKey];
+
+        if (hasBeenTouched) { // !important
             return setValueCallback(currentValue);
         }
 
-        if (initialValue) {
+        if (initialValue !== undefined) {
             return setValue(fieldKey, initialValue, {
-                shouldValidate: true
+                shouldValidate: true,
+                shouldTouch: true, // !important
             });
         }
     }
@@ -163,24 +182,13 @@ const OnboardingStep = ({
                             className="w-full mt-4"
                             showLoader={isValidating}
                             btnVariant="secondary"
-                            label={primaryButton.label}
+                            label={primaryButton.label ?? __("Next", "simplybook")}
                             context={bottomText}
                             button={{
                                 disabled: (primaryButton.disabled ?? disabled),
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />
-                        {currentStepId > 1 && currentStepId < 4 && (
-                            <ButtonLink
-                                iconName="retry"
-                                linkClassName="w-full"
-                                className="w-full border-tertiary text-tertiary"
-                                btnVariant="ghost"
-                                onClick={restartOnboarding}
-                            >
-                                {__("Retry registration", "simplybook")}
-                            </ButtonLink>
-                        )}
                         {secondaryButton && (
                             <ButtonField
                                 btnVariant="tertiary"
@@ -195,8 +203,12 @@ const OnboardingStep = ({
                 </div>
                 {apiError && (
                     <Error
-                        errorHeading={__("Something went wrong...", "simplybook")}
+                        errorHeading={__("Something went wrong", "simplybook")}
                         error={apiError}
+                        resolve={{
+                            callback: restartOnboarding,
+                            label: __("Or restart the onboarding", "simplybook"),
+                        }}
                     />
                 )}
             </div>

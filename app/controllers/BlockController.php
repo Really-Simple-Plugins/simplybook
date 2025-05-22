@@ -82,11 +82,11 @@ class BlockController implements ControllerInterface
             ]
         );
 
-        //add widget.js script
-        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'));
-        wp_enqueue_script('simplybookMePl_widget_scripts');
+        // Add widget.js script in the header of the page. We need it to be
+        // Loaded as soon as possible, as our widgets are dependent on it.
+        wp_enqueue_script('simplybookMePl_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), false);
 
-        wp_register_style('simplybookMePl_widget_styles', $indexCss);
+        wp_register_style('simplybookMePl_widget_styles', $indexCss, [], App::env('plugin.version'));
         wp_enqueue_style('simplybookMePl_widget_styles');
 
         wp_set_script_translations('simplybook-block', 'simplybook');
@@ -94,10 +94,15 @@ class BlockController implements ControllerInterface
 
     /**
      * Render the SimplyBook Widget block when the block is displayed on the
-     * front-end
+     * front-end. Empty values are removed from the attributes array, the "any"
+     * value is also removed from the attributes array.
      */
     public function addWidgetBlock(array $attributes = []): string
     {
+        $attributes = array_filter($attributes, function ($value) {
+            return !empty($value) && $value !== 'any';
+        });
+
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
     }
 

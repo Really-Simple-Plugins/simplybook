@@ -32,6 +32,11 @@ trait HasAllowlistControl
      *      OR
      *  - The user is logged in and has the 'simplybook_manage' capability
      *
+     * @internal Ignore the phpcs errors for this method, as they are false
+     * positives. We do not actually use the $_GET or $_SERVER variables
+     * directly, but we need to check if they are set and contain the
+     * expected values.
+     *
      * @internal This replaces global: simplybook_is_logged_in_rest()
      * @todo Name of this method is not entirely accurate, consider renaming
      */
@@ -39,11 +44,14 @@ trait HasAllowlistControl
     {
         $validWpJsonRequest = (
             isset($_SERVER['REQUEST_URI'])
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
             && (strpos($_SERVER['REQUEST_URI'], '/simplybook/v') !== false)
         );
 
         $validPlainPermalinksRequest = (
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             isset($_GET['rest_route'])
+            // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
             && (strpos($_GET['rest_route'], 'simplybook/v') !== false)
         );
 
@@ -55,6 +63,8 @@ trait HasAllowlistControl
         // SimplyBook callback can execute
         $expires = get_option('simplybook_callback_url_expires');
         $callbackUrl = get_option('simplybook_callback_url', '');
+
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $requestUriContainsCallbackUrl = strpos($_SERVER['REQUEST_URI'], 'company_registration/' . $callbackUrl) !== false;
 
         if ($expires > time() && !empty($callbackUrl) && $requestUriContainsCallbackUrl) {

@@ -4,4 +4,7 @@ export default interface SpecialFeaturesData {
     plugins: any[];
     hasError: boolean;
     isLoading: boolean;
+    data: {
+        [key: string]: any;
+    };
 }

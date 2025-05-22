@@ -3,6 +3,7 @@ import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import Error from "../Errors/Error";
 import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
+import useFieldValidation from "../../hooks/useFieldValidation";  
 
 const FieldWrapper = memo(({
        label,
@@ -15,12 +16,16 @@ const FieldWrapper = memo(({
        required = false,
        type="text",
        children,
+       fieldState
 }: FieldWrapperProps) => {
+
+    const { buildValidationClass } = useFieldValidation();
 
     const wrapperClasses = [
         "flex flex-col",
         className,
-        "mb-4"
+        "mb-4",
+        (fieldState?.error ? buildValidationClass(fieldState?.error) : ""),
     ].filter(Boolean).join(" ");
 
     const contentClasses = [
@@ -34,7 +39,7 @@ const FieldWrapper = memo(({
                 {type==='checkbox' && children}
                 {label && (
                     <Label.Root
-                        className={"cursor-pointer pb-2 font-medium text-black text-label "}
+                        className={"cursor-pointer pb-1 font-medium text-black text-label "}
                         htmlFor={inputId}
                     >
                         {label}
@@ -42,7 +47,9 @@ const FieldWrapper = memo(({
                     </Label.Root>
                 )}
                 {help && (
-                    <p className="pb-1 text-xs font-light text-gray-600">{help}</p>
+                    <p className="m-0 pb-1 text-xs italic font-light text-gray-600">
+                        {help}
+                    </p>
                 )}
                 {type!=='checkbox' && children}
             </div>

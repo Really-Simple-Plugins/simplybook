@@ -11,7 +11,6 @@ return [
 		'link'     => 'v2/management/#services',
 		'type'     => 'list',
 		'label'    => __('Services', 'simplybook'),
-        'premiumText' => __('Want more services?', 'simplybook'),
 		'default'  => false,
 	],
 ];

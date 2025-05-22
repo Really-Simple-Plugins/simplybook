@@ -2,12 +2,12 @@ import request from "../../requests/request";
 
 /**
  * Update an onboarding step
- * @param data
+ * @param payload
  * @return {Promise<void>}
  */
-const generatePages = async ({ data = true }) => {
+const generatePages = async ({ payload = true }) => {
 
-    return await request("onboarding/generate_pages", "POST", { data });
+    return await request("onboarding/generate_pages", "POST", { payload });
 };
 
 export default generatePages;

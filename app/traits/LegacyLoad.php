@@ -15,7 +15,7 @@ trait LegacyLoad {
 	public $fields = [];
 	public $values_loaded = false;
 
-    protected string $newSimplyBookUserDomain = 'wp.simplybook.ovh';
+    public $counter = 0;
 
     /**
      * Get a field by ID
@@ -26,7 +26,7 @@ trait LegacyLoad {
     {
         $fields = $this->fields();
         foreach ( $fields as $field ) {
-            if ( $field['id'] === $id ) {
+            if (isset($field['id']) && $field['id'] === $id ) {
                 return $field;
             }
         }
@@ -57,7 +57,6 @@ trait LegacyLoad {
 
         $field = $this->get_field_by_id($key);
         if ( !$field ) {
-            error_log("field $key not found");
             return false;
         }
 
@@ -207,10 +206,27 @@ trait LegacyLoad {
      * @param bool $validate Is used on {@see get_option} to parse the domain
      * field from the fields' config. Sometimes we do not want this to prevent
      * translation errors while loading the fields.
+     * @throws \LogicException For developers
      */
     public function get_domain(bool $validate = true)
     {
-        return ($this->get_option('domain', $validate) ?: $this->newSimplyBookUserDomain);
+        if ($cache = wp_cache_get('simplybook_get_domain_legacy_load', 'simplybook')) {
+            return $cache;
+        }
+
+        $savedDomain = $this->get_option('domain', $validate);
+        if (!empty($savedDomain)) {
+            wp_cache_set('simplybook_get_domain_legacy_load', $savedDomain, 'simplybook');
+            return $savedDomain;
+        }
+
+        $environment = App::provide('simplybook_env');
+        if (empty($environment['domain'])) {
+            throw new \LogicException('SimplyBook domain is not set in the environment.');
+        }
+
+        wp_cache_set('simplybook_get_domain_legacy_load', $environment['domain'], 'simplybook');
+        return $environment['domain'];
     }
 
 }

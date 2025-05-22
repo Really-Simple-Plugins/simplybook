@@ -16,10 +16,10 @@ function CreateLoginAccount() {
     return(
         <>
             <LeftColumn
-                className={"flex-col col-span-5"}
+                className={"flex-col col-span-5 col-start-2"}
             >
                 <div className={"text-center"}>
-                    <h1 className={"text-3xl font-semibold text-black mb-4"}>
+                    <h1 className={"text-4xl font-semibold text-black mb-4"}>
                         {__("Create your free account", "simplybook")}
                     </h1>
                     <h2 className={"mt-2 text-lg font-light text-black"}>
@@ -29,14 +29,17 @@ function CreateLoginAccount() {
                 </div>
                 <OnboardingStep
                     path={path}
+                    primaryButton={{
+                        disabled: false,
+                    }}
                 />
             </LeftColumn>
             <RightColumn
-                className={"col-span-6"}
+                className={"col-span-5 justify-center"}
             >
                 <div className="pb-4">
                     <VideoFrame
-                        FrameWrapperClass="h-[350px] aspect-w-16 aspect-h-9 mb-8"
+                        FrameWrapperClass="aspect-w-16 aspect-h-9 mb-8"
                         className="w-full h-full"
                         src="https://www.youtube.com/embed/qgMn9dKJAt4"
                         title={__("How to get started with SimplyBook.me", "simplybook")}

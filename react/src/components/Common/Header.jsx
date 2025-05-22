@@ -9,6 +9,7 @@ import useTaskData from "../../hooks/useTaskData";
 import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
 import Label from "./Label";
+import LiveAgent from "./LiveAgent";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
@@ -21,7 +22,6 @@ const Header = () => {
         return matchRoute({ to: route, fuzzy: includeSubRoutes }) !== false;
     }
 
-
     useEffect(() => {
         if (
             !onboardingCompleted &&
@@ -30,31 +30,34 @@ const Header = () => {
             !simplybook.debug
         ) {
             window.location.href = window.location.href.replace(
-                /page=simplybook.*/,
-                "page=simplybook#/onboarding/create-your-account",
+                /page=simplybook-integration.*/,
+                "page=simplybook-integration#/onboarding/create-your-account",
             );
         }
     }, [onboardingCompleted]);
 
-    const linkClassName = "text-base p-6 text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative";
+    const linkClassName = "text-base px-4 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300 hover:text-primary";
 
-    const expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    let expireText = subscriptionPlan;
+    if (subscriptionPlan.toUpperCase() === 'TRIAL' || (expiresIn < 30)) {
+        expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    }
 
     return (
         <div className="bg-white ">
-            <div className="mx-auto pl-10 pr-5 flex items-baseline max-w-screen-2xl">
+            <header className="mx-auto flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
                         <Logo className=" w-40 mr-4" />
                     </Link>
                 </div>
-                <div className="flex items-center mr-4">
+                <div className="header-navigation flex items-center mr-4 order-6 justify-center w-full pt-4 xl:order-0 xl:justify-normal xl:w-auto xl:p-0">
                     <Link
                         to="/"
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
                     >
                         {!tasksLoading && tasksOpen > 0 && (
-                            <div className="notification-bubble flex items-center justify-center absolute right-0.5 top-2.5 text-center text-xs w-[20px] h-[20px]  text-white rounded-full bg-red-600 p-2">
+                            <div className="notification-bubble flex items-center justify-center absolute -right-0.5 top-2.5 text-center text-xxs w-[18px] h-[18px]  text-white rounded-full bg-red-600 p-2">
                                 {tasksOpen}
                             </div>
                         )}
@@ -94,7 +97,10 @@ const Header = () => {
                 >
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
-                <div className="float-right ml-auto flex items-center gap-6 px-4">
+                <div className="
+                    py-6 w-full ml-auto flex items-center justify-between px-0
+                    xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
+                ">
                     {!isLoading && !isExpired && subscriptionPlan && (
                         <Label
                             labelVariant="trial"
@@ -109,17 +115,9 @@ const Header = () => {
                             {subscriptionPlan} {__("is expired.", "simplybook")}
                         </Label>
                     )}
-                    <ButtonLink
-                        linkClassName="text-primary"
-                        className="border-primary text-primary hover:border-primary-hover hover:text-primary-hover"
-                        btnVariant="ghost-small"
-                        target="_blank"
-                        loginLink="v2/r/payment-widget#/"
-                    >
-                        {__("Upgrade", "simplybook")}
-                    </ButtonLink>
+                    <LiveAgent/>
                 </div>
-            </div>
+            </header>
         </div>
     );
 };

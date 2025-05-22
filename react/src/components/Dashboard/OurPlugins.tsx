@@ -18,10 +18,10 @@ const OurPlugins = () => {
         <Block className={"col-span-12 sm:col-span-6 2xl:col-span-6 2xl:row-span-2 xl:col-span-6 !bg-transparent shadow-none"}>
             <div className="flex justify-between items-center">
                 <BlockHeading
-                title={__("Our Plugins", "simplybook")}
+                title={__("Other Plugins", "simplybook")}
                 controls={undefined}
                 />
-                <div className="w-[200px]">
+                <div className="w-[185px]">
                     <RspLogo />
                 </div>
             </div>
@@ -29,13 +29,17 @@ const OurPlugins = () => {
             <BlockContent className={"flex flex-col items-center px-4"}>
                 {// @ts-ignore
                     fetched && plugins && Object.keys(plugins).length && Object.values(plugins).map((plugin: OtherPlugin) => (
-                        <div key={plugin.url} className={"flex items-center gap-2 text-sm w-full mb-2 xl:flex-wrap"}>
-                            <Icon name={"circle"} color={plugin.color}/>
-                            <Link
-                                className="text-black font-semibold"
-                                to={plugin.url}>
-                                {plugin.title}
-                            </Link>
+                        <div key={plugin.url} className={
+                            "flex items-start xl:items-center justify-between gap-2 text-sm w-full mb-2 xl:flex-wrap"
+                        }>
+                            <div className=" w-[75%] xl:w-auto">
+                                <Icon name={"circle"} color={plugin.color}/>
+                                <Link
+                                    className="text-black font-normal ml-2 hover:text-primary hover:underline"
+                                    to={plugin.url}>
+                                    {plugin.title}
+                                </Link>
+                            </div>
                             <div className={"flex text-black underline text-sm"}>
                                 {plugin.action === 'installed' && pluginActionNice(plugin.action)}
                                 {plugin.action !== 'installed' && <>

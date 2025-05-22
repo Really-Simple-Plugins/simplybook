@@ -1,4 +1,5 @@
-let widget = new SimplybookWidget({
+// Unused since: NL14RSP2-219 - kept for reference
+let reviewWidget = new SimplybookWidget({
     "widget_type": "reviews",
     "url": "{{ server }}",
     "theme": "{{ theme }}",

@@ -14,7 +14,7 @@ class AcceptPaymentsTask extends AbstractTask
     /**
      * @inheritDoc
      */
-    protected bool $premium = true;
+    protected bool $specialFeature = true;
 
     /**
      * @inheritDoc

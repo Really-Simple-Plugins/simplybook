@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Interfaces\NoticeInterface;
-use SimplyBook\Features\Notifications\Notices\AbstractNotice;
 
 class NotificationsRepository
 {
@@ -29,18 +28,9 @@ class NotificationsRepository
      * Retrieve all registered notices
      * @return NoticeInterface[]
      */
-    public function getAllNotices(bool $strict = false): array
+    public function getAllNotices(): array
     {
-        $notices = $this->notices;
-
-        // If strict mode is enabled, remove Notices that are hidden
-        if ($strict) {
-            $notices = array_filter($notices, function ($notice) {
-                return $notice->getStatus() !== AbstractNotice::STATUS_HIDDEN;
-            });
-        }
-
-        return $notices;
+        return $this->notices;
     }
 
     /**
@@ -71,14 +61,6 @@ class NotificationsRepository
 
         if ($noticeIsUpdatable === false) {
             return;
-        }
-
-        // Keep current status if new Notice does not want to reactivate on
-        // upgrade
-        if ($noticeExists && ($notice->reactivateOnUpgrade() === false)) {
-            $notice->setStatus(
-                $existingNotice->getStatus(),
-            );
         }
 
         // Upgrades existing Notices and add new Notices
@@ -116,14 +98,14 @@ class NotificationsRepository
      * required and the status is set to 'dismissed', the status will not be
      * updated.
      */
-    public function updateNoticeStatus(string $noticeId, string $status): void
+    public function toggleNoticeServerSide(string $noticeId, bool $active): void
     {
         $notice = $this->getNotice($noticeId);
         if ($notice === null) {
             return;
         }
 
-        $notice->setStatus($status);
+        $notice->setActive($active);
         $this->addNotice($notice);
     }
 
