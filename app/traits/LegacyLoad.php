@@ -119,6 +119,11 @@ trait LegacyLoad {
 	 */
 	public function decrypt_string($encrypted_string): string
 	{
+
+		if ( empty( $encrypted_string ) ) {
+			return '';
+		}
+		
 		$key = '7*w$9pumLw5koJc#JT6';
 
 		// Check if it's a v2 token (new format)
