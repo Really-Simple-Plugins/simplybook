@@ -15,7 +15,7 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
         switch(type) {
             case "info":
                 iconType = "info-circle";
-                iconColor = "var(--color-blue-500)";
+                iconColor = "var(--color-black-900)";
             break;
 
             case "warning":
@@ -42,11 +42,14 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
             <Icon 
                 name={iconType} 
                 color={iconColor} 
-                className="tooltip-icon ml-2"
-                data-tooltip-id="field-tooltip" 
+                className={"tooltip-icon ml-2"}
+                data-tooltip-id={"field-tooltip"} 
                 data-tooltip-content={message}
             />
-            <Tooltip id="field-tooltip" />
+            <Tooltip 
+                id={"field-tooltip"}
+                place={"bottom"}
+            />
         </>
     )
 }
