@@ -14,7 +14,6 @@ import {
   faChevronDown,
   faChevronUp,
   faCheck,
-  faInfoCircle,
   faTimes,
   faTrophy,
   faUserGroup,
@@ -27,8 +26,7 @@ import {
   faCircleXmark,
   faArrowUpRightFromSquare,
   faLinesLeaning,
-  faTriangleExclamation,
-  faCircleExclamation
+  faTriangleExclamation
  } from "@fortawesome/free-solid-svg-icons";
 
  import { 
@@ -37,6 +35,8 @@ import {
   faFileCircleXmark,
   faCalendarDay,
   faCalendarWeek,
+  faCircleExclamation,
+  faInfoCircle
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
