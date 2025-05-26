@@ -1,15 +1,15 @@
 import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
-import Error from "../Errors/Error";
 import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
 import useFieldValidation from "../../hooks/useFieldValidation";  
+import FormTooltip from "../Fields/Partials/FormTooltip";
+
 
 const FieldWrapper = memo(({
        label,
        context,
-       help,
-       error,
+       tooltip,
        reverseLabel = false,
        className = "",
        inputId,
@@ -44,16 +44,18 @@ const FieldWrapper = memo(({
                     >
                         {label}
                         {required}
+                        {tooltip && (
+                            <>
+                                <FormTooltip 
+                                    message={tooltip?.message} 
+                                    type={tooltip?.type} 
+                                />
+                            </>                   
+                        )}
                     </Label.Root>
-                )}
-                {help && (
-                    <p className="m-0 pb-1 text-xs italic font-light text-gray-600">
-                        {help}
-                    </p>
                 )}
                 {type!=='checkbox' && children}
             </div>
-
             {context && (
                 <p className="mt-2 text-xs font-light text-gray-600">
                     {context}
