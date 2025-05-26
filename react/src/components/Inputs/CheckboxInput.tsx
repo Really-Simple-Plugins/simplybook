@@ -1,9 +1,11 @@
 import React, {forwardRef, InputHTMLAttributes, useEffect, useState} from "react";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
+import FormTooltip from "../Fields/Partials/FormTooltip";
 
 interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
     label: string;
+    tooltip?: any;
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -16,6 +18,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
     ({
         label,
         className,
+        tooltip,
         value,
         onChange,
         ...props
@@ -33,30 +36,40 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
         );
 
         return (
-            <label className="checkbox-field w-max relative inline-flex items-center cursor-pointer transition-[border-color] duration-300 ease-in-out">
-                <input
-                    type="checkbox"
-                    checked={checked}
-                    onChange={(e) => {
-                        setValueState((e.target.checked ? 1 : 0));
-                        setChecked(e.target.checked);
-                        if (onChange) {
-                            onChange(e);
-                        }
-                    }}
-                    className="sr-only peer"
-                    value={valueState}
-                    {...props}
-                />
-                <div className={clsx(checkBoxClasses, className)}></div>
-                {label && (
-                    <span
-                        className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}
-                        dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(label, {ADD_ATTR: ['target']})}}
-                    >
-                    </span>
-                )}
-            </label>
+            <>
+                <label className="checkbox-field relative inline-flex items-center cursor-pointer">
+                    <input
+                        type="checkbox"
+                        checked={checked}
+                        onChange={(e) => {
+                            setValueState((e.target.checked ? 1 : 0));
+                            setChecked(e.target.checked);
+                            if (onChange) {
+                                onChange(e);
+                            }
+                        }}
+                        className="sr-only peer"
+                        value={valueState}
+                        {...props}
+                    />
+                    <div className={clsx(checkBoxClasses, className)}></div>
+                    {label && (
+                        <span
+                            className={`ml-2 leading-5 font-medium text-black text-label ${className || ""}`}
+                            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(label)}}
+                        >
+                        </span>
+                    )}
+                    {tooltip && (
+                        <>
+                            <FormTooltip 
+                                message={tooltip?.message} 
+                                type={tooltip?.type} 
+                            />
+                        </>                   
+                    )}
+                </label>
+            </>
         );
     }
 );
