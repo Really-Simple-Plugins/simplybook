@@ -150,8 +150,8 @@ const formLogin = ({
                             {...field}
                             fieldState={fieldState}
                             label={__("User login or email", "simplybook")}
-                            setting="email"
-                            type="email"
+                            setting="user_login"
+                            type="text"
                             placeholder={__("User login or email", "simplybook")}
                         />
                     )}
