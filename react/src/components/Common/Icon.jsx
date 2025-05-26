@@ -27,7 +27,8 @@ import {
   faCircleXmark,
   faArrowUpRightFromSquare,
   faLinesLeaning,
-  faTriangleExclamation
+  faTriangleExclamation,
+  faCircleExclamation
  } from "@fortawesome/free-solid-svg-icons";
 
  import { 
@@ -35,7 +36,7 @@ import {
   faFileSlash,
   faFileCircleXmark,
   faCalendarDay,
-  faCalendarWeek
+  faCalendarWeek,
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
@@ -55,7 +56,8 @@ const iconMap = {
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
     "check": faCheck,
-    "info": faInfoCircle,
+    "info-circle": faInfoCircle,
+    "warning-circle": faCircleExclamation,
     "times": faTimes,
     "trophy": faTrophy,
     "user-group": faUserGroup,
