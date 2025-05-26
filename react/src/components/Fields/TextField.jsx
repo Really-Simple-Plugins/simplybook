@@ -33,8 +33,7 @@ const TextField = forwardRef(
     return (
       <FieldWrapper
         label={label}
-        help={help}
-        error={fieldState?.error?.message}
+        tooltip={props.tooltip}
         context={context}
         className={className}
         inputId={inputId}
