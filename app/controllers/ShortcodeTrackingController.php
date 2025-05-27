@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Services;
+namespace SimplyBook\Controllers;
 
 use SimplyBook\Helpers\Event;
 
@@ -11,7 +11,7 @@ use SimplyBook\Helpers\Event;
  * list of published pages that contain booking widgets. It fires events when
  * a shortcode publishing status changes to notify other parts of the application.
  */
-class ShortcodeTrackingService
+class ShortcodeTrackingController
 {
 
 	const PAGES_WITH_SHORTCODE_OPTION = 'simplybook_pages_with_shortcode';
@@ -48,8 +48,8 @@ class ShortcodeTrackingService
 
 		// Filter out revisions, autosaves, and non-published posts.
 		if ( wp_is_post_revision($postId) ||
-		    wp_is_post_autosave($postId) ||
-		    $post->post_status !== 'publish') {
+		     wp_is_post_autosave($postId) ||
+		     $post->post_status !== 'publish') {
 			return;
 		}
 
@@ -65,7 +65,7 @@ class ShortcodeTrackingService
 		if ($shouldAddToTracking) {
 			// Fire published event only for the very first shortcode
 			if ($isFirstShortcodePublished) {
-				do_action('simplybook_event_' . Event::CALENDAR_PUBLISHED);
+				Event::dispatch(Event::CALENDAR_PUBLISHED);
 			}
 
 			$trackedPages[] = $postId;
@@ -77,7 +77,7 @@ class ShortcodeTrackingService
 
 			// Fire unpublished event if no more shortcodes exist
 			if (empty($trackedPages)) {
-				do_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED);
+				Event::dispatch(Event::CALENDAR_PUBLISHED);
 			}
 		}
 	}
@@ -101,7 +101,7 @@ class ShortcodeTrackingService
 
 		// Fire unpublished event if no more shortcodes exist
 		if (empty($trackedPages)) {
-			do_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED);
+			Event::dispatch(Event::CALENDAR_UNPUBLISHED);
 		}
 	}
 }

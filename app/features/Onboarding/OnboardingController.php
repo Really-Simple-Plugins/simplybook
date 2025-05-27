@@ -456,26 +456,11 @@ class OnboardingController implements FeatureInterface
             return;
         }
 
-        global $wpdb;
-
-        // Search for "simplybook widget" with a maximum of 1 character in
-        // between. This will match both the shortcode ([simplybook_widget])
-        // and the Gutenberg block (<!-- wp:simplybook/widget -->).
-        $pattern = 'simplybook.{0,1}widget';
-
-        // This direct SQL query is intentional, safe, and properly prepared.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
-        $query = $wpdb->prepare("
-            SELECT 1
-            FROM {$wpdb->posts}
-            WHERE post_content REGEXP %s
-            LIMIT 1
-        ", $pattern);
-
-        $havePosts = (bool) $wpdb->get_var($query);
-        if (!$havePosts) {
-            return;
-        }
+		// If the  simplybook_pages_with_shortcode is not empty, a page with shortcode is already published
+		if ( !empty(get_option('simplybook_pages_with_shortcode'))){
+			$this->service->setPublishWidgetCompleted();
+			return;
+		}
 
         $this->service->setPublishWidgetCompleted();
         wp_cache_set('simplybook_widget_published', true, 'simplybook');
