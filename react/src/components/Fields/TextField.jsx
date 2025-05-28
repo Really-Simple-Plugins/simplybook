@@ -14,21 +14,21 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @return {JSX.Element}
  */
 const TextField = forwardRef(
-  ({ 
-    setting, 
-    fieldState, 
-    name, 
-    label, 
-    help, 
-    context, 
-    className, 
-    type, 
+  ({
+    setting,
+    fieldState,
+    name,
+    label,
+    help,
+    context,
+    className,
+    type,
     copyField,
     required,
-    ...props 
+    ...props
   }, ref) => {
 
-    const inputId = setting.id; 
+    const inputId = setting.id;
 
     return (
       <FieldWrapper
