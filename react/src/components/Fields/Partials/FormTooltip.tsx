@@ -28,10 +28,9 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
         }
     }
 
-    // Initialize the switch with the type prop
-    useEffect(() => {
-        tooltipIcon(type);
-    }, [type]);
+    if (!message) {
+        return null;
+    }
 
     return (
         <>
