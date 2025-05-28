@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import Icon from '../../Common/Icon';
 import { Tooltip } from 'react-tooltip';
 import { FormTooltipProps } from '../../../types/fields/FormTooltipProps';
@@ -13,11 +13,6 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
 
     const tooltipIcon = (type: string) => {
         switch(type) {
-            case "info":
-                iconType = "info-circle";
-                iconColor = "var(--color-black-900)";
-            break;
-
             case "warning":
                 iconType = "warning-circle";
                 iconColor = "var(--color-yellow-500)";
@@ -30,23 +25,25 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
 
             default:
                 iconType = "info-circle";
-                iconColor = "var(--color-stone-500)";
+                iconColor = "var(--color-black-900)";
         }
     };
 
     // Initialize the switch with the type prop
-    tooltipIcon(type);
+    useEffect(() => {
+        tooltipIcon(type);
+    }, [type]);
 
     return (
         <>
-            <Icon 
-                name={iconType} 
-                color={iconColor} 
+            <Icon
+                name={iconType}
+                color={iconColor}
                 className={"tooltip-icon ml-2"}
-                data-tooltip-id={"field-tooltip"} 
+                data-tooltip-id={"field-tooltip"}
                 data-tooltip-content={message}
             />
-            <Tooltip 
+            <Tooltip
                 id={"field-tooltip"}
                 place={"bottom"}
             />
