@@ -2,7 +2,7 @@ import * as Label from "@radix-ui/react-label";
 import { memo } from "react";
 import { __ } from "@wordpress/i18n";
 import { FieldWrapperProps } from "../../types/fields/FieldWrapperProps";
-import useFieldValidation from "../../hooks/useFieldValidation";  
+import useFieldValidation from "../../hooks/useFieldValidation";
 import FormTooltip from "../Fields/Partials/FormTooltip";
 
 
@@ -45,12 +45,10 @@ const FieldWrapper = memo(({
                         {label}
                         {required}
                         {tooltip && (
-                            <>
-                                <FormTooltip 
-                                    message={tooltip?.message} 
-                                    type={tooltip?.type} 
-                                />
-                            </>                   
+                            <FormTooltip
+                                message={tooltip?.message}
+                                type={tooltip?.type}
+                            />
                         )}
                     </Label.Root>
                 )}
