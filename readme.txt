@@ -90,6 +90,8 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= Unreleased =
+* Added: A help text in the settings page is now displayed in a tooltip.
 
 = 3.0.0 =
 * Major refactor of the plugin.
