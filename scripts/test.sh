@@ -155,13 +155,27 @@ done
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
-# Zip te package in the current directory with the plugin name
+# Rename the folder to the plugin name if it's different
+if [[ "${ORIGINAL_PLUGIN_NAME}" != "${PLUGIN_NAME}" ]]; then
+  printf "${BLUE}Renaming folder from ${YELLOW}%s${BLUE} to ${YELLOW}%s${BLUE}...${RESET}\n" "${ORIGINAL_PLUGIN_NAME}" "${PLUGIN_NAME}"
+  mv "${PARENT_DIR}/${ORIGINAL_PLUGIN_NAME}" "${PARENT_DIR}/${PLUGIN_NAME}" || {
+    printf "${RED}Error: Failed to rename folder.${RESET}\n"
+    exit 1
+  }
+  printf "${GREEN}✅ Folder renamed successfully.${RESET}\n\n"
+fi
+
+# Zip the package in the current directory with the plugin name
 printf "${BLUE}Zipping the package...${RESET}\n"
 cd "${PARENT_DIR}" || exit
-zip -rqT "${PLUGIN_NAME}".zip "${ROOT_DIR}"/
+zip -rqT "${PLUGIN_NAME}".zip "${PLUGIN_NAME}"/
 
-# Remove ORIGINAL_PLUGIN_NAME from PARENT_DIR
-rm -rf "${PARENT_DIR}/${ORIGINAL_PLUGIN_NAME}"
-rm -rf "${PARENT_DIR}/${ORIGINAL_PLUGIN_NAME}.zip"
+# Remove the renamed plugin folder (cleanup)
+rm -rf "${PARENT_DIR}/${PLUGIN_NAME}"
+
+# Remove the original plugin zip file if it exists
+if [[ -f "${PARENT_DIR}/${ORIGINAL_PLUGIN_NAME}.zip" ]]; then
+  rm -f "${PARENT_DIR}/${ORIGINAL_PLUGIN_NAME}.zip"
+fi
 
 printf "${GREEN}✅ Your package '${YELLOW}%s.zip${GREEN}' is ready.${RESET}\n\n" "${PLUGIN_NAME}"
