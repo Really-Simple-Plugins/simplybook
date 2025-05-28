@@ -90,6 +90,8 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= Unreleased =
+* Fixed: A non-email value is now accepted in the user login when logging in.
 
 = 3.0.0 =
 * Major refactor of the plugin.
