@@ -4,6 +4,7 @@ import {useForm, Controller} from "react-hook-form";
 import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 import request from "../../../api/requests/request";
+import SelectField from "../../Fields/SelectField";
 
 const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProviders, onClose}) => {
 
