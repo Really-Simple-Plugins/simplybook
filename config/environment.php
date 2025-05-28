@@ -6,7 +6,7 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.0.0',
+        'version' => '3.0.0.1',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). '/' . plugin_basename(dirname(__DIR__)) . '.php',
