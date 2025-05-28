@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import Icon from '../../Common/Icon';
 import { Tooltip } from 'react-tooltip';
 import { FormTooltipProps } from '../../../types/fields/FormTooltipProps';
@@ -6,28 +6,27 @@ import { FormTooltipProps } from '../../../types/fields/FormTooltipProps';
 const FormTooltip: React.FC<FormTooltipProps> = ({
     message,
     type,
+    iconType = "",
+    iconColor = "",
 }) => {
 
-    let iconType = "";
-    let iconColor = "";
-
-    const tooltipIcon = (type: string) => {
+    if (!iconType || !iconColor) {
         switch(type) {
             case "warning":
                 iconType = "warning-circle";
                 iconColor = "var(--color-yellow-500)";
-            break;
+                break;
 
             case "error":
                 iconType = "warning-circle";
                 iconColor = "var(--color-red-500)";
-            break;
+                break;
 
             default:
                 iconType = "info-circle";
                 iconColor = "var(--color-black-900)";
         }
-    };
+    }
 
     // Initialize the switch with the type prop
     useEffect(() => {
