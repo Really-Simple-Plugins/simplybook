@@ -10,14 +10,17 @@ use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Services\WidgetTrackingService;
 
 class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
+    private WidgetTrackingService $widgetService;
 
-    public function __construct(OnboardingService $service)
+    public function __construct(OnboardingService $service, WidgetTrackingService $widgetTrackingService)
     {
         $this->service = $service;
+        $this->widgetService = $widgetTrackingService;
     }
 
     public function register()
@@ -448,21 +451,20 @@ class OnboardingController implements FeatureInterface
      * that there is a published post with the SimplyBook.me widget shortcode
      * or the Gutenberg block.
      */
-    public function validatePublishedWidget(): void
-    {
-        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
-        if ($cache === true) {
-            $this->service->setPublishWidgetCompleted();
-            return;
-        }
-
-		// If the  simplybook_pages_with_shortcode is not empty, a page with shortcode is already published
-		if ( !empty(get_option('simplybook_pages_with_shortcode'))){
+	public function validatePublishedWidget(): void {
+		$cache = wp_cache_get( 'simplybook_widget_published', 'simplybook' );
+		if ( $cache === true ) {
 			$this->service->setPublishWidgetCompleted();
+
 			return;
 		}
 
-        $this->service->setPublishWidgetCompleted();
-        wp_cache_set('simplybook_widget_published', true, 'simplybook');
-    }
+		// Check if any widgets are currently published
+		if ( $this->widgetService->hasPublishedWidgets() ) {
+			$this->service->setPublishWidgetCompleted();
+			wp_cache_set( 'simplybook_widget_published', true, 'simplybook' );
+
+			return;
+		}
+	}
 }
