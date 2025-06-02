@@ -23,15 +23,16 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
         }
     };
 
+    const taskIsDismissable = (): boolean => {
+        return task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status);
+    }
+
     const renderActionButton = () => {
         if (!task.action) return null;
 
-        // Check if the task is dismissable (same logic as in renderDismissButton)
-        const isDismissable = task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status);
-
         const buttonClassName = clsx(
             "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
-            !isDismissable && "mr-8"  // Add margin only when NOT dismissable
+            !taskIsDismissable() && "mr-8"  // Add margin only when NOT dismissable
         );
 
         if (task.action.text && task.action.link) {
@@ -61,7 +62,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
     };
 
     const renderDismissButton = () => {
-        if (task.type !== 'optional' || !['open', 'urgent', 'premium'].includes(task.status)) {
+        if (!taskIsDismissable()) {
             return null;
         }
 
