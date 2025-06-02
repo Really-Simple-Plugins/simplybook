@@ -4,24 +4,25 @@ import LoginLink from "../Common/LoginLink";
 import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
 
-const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
-    if (premium || special_feature) {
-        return 'bg-tertiary text-white';
-    }
-
-    switch (status) {
-        case 'open':
-            return 'bg-yellow-400 text-black';
-        case 'urgent':
-            return 'bg-red-800 text-white';
-        case 'completed':
-            return 'bg-green-500 text-white';
-        default:
-            return 'bg-gray-100 text-gray-800';
-    }
-};
-
 const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
+
+    const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
+        if (premium || special_feature) {
+            return 'bg-tertiary text-white';
+        }
+
+        switch (status) {
+            case 'open':
+                return 'bg-yellow-400 text-black';
+            case 'urgent':
+                return 'bg-red-800 text-white';
+            case 'completed':
+                return 'bg-green-500 text-white';
+            default:
+                return 'bg-gray-100 text-gray-800';
+        }
+    };
+
     const renderActionButton = () => {
         if (!task.action) return null;
 
