@@ -5,7 +5,7 @@ import { __, _n, sprintf } from "@wordpress/i18n";
 import BlockFooter from "../Blocks/BlockFooter";
 import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
-import Task from "../Tasks/Task";
+import TaskComponent from "../Tasks/TaskComponent";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
 
 const Progress = () => {
@@ -79,7 +79,7 @@ const Progress = () => {
                 {/* Task List */}
                 <div className="task-wrapper scroll-container h-[290px] mt-1 grid overflow-y-auto content-start gap-2">
                     {displayedTasks.map((task) => (
-                        <Task
+                        <TaskComponent
                             key={task.id}
                             task={task}
                             onDismissCallback={dismissTask}

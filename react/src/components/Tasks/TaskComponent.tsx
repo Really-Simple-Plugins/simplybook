@@ -1,14 +1,8 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
-import { Task as TaskType } from "../../types/Task";
+import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
-
-interface TaskProps {
-    task: TaskType;
-    onDismissCallback: (taskId: string) => void;
-    className?: string;
-}
 
 const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
     if (premium || special_feature) {
@@ -27,7 +21,7 @@ const getStatusStyles = (status: string, premium: boolean, special_feature: bool
     }
 };
 
-const Task: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
+const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
     const renderActionButton = () => {
         if (!task.action) return null;
 
@@ -116,6 +110,6 @@ const Task: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
     );
 };
 
-Task.displayName = "Task";
+TaskComponent.displayName = "Task";
 
-export default Task;
+export default TaskComponent;
