@@ -26,9 +26,12 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
     const renderActionButton = () => {
         if (!task.action) return null;
 
+        // Check if the task is dismissable (same logic as in renderDismissButton)
+        const isDismissable = task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status);
+
         const buttonClassName = clsx(
             "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
-            (task.type === 'required' || (task.type === 'optional' && task.status !== 'open')) && "mr-8"
+            !isDismissable && "mr-8"  // Add margin only when NOT dismissable
         );
 
         if (task.action.text && task.action.link) {
