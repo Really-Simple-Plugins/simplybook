@@ -41,7 +41,7 @@ class WidgetTrackingService
 		}
 
 		return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER)
-		       || $this->postHasGutenbergBlock($this->post->post_content);
+		       || $this->postHasGutenbergBlock();
 	}
 
 	/**
