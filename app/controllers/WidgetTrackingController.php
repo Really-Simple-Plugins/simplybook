@@ -37,7 +37,7 @@ class WidgetTrackingController implements ControllerInterface
 	public function handlePostSave( int $postId, \WP_Post $post ): void
 	{
 
-		if ($this->shouldProcessSavedPost($postId, $post) !== false) {
+		if ($this->shouldProcessSavedPost($postId, $post) !== true) {
 			return;
 		}
 
