@@ -24,7 +24,6 @@ class WidgetTrackingService
 	 */
 	public function setPost(int $postId, ?\WP_Post $post = null): void
 	{
-
 		$this->post = $post ?? get_post($postId);
 		$this->postId = $postId;
 	}
@@ -32,8 +31,8 @@ class WidgetTrackingService
 	/**
 	 * Check if the current post contains a SimplyBook widget.
 	 */
-	public function postContainsWidget(): bool {
-
+	public function postContainsWidget(): bool
+    {
 		if ($this->hasPost() === false) {
 			throw new \RuntimeException(
 				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
@@ -49,7 +48,6 @@ class WidgetTrackingService
 	 */
 	public function widgetWasRemoved(): bool
 	{
-
 		if ($this->hasPost() === false) {
 			throw new \RuntimeException(
 				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
@@ -120,8 +118,8 @@ class WidgetTrackingService
 
 	/**
 	 * Check if any widgets are currently published.
-	 *
-	 * This method can be used to validate if the publish widget task should be completed.
+	 * This method can be used to validate if the publish widget task should be
+     * completed.
 	 */
 	public function hasTrackedPosts(): bool
 	{
@@ -130,8 +128,6 @@ class WidgetTrackingService
 
 	/**
 	 * Check if the current post is currently being tracked.
-	 *
-	 * @return bool True if the current post is in the tracked posts list
 	 * @throws \InvalidArgumentException If no post has been set
 	 */
 	private function postIsCurrentlyTracked(): bool
@@ -148,7 +144,7 @@ class WidgetTrackingService
 
 	/**
 	 * Update the tracked posts list in the database.
-	 *
+     *
 	 * @param array $posts Array of post IDs to store
 	 */
 	private function updateTrackedPosts(array $posts): void
@@ -185,6 +181,6 @@ class WidgetTrackingService
 	 */
 	public function hasPost(): bool
 	{
-		return $this->post instanceof \WP_Post;
+		return !empty($this->postId) && ($this->post instanceof \WP_Post);
 	}
 }
