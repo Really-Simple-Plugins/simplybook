@@ -33,24 +33,17 @@ class WidgetTrackingController implements ControllerInterface
 
 	/**
 	 * Update widget tracking when a post is saved or updated.
-	 *
-	 * WordPress automatically calls this method when any post is saved.
-	 * It checks if the post contains SimplyBook widgets and updates the tracking
-	 * accordingly. Fires events when widget publishing status changes.
-	 *
-	 * @param int $postId The ID of the post being saved
-	 * @param \WP_Post $post The post object being saved
 	 */
-	public function handlePostSave(int $postId, \WP_Post $post, bool $update): void
+	public function handlePostSave( int $postId, \WP_Post $post ): void
 	{
 
-		if (!$this->canHandleSavedPost($postId, $post)) {
+		if ($this->shouldProcessSavedPost($postId, $post) !== false) {
 			return;
 		}
 
 		$this->service->setPost($postId, $post);
 
-		if ($this->service->containsWidget()) {
+		if ($this->service->postContainsWidget()) {
 			$this->service->trackPost();
 			return;
 		}
@@ -62,13 +55,11 @@ class WidgetTrackingController implements ControllerInterface
 
 	/**
 	 * Remove a post from widget tracking when it's deleted.
-	 *
-	 * @param int $postId The ID of the post being deleted
-	 **/
+	 */
 	public function handlePostDelete(int $postId): void
 	{
 
-		$post = get_post($postId);
+		$post = $this->service->getPost($postId);
 		$this->service->setPost($postId, $post);
 
 		$allTrackedPosts = $this->service->getTrackedPosts();
@@ -81,17 +72,13 @@ class WidgetTrackingController implements ControllerInterface
 	}
 
 	/**
-	 * @param int $postId
-	 *
 	 * Handles the post being trashed.
-	 *
-	 * @return void
 	 */
 	public function handlePostTrashed(int $postId): void
 	{
 		$allTrackedPosts = $this->service->getTrackedPosts();
 
-		$post = get_post($postId);
+		$post = $this->service->getPost($postId);
 		$this->service->setPost($postId, $post);
 
 		if (!in_array($postId, $allTrackedPosts)) {
@@ -103,15 +90,8 @@ class WidgetTrackingController implements ControllerInterface
 
 	/**
 	 * Determine if a saved post should be processed for widget tracking.
-	 *
-	 * This method filters out revisions, autosaves, and non-published posts
-	 * to ensure we only track actual published content that visitors can see.
-	 *
-	 * @param int $postId The ID of the post being saved
-	 * @param \WP_Post $post The post object being saved
-	 * @return bool True if the post should be processed, false otherwise
 	 */
-	private function canHandleSavedPost(int $postId, \WP_Post $post): bool
+	private function shouldProcessSavedPost(int $postId, \WP_Post $post): bool
 	{
 		return !wp_is_post_revision($postId)
 		       && !wp_is_post_autosave($postId)

@@ -240,7 +240,7 @@ class OnboardingController implements FeatureInterface
 
         // These flags are deleted after its one time use in the Task and Notice
         if ($pageCreatedSuccessfully) {
-            $this->service->setPublishWidgetCompleted();
+            $this->widgetService->setPublishWidgetCompleted();
         }
 
         $this->service->setOnboardingCompleted();
@@ -454,17 +454,15 @@ class OnboardingController implements FeatureInterface
 	public function validatePublishedWidget(): void {
 		$cache = wp_cache_get( 'simplybook_widget_published', 'simplybook' );
 		if ( $cache === true ) {
-			$this->service->setPublishWidgetCompleted();
+			$this->widgetService->setPublishWidgetCompleted();
 
 			return;
 		}
 
 		// Check if any widgets are currently published
-		if ( $this->widgetService->hasPublishedWidgets() ) {
-			$this->service->setPublishWidgetCompleted();
+		if ( $this->widgetService->hasTrackedPosts() ) {
+			$this->widgetService->setPublishWidgetCompleted();
 			wp_cache_set( 'simplybook_widget_published', true, 'simplybook' );
-
-			return;
 		}
 	}
 }

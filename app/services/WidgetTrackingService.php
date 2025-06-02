@@ -16,26 +16,36 @@ class WidgetTrackingService
 	const SHORTCODE_IDENTIFIER = 'simplybook_widget';
 	const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
 
+	private int $postId;
+	private \WP_Post $post;
+
 	/**
 	 * Set the current post for processing.
-	 *
-	 * @param int $postId The ID of the post to process
-	 * @param \WP_Post $post The post object to process
 	 */
-	public function setPost(int $postId, \WP_Post $post): void
+	public function setPost(int $postId, ?\WP_Post $post = null): void
 	{
 		$this->postId = $postId;
 		$this->post = $post;
+
+		if ($this->hasPost() !== false) {
+			$this->post = $this->getPost($postId);
+		} else {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
 	}
 
 	/**
 	 * Check if the current post contains a SimplyBook widget.
-	 *
-	 * @return bool True if the post contains a widget (shortcode or Gutenberg block)
 	 */
-	public function containsWidget(): bool
-	{
-		$this->validatePostIsSet();
+	public function postContainsWidget(): bool {
+
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
 
 		return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER)
 		       || $this->hasGutenbergBlock($this->post->post_content);
@@ -43,29 +53,35 @@ class WidgetTrackingService
 
 	/**
 	 * Check if a widget was removed from the current post.
-	 *
-	 * @return bool True if the post was previously tracked but no longer contains a widget
 	 */
 	public function widgetWasRemoved(): bool
 	{
-		$this->validatePostIsSet();
 
-		return !$this->containsWidget() && $this->isCurrentlyTracked();
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
+
+		return !$this->widgetWasRemoved() && $this->postIsCurrentlyTracked();
 	}
 
 	/**
 	 * Add the current post to widget tracking.
 	 *
 	 * Fires a CALENDAR_PUBLISHED event if this is the first widget being published.
-	 *
 	 */
 	public function trackPost(): void
 	{
-		$this->validatePostIsSet();
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
 
 		$trackedPosts = $this->getTrackedPosts();
 
-		if ($this->isCurrentlyTracked()) {
+		if ($this->postIsCurrentlyTracked()) {
 			return; // Already tracked
 		}
 
@@ -82,8 +98,6 @@ class WidgetTrackingService
 	 * Remove a post from widget tracking.
 	 *
 	 * Fires a CALENDAR_UNPUBLISHED event if this was the last tracked widget.
-	 *
-	 * @param int|null $postId The post ID to untrack, or null to use the current post
 	 */
 	public function untrackPost(?int $postId = null): void
 	{
@@ -105,8 +119,6 @@ class WidgetTrackingService
 
 	/**
 	 * Get all posts that are currently being tracked.
-	 *
-	 * @return array Array of post IDs that contain widgets
 	 */
 	public function getTrackedPosts(): array
 	{
@@ -117,10 +129,8 @@ class WidgetTrackingService
 	 * Check if any widgets are currently published.
 	 *
 	 * This method can be used to validate if the publish widget task should be completed.
-	 *
-	 * @return bool True if at least one widget is published
 	 */
-	public function hasPublishedWidgets(): bool
+	public function hasTrackedPosts(): bool
 	{
 		return !empty($this->getTrackedPosts());
 	}
@@ -131,9 +141,13 @@ class WidgetTrackingService
 	 * @return bool True if the current post is in the tracked posts list
 	 * @throws \InvalidArgumentException If no post has been set
 	 */
-	private function isCurrentlyTracked(): bool
+	private function postIsCurrentlyTracked(): bool
 	{
-		$this->validatePostIsSet();
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
 
 		$trackedPosts = $this->getTrackedPosts();
 		return in_array($this->postId, $trackedPosts);
@@ -161,14 +175,27 @@ class WidgetTrackingService
 	}
 
 	/**
-	 * Validate that a post has been set for processing.
-	 *
-	 * @throws \InvalidArgumentException If no post has been set
+	 * Get a post object by its ID.
 	 */
-	private function validatePostIsSet(): void
+	public function getPost($postId): ?\WP_Post {
+		return get_post($postId);
+	}
+
+	/**
+	 * Use this method to set the "publish widget" notice and task as completed.
+	 * These flags are deleted after its one time use in the Task and Notice.
+	 */
+	public function setPublishWidgetCompleted(bool $completed = true): void
 	{
-		if (empty($this->postId) || empty($this->post)) {
-			throw new \InvalidArgumentException('Missing mandatory post data. Call setPost() first.');
-		}
+		update_option('simplybook_calendar_published_notification_completed', $completed);
+		update_option('simplybook_calendar_published_task_completed', $completed);
+	}
+
+	/**
+	 * Check if a post has been set.
+	 */
+	public function hasPost(): bool
+	{
+		return $this->post instanceof \WP_Post;
 	}
 }

@@ -12,6 +12,7 @@ return [
         'pro' => false,
         'dependencies' => [
             'Service',
+            'WidgetTrackingService',
         ],
     ],
     'TaskManagement' => [
