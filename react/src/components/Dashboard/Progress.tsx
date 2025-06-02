@@ -82,9 +82,8 @@ const Progress = () => {
                         <Task
                             key={task.id}
                             task={task}
-                            onDismiss={dismissTask}
-                            remainingTasksCount={remainingTasks.length}
-                            showAll={showAll}
+                            onDismissCallback={dismissTask}
+                            className={remainingTasks.length > 7 ? "!mr-0" : !showAll ? "mr-2" : ""}
                         />
                     ))}
                 </div>

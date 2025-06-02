@@ -1,18 +1,33 @@
 import React from "react";
 import { Link } from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
-import TaskStatusPill from "./TaskStatusPill";
 import { Task as TaskType } from "../../types/Task";
 import clsx from "clsx";
 
 interface TaskProps {
     task: TaskType;
-    onDismiss: (taskId: string) => void;
-    remainingTasksCount: number;
-    showAll: boolean;
+    onDismissCallback: (taskId: string) => void;
+    className?: string;
 }
 
-const Task: React.FC<TaskProps> = ({ task, onDismiss, remainingTasksCount, showAll }) => {
+const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
+    if (premium || special_feature) {
+        return 'bg-tertiary text-white';
+    }
+
+    switch (status) {
+        case 'open':
+            return 'bg-yellow-400 text-black';
+        case 'urgent':
+            return 'bg-red-800 text-white';
+        case 'completed':
+            return 'bg-green-500 text-white';
+        default:
+            return 'bg-gray-100 text-gray-800';
+    }
+};
+
+const Task: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
     const renderActionButton = () => {
         if (!task.action) return null;
 
@@ -54,7 +69,7 @@ const Task: React.FC<TaskProps> = ({ task, onDismiss, remainingTasksCount, showA
 
         return (
             <button
-                onClick={() => onDismiss(task.id)}
+                onClick={() => onDismissCallback(task.id)}
                 className="ml-2 text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
             >
                 ×
@@ -65,23 +80,23 @@ const Task: React.FC<TaskProps> = ({ task, onDismiss, remainingTasksCount, showA
     return (
         <div
             className={clsx(
-                remainingTasksCount > 7 ? "!mr-0" : !showAll ? "mr-2" : "",
+                className,
                 "task-item-inner",
                 "h-6 flex items-center gap-4 pl-5 pr-1",
                 "hover:bg-gray-50",
                 "xl:h-auto xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1"
             )}
         >
-            {/* Status pill */}
-            <TaskStatusPill
-                status={task.status}
-                premium={task.premium}
-                special_feature={task.special_feature}
-                label={task.label}
-            />
+            <span
+                className={clsx(
+                    "inline-block w-0 p-2 rounded-[3rem] xl:w-[130px] text-center xl:px-1 xl:py-1.5 xl:rounded-sm text-xs font-medium",
+                    getStatusStyles(task.status, task.premium, task.special_feature)
+                )}
+            >
+                <span className="text-xxs hidden xl:block">{task.label}</span>
+            </span>
 
             <div className="flex justify-between w-full items-center">
-                {/* Task text */}
                 <div className={clsx(
                     task.status === 'dismissed' ? 'text-gray-400 line-through' : '',
                     "text-[0.8125rem] w-[70%]"
@@ -90,10 +105,8 @@ const Task: React.FC<TaskProps> = ({ task, onDismiss, remainingTasksCount, showA
                 </div>
 
                 <div className="flex items-center justify-end">
-                    {/* Action button */}
                     {renderActionButton()}
 
-                    {/* Dismiss button */}
                     <div className="text-right">
                         {renderDismissButton()}
                     </div>
