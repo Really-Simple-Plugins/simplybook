@@ -34,14 +34,14 @@ class WidgetTrackingController implements ControllerInterface
 	/**
 	 * Update widget tracking when a post is saved or updated.
 	 */
-	public function handlePostSave( int $postId, \WP_Post $post ): void
+	public function handlePostSave(int $postId, \WP_Post $post): void
 	{
 
 		if ($this->shouldProcessSavedPost($postId, $post) !== true) {
 			return;
 		}
 
-		$this->service->setPost($postId, $post);
+		$this->service->setPost($postId);
 
 		if ($this->service->postContainsWidget()) {
 			$this->service->trackPost();
@@ -59,8 +59,7 @@ class WidgetTrackingController implements ControllerInterface
 	public function handlePostDelete(int $postId): void
 	{
 
-		$post = $this->service->getPost($postId);
-		$this->service->setPost($postId, $post);
+		$this->service->setPost($postId);
 
 		$allTrackedPosts = $this->service->getTrackedPosts();
 
@@ -78,8 +77,7 @@ class WidgetTrackingController implements ControllerInterface
 	{
 		$allTrackedPosts = $this->service->getTrackedPosts();
 
-		$post = $this->service->getPost($postId);
-		$this->service->setPost($postId, $post);
+		$this->service->setPost($postId);
 
 		if (!in_array($postId, $allTrackedPosts)) {
 			return; // Nothing to do

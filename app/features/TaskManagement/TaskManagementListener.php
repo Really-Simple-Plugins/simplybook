@@ -258,7 +258,7 @@ class TaskManagementListener
      */
     public function handleCalendarUnPublished(): void
     {
-        $this->service->openTask(
+        $this->service->flagTaskUrgent(
             Tasks\PublishWidgetTask::IDENTIFIER
         );
     }

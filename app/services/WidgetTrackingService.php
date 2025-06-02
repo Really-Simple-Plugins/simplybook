@@ -24,16 +24,9 @@ class WidgetTrackingService
 	 */
 	public function setPost(int $postId, ?\WP_Post $post = null): void
 	{
-		$this->postId = $postId;
-		$this->post = $post;
 
-		if ($this->hasPost() !== false) {
-			$this->post = $this->getPost($postId);
-		} else {
-			throw new \RuntimeException(
-				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
-			);
-		}
+		$this->post = $post ?? get_post($postId);
+		$this->postId = $postId;
 	}
 
 	/**
@@ -48,7 +41,7 @@ class WidgetTrackingService
 		}
 
 		return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER)
-		       || $this->hasGutenbergBlock($this->post->post_content);
+		       || $this->postHasGutenbergBlock($this->post->post_content);
 	}
 
 	/**
@@ -165,20 +158,16 @@ class WidgetTrackingService
 
 	/**
 	 * Check if the post content contains a SimplyBook Gutenberg block.
-	 *
-	 * @param string $content The post content to check
-	 * @return bool True if the content contains the Gutenberg block
 	 */
-	private function hasGutenbergBlock(string $content): bool
+	private function postHasGutenbergBlock(): bool
 	{
-		return has_block(self::GUTENBERG_BLOCK_IDENTIFIER, $content);
-	}
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
 
-	/**
-	 * Get a post object by its ID.
-	 */
-	public function getPost($postId): ?\WP_Post {
-		return get_post($postId);
+		return has_block(self::GUTENBERG_BLOCK_IDENTIFIER, $this->post->post_content);
 	}
 
 	/**

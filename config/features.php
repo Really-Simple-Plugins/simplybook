@@ -12,7 +12,7 @@ return [
         'pro' => false,
         'dependencies' => [
             'Service',
-            'WidgetTrackingService',
+            '\SimplyBook\Services\WidgetTrackingService',
         ],
     ],
     'TaskManagement' => [
