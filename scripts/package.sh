@@ -149,14 +149,14 @@ printf "${GREEN}✅ Glob operations are now supported!${RESET}\n\n"
 # Remove everything from react folder except src and build folder
 printf "${BLUE}Cleaning up React app...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/react || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
 # Remove everything from Gutenberg block except src and build folder
 printf "${BLUE}Cleaning up Gutenberg block...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/assets/block || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
