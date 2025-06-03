@@ -1608,18 +1608,23 @@ class ApiClient
     }
 
 	/**
-	 * Get referrer for the API requests.
+	 *
+	 * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+	 * configured using Extendify. Otherwise, use default 'wp'.
 	 */
-	private function getReferrer(): string {
-		// \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is configured using Extendify. Otherwise, use default 'wp'.
+	private function getReferrer(): string
+	{
 		return (defined('\EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
 	}
 
 	/**
 	 * Get the user agent for the API requests.
+	 *
+	 * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
+	 * EXTENDIFY_PARTNER_ID; +https://example.com)
 	 */
-	private function getRequestUserAgent(): string {
-		// Matches this format: SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref: EXTENDIFY_PARTNER_ID; +https://example.com)
+	private function getRequestUserAgent(): string
+	{
 		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
 	}
 
