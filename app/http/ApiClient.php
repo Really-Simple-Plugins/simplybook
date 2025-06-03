@@ -231,6 +231,7 @@ class ApiClient
         $token_type = in_array($token_type, ['public', 'admin']) ? $token_type : 'public';
         $headers = array(
             'Content-Type'  => 'application/json',
+            'User-Agent' => 'ref: ' . $this->get_referrer(),
         );
 
         if ( $include_token ) {
@@ -242,9 +243,6 @@ class ApiClient
                         break;
                     case 'admin':
                         $this->refresh_token('admin');
-                        break;
-                    case 'user':
-                        $this->get_user_token();
                         break;
                 }
                 $token = $this->get_token($token_type);
@@ -676,6 +674,7 @@ class ApiClient
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                 ]
             ),
+            'ref' => $this->get_referrer(),
         ));
 
         if (is_wp_error($request)) {
@@ -1606,5 +1605,13 @@ class ApiClient
         wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
         return $response;
     }
+
+	/**
+	 * Get referrer for the API requests.
+	 */
+	private function get_referrer(): string {
+		// \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is configured using Extendify. Otherwise, use default 'wp'.
+		return (defined('\EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+	}
 
 }
