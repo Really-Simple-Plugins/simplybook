@@ -26,7 +26,7 @@ const TextField = forwardRef(
     copyField,
     required,
     ...props 
-  }, ref) => {
+  }) => {
 
     const inputId = setting.id; 
 
@@ -43,7 +43,6 @@ const TextField = forwardRef(
       >
         <TextInput
           name={name}
-          ref={ref}
           id={inputId}
           type={type}
           aria-invalid={!!fieldState?.error?.message}
