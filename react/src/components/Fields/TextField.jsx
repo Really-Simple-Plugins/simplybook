@@ -13,7 +13,7 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @param {object} props
  * @return {JSX.Element}
  */
-const TextField = forwardRef(
+const TextField =
   ({ 
     setting, 
     fieldState, 
@@ -51,8 +51,7 @@ const TextField = forwardRef(
         />
       </FieldWrapper>
     );
-  },
-);
+  }
 
 TextField.displayName = "TextField";
 export default TextField;

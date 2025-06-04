@@ -91,7 +91,7 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = unreleased =
-* dropped unused ref in TextField component
+Fixed: An error was logged in the browser console when starting the onboarding.
 
 = 3.0.0 =
 * Major refactor of the plugin.
