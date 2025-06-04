@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
 
@@ -14,21 +13,21 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @return {JSX.Element}
  */
 const TextField =
-  ({ 
-    setting, 
-    fieldState, 
-    name, 
-    label, 
-    help, 
-    context, 
-    className, 
-    type, 
+  ({
+    setting,
+    fieldState,
+    name,
+    label,
+    help,
+    context,
+    className,
+    type,
     copyField,
     required,
-    ...props 
+    ...props
   }) => {
 
-    const inputId = setting.id; 
+    const inputId = setting.id;
 
     return (
       <FieldWrapper
