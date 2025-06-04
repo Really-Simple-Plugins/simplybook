@@ -73,6 +73,8 @@ react/.npmrc
 
 *storybook.log
 
+/.idea/
+
 # ignore all in assets/languages except index.php and .pot file
 assets/languages/*
 !assets/languages/index.php
