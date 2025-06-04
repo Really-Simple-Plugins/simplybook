@@ -90,8 +90,8 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= unreleased =
-Fixed: An error was logged in the browser console when starting the onboarding.
+= Unreleased =
+* Fixed: An error was logged in the browser console when starting the onboarding.
 
 = 3.0.0 =
 * Major refactor of the plugin.
