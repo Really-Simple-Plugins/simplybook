@@ -50,7 +50,7 @@ class WidgetScriptBuilder
             return $this->getWrappedScriptHTML($script);
         }
 
-        if ($this->isAuthenticated === false) {
+        if ($this->showDemoWidget()) {
             return $this->getDemoWidgetAlert() . $script;
         }
 
@@ -193,7 +193,7 @@ class WidgetScriptBuilder
     {
         $content = '';
 
-        if ($this->isAuthenticated === false) {
+        if ($this->showDemoWidget()) {
             $content = $this->getDemoWidgetAlert();
         }
 
@@ -256,5 +256,14 @@ class WidgetScriptBuilder
             'message' => $message,
         ]);
     }
+
+	/**
+	 * Check if the demo widget should be shown or not.
+	 */
+	public function showDemoWidget(?array $widgetSettings = null): bool
+	{
+		$widgetSettings = $widgetSettings ?? $this->widgetSettings;
+		return empty($widgetSettings['server']);
+	}
 
 }
