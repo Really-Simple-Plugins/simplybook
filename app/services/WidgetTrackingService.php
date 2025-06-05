@@ -54,7 +54,7 @@ class WidgetTrackingService
 			);
 		}
 
-		return !$this->widgetWasRemoved() && $this->postIsCurrentlyTracked();
+		return !$this->postContainsWidget() && $this->postIsCurrentlyTracked();
 	}
 
 	/**
