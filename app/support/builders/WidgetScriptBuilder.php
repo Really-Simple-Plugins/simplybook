@@ -220,7 +220,7 @@ class WidgetScriptBuilder
             }
         }
 
-        if (empty($widgetSettings['server'])) {
+        if ($this->showDemoWidget($widgetSettings)) {
             $widgetSettings['server'] = $this->getDemoWidgetServerUrl();
         }
 
