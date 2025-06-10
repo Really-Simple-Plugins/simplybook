@@ -258,7 +258,13 @@ class WidgetScriptBuilder
     }
 
 	/**
-	 * Check if the demo widget should be shown or not.
+	 * The demo widget should be shown if the server URL is not set in the
+     * widget settings. This is used to display a demo widget when the
+     * plugin is not configured yet.
+     *
+     * @internal The widget works even when the plugin lost connection to the
+     * SimplyBook account of the user so that is not a condition to show the
+     * demo widget.
 	 */
 	public function showDemoWidget(?array $widgetSettings = null): bool
 	{
