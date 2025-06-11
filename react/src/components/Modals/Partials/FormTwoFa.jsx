@@ -5,12 +5,16 @@ import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 import request from "../../../api/requests/request";
 
+// API IMPORTS
+import Error from "../../Errors/Error";
+
 const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProviders, onClose}) => {
 
     const firstProvider = Object.keys(twoFaProviders)[0];
     const [twoFaCode, setTwoFaCode] = useState("");
     const [selectedProvider, setSelectedProvider] = useState(firstProvider);
     const [smsRequested, setSmsRequested] = useState(false); // Default is false
+    const [errorMessage, setErrorMessage] = useState("");
 
     // Create a useForm instance for the 2FA field
     const {
@@ -44,9 +48,19 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
         });
 
         if (response) {
-            console.log("2FA successful:", response);
-            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
-            return;
+            switch (response.status) {
+                case "error":
+                    setErrorMessage(response.message);
+                    console.error("2FA failed:", response); // Still log the error
+                    break;
+                case "success":
+                    console.log("2FA successful:", response);
+                    window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+                    break;
+                default:
+                    setErrorMessage("An error occured. Please try again.");
+                    break;
+            }
         }
     });
 
@@ -105,6 +119,9 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                                 placeholder={__("Enter code", "simplybook")}
                                 value={twoFaCode}
                                 onChange={(e) => {
+                                    // removes error message once user starts typing new code so if there's another failed attempt the user will get feedback again
+                                    errorMessage !== "" && setErrorMessage("")
+
                                     setTwoFaCode(e.target.value);
                                     field.onChange(e);
                                 }}
@@ -122,6 +139,12 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                             {smsRequested ? __("SMS Requested", "simplybook") : __("Request SMS", "simplybook")}
                         </ButtonInput>
                     )}
+                    {errorMessage &&
+                        <Error
+                            errorHeading={__("Something went wrong", "simplybook")}
+                            error={errorMessage}
+                        />
+                    }
                     <div className={"two_fa_button_wrapper flex flex-col"}>
                         <ButtonInput
                             className="mt-4 mb-4"

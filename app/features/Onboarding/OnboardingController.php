@@ -337,6 +337,7 @@ class OnboardingController implements FeatureInterface
 
         return new \WP_REST_Response([
             'message' => 'Successfully authenticated user',
+            'status' => 'success',
         ], 200);
     }
 
