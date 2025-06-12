@@ -335,9 +335,7 @@ class OnboardingController implements FeatureInterface
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
 
-        return $this->service->sendHttpResponse([
-            'message' => 'Successfully authenticated user',
-        ], true, esc_html__('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
+        return $this->service->sendHttpResponse([], true, esc_html__('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
@@ -399,14 +397,10 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('auth_session_id'),
             );
         } catch (\Exception $e) {
-            return $this->service->sendHttpResponse([
-                'message' => $e->getMessage(),
-            ], false, $e->getMessage()); // Default code 200 because React side still used request() here
+            return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
         }
 
-        return $this->service->sendHttpResponse([
-            'message' => 'Successfully requested SMS code',
-        ], true, esc_html__('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here
+        return $this->service->sendHttpResponse([], true, esc_html__('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
