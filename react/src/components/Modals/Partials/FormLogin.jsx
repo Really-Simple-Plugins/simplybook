@@ -97,7 +97,7 @@ const formLogin = ({
                 window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
 
             } catch (error) {
-                setErrorMessage(error.message);
+                setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
                 console.log(error); // Still log the error
             }
         };

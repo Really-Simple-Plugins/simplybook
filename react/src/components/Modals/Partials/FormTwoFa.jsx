@@ -49,7 +49,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
 
         switch (response?.status) {
             case "error":
-                setErrorMessage(response.message);
+                setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
                 console.error("2FA failed:", response); // Still log the error
                 break;
             case "success":
@@ -70,16 +70,16 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
         });
         switch (response?.status) {
             case "error":
-              setErrorMessage(response.message);
-              console.error("Unable to request SMS:", response); // Still log the error
-              break;
+                setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
+                console.error("Unable to request SMS:", response); // Still log the error
+                break;
             case "success":
-              setSmsRequested(true);
-              console.log("SMS request successful:", response);
-              break;
+                setSmsRequested(true);
+                console.log("SMS request successful:", response);
+                break;
             default:
-              setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
-              break;
+                setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
+                break;
         }
     };
 
