@@ -58,7 +58,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                     window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
                     break;
                 default:
-                    setErrorMessage("An error occured. Please try again.");
+                    setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
                     break;
             }
         }
