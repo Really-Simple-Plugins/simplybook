@@ -40,10 +40,17 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
                 className={"tooltip-icon ml-2"}
                 data-tooltip-id={"field-tooltip"}
                 data-tooltip-content={message}
+                aria-hidden={"false"}
+                aria-label={message}
             />
             <Tooltip
                 id={"field-tooltip"}
                 place={"bottom"}
+                openEvents={{
+                    mouseover: true,
+                    focus: true,
+                    click: true
+                }}
             />
         </>
     )
