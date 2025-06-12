@@ -47,20 +47,18 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
             two_fa_type: data.two_fa_type,
         });
 
-        if (response) {
-            switch (response.status) {
-                case "error":
-                    setErrorMessage(response.message);
-                    console.error("2FA failed:", response); // Still log the error
-                    break;
-                case "success":
-                    console.log("2FA successful:", response);
-                    window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
-                    break;
-                default:
-                    setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
-                    break;
-            }
+        switch (response?.status) {
+            case "error":
+                setErrorMessage(response.message);
+                console.error("2FA failed:", response); // Still log the error
+                break;
+            case "success":
+                console.log("2FA successful:", response);
+                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+                break;
+            default:
+                setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
+                break;
         }
     });
 
