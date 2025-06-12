@@ -68,11 +68,19 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
             company_login: companyLogin,
             domain: domain,
         });
-        if (response) {
-            setSmsRequested(true);
-            return console.log("SMS request successful:", response);
+        switch (response?.status) {
+            case "error":
+              setErrorMessage(response.message);
+              console.error("Unable to request SMS:", response); // Still log the error
+              break;
+            case "success":
+              setSmsRequested(true);
+              console.log("SMS request successful:", response);
+              break;
+            default:
+              setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
+              break;
         }
-        console.error("SMS request error:", error);
     };
 
     return (
