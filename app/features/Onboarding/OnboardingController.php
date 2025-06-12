@@ -335,10 +335,9 @@ class OnboardingController implements FeatureInterface
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
 
-        return new \WP_REST_Response([
+        return $this->service->sendHttpResponse([
             'message' => 'Successfully authenticated user',
-            'status' => 'success',
-        ], 200);
+        ], true, esc_html__('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
