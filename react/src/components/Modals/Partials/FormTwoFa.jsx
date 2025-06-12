@@ -118,9 +118,11 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                                 value={twoFaCode}
                                 onChange={(e) => {
                                     // removes error message once user starts typing new code so if there's another failed attempt the user will get feedback again
-                                    errorMessage !== "" && setErrorMessage("")
+                                  if (errorMessage !== "") {
+                                    setErrorMessage("");
+                                  }
 
-                                    setTwoFaCode(e.target.value);
+                                  setTwoFaCode(e.target.value);
                                     field.onChange(e);
                                 }}
                             />
