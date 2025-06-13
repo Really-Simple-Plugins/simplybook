@@ -12,6 +12,7 @@ return [
         'pro' => false,
         'dependencies' => [
             'Service',
+            '\SimplyBook\Services\WidgetTrackingService',
         ],
     ],
     'TaskManagement' => [
@@ -19,7 +20,7 @@ return [
         'inScope' => true, // Should be able to listen everywhere
         'pro' => false,
         'priorityFiles' => [
-            'Tasks/AbstractTask',
+            'Tasks' . DIRECTORY_SEPARATOR . 'AbstractTask',
         ],
     ],
     'Notifications' => [
@@ -27,7 +28,7 @@ return [
         'inScope' => true, // Should be able to listen everywhere
         'pro' => false,
         'priorityFiles' => [
-            'Notices/AbstractNotice',
+            'Notices' . DIRECTORY_SEPARATOR . 'AbstractNotice',
         ],
     ],
 ];

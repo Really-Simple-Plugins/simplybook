@@ -4,6 +4,7 @@ import save from './save';
 import metadata from './block.json';
 
 registerBlockType(metadata.name, {
+	apiVersion: 2,
 	edit: Edit,
 	save,
 	attributes: metadata.attributes,

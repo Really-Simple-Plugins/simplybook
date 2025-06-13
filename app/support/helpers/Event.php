@@ -23,6 +23,7 @@ class Event
     const AUTH_FAILED = 'auth_failed';
     const AUTH_SUCCEEDED = 'auth_succeeded';
     const CALENDAR_PUBLISHED = 'calendar_published';
+	const CALENDAR_UNPUBLISHED = 'calendar_unpublished';
     const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
 
     /**
