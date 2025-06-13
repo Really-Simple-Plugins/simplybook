@@ -91,6 +91,7 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = Unreleased =
+* Fixed: A non-email value is now accepted in the user login when logging in.
 * Fixed: An error was logged in the browser console when starting the onboarding.
 * Fixed: Logging in with 2FA enabled now works correctly
 * Removed: Duplicate entry in the domain dropdown for signing in to an existing account.
