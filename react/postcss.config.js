@@ -1,7 +1,8 @@
 module.exports = {
-  plugins: {
-    
-    // part of V4 upgrade
-    "@tailwindcss/postcss": {},
-  },
+  plugins: [
+    require('@tailwindcss/postcss'),
+    ...(process.env.NODE_ENV === 'production'
+        ? [require('cssnano')({ preset: 'default' })]
+        : []),
+  ],
 };
