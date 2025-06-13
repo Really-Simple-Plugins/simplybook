@@ -31,7 +31,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
         if (!task.action) return null;
 
         const buttonClassName = clsx(
-            "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem]",
+            "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem] text-nowrap",
             !taskIsDismissable() && "mr-8"  // Add margin only when NOT dismissable
         );
 
