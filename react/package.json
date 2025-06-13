@@ -15,8 +15,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "build:css": "postcss src/tailwind.css -o src/tailwind.generated.css",
-    "build:css:watch": "postcss src/tailwind.css -o src/tailwind.generated.css --watch",
+    "build:css": "NODE_ENV=production postcss src/tailwind.css -o build/tailwind.generated.css",
+    "build:css:watch": "postcss src/tailwind.css -o build/tailwind.generated.css --watch",
     "postinstall": "node fix-chalk.js"
   },
   "keywords": [],
