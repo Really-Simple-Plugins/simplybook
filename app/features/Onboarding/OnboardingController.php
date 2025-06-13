@@ -335,9 +335,7 @@ class OnboardingController implements FeatureInterface
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
 
-        return new \WP_REST_Response([
-            'message' => 'Successfully authenticated user',
-        ], 200);
+        return $this->service->sendHttpResponse([], true, esc_html__('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
@@ -399,14 +397,10 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('auth_session_id'),
             );
         } catch (\Exception $e) {
-            return new \WP_REST_Response([
-                'message' => $e->getMessage(),
-            ], 400);
+            return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
         }
 
-        return new \WP_REST_Response([
-            'message' => 'Successfully requested SMS code',
-        ], 200);
+        return $this->service->sendHttpResponse([], true, esc_html__('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**

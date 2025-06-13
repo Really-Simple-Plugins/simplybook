@@ -9,6 +9,8 @@
     "sync-rogier": "browser-sync start -p 'https://simplybook.local' --files '**/*.php' '**/*.jsx' '**/*.tsx' 'build/*.js' 'src/*.css'",
     "start": "set \"INLINE_RUNTIME_CHUNK=false\" && export PLUGIN_ENV=development && wp-scripts start",
     "build": "set \"INLINE_RUNTIME_CHUNK=false\" && export PLUGIN_ENV=production && wp-scripts build",
+    "win-start": "set \"INLINE_RUNTIME_CHUNK=false\" && set PLUGIN_ENV=development && wp-scripts start",
+    "win-build": "set \"INLINE_RUNTIME_CHUNK=false\" && set PLUGIN_ENV=production && wp-scripts build",
     "format": "prettier --write '**/*.js' '**/*.css' '**/*.html'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
