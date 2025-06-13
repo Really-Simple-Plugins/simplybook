@@ -90,12 +90,18 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= Unreleased =
-* Added: A help text in the settings page is now displayed in a tooltip.
-* Fixed: A non-email value is now accepted in the user login when logging in.
-* Fixed: An error was logged in the browser console when starting the onboarding.
-* Fixed: Logging in with 2FA enabled now works correctly
-* Removed: Duplicate entry in the domain dropdown for signing in to an existing account.
+= 3.1.0 =
+* Added: Setting help texts now shown in tooltips.
+* Changed: Prompt to publish the widget now responds to user actions in posts.
+* Changed: Removed unnecessary files to make the plugin package smaller.
+* Removed: Duplicate domain option from sign-in dropdown.
+* Fixed: Non-email usernames now accepted at login.
+* Fixed: Console error on onboarding start resolved.
+* Fixed: Miscellaneous 2FA login console errors resolved.
+* Fixed: Gutenberg block now registers correctly with API V2, resolving a console error.
+* Fixed: Error message now correctly shown when an invalid 2FA code is entered.
+* Fixed: Demo widget notice now only appears when the loaded widget is actually a demo.
+* Fixed: Unexpectedly losing connection with SimplyBook.me is now resolved.
 
 = 3.0.0 =
 * Major refactor of the plugin.
