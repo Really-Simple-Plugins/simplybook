@@ -50,7 +50,7 @@ class WidgetScriptBuilder
             return $this->getWrappedScriptHTML($script);
         }
 
-        if ($this->isAuthenticated === false) {
+        if ($this->showDemoWidget()) {
             return $this->getDemoWidgetAlert() . $script;
         }
 
@@ -193,7 +193,7 @@ class WidgetScriptBuilder
     {
         $content = '';
 
-        if ($this->isAuthenticated === false) {
+        if ($this->showDemoWidget()) {
             $content = $this->getDemoWidgetAlert();
         }
 
@@ -220,7 +220,7 @@ class WidgetScriptBuilder
             }
         }
 
-        if (empty($widgetSettings['server'])) {
+        if ($this->showDemoWidget($widgetSettings)) {
             $widgetSettings['server'] = $this->getDemoWidgetServerUrl();
         }
 
@@ -256,5 +256,20 @@ class WidgetScriptBuilder
             'message' => $message,
         ]);
     }
+
+	/**
+	 * The demo widget should be shown if the server URL is not set in the
+     * widget settings. This is used to display a demo widget when the
+     * plugin is not configured yet.
+     *
+     * @internal The widget works even when the plugin lost connection to the
+     * SimplyBook account of the user so that is not a condition to show the
+     * demo widget.
+	 */
+	public function showDemoWidget(?array $widgetSettings = null): bool
+	{
+		$widgetSettings = $widgetSettings ?? $this->widgetSettings;
+		return empty($widgetSettings['server']);
+	}
 
 }
