@@ -5,7 +5,6 @@ export interface TextInputProps extends InputHTMLAttributes<HTMLInputElement> {
     placeholder?: string;
     type?: string;
     className?: string;
-    ref?: string;
     clickToSelect?: boolean;
     storedValue?: string;
     disabled: boolean;

@@ -12,7 +12,6 @@ const TextInput: React.FC<TextInputProps> = ({
     className,
     clickToSelect = false,
     disabled = false,
-    ref,
     ...props
 }) => {
 
@@ -62,7 +61,6 @@ const TextInput: React.FC<TextInputProps> = ({
             <input
                 name={name}
                 placeholder={placeholder}
-                ref={ref}
                 type={type}
                 onClick={clickToSelect ? copyOnClick : undefined }
                 className={clsx(textInputClass + " " + disabledClass + " " + className)}

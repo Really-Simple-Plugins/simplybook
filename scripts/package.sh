@@ -40,6 +40,12 @@ for cmd in "${REQUIRED_COMMANDS[@]}"; do
   fi
 done
 
+# Check if PLUGIN_NAME, ORIGINAL_PLUGIN_NAME, and PARENT_DIR are set
+if [[ -z "$PLUGIN_NAME" || -z "$ROOT_DIR" ]]; then
+  printf "${RED}Error: Plugin name or Root directory variables are not set. Aborted to prevent MacOS deletion.${RESET}\n"
+  exit 1
+fi
+
 # Ask user to confirm executing this script with an explanation of what it does
 printf "${BLUE}This script will create a zip package of the plugin for distribution.${RESET}\n"
 printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files. ${RESET}\n"
@@ -143,14 +149,14 @@ printf "${GREEN}✅ Glob operations are now supported!${RESET}\n\n"
 # Remove everything from react folder except src and build folder
 printf "${BLUE}Cleaning up React app...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/react || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
 # Remove everything from Gutenberg block except src and build folder
 printf "${BLUE}Cleaning up Gutenberg block...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/assets/block || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 

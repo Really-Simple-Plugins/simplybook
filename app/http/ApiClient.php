@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
+use SimplyBook\App;
 use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
@@ -231,6 +232,7 @@ class ApiClient
         $token_type = in_array($token_type, ['public', 'admin']) ? $token_type : 'public';
         $headers = array(
             'Content-Type'  => 'application/json',
+            'User-Agent' => $this->getRequestUserAgent(),
         );
 
         if ( $include_token ) {
@@ -242,9 +244,6 @@ class ApiClient
                         break;
                     case 'admin':
                         $this->refresh_token('admin');
-                        break;
-                    case 'user':
-                        $this->get_user_token();
                         break;
                 }
                 $token = $this->get_token($token_type);
@@ -674,6 +673,7 @@ class ApiClient
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+                    'ref' => $this->getReferrer(),
                 ]
             ),
         ));
@@ -1606,5 +1606,26 @@ class ApiClient
         wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
         return $response;
     }
+
+	/**
+	 *
+	 * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+	 * configured using Extendify. Otherwise, use default 'wp'.
+	 */
+	private function getReferrer(): string
+	{
+		return (defined('\EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+	}
+
+	/**
+	 * Get the user agent for the API requests.
+	 *
+	 * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
+	 * EXTENDIFY_PARTNER_ID; +https://example.com)
+	 */
+	private function getRequestUserAgent(): string
+	{
+		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+	}
 
 }
