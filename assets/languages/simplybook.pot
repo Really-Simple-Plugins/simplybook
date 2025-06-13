@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-05-21T11:44:41+00:00\n"
+"POT-Creation-Date: 2025-06-12T13:38:55+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #. Plugin URI of the plugin
 #: simplybook.php
-msgid "https://help.simplybook.me/index.php/WordPress_plugn"
+msgid "https://help.simplybook.me/index.php?title=WordPress_integration"
 msgstr ""
 
 #. Description of the plugin
@@ -165,19 +165,27 @@ msgstr ""
 msgid "Login successful."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:419
+#: app/features/Onboarding/OnboardingController.php:338
+msgid "Successfully authenticated user"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:403
+msgid "Successfully requested SMS code"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:413
 msgid "Successfully finished onboarding!"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:423
+#: app/features/Onboarding/OnboardingController.php:417
 msgid "An error occurred while finishing the onboarding process"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:437
+#: app/features/Onboarding/OnboardingController.php:431
 msgid "Successfully removed all previous data."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:440
+#: app/features/Onboarding/OnboardingController.php:434
 msgid "An error occurred while trying to remove previous data."
 msgstr ""
 
@@ -1976,7 +1984,8 @@ msgstr ""
 #: react/build/792.js:1
 #: react/build/843.js:1
 #: react/build/939.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:177
+#: react/src/components/Modals/Partials/FormLogin.jsx:195
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:151
 #: react/src/components/Onboarding/OnboardingStep.jsx:206
 msgid "Something went wrong"
 msgstr ""
@@ -2377,8 +2386,8 @@ msgstr ""
 #: react/build/46.js:1
 #: react/build/107.js:1
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:194
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:140
+#: react/src/components/Modals/Partials/FormLogin.jsx:212
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:170
 msgid "Close"
 msgstr ""
 
@@ -2680,33 +2689,46 @@ msgid "SimplyBook.me will generate the following page automatically"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:78
+#: react/src/components/Modals/Partials/FormLogin.jsx:100
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:52
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:73
+msgid "An unknown error occurred, please try again."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:60
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:81
+msgid "An unknown error occurred. Please try again."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:98
 msgid "Select 2FA provider"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:102
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:122
 msgid "Enter 2FA authentication code"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:105
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:125
 msgid "Enter code"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:122
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:146
 msgid "SMS Requested"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:122
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:146
 msgid "Request SMS"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:187
-#: react/src/components/Modals/Partials/FormTwoFa.jsx:132
+#: react/src/components/Modals/Partials/FormLogin.jsx:205
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:162
 msgid "Submit"
 msgstr ""
 
@@ -2722,14 +2744,14 @@ msgid "Company login"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:152
-#: react/src/components/Modals/Partials/FormLogin.jsx:155
+#: react/src/components/Modals/Partials/FormLogin.jsx:158
+#: react/src/components/Modals/Partials/FormLogin.jsx:161
 msgid "User login or email"
 msgstr ""
 
 #: react/build/843.js:1
-#: react/src/components/Modals/Partials/FormLogin.jsx:168
-#: react/src/components/Modals/Partials/FormLogin.jsx:171
+#: react/src/components/Modals/Partials/FormLogin.jsx:180
+#: react/src/components/Modals/Partials/FormLogin.jsx:183
 msgid "Password"
 msgstr ""
 
