@@ -97,7 +97,7 @@ const formLogin = ({
                 window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
 
             } catch (error) {
-                setErrorMessage(error.message);
+                setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
                 console.log(error); // Still log the error
             }
         };
@@ -137,6 +137,12 @@ const formLogin = ({
                             setting="company_login"
                             type="text"
                             placeholder={__("Company login", "simplybook")}
+                            onChange={(e) => {
+                                if (errorMessage !== "") {
+                                    setErrorMessage("");
+                                }
+                                field.onChange(e);
+                            }}
                         />
                     )}
                 />
@@ -153,6 +159,12 @@ const formLogin = ({
                             setting="email"
                             type="email"
                             placeholder={__("User login or email", "simplybook")}
+                            onChange={(e) => {
+                                if (errorMessage !== "") {
+                                    setErrorMessage("");
+                                }
+                              field.onChange(e);
+                            }}
                         />
                     )}
                 />
@@ -169,6 +181,12 @@ const formLogin = ({
                             setting="password"
                             type="password"
                             placeholder={__("Password", "simplybook")}
+                            onChange={(e) => {
+                                if (errorMessage !== "") {
+                                    setErrorMessage("");
+                                }
+                                field.onChange(e);
+                            }}
                         />
                     )}
                 />

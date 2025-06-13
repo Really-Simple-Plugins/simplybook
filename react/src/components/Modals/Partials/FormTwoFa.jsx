@@ -5,12 +5,16 @@ import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 import request from "../../../api/requests/request";
 
+// API IMPORTS
+import Error from "../../Errors/Error";
+
 const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProviders, onClose}) => {
 
     const firstProvider = Object.keys(twoFaProviders)[0];
     const [twoFaCode, setTwoFaCode] = useState("");
     const [selectedProvider, setSelectedProvider] = useState(firstProvider);
     const [smsRequested, setSmsRequested] = useState(false); // Default is false
+    const [errorMessage, setErrorMessage] = useState("");
 
     // Create a useForm instance for the 2FA field
     const {
@@ -43,10 +47,18 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
             two_fa_type: data.two_fa_type,
         });
 
-        if (response) {
-            console.log("2FA successful:", response);
-            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
-            return;
+        switch (response?.status) {
+            case "error":
+                setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
+                console.error("2FA failed:", response); // Still log the error
+                break;
+            case "success":
+                console.log("2FA successful:", response);
+                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+                break;
+            default:
+                setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
+                break;
         }
     });
 
@@ -56,11 +68,19 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
             company_login: companyLogin,
             domain: domain,
         });
-        if (response) {
-            setSmsRequested(true);
-            return console.log("SMS request successful:", response);
+        switch (response?.status) {
+            case "error":
+                setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
+                console.error("Unable to request SMS:", response); // Still log the error
+                break;
+            case "success":
+                setSmsRequested(true);
+                console.log("SMS request successful:", response);
+                break;
+            default:
+                setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
+                break;
         }
-        console.error("SMS request error:", error);
     };
 
     return (
@@ -105,6 +125,10 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                                 placeholder={__("Enter code", "simplybook")}
                                 value={twoFaCode}
                                 onChange={(e) => {
+                                    // removes error message once user starts typing new code so if there's another failed attempt the user will get feedback again
+                                    if (errorMessage !== "") {
+                                        setErrorMessage("");
+                                    }
                                     setTwoFaCode(e.target.value);
                                     field.onChange(e);
                                 }}
@@ -122,6 +146,12 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                             {smsRequested ? __("SMS Requested", "simplybook") : __("Request SMS", "simplybook")}
                         </ButtonInput>
                     )}
+                    {errorMessage &&
+                        <Error
+                            errorHeading={__("Something went wrong", "simplybook")}
+                            error={errorMessage}
+                        />
+                    }
                     <div className={"two_fa_button_wrapper flex flex-col"}>
                         <ButtonInput
                             className="mt-4 mb-4"
