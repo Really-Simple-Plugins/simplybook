@@ -20,6 +20,7 @@ const SelectField = forwardRef(
         return (
             <FieldWrapper
                 label={label}
+                tooltip={props.tooltip}
                 help={help}
                 error={fieldState?.error?.message}
                 context={context}

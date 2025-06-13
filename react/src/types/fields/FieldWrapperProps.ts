@@ -1,8 +1,7 @@
 export interface FieldWrapperProps {
     label: string;
     context?: string;
-    help?: string;
-    error?: string;
+    tooltip?: any;
     reverseLabel?: boolean;
     className?: string;
     inputId: string;

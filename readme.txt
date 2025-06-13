@@ -91,6 +91,7 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = Unreleased =
+* Added: A help text in the settings page is now displayed in a tooltip.
 * Fixed: A non-email value is now accepted in the user login when logging in.
 * Fixed: An error was logged in the browser console when starting the onboarding.
 * Fixed: Logging in with 2FA enabled now works correctly
