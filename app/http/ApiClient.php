@@ -266,7 +266,7 @@ class ApiClient
         if ( $refresh ) {
             $type = $type . '_refresh';
         }
-        $token = get_option("simplybook_token_" . esc_sql($type), '');
+        $token = get_option("simplybook_token_" . $type, '');
 
         return $this->decrypt_string($token);
     }
