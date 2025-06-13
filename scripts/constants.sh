@@ -33,3 +33,20 @@ MAPPED_LANGUAGES=(
 
 # A timestamp indeed
 TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+
+# Detecting OS for sed command
+DETECTEDOS=
+case "$OSTYPE" in
+  solaris*) DETECTEDOS="SOLARIS" ;;
+  darwin*)  DETECTEDOS="OSX" ;; 
+  linux*)   DETECTEDOS="LINUX" ;;
+  bsd*)     DETECTEDOS="BSD" ;;
+  msys*)    DETECTEDOS="WINDOWS" ;;
+  cygwin*)  DETECTEDOS="WINDOWS" ;;
+  *)        DETECTEDOS="unknown: $OSTYPE" ;;
+esac
+
+SEDCOMMAND="-i"
+if [[ $DETECTEDOS == "OSX" ]]; then
+   $SEDCOMMAND="-i ''"
+fi
