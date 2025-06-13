@@ -12,15 +12,16 @@ import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
 import Error from "../../Errors/Error";
 
 const formLogin = ({
-                       onClose,
-                       setRequire2fa,
-                       setAuthSessionId,
-                       setCompanyLogin,
-                       setUserLogin,
-                       setTwoFaProviders,
-                       setDomain,
-                       domain,
-                   }) => {
+   onClose,
+   setRequire2fa,
+   setAuthSessionId,
+   setCompanyLogin,
+   setUserLogin,
+   setTwoFaProviders,
+   setDomain,
+   domain,
+}) => {
+
     /**
      * We use React Hook Form to handle client-side validation for the main login
      */
@@ -48,58 +49,15 @@ const formLogin = ({
         watchFields.every((field) => field && field.trim() !== "") === false
     );
 
-        /**
-         * Sends the filled in form data to the api to log the user
-         */
-        const submitForm = handleSubmit((data) => {
-            const formData = {
-                company_domain: domain,
-                company_login: data?.company_login,
-                user_login: data?.user_login,
-                user_password: data?.user_password
-            };
-
-            logUserIn(formData);
-        });
-
-
-        const [errorMessage, setErrorMessage] = useState("");
-
-        /**
-         * Checks if the filled input credentials comply and sends an API call to SimplyBook
-         */
-        const logUserIn = async (formData) => {
-            try {
-                let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
-                let data = { ...formData, nonce: NONCE };
-
-                let request = await apiFetch({
-                    path,
-                    method: "POST",
-                    data
-                });
-
-                let response = request?.data;
-
-                if (response?.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
-
-                    setAuthSessionId(response.data.auth_session_id);
-                    setCompanyLogin(response.data.company_login);
-                    setUserLogin(response.data.user_login);
-                    setDomain(response.data.domain);
-                    setTwoFaProviders(response.data.allowed2fa_providers);
-
-                    setRequire2fa(true);
-
-                    return;
-                }
-
-                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
-
-            } catch (error) {
-                setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
-                console.log(error); // Still log the error
-            }
+    /**
+     * Sends the filled in form data to the api to log the user
+     */
+    const submitForm = handleSubmit((data) => {
+        const formData = {
+            company_domain: domain,
+            company_login: data?.company_login,
+            user_login: data?.user_login,
+            user_password: data?.user_password
         };
 
         logUserIn(formData);
@@ -140,7 +98,7 @@ const formLogin = ({
             window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
 
         } catch (error) {
-            setErrorMessage(error.message);
+            setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
             console.log(error); // Still log the error
         }
     };
