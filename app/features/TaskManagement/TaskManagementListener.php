@@ -24,6 +24,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::SPECIAL_FEATURES_LOADED, [$this, 'handleSpecialFeaturesLoaded']);
         add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_event_' . Event::CALENDAR_PUBLISHED, [$this, 'handleCalendarPublished']);
+        add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -248,6 +249,16 @@ class TaskManagementListener
     public function handleCalendarPublished(): void
     {
         $this->service->completeTask(
+            Tasks\PublishWidgetTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle the calendar published event to update task status.
+     */
+    public function handleCalendarUnPublished(): void
+    {
+        $this->service->flagTaskUrgent(
             Tasks\PublishWidgetTask::IDENTIFIER
         );
     }

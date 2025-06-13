@@ -192,6 +192,9 @@ class Plugin
             ),
             new Controllers\ServicesController(),
             new Controllers\ReviewController(),
+	        new Controllers\WidgetTrackingController(
+		        new Services\WidgetTrackingService()
+	        ),
         ]);
     }
 

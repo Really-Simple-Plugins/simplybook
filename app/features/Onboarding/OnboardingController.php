@@ -10,14 +10,17 @@ use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Services\WidgetTrackingService;
 
 class OnboardingController implements FeatureInterface
 {
     private OnboardingService $service;
+    private WidgetTrackingService $widgetService;
 
-    public function __construct(OnboardingService $service)
+    public function __construct(OnboardingService $service, WidgetTrackingService $widgetTrackingService)
     {
         $this->service = $service;
+        $this->widgetService = $widgetTrackingService;
     }
 
     public function register()
@@ -237,7 +240,7 @@ class OnboardingController implements FeatureInterface
 
         // These flags are deleted after its one time use in the Task and Notice
         if ($pageCreatedSuccessfully) {
-            $this->service->setPublishWidgetCompleted();
+            $this->widgetService->setPublishWidgetCompleted();
         }
 
         $this->service->setOnboardingCompleted();
@@ -442,36 +445,18 @@ class OnboardingController implements FeatureInterface
      * that there is a published post with the SimplyBook.me widget shortcode
      * or the Gutenberg block.
      */
-    public function validatePublishedWidget(): void
-    {
-        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
-        if ($cache === true) {
-            $this->service->setPublishWidgetCompleted();
-            return;
-        }
+	public function validatePublishedWidget(): void {
+		$cache = wp_cache_get( 'simplybook_widget_published', 'simplybook' );
+		if ( $cache === true ) {
+			$this->widgetService->setPublishWidgetCompleted();
 
-        global $wpdb;
+			return;
+		}
 
-        // Search for "simplybook widget" with a maximum of 1 character in
-        // between. This will match both the shortcode ([simplybook_widget])
-        // and the Gutenberg block (<!-- wp:simplybook/widget -->).
-        $pattern = 'simplybook.{0,1}widget';
-
-        // This direct SQL query is intentional, safe, and properly prepared.
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQLPlaceholders.UnquotedComplexPlaceholder
-        $query = $wpdb->prepare("
-            SELECT 1
-            FROM {$wpdb->posts}
-            WHERE post_content REGEXP %s
-            LIMIT 1
-        ", $pattern);
-
-        $havePosts = (bool) $wpdb->get_var($query);
-        if (!$havePosts) {
-            return;
-        }
-
-        $this->service->setPublishWidgetCompleted();
-        wp_cache_set('simplybook_widget_published', true, 'simplybook');
-    }
+		// Check if any widgets are currently published
+		if ( $this->widgetService->hasTrackedPosts() ) {
+			$this->widgetService->setPublishWidgetCompleted();
+			wp_cache_set( 'simplybook_widget_published', true, 'simplybook' );
+		}
+	}
 }
