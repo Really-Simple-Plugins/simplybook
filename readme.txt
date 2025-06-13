@@ -63,7 +63,7 @@ Additionally, an online booking system offers powerful analytics that provide de
 
 == Installation ==
 
-= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here </a> =
+= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
 
 
 == Frequently Asked Questions ==
