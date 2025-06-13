@@ -12,9 +12,9 @@ use SimplyBook\Helpers\Event;
  */
 class WidgetTrackingService
 {
-	const PAGES_WITH_WIDGET_OPTION = 'simplybook_pages_with_shortcode';
-	const SHORTCODE_IDENTIFIER = 'simplybook_widget';
-	const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
+	public const PAGES_WITH_WIDGET_OPTION = '_simplybook_pages_with_shortcode';
+	public const SHORTCODE_IDENTIFIER = 'simplybook_widget';
+	public const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
 
 	private int $postId;
 	private \WP_Post $post;
