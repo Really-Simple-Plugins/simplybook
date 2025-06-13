@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Task } from "../types/Task";
 import { TaskData } from "../types/TaskData";
 import HttpClient from "../api/requests/HttpClient";
+import useOnboardingData from "./useOnboardingData";
 
 const useTaskData = () => {
 
@@ -14,6 +15,7 @@ const useTaskData = () => {
     };
 
     const queryClient = useQueryClient();
+    const { onboardingCompleted } = useOnboardingData();
 
     const getTasksRoute = 'get_tasks';
     const dismissTaskRoute = 'dismiss_task';
@@ -26,6 +28,8 @@ const useTaskData = () => {
         queryKey: [getTasksRoute],
         queryFn: () => client.setRoute(getTasksRoute).get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
+        retry: 0,
+        enabled: !!onboardingCompleted,
     });
 
     /**
