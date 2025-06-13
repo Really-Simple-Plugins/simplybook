@@ -1,6 +1,6 @@
 {
     "name": "really-simple-plugins/simplybookme",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "description": "Online booking system plugin for service businesses that lets your customers schedule appointments and pay for your services on your Wordpress site.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",

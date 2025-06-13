@@ -126,7 +126,7 @@ class Plugin
         /**
          * @deprecated 3.0.0 Use App::env('plugin.version') instead
          */
-        define('SIMPLYBOOK_VERSION', '3.0.0');
+        define('SIMPLYBOOK_VERSION', '3.1.0');
 
         /**
          * @deprecated 3.0.0 Use App::env('plugin.path') instead
