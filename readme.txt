@@ -1,5 +1,5 @@
 === SimplyBook.me - Booking and reservations calendar ===
-Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk
+Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, rvvelthuijsen
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.0
