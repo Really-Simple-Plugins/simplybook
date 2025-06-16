@@ -38,15 +38,10 @@ TIMESTAMP=$(date +"%Y%m%d%H%M%S")
 DETECTEDOS=
 case "$OSTYPE" in
   solaris*) DETECTEDOS="SOLARIS" ;;
-  darwin*)  DETECTEDOS="OSX" ;; 
+  darwin*)  DETECTEDOS="OSX" ;;
   linux*)   DETECTEDOS="LINUX" ;;
   bsd*)     DETECTEDOS="BSD" ;;
   msys*)    DETECTEDOS="WINDOWS" ;;
   cygwin*)  DETECTEDOS="WINDOWS" ;;
   *)        DETECTEDOS="unknown: $OSTYPE" ;;
 esac
-
-SEDCOMMAND="-i"
-if [[ $DETECTEDOS == "OSX" ]]; then
-   SEDCOMMAND="-i ''"
-fi

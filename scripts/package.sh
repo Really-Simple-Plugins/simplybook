@@ -100,8 +100,15 @@ printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
 printf "${BLUE}Setting the environment to 'production' in Plugin class...${RESET}\n"
 # Check if the line exists first
 if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
+
+  if [[ $DETECTEDOS == "OSX" ]]; then
+    sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
+  else
+    sed -i "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
+  fi
+
   # Perform the actual replacement
-  if sed $SEDCOMMAND "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"; then
+  if [[ $? -eq 0 ]]; then
     printf "${GREEN}✅ Environment set to 'production'.${RESET}\n\n"
   else
     printf "${RED}❌ Error: sed command failed.${RESET}\n"
