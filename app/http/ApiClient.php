@@ -441,9 +441,10 @@ class ApiClient
      */
     private function automaticAuthenticationFallback(string $type)
     {
-        if ($this->authenticationFailedFlag) {
+        // Company login can be empty for fresh accounts
+        if ($this->authenticationFailedFlag || empty($this->get_company_login(false))) {
             $this->releaseRefreshLock($type);
-            return; // Dont even try again.
+            return; // Dont even try (again).
         }
 
         $validateBasedOnDomainConfig = did_action('init');
@@ -527,10 +528,15 @@ class ApiClient
      * Get company login and generate one if it does not exist
      * @return string
      */
-    public function get_company_login(): string {
+    public function get_company_login(bool $create = true): string
+    {
         $login = get_option('simplybook_company_login', '');
         if ( !empty($login) ) {
             return $login;
+        }
+
+        if ($create === false) {
+            return ''; // Abort
         }
 
         //generate a random integer of 10 digits
