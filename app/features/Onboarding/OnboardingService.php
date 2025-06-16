@@ -1,5 +1,6 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
+use SimplyBook\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
@@ -29,6 +30,8 @@ class OnboardingService
     {
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
+
+        App::provide('client')->clearFailedAuthenticationFlag();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {

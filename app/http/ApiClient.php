@@ -117,6 +117,17 @@ class ApiClient
     }
 
     /**
+     * Clear the authentication failed flag. This is used when the user has
+     * successfully authenticated again. Currently used after successfully
+     * logging in with the sign in modal.
+     */
+    public function clearFailedAuthenticationFlag(): void
+    {
+        $this->authenticationFailedFlag = false;
+        delete_option($this->authenticationFailedFlagKey);
+    }
+
+    /**
      * Set the during onboarding flag
      */
     public function setDuringOnboardingFlag(bool $flag): ApiClient
