@@ -78,7 +78,7 @@ printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} as the text domain.${RESET}\n\n" "
 
 # Ask the user to confirm their operating system
 printf "${BLUE}Detected operating system: ${YELLOW}%s${RESET}\n" "${DETECTEDOS}"
-read -p "$(printf "${BLUE}Please confirm this is the correct text domain. ${RESET}(y/n):")" CONFIRM
+read -p "$(printf "${BLUE}Please confirm this is the correct operating system. ${RESET}(y/n):")" CONFIRM
 if [[ "$CONFIRM" != "y" ]]; then
   printf "${RED}Aborted${RESET}\n"
   exit 1
