@@ -16,6 +16,7 @@
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
     "build:css": "NODE_ENV=production postcss src/tailwind.css -o build/tailwind.generated.css",
+    "win-build:css": "set NODE_ENV=production && postcss src/tailwind.css -o build/tailwind.generated.css",
     "build:css:watch": "postcss src/tailwind.css -o build/tailwind.generated.css --watch",
     "postinstall": "node fix-chalk.js"
   },
@@ -87,5 +88,9 @@
     "react-tooltip": "^5.28.1",
     "react-toastify": "^11.0.5",
     "zustand": "^5.0.1"
+  },
+  "optionalDependencies": {
+    "@tailwindcss/oxide-win32-x64-msvc": "^4.0.0",
+    "lightningcss-win32-x64-msvc": "^1.30.1"
   }
 }

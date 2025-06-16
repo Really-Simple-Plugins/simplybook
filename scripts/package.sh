@@ -7,7 +7,7 @@ source "./constants.sh"
 PLUGIN_NAME=${ROOT_DIR##*/}
 
 # Extract "Text Domain:" from the main file of the plugin
-TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | xargs)
+TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | tr -d '\r' | xargs)
 
 # Abort if any function (except extended glob) is not installed from this script
 REQUIRED_COMMANDS=(
@@ -76,6 +76,16 @@ fi
 
 printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} as the text domain.${RESET}\n\n" "${TEXT_DOMAIN}"
 
+# Ask the user to confirm their operating system
+printf "${BLUE}Detected operating system: ${YELLOW}%s${RESET}\n" "${DETECTEDOS}"
+read -p "$(printf "${BLUE}Please confirm this is the correct operating system. ${RESET}(y/n):")" CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+  printf "${RED}Aborted${RESET}\n"
+  exit 1
+fi
+
+printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} based commands.${RESET}\n\n" "${DETECTEDOS}"
+
 # First make sure React build is up to date
 printf "${BLUE}Making sure React build is up to date in your local environment before copying...${RESET}\n"
 cd "${ROOT_DIR}"/react || exit
@@ -91,7 +101,7 @@ printf "${BLUE}Setting the environment to 'production' in Plugin class...${RESET
 # Check if the line exists first
 if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
   # Perform the actual replacement
-  if sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"; then
+  if sed $SEDCOMMAND "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"; then
     printf "${GREEN}✅ Environment set to 'production'.${RESET}\n\n"
   else
     printf "${RED}❌ Error: sed command failed.${RESET}\n"
