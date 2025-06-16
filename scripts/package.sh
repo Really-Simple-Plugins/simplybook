@@ -7,7 +7,7 @@ source "./constants.sh"
 PLUGIN_NAME=${ROOT_DIR##*/}
 
 # Extract "Text Domain:" from the main file of the plugin
-TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | xargs)
+TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | tr -d '\r' | xargs)
 
 # Abort if any function (except extended glob) is not installed from this script
 REQUIRED_COMMANDS=(
