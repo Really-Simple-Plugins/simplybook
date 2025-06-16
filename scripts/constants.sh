@@ -48,5 +48,5 @@ esac
 
 SEDCOMMAND="-i"
 if [[ $DETECTEDOS == "OSX" ]]; then
-   $SEDCOMMAND="-i ''"
+   SEDCOMMAND="-i ''"
 fi
