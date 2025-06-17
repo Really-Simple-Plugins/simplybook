@@ -89,8 +89,9 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = 3.1.0 =
-* Added: Setting help texts now shown in tooltips.
-* Changed: Prompt to publish the widget now responds to user actions in posts.
+* Added: markwolters and rvvelthuijsen are added as contributors.
+* Added: Setting help texts are now shown in tooltips.
+* Changed: Prompts to publish the widget now responds to user actions in posts.
 * Changed: Removed unnecessary files to make the plugin package smaller.
 * Removed: Duplicate domain option from sign-in dropdown.
 * Fixed: Non-email usernames now accepted at login.
@@ -102,7 +103,8 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Unexpectedly losing connection with SimplyBook.me is now resolved.
 
 = 3.0.0 =
-* Major refactor of the plugin.
+* Major refactor of the plugin by Really Simple Plugins.
+* Added: reallysimpleplugins, wimbraam and jeroenvdk are added as contributors.
 
 = 2.3 =
 * Fixed some bugs
