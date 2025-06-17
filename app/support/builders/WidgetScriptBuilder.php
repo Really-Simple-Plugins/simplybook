@@ -155,7 +155,7 @@ class WidgetScriptBuilder
 
             $sanitizedAttributes[sanitize_text_field($attribute)] = sanitize_text_field($value);
         }
-        return array_unique( $sanitizedAttributes );
+        return $sanitizedAttributes;
     }
 
     /**
