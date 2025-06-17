@@ -285,7 +285,7 @@ class OnboardingController implements FeatureInterface
 
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-                'data' => $exceptionData,
+                $exceptionData,
             ], false, $e->getMessage(), $e->getResponseCode());
 
         } catch (\Exception $e) {
@@ -328,7 +328,7 @@ class OnboardingController implements FeatureInterface
         } catch (RestDataException $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-                'data' => $e->getData(),
+                $e->getData(),
             ], false, $e->getMessage()); // Default code 200 because React side still used request() here
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
