@@ -1,11 +1,11 @@
 === SimplyBook.me - Booking and reservations calendar ===
-Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk
+Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.0
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.0.0
+Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,8 +40,7 @@ SimplyBook.me can be used for free up to 50 appointments per month. In addition,
 = Why SimplyBook.me? =
 
 SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings and settings. On top of that you will get an admin app where you can manage all your bookings and accept payments on the go.Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
-For a more detailed understanding of the SimplyBook.me service, you can explore at the following link:
-* <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/?ref=wordpress</a>
+For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/</a>
 
 This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you familiarize yourself with the privacy policy and terms of use of SimplyBook.me at the following links:
 
@@ -60,10 +59,9 @@ Really Simple Plugins is the creator of most-used plugins Really Simple Security
 Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book services outside of traditional office hours, an online booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
 Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
 
-
 == Installation ==
 
-= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here </a> =
+= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
 
 
 == Frequently Asked Questions ==
@@ -90,9 +88,23 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.1.0 =
+* Added: markwolters and rvvelthuijsen are added as contributors.
+* Added: Setting help texts are now shown in tooltips.
+* Changed: Prompts to publish the widget now responds to user actions in posts.
+* Changed: Removed unnecessary files to make the plugin package smaller.
+* Removed: Duplicate domain option from sign-in dropdown.
+* Fixed: Non-email usernames now accepted at login.
+* Fixed: Console error in onboarding-start resolved.
+* Fixed: Miscellaneous 2FA login console errors resolved.
+* Fixed: Gutenberg block now registers correctly with API V2, resolving a console notice.
+* Fixed: Error message now correctly shown when an invalid 2FA code is entered.
+* Fixed: Demo widget notice now only appears when the loaded widget is actually a demo.
+* Fixed: Unexpectedly losing connection with SimplyBook.me is now resolved.
 
 = 3.0.0 =
-* Major refactor of the plugin.
+* Major refactor of the plugin by Really Simple Plugins.
+* Added: reallysimpleplugins, wimbraam and jeroenvdk are added as contributors.
 
 = 2.3 =
 * Fixed some bugs

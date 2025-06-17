@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
 
@@ -13,28 +12,27 @@ import FieldWrapper from "../Forms/FieldWrapper";
  * @param {object} props
  * @return {JSX.Element}
  */
-const TextField = forwardRef(
-  ({ 
-    setting, 
-    fieldState, 
-    name, 
-    label, 
-    help, 
-    context, 
-    className, 
-    type, 
+const TextField =
+  ({
+    setting,
+    fieldState,
+    name,
+    label,
+    help,
+    context,
+    className,
+    type,
     copyField,
     required,
-    ...props 
-  }, ref) => {
+    ...props
+  }) => {
 
-    const inputId = setting.id; 
+    const inputId = setting.id;
 
     return (
       <FieldWrapper
         label={label}
-        help={help}
-        error={fieldState?.error?.message}
+        tooltip={props.tooltip}
         context={context}
         className={className}
         inputId={inputId}
@@ -43,7 +41,6 @@ const TextField = forwardRef(
       >
         <TextInput
           name={name}
-          ref={ref}
           id={inputId}
           type={type}
           aria-invalid={!!fieldState?.error?.message}
@@ -52,8 +49,7 @@ const TextField = forwardRef(
         />
       </FieldWrapper>
     );
-  },
-);
+  }
 
 TextField.displayName = "TextField";
 export default TextField;

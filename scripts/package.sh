@@ -7,7 +7,7 @@ source "./constants.sh"
 PLUGIN_NAME=${ROOT_DIR##*/}
 
 # Extract "Text Domain:" from the main file of the plugin
-TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | xargs)
+TEXT_DOMAIN=$(grep -m 1 "Text Domain:" "${ROOT_DIR}/${PLUGIN_NAME}.php" | awk -F': ' '{print $2}' | tr -d '\r' | xargs)
 
 # Abort if any function (except extended glob) is not installed from this script
 REQUIRED_COMMANDS=(
@@ -40,6 +40,12 @@ for cmd in "${REQUIRED_COMMANDS[@]}"; do
   fi
 done
 
+# Check if PLUGIN_NAME, ORIGINAL_PLUGIN_NAME, and PARENT_DIR are set
+if [[ -z "$PLUGIN_NAME" || -z "$ROOT_DIR" ]]; then
+  printf "${RED}Error: Plugin name or Root directory variables are not set. Aborted to prevent MacOS deletion.${RESET}\n"
+  exit 1
+fi
+
 # Ask user to confirm executing this script with an explanation of what it does
 printf "${BLUE}This script will create a zip package of the plugin for distribution.${RESET}\n"
 printf "${BLUE}It will copy the plugin to your /tmp directory, install dependencies, and clean up unnecessary files. ${RESET}\n"
@@ -70,6 +76,16 @@ fi
 
 printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} as the text domain.${RESET}\n\n" "${TEXT_DOMAIN}"
 
+# Ask the user to confirm their operating system
+printf "${BLUE}Detected operating system: ${YELLOW}%s${RESET}\n" "${DETECTEDOS}"
+read -p "$(printf "${BLUE}Please confirm this is the correct operating system. ${RESET}(y/n):")" CONFIRM
+if [[ "$CONFIRM" != "y" ]]; then
+  printf "${RED}Aborted${RESET}\n"
+  exit 1
+fi
+
+printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} based commands.${RESET}\n\n" "${DETECTEDOS}"
+
 # First make sure React build is up to date
 printf "${BLUE}Making sure React build is up to date in your local environment before copying...${RESET}\n"
 cd "${ROOT_DIR}"/react || exit
@@ -84,8 +100,15 @@ printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
 printf "${BLUE}Setting the environment to 'production' in Plugin class...${RESET}\n"
 # Check if the line exists first
 if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
+
+  if [[ $DETECTEDOS == "OSX" ]]; then
+    sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
+  else
+    sed -i "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
+  fi
+
   # Perform the actual replacement
-  if sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"; then
+  if [[ $? -eq 0 ]]; then
     printf "${GREEN}✅ Environment set to 'production'.${RESET}\n\n"
   else
     printf "${RED}❌ Error: sed command failed.${RESET}\n"
@@ -143,14 +166,14 @@ printf "${GREEN}✅ Glob operations are now supported!${RESET}\n\n"
 # Remove everything from react folder except src and build folder
 printf "${BLUE}Cleaning up React app...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/react || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 
 # Remove everything from Gutenberg block except src and build folder
 printf "${BLUE}Cleaning up Gutenberg block...${RESET}\n"
 cd /tmp/"${PLUGIN_NAME}"/assets/block || exit
-rm -rf ..?* .[!.]* !(src|build)
+rm -rf ..?* .[!.]* !(build)
 
 printf "${GREEN}✅ Clean!${RESET}\n\n"
 

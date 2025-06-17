@@ -9,8 +9,11 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css";
 
-/* load the safelist */
+/* Import Toastify css */
 @import "../node_modules/react-toastify/dist/ReactToastify.css";
+
+/* Import React Tooltip css */
+@import "../node_modules/react-tooltip/dist/react-tooltip.css";
 
 /* load the safelist */
 @source "../safelist.txt";
@@ -191,6 +194,19 @@ Design settings
 .theme-config-group-color > .theme-config-field {
     width: 100%;
     grid-column: span 1;
+}
+
+/**
+======================================
+Tooltip style overwrite 
+======================================
+**/
+#field-tooltip {
+    z-index: 99999;
+    font-size: var(--text-xs);
+    font-weight: 400;
+    background: color-mix(in oklab,var(--color-neutral-800)60%,transparent);
+    max-width: 300px;
 }
 
 /**

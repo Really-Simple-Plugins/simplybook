@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
+use SimplyBook\App;
 use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
@@ -113,6 +114,17 @@ class ApiClient
         add_action('init', function() {
             Event::dispatch(Event::AUTH_FAILED);
         });
+    }
+
+    /**
+     * Clear the authentication failed flag. This is used when the user has
+     * successfully authenticated again. Currently used after successfully
+     * logging in with the sign in modal.
+     */
+    public function clearFailedAuthenticationFlag(): void
+    {
+        $this->authenticationFailedFlag = false;
+        delete_option($this->authenticationFailedFlagKey);
     }
 
     /**
@@ -231,6 +243,7 @@ class ApiClient
         $token_type = in_array($token_type, ['public', 'admin']) ? $token_type : 'public';
         $headers = array(
             'Content-Type'  => 'application/json',
+            'User-Agent' => $this->getRequestUserAgent(),
         );
 
         if ( $include_token ) {
@@ -242,9 +255,6 @@ class ApiClient
                         break;
                     case 'admin':
                         $this->refresh_token('admin');
-                        break;
-                    case 'user':
-                        $this->get_user_token();
                         break;
                 }
                 $token = $this->get_token($token_type);
@@ -267,7 +277,7 @@ class ApiClient
         if ( $refresh ) {
             $type = $type . '_refresh';
         }
-        $token = get_option("simplybook_token_" . esc_sql($type), '');
+        $token = get_option("simplybook_token_" . $type, '');
 
         return $this->decrypt_string($token);
     }
@@ -431,9 +441,10 @@ class ApiClient
      */
     private function automaticAuthenticationFallback(string $type)
     {
-        if ($this->authenticationFailedFlag) {
+        // Company login can be empty for fresh accounts
+        if ($this->authenticationFailedFlag || empty($this->get_company_login(false))) {
             $this->releaseRefreshLock($type);
-            return; // Dont even try again.
+            return; // Dont even try (again).
         }
 
         $validateBasedOnDomainConfig = did_action('init');
@@ -517,10 +528,15 @@ class ApiClient
      * Get company login and generate one if it does not exist
      * @return string
      */
-    public function get_company_login(): string {
+    public function get_company_login(bool $create = true): string
+    {
         $login = get_option('simplybook_company_login', '');
         if ( !empty($login) ) {
             return $login;
+        }
+
+        if ($create === false) {
+            return ''; // Abort
         }
 
         //generate a random integer of 10 digits
@@ -674,6 +690,7 @@ class ApiClient
                     'marketing_consent' => false,
 					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+                    'ref' => $this->getReferrer(),
                 ]
             ),
         ));
@@ -1606,5 +1623,26 @@ class ApiClient
         wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
         return $response;
     }
+
+	/**
+	 *
+	 * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+	 * configured using Extendify. Otherwise, use default 'wp'.
+	 */
+	private function getReferrer(): string
+	{
+		return (defined('\EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+	}
+
+	/**
+	 * Get the user agent for the API requests.
+	 *
+	 * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
+	 * EXTENDIFY_PARTNER_ID; +https://example.com)
+	 */
+	private function getRequestUserAgent(): string
+	{
+		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+	}
 
 }

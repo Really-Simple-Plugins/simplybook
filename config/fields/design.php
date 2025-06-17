@@ -40,11 +40,14 @@ return
 			'group_id' => 'main',
 			'type'     => 'checkbox',
             'label'    => __('RTL', 'simplybook'),
-            'help'     => sprintf(
-                /* translators: %s - IS or IS NOT */
-                __('When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL.', 'simplybook'),
-                (is_rtl() ? 'IS' : 'IS NOT'),
-            ),
+            'tooltip'  => [
+                'message' => sprintf(
+                    /* translators: %s - IS or IS NOT */
+                    __('When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL.', 'simplybook'),
+                    (is_rtl() ? 'IS' : 'IS NOT'),
+                ),
+                'type'    => 'info',
+            ],
 			'disabled' => false,
 			'default'  => is_rtl(),
 		],
@@ -54,7 +57,10 @@ return
 			'group_id' => 'main',
 			'type'     => 'checkbox',
 			'label'    => __('Allow switch to ADA', 'simplybook'),
-            'help'     => __('This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability.', 'simplybook'),
+            'tooltip'  => [
+                'message' => __('This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability.', 'simplybook'),
+                'type'    => 'info',
+            ],
 			'disabled' => false,
 			'default'  => false,
 		],
@@ -63,8 +69,11 @@ return
             'menu_id'  => 'design',
             'group_id' => 'main',
             'type'     => 'checkbox',
+            'tooltip'  => [
+                'message' => __('Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones.', 'simplybook'),
+                'type'    => 'info',
+            ],
             'label'    => __('Clear the session of each widget initialization', 'simplybook'),
-            'help' => __('Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones.', 'simplybook'),
             'disabled' => false,
             'default'  => true,
         ],

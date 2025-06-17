@@ -14,7 +14,6 @@ import {
   faChevronDown,
   faChevronUp,
   faCheck,
-  faInfoCircle,
   faTimes,
   faTrophy,
   faUserGroup,
@@ -35,7 +34,9 @@ import {
   faFileSlash,
   faFileCircleXmark,
   faCalendarDay,
-  faCalendarWeek
+  faCalendarWeek,
+  faCircleExclamation,
+  faInfoCircle
 } from "@fortawesome/pro-regular-svg-icons";
 
  import { 
@@ -55,7 +56,8 @@ const iconMap = {
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
     "check": faCheck,
-    "info": faInfoCircle,
+    "info-circle": faInfoCircle,
+    "warning-circle": faCircleExclamation,
     "times": faTimes,
     "trophy": faTrophy,
     "user-group": faUserGroup,

@@ -8,7 +8,7 @@ return [
         'really-simple-ssl' => [
             'slug' => 'really-simple-ssl',
             'options_prefix' => 'rsssl',
-            'activation_slug' => 'really-simple-ssl/rlrsssl-really-simple-ssl.php',
+            'activation_slug' => 'really-simple-ssl' . DIRECTORY_SEPARATOR . 'rlrsssl-really-simple-ssl.php',
             'constant_free' => 'rsssl_version',
             'constant_premium' => 'rsssl_pro',
             'url' => 'https://wordpress.org/plugins/really-simple-ssl/',
@@ -19,7 +19,7 @@ return [
         'complianz-gdpr' => [
             'slug' => 'complianz-gdpr',
             'options_prefix' => 'cmplz',
-            'activation_slug' => 'complianz-gdpr/complianz-gpdr.php',
+            'activation_slug' => 'complianz-gdpr' . DIRECTORY_SEPARATOR . 'complianz-gpdr.php',
             'constant_free' => 'cmplz_version',
             'constant_premium' => 'cmplz_premium',
             'create' => admin_url('admin.php?page=complianz'),
@@ -31,7 +31,7 @@ return [
         'complianz-terms-conditions' => [
             'slug' => 'complianz-terms-conditions',
             'options_prefix' => 'cmplz_tc',
-            'activation_slug' => 'complianz-terms-conditions/complianz-terms-conditions.php',
+            'activation_slug' => 'complianz-terms-conditions' . DIRECTORY_SEPARATOR . 'complianz-terms-conditions.php',
             'constant_free' => 'cmplz_tc_version',
             'create' => admin_url('admin.php?page=terms-conditions'),
             'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',

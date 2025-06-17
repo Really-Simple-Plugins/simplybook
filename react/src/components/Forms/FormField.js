@@ -141,6 +141,7 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                             copyField={setting.copy_field}
                             disabled={props.settingsIsUpdating || setting.disabled}
                             context={setting.context}
+                            tooltip={setting.tooltip}
                             help={setting.help}
                             options={setting.options}
                             {...field}

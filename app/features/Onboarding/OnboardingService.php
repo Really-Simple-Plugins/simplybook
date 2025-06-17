@@ -1,5 +1,6 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
+use SimplyBook\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
@@ -29,6 +30,8 @@ class OnboardingService
     {
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
+
+        App::provide('client')->clearFailedAuthenticationFlag();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {
@@ -173,13 +176,4 @@ class OnboardingService
         delete_option('simplybook_temporary_onboarding_data');
     }
 
-    /**
-     * Use this method to set the "publish widget" notice and task as completed.
-     * These flags are deleted after its one time use in the Task and Notice.
-     */
-    public function setPublishWidgetCompleted(bool $completed = true): void
-    {
-        update_option('simplybook_calendar_published_notification_completed', $completed);
-        update_option('simplybook_calendar_published_task_completed', $completed);
-    }
 }
