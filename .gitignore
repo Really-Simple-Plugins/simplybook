@@ -70,6 +70,7 @@ sketch
 react/build
 react/build/*
 react/.npmrc
+/assets/block/build/
 
 *storybook.log
 
