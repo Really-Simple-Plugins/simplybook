@@ -20,7 +20,7 @@
     },
     "provider": {
       "type": "string",
-      "default": 0
+      "default": "0"
     }
   },
   "editorScript": "file:./index.js",
