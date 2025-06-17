@@ -37,7 +37,7 @@ class BlockController implements ControllerInterface
                 ],
                 'provider' => [
                     'type' => 'string', //any provide id = any
-                    'default' => 'any'
+                    'default' => '0'
                 ],
                 'service' => [
                     'type' => 'integer',
@@ -100,7 +100,7 @@ class BlockController implements ControllerInterface
     public function addWidgetBlock(array $attributes = []): string
     {
         $attributes = array_filter($attributes, function ($value) {
-            return !empty($value) && $value !== 'any';
+            return !empty($value);
         });
 
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
