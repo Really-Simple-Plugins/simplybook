@@ -36,7 +36,7 @@ class BlockController implements ControllerInterface
                     'default' => 0
                 ],
                 'provider' => [
-                    'type' => 'string', //any provide id = any
+                    'type' => 'string', // Provider ID  can be a sting like "any"
                     'default' => '0'
                 ],
                 'service' => [
