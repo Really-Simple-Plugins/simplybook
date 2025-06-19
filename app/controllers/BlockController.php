@@ -96,6 +96,7 @@ class BlockController implements ControllerInterface
      * Render the SimplyBook Widget block when the block is displayed on the
      * front-end. Empty values are removed from the attributes array, the "any"
      * value is also removed from the attributes array.
+     * @since 3.2.0 No longer filters out 'any', as "0" is the new default value when nothing is selected.
      */
     public function addWidgetBlock(array $attributes = []): string
     {
