@@ -283,10 +283,13 @@ class OnboardingController implements FeatureInterface
                 $this->saveLoginCompanyData($userLogin, $userPassword);
             }
 
-            return $this->service->sendHttpResponse([
+	        // By default, show the error message from simplybook, with the exceptions message as fallback
+	        $exceptionMessage = "SimplyBook.me: " . $exceptionData['response_message'] ?? $e->getMessage();
+
+	        return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
                 $exceptionData,
-            ], false, $e->getMessage(), $e->getResponseCode());
+            ], false, $exceptionMessage, $e->getResponseCode());
 
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
@@ -326,10 +329,13 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('two_fa_code'),
             );
         } catch (RestDataException $e) {
+	        // By default, show the error message from simplybook, with the exceptions message as fallback
+	        $exceptionMessage = "SimplyBook.me: " . $e->getData()['response_message'] ?? $e->getMessage();
+
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
                 $e->getData(),
-            ], false, $e->getMessage()); // Default code 200 because React side still used request() here
+            ], false, $exceptionMessage); // Default code 200 because React side still used request() here
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
