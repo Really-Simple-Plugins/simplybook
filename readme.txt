@@ -1,5 +1,5 @@
 === SimplyBook.me - Booking and reservations calendar ===
-Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen
+Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen, mircobaalmans
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.0
@@ -88,6 +88,9 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= Unreleased =
+* Fixed: Predefined provider wasn’t saved in the Gutenberg block under specific conditions.
+
 = 3.1.0 =
 * Added: markwolters and rvvelthuijsen are added as contributors.
 * Added: Setting help texts are now shown in tooltips.
