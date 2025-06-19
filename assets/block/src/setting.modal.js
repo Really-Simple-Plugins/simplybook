@@ -60,7 +60,7 @@ export default function SettingsModal(options) {
                                     value={attributes.provider}
                                     options={[{ label: __('Select provider', 'simplybook'), value: "0" }, ...providers.map(provider => ({ label: provider.name, value: String(provider.id) }))]}
                                     onChange={(newProvider) => {
-                                        // Cast provider as a String, because provider can have a value like "any"
+                                        // Cast provider as a String, because provider can have an ID like "any"
                                         setAttributes({ provider: String(newProvider) });
                                     }}
                                 />

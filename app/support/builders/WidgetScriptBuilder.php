@@ -140,9 +140,10 @@ class WidgetScriptBuilder
 
     /**
      * Sanitize an array of attributes
-     * @since 3.2.0 No longer put the $sanitizedAttributes through array_unique(),
-     * as this removed the provider from the list.
-     */
+     *
+     * @since 3.2.0 Removed array_unique() on the return value as this could
+     * * remove a provider/service with the same ID.
+	 */
     private function sanitizeAttributes(array $attributes, bool $lowercase = false): array
     {
         if ($lowercase) {
