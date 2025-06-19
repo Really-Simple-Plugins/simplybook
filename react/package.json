@@ -15,9 +15,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build",
-    "build:css": "NODE_ENV=production postcss src/tailwind.css -o build/tailwind.generated.css",
-    "win-build:css": "set NODE_ENV=production && postcss src/tailwind.css -o build/tailwind.generated.css",
-    "build:css:watch": "postcss src/tailwind.css -o build/tailwind.generated.css --watch",
+    "build:css": "NODE_ENV=production postcss src/tailwind.css -o ../assets/css/tailwind.generated.css",
+    "win-build:css": "set NODE_ENV=production && postcss src/tailwind.css -o ../assets/css/tailwind.generated.css",
+    "build:css:watch": "postcss src/tailwind.css -o ../assets/css/tailwind.generated.css --watch",
     "postinstall": "node fix-chalk.js"
   },
   "keywords": [],
@@ -85,8 +85,8 @@
     "react-color": "^2.19.3",
     "react-compiler-runtime": "^19.0.0-beta-714736e-20250131",
     "react-hook-form": "^7.53.1",
-    "react-tooltip": "^5.28.1",
     "react-toastify": "^11.0.5",
+    "react-tooltip": "^5.28.1",
     "zustand": "^5.0.1"
   },
   "optionalDependencies": {
