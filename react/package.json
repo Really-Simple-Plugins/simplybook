@@ -7,7 +7,7 @@
     "preview": "npm-run-all --parallel sync start build:css:watch",
     "sync": "browser-sync start -p 'https://simplybook.local' --files '**/*.php' '**/*.jsx' '**/*.tsx' 'build/*.js' 'src/*.css'",
     "sync-rogier": "browser-sync start -p 'https://simplybook.local' --files '**/*.php' '**/*.jsx' '**/*.tsx' 'build/*.js' 'src/*.css'",
-    "start": "set \"INLINE_RUNTIME_CHUNK=false\" && export PLUGIN_ENV=development && wp-scripts start & npm run build:css:watch",
+    "start": "set \"INLINE_RUNTIME_CHUNK=false\" && export PLUGIN_ENV=development && wp-scripts start",
     "build": "set \"INLINE_RUNTIME_CHUNK=false\" && export PLUGIN_ENV=production && wp-scripts build",
     "win-start": "npm-run-all --parallel win-wp-start build:css:watch",
     "win-wp-start": "set \"INLINE_RUNTIME_CHUNK=false\" && set PLUGIN_ENV=development && wp-scripts start",
