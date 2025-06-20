@@ -98,9 +98,9 @@ You can skip the onboarding and login with your existing login credentials.
 * Changed: Removed unnecessary files to make the plugin package smaller.
 * Removed: Duplicate domain option from sign-in dropdown.
 * Fixed: Non-email usernames now accepted at login.
-* Fixed: Console error on onboarding start resolved.
+* Fixed: Console error in onboarding-start resolved.
 * Fixed: Miscellaneous 2FA login console errors resolved.
-* Fixed: Gutenberg block now registers correctly with API V2, resolving a console error.
+* Fixed: Gutenberg block now registers correctly with API V2, resolving a console notice.
 * Fixed: Error message now correctly shown when an invalid 2FA code is entered.
 * Fixed: Demo widget notice now only appears when the loaded widget is actually a demo.
 * Fixed: Unexpectedly losing connection with SimplyBook.me is now resolved.

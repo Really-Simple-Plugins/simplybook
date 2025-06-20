@@ -105,7 +105,7 @@ class DashboardController implements ControllerInterface
 
         wp_enqueue_style(
             'simplybook-tailwind',
-            App::env('plugin.react_url') . '/build/tailwind.generated.css',
+            App::env('plugin.assets_url') . '/css/tailwind.generated.css',
             [],
             ($chunkTranslation['version'] ?? '')
         );
