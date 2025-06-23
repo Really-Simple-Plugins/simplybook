@@ -54,7 +54,7 @@ class Plugin
     public function registerEnvironment()
     {
         if (!defined('SIMPLYBOOK_ENV')) {
-            define('SIMPLYBOOK_ENV', 'production');
+            define('SIMPLYBOOK_ENV', 'development');
         }
     }
 
