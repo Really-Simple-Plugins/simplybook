@@ -755,7 +755,6 @@ class ApiClient
             'message' => $response->message,
             'data' => get_object_vars($response->data),
         ]);
-
     }
 
     /**
@@ -1373,39 +1372,14 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_message());
+	        throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         $responseCode = wp_remote_retrieve_response_code($response);
 
         if ($responseCode != 200) {
-	        // 400 = wrong credentials
-	        // 403 = too many attempts
-	        if($responseCode == 400){
-		        throw (new RestDataException(
-			        esc_html__('Invalid login or password', 'simplybook')
-		        ))->setResponseCode(400)->setData([
-			        'response_code' => $responseCode,
-			        'response_message' => ($responseBody['message'] ?? esc_html__('Incorrect credentials', 'simplybook')),
-		        ]);
-	        }
-
-			if($responseCode == 403){
-				throw (new RestDataException(
-					esc_html__('Too many login attempts. Try again later.', 'simplybook')
-				))->setResponseCode(403)->setData([
-					'response_code' => $responseCode,
-					'response_message' => ($responseBody['message'] ?? esc_html__('Too many attempts', 'simplybook')),
-				]);
-			}
-
-            throw (new RestDataException(
-                esc_html__('Failed logging in, please verify your credentials.', 'simplybook')
-            ))->setResponseCode(500)->setData([
-                'response_code' => $responseCode,
-                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown error', 'simplybook')),
-            ]);
+	        $this->handleLoginErrorResponse($responseCode, $response);
         }
 
         if (!isset($responseBody['token'])) {
@@ -1455,37 +1429,14 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_message());
+            throw new \Exception($response->get_error_code() . " ". $response->get_error_message());
         }
+
 	    $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         $responseCode = wp_remote_retrieve_response_code($response);
 
         if ($responseCode != 200) {
-	        // 400 = wrong 2FA code
-	        // 403 = too many attempts
-	        if($responseCode == 400){
-		        throw (new RestDataException(
-			        esc_html__('Incorrect 2FA authentication code, please try again', 'simplybook')
-		        ))->setResponseCode(400)->setData([
-			        'response_code' => $responseCode,
-			        'response_message' => ($responseBody['message'] ?? esc_html__('Incorrect credentials', 'simplybook')),
-		        ]);
-	        }
-
-	        if($responseCode == 403){
-		        throw (new RestDataException(
-			        esc_html__('Too many login attempts. Try again later.', 'simplybook')
-		        ))->setResponseCode(403)->setData([
-			        'response_code' => $responseCode,
-			        'response_message' => ($responseBody['message'] ?? esc_html__('Too many attempts', 'simplybook')),
-		        ]);
-	        }
-            throw (new RestDataException(
-                esc_html__('Failed two factor authentication, please verify your credentials.', 'simplybook')
-            ))->setData([
-                'response_code' => $responseCode,
-                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown 2FA error', 'simplybook')),
-            ]);
+			$this->handleLoginErrorResponse($responseCode, $responseBody,true);
         }
 
         if (!isset($responseBody['token'])) {
@@ -1499,6 +1450,62 @@ class ApiClient
 
         return $responseBody;
     }
+
+	/**
+	 * Handles api related login errors based on the response code and if it is a 2FA call.
+	 * When there is no specific case throw a RestDataException with a more generic message.
+	 *
+	 * @throws RestDataException
+	 */
+	public function handleLoginErrorResponse(int $responseCode,array $responseBody, bool $isTwoFactorAuth = false){
+		// 400 = Wrong login or 2FA code
+		// 403 = Too many attempts
+		// 404 = SB generated a 404 page with the given company login
+		// Else generic failed attempt message
+
+		// In some cases the $responseBody gets set to null by json_decode
+		// This happens when SB gives a string/html response instead of json.
+		if(empty($responseBody))
+			$responseBody = [];
+
+		$loginMessage = esc_html__('Invalid login or password, please try again.', 'simplybook');
+		$twoFaLoginMessage = esc_html__('Incorrect 2FA authentication code, please try again.', 'simplybook');
+
+		if($responseCode == 400){
+			throw (new RestDataException(
+				$isTwoFactorAuth ? $twoFaLoginMessage : $loginMessage
+			))->setResponseCode($responseCode)->setData([
+				'response_code' => $responseCode,
+				'response_message' => ($responseBody['message'] ?? esc_html__('Incorrect company credentials or 2FA code was given.', 'simplybook')),
+			]);
+		}
+
+		if($responseCode == 403){
+			throw (new RestDataException(
+				esc_html__('Too many login attempts. Check your credentials and try again in a few minutes.', 'simplybook')
+			))->setResponseCode($responseCode)->setData([
+				'response_code' => $responseCode,
+				'response_message' => ($responseBody['message'] ?? esc_html__('Too many failed login attempts in a short period of time. Wait a few minutes.', 'simplybook')),
+			]);
+		}
+
+		if($responseCode == 404){
+			throw (new RestDataException(
+				esc_html__("Could not find a company associated with that company login.", 'simplybook')
+			))->setResponseCode($responseCode)->setData([
+				'response_code' => $responseCode,
+				'response_message' => ($responseBody['message'] ?? esc_html__('The company login provided generated a 404 page when calling the SB api.', 'simplybook')),
+			]);
+		}
+
+		// Final Throw
+		throw (new RestDataException(
+			esc_html__('Authentication failed, please verify your credentials.', 'simplybook')
+		))->setData([
+			'response_code' => $responseCode,
+			'response_message' => ($responseBody['message'] ?? esc_html__('Unknown login error', 'simplybook')),
+		]);
+	}
 
     /**
      * Request to send an SMS code to the user for two-factor authentication.

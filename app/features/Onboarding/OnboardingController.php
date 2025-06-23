@@ -329,7 +329,7 @@ class OnboardingController implements FeatureInterface
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, esc_html__('Unknown error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
+            ], false, esc_html__('Unknown 2FA error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
         }
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
