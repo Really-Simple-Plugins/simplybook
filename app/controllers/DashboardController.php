@@ -243,7 +243,7 @@ class DashboardController implements ControllerInterface
                 'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
-                'simplybook_domains' => App::env('simplybook.domains'),
+                'simplybook_domains' => App::provide('simplybook_domains'),
                 'simplybook_countries' => App::countries(),
                 'support' => App::env('simplybook.support'),
             ]

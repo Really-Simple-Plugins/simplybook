@@ -86,6 +86,44 @@ fi
 
 printf "${GREEN}✅ Using ${YELLOW}%s${GREEN} based commands.${RESET}\n\n" "${DETECTEDOS}"
 
+# Prompt user for environment
+read -p "$(printf "${BLUE}Is this package for testing, or production? ${RESET}(t/p): ")" ENV_CHOICE
+
+case "$ENV_CHOICE" in
+  t|T|testing|Testing)
+    TARGET_ENV="development"
+    ;;
+  p|P|production|Production)
+    TARGET_ENV="production"
+    ;;
+  *)
+    printf "${RED}❌ Invalid choice. Please enter 't', or 'p'.${RESET}\n"
+    exit 1
+    ;;
+esac
+
+# Update Plugin.php with the selected environment
+printf "${BLUE}Setting the environment to '${TARGET_ENV}' in Plugin class...${RESET}\n"
+
+if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
+
+  if [[ $DETECTEDOS == "OSX" ]]; then
+    sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', '${TARGET_ENV}');/" "${ROOT_DIR}/app/Plugin.php"
+  else
+    sed -i "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', '${TARGET_ENV}');/" "${ROOT_DIR}/app/Plugin.php"
+  fi
+
+  if [[ $? -eq 0 ]]; then
+    printf "${GREEN}✅ Environment set to '${TARGET_ENV}'.${RESET}\n\n"
+  else
+    printf "${RED}❌ Error: sed command failed.${RESET}\n"
+    exit 1
+  fi
+else
+  printf "${RED}❌ Error: Environment line not found in Plugin.php.${RESET}\n"
+  exit 1
+fi
+
 # First make sure React build is up to date
 printf "${BLUE}Making sure React build is up to date in your local environment before copying...${RESET}\n"
 cd "${ROOT_DIR}"/react || exit
@@ -95,29 +133,6 @@ npm run build:css
 cd "${ROOT_DIR}" || exit
 
 printf "${GREEN}✅ React build is up to date.${RESET}\n\n"
-
-# Secondly make sure the environment is set to 'production' in Plugin
-printf "${BLUE}Setting the environment to 'production' in Plugin class...${RESET}\n"
-# Check if the line exists first
-if grep -q "define('SIMPLYBOOK_ENV'" "${ROOT_DIR}/app/Plugin.php"; then
-
-  if [[ $DETECTEDOS == "OSX" ]]; then
-    sed -i '' "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
-  else
-    sed -i "s/define('SIMPLYBOOK_ENV', *['\"].*['\"]);/define('SIMPLYBOOK_ENV', 'production');/" "${ROOT_DIR}/app/Plugin.php"
-  fi
-
-  # Perform the actual replacement
-  if [[ $? -eq 0 ]]; then
-    printf "${GREEN}✅ Environment set to 'production'.${RESET}\n\n"
-  else
-    printf "${RED}❌ Error: sed command failed.${RESET}\n"
-    exit 1
-  fi
-else
-  printf "${RED}❌ Error: Environment line not found in Plugin.php.${RESET}\n"
-  exit 1
-fi
 
 # Clean up any previous build artifacts
 printf "${BLUE}Cleaning up previous package artifacts in /tmp...${RESET}\n"
