@@ -1380,6 +1380,26 @@ class ApiClient
         $responseCode = wp_remote_retrieve_response_code($response);
 
         if ($responseCode != 200) {
+	        // 400 = wrong credentials
+	        // 403 = too many attempts
+	        if($responseCode == 400){
+		        throw (new RestDataException(
+			        esc_html__('Invalid login or password', 'simplybook')
+		        ))->setResponseCode(400)->setData([
+			        'response_code' => $responseCode,
+			        'response_message' => ($responseBody['message'] ?? esc_html__('Incorrect credentials', 'simplybook')),
+		        ]);
+	        }
+
+			if($responseCode == 403){
+				throw (new RestDataException(
+					esc_html__('Too many login attempts. Try again later.', 'simplybook')
+				))->setResponseCode(403)->setData([
+					'response_code' => $responseCode,
+					'response_message' => ($responseBody['message'] ?? esc_html__('Too many attempts', 'simplybook')),
+				]);
+			}
+
             throw (new RestDataException(
                 esc_html__('Failed logging in, please verify your credentials.', 'simplybook')
             ))->setResponseCode(500)->setData([
@@ -1440,6 +1460,25 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
+	        // 400 = wrong 2FA code
+	        // 403 = too many attempts
+	        if($responseCode == 400){
+		        throw (new RestDataException(
+			        esc_html__('Incorrect 2FA authentication code, please try again', 'simplybook')
+		        ))->setResponseCode(400)->setData([
+			        'response_code' => $responseCode,
+			        'response_message' => ($responseBody['message'] ?? esc_html__('Incorrect credentials', 'simplybook')),
+		        ]);
+	        }
+
+	        if($responseCode == 403){
+		        throw (new RestDataException(
+			        esc_html__('Too many login attempts. Try again later.', 'simplybook')
+		        ))->setResponseCode(403)->setData([
+			        'response_code' => $responseCode,
+			        'response_message' => ($responseBody['message'] ?? esc_html__('Too many attempts', 'simplybook')),
+		        ]);
+	        }
             throw (new RestDataException(
                 esc_html__('Failed two factor authentication, please verify your credentials.', 'simplybook')
             ))->setData([
