@@ -1457,8 +1457,9 @@ class ApiClient
         if (is_wp_error($response)) {
             throw new \Exception($response->get_error_message());
         }
-
+	    $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         $responseCode = wp_remote_retrieve_response_code($response);
+
         if ($responseCode != 200) {
 	        // 400 = wrong 2FA code
 	        // 403 = too many attempts
