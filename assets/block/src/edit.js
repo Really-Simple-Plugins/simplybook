@@ -64,7 +64,7 @@ export default function Edit(props) {
 			setSelectedService(service ? service.name : null);
 		}
 		if (providers.length > 0) {
-			const provider = providers.find(prov => prov.id === attributes.provider);
+			const provider = providers.find(prov => String(prov.id) === String(attributes.provider));
 			setSelectedProvider(provider ? provider.name : null);
 		}
 	}, [locations, categories, services, providers, attributes]);
