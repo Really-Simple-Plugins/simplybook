@@ -55,7 +55,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                 break;
             case "success":
                 console.log("2FA successful:", response);
-                window.location.href = simplybook.dashboard_url;
+                window.location.assign(simplybook.dashboard_url);
                 break;
             default:
                 setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));

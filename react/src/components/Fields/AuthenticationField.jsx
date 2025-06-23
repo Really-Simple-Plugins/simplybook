@@ -40,7 +40,7 @@ const AuthenticationField = forwardRef(
                 return;
             }
 
-            window.location.href = simplybook.dashboard_url;
+            window.location.assign(simplybook.dashboard_url);
 
         };
 

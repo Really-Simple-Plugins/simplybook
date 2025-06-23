@@ -95,7 +95,7 @@ const formLogin = ({
                 return;
             }
 
-            window.location.href = simplybook.dashboard_url;
+            window.location.assign(simplybook.dashboard_url);
 
         } catch (error) {
             setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
