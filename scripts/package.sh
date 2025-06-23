@@ -97,7 +97,7 @@ case "$ENV_CHOICE" in
     TARGET_ENV="production"
     ;;
   *)
-    echo "❌ Invalid choice. Please enter 't', or 'p'."
+    printf "${RED}❌ Invalid choice. Please enter 't', or 'p'.${RESET}\n"
     exit 1
     ;;
 esac
