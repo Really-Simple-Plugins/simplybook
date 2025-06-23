@@ -50,7 +50,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
 
         switch (response?.status) {
             case "error":
-                setErrorMessage((response?.data?.response_message ?? __('An unknown error occurred, please try again.', 'simplybook')));
+                setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
                 console.error("2FA failed:", response); // Still log the error
                 break;
             case "success":
