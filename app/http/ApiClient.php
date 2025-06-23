@@ -1488,8 +1488,7 @@ class ApiClient
             ]);
         }
 
-        $response = json_decode(wp_remote_retrieve_body($response), true);
-        if (!isset($response['token'])) {
+        if (!isset($responseBody['token'])) {
             throw (new RestDataException(
                 esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
@@ -1498,7 +1497,7 @@ class ApiClient
             ]);
         }
 
-        return $response;
+        return $responseBody;
     }
 
     /**
