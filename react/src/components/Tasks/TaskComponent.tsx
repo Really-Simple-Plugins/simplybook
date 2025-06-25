@@ -4,7 +4,7 @@ import LoginLink from "../Common/LoginLink";
 import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
 
-const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
+const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className, onModalOpen }) => {
 
     const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
         if (premium || special_feature) {
@@ -55,6 +55,19 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
                 >
                     {task.action.text}
                 </LoginLink>
+            );
+        }
+
+        if (task.action.text && task.action.modal) {
+            return (
+                <button
+                    onClick={ ()=>
+                        onModalOpen(task.action?.modal)
+                    }
+                    className={buttonClassName}
+                >
+                    {task.action.text}
+                </button>
             );
         }
 
