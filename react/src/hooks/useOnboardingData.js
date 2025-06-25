@@ -195,8 +195,8 @@ const useOnboardingData = () => {
             ],
             beforeSubmit: async (data) => {
                 let response = await registerCompany({ data });
-                if (response.status !== "success") {
-                    setApiError(response.message);
+                if (!response || (response?.status && response?.status !== "success")) {
+                    setApiError(response?.message ?? __('Unknown error encountered while registering your company. Please try again.', 'simplybook'));
                     return false;
                 }
                 setApiError("");
