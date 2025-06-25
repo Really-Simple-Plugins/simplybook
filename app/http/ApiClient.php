@@ -753,7 +753,7 @@ class ApiClient
             esc_html__('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message,
-            'data' => get_object_vars($response->data),
+            'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
         ]);
 
     }
