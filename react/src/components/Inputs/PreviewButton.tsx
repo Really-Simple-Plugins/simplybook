@@ -83,7 +83,6 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 title={__('Preview', 'simplybook')}
-                closeButton={__('Close', 'simplybook')}
             >
                 <div id="sbw_z0hg2i_calendar" className={"h-[70vh] overflow-y-scroll my-4"}></div>
             </Modal>
