@@ -1,3 +1,5 @@
+import { TaskModal } from "./TaskModal";
+
 export interface Task {
     id: string;
     text: string;
@@ -12,5 +14,6 @@ export interface Task {
         link?: string;
         login_link?: string;
         target?: string;
+        modal?: TaskModal
     };
 }
