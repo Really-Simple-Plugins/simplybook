@@ -141,21 +141,49 @@ function Settings() {
                 );
             })}
 
-            {formHasSettings && (
-                <>
-                    <FormFooter
-                        getValues={getValues}
-                        onSubmit={handleSubmit((formData) => {
-                            saveSettings(formData).then(() => {
-                                return handleSavedSettings(formData);
-                            }).catch((response) => {
-                                return handleCaughtErrorInSaveSettings(response);
-                            });
-                        })}
-                        control={control}
-                    />
-                </>
-            )}
+            {formHasSettings && (() => {
+                // Read list component states for CRUD functionality
+                const providersState = getValues('_providers_state');
+                const servicesState = getValues('_services_state');
+                
+                let listState = null;
+                try {
+                    if (settingsId === 'providers' && providersState) {
+                        listState = JSON.parse(providersState);
+                    } else if (settingsId === 'services' && servicesState) {
+                        listState = JSON.parse(servicesState);
+                    }
+                } catch (e) {
+                    // Ignore JSON parse errors
+                }
+
+                // Determine FormFooter props based on list state
+                const isListPage = settingsId === 'providers' || settingsId === 'services';
+                const hasActiveForm = listState?.hasActiveForm || false;
+                const isEditing = listState?.isEditing || false;
+                const isDirty = listState?.isDirty || false;
+
+                return (
+                    <>
+                        <FormFooter
+                            getValues={getValues}
+                            onSubmit={handleSubmit((formData) => {
+                                saveSettings(formData).then(() => {
+                                    return handleSavedSettings(formData);
+                                }).catch((response) => {
+                                    return handleCaughtErrorInSaveSettings(response);
+                                });
+                            })}
+                            control={control}
+                            overrideIsDirty={isListPage && hasActiveForm ? isDirty : undefined}
+                            onDelete={isListPage && isEditing ? () => {
+                                console.log('Delete triggered from FormFooter - handled by list component');
+                            } : undefined}
+                            isEditing={isListPage ? isEditing : false}
+                        />
+                    </>
+                );
+            })()}
         </form>
     );
 }

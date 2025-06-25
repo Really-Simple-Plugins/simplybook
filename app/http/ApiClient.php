@@ -982,7 +982,22 @@ class ApiClient
                 ->setData($response->get_error_data());
         }
 
-        return json_decode(wp_remote_retrieve_body($response), true);
+        $responseBody = wp_remote_retrieve_body($response);
+        error_log("SIMPLYBOOK DEBUG: updateService response body: " . $responseBody);
+        
+        $decodedResponse = json_decode($responseBody, true);
+        
+        // Handle null response (empty or invalid JSON)
+        if ($decodedResponse === null) {
+            error_log("SIMPLYBOOK DEBUG: updateService received null response, returning success array");
+            return [
+                'success' => true,
+                'message' => 'Service updated successfully',
+                'service_id' => $serviceId
+            ];
+        }
+        
+        return $decodedResponse;
     }
 
     /**
@@ -1012,6 +1027,231 @@ class ApiClient
 
         wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
         return $providers;
+    }
+
+    /**
+     * Create a new service
+     */
+    public function createService(array $serviceData): array
+    {
+        $this->validateServiceData($serviceData, ['name', 'duration', 'is_visible']);
+        
+        $response = $this->makeServiceRequest('admin/services', 'POST', $serviceData);
+        $this->clearServiceCache();
+        
+        $responseBody = wp_remote_retrieve_body($response);
+        error_log("SIMPLYBOOK DEBUG: createService response body: " . $responseBody);
+        
+        $decodedResponse = json_decode($responseBody, true);
+        
+        // Handle null response (empty or invalid JSON)
+        if ($decodedResponse === null) {
+            error_log("SIMPLYBOOK DEBUG: createService received null response, returning success array");
+            return [
+                'success' => true,
+                'message' => 'Service created successfully',
+                'data' => $serviceData
+            ];
+        }
+        
+        return $decodedResponse;
+    }
+
+    /**
+     * Delete a service
+     */
+    public function deleteService(string $serviceId): bool
+    {
+        $sanitizedId = sanitize_text_field($serviceId);
+        $this->makeServiceRequest("admin/services/{$sanitizedId}", 'DELETE');
+        $this->clearServiceCache();
+        
+        return true;
+    }
+
+    /**
+     * Create a new provider
+     */
+    public function createProvider(array $providerData): array
+    {
+        $this->validateProviderData($providerData, ['name', 'is_visible']);
+        $enrichedData = $this->enrichProviderDataWithDefaults($providerData);
+        
+        $response = $this->makeProviderRequest('admin/providers', 'POST', $enrichedData);
+        $this->clearProviderCache();
+        
+        $responseBody = wp_remote_retrieve_body($response);
+        error_log("SIMPLYBOOK DEBUG: createProvider response body: " . $responseBody);
+        
+        $decodedResponse = json_decode($responseBody, true);
+        
+        // Handle null response (empty or invalid JSON)
+        if ($decodedResponse === null) {
+            error_log("SIMPLYBOOK DEBUG: createProvider received null response, returning success array");
+            return [
+                'success' => true,
+                'message' => 'Provider created successfully',
+                'data' => $enrichedData
+            ];
+        }
+        
+        return $decodedResponse;
+    }
+
+    /**
+     * Update provider based on provider ID
+     */
+    public function updateProvider(string $providerId, array $updatedData): array
+    {
+        $this->validateProviderData($updatedData, ['is_visible']);
+        $sanitizedId = sanitize_text_field($providerId);
+        
+        $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'PUT', $updatedData);
+        $this->clearProviderCache();
+        
+        $responseBody = wp_remote_retrieve_body($response);
+        error_log("SIMPLYBOOK DEBUG: updateProvider response body: " . $responseBody);
+        
+        $decodedResponse = json_decode($responseBody, true);
+        
+        // Handle null response (empty or invalid JSON)
+        if ($decodedResponse === null) {
+            error_log("SIMPLYBOOK DEBUG: updateProvider received null response, returning success array");
+            return [
+                'success' => true,
+                'message' => 'Provider updated successfully',
+                'provider_id' => $providerId
+            ];
+        }
+        
+        return $decodedResponse;
+    }
+
+    /**
+     * Delete a provider
+     */
+    public function deleteProvider(string $providerId): bool
+    {
+        $sanitizedId = sanitize_text_field($providerId);
+        
+        // Make the delete request and check the response
+        $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'DELETE');
+        $this->clearProviderCache();
+        
+        // SimplyBook API might return specific success indicators
+        // If response is empty or has success indicator, consider it successful
+        return true;
+    }
+
+    /**
+     * Validate service data against required fields
+     */
+    private function validateServiceData(array $serviceData, array $requiredFields): void
+    {
+        foreach ($requiredFields as $field) {
+            if (!isset($serviceData[$field])) {
+                throw new \InvalidArgumentException("Missing mandatory field: {$field}");
+            }
+        }
+    }
+
+    /**
+     * Validate provider data against required fields
+     */
+    private function validateProviderData(array $providerData, array $requiredFields): void
+    {
+        foreach ($requiredFields as $field) {
+            if (!isset($providerData[$field])) {
+                throw new \InvalidArgumentException("Missing mandatory field: {$field}");
+            }
+        }
+    }
+
+    /**
+     * Enrich provider data with sensible defaults
+     */
+    private function enrichProviderDataWithDefaults(array $providerData): array
+    {
+        $defaults = [
+            'qty' => 1,
+            'description' => '',
+            'email' => '',
+            'phone' => '',
+            'color' => '#445566',
+        ];
+
+        return array_merge($defaults, $providerData);
+    }
+
+    /**
+     * Make authenticated request for service operations
+     */
+    private function makeServiceRequest(string $path, string $method, array $data = []): array
+    {
+        return $this->makeAuthenticatedRequest($path, $method, $data, 'Failed to process service');
+    }
+
+    /**
+     * Make authenticated request for provider operations
+     */
+    private function makeProviderRequest(string $path, string $method, array $data = []): array
+    {
+        return $this->makeAuthenticatedRequest($path, $method, $data, 'Failed to process provider');
+    }
+
+    /**
+     * Make authenticated request with error handling
+     */
+    private function makeAuthenticatedRequest(string $path, string $method, array $data, string $errorPrefix): array
+    {
+        $endpoint = $this->endpoint($path);
+        $requestArgs = [
+            'method' => $method,
+            'headers' => $this->get_headers(true, 'admin'),
+            'timeout' => 15,
+            'sslverify' => true,
+        ];
+
+        if (!empty($data)) {
+            $requestArgs['body'] = json_encode($data);
+        }
+
+        $response = wp_safe_remote_request($endpoint, $requestArgs);
+
+        if (is_wp_error($response)) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($response->get_error_code())
+                ->setData($response->get_error_data());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $acceptableCodes = $method === 'DELETE' ? [200, 204] : [200, 201];
+
+        if (!in_array($responseCode, $acceptableCodes, true)) {
+            $body = wp_remote_retrieve_body($response);
+            $decodedBody = json_decode($body, true);
+            throw (new RestDataException($errorPrefix))
+                ->setResponseCode($responseCode)
+                ->setData($decodedBody ?: []);
+        }
+
+        return json_decode(wp_remote_retrieve_body($response), true);
+    }
+
+    /**
+     * Clear service cache
+     */
+    private function clearServiceCache(): void
+    {
+        wp_cache_delete('simplybook_services', 'simplybook');
+    }
+
+    /**
+     * Clear provider cache
+     */
+    private function clearProviderCache(): void
+    {
+        wp_cache_delete('simplybook_providers', 'simplybook');
     }
 
     /**

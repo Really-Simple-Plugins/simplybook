@@ -17,16 +17,20 @@ import useFieldValidation from "../../hooks/useFieldValidation";
 
 const fieldComponents = {
     text: TextField,
+    textarea: TextField,
+    number: TextField,
     api: TextField,
     hidden: HiddenField,
     checkbox: CheckboxField,
     select: SelectField,
     colorpicker: ColorPickerField,
     implementation: ImplementationField,
-    list:ListField,
+    list: ListField,
     palettes: PalettesField,
     authentication: AuthenticationField,
     theme: ThemeField,
+    providers_list: ProvidersListField,
+    services_list: ServicesListField,
 };
 
 const FormField = memo(({ setting, control, reset, ...props } ) => {

@@ -45,30 +45,63 @@ class HttpClient {
             headers: this.getMethodHeaders,
         });
         if (!response.ok) {
-            const errorData = await response.json();
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e: unknown) {
+                // If JSON parsing fails, response is likely HTML (PHP error)
+                const htmlText = await response.text();
+                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
+            }
             return this.handleError(errorData);
         }
-        return response.json();
+        try {
+            return await response.json();
+        } catch (e: unknown) {
+            // If JSON parsing fails, response is likely HTML (PHP error)
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            throw new Error(`Invalid JSON response: ${message}`);
+        }
     }
 
     /**
      * Performs a POST request.
+     * @param route - The API route or body data if route is already set.
      * @param body - The body of the POST request.
      * @returns The response data in JSON format.
      * @throws An error if the response is not ok or route is not set.
      */
-    async post(body?: any) {
-        let payload = body ?? this.payload;
+    async post(route?: string | any, body?: any) {
+        // Handle both old and new API
+        let requestRoute = this.route;
+        let payload = this.payload;
+
+        if (typeof route === 'string') {
+            requestRoute = SB_API_URL + route;
+            payload = body ?? this.payload;
+        } else if (route && typeof route === 'object') {
+            payload = route;
+        } else if (route) {
+            payload = route;
+        }
+
+        console.log('SIMPLYBOOK DEBUG: POST request', {
+            route,
+            requestRoute,
+            payload,
+            SB_API_URL,
+            NONCE
+        });
 
         if (!payload) {
             throw new Error(__('Payload is not set', 'simplybook'));
         }
 
-        if (!this.route) {
+        if (!requestRoute) {
             throw new Error(__('Route is not set', 'simplybook'));
         }
 
-        const response = await fetch(this.route, {
+        const response = await fetch(requestRoute, {
             method: 'POST',
             headers: this.postMethodHeaders,
             body: JSON.stringify({
@@ -77,10 +110,111 @@ class HttpClient {
             }),
         });
         if (!response.ok) {
-            const errorData = await response.json();
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e: unknown) {
+                // If JSON parsing fails, response is likely HTML (PHP error)
+                const htmlText = await response.text();
+                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
+            }
             return this.handleError(errorData);
         }
-        return response.json();
+        try {
+            return await response.json();
+        } catch (e: unknown) {
+            // If JSON parsing fails, response is likely HTML (PHP error)
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            throw new Error(`Invalid JSON response: ${message}`);
+        }
+    }
+
+    /**
+     * Performs a PUT request.
+     */
+    async put(route: string, body: any) {
+        const requestRoute = SB_API_URL + route;
+        const payload = {
+            ...body,
+            nonce: NONCE,
+        };
+
+        console.log('SIMPLYBOOK DEBUG: PUT request', {
+            route,
+            requestRoute,
+            body,
+            payload,
+            SB_API_URL,
+            NONCE,
+            method: 'PUT',
+            headers: this.postMethodHeaders
+        });
+
+        const response = await fetch(requestRoute, {
+            method: 'PUT',
+            headers: this.postMethodHeaders,
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e: unknown) {
+                // If JSON parsing fails, response is likely HTML (PHP error)
+                const htmlText = await response.text();
+                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
+            }
+            return this.handleError(errorData);
+        }
+        try {
+            return await response.json();
+        } catch (e: unknown) {
+            // If JSON parsing fails, response is likely HTML (PHP error)
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            throw new Error(`Invalid JSON response: ${message}`);
+        }
+    }
+
+    /**
+     * Performs a DELETE request.
+     */
+    async delete(route: string) {
+        const requestRoute = SB_API_URL + route;
+        const payload = {
+            nonce: NONCE,
+        };
+
+        console.log('SIMPLYBOOK DEBUG: DELETE request', {
+            route,
+            requestRoute,
+            payload,
+            SB_API_URL,
+            NONCE
+        });
+
+        const response = await fetch(requestRoute, {
+            method: 'DELETE',
+            headers: this.postMethodHeaders,
+            body: JSON.stringify(payload),
+        });
+        if (!response.ok) {
+            let errorData;
+            try {
+                errorData = await response.json();
+            } catch (e: unknown) {
+                // If JSON parsing fails, response is likely HTML (PHP error)
+                const htmlText = await response.text();
+                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
+            }
+            return this.handleError(errorData);
+        }
+        try {
+            return await response.json();
+        } catch (e: unknown) {
+            // If JSON parsing fails, response is likely HTML (PHP error)
+            const message = e instanceof Error ? e.message : 'Unknown error';
+            throw new Error(`Invalid JSON response: ${message}`);
+        }
     }
 
     /**
