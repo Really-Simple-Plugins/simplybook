@@ -8,7 +8,7 @@ import useTaskData from "../../hooks/useTaskData";
 import TaskComponent from "../Tasks/TaskComponent";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
 import { TaskModal as TaskModalType } from "../../types/TaskModal";
-import TaskModal from "../Modals/TaskModal"
+import TaskModal from "../Modals/TaskModal";
 
 const Progress = () => {
     const [showAll, setShowAll] = useState(false);
@@ -19,15 +19,15 @@ const Progress = () => {
     const displayedTasks = showAll ? tasks : getRemainingTasks();
     const completionPercentage = getCompletionPercentage();
     const remainingTasks = getRemainingTasks();
-    const hasModal = displayedTasks.some((task) => task.action?.modal)
+    const hasModal = displayedTasks.some((task) => task.action?.modal);
 
     const onModalOpen = (taskModal: TaskModalType | undefined) => {
         setIsModalOpen(true);
         setTaskModalContent(taskModal);
-    }
+    };
     const onModalClose = () => {
         setIsModalOpen(false);
-    }
+    };
 
     let defaultMessage = __("No tasks available.", "simplybook");
     if (isLoading) {
@@ -109,7 +109,11 @@ const Progress = () => {
                 </BlockFooter>
             </Block>
             {hasModal && (
-                <TaskModal isModalOpen={isModalOpen} taskModalContent={taskModalContent} onModalClose={onModalClose} />
+                <TaskModal
+                    isModalOpen={isModalOpen}
+                    taskModalContent={taskModalContent}
+                    onModalClose={onModalClose}
+                />
             )}
         </>
     );
