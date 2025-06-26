@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import {__} from "@wordpress/i18n";
-import ButtonLink from "../Buttons/ButtonLink";
 
 type ModalProps = {
     closeButton?: boolean,
@@ -46,13 +45,6 @@ const Modal: React.FC<ModalProps> = ({ closeButton = true, isOpen, onClose, chil
                             onClick={onClose}>
                             {__('Close', 'simplybook')}
                         </button>)}
-                    {/* <ButtonLink
-                        className="bg-secondary hover:bg-secondary-dark text-white w-20"
-                        btnVariant="square-small"
-                        onClick={onClose}
-                    >
-                        {__('Close', 'simplybook')}
-                    </ButtonLink> */}
                 </div>
             </div>
         </div>
