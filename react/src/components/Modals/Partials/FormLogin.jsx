@@ -97,7 +97,8 @@ const formLogin = ({
 
         } catch (error) {
             setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
-            console.log(error); // Still log the error
+            console.error('SimplyBook.me API error: ' + error?.data?.response_message);
+            console.log(error); // Still log the full error
         }
     };
 
