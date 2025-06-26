@@ -39,18 +39,18 @@ class InstallAppTask extends AbstractTask
 		            [
 			            'image' => 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
 			            'link' => 'https://apps.apple.com/us/app/simplybook-me-admin/id1498910745',
-			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg'
+			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg',
 		            ],
 		            [
 			            'image' => 'https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg',
 			            'link' => 'https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook',
-			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg'
+			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg',
 		            ],
 	            ],
 	            'footer' => [
 		            'text' => esc_html__('I already have the app, I want to ', 'simplybook'),
 					'link' => 'https://simplybook.me/en/app_client-app_admin-app',
-		            'linkText' => esc_html__('Log in', 'simplybook')
+		            'linkText' => esc_html__('Log in', 'simplybook'),
 	            ]
             ],
         ];
