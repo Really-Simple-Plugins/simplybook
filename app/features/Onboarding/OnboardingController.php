@@ -283,8 +283,7 @@ class OnboardingController implements FeatureInterface
                 $this->saveLoginCompanyData($userLogin, $userPassword);
             }
 
-	        return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(),
-		        $e->getResponseCode());
+	        return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
 
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
@@ -324,8 +323,8 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('two_fa_code'),
             );
         } catch (RestDataException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false,
-	            $e->getMessage()); // Default code 200 because React side still used request() here
+            // Default code 200 because React side still used request() here
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
