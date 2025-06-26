@@ -38,16 +38,11 @@ const Modal: React.FC<ModalProps> = ({ title, closeButton = true, isOpen, onClos
         <div className="fixed inset-0 flex items-center justify-center z-99999">
             <div id="modal-overlay" className="modal-background bg-black/50 cursor-pointer inset-0 absolute"></div>
             <div id="modal-body" className="bg-white p-6 rounded shadow-lg z-60 cursor-default relative w-[50vw] h-auto overflow-y-scroll">
-                {(title || !closeButton) && (
-                    <div id="modal-header" className="leading-none flex justify-between">
-                        <div>{title && (<h2>{__(`${title}`, 'simplybook')}</h2>)}</div>
-                        {!closeButton && (
-                            <button
-                                onClick={onClose}
-                                className="ml-2 text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer">
-                            ×
-                            </button>)}
-                    </div>)}
+                {title && (
+                    <div id="modal-header" className={"leading-none"}>
+                        <h2>{title}</h2>
+                    </div>
+                )}
                 {children}
                 <div id="modal-footer">
                     {closeButton && (
