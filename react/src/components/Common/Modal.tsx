@@ -3,14 +3,13 @@ import {__} from "@wordpress/i18n";
 import ButtonLink from "../Buttons/ButtonLink";
 
 type ModalProps = {
-    title?: string,
     closeButton?: boolean,
     isOpen: boolean;
     onClose: () => void;
     children: React.ReactNode;
 };
 
-const Modal: React.FC<ModalProps> = ({ title, closeButton = true, isOpen, onClose, children }) => {
+const Modal: React.FC<ModalProps> = ({ closeButton = true, isOpen, onClose, children }) => {
     useEffect(() => {
         const handleOutsideClick = (event: MouseEvent) => {
             if ((event.target as HTMLElement).id === "modal-overlay") {
@@ -38,11 +37,6 @@ const Modal: React.FC<ModalProps> = ({ title, closeButton = true, isOpen, onClos
         <div className="fixed inset-0 flex items-center justify-center z-99999">
             <div id="modal-overlay" className="modal-background bg-black/50 cursor-pointer inset-0 absolute"></div>
             <div id="modal-body" className="bg-white p-6 rounded shadow-lg z-60 cursor-default relative w-[50vw] h-auto overflow-y-scroll">
-                {title && (
-                    <div id="modal-header" className={"leading-none"}>
-                        <h2>{title}</h2>
-                    </div>
-                )}
                 {children}
                 <div id="modal-footer">
                     {closeButton && (
