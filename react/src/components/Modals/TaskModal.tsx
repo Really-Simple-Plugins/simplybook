@@ -12,7 +12,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
 
     return (
         <Modal isOpen={isModalOpen} closeButton={false} onClose={onModalClose}>
-            <div className="flex flex-row gap-4">
+            <div style={{...( taskModalContent?.backgroundImage && {backgroundImage: `url(${taskModalContent?.backgroundImage})`})}} className="flex flex-row gap-4">
                 <div className={clsx(
                     taskModalContent?.image ? "sm:max-w-2/3" : "",
                     "flex flex-col gap-3")}>

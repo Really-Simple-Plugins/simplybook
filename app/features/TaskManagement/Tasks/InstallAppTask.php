@@ -34,17 +34,18 @@ class InstallAppTask extends AbstractTask
             'modal' => [
 	            'title' => esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
 	            'content' => esc_html__('See new and upcoming bookings, access and contact your clients, send payment links (coming soon) and more, with the Admin App. Just scan one of these codes:', 'simplybook'),
-	            'image' => App::env('plugin.assets_url') . 'img/placeholder.jpg',
+	            'image' => App::env('plugin.assets_url') . 'img/QR-MODAL-PHONES.svg',
+	            'backgroundImage' => App::env('plugin.assets_url') . 'img/QR-MODAL-BG.svg',
 	            'buttons' => [
 		            [
-			            'image' => 'https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg',
+			            'image' => App::env('plugin.assets_url') . 'img/App-Store-Btn.svg',
 			            'link' => 'https://apps.apple.com/us/app/simplybook-me-admin/id1498910745',
-			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg',
+			            'qr' => App::env('plugin.assets_url') . 'img/App store.svg',
 		            ],
 		            [
-			            'image' => 'https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg',
+			            'image' => App::env('plugin.assets_url') . 'img/Google-Play-Btn.svg',
 			            'link' => 'https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook',
-			            'qr' => App::env('plugin.assets_url') . 'img/placeholder.jpg',
+			            'qr' => App::env('plugin.assets_url') . 'img/Google Play.svg',
 		            ],
 	            ],
 	            'footer' => [

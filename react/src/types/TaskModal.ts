@@ -6,6 +6,7 @@ interface ModalButton {
 
 export interface TaskModal {
     image?: string,
+    backgroundImage?: string,
     title?: string,
     content?: string
     buttons?: ModalButton[]
