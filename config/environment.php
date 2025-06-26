@@ -111,6 +111,8 @@ return [
             ['value' => 'login:booking.names.uk', 'label' => 'booking.names.uk'],
             ['value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            ['value' => 'login:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
+            ['value' => 'login:simplybooking.io', 'label' => 'simplybooking.io'],
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ],
