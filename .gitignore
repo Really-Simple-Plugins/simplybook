@@ -79,3 +79,6 @@ react/.npmrc
 assets/languages/*
 !assets/languages/index.php
 !assets/languages/*.pot
+
+# ignore internal tooling
+scripts
