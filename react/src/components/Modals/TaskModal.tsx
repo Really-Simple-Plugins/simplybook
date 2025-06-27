@@ -20,8 +20,11 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
                     "flex flex-col gap-3")}>
                     {taskModalContent?.title && (
                         <h2>{taskModalContent?.title}</h2>)}
-                    {taskModalContent?.content && (
-                        <p>{taskModalContent?.content}</p>)}
+                    {taskModalContent?.content?.sections && (
+                        taskModalContent?.content?.sections.map((section) => (
+                            <p>{section}</p>
+                        ))
+                    )}
                     {taskModalContent?.buttons && (
                         <div className="flex flex-col sm:flex-row gap-4">
                             {taskModalContent?.buttons.map((button) => (

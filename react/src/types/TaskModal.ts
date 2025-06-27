@@ -8,7 +8,9 @@ export interface TaskModal {
     image?: string,
     backgroundImage?: string,
     title?: string,
-    content?: string
+    content?: {
+        sections: string[]
+    }
     buttons?: ModalButton[]
     footer?: {
         text: string,

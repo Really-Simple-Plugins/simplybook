@@ -33,7 +33,12 @@ class InstallAppTask extends AbstractTask
 //            'target' => '_blank',
             'modal' => [
 	            'title' => esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
-	            'content' => esc_html__('See new and upcoming bookings, access and contact your clients, send payment links (coming soon) and more, with the Admin App. Just scan one of these codes:', 'simplybook'),
+	            'content' => [
+                    'sections' => [
+                        esc_html__('See new and upcoming bookings, access and contact your clients, send payment links (coming soon) and more, with the Admin App.', 'simplybook'),
+                        esc_html__('Just scan one of these codes:', 'simplybook'),
+                    ],
+                ],
 	            'image' => App::env('plugin.assets_url') . 'img/QR-MODAL-PHONES.svg',
 	            'backgroundImage' => App::env('plugin.assets_url') . 'img/QR-MODAL-BG.svg',
 	            'buttons' => [
