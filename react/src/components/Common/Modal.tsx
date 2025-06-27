@@ -35,7 +35,7 @@ const Modal: React.FC<ModalProps> = ({ closeButton = true, isOpen, onClose, chil
     return (
         <div className="fixed inset-0 flex items-center justify-center z-99999">
             <div id="modal-overlay" className="modal-background bg-black/50 cursor-pointer inset-0 absolute"></div>
-            <div id="modal-body" className="bg-white p-6 rounded shadow-lg z-60 cursor-default relative w-[50vw] h-auto overflow-y-scroll">
+            <div id="modal-body" className="bg-white p-6 rounded shadow-lg z-60 cursor-default relative w-[65vw] sm:w-[50vw] 2xl:w-[30vw] h-auto overflow-y-scroll">
                 {children}
                 <div id="modal-footer">
                     {closeButton && (
