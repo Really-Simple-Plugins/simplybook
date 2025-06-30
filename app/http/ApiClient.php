@@ -1022,6 +1022,9 @@ class ApiClient
             'count' => count($providers),
         ]);
 
+        // Add local colors to providers
+        $providers = $this->addProviderColors($providers);
+        
         wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
         return $providers;
     }
@@ -1073,6 +1076,9 @@ class ApiClient
     {
         $this->validateProviderData($providerData, ['name', 'is_visible']);
         
+        // Store color for later since we'll need the provider ID first
+        $colorToSave = $providerData['color'] ?? null;
+        
         // Map frontend fields to API fields and remove non-API fields
         $mappedData = $this->mapProviderFieldsForApi($providerData);
         $enrichedData = $this->enrichProviderDataWithDefaults($mappedData);
@@ -1088,14 +1094,21 @@ class ApiClient
         // Handle null response (empty or invalid JSON)
         if ($decodedResponse === null) {
             error_log("SIMPLYBOOK DEBUG: createProvider received null response, returning success array");
-            return [
+            $result = [
                 'success' => true,
                 'message' => 'Provider created successfully',
                 'data' => $enrichedData
             ];
+        } else {
+            $result = $decodedResponse;
         }
         
-        return $decodedResponse;
+        // Save color locally if provider was created successfully and we have an ID
+        if ($colorToSave && isset($result['data']['id'])) {
+            $this->saveProviderColor($result['data']['id'], $colorToSave);
+        }
+        
+        return $result;
     }
 
     /**
@@ -1106,14 +1119,26 @@ class ApiClient
         $this->validateProviderData($updatedData, ['is_visible']);
         $sanitizedId = sanitize_text_field($providerId);
         
+        // Store color locally since SimplyBook API doesn't support it
+        if (isset($updatedData['color'])) {
+            $this->saveProviderColor($sanitizedId, $updatedData['color']);
+        }
+        
         // Map frontend fields to API fields and remove non-API fields
         $mappedData = $this->mapProviderFieldsForApi($updatedData);
+        
+        error_log("SIMPLYBOOK DEBUG: updateProvider mapped data: " . print_r($mappedData, true));
         
         $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'PUT', $mappedData);
         $this->clearProviderCache();
         
         $responseBody = wp_remote_retrieve_body($response);
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $responseHeaders = wp_remote_retrieve_headers($response);
+        
+        error_log("SIMPLYBOOK DEBUG: updateProvider response code: " . $responseCode);
         error_log("SIMPLYBOOK DEBUG: updateProvider response body: " . $responseBody);
+        error_log("SIMPLYBOOK DEBUG: updateProvider response headers: " . print_r($responseHeaders, true));
         
         $decodedResponse = json_decode($responseBody, true);
         
@@ -1192,7 +1217,8 @@ class ApiClient
     private function mapProviderFieldsForApi(array $providerData): array
     {
         // Fields that should not be sent to the API
-        $excludeFields = ['nonce', '_method'];
+        // Note: 'color' field is excluded because SimplyBook API doesn't support it
+        $excludeFields = ['nonce', '_method', 'color'];
         
         // Filter out excluded fields
         return array_filter($providerData, function($key) use ($excludeFields) {
@@ -1236,12 +1262,26 @@ class ApiClient
         $response = wp_safe_remote_request($endpoint, $requestArgs);
 
         if (is_wp_error($response)) {
+            error_log("SIMPLYBOOK DEBUG: WP Error in makeAuthenticatedRequest: " . $response->get_error_message());
             throw (new RestDataException($response->get_error_message()))
                 ->setResponseCode($response->get_error_code())
                 ->setData($response->get_error_data());
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
+        
+        // Check for authentication errors (401, 403)
+        if (in_array($responseCode, [401, 403])) {
+            error_log("SIMPLYBOOK DEBUG: Authentication error (HTTP {$responseCode}), token may be expired");
+            error_log("SIMPLYBOOK DEBUG: Request endpoint: " . $endpoint);
+            error_log("SIMPLYBOOK DEBUG: Request headers: " . print_r($requestArgs['headers'], true));
+        }
+
+        // Check for empty response which indicates connection failure
+        if (empty($responseCode)) {
+            error_log("SIMPLYBOOK DEBUG: Empty response code, possible connection failure");
+            error_log("SIMPLYBOOK DEBUG: Request endpoint: " . $endpoint);
+        }
         $acceptableCodes = $method === 'DELETE' ? [200, 204] : [200, 201];
 
         if (!in_array($responseCode, $acceptableCodes, true)) {
@@ -1900,6 +1940,34 @@ class ApiClient
 	private function getRequestUserAgent(): string
 	{
 		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+	}
+
+	/**
+	 * Save provider color locally since SimplyBook API doesn't support it
+	 */
+	private function saveProviderColor(string $providerId, string $color): void
+	{
+		$colors = get_option('simplybook_provider_colors', []);
+		$colors[$providerId] = sanitize_hex_color($color) ?: '#3b82f6';
+		update_option('simplybook_provider_colors', $colors);
+	}
+
+	/**
+	 * Add local colors to provider data
+	 */
+	private function addProviderColors(array $providers): array
+	{
+		$colors = get_option('simplybook_provider_colors', []);
+		
+		foreach ($providers as &$provider) {
+			if (isset($provider['id']) && isset($colors[$provider['id']])) {
+				$provider['color'] = $colors[$provider['id']];
+			} else {
+				$provider['color'] = '#3b82f6'; // Default color
+			}
+		}
+		
+		return $providers;
 	}
 
 }

@@ -64,12 +64,25 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
     const toggleRow = useCallback((providerId, provider) => {
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(providerId)) {
+            // Collapsing - close this row
             newExpanded.delete(providerId);
-            setEditingProvider(null);
-            setFormData({});
-            setHasUnsavedChanges(false);
+            if (editingProvider === providerId) {
+                setEditingProvider(null);
+                setFormData({});
+                setHasUnsavedChanges(false);
+            }
         } else {
+            // Expanding - close any other expanded rows and open this one
+            newExpanded.clear();
             newExpanded.add(providerId);
+            
+            // If another provider was being edited, clear that state
+            if (editingProvider && editingProvider !== providerId) {
+                setEditingProvider(null);
+                setFormData({});
+                setHasUnsavedChanges(false);
+            }
+            
             setEditingProvider(providerId);
             const newFormData = {
                 ...provider,
@@ -80,7 +93,7 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
             setHasUnsavedChanges(false);
         }
         setExpandedRows(newExpanded);
-    }, [expandedRows]);
+    }, [expandedRows, editingProvider]);
 
     const handleInputChange = useCallback((field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -229,42 +242,41 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
                 </div>
             )}
 
-            {/* Providers Table */}
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-                <table className="min-w-full divide-y divide-gray-300">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {__('Provider', 'simplybook')}
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {__('Contact', 'simplybook')}
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {__('Status', 'simplybook')}
-                            </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                {__('Actions', 'simplybook')}
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {providers.filter(provider => provider != null).map((provider) => (
-                            <ProviderRow
-                                key={provider.id}
-                                provider={provider}
-                                isExpanded={expandedRows.has(provider.id)}
-                                isEditing={editingProvider === provider.id}
-                                onToggle={() => toggleRow(provider.id, provider)}
-                                onDelete={() => handleDelete(provider.id)}
-                                formData={editingProvider === provider.id ? formData : null}
-                                onChange={handleInputChange}
-                                isLoading={isUpdating || isDeleting}
-                                error={updateError || deleteError}
-                            />
-                        ))}
-                    </tbody>
-                </table>
+            {/* Providers List */}
+            <div className="space-y-6">
+                {providers.filter(provider => provider != null).map((provider) => (
+                    <ProviderRow
+                        key={provider.id}
+                        provider={provider}
+                        providers={providers}
+                        isExpanded={expandedRows.has(provider.id)}
+                        isEditing={editingProvider === provider.id}
+                        onToggle={() => toggleRow(provider.id, provider)}
+                        onDelete={() => handleDelete(provider.id)}
+                        formData={editingProvider === provider.id && formData ? formData : null}
+                        onChange={handleInputChange}
+                        onVisibilityChange={(value) => {
+                            // If not editing, start editing mode first
+                            if (editingProvider !== provider.id) {
+                                setEditingProvider(provider.id);
+                                setExpandedRows(prev => new Set([...prev, provider.id]));
+                                const newFormData = {
+                                    ...provider,
+                                    qty: provider.qty || provider.quantity || 1,
+                                    color: provider.color || '#3b82f6',
+                                    is_visible: value
+                                };
+                                setFormData(newFormData);
+                                setHasUnsavedChanges(true);
+                            } else {
+                                // Already editing, just update the value
+                                handleInputChange('is_visible', value);
+                            }
+                        }}
+                        isLoading={isUpdating || isDeleting}
+                        error={updateError || deleteError}
+                    />
+                ))}
             </div>
 
             {providers.length === 0 && (
@@ -278,85 +290,141 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
 
 const ProviderRow = ({ 
     provider, 
+    providers,
     isExpanded, 
     isEditing, 
     onToggle, 
     onDelete, 
     formData, 
     onChange, 
+    onVisibilityChange,
     isLoading, 
     error 
 }) => {
+    const handleVisibilityToggle = (e) => {
+        e.stopPropagation();
+        if (onVisibilityChange) {
+            onVisibilityChange(e.target.checked);
+        }
+    };
+
+    const currentVisibility = isEditing && formData ? formData.is_visible : provider.is_visible;
+    
+    // Count visible providers (considering current form state if editing)
+    const visibleProvidersCount = providers.filter(p => {
+        if (isEditing && p.id === provider.id) {
+            return currentVisibility;
+        }
+        return p.is_visible;
+    }).length;
+    
+    // Disable toggle if this is the last visible provider and we're trying to hide it
+    const isToggleDisabled = currentVisibility && visibleProvidersCount <= 1;
+    
+    // Disable delete if this is the last provider
+    const isDeleteDisabled = providers.length <= 1;
+
     return (
-        <>
-            <tr className="hover:bg-gray-50">
-                <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                        <button
-                            type="button"
-                            onClick={onToggle}
-                            className="mr-2 p-1 rounded hover:bg-gray-200"
-                        >
-                            {isExpanded ? (
-                                <FontAwesomeIcon icon={faChevronDown} className="w-4 h-4" />
-                            ) : (
-                                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
-                            )}
-                        </button>
-                        <div className="flex items-center">
-                            <div 
-                                className="w-4 h-4 rounded-full mr-3"
-                                style={{ backgroundColor: provider.color }}
-                            ></div>
-                            <div>
-                                <div className="text-sm font-medium text-gray-900">{provider.name}</div>
-                                <div className="text-sm text-gray-500">{provider.description}</div>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{provider.email}</div>
-                    <div className="text-sm text-gray-500">{provider.phone}</div>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={clsx(
-                        "inline-flex px-2 py-1 text-xs font-semibold rounded-full",
-                        provider.is_visible 
-                            ? "bg-green-100 text-green-800" 
-                            : "bg-gray-100 text-gray-800"
-                    )}>
-                        {provider.is_visible ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')}
-                    </span>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+        <div className="bg-gray-50 border border-gray-300 rounded-lg shadow-sm mb-6">
+            {/* Main row */}
+            <div 
+                className="flex items-center justify-between p-4 hover:bg-gray-100 rounded-t-lg cursor-pointer"
+                onClick={onToggle}
+            >
+                {/* Left side: Provider info */}
+                <div className="flex items-center flex-1">
+                    <div className="text-sm font-medium text-gray-900">{provider.name}</div>
+                </div>
+                
+                {/* Right side: Actions */}
+                <div className="flex items-center space-x-3">
+                    {/* Trash Icon */}
                     <button
                         type="button"
-                        onClick={onDelete}
-                        disabled={isEditing || isLoading}
-                        className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete();
+                        }}
+                        disabled={isEditing || isLoading || isDeleteDisabled}
+                        className="text-gray-500 hover:text-red-600 disabled:opacity-50 p-1 cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
+                        title={__('Delete Provider', 'simplybook')}
                     >
                         <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                     </button>
-                </td>
-            </tr>
-            {isExpanded && (
-                <tr>
-                    <td colSpan="4" className="px-6 py-4 bg-gray-50">
-                        <ProviderForm
-                            formData={formData}
-                            onChange={onChange}
-                            isLoading={isLoading}
-                            error={error}
+                    
+                    {/* Visibility Toggle */}
+                    <div 
+                        className="flex items-center h-6"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <label 
+                            className={clsx(
+                                "relative inline-flex items-center",
+                                isToggleDisabled ? "cursor-not-allowed" : "cursor-pointer"
+                            )} 
+                            title={
+                                isToggleDisabled 
+                                    ? __('Cannot hide the last visible provider', 'simplybook')
+                                    : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
+                            }
+                        >
+                        <input
+                            type="checkbox"
+                            checked={currentVisibility || false}
+                            onChange={handleVisibilityToggle}
+                            disabled={isToggleDisabled}
+                            className="sr-only peer"
                         />
-                    </td>
-                </tr>
+                        <div className={clsx(
+                            "w-10 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer",
+                            "peer-checked:bg-blue-600 peer-checked:after:translate-x-[1.125rem] peer-checked:after:border-white",
+                            "after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-200",
+                            "after:border after:rounded-full after:aspect-square after:h-4 after:w-4 after:transition-all",
+                            isToggleDisabled && "opacity-50 cursor-not-allowed"
+                        )}></div>
+                        </label>
+                    </div>
+                    
+                    {/* Dropdown Toggle */}
+                    <button
+                        type="button"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            onToggle();
+                        }}
+                        className="p-1 rounded hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6"
+                        title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
+                    >
+                        <FontAwesomeIcon 
+                            icon={faChevronDown} 
+                            className={clsx("w-4 h-4 transition-transform duration-200", 
+                                isExpanded && "rotate-180"
+                            )} 
+                        />
+                    </button>
+                </div>
+            </div>
+            
+            {/* Expanded section */}
+            {isExpanded && (
+                <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
+                    <ProviderForm
+                        formData={formData}
+                        onChange={onChange}
+                        isLoading={isLoading}
+                        error={error}
+                    />
+                </div>
             )}
-        </>
+        </div>
     );
 };
 
 const ProviderForm = ({ formData, onChange, isLoading, error }) => {
+    if (!formData) {
+        return <div className="text-gray-500">Loading...</div>;
+    }
+    
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
@@ -413,19 +481,8 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
                     type="color"
                     value={formData.color || '#3b82f6'}
                     onChange={(e) => onChange('color', e.target.value)}
-                    className="w-full h-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-20 h-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
-            </div>
-            <div>
-                <label className="flex items-center">
-                    <input
-                        type="checkbox"
-                        checked={formData.is_visible || false}
-                        onChange={(e) => onChange('is_visible', e.target.checked)}
-                        className="mr-2"
-                    />
-                    {__('Visible', 'simplybook')}
-                </label>
             </div>
             <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">

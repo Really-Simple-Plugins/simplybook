@@ -21,8 +21,48 @@ const useServicesData = () => {
     });
 
     const updateServiceMutation = useMutation({
-        mutationFn: (params: { id: string | number; data: any }) => client.put(`${route}/${params.id}`, params.data),
-        onSuccess: () => {
+        mutationFn: async (params: { id: string | number; data: any }) => {
+            console.log('SIMPLYBOOK DEBUG: updateService called with:', params);
+            try {
+                const result = await client.put(`${route}/${params.id}`, params.data);
+                console.log('SIMPLYBOOK DEBUG: updateService response:', result);
+                return result;
+            } catch (error) {
+                console.error('SIMPLYBOOK DEBUG: updateService error:', error);
+                throw error;
+            }
+        },
+        onMutate: async (params) => {
+            // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
+            await queryClient.cancelQueries({ queryKey: [route] });
+            
+            // Snapshot the previous value
+            const previousServices = queryClient.getQueryData([route]);
+            
+            // Optimistically update to the new value
+            queryClient.setQueryData([route], (old: any) => {
+                if (!old?.data) return old;
+                return {
+                    ...old,
+                    data: old.data.map((service: any) => 
+                        service.id === params.id 
+                            ? { ...service, ...params.data }
+                            : service
+                    )
+                };
+            });
+            
+            // Return a context object with the snapshotted value
+            return { previousServices };
+        },
+        onError: (err, params, context) => {
+            // If the mutation fails, use the context returned from onMutate to roll back
+            if (context?.previousServices) {
+                queryClient.setQueryData([route], context.previousServices);
+            }
+        },
+        onSettled: () => {
+            // Always refetch after error or success to ensure server state
             queryClient.invalidateQueries({ queryKey: [route] });
         },
     });
