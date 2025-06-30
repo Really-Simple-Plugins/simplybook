@@ -126,6 +126,11 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
         } else {
             const providerId = currentEditingProvider || currentFormData.id;
             updateProvider({ id: providerId, data: providerData }).then(() => {
+                setExpandedRows(prev => {
+                    const newExpanded = new Set(prev);
+                    newExpanded.delete(providerId);
+                    return newExpanded;
+                });
                 setEditingProvider(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
@@ -137,6 +142,13 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
     };
 
     const handleCancel = () => {
+        if (editingProvider) {
+            setExpandedRows(prev => {
+                const newExpanded = new Set(prev);
+                newExpanded.delete(editingProvider);
+                return newExpanded;
+            });
+        }
         setEditingProvider(null);
         setIsCreatingNew(false);
         setFormData({});
@@ -237,7 +249,7 @@ const ProvidersListField = ({ setting, control, setValue, getValues, reset }) =>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {providers.map((provider) => (
+                        {providers.filter(provider => provider != null).map((provider) => (
                             <ProviderRow
                                 key={provider.id}
                                 provider={provider}
