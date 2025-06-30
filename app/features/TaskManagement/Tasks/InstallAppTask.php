@@ -44,18 +44,24 @@ class InstallAppTask extends AbstractTask
                 ],
 	            'image' => App::env('plugin.assets_url') . 'img/QR-MODAL-PHONES.svg',
 	            'backgroundImage' => App::env('plugin.assets_url') . 'img/QR-MODAL-BG.svg',
-	            'buttons' => [
-		            [
-			            'image' => App::env('plugin.assets_url') . 'img/App-Store-Btn.svg',
-			            'link' => 'https://apps.apple.com/us/app/simplybook-me-admin/id1498910745',
-			            'qr' => App::env('plugin.assets_url') . 'img/App store.svg',
-		            ],
-		            [
-			            'image' => App::env('plugin.assets_url') . 'img/Google-Play-Btn.svg',
-			            'link' => 'https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook',
-			            'qr' => App::env('plugin.assets_url') . 'img/Google Play.svg',
-		            ],
-	            ],
+                'callsToAction' => [
+                    [
+                        'button' => [
+                            'image' => App::env('plugin.assets_url') . 'img/App-Store-Btn.svg',
+                            'link' => 'https://apps.apple.com/us/app/simplybook-me-admin/id1498910745',
+                            'text' => esc_html__('Download on the App Store', 'simplybook'),
+                        ],
+                        'qr' => App::env('plugin.assets_url') . 'img/App store.svg',
+                    ],
+                    [
+                        'button' => [
+                            'image' => App::env('plugin.assets_url') . 'img/Google-Play-Btn.svg',
+                            'link' => 'https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook',
+                            'text' => esc_html__('Get it on Google Play', 'simplybook'),
+                        ],
+                        'qr' => App::env('plugin.assets_url') . 'img/Google Play.svg',
+                    ],
+                ],
 	            'footer' => [
 		            'text' => esc_html__('I already have the app, I want to ', 'simplybook'),
 					'link' => 'https://simplybook.me/en/app_client-app_admin-app',

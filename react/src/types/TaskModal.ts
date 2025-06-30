@@ -1,7 +1,12 @@
+interface CallsToAction {
+    button?: ModalButton,
+    qr?: string,
+}
+
 interface ModalButton {
     image?: string,
-    link?: string
-    qr?: string
+    link?: string,
+    text?: string,
 }
 
 export interface TaskModal {
@@ -11,10 +16,10 @@ export interface TaskModal {
     content?: {
         sections: string[]
     }
-    buttons?: ModalButton[]
+    callsToAction?: CallsToAction[]
     footer?: {
         text: string,
         link: string,
-        linkText: string
+        linkText: string,
     }
 }

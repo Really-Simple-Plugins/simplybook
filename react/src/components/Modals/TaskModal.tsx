@@ -13,7 +13,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
 
     return (
         <Modal isOpen={isModalOpen} closeButton={true} onClose={onModalClose}>
-            <div className="flex flex-row gap-4 mb-3">
+            <div className="flex flex-row gap-8 mb-3">
                 <div className={clsx(
                     taskModalContent?.image ? "sm:max-w-1/2" : "",
                     "flex flex-col gap-3")}>
@@ -24,22 +24,29 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
                             <p className="m-0 text-justify sm:text-left">{section}</p>
                         ))
                     )}
-                    {taskModalContent?.buttons && (
-                        <div className="flex flex-row gap-4">
-                            {taskModalContent?.buttons.map((button) => (
+                    {taskModalContent?.callsToAction && (
+                        <div className={clsx(taskModalContent?.callsToAction.some((cta) => !cta.button) ? "items-start" : "",
+                            "flex flex-row gap-4 ")}>
+                            {taskModalContent?.callsToAction.map((cta) => (
                                 <div className="flex flex-col gap-3 justify-center items-center">
-                                    <img width="100%" src={button.qr} alt=""/>
-                                    <a href={button.link} target="_blank">
-                                        <img src={button.image} width="200px" alt=""/>
-                                    </a>
+                                    {cta.qr && (<img width="100%" src={cta.qr} alt={cta.button?.text ?? "QR code"}/>)}
+                                    {cta.button && (
+                                        <a href={cta.button.link} target="_blank">
+                                            {cta.button.image ? (
+                                                <img src={cta.button.image} width="200px" alt={cta.button.text}/>) : (
+                                                <p>{cta.button.text}</p>)}
+                                        </a>
+                                    )}
                                 </div>
                             ))}
                         </div>)}
                     {taskModalContent?.footer && (
-                        <div className="my-2">
-                            <span>{taskModalContent.footer.text}
-                                <a href={taskModalContent.footer.link}
-                                   target="_blank">{taskModalContent.footer.linkText}</a>
+                        <div className="mb-2">
+                            <span>{taskModalContent.footer.text ?? ""}
+                                {(taskModalContent.footer.link && taskModalContent.footer.linkText) && (
+                                    <a href={taskModalContent.footer.link}
+                                       target="_blank">{taskModalContent.footer.linkText}</a>
+                                )}
                             </span>
                         </div>)}
                 </div>
