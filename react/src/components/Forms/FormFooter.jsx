@@ -6,34 +6,47 @@ import Icon from "../Common/Icon";
 import useSettingsData from "../../hooks/useSettingsData";
 import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
-import { Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
 import {ToastContainer} from "react-toastify";
 
 const FormFooter = ({
     onSubmit,
     control,
-    getValues
+    getValues,
+    
+    crudContext = null,
+    showSettingsButtons = true
 }) => {
+    const settingsFormState = control ? useFormState({ control }) : {};
     const {
-        isDirty,
-        isSubmitting,
-        isValidating,
-        isValid
-    } = useFormState({
-        control,
-    });
+        isDirty = false,
+        isSubmitting = false,
+        isValidating = false,
+        isValid = true
+    } = settingsFormState;
 
     const { isSavingSettings } = useSettingsData();
 
-    const formStates = [
+    // Determine active context
+    const isCrudMode = crudContext !== null;
+    const showSettings = showSettingsButtons && !isCrudMode;
+    const showCrud = isCrudMode;
+
+    // Settings form states
+    const settingsStates = [
         { condition: isSubmitting, message: __("Saving...", "simplybook"), color: "blue" },
         { condition: isValidating, message: __("Validating...", "simplybook"), color: "blue" },
         { condition: !isValid, message: __("Form contains errors", "simplybook"), color: "red" },
         { condition: isDirty, message: __("You have unsaved changes", "simplybook"), color: "amber" },
     ];
 
-    const currentState = formStates.find(state => state.condition);
+    const crudStates = [
+        { condition: crudContext?.isLoading, message: __("Saving...", "simplybook"), color: "blue" },
+        { condition: crudContext?.hasUnsavedChanges, message: __("You have unsaved changes", "simplybook"), color: "amber" },
+    ];
+
+    const currentState = showSettings 
+        ? settingsStates.find(state => state.condition)
+        : crudStates.find(state => state.condition);
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
             <FormScrollProgressLine />
@@ -43,17 +56,45 @@ const FormFooter = ({
                         {currentState.message}
                     </p>
                 )}
-                <PreviewButtonInput
-                    btnVariant={'tertiary-small'}
-                    getValues={getValues}>
-                </PreviewButtonInput>
-                <ButtonLink
-                    disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
-                    btnVariant={'secondary-small'}
-                    onClick={onSubmit}
-                >
-                    {__("Save", "simplybook")}
-                </ButtonLink>
+                
+                {/* Settings context buttons */}
+                {showSettings && (
+                    <>
+                        <PreviewButtonInput
+                            btnVariant={'tertiary-small'}
+                            getValues={getValues}>
+                        </PreviewButtonInput>
+                        <ButtonLink
+                            disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
+                            btnVariant={'secondary-small'}
+                            onClick={onSubmit}
+                        >
+                            {__("Save", "simplybook")}
+                        </ButtonLink>
+                    </>
+                )}
+                
+                {/* CRUD context buttons */}
+                {showCrud && (
+                    <>
+                        <ButtonLink
+                            btnVariant={'tertiary-small'}
+                            onClick={crudContext.onCancel}
+                            disabled={crudContext.isLoading}
+                        >
+                            {__("Cancel", "simplybook")}
+                        </ButtonLink>
+                        <ButtonLink
+                            btnVariant={'secondary-small'}
+                            onClick={crudContext.onSave}
+                            disabled={crudContext.isLoading}
+                        >
+                            {crudContext.isLoading 
+                                ? __("Saving...", "simplybook") 
+                                : __("Save", "simplybook")}
+                        </ButtonLink>
+                    </>
+                )}
             </div>
 
             <ToastContainer

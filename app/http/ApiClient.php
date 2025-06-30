@@ -310,11 +310,8 @@ class ApiClient
                 $this->update_token( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
                 $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
-            } else {
-                $this->log("Error during token retrieval");
             }
-        } else {
-            $this->log("Error during token retrieval: ".$request->get_error_message());		}
+        }
     }
 
     /**
@@ -1075,7 +1072,10 @@ class ApiClient
     public function createProvider(array $providerData): array
     {
         $this->validateProviderData($providerData, ['name', 'is_visible']);
-        $enrichedData = $this->enrichProviderDataWithDefaults($providerData);
+        
+        // Map frontend fields to API fields and remove non-API fields
+        $mappedData = $this->mapProviderFieldsForApi($providerData);
+        $enrichedData = $this->enrichProviderDataWithDefaults($mappedData);
         
         $response = $this->makeProviderRequest('admin/providers', 'POST', $enrichedData);
         $this->clearProviderCache();
@@ -1106,7 +1106,10 @@ class ApiClient
         $this->validateProviderData($updatedData, ['is_visible']);
         $sanitizedId = sanitize_text_field($providerId);
         
-        $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'PUT', $updatedData);
+        // Map frontend fields to API fields and remove non-API fields
+        $mappedData = $this->mapProviderFieldsForApi($updatedData);
+        
+        $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'PUT', $mappedData);
         $this->clearProviderCache();
         
         $responseBody = wp_remote_retrieve_body($response);
@@ -1181,6 +1184,20 @@ class ApiClient
         ];
 
         return array_merge($defaults, $providerData);
+    }
+
+    /**
+     * Filter provider data to remove non-API fields like nonce
+     */
+    private function mapProviderFieldsForApi(array $providerData): array
+    {
+        // Fields that should not be sent to the API
+        $excludeFields = ['nonce', '_method'];
+        
+        // Filter out excluded fields
+        return array_filter($providerData, function($key) use ($excludeFields) {
+            return !in_array($key, $excludeFields);
+        }, ARRAY_FILTER_USE_KEY);
     }
 
     /**

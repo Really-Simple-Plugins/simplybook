@@ -3,11 +3,18 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState, createContext, useContext } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 import ToastNotice from "../../components/Errors/ToastNotice";
+
+const CrudContext = createContext({
+    crudContext: null,
+    setCrudContext: () => {}
+});
+
+export const useCrudContext = () => useContext(CrudContext);
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -31,7 +38,8 @@ function Settings() {
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
-
+    
+    const [crudContext, setCrudContext] = useState(null);
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -55,6 +63,7 @@ function Settings() {
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { isDirty },
         getValues,
     } = useForm({
@@ -120,71 +129,46 @@ function Settings() {
     }
 
     return (
-        <form className="col-span-12 lg:col-span-6">
-            {currentForm.groups?.map((group) => {
-                const isLastGroup = lastGroup.id === group.id;
-                const currentGroupFields = currentFormFields.filter(
-                    (field) => field.group_id === group.id,
-                );
+        <CrudContext.Provider value={{ crudContext, setCrudContext }}>
+            <form className="col-span-12 lg:col-span-6">
+                {currentForm.groups?.map((group) => {
+                    const isLastGroup = lastGroup.id === group.id;
+                    const currentGroupFields = currentFormFields.filter(
+                        (field) => field.group_id === group.id,
+                    );
 
-                return (
-                    <SettingsGroupBlock
-                        key={group.id}
-                        group={group}
-                        currentGroupFields={currentGroupFields}
-                        control={control}
-                        isLastGroup={isLastGroup}
-                        formHasSettings={formHasSettings}
-                        getValues={getValues}
-                        reset={reset}
-                    />
-                );
-            })}
-
-            {formHasSettings && (() => {
-                // Read list component states for CRUD functionality
-                const providersState = getValues('_providers_state');
-                const servicesState = getValues('_services_state');
-                
-                let listState = null;
-                try {
-                    if (settingsId === 'providers' && providersState) {
-                        listState = JSON.parse(providersState);
-                    } else if (settingsId === 'services' && servicesState) {
-                        listState = JSON.parse(servicesState);
-                    }
-                } catch (e) {
-                    // Ignore JSON parse errors
-                }
-
-                // Determine FormFooter props based on list state
-                const isListPage = settingsId === 'providers' || settingsId === 'services';
-                const hasActiveForm = listState?.hasActiveForm || false;
-                const isEditing = listState?.isEditing || false;
-                const isDirty = listState?.isDirty || false;
-
-                return (
-                    <>
-                        <FormFooter
-                            getValues={getValues}
-                            onSubmit={handleSubmit((formData) => {
-                                saveSettings(formData).then(() => {
-                                    return handleSavedSettings(formData);
-                                }).catch((response) => {
-                                    return handleCaughtErrorInSaveSettings(response);
-                                });
-                            })}
+                    return (
+                        <SettingsGroupBlock
+                            key={group.id}
+                            group={group}
+                            currentGroupFields={currentGroupFields}
                             control={control}
-                            overrideIsDirty={isListPage && hasActiveForm ? isDirty : undefined}
-                            onDelete={isListPage && isEditing ? () => {
-                                console.log('Delete triggered from FormFooter - handled by list component');
-                            } : undefined}
-                            isEditing={isListPage ? isEditing : false}
+                            isLastGroup={isLastGroup}
+                            formHasSettings={formHasSettings}
+                            getValues={getValues}
+                            setValue={setValue}
+                            reset={reset}
                         />
-                    </>
-                );
-            })()}
-        </form>
+                    );
+                })}
+
+                {formHasSettings && (
+                    <FormFooter
+                        getValues={getValues}
+                        onSubmit={handleSubmit((formData) => {
+                            saveSettings(formData).then(() => {
+                                return handleSavedSettings(formData);
+                            }).catch((response) => {
+                                return handleCaughtErrorInSaveSettings(response);
+                            });
+                        })}
+                        control={control}
+                        crudContext={crudContext}
+                        showSettingsButtons={!crudContext}
+                    />
+                )}
+            </form>
+        </CrudContext.Provider>
     );
 }
 
