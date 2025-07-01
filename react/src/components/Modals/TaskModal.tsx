@@ -16,7 +16,7 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
             <div className="flex flex-row gap-8 mb-3">
                 <div className={clsx(
                     taskModalContent?.image ? "sm:max-w-1/2" : "",
-                    "flex flex-col gap-3")}>
+                    "flex flex-col gap-3 mb-2")}>
                     {taskModalContent?.title && (
                         <h2 className="text-xl font-bold text-tertiary">{taskModalContent?.title}</h2>)}
                     {taskModalContent?.content?.sections && (
@@ -39,15 +39,6 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
                                     )}
                                 </div>
                             ))}
-                        </div>)}
-                    {taskModalContent?.footer && (
-                        <div className="mb-2">
-                            <span>{taskModalContent.footer.text ?? ""}
-                                {(taskModalContent.footer.link && taskModalContent.footer.linkText) && (
-                                    <a href={taskModalContent.footer.link}
-                                       target="_blank">{taskModalContent.footer.linkText}</a>
-                                )}
-                            </span>
                         </div>)}
                 </div>
                 {taskModalContent?.image && (

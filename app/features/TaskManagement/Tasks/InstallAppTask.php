@@ -62,11 +62,6 @@ class InstallAppTask extends AbstractTask
                         'qr' => App::env('plugin.assets_url') . 'img/Google Play.svg',
                     ],
                 ],
-	            'footer' => [
-		            'text' => esc_html__('I already have the app, I want to ', 'simplybook'),
-					'link' => 'https://simplybook.me/en/app_client-app_admin-app',
-		            'linkText' => esc_html__('Log in', 'simplybook'),
-	            ]
             ],
         ];
     }
