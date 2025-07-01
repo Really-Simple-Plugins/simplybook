@@ -18,33 +18,40 @@ const TaskModal: React.FC<TaskModalProps> = ({ isModalOpen, taskModalContent, on
                     taskModalContent?.image ? "sm:max-w-1/2" : "",
                     "flex flex-col gap-3 mb-2")}>
                     {taskModalContent?.title && (
-                        <h2 className="text-xl font-bold text-tertiary">{taskModalContent?.title}</h2>)}
+                        <h2 className="text-xl font-bold text-tertiary">{taskModalContent?.title}</h2>
+                    )}
                     {taskModalContent?.content?.sections && (
                         taskModalContent?.content?.sections.map((section) => (
                             <p className="m-0 text-justify sm:text-left">{section}</p>
                         ))
                     )}
                     {taskModalContent?.callsToAction && (
-                        <div className={clsx(taskModalContent?.callsToAction.some((cta) => !cta.button) ? "items-start" : "",
+                        <div className={clsx(
+                            taskModalContent?.callsToAction.some((cta) => !cta.button) ? "items-start" : "",
                             "flex flex-row gap-4 ")}>
                             {taskModalContent?.callsToAction.map((cta) => (
                                 <div className="flex flex-col gap-3 justify-center items-center">
-                                    {cta.qr && (<img width="100%" src={cta.qr} alt={cta.button?.text ?? "QR code"}/>)}
+                                    {cta.qr && (
+                                        <img width="100%" src={cta.qr} alt={cta.button?.text ?? "QR code"}/>
+                                    )}
                                     {cta.button && (
                                         <a href={cta.button.link} target="_blank">
                                             {cta.button.image ? (
                                                 <img src={cta.button.image} width="200px" alt={cta.button.text}/>) : (
-                                                <p>{cta.button.text}</p>)}
+                                                <p>{cta.button.text}</p>
+                                            )}
                                         </a>
                                     )}
                                 </div>
                             ))}
-                        </div>)}
+                        </div>
+                    )}
                 </div>
                 {taskModalContent?.image && (
                     <div className="hidden sm:flex flex-col gap-3 grow-1">
                         <img className="h-full" src={`${taskModalContent?.image}`} alt="test"/>
-                    </div>)}
+                    </div>
+                )}
             </div>
             {taskModalContent?.backgroundImage && (
                 <div className="modal-background absolute inset-0 -z-1"

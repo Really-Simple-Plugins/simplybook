@@ -44,7 +44,8 @@ const Modal: React.FC<ModalProps> = ({ closeButton = true, isOpen, onClose, chil
                             className={"flex items-center justify-center transition-all duration-200 px-3 py-1 rounded-md text-white text-sm font-bold cursor-pointer  flex-row bg-secondary hover:bg-secondary-dark w-20"}
                             onClick={onClose}>
                             {__('Close', 'simplybook')}
-                        </button>)}
+                        </button>
+                    )}
                 </div>
             </div>
         </div>
