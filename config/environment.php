@@ -101,6 +101,8 @@ return [
             ['value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
             ['value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
             ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
+            ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
+            ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
             ['value' => 'login:simplybook.vip', 'label' => 'simplybook.vip'],
             ['value' => 'login:simplybook.cc', 'label' => 'simplybook.cc'],
             ['value' => 'login:simplybook.us', 'label' => 'simplybook.us'],
@@ -111,8 +113,6 @@ return [
             ['value' => 'login:booking.names.uk', 'label' => 'booking.names.uk'],
             ['value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
-            ['value' => 'login:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
-            ['value' => 'login:simplybooking.io', 'label' => 'simplybooking.io'],
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ],
