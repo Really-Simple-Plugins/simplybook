@@ -85,14 +85,6 @@ class HttpClient {
             payload = route;
         }
 
-        console.log('SIMPLYBOOK DEBUG: POST request', {
-            route,
-            requestRoute,
-            payload,
-            SB_API_URL,
-            NONCE
-        });
-
         if (!payload) {
             throw new Error(__('Payload is not set', 'simplybook'));
         }
@@ -139,17 +131,6 @@ class HttpClient {
             nonce: NONCE,
         };
 
-        console.log('SIMPLYBOOK DEBUG: PUT request', {
-            route,
-            requestRoute,
-            body,
-            payload,
-            SB_API_URL,
-            NONCE,
-            method: 'PUT',
-            headers: this.postMethodHeaders
-        });
-
         const response = await fetch(requestRoute, {
             method: 'PUT',
             headers: this.postMethodHeaders,
@@ -183,14 +164,6 @@ class HttpClient {
         const payload = {
             nonce: NONCE,
         };
-
-        console.log('SIMPLYBOOK DEBUG: DELETE request', {
-            route,
-            requestRoute,
-            payload,
-            SB_API_URL,
-            NONCE
-        });
 
         const response = await fetch(requestRoute, {
             method: 'DELETE',

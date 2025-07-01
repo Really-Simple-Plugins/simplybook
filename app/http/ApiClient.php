@@ -981,13 +981,11 @@ class ApiClient
         }
 
         $responseBody = wp_remote_retrieve_body($response);
-        error_log("SIMPLYBOOK DEBUG: updateService response body: " . $responseBody);
         
         $decodedResponse = json_decode($responseBody, true);
         
         // Handle null response (empty or invalid JSON)
         if ($decodedResponse === null) {
-            error_log("SIMPLYBOOK DEBUG: updateService received null response, returning success array");
             return [
                 'success' => true,
                 'message' => 'Service updated successfully',
@@ -1041,13 +1039,11 @@ class ApiClient
         $this->clearServiceCache();
         
         $responseBody = wp_remote_retrieve_body($response);
-        error_log("SIMPLYBOOK DEBUG: createService response body: " . $responseBody);
         
         $decodedResponse = json_decode($responseBody, true);
         
         // Handle null response (empty or invalid JSON)
         if ($decodedResponse === null) {
-            error_log("SIMPLYBOOK DEBUG: createService received null response, returning success array");
             return [
                 'success' => true,
                 'message' => 'Service created successfully',
@@ -1088,13 +1084,11 @@ class ApiClient
         $this->clearProviderCache();
         
         $responseBody = wp_remote_retrieve_body($response);
-        error_log("SIMPLYBOOK DEBUG: createProvider response body: " . $responseBody);
         
         $decodedResponse = json_decode($responseBody, true);
         
         // Handle null response (empty or invalid JSON)
         if ($decodedResponse === null) {
-            error_log("SIMPLYBOOK DEBUG: createProvider received null response, returning success array");
             $result = [
                 'success' => true,
                 'message' => 'Provider created successfully',
@@ -1128,7 +1122,6 @@ class ApiClient
         // Map frontend fields to API fields and remove non-API fields
         $mappedData = $this->mapProviderFieldsForApi($updatedData);
         
-        error_log("SIMPLYBOOK DEBUG: updateProvider mapped data: " . print_r($mappedData, true));
         
         $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'PUT', $mappedData);
         $this->clearProviderCache();
@@ -1137,15 +1130,11 @@ class ApiClient
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseHeaders = wp_remote_retrieve_headers($response);
         
-        error_log("SIMPLYBOOK DEBUG: updateProvider response code: " . $responseCode);
-        error_log("SIMPLYBOOK DEBUG: updateProvider response body: " . $responseBody);
-        error_log("SIMPLYBOOK DEBUG: updateProvider response headers: " . print_r($responseHeaders, true));
         
         $decodedResponse = json_decode($responseBody, true);
         
         // Handle null response (empty or invalid JSON)
         if ($decodedResponse === null) {
-            error_log("SIMPLYBOOK DEBUG: updateProvider received null response, returning success array");
             return [
                 'success' => true,
                 'message' => 'Provider updated successfully',
@@ -1263,7 +1252,6 @@ class ApiClient
         $response = wp_safe_remote_request($endpoint, $requestArgs);
 
         if (is_wp_error($response)) {
-            error_log("SIMPLYBOOK DEBUG: WP Error in makeAuthenticatedRequest: " . $response->get_error_message());
             throw (new RestDataException($response->get_error_message()))
                 ->setResponseCode($response->get_error_code())
                 ->setData($response->get_error_data());
@@ -1271,19 +1259,6 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         
-        // Check for authentication errors (401, 403)
-        if (in_array($responseCode, [401, 403])) {
-            error_log("SIMPLYBOOK DEBUG: Authentication error (HTTP {$responseCode}), token may be expired");
-            error_log("SIMPLYBOOK DEBUG: Request endpoint: " . $endpoint);
-            error_log("SIMPLYBOOK DEBUG: Request headers: " . print_r($requestArgs['headers'], true));
-        }
-
-        // Check for empty response which indicates connection failure
-        if (empty($responseCode)) {
-            error_log("SIMPLYBOOK DEBUG: Empty response code, possible connection failure or timeout");
-            error_log("SIMPLYBOOK DEBUG: Request endpoint: " . $endpoint);
-            error_log("SIMPLYBOOK DEBUG: Page load time: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . " seconds");
-        }
         
         $acceptableCodes = $method === 'DELETE' ? [200, 204] : [200, 201];
 

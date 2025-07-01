@@ -97,10 +97,6 @@ class BaseEndpoint implements MultiEndpointInterface
         $route = $this->getRoute();
         $resourceName = $this->getResourceName();
         
-        error_log("SIMPLYBOOK DEBUG: Collection request - Method: {$method}, Route: /{$route}");
-        error_log("SIMPLYBOOK DEBUG: Request params: " . print_r($request->get_params(), true));
-
-        error_log("SIMPLYBOOK DEBUG: Handling {$method} {$resourceName}s request");
 
         try {
             switch ($method) {
@@ -112,8 +108,7 @@ class BaseEndpoint implements MultiEndpointInterface
                     return $this->sendHttpResponse(['error' => 'Method not allowed'], 405);
             }
         } catch (\Exception $e) {
-            error_log("SIMPLYBOOK DEBUG: Collection request exception: " . $e->getMessage());
-            return $this->sendHttpResponse(['error' => $e->getMessage()], 500);
+                return $this->sendHttpResponse(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -127,10 +122,6 @@ class BaseEndpoint implements MultiEndpointInterface
         $route = $this->getRoute();
         $resourceName = $this->getResourceName();
         
-        error_log("SIMPLYBOOK DEBUG: Single request - Method: {$method}, Route: /{$route}/{$itemId}, ID: {$itemId}");
-        error_log("SIMPLYBOOK DEBUG: Request params: " . print_r($request->get_params(), true));
-
-        error_log("SIMPLYBOOK DEBUG: Handling {$method} {$resourceName} request");
 
         try {
             switch ($method) {
@@ -145,8 +136,7 @@ class BaseEndpoint implements MultiEndpointInterface
                     return $this->sendHttpResponse(['error' => 'Method not allowed'], 405);
             }
         } catch (\Exception $e) {
-            error_log("SIMPLYBOOK DEBUG: Single request exception: " . $e->getMessage());
-            return $this->sendHttpResponse(['error' => $e->getMessage()], 500);
+                return $this->sendHttpResponse(['error' => $e->getMessage()], 500);
         }
     }
 
@@ -197,21 +187,17 @@ class BaseEndpoint implements MultiEndpointInterface
         $data = $request->get_json_params();
         $resourceName = $this->getResourceName();
         
-        error_log("SIMPLYBOOK DEBUG: CREATE {$resourceName} data: " . print_r($data, true));
         
         if (empty($data)) {
-            error_log("SIMPLYBOOK DEBUG: No {$resourceName} data provided");
             return $this->sendHttpResponse(['error' => "No {$resourceName} data provided"], 400);
         }
 
         $sanitizedData = $this->sanitizeInputData($data, $this->getResourceType());
-        error_log("SIMPLYBOOK DEBUG: CREATE {$resourceName} sanitized data: " . print_r($sanitizedData, true));
 
         $client = \SimplyBook\App::provide('client');
         $methodName = 'create' . $this->getResourceType();
         $result = $client->$methodName($sanitizedData);
         
-        error_log("SIMPLYBOOK DEBUG: CREATE {$resourceName} result: " . print_r($result, true));
         return $this->sendHttpResponse($result, 201);
     }
 
@@ -223,8 +209,6 @@ class BaseEndpoint implements MultiEndpointInterface
         $data = $request->get_json_params();
         $resourceName = $this->getResourceName();
         
-        error_log("SIMPLYBOOK DEBUG: UPDATE {$resourceName} ID: {$itemId}");
-        error_log("SIMPLYBOOK DEBUG: UPDATE {$resourceName} data: " . print_r($data, true));
         
         if (empty($itemId)) {
             return $this->sendHttpResponse(['error' => ucfirst($resourceName) . ' ID is required'], 400);
@@ -235,13 +219,11 @@ class BaseEndpoint implements MultiEndpointInterface
         }
 
         $sanitizedData = $this->sanitizeInputData($data, $this->getResourceType());
-        error_log("SIMPLYBOOK DEBUG: UPDATE {$resourceName} sanitized data: " . print_r($sanitizedData, true));
 
         $client = \SimplyBook\App::provide('client');
         $methodName = 'update' . $this->getResourceType();
         $result = $client->$methodName($itemId, $sanitizedData);
         
-        error_log("SIMPLYBOOK DEBUG: UPDATE {$resourceName} result: " . print_r($result, true));
         return $this->sendHttpResponse($result);
     }
 

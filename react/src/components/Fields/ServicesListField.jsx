@@ -6,7 +6,7 @@ import { faChevronDown, faChevronRight, faPlus, faTrash } from '@fortawesome/fre
 import clsx from 'clsx';
 import { useCrudContext } from '../../routes/settings/$settingsId.lazy';
 
-const ServicesListField = ({ setting, control, setValue, getValues, reset }) => {
+const ServicesListField = ({  }) => {
     const {
         services,
         isLoading,

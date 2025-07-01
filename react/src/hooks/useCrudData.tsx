@@ -42,15 +42,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
 
     const updateMutation = useMutation({
         mutationFn: async (params: CrudDataParams) => {
-            console.log(`SIMPLYBOOK DEBUG: update${resourceName.charAt(0).toUpperCase() + resourceName.slice(1)} called with:`, params);
-            try {
-                const result = await client.put(`${route}/${params.id}`, params.data);
-                console.log(`SIMPLYBOOK DEBUG: update${resourceName.charAt(0).toUpperCase() + resourceName.slice(1)} response:`, result);
-                return result;
-            } catch (error) {
-                console.error(`SIMPLYBOOK DEBUG: update${resourceName.charAt(0).toUpperCase() + resourceName.slice(1)} error:`, error);
-                throw error;
-            }
+            return await client.put(`${route}/${params.id}`, params.data);
         },
         onMutate: async (params) => {
             // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
