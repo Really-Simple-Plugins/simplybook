@@ -33,6 +33,7 @@ class InstallAppTask extends AbstractTask
 	            'title' => esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
 	            'content' => [
                     'sections' => [
+                        /* translators: %1$s: an & (ampersand) sign */
                         sprintf(
                             esc_html__('See new and upcoming bookings, access %1$s contact your clients, send payment links (coming soon) %1$s more with the Admin App.', 'simplybook'),
                             '&'
