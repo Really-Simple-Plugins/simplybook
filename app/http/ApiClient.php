@@ -974,9 +974,10 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode !== 200) {
-            throw (new RestDataException($response->get_error_message()))
+            $responseBody = wp_remote_retrieve_body($response);
+            throw (new RestDataException("HTTP Error {$responseCode}: {$responseBody}"))
                 ->setResponseCode($responseCode)
-                ->setData($response->get_error_data());
+                ->setData(['response_body' => $responseBody]);
         }
 
         $responseBody = wp_remote_retrieve_body($response);
@@ -1279,9 +1280,11 @@ class ApiClient
 
         // Check for empty response which indicates connection failure
         if (empty($responseCode)) {
-            error_log("SIMPLYBOOK DEBUG: Empty response code, possible connection failure");
+            error_log("SIMPLYBOOK DEBUG: Empty response code, possible connection failure or timeout");
             error_log("SIMPLYBOOK DEBUG: Request endpoint: " . $endpoint);
+            error_log("SIMPLYBOOK DEBUG: Page load time: " . (microtime(true) - $_SERVER['REQUEST_TIME_FLOAT']) . " seconds");
         }
+        
         $acceptableCodes = $method === 'DELETE' ? [200, 204] : [200, 201];
 
         if (!in_array($responseCode, $acceptableCodes, true)) {

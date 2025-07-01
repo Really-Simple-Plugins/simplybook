@@ -7,6 +7,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
 import {ToastContainer} from "react-toastify";
+import { useParams } from "@tanstack/react-router";
 
 const FormFooter = ({
     onSubmit,
@@ -25,6 +26,10 @@ const FormFooter = ({
     } = settingsFormState;
 
     const { isSavingSettings } = useSettingsData();
+    const params = useParams({ from: '/settings/$settingsId' });
+    
+    // Check if we're on providers or services pages
+    const isProvidersOrServicesPage = params?.settingsId === 'providers' || params?.settingsId === 'services';
 
     // Determine active context
     const isCrudMode = crudContext !== null;
@@ -60,10 +65,12 @@ const FormFooter = ({
                 {/* Settings context buttons */}
                 {showSettings && (
                     <>
-                        <PreviewButtonInput
-                            btnVariant={'tertiary-small'}
-                            getValues={getValues}>
-                        </PreviewButtonInput>
+                        {!isProvidersOrServicesPage && (
+                            <PreviewButtonInput
+                                btnVariant={'tertiary-small'}
+                                getValues={getValues}>
+                            </PreviewButtonInput>
+                        )}
                         <ButtonLink
                             disabled={!isDirty || isSubmitting || isValidating || isSavingSettings}
                             btnVariant={'secondary-small'}
