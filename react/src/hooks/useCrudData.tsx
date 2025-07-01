@@ -34,7 +34,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
     });
 
     const createMutation = useMutation({
-        mutationFn: (data) => client.post(data),
+        mutationFn: (data: any) => client.post(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [route] });
         },
@@ -88,7 +88,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id) => client.delete(`${route}/${id}`),
+        mutationFn: (id: string | number) => client.delete(`${route}/${id}`),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [route] });
         },
