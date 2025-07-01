@@ -29,8 +29,6 @@ class InstallAppTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('More info','simplybook'),
-//            'link' => 'https://simplybook.me/en/app_client-app_admin-app',
-//            'target' => '_blank',
             'modal' => [
 	            'title' => esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
 	            'content' => [
