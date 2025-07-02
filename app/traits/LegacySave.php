@@ -342,6 +342,7 @@ trait LegacySave {
             $wpdb->prepare($query, ...$params)
         );
 
+        wp_cache_flush();
         return $result !== false;
     }
 }
