@@ -1,0 +1,2862 @@
+# Copyright (C) 2025 Really Simple Plugins
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: SimplyBook.me - Booking and reservations calendar 3.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/simplybook\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2025-06-12T13:38:55+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: simplybook\n"
+
+#. Plugin Name of the plugin
+#: simplybook.php
+msgid "SimplyBook.me - Booking and reservations calendar"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: simplybook.php
+msgid "https://help.simplybook.me/index.php?title=WordPress_integration"
+msgstr ""
+
+#. Description of the plugin
+#: simplybook.php
+msgid "Simply add a booking calendar to your site to schedule bookings, reservations, appointments and to collect payments."
+msgstr ""
+
+#. Author of the plugin
+#: simplybook.php
+msgid "Really Simple Plugins"
+msgstr ""
+
+#. Author URI of the plugin
+#: simplybook.php
+msgid "https://really-simple-plugins.com"
+msgstr ""
+
+#: app/controllers/AdminController.php:30
+#: react/build/107.js:1
+#: react/build/747.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:16
+#: react/src/components/Settings/SettingsMenu.jsx:29
+msgid "Settings"
+msgstr ""
+
+#: app/controllers/AdminController.php:34
+msgid "Support"
+msgstr ""
+
+#: app/controllers/DashboardController.php:75
+#: app/controllers/DashboardController.php:76
+#: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:29
+msgid "SimplyBook.me"
+msgstr ""
+
+#. translators: %1$d is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
+#: app/controllers/ReviewController.php:41
+msgid "Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s."
+msgstr ""
+
+#: app/controllers/ScheduleController.php:16
+msgid "Once every day"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:14
+msgid "No Providers configured"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:22
+#: app/features/TaskManagement/Tasks/AddMandatoryProviderTask.php:29
+msgid "Please configure at least one Service Provider"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:47
+msgid "Add Service Provider"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:14
+msgid "No Services configured"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:22
+#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:29
+msgid "Please configure at least one Service"
+msgstr ""
+
+#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:47
+#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
+msgid "Add Service"
+msgstr ""
+
+#: app/features/Notifications/Notices/FailedAuthenticationNotice.php:23
+msgid "Connection lost"
+msgstr ""
+
+#: app/features/Notifications/Notices/FailedAuthenticationNotice.php:31
+msgid "We’ve lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect."
+msgstr ""
+
+#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:14
+msgid "Maximum number of Providers reached"
+msgstr ""
+
+#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:22
+msgid "Please upgrade your plan to configure more Service Providers, or delete existing Providers if you want to add more."
+msgstr ""
+
+#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:47
+#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:47
+msgid "Upgrade now"
+msgstr ""
+
+#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:14
+msgid "Maximum number of Services reached"
+msgstr ""
+
+#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:22
+msgid "Please upgrade your plan to configure more Services, or delete existing Services if you want to add more."
+msgstr ""
+
+#: app/features/Notifications/Notices/PublishWidgetNotice.php:39
+msgid "No booking widget detected!"
+msgstr ""
+
+#: app/features/Notifications/Notices/PublishWidgetNotice.php:47
+msgid "It seems that you haven’t published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:127
+#: app/features/Onboarding/OnboardingController.php:269
+#: app/features/Onboarding/OnboardingController.php:314
+msgid "Please fill in all fields."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:151
+msgid "Please verify you're not a robot."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:155
+msgid "Please enter the confirmation code."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:194
+msgid "Something went wrong while saving the widget style settings. Please try again."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:199
+msgid "Successfully saved widget style settings"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:225
+msgid "Calendar page title should be available if you choose to generate this page."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:291
+#: app/features/Onboarding/OnboardingController.php:333
+msgid "Unknown error occurred, please verify your credentials."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:298
+msgid "Login successful."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:338
+msgid "Successfully authenticated user"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:403
+msgid "Successfully requested SMS code"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:413
+msgid "Successfully finished onboarding!"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:417
+msgid "An error occurred while finishing the onboarding process"
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:431
+msgid "Successfully removed all previous data."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingController.php:434
+msgid "An error occurred while trying to remove previous data."
+msgstr ""
+
+#: app/features/Onboarding/OnboardingService.php:69
+msgid "Please enter a valid email address and accept the terms and conditions"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AbstractTask.php:207
+msgid "Premium"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AbstractTask.php:211
+msgid "Special feature"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:24
+msgid "Accept payments via SimplyBook.me"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:34
+#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:34
+#: app/features/TaskManagement/Tasks/InstallAppTask.php:29
+#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:34
+msgid "More info"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AddAllProvidersTask.php:23
+msgid "Have you added all Service Providers?"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AddAllProvidersTask.php:33
+msgid "Add Providers"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AddAllServicesTask.php:23
+msgid "Have you added all your Services?"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AddAllServicesTask.php:33
+msgid "Add Services"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/AddMandatoryProviderTask.php:39
+msgid "Add Provider"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/CustomizeDesignTask.php:19
+msgid "Customize your booking widget"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/CustomizeDesignTask.php:29
+msgid "Design settings"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:27
+msgid "We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings."
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:37
+msgid "General settings"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:24
+msgid "Gather information from your clients upon booking"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:19
+msgid "Discover the full functionality on SimplyBook.me"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/InstallAppTask.php:19
+msgid "Install the SimplyBook.me app for iOS or Android"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/MaxedOutProvidersTask.php:34
+msgid "You have reached the maximum number of Service Providers for your plan"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/MaxedOutProvidersTask.php:44
+#: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:45
+#: app/features/TaskManagement/Tasks/TrialExpiredTask.php:45
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/ListItem.js:64
+msgid "Upgrade"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:35
+msgid "You have reached the maximum number of bookings for your plan"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:24
+msgid "Post your social media content and create ads"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:47
+msgid "Publish the booking widget on the front-end of your site."
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:57
+msgid "Show shortcodes"
+msgstr ""
+
+#: app/features/TaskManagement/Tasks/TrialExpiredTask.php:35
+msgid "Your Trial period has expired! Please consider all premium features!"
+msgstr ""
+
+#: app/http/ApiClient.php:619
+#: app/http/ApiClient.php:827
+msgid "You are not authorized to do this."
+msgstr ""
+
+#: app/http/ApiClient.php:625
+msgid "Too many attempts to register company, please try again in a minute."
+msgstr ""
+
+#: app/http/ApiClient.php:639
+msgid "Please fill in all company data."
+msgstr ""
+
+#: app/http/ApiClient.php:683
+msgid "Something went wrong while registering your company. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:695
+msgid "Company successfully registered."
+msgstr ""
+
+#: app/http/ApiClient.php:728
+msgid "The company name is not allowed. Please change the company name."
+msgstr ""
+
+#: app/http/ApiClient.php:736
+msgid "Unknown error encountered while registering your company. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:835
+msgid "Something went wrong, are you sure you started the company registration?"
+msgstr ""
+
+#: app/http/ApiClient.php:854
+msgid "Something went wrong while confirming your email. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:862
+msgid "Email successfully confirmed."
+msgstr ""
+
+#: app/http/ApiClient.php:866
+msgid "Unknown error encountered while confirming your email. Please try again."
+msgstr ""
+
+#: app/http/ApiClient.php:868
+msgid "This confirmation code is not valid."
+msgstr ""
+
+#: app/http/ApiClient.php:1367
+msgid "Failed logging in, please verify your credentials."
+msgstr ""
+
+#: app/http/ApiClient.php:1370
+msgid "Unknown error"
+msgstr ""
+
+#: app/http/ApiClient.php:1376
+msgid "Login failed! Please try again later."
+msgstr ""
+
+#: app/http/ApiClient.php:1379
+msgid "Invalid response from SimplyBook.me"
+msgstr ""
+
+#: app/http/ApiClient.php:1427
+msgid "Failed two factor authentication, please verify your credentials."
+msgstr ""
+
+#: app/http/ApiClient.php:1430
+msgid "Unknown 2FA error"
+msgstr ""
+
+#: app/http/ApiClient.php:1437
+msgid "Two factor authentication failed! Please try again later."
+msgstr ""
+
+#: app/http/ApiClient.php:1440
+msgid "Invalid 2FA response from SimplyBook.me"
+msgstr ""
+
+#: app/http/ApiClient.php:1508
+#: react/build/843.js:1
+#: react/src/components/Modals/SignInModal.jsx:15
+msgid "Google Authenticator"
+msgstr ""
+
+#: app/http/ApiClient.php:1509
+msgid "SMS"
+msgstr ""
+
+#: app/http/ApiClient.php:1515
+msgid "Unknown 2FA provider"
+msgstr ""
+
+#: app/http/endpoints/BlockEndpoints.php:121
+msgid "Any provider"
+msgstr ""
+
+#: app/http/endpoints/LogOutEndpoint.php:51
+msgid "User is logged out and will be redirected to onboarding."
+msgstr ""
+
+#: app/http/endpoints/LogOutEndpoint.php:53
+msgid "Failed to log out user."
+msgstr ""
+
+#: app/http/endpoints/PublicThemeListEndpoint.php:60
+msgid "No themes found"
+msgstr ""
+
+#: app/http/endpoints/SettingEndpoints.php:114
+msgid "Error processing settings"
+msgstr ""
+
+#: app/managers/EndpointManager.php:168
+msgid "Forbidden."
+msgstr ""
+
+#: app/services/DesignSettingsService.php:189
+msgid "Invalid value for setting"
+msgstr ""
+
+#: app/support/builders/WidgetScriptBuilder.php:243
+msgid "This is a demo SimplyBook.me widget."
+msgstr ""
+
+#. translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag
+#: app/support/builders/WidgetScriptBuilder.php:248
+msgid "You can configure the plugin settings to display your customized widget %1$shere%2$s."
+msgstr ""
+
+#: app/support/builders/WidgetScriptBuilder.php:255
+msgid "Notice"
+msgstr ""
+
+#: app/views/admin/review-notice.php:75
+msgid "Leave a review"
+msgstr ""
+
+#: app/views/admin/review-notice.php:79
+msgid "Maybe later"
+msgstr ""
+
+#: app/views/admin/review-notice.php:83
+msgid "Don't show again"
+msgstr ""
+
+#: config/countries.php:6
+msgid "Afghanistan"
+msgstr ""
+
+#: config/countries.php:7
+msgid "Aland Islands"
+msgstr ""
+
+#: config/countries.php:8
+msgid "Albania"
+msgstr ""
+
+#: config/countries.php:9
+msgid "Algeria"
+msgstr ""
+
+#: config/countries.php:10
+msgid "American Samoa"
+msgstr ""
+
+#: config/countries.php:11
+msgid "Andorra"
+msgstr ""
+
+#: config/countries.php:12
+msgid "Angola"
+msgstr ""
+
+#: config/countries.php:13
+msgid "Anguilla"
+msgstr ""
+
+#: config/countries.php:14
+msgid "Antarctica"
+msgstr ""
+
+#: config/countries.php:15
+msgid "Antigua And Barbuda"
+msgstr ""
+
+#: config/countries.php:16
+msgid "Argentina"
+msgstr ""
+
+#: config/countries.php:17
+msgid "Armenia"
+msgstr ""
+
+#: config/countries.php:18
+msgid "Aruba"
+msgstr ""
+
+#: config/countries.php:19
+msgid "Australia"
+msgstr ""
+
+#: config/countries.php:20
+msgid "Austria"
+msgstr ""
+
+#: config/countries.php:21
+msgid "Azerbaijan"
+msgstr ""
+
+#: config/countries.php:22
+msgid "Bahamas"
+msgstr ""
+
+#: config/countries.php:23
+msgid "Bahrain"
+msgstr ""
+
+#: config/countries.php:24
+msgid "Bangladesh"
+msgstr ""
+
+#: config/countries.php:25
+msgid "Barbados"
+msgstr ""
+
+#: config/countries.php:26
+msgid "Belarus"
+msgstr ""
+
+#: config/countries.php:27
+msgid "Belgium"
+msgstr ""
+
+#: config/countries.php:28
+msgid "Belize"
+msgstr ""
+
+#: config/countries.php:29
+msgid "Benin"
+msgstr ""
+
+#: config/countries.php:30
+msgid "Bermuda"
+msgstr ""
+
+#: config/countries.php:31
+msgid "Bhutan"
+msgstr ""
+
+#: config/countries.php:32
+msgid "Bolivia"
+msgstr ""
+
+#: config/countries.php:33
+msgid "Bosnia And Herzegovina"
+msgstr ""
+
+#: config/countries.php:34
+msgid "Botswana"
+msgstr ""
+
+#: config/countries.php:35
+msgid "Bouvet Island"
+msgstr ""
+
+#: config/countries.php:36
+msgid "Brazil"
+msgstr ""
+
+#: config/countries.php:37
+msgid "British Indian Ocean Territory"
+msgstr ""
+
+#: config/countries.php:38
+msgid "Brunei Darussalam"
+msgstr ""
+
+#: config/countries.php:39
+msgid "Bulgaria"
+msgstr ""
+
+#: config/countries.php:40
+msgid "Burkina Faso"
+msgstr ""
+
+#: config/countries.php:41
+msgid "Burundi"
+msgstr ""
+
+#: config/countries.php:42
+msgid "Cambodia"
+msgstr ""
+
+#: config/countries.php:43
+msgid "Cameroon"
+msgstr ""
+
+#: config/countries.php:44
+msgid "Canada"
+msgstr ""
+
+#: config/countries.php:45
+msgid "Cape Verde"
+msgstr ""
+
+#: config/countries.php:46
+msgid "Cayman Islands"
+msgstr ""
+
+#: config/countries.php:47
+msgid "Central African Republic"
+msgstr ""
+
+#: config/countries.php:48
+msgid "Chad"
+msgstr ""
+
+#: config/countries.php:49
+msgid "Chile"
+msgstr ""
+
+#: config/countries.php:50
+msgid "China"
+msgstr ""
+
+#: config/countries.php:51
+msgid "Christmas Island"
+msgstr ""
+
+#: config/countries.php:52
+msgid "Cocos (Keeling) Islands"
+msgstr ""
+
+#: config/countries.php:53
+msgid "Colombia"
+msgstr ""
+
+#: config/countries.php:54
+msgid "Comoros"
+msgstr ""
+
+#: config/countries.php:55
+msgid "Congo"
+msgstr ""
+
+#: config/countries.php:56
+msgid "Congo, Democratic Republic"
+msgstr ""
+
+#: config/countries.php:57
+msgid "Cook Islands"
+msgstr ""
+
+#: config/countries.php:58
+msgid "Costa Rica"
+msgstr ""
+
+#: config/countries.php:59
+msgid "Cote D'Ivoire"
+msgstr ""
+
+#: config/countries.php:60
+msgid "Croatia"
+msgstr ""
+
+#: config/countries.php:61
+msgid "Cuba"
+msgstr ""
+
+#: config/countries.php:62
+msgid "Cyprus"
+msgstr ""
+
+#: config/countries.php:63
+msgid "Czech Republic"
+msgstr ""
+
+#: config/countries.php:64
+msgid "Denmark"
+msgstr ""
+
+#: config/countries.php:65
+msgid "Djibouti"
+msgstr ""
+
+#: config/countries.php:66
+msgid "Dominica"
+msgstr ""
+
+#: config/countries.php:67
+msgid "Dominican Republic"
+msgstr ""
+
+#: config/countries.php:68
+msgid "Ecuador"
+msgstr ""
+
+#: config/countries.php:69
+msgid "Egypt"
+msgstr ""
+
+#: config/countries.php:70
+msgid "El Salvador"
+msgstr ""
+
+#: config/countries.php:71
+msgid "Equatorial Guinea"
+msgstr ""
+
+#: config/countries.php:72
+msgid "Eritrea"
+msgstr ""
+
+#: config/countries.php:73
+msgid "Estonia"
+msgstr ""
+
+#: config/countries.php:74
+msgid "Ethiopia"
+msgstr ""
+
+#: config/countries.php:75
+msgid "Falkland Islands (Malvinas)"
+msgstr ""
+
+#: config/countries.php:76
+msgid "Faroe Islands"
+msgstr ""
+
+#: config/countries.php:77
+msgid "Fiji"
+msgstr ""
+
+#: config/countries.php:78
+msgid "Finland"
+msgstr ""
+
+#: config/countries.php:79
+msgid "France"
+msgstr ""
+
+#: config/countries.php:80
+msgid "French Guiana"
+msgstr ""
+
+#: config/countries.php:81
+msgid "French Polynesia"
+msgstr ""
+
+#: config/countries.php:82
+msgid "French Southern Territories"
+msgstr ""
+
+#: config/countries.php:83
+msgid "Gabon"
+msgstr ""
+
+#: config/countries.php:84
+msgid "Gambia"
+msgstr ""
+
+#: config/countries.php:85
+msgid "Georgia"
+msgstr ""
+
+#: config/countries.php:86
+msgid "Germany"
+msgstr ""
+
+#: config/countries.php:87
+msgid "Ghana"
+msgstr ""
+
+#: config/countries.php:88
+msgid "Gibraltar"
+msgstr ""
+
+#: config/countries.php:89
+msgid "Greece"
+msgstr ""
+
+#: config/countries.php:90
+msgid "Greenland"
+msgstr ""
+
+#: config/countries.php:91
+msgid "Grenada"
+msgstr ""
+
+#: config/countries.php:92
+msgid "Guadeloupe"
+msgstr ""
+
+#: config/countries.php:93
+msgid "Guam"
+msgstr ""
+
+#: config/countries.php:94
+msgid "Guatemala"
+msgstr ""
+
+#: config/countries.php:95
+msgid "Guernsey"
+msgstr ""
+
+#: config/countries.php:96
+msgid "Guinea"
+msgstr ""
+
+#: config/countries.php:97
+msgid "Guinea-Bissau"
+msgstr ""
+
+#: config/countries.php:98
+msgid "Guyana"
+msgstr ""
+
+#: config/countries.php:99
+msgid "Haiti"
+msgstr ""
+
+#: config/countries.php:100
+msgid "Heard Island & Mcdonald Islands"
+msgstr ""
+
+#: config/countries.php:101
+msgid "Holy See (Vatican City State)"
+msgstr ""
+
+#: config/countries.php:102
+msgid "Honduras"
+msgstr ""
+
+#: config/countries.php:103
+msgid "Hong Kong"
+msgstr ""
+
+#: config/countries.php:104
+msgid "Hungary"
+msgstr ""
+
+#: config/countries.php:105
+msgid "Iceland"
+msgstr ""
+
+#: config/countries.php:106
+msgid "India"
+msgstr ""
+
+#: config/countries.php:107
+msgid "Indonesia"
+msgstr ""
+
+#: config/countries.php:108
+msgid "Iran, Islamic Republic Of"
+msgstr ""
+
+#: config/countries.php:109
+msgid "Iraq"
+msgstr ""
+
+#: config/countries.php:110
+msgid "Ireland"
+msgstr ""
+
+#: config/countries.php:111
+msgid "Isle Of Man"
+msgstr ""
+
+#: config/countries.php:112
+msgid "Israel"
+msgstr ""
+
+#: config/countries.php:113
+msgid "Italy"
+msgstr ""
+
+#: config/countries.php:114
+msgid "Jamaica"
+msgstr ""
+
+#: config/countries.php:115
+msgid "Japan"
+msgstr ""
+
+#: config/countries.php:116
+msgid "Jersey"
+msgstr ""
+
+#: config/countries.php:117
+msgid "Jordan"
+msgstr ""
+
+#: config/countries.php:118
+msgid "Kazakhstan"
+msgstr ""
+
+#: config/countries.php:119
+msgid "Kenya"
+msgstr ""
+
+#: config/countries.php:120
+msgid "Kiribati"
+msgstr ""
+
+#: config/countries.php:121
+msgid "Korea"
+msgstr ""
+
+#: config/countries.php:122
+msgid "Kuwait"
+msgstr ""
+
+#: config/countries.php:123
+msgid "Kyrgyzstan"
+msgstr ""
+
+#: config/countries.php:124
+msgid "Lao People's Democratic Republic"
+msgstr ""
+
+#: config/countries.php:125
+msgid "Latvia"
+msgstr ""
+
+#: config/countries.php:126
+msgid "Lebanon"
+msgstr ""
+
+#: config/countries.php:127
+msgid "Lesotho"
+msgstr ""
+
+#: config/countries.php:128
+msgid "Liberia"
+msgstr ""
+
+#: config/countries.php:129
+msgid "Libyan Arab Jamahiriya"
+msgstr ""
+
+#: config/countries.php:130
+msgid "Liechtenstein"
+msgstr ""
+
+#: config/countries.php:131
+msgid "Lithuania"
+msgstr ""
+
+#: config/countries.php:132
+msgid "Luxembourg"
+msgstr ""
+
+#: config/countries.php:133
+msgid "Macao"
+msgstr ""
+
+#: config/countries.php:134
+msgid "North Macedonia"
+msgstr ""
+
+#: config/countries.php:135
+msgid "Madagascar"
+msgstr ""
+
+#: config/countries.php:136
+msgid "Malawi"
+msgstr ""
+
+#: config/countries.php:137
+msgid "Malaysia"
+msgstr ""
+
+#: config/countries.php:138
+msgid "Maldives"
+msgstr ""
+
+#: config/countries.php:139
+msgid "Mali"
+msgstr ""
+
+#: config/countries.php:140
+msgid "Malta"
+msgstr ""
+
+#: config/countries.php:141
+msgid "Marshall Islands"
+msgstr ""
+
+#: config/countries.php:142
+msgid "Martinique"
+msgstr ""
+
+#: config/countries.php:143
+msgid "Mauritania"
+msgstr ""
+
+#: config/countries.php:144
+msgid "Mauritius"
+msgstr ""
+
+#: config/countries.php:145
+msgid "Mayotte"
+msgstr ""
+
+#: config/countries.php:146
+msgid "Mexico"
+msgstr ""
+
+#: config/countries.php:147
+msgid "Micronesia, Federated States Of"
+msgstr ""
+
+#: config/countries.php:148
+msgid "Moldova"
+msgstr ""
+
+#: config/countries.php:149
+msgid "Monaco"
+msgstr ""
+
+#: config/countries.php:150
+msgid "Mongolia"
+msgstr ""
+
+#: config/countries.php:151
+msgid "Montenegro"
+msgstr ""
+
+#: config/countries.php:152
+msgid "Montserrat"
+msgstr ""
+
+#: config/countries.php:153
+msgid "Morocco"
+msgstr ""
+
+#: config/countries.php:154
+msgid "Mozambique"
+msgstr ""
+
+#: config/countries.php:155
+msgid "Myanmar"
+msgstr ""
+
+#: config/countries.php:156
+msgid "Namibia"
+msgstr ""
+
+#: config/countries.php:157
+msgid "Nauru"
+msgstr ""
+
+#: config/countries.php:158
+msgid "Nepal"
+msgstr ""
+
+#: config/countries.php:159
+msgid "Netherlands"
+msgstr ""
+
+#: config/countries.php:160
+msgid "Netherlands Antilles"
+msgstr ""
+
+#: config/countries.php:161
+msgid "New Caledonia"
+msgstr ""
+
+#: config/countries.php:162
+msgid "New Zealand"
+msgstr ""
+
+#: config/countries.php:163
+msgid "Nicaragua"
+msgstr ""
+
+#: config/countries.php:164
+msgid "Niger"
+msgstr ""
+
+#: config/countries.php:165
+msgid "Nigeria"
+msgstr ""
+
+#: config/countries.php:166
+msgid "Niue"
+msgstr ""
+
+#: config/countries.php:167
+msgid "Norfolk Island"
+msgstr ""
+
+#: config/countries.php:168
+msgid "Northern Mariana Islands"
+msgstr ""
+
+#: config/countries.php:169
+msgid "Norway"
+msgstr ""
+
+#: config/countries.php:170
+msgid "Oman"
+msgstr ""
+
+#: config/countries.php:171
+msgid "Pakistan"
+msgstr ""
+
+#: config/countries.php:172
+msgid "Palau"
+msgstr ""
+
+#: config/countries.php:173
+msgid "Palestinian Territory, Occupied"
+msgstr ""
+
+#: config/countries.php:174
+msgid "Panama"
+msgstr ""
+
+#: config/countries.php:175
+msgid "Papua New Guinea"
+msgstr ""
+
+#: config/countries.php:176
+msgid "Paraguay"
+msgstr ""
+
+#: config/countries.php:177
+msgid "Peru"
+msgstr ""
+
+#: config/countries.php:178
+msgid "Philippines"
+msgstr ""
+
+#: config/countries.php:179
+msgid "Pitcairn"
+msgstr ""
+
+#: config/countries.php:180
+msgid "Poland"
+msgstr ""
+
+#: config/countries.php:181
+msgid "Portugal"
+msgstr ""
+
+#: config/countries.php:182
+msgid "Puerto Rico"
+msgstr ""
+
+#: config/countries.php:183
+msgid "Qatar"
+msgstr ""
+
+#: config/countries.php:184
+msgid "Reunion"
+msgstr ""
+
+#: config/countries.php:185
+msgid "Romania"
+msgstr ""
+
+#: config/countries.php:186
+msgid "Russian Federation"
+msgstr ""
+
+#: config/countries.php:187
+msgid "Rwanda"
+msgstr ""
+
+#: config/countries.php:188
+msgid "Saint Barthelemy"
+msgstr ""
+
+#: config/countries.php:189
+msgid "Saint Helena"
+msgstr ""
+
+#: config/countries.php:190
+msgid "Saint Kitts And Nevis"
+msgstr ""
+
+#: config/countries.php:191
+msgid "Saint Lucia"
+msgstr ""
+
+#: config/countries.php:192
+msgid "Saint Martin"
+msgstr ""
+
+#: config/countries.php:193
+msgid "Saint Pierre And Miquelon"
+msgstr ""
+
+#: config/countries.php:194
+msgid "Saint Vincent And Grenadines"
+msgstr ""
+
+#: config/countries.php:195
+msgid "Samoa"
+msgstr ""
+
+#: config/countries.php:196
+msgid "San Marino"
+msgstr ""
+
+#: config/countries.php:197
+msgid "Sao Tome And Principe"
+msgstr ""
+
+#: config/countries.php:198
+msgid "Saudi Arabia"
+msgstr ""
+
+#: config/countries.php:199
+msgid "Senegal"
+msgstr ""
+
+#: config/countries.php:200
+msgid "Serbia"
+msgstr ""
+
+#: config/countries.php:201
+msgid "Seychelles"
+msgstr ""
+
+#: config/countries.php:202
+msgid "Sierra Leone"
+msgstr ""
+
+#: config/countries.php:203
+msgid "Singapore"
+msgstr ""
+
+#: config/countries.php:204
+msgid "Slovakia"
+msgstr ""
+
+#: config/countries.php:205
+msgid "Slovenia"
+msgstr ""
+
+#: config/countries.php:206
+msgid "Solomon Islands"
+msgstr ""
+
+#: config/countries.php:207
+msgid "Somalia"
+msgstr ""
+
+#: config/countries.php:208
+msgid "South Africa"
+msgstr ""
+
+#: config/countries.php:209
+msgid "South Georgia And Sandwich Isl."
+msgstr ""
+
+#: config/countries.php:210
+msgid "Spain"
+msgstr ""
+
+#: config/countries.php:211
+msgid "Sri Lanka"
+msgstr ""
+
+#: config/countries.php:212
+msgid "Sudan"
+msgstr ""
+
+#: config/countries.php:213
+msgid "Suriname"
+msgstr ""
+
+#: config/countries.php:214
+msgid "Svalbard And Jan Mayen"
+msgstr ""
+
+#: config/countries.php:215
+msgid "Swaziland"
+msgstr ""
+
+#: config/countries.php:216
+msgid "Sweden"
+msgstr ""
+
+#: config/countries.php:217
+msgid "Switzerland"
+msgstr ""
+
+#: config/countries.php:218
+msgid "Syrian Arab Republic"
+msgstr ""
+
+#: config/countries.php:219
+msgid "Taiwan"
+msgstr ""
+
+#: config/countries.php:220
+msgid "Tajikistan"
+msgstr ""
+
+#: config/countries.php:221
+msgid "Tanzania"
+msgstr ""
+
+#: config/countries.php:222
+msgid "Thailand"
+msgstr ""
+
+#: config/countries.php:223
+msgid "Timor-Leste"
+msgstr ""
+
+#: config/countries.php:224
+msgid "Togo"
+msgstr ""
+
+#: config/countries.php:225
+msgid "Tokelau"
+msgstr ""
+
+#: config/countries.php:226
+msgid "Tonga"
+msgstr ""
+
+#: config/countries.php:227
+msgid "Trinidad And Tobago"
+msgstr ""
+
+#: config/countries.php:228
+msgid "Tunisia"
+msgstr ""
+
+#: config/countries.php:229
+msgid "Turkey"
+msgstr ""
+
+#: config/countries.php:230
+msgid "Turkmenistan"
+msgstr ""
+
+#: config/countries.php:231
+msgid "Turks And Caicos Islands"
+msgstr ""
+
+#: config/countries.php:232
+msgid "Tuvalu"
+msgstr ""
+
+#: config/countries.php:233
+msgid "Uganda"
+msgstr ""
+
+#: config/countries.php:234
+msgid "Ukraine"
+msgstr ""
+
+#: config/countries.php:235
+msgid "United Arab Emirates"
+msgstr ""
+
+#: config/countries.php:236
+msgid "United Kingdom"
+msgstr ""
+
+#: config/countries.php:237
+msgid "United States"
+msgstr ""
+
+#: config/countries.php:238
+msgid "United States Outlying Islands"
+msgstr ""
+
+#: config/countries.php:239
+msgid "Uruguay"
+msgstr ""
+
+#: config/countries.php:240
+msgid "Uzbekistan"
+msgstr ""
+
+#: config/countries.php:241
+msgid "Vanuatu"
+msgstr ""
+
+#: config/countries.php:242
+msgid "Venezuela"
+msgstr ""
+
+#: config/countries.php:243
+msgid "Viet Nam"
+msgstr ""
+
+#: config/countries.php:244
+msgid "Virgin Islands, British"
+msgstr ""
+
+#: config/countries.php:245
+msgid "Virgin Islands, U.S."
+msgstr ""
+
+#: config/countries.php:246
+msgid "Wallis And Futuna"
+msgstr ""
+
+#: config/countries.php:247
+msgid "Western Sahara"
+msgstr ""
+
+#: config/countries.php:248
+msgid "Yemen"
+msgstr ""
+
+#: config/countries.php:249
+msgid "Zambia"
+msgstr ""
+
+#: config/countries.php:250
+msgid "Zimbabwe"
+msgstr ""
+
+#: config/fields/authentication.php:11
+msgid "Currently logged in as"
+msgstr ""
+
+#: config/fields/content.php:13
+msgid "Calendar shortcode"
+msgstr ""
+
+#: config/fields/design.php:12
+#: config/fields/design.php:152
+msgid "Flexible"
+msgstr ""
+
+#: config/fields/design.php:13
+#: config/fields/design.php:150
+msgid "Modern"
+msgstr ""
+
+#: config/fields/design.php:14
+#: config/fields/design.php:148
+msgid "Flexible weekly"
+msgstr ""
+
+#: config/fields/design.php:15
+#: config/fields/design.php:153
+msgid "Slots weekly"
+msgstr ""
+
+#: config/fields/design.php:16
+#: config/fields/design.php:156
+msgid "Modern Provider"
+msgstr ""
+
+#: config/fields/design.php:17
+#: config/fields/design.php:149
+msgid "Flexible Provider"
+msgstr ""
+
+#: config/fields/design.php:18
+#: config/fields/design.php:154
+msgid "Weekly classes"
+msgstr ""
+
+#: config/fields/design.php:20
+msgid "Calendar layout"
+msgstr ""
+
+#: config/fields/design.php:29
+msgid "Datepicker type"
+msgstr ""
+
+#: config/fields/design.php:32
+msgid "Inline Datepicker"
+msgstr ""
+
+#: config/fields/design.php:33
+msgid "Top Calendar"
+msgstr ""
+
+#: config/fields/design.php:42
+msgid "RTL"
+msgstr ""
+
+#. translators: %s - IS or IS NOT
+#: config/fields/design.php:45
+msgid "When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL."
+msgstr ""
+
+#: config/fields/design.php:56
+msgid "Allow switch to ADA"
+msgstr ""
+
+#: config/fields/design.php:57
+msgid "This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability."
+msgstr ""
+
+#: config/fields/design.php:66
+msgid "Clear the session of each widget initialization"
+msgstr ""
+
+#: config/fields/design.php:67
+msgid "Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones."
+msgstr ""
+
+#: config/fields/design.php:144
+msgid "Theme"
+msgstr ""
+
+#: config/fields/design.php:151
+msgid "Default"
+msgstr ""
+
+#: config/fields/design.php:155
+msgid "Daily classes"
+msgstr ""
+
+#: config/fields/design.php:157
+msgid "As slots"
+msgstr ""
+
+#: config/fields/design.php:158
+msgid "As table"
+msgstr ""
+
+#: config/fields/design.php:159
+msgid "Block"
+msgstr ""
+
+#: config/fields/design.php:160
+msgid "List"
+msgstr ""
+
+#: config/fields/design.php:161
+msgid "Single page"
+msgstr ""
+
+#: config/fields/design.php:162
+msgid "Display calendar"
+msgstr ""
+
+#: config/fields/design.php:163
+msgid "Base theme color"
+msgstr ""
+
+#: config/fields/design.php:164
+msgid "Show only available time"
+msgstr ""
+
+#: config/fields/design.php:165
+msgid "Hide unavailable days on calendar"
+msgstr ""
+
+#: config/fields/design.php:166
+msgid "Display calendar layout sidebar"
+msgstr ""
+
+#: config/fields/design.php:167
+msgid "Image scale mode"
+msgstr ""
+
+#: config/fields/providers.php:13
+#: config/menus.php:24
+#: react/build/747.js:1
+msgid "Service Providers"
+msgstr ""
+
+#: config/fields/providers.php:14
+msgid "Want more Service Providers?"
+msgstr ""
+
+#: config/fields/services.php:13
+#: config/menus.php:29
+msgid "Services"
+msgstr ""
+
+#: config/menus.php:9
+msgid "General"
+msgstr ""
+
+#: config/menus.php:14
+msgid "Authentication"
+msgstr ""
+
+#: config/menus.php:18
+msgid "Content"
+msgstr ""
+
+#: config/menus.php:34
+msgid "Design"
+msgstr ""
+
+#: config/menus.php:38
+msgid "Main settings"
+msgstr ""
+
+#: config/menus.php:43
+msgid "Theme settings"
+msgstr ""
+
+#: config/menus.php:59
+#: react/build/107.js:1
+msgid "Notifications"
+msgstr ""
+
+#: config/menus.php:64
+msgid "Schedule"
+msgstr ""
+
+#: config/menus.php:69
+#: react/build/747.js:1
+msgid "Bookings"
+msgstr ""
+
+#: config/related.php:16
+msgid "Lightweight plugin. Heavyweight security features."
+msgstr ""
+
+#: config/related.php:28
+msgid "Consent Management as it should be"
+msgstr ""
+
+#: config/related.php:39
+msgid "Terms & Conditions"
+msgstr ""
+
+#: assets/block/build/index.js:75
+#: assets/block/src/edit.js:86
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: assets/block/build/index.js:59
+msgid "Preview"
+msgstr ""
+
+#: assets/block/build/index.js:142
+#: assets/block/src/edit.js:164
+#: assets/block/build/index.js:138
+msgid "SimplyBook.me Widget"
+msgstr ""
+
+#: assets/block/build/index.js:144
+#: assets/block/src/edit.js:167
+#: assets/block/build/index.js:141
+msgid "Easily customize and streamline your booking process with predefined options for services, providers, categories and locations."
+msgstr ""
+
+#: assets/block/build/index.js:146
+#: assets/block/build/index.js:251
+#: assets/block/src/edit.js:172
+#: assets/block/src/setting.modal.js:19
+#: assets/block/build/index.js:236
+msgid "You are not authorized in "
+msgstr ""
+
+#: assets/block/build/index.js:148
+#: assets/block/build/index.js:253
+#: assets/block/src/edit.js:173
+#: assets/block/src/setting.modal.js:20
+#: assets/block/build/index.js:147
+#: assets/block/build/index.js:237
+msgid "SimplyBook.me plugin"
+msgstr ""
+
+#: assets/block/build/index.js:150
+#: assets/block/src/edit.js:179
+#: assets/block/build/index.js:153
+msgid "Location: "
+msgstr ""
+
+#: assets/block/build/index.js:152
+#: assets/block/src/edit.js:184
+#: assets/block/build/index.js:158
+msgid "Category: "
+msgstr ""
+
+#: assets/block/build/index.js:154
+#: assets/block/src/edit.js:189
+#: assets/block/build/index.js:163
+msgid "Service: "
+msgstr ""
+
+#: assets/block/build/index.js:156
+#: assets/block/src/edit.js:194
+#: assets/block/build/index.js:168
+msgid "Provider: "
+msgstr ""
+
+#: assets/block/build/index.js:160
+#: assets/block/build/index.js:247
+#: assets/block/src/edit.js:202
+#: assets/block/src/setting.modal.js:13
+#: assets/block/build/index.js:176
+#: assets/block/build/index.js:230
+msgid "Edit predefined parameters"
+msgstr ""
+
+#: assets/block/build/index.js:176
+#: assets/block/src/edit.js:217
+#: assets/block/build/index.js:191
+msgid "WidgetPreview"
+msgstr ""
+
+#: assets/block/build/index.js:257
+#: assets/block/src/setting.modal.js:26
+#: assets/block/build/index.js:243
+msgid "This feature allows you to customize your booking widget specifically for a service, provider, category, or location."
+msgstr ""
+
+#: assets/block/build/index.js:259
+#: assets/block/src/setting.modal.js:29
+#: assets/block/build/index.js:246
+msgid "For example, if you have two services, A and B, and choose service A as predefined, the widget will open directly on that service, skipping the step of choosing a service. This is useful if you want to display only certain services on a specific page of your website. Note that if you select a provider not connected to the chosen service, the widget will not work. These settings will immediately apply to the widget, ensuring a streamlined booking process."
+msgstr ""
+
+#: assets/block/build/index.js:262
+#: assets/block/src/setting.modal.js:35
+#: assets/block/build/index.js:252
+msgid "Predefined location"
+msgstr ""
+
+#: assets/block/build/index.js:265
+#: assets/block/src/setting.modal.js:37
+#: assets/block/build/index.js:254
+msgid "Select location"
+msgstr ""
+
+#: assets/block/build/index.js:275
+#: assets/block/src/setting.modal.js:43
+#: assets/block/build/index.js:260
+msgid "Predefined category"
+msgstr ""
+
+#: assets/block/build/index.js:278
+#: assets/block/src/setting.modal.js:45
+#: assets/block/build/index.js:262
+msgid "Select category"
+msgstr ""
+
+#: assets/block/build/index.js:288
+#: assets/block/src/setting.modal.js:51
+#: assets/block/build/index.js:268
+msgid "Predefined service"
+msgstr ""
+
+#: assets/block/build/index.js:291
+#: assets/block/src/setting.modal.js:53
+#: assets/block/build/index.js:270
+msgid "Select service"
+msgstr ""
+
+#: assets/block/build/index.js:301
+#: assets/block/src/setting.modal.js:59
+#: assets/block/build/index.js:276
+msgid "Predefined provider"
+msgstr ""
+
+#: assets/block/build/index.js:304
+#: assets/block/src/setting.modal.js:61
+#: assets/block/build/index.js:278
+msgid "Select provider"
+msgstr ""
+
+#: assets/block/build/index.js:327
+#: assets/block/src/setting.modal.js:78
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/components/Forms/FormFooter.jsx:55
+#: assets/block/build/index.js:295
+msgid "Save"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+msgid "Route is not set"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+msgid "Payload is not set"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+msgid "An error occurred"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Common/CalendarLoading.jsx:62
+msgid "Please wait while your registration is being processed. This usually takes about 30 seconds."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Common/CalendarLoading.jsx:65
+msgid "This is taking a bit longer than expected. Please wait while we retry a few times."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Common/CalendarLoading.jsx:69
+msgid "We're sorry, but it seems there is a problem with your registration. Please try again later."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Common/CalendarLoading.jsx:71
+msgid "Please complete the onboarding first to register your account."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+msgid "Select an option"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/ListItem.js:27
+msgid "Loading"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/ListItem.js:51
+msgid "Edit"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+msgid "live"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+msgid "preview"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/AuthenticationField.jsx:30
+msgid "Are you sure you want to logout? All settings will be lost."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/AuthenticationField.jsx:68
+#: react/src/components/Fields/AuthenticationField.jsx:71
+msgid "Log out"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Fields/ThemeField.jsx:67
+msgid "Error fetching theme settings. Please try again later."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Forms/FormField.js:52
+msgid "This field is required"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Forms/FormField.js:59
+msgid "Invalid format"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Forms/OnboardingForms.jsx:17
+#: react/src/components/Onboarding/OnboardingStep.jsx:19
+#: react/src/components/Onboarding/OnboardingStep.jsx:185
+msgid "Next"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:195
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:151
+#: react/src/components/Onboarding/OnboardingStep.jsx:206
+msgid "Something went wrong"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/792.js:1
+#: react/build/939.js:1
+#: react/src/components/Onboarding/OnboardingStep.jsx:210
+msgid "Or restart the onboarding"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:90
+msgid "Email address"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:94
+msgid "Please enter a valid email address"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:102
+msgid "I agree to the %sterms and conditions%s"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:133
+msgid "Business category"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:135
+msgid "Beauty and wellness"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:136
+msgid "Sport and fitness"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:139
+msgid "Personal meetings and services"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:141
+msgid "Medical"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:142
+msgid "Events and entertainment"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:143
+msgid "Education"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:144
+msgid "Retailers"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:145
+msgid "Officials"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:146
+msgid "Other category"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:153
+msgid "What service do you provide?"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:160
+msgid "Phone"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:163
+msgid "Please enter a valid phone number"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:171
+msgid "Address"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:178
+msgid "Postal Code"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:185
+msgid "City"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:191
+msgid "Country"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:212
+msgid "Confirmation Code"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:252
+msgid "Simple"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:253
+msgid "Generate page"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:257
+msgid "Shortcode"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:258
+msgid "Do it yourself"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:57
+msgid "Please enter a valid calendar page URL"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/157.js:1
+#: react/build/182.js:1
+#: react/build/747.js:1
+#: react/build/792.js:1
+#: react/build/843.js:1
+#: react/build/939.js:1
+#: react/src/hooks/useOnboardingData.js:62
+msgid "This calendar page URL is taken. Please choose another one."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:23
+msgid "Create your free account"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:26
+msgid "100% free. No credit card needed."
+msgstr ""
+
+#: react/build/18.js:1
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:45
+msgid "How to get started with SimplyBook.me"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/157.js:1
+#: react/build/939.js:1
+#: react/src/routes/onboarding/confirm-email.lazy.jsx:102
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:51
+#: react/src/routes/onboarding/information-check.lazy.jsx:46
+msgid "SimplyBook.me fits seamlessly into your business"
+msgstr ""
+
+#: react/build/18.js:1
+#: react/build/157.js:1
+#: react/build/939.js:1
+#: react/src/routes/onboarding/confirm-email.lazy.jsx:105
+#: react/src/routes/onboarding/create-your-account.lazy.jsx:54
+#: react/src/routes/onboarding/information-check.lazy.jsx:49
+msgid "It’s easy to keep your appointments in sync with the apps and plugins you need."
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:212
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:170
+msgid "Close"
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/components/Forms/FormFooter.jsx:30
+msgid "Saving..."
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/components/Forms/FormFooter.jsx:31
+msgid "Validating..."
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/components/Forms/FormFooter.jsx:32
+msgid "Form contains errors"
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/components/Forms/FormFooter.jsx:33
+msgid "You have unsaved changes"
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/routes/settings/$settingsId.lazy.jsx:77
+msgid ""
+"You have unsaved changes. Are you sure you want to leave?\n"
+"\n"
+"Your changes will be lost."
+msgstr ""
+
+#: react/build/46.js:1
+#: react/build/107.js:1
+#: react/src/routes/settings/$settingsId.lazy.jsx:98
+msgid "Settings saved successfully"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "Live Help"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "days left"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "Dashboard"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "Clients"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "Calendar"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "Help Center"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/build/747.js:1
+msgid "is expired."
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:18
+msgid "Loading menu..."
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:19
+msgid "Error loading menu"
+msgstr ""
+
+#: react/build/107.js:1
+#: react/src/components/Settings/SettingsMenu.jsx:20
+msgid "No menu items available"
+msgstr ""
+
+#: react/build/107.js:1
+msgid "You currently have no notifications."
+msgstr ""
+
+#: react/build/157.js:1
+#: react/src/routes/onboarding/confirm-email.lazy.jsx:68
+msgid "Lets get you verified!"
+msgstr ""
+
+#: react/build/157.js:1
+#: react/src/routes/onboarding/confirm-email.lazy.jsx:71
+msgid "Fill in the authentication code sent to your email"
+msgstr ""
+
+#: react/build/157.js:1
+#: react/src/routes/onboarding/confirm-email.lazy.jsx:85
+msgid "Verify email"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:31
+msgid "Select your company colors"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:34
+msgid "Next Step: Finish"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:40
+msgid "Primary"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:52
+msgid "Secondary"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:63
+msgid "Active"
+msgstr ""
+
+#: react/build/182.js:1
+#: react/src/routes/onboarding/style-widget.lazy.jsx:78
+msgid "Next step"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "is expired"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "No tasks available."
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Loading tasks..."
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Progress"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "All tasks"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Remaining tasks"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "You're all set! Great job!"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "You're on your way. You still have %s task open."
+msgid_plural "You're on your way. You still have %s tasks open."
+msgstr[0] ""
+msgstr[1] ""
+
+#: react/build/747.js:1
+msgid "Not yet calculated..."
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Today"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "This week"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Service Provider"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Service"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Most popular"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Last 30 days"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "View Bookings"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "SMS Credits"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "SMS Gateway"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Membership"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Paid Events"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Management"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Tips & Tricks"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "View All"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Installed"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Install"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Activate"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Activating..."
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Downloading..."
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Other Plugins"
+msgstr ""
+
+#: react/build/747.js:1
+msgid "Loading..."
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:25
+msgid "calendar"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:59
+msgid "Almost there!"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:62
+#: react/src/routes/onboarding/implementation.lazy.jsx:67
+msgid "Implement SimplyBook.me"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:69
+msgid "Continue configuration"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:81
+#: react/src/routes/onboarding/implementation.lazy.jsx:107
+msgid "Implementation"
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:84
+msgid "Use the below shortcode in a page to show the widget."
+msgstr ""
+
+#: react/build/792.js:1
+#: react/src/routes/onboarding/implementation.lazy.jsx:110
+msgid "SimplyBook.me will generate the following page automatically"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:100
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:52
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:73
+msgid "An unknown error occurred, please try again."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:60
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:81
+msgid "An unknown error occurred. Please try again."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:98
+msgid "Select 2FA provider"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:122
+msgid "Enter 2FA authentication code"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:125
+msgid "Enter code"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:146
+msgid "SMS Requested"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:146
+msgid "Request SMS"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:205
+#: react/src/components/Modals/Partials/FormTwoFa.jsx:162
+msgid "Submit"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:116
+msgid "Company domain"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:136
+#: react/src/components/Modals/Partials/FormLogin.jsx:139
+msgid "Company login"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:158
+#: react/src/components/Modals/Partials/FormLogin.jsx:161
+msgid "User login or email"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/Partials/FormLogin.jsx:180
+#: react/src/components/Modals/Partials/FormLogin.jsx:183
+msgid "Password"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/SignInModal.jsx:42
+msgid "2FA authentication"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/SignInModal.jsx:43
+msgid "Please use your 2FA provider to sign in."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/SignInModal.jsx:24
+msgid "Sign In"
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Modals/SignInModal.jsx:25
+msgid "Please enter your SimplyBook.me credentials to sign in."
+msgstr ""
+
+#: react/build/843.js:1
+#: react/src/components/Onboarding/OnboardingHeader.jsx:35
+msgid "Already got an account?"
+msgstr ""
+
+#: react/build/939.js:1
+#: react/src/routes/onboarding/information-check.lazy.jsx:18
+msgid "Welcome to SimplyBook.me"
+msgstr ""
+
+#: react/build/939.js:1
+#: react/src/routes/onboarding/information-check.lazy.jsx:21
+msgid "Fill in extra information for your account"
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:44
+msgid "Uh-oh! We stumbled upon an error."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:59
+msgid "Copied"
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:60
+msgid "Copy Error"
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:64
+msgid "We're sorry for the trouble. Please take a moment to report this issue on the WordPress forums so we can work on fixing it. Here’s how you can report the issue:"
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:72
+msgid "Copy the error details by clicking the %s button above."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:84
+msgid "Navigate to the Support Forum."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:88
+msgid "If you haven’t already, log in to your WordPress.org account or create a new account."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:95
+msgid "Once logged in, click on %s under the SimplyBook.me forum."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:104
+msgid "Title: Mention %s along with a brief hint of the error."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:112
+msgid "Description: Paste the copied error details and explain what you were doing when the error occurred."
+msgstr ""
+
+#: react/build/index.js:1
+#: react/src/components/Common/ErrorBoundary.jsx:119
+msgid "Click %s to post your topic. Our team will look into the issue and provide assistance."
+msgstr ""
+
+#: react/src/components/Onboarding/OnboardingFooter.jsx:34
+msgid "What can you do with SimplyBook.me?"
+msgstr ""
+
+#: assets/block/build/block.json
+#: assets/block/src/block.json
+msgctxt "block title"
+msgid "Simplybook Widget"
+msgstr ""
+
+#: assets/block/build/block.json
+#: assets/block/src/block.json
+msgctxt "block description"
+msgid "A widget for Simplybook.me"
+msgstr ""

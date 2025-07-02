@@ -1,0 +1,289 @@
+/* To use our current tailwind.config.js we now use @config in this CSS file */
+@config "../tailwind.config.js";
+
+/* New way to load Tailwindcss */
+/* @import "tailwindcss"; */
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css";
+
+/* Import Toastify css */
+@import "../node_modules/react-toastify/dist/ReactToastify.css";
+
+/* Import React Tooltip css */
+@import "../node_modules/react-tooltip/dist/react-tooltip.css";
+
+/* load the safelist */
+@source "../safelist.txt";
+
+@theme {
+    /* Box-shadow */
+    --shadow-md: 0px 9px 14px -2px rgba(0,0,0,0.1);
+
+    /* Define custom font sizes */
+    --text-xxs: 0.6825rem;
+    --text-base: 0.875rem;
+    --text-lg: 1rem;
+    --text-label: var(--text-base);
+    --text-xl: 1.125rem;
+    --text-2xl: 1.375rem;
+    --text-3xl: 1.5rem;
+    --text-4xl: 2rem;
+
+    /* Succes colors */
+    --color-succes: var(--color-green-500);
+    --color-succes-light: #EAFAF3;
+
+    /* Warning colors */
+    --color-warning: var(--color-yellow-400);
+    --color-warning-light: var(--color-yellow-100);
+
+    /* Warning colors */
+    --color-error: var(--color-red-400);
+    --color-error-light: var(--color-red-100);
+
+
+    /* Primary colors */
+    --bg-primary-light: #b3e4f9;
+    --bg-primary: #06adef;
+    --bg-primary-dark: #055b78;
+    --color-primary-hover: #0589bd;
+    --color-primary-lighter: #F8FCFE;
+
+    /* Secondary colors */
+    --bg-secondary-light: #ffb3c1;
+    --bg-secondary: #ff3259;
+    --bg-secondary-dark: #950c28;
+
+    /* Tertiary colors */
+    --bg-tertiary-light: #D9E3FD;
+    --bg-tertiary: #0c3052;
+    --bg-tertiary-dark: #061f32;
+    --color-tertiary-hover: #e8eeff;
+
+
+    /* Text colors */
+    --color-sb-blue: #5A6FA5;
+    --color-sb-gray: #788291;
+
+    /* Button colors */
+    --color-youtube: #f03;
+
+    /* Border colors */
+    --color-tertiary-border: #EFF4FF;
+
+    /* Hover colors */
+    --color-gray-200: rgba(218, 218, 218, 0.5);
+
+    /* Max width */
+    --breakpoint-2xl: clamp(300px,100% - 20px * 2,1600px);
+    --container-8xl: 125rem;
+}
+
+/**
+======================================
+Root overwriites 
+
+Use to define or change global styles
+======================================
+**/
+:root {
+    /* Toastify */
+    --toastify-toast-min-height: 3rem;
+}
+
+/**
+======================================
+WP style overwrites
+======================================
+**/
+#wpcontent {
+    padding-left: 0 !important;
+}
+
+/**
+======================================
+WCAG styles
+======================================
+**/
+input,
+select,
+textarea,
+button,
+.checkbox-field,
+.radio-field,
+.notification-box,
+a {
+    &:focus {
+        outline: 2px solid var(--color-primary-hover);
+    }
+}
+
+/**
+======================================
+Text styles
+======================================
+**/
+small {
+    font-size: var(--text-base);
+}
+
+/**
+======================================
+Base styles
+======================================
+**/
+h1, h2, h3, h4, h5 h6 {
+    margin: 0; /* Disable default padding throughout the plugin*/
+}
+
+h1 { font-size: var(--text-3xl);}
+h2 { font-size: var(--text-2xl);}
+h3 { font-size: var(--text-xl);}
+
+/**
+======================================
+Grid styles
+======================================
+**/
+.max-w-container { width: 2000px; }
+
+/**
+======================================
+Onboarding styles
+======================================
+**/
+.onboarding-body {
+    height: 100%;
+    margin: 1svh auto;
+}
+
+/**
+======================================
+Form field container
+======================================
+**/
+.form-field-inline {
+    width: calc(1/2 * 97%)
+}
+
+/**
+======================================
+Design settings
+======================================
+**/
+.theme-config {
+    width: 100%;
+}
+
+.theme-config-group-color {
+    margin: 1.5rem auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    @media screen and (max-width: 40rem) {
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+}
+
+.theme-config-group-color > .theme-config-field {
+    width: 100%;
+    grid-column: span 1;
+}
+
+/**
+======================================
+Tooltip style overwrite 
+======================================
+**/
+#field-tooltip {
+    z-index: 99999;
+    font-size: var(--text-xs);
+    font-weight: 400;
+    background: color-mix(in oklab,var(--color-neutral-800)60%,transparent);
+    max-width: 300px;
+}
+
+/**
+======================================
+Input global styles
+======================================
+**/
+#simplybook_app{
+
+    label {
+        font-size: var(--text-label);
+        font-weight: var(--font-weight-medium);
+        margin-bottom: 0.5rem;
+    }
+
+    .input-base {
+            position: relative;
+            font-size: var(--text-base);
+            max-width: 100%;
+            width: 100%;
+            border-radius: var(--radius-md);
+            padding: 0.5rem;
+            border-color: var(--color-gray-200);
+            border-style: var(--tw-border-style);
+            border-width: 2px;
+            box-shadow: var(--shadow-md);
+            line-height: 1.5;
+    }
+    
+    .checkbox-field {
+        border: 2px solid transparent;
+    }    
+}
+
+/**
+======================================
+Scroll containers   
+======================================
+**/
+.scroll-container::-webkit-scrollbar {
+    width: 8px;
+    border-radius: 10px;
+    background-color: var(--color-gray-300);
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background-color: var(--color-gray-500);
+    border-radius: 10px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 2px rgba(0, 0, 0, 0);
+    background-color: transparent;
+}
+
+/**
+======================================
+Field validation
+======================================
+**/
+.invalid-field-regex {
+
+    input {
+        border-color: var(--color-error) !important;
+    }
+}
+
+.invalid-field-required {
+
+    /* The checbox field is a div and not an input, thus we need to target the div */
+    .checkbox-field {
+        border-color: var(--color-error) !important;
+    }
+
+    input,
+    select {
+        border-color: var(--color-error) !important;
+    }
+}

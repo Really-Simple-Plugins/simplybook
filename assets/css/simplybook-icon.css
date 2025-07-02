@@ -1,0 +1,35 @@
+@font-face {
+    font-family: 'simplybook-icon';
+    src: url('../fonts/simplybook-icon.eot');
+    src: url('../fonts/simplybook-icon.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/simplybook-icon.woff') format('woff'),
+    url('../fonts/simplybook-icon.ttf') format('truetype'),
+    url('../fonts/simplybook-icon.svg#simplybook-icon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class*='dashicons-simplybook']:before{
+    display: inline-block !important;
+    font-family: 'simplybook-icon', serif !important;
+    font-style: normal !important;
+    font-weight: normal !important;
+    line-height: 1 !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.dashicons-simplybook:before{
+    content:'\0041' !important;
+}
+
+.dashicons-simplybook {
+    position: relative;
+    display: inline-block;
+    font-size: 28px;
+    margin: 0;
+    width: auto;
+    height: auto;
+    color: #06ADEF;
+    padding: unset;
+}
