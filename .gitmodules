@@ -1,0 +1,3 @@
+[submodule "scripts"]
+	path = scripts
+	url = git@gitlab.group.team.blue:really-simple-plugins/simplybook-me/simplybookme-scripts.git
