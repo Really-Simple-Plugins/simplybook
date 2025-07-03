@@ -3,7 +3,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
@@ -31,7 +31,8 @@ function Settings() {
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
-
+    const settingsFormRef = useRef();
+    const [settingsFormHeight, setSettingsFormHeight] = useState();
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -66,6 +67,22 @@ function Settings() {
     useEffect(() => {
         reset(currentFormValues);
     }, [settingsId, currentFormValues, reset]);
+
+    // Setting up a ResizeObserver inside a useEffect so it can observe the form
+    // using the settingsFormRef. All this purely to trigger a useEffect
+    // in FormScrollProgressLine.jsx
+    useEffect(() => {
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                // checking this so it doesn't trigger a rerender in
+                // FormScrollProgressLine on every resize event
+                if (entry.contentRect.height !== settingsFormHeight){
+                    setSettingsFormHeight(entry.contentRect.height);
+                }
+            }
+        });
+        observer.observe(settingsFormRef.current);
+    }, []);
 
     useBlocker({
         shouldBlockFn: () => {
@@ -120,7 +137,7 @@ function Settings() {
     }
 
     return (
-        <form className="col-span-12 lg:col-span-6">
+        <form className="col-span-12 lg:col-span-6" ref={settingsFormRef}>
             {currentForm.groups?.map((group) => {
                 const isLastGroup = lastGroup.id === group.id;
                 const currentGroupFields = currentFormFields.filter(
@@ -153,6 +170,7 @@ function Settings() {
                             });
                         })}
                         control={control}
+                        settingsFormHeight={settingsFormHeight}
                     />
                 </>
             )}

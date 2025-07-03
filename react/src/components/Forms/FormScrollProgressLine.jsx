@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 
-const FormScrollProgressLine = () => {
+const FormScrollProgressLine = ({ settingsFormHeight }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [canScroll, setCanScroll] = useState(false);
+
   useEffect(() => {
     const onScroll = () => {
       const scrollable =
@@ -12,7 +14,12 @@ const FormScrollProgressLine = () => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const canScroll = document.documentElement.scrollHeight > window.innerHeight;
+  // useEffect to update canScroll when settingsFormHeight changes. Not actually
+  // using the settingsFormHeight value in setCanScroll to remain consistent
+  // with the values used in onScroll() above.
+  useEffect(() => {
+    setCanScroll(document.documentElement.scrollHeight > window.innerHeight);
+  }, [settingsFormHeight]);
 
   if (!canScroll) {
     return null;
@@ -21,7 +28,7 @@ const FormScrollProgressLine = () => {
     <div className="h-1 w-full bg-gray-200">
       <div
         className="h-full bg-blue-500"
-        style={{ width: `${Math.max(scrollProgress, 10)}%` }}
+        style={{ width: `${Math.max(scrollProgress, 5)}%` }}
       ></div>
     </div>
   );
