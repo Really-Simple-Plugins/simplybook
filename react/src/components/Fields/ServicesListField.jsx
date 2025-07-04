@@ -4,7 +4,7 @@ import useServicesData from '../../hooks/useServicesData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { useCrudContext } from '../../routes/settings/$settingsId.lazy';
+import { useCrudContext } from '../../context/CrudContext';
 
 const ServicesListField = ({  }) => {
     const {
@@ -29,6 +29,8 @@ const ServicesListField = ({  }) => {
     const [formData, setFormData] = useState({});
     const [isCreatingNew, setIsCreatingNew] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    // Track visibility changes independently of edit state
+    const [visibilityOverrides, setVisibilityOverrides] = useState({});
 
     // Use refs to always have access to latest state
     const formDataRef = useRef(formData);
@@ -61,9 +63,14 @@ const ServicesListField = ({  }) => {
         } else {
             setCrudContext(null);
         }
-    }, [isCreatingNew, editingService, isCreating, isUpdating, setCrudContext]);
+    }, [isCreatingNew, editingService, isCreating, isUpdating, hasUnsavedChanges, setCrudContext]);
 
     const toggleRow = useCallback((serviceId, service) => {
+        // Don't allow expanding/editing services when creating a new one
+        if (isCreatingNew) {
+            return;
+        }
+        
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(serviceId)) {
             // Collapsing - close this row
@@ -78,23 +85,29 @@ const ServicesListField = ({  }) => {
             newExpanded.clear();
             newExpanded.add(serviceId);
             
-            // If another service was being edited, clear that state
+            // If another service was being edited or we're creating new, clear that state
             if (editingService && editingService !== serviceId) {
                 setEditingService(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
             }
             
+            
             setEditingService(serviceId);
-            setFormData({ ...service });
-            setHasUnsavedChanges(false);
+            const newFormData = {
+                ...service,
+                // Include any visibility override when starting edit mode
+                is_visible: visibilityOverrides[serviceId] !== undefined ? visibilityOverrides[serviceId] : service.is_visible
+            };
+            setFormData(newFormData);
+            setHasUnsavedChanges(false); // Start with no changes when opening
         }
         setExpandedRows(newExpanded);
-    }, [expandedRows, editingService]);
+    }, [expandedRows, editingService, visibilityOverrides, isCreatingNew]);
 
     const handleInputChange = useCallback((field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        setHasUnsavedChanges(true);
+        setHasUnsavedChanges(true); // Any change = unsaved changes
     }, []);
 
     const handleSave = () => {
@@ -133,6 +146,12 @@ const ServicesListField = ({  }) => {
                 setEditingService(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
+                // Clear visibility override for this service since it's now saved
+                setVisibilityOverrides(prev => {
+                    const newOverrides = { ...prev };
+                    delete newOverrides[currentEditingService];
+                    return newOverrides;
+                });
                 setCrudContext(null);
             }).catch((error) => {
                 console.error('Error updating service:', error);
@@ -213,16 +232,30 @@ const ServicesListField = ({  }) => {
     return (
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">{__('Services', 'simplybook')}</h3>
-                <button
-                    type="button"
-                    onClick={handleAdd}
-                    disabled={isCreatingNew || editingService}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2" />
-                    {__('Add Service', 'simplybook')}
-                </button>
+                <h3 className="text-lg font-medium">{__('Manage Services', 'simplybook')}</h3>
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://simplybook.it"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                    >
+                        {__('Edit All Properties', 'simplybook')}
+                    </a>
+                    <button
+                        type="button"
+                        onClick={isCreatingNew ? handleCancel : handleAdd}
+                        disabled={editingService}
+                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isCreatingNew 
+                                ? 'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary'
+                                : 'bg-primary text-white hover:bg-primary-dark'
+                        }`}
+                    >
+                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2" />
+                        {isCreatingNew ? __('Cancel', 'simplybook') : __('Add Service', 'simplybook')}
+                    </button>
+                </div>
             </div>
 
             {/* Add New Service Form */}
@@ -247,24 +280,22 @@ const ServicesListField = ({  }) => {
                         services={services}
                         isExpanded={expandedRows.has(service.id)}
                         isEditing={editingService === service.id}
+                        isCreatingNew={isCreatingNew}
                         onToggle={() => toggleRow(service.id, service)}
                         onDelete={() => handleDelete(service.id)}
                         formData={editingService === service.id && formData ? formData : null}
                         onChange={handleInputChange}
+                        visibilityOverrides={visibilityOverrides}
                         onVisibilityChange={(value) => {
-                            // If not editing, start editing mode first
-                            if (editingService !== service.id) {
-                                setEditingService(service.id);
-                                setExpandedRows(prev => new Set([...prev, service.id]));
-                                const newFormData = {
-                                    ...service,
-                                    is_visible: value
-                                };
-                                setFormData(newFormData);
-                                setHasUnsavedChanges(true);
-                            } else {
-                                // Already editing, just update the value
+                            if (editingService === service.id) {
+                                // Already editing - update the form data
                                 handleInputChange('is_visible', value);
+                            } else {
+                                // Not editing - only update visibility override, don't open edit form
+                                setVisibilityOverrides(prev => ({
+                                    ...prev,
+                                    [service.id]: value
+                                }));
                             }
                         }}
                         isLoading={isUpdating || isDeleting}
@@ -287,10 +318,12 @@ const ServiceRow = ({
                         services,
                         isExpanded,
                         isEditing,
+                        isCreatingNew,
                         onToggle,
                         onDelete,
                         formData,
                         onChange,
+                        visibilityOverrides,
                         onVisibilityChange,
                         isLoading,
                         error
@@ -319,14 +352,20 @@ const ServiceRow = ({
         }
     };
 
-    const currentVisibility = isEditing && formData ? formData.is_visible : service.is_visible;
+    // Check visibility in order: form data (if editing) -> visibility overrides -> original data
+    const currentVisibility = isEditing && formData 
+        ? formData.is_visible 
+        : visibilityOverrides[service.id] !== undefined 
+        ? visibilityOverrides[service.id] 
+        : service.is_visible;
     
-    // Count visible services (considering current form state if editing)
+    // Count visible services (considering form state and visibility overrides)
     const visibleServicesCount = services.filter(s => {
         if (isEditing && s.id === service.id) {
             return currentVisibility;
         }
-        return s.is_visible;
+        // Check visibility overrides first, then original data
+        return visibilityOverrides[s.id] !== undefined ? visibilityOverrides[s.id] : s.is_visible;
     }).length;
     
     // Disable toggle if this is the last visible service and we're trying to hide it
@@ -336,10 +375,16 @@ const ServiceRow = ({
     const isDeleteDisabled = services.length <= 1;
 
     return (
-        <div className="bg-gray-50 border border-gray-300 rounded-lg shadow-sm mb-6">
+        <div className={clsx(
+            "border border-gray-300 rounded-lg shadow-sm mb-6",
+            isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
+        )}>
             {/* Main row */}
             <div 
-                className="flex items-center justify-between p-4 hover:bg-gray-100 rounded-t-lg cursor-pointer"
+                className={clsx(
+                    "flex items-center justify-between p-4 rounded-t-lg",
+                    isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
+                )}
                 onClick={onToggle}
             >
                 {/* Left side: Service info */}
@@ -365,7 +410,7 @@ const ServiceRow = ({
                     
                     {/* Visibility Toggle */}
                     <div 
-                        className="flex items-center h-6"
+                        className="h-6"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <label className={clsx(

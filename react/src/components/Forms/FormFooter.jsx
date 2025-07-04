@@ -94,7 +94,7 @@ const FormFooter = ({
                         <ButtonLink
                             btnVariant={'secondary-small'}
                             onClick={crudContext.onSave}
-                            disabled={crudContext.isLoading}
+                            disabled={crudContext.isLoading || !crudContext.hasUnsavedChanges}
                         >
                             {crudContext.isLoading 
                                 ? __("Saving...", "simplybook") 

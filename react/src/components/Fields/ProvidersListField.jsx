@@ -4,7 +4,7 @@ import useProviderData from '../../hooks/useProviderData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faChevronRight, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { useCrudContext } from '../../routes/settings/$settingsId.lazy';
+import { useCrudContext } from '../../context/CrudContext';
 
 const ProvidersListField = ({  }) => {
     const {
@@ -29,6 +29,8 @@ const ProvidersListField = ({  }) => {
     const [formData, setFormData] = useState({});
     const [isCreatingNew, setIsCreatingNew] = useState(false);
     const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+    // Track visibility changes independently of edit state
+    const [visibilityOverrides, setVisibilityOverrides] = useState({});
 
     const formDataRef = useRef(formData);
     const editingProviderRef = useRef(editingProvider);
@@ -59,9 +61,14 @@ const ProvidersListField = ({  }) => {
         } else {
             setCrudContext(null);
         }
-    }, [isCreatingNew, editingProvider, isCreating, isUpdating, setCrudContext]);
+    }, [isCreatingNew, editingProvider, isCreating, isUpdating, hasUnsavedChanges, setCrudContext]);
 
     const toggleRow = useCallback((providerId, provider) => {
+        // Don't allow expanding/editing providers when creating a new one
+        if (isCreatingNew) {
+            return;
+        }
+        
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(providerId)) {
             // Collapsing - close this row
@@ -76,28 +83,30 @@ const ProvidersListField = ({  }) => {
             newExpanded.clear();
             newExpanded.add(providerId);
             
-            // If another provider was being edited, clear that state
+            // If another provider was being edited or we're creating new, clear that state
             if (editingProvider && editingProvider !== providerId) {
                 setEditingProvider(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
             }
             
+            
             setEditingProvider(providerId);
             const newFormData = {
                 ...provider,
                 qty: provider.qty || provider.quantity || 1,
-                color: provider.color || '#3b82f6'
+                // Include any visibility override when starting edit mode
+                is_visible: visibilityOverrides[providerId] !== undefined ? visibilityOverrides[providerId] : provider.is_visible
             };
             setFormData(newFormData);
-            setHasUnsavedChanges(false);
+            setHasUnsavedChanges(false); // Start with no changes when opening
         }
         setExpandedRows(newExpanded);
-    }, [expandedRows, editingProvider]);
+    }, [expandedRows, editingProvider, visibilityOverrides, isCreatingNew]);
 
     const handleInputChange = useCallback((field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
-        setHasUnsavedChanges(true);
+        setHasUnsavedChanges(true); // Any change = unsaved changes
     }, []);
 
     const handleSave = () => {
@@ -108,6 +117,26 @@ const ProvidersListField = ({  }) => {
         if (!currentFormData.name) {
             console.error('No provider name provided');
             return;
+        }
+        
+        // Validate email if provided
+        if (currentFormData.email && currentFormData.email.trim()) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailPattern.test(currentFormData.email.trim())) {
+                console.error('Invalid email format');
+                alert(__('Please enter a valid email address (e.g., example@domain.com)', 'simplybook'));
+                return;
+            }
+        }
+        
+        // Validate phone number if provided
+        if (currentFormData.phone && currentFormData.phone.trim()) {
+            const phonePattern = /^[+]?[0-9\s\-\(\)]{7,20}$/;
+            if (!phonePattern.test(currentFormData.phone.trim())) {
+                console.error('Invalid phone number format');
+                alert(__('Please enter a valid phone number (7-20 digits, may include +, spaces, hyphens, and parentheses)', 'simplybook'));
+                return;
+            }
         }
         
         if (!currentIsCreatingNew && !currentEditingProvider) {
@@ -123,7 +152,6 @@ const ProvidersListField = ({  }) => {
             qty: Math.max(parseInt(currentFormData.qty) || 1, 1),
             email: currentFormData.email || '',
             phone: currentFormData.phone || '',
-            color: (currentFormData.color && currentFormData.color.trim()) || '#3b82f6',
             is_visible: currentFormData.is_visible
         };
 
@@ -147,6 +175,12 @@ const ProvidersListField = ({  }) => {
                 setEditingProvider(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
+                // Clear visibility override for this provider since it's now saved
+                setVisibilityOverrides(prev => {
+                    const newOverrides = { ...prev };
+                    delete newOverrides[providerId];
+                    return newOverrides;
+                });
                 setCrudContext(null);
             }).catch((error) => {
                 console.error('Error updating provider:', error);
@@ -179,14 +213,13 @@ const ProvidersListField = ({  }) => {
             qty: 1,
             email: '',
             phone: '',
-            color: '#3b82f6',
             is_visible: true
         });
         setHasUnsavedChanges(false);
     }, []);
 
     const handleDelete = useCallback((providerId) => {
-        if (window.confirm(__('Are you sure you want to delete this provider?', 'simplybook'))) {
+        if (window.confirm(__('Are you sure you want to delete this service provider?', 'simplybook'))) {
             deleteProvider(providerId).then(() => {
                 setEditingProvider(null);
                 setFormData({});
@@ -201,7 +234,7 @@ const ProvidersListField = ({  }) => {
         return (
             <div className="flex items-center justify-center p-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2">{__('Loading providers...', 'simplybook')}</span>
+                <span className="ml-2">{__('Loading service providers...', 'simplybook')}</span>
             </div>
         );
     }
@@ -209,7 +242,7 @@ const ProvidersListField = ({  }) => {
     if (error) {
         return (
             <div className="text-red-600 p-4 bg-red-50 rounded-md">
-                {__('Error loading providers: ', 'simplybook')} {error.message}
+                {__('Error loading service providers: ', 'simplybook')} {error.message}
             </div>
         );
     }
@@ -217,22 +250,36 @@ const ProvidersListField = ({  }) => {
     return (
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">{__('Providers', 'simplybook')}</h3>
-                <button
-                    type="button"
-                    onClick={handleAdd}
-                    disabled={isCreatingNew || editingProvider}
-                    className="flex items-center px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                    <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2" />
-                    {__('Add Provider', 'simplybook')}
-                </button>
+                <h3 className="text-lg font-medium">{__('Manage Service Providers', 'simplybook')}</h3>
+                <div className="flex items-center gap-3">
+                    <a
+                        href="https://simplybook.it"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                    >
+                        {__('Edit All Properties', 'simplybook')}
+                    </a>
+                    <button
+                        type="button"
+                        onClick={isCreatingNew ? handleCancel : handleAdd}
+                        disabled={editingProvider}
+                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${
+                            isCreatingNew 
+                                ? 'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary'
+                                : 'bg-primary text-white hover:bg-primary-dark'
+                        }`}
+                    >
+                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2" />
+                        {isCreatingNew ? __('Cancel', 'simplybook') : __('Add Service Provider', 'simplybook')}
+                    </button>
+                </div>
             </div>
 
             {/* Add New Provider Form */}
             {isCreatingNew && (
                 <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                    <h4 className="text-md font-medium mb-4">{__('Add New Provider', 'simplybook')}</h4>
+                    <h4 className="text-md font-medium mb-4">{__('Add New Service Provider', 'simplybook')}</h4>
                     <ProviderForm
                         formData={formData}
                         onChange={handleInputChange}
@@ -251,26 +298,22 @@ const ProvidersListField = ({  }) => {
                         providers={providers}
                         isExpanded={expandedRows.has(provider.id)}
                         isEditing={editingProvider === provider.id}
+                        isCreatingNew={isCreatingNew}
                         onToggle={() => toggleRow(provider.id, provider)}
                         onDelete={() => handleDelete(provider.id)}
                         formData={editingProvider === provider.id && formData ? formData : null}
                         onChange={handleInputChange}
+                        visibilityOverrides={visibilityOverrides}
                         onVisibilityChange={(value) => {
-                            // If not editing, start editing mode first
-                            if (editingProvider !== provider.id) {
-                                setEditingProvider(provider.id);
-                                setExpandedRows(prev => new Set([...prev, provider.id]));
-                                const newFormData = {
-                                    ...provider,
-                                    qty: provider.qty || provider.quantity || 1,
-                                    color: provider.color || '#3b82f6',
-                                    is_visible: value
-                                };
-                                setFormData(newFormData);
-                                setHasUnsavedChanges(true);
-                            } else {
-                                // Already editing, just update the value
+                            if (editingProvider === provider.id) {
+                                // Already editing - update the form data
                                 handleInputChange('is_visible', value);
+                            } else {
+                                // Not editing - only update visibility override, don't open edit form
+                                setVisibilityOverrides(prev => ({
+                                    ...prev,
+                                    [provider.id]: value
+                                }));
                             }
                         }}
                         isLoading={isUpdating || isDeleting}
@@ -281,7 +324,7 @@ const ProvidersListField = ({  }) => {
 
             {providers.length === 0 && (
                 <div className="text-center py-8 text-gray-500">
-                    {__('No providers found. Click "Add Provider" to create your first provider.', 'simplybook')}
+                    {__('No service providers found. Click "Add Service Provider" to create your first service provider.', 'simplybook')}
                 </div>
             )}
         </div>
@@ -293,10 +336,12 @@ const ProviderRow = ({
     providers,
     isExpanded, 
     isEditing, 
+    isCreatingNew,
     onToggle, 
     onDelete, 
     formData, 
     onChange, 
+    visibilityOverrides,
     onVisibilityChange,
     isLoading, 
     error 
@@ -308,14 +353,20 @@ const ProviderRow = ({
         }
     };
 
-    const currentVisibility = isEditing && formData ? formData.is_visible : provider.is_visible;
+    // Check visibility in order: form data (if editing) -> visibility overrides -> original data
+    const currentVisibility = isEditing && formData 
+        ? formData.is_visible 
+        : visibilityOverrides[provider.id] !== undefined 
+        ? visibilityOverrides[provider.id] 
+        : provider.is_visible;
     
-    // Count visible providers (considering current form state if editing)
+    // Count visible providers (considering form state and visibility overrides)
     const visibleProvidersCount = providers.filter(p => {
         if (isEditing && p.id === provider.id) {
             return currentVisibility;
         }
-        return p.is_visible;
+        // Check visibility overrides first, then original data
+        return visibilityOverrides[p.id] !== undefined ? visibilityOverrides[p.id] : p.is_visible;
     }).length;
     
     // Disable toggle if this is the last visible provider and we're trying to hide it
@@ -325,10 +376,16 @@ const ProviderRow = ({
     const isDeleteDisabled = providers.length <= 1;
 
     return (
-        <div className="bg-gray-50 border border-gray-300 rounded-lg shadow-sm mb-6">
+        <div className={clsx(
+            "border border-gray-300 rounded-lg shadow-sm mb-6",
+            isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
+        )}>
             {/* Main row */}
             <div 
-                className="flex items-center justify-between p-4 hover:bg-gray-100 rounded-t-lg cursor-pointer"
+                className={clsx(
+                    "flex items-center justify-between p-4 rounded-t-lg",
+                    isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
+                )}
                 onClick={onToggle}
             >
                 {/* Left side: Provider info */}
@@ -347,14 +404,14 @@ const ProviderRow = ({
                         }}
                         disabled={isEditing || isLoading || isDeleteDisabled}
                         className="text-gray-500 hover:text-red-600 disabled:opacity-50 p-1 cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
-                        title={__('Delete Provider', 'simplybook')}
+                        title={__('Delete Service Provider', 'simplybook')}
                     >
                         <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                     </button>
                     
                     {/* Visibility Toggle */}
                     <div 
-                        className="flex items-center h-6"
+                        className=""
                         onClick={(e) => e.stopPropagation()}
                     >
                         <label 
@@ -364,7 +421,7 @@ const ProviderRow = ({
                             )} 
                             title={
                                 isToggleDisabled 
-                                    ? __('Cannot hide the last visible provider', 'simplybook')
+                                    ? __('Cannot hide the last visible service provider', 'simplybook')
                                     : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
                             }
                         >
@@ -439,9 +496,9 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
                     required
                 />
             </div>
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Email', 'simplybook')}
+                    {__('E-mail', 'simplybook')}
                 </label>
                 <input
                     type="email"
@@ -458,6 +515,8 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
                     type="tel"
                     value={formData.phone || ''}
                     onChange={(e) => onChange('phone', e.target.value)}
+                    pattern="[+]?[0-9\s\-\(\)]{7,20}"
+                    title={__('Please enter a valid phone number (7-20 digits, may include +, spaces, hyphens, and parentheses)', 'simplybook')}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
@@ -471,17 +530,6 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
                     value={formData.qty || 1}
                     onChange={(e) => onChange('qty', e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Color', 'simplybook')}
-                </label>
-                <input
-                    type="color"
-                    value={formData.color || '#3b82f6'}
-                    onChange={(e) => onChange('color', e.target.value)}
-                    className="w-20 h-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
             <div className="col-span-full">
