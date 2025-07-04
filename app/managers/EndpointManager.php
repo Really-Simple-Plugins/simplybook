@@ -162,7 +162,10 @@ final class EndpointManager
     {
         $method = $request->get_method();
         $nonce = $request->get_param('nonce');
-        if (($method === 'POST') && ($this->verifyNonce($nonce) === false)) {
+        
+        // For methods that modify data, verify the nonce
+        $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
+        if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
             return new \WP_Error(
                 'rest_forbidden',
                 esc_html__('Forbidden.', 'simplybook'),

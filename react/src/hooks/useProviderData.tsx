@@ -1,22 +1,39 @@
+import { useEffect } from 'react';
 import useCrudData from './useCrudData';
+import { useNotifications } from '../context/NotificationContext';
 
 const useProviderData = () => {
     const crudData = useCrudData('providers', 'provider');
+    const { triggerNotificationById } = useNotifications();
+    
+    // Trigger notification when providers array is empty
+    useEffect(() => {
+        if (crudData.dataFetched && crudData.data?.length === 0) {
+            triggerNotificationById('add_mandatory_provider');
+        }
+    }, [crudData.dataFetched, crudData.data?.length, triggerNotificationById]);
+    
+    // Log errors
+    useEffect(() => {
+        if (crudData.error) {
+            console.error('Error fetching providers: ', crudData.error.message);
+        }
+    }, [crudData.error]);
     
     return {
-        providers: crudData.data,
-        providersFetched: crudData.dataFetched,
-        isLoading: crudData.isLoading,
-        error: crudData.error,
+        providers: crudData.data ?? [],
+        providersFetched: crudData.dataFetched ?? false,
+        isLoading: crudData.isLoading ?? false,
+        error: crudData.error ?? null,
         createProvider: crudData.create,
         updateProvider: crudData.update,
         deleteProvider: crudData.delete,
-        isCreating: crudData.isCreating,
-        isUpdating: crudData.isUpdating,
-        isDeleting: crudData.isDeleting,
-        createError: crudData.createError,
-        updateError: crudData.updateError,
-        deleteError: crudData.deleteError,
+        isCreating: crudData.isCreating ?? false,
+        isUpdating: crudData.isUpdating ?? false,
+        isDeleting: crudData.isDeleting ?? false,
+        createError: crudData.createError ?? null,
+        updateError: crudData.updateError ?? null,
+        deleteError: crudData.deleteError ?? null,
     };
 };
 

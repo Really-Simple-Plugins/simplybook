@@ -42,7 +42,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
 
     const updateMutation = useMutation({
         mutationFn: async (params: CrudDataParams) => {
-            return await client.put(`${route}/${params.id}`, params.data);
+            return await client.setRoute(`${route}/${params.id}`).put(params.data);
         },
         onMutate: async (params) => {
             // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
@@ -80,33 +80,30 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
     });
 
     const deleteMutation = useMutation({
-        mutationFn: (id: string | number) => client.delete(`${route}/${id}`),
+        mutationFn: (id: string | number) => client.setRoute(`${route}/${id}`).delete(),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: [route] });
         },
     });
 
-    if (error) {
-        console.error(`Error fetching ${resourceName} data: `, error.message);
-    }
 
-    const data = response?.data || [];
+    const data = response?.data ?? [];
     const dataFetched = !isLoading && !error;
 
     return {
         data,
         dataFetched,
-        isLoading,
-        error,
+        isLoading: isLoading ?? false,
+        error: error ?? null,
         create: createMutation.mutateAsync,
         update: updateMutation.mutateAsync,
         delete: deleteMutation.mutateAsync,
-        isCreating: createMutation.isPending,
-        isUpdating: updateMutation.isPending,
-        isDeleting: deleteMutation.isPending,
-        createError: createMutation.error,
-        updateError: updateMutation.error,
-        deleteError: deleteMutation.error,
+        isCreating: createMutation.isPending ?? false,
+        isUpdating: updateMutation.isPending ?? false,
+        isDeleting: deleteMutation.isPending ?? false,
+        createError: createMutation.error ?? null,
+        updateError: updateMutation.error ?? null,
+        deleteError: deleteMutation.error ?? null,
     };
 };
 

@@ -1948,4 +1948,26 @@ class ApiClient
 		return $providers;
 	}
 
+	// ========================================
+	// Fluent API for Services and Providers
+	// ========================================
+
+	/**
+	 * Get the service repository for fluent API
+	 * Usage: App::provide('client')->service()->find(123)
+	 */
+	public function service(): \SimplyBook\Repositories\ServiceRepository
+	{
+		return new \SimplyBook\Repositories\ServiceRepository($this);
+	}
+
+	/**
+	 * Get the provider repository for fluent API
+	 * Usage: App::provide('client')->provider()->find(123)
+	 */
+	public function provider(): \SimplyBook\Repositories\ProviderRepository
+	{
+		return new \SimplyBook\Repositories\ProviderRepository($this);
+	}
+
 }

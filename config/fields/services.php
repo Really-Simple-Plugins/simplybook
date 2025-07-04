@@ -10,12 +10,4 @@ return [
 		'label'    => __('Services', 'simplybook'),
 		'control'  => 'self',
 	],
-	'_services_state' => [
-		'id'       => '_services_state',
-		'menu_id'  => 'services',
-		'group_id' => 'services_list',
-		'type'     => 'hidden',
-		'visible'  => false,
-		'default'  => '{"isDirty":false,"isEditing":false,"hasActiveForm":false}',
-	],
 ];

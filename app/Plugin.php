@@ -209,7 +209,6 @@ class Plugin
             new Http\Endpoints\LoginUrlEndpoint(
                 new Services\LoginUrlService(),
             ),
-            new Http\Endpoints\BaseEndpoint(),
             new Http\Endpoints\ServicesEndpoint(),
             new Http\Endpoints\ProvidersEndpoint(),
             new Http\Endpoints\SettingEndpoints(),

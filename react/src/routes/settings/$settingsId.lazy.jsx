@@ -3,18 +3,12 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useEffect, useMemo, useState, createContext, useContext } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 import ToastNotice from "../../components/Errors/ToastNotice";
-
-const CrudContext = createContext({
-    crudContext: null,
-    setCrudContext: () => {}
-});
-
-export const useCrudContext = () => useContext(CrudContext);
+import CrudContext, { useCrudContext } from "../../context/CrudContext";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
