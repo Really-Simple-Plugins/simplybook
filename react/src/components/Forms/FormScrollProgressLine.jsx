@@ -2,37 +2,37 @@ import { useEffect, useState } from "react";
 
 const FormScrollProgressLine = ({ settingsFormHeight }) => {
   const [scrollProgress, setScrollProgress] = useState(0);
-  const [canScroll, setCanScroll] = useState(false);
+  const [isPageScrollable, setIsPageScrollable] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
+    const updateScrollProgress = () => {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(Math.round((window.scrollY / scrollable) * 100));
     };
 
-    if (canScroll) {
-      window.addEventListener("scroll", onScroll);
+    if (isPageScrollable) {
+      window.addEventListener("scroll", updateScrollProgress);
     } else {
-      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", updateScrollProgress);
     }
 
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [canScroll]);
+    return () => window.removeEventListener("scroll", updateScrollProgress);
+  }, [isPageScrollable]);
 
   /**
-   * The settingsFormHeight variable is only used to trigger useEffect.
-   * Not using it in setCanScroll() to remain consistent with the values used
-   * for scrollable in onScroll() above.
+   * The settingsFormHeight variable is only used to trigger this useEffect.
+   * Not using it in setIsPageScrollable() to remain consistent with the values
+   * used for scrollable in updateScrollProgress() above.
    */
   useEffect(() => {
-    const updatedCanScrollCheck = document.documentElement.scrollHeight > window.innerHeight;
-    if (canScroll !== updatedCanScrollCheck) {
-      setCanScroll(updatedCanScrollCheck);
+    const isPageScrollableOnRerender = document.documentElement.scrollHeight > window.innerHeight;
+    if (isPageScrollable !== isPageScrollableOnRerender) {
+      setIsPageScrollable(isPageScrollableOnRerender);
     }
   }, [settingsFormHeight]);
 
-  if (!canScroll) {
+  if (!isPageScrollable) {
     return null;
   }
   return (
