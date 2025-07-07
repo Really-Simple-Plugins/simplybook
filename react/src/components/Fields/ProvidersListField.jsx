@@ -252,12 +252,6 @@ const ProvidersListField = ({  }) => {
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
-                    <LoginLink
-                        page="management/#providers"
-                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
-                    >
-                        {__('Edit All Properties', 'simplybook')}
-                    </LoginLink>
                     <button
                         type="button"
                         onClick={isCreatingNew ? handleCancel : handleAdd}
@@ -283,6 +277,7 @@ const ProvidersListField = ({  }) => {
                         onChange={handleInputChange}
                         isLoading={isCreating}
                         error={createError}
+                        providerId={null}
                     />
                 </div>
             )}
@@ -498,6 +493,7 @@ const ProviderRow = ({
                         onChange={onChange}
                         isLoading={isLoading}
                         error={error}
+                        providerId={provider.id}
                     />
                 </div>
             )}
@@ -505,14 +501,14 @@ const ProviderRow = ({
     );
 };
 
-const ProviderForm = ({ formData, onChange, error }) => {
+const ProviderForm = ({ formData, onChange, error, providerId }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
     
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Service provider name', 'simplybook')} *
                 </label>
@@ -535,7 +531,7 @@ const ProviderForm = ({ formData, onChange, error }) => {
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Phone', 'simplybook')}
                 </label>
@@ -549,7 +545,7 @@ const ProviderForm = ({ formData, onChange, error }) => {
                     placeholder="+31 123 456 789"
                 />
             </div>
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('How many clients can be served at the same time?', 'simplybook')}
                 </label>
@@ -572,6 +568,17 @@ const ProviderForm = ({ formData, onChange, error }) => {
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
+            {/* Edit All Properties Button */}
+            {providerId && (
+                <div className="col-span-full mt-4">
+                    <LoginLink
+                        page={`/v2/management/#providers/edit/details/${providerId}`}
+                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                    >
+                        {__('Edit All Properties', 'simplybook')}
+                    </LoginLink>
+                </div>
+            )}
             {error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {error.message}

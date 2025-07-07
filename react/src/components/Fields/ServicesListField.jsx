@@ -93,7 +93,6 @@ const ServicesListField = ({  }) => {
                 setHasUnsavedChanges(false);
             }
             
-            
             setEditingService(serviceId);
             const newFormData = {
                 ...service,
@@ -186,7 +185,7 @@ const ServicesListField = ({  }) => {
             price: '',
             deposit_price: '',
             tax_id: '',
-            duration: 60,
+            duration: '',
             is_visible: true
         });
         setHasUnsavedChanges(false);
@@ -234,12 +233,6 @@ const ServicesListField = ({  }) => {
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
-                    <LoginLink
-                        page="management/#services"
-                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
-                    >
-                        {__('Edit All Properties', 'simplybook')}
-                    </LoginLink>
                     <button
                         type="button"
                         onClick={isCreatingNew ? handleCancel : handleAdd}
@@ -265,6 +258,7 @@ const ServicesListField = ({  }) => {
                         onChange={handleInputChange}
                         isLoading={isCreating}
                         error={createError}
+                        serviceId={null}
                     />
                 </div>
             )}
@@ -479,6 +473,7 @@ const ServiceRow = ({
                         onChange={onChange}
                         isLoading={isLoading}
                         error={error}
+                        serviceId={service.id}
                     />
                 </div>
             )}
@@ -486,7 +481,7 @@ const ServiceRow = ({
     );
 };
 
-const ServiceForm = ({ formData, onChange, error }) => {
+const ServiceForm = ({ formData, onChange, error, serviceId }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
@@ -538,9 +533,10 @@ const ServiceForm = ({ formData, onChange, error }) => {
                 <input
                     type="number"
                     min="1"
-                    value={formData.duration || 60}
+                    value={formData.duration || ''}
                     onChange={(e) => onChange('duration', e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="60"
                 />
             </div>
             <div>
@@ -565,6 +561,17 @@ const ServiceForm = ({ formData, onChange, error }) => {
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
+            {/* Edit All Properties Button */}
+            {serviceId && (
+                <div className="col-span-full mt-4">
+                    <LoginLink
+                        page={`/v2/management/#services/edit/details/${serviceId}`}
+                        className="inline-flex items-center justify-center rounded-full transition-all duration-200 px-4 py-2 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                    >
+                        {__('Edit All Properties', 'simplybook')}
+                    </LoginLink>
+                </div>
+            )}
             {error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {error.message}
