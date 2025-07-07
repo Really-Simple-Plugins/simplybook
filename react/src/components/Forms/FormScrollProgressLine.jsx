@@ -12,6 +12,7 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
     };
 
     if (isPageScrollable) {
+      updateScrollProgress();
       window.addEventListener("scroll", updateScrollProgress);
     } else {
       window.removeEventListener("scroll", updateScrollProgress);
