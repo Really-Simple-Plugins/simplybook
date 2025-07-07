@@ -26,7 +26,10 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
    * for scrollable in onScroll() above.
    */
   useEffect(() => {
-    setCanScroll(document.documentElement.scrollHeight > window.innerHeight);
+    const updatedCanScrollCheck = document.documentElement.scrollHeight > window.innerHeight;
+    if (canScroll !== updatedCanScrollCheck) {
+      setCanScroll(updatedCanScrollCheck);
+    }
   }, [settingsFormHeight]);
 
   if (!canScroll) {
