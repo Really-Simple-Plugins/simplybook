@@ -14,9 +14,11 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // useEffect to update canScroll when settingsFormHeight changes. Not actually
-  // using the settingsFormHeight value in setCanScroll to remain consistent
-  // with the values used in onScroll() above.
+  /**
+   * The settingsFormHeight variable is only used to trigger useEffect.
+   * Not using it in setCanScroll() to remain consistent with the values used
+   * for scrollable in onScroll() above.
+   */
   useEffect(() => {
     setCanScroll(document.documentElement.scrollHeight > window.innerHeight);
   }, [settingsFormHeight]);
