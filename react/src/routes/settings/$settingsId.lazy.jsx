@@ -68,9 +68,13 @@ function Settings() {
         reset(currentFormValues);
     }, [settingsId, currentFormValues, reset]);
 
-    // Setting up a ResizeObserver inside a useEffect so it can observe the form
-    // using the settingsFormRef. All this purely to trigger a useEffect
-    // in FormScrollProgressLine.jsx
+    /**
+     * This useEffect sets up a ResizeObserver to monitor changes in the
+     * height of the settings form. It updates the `settingsFormHeight` state
+     * only on changes in height, preventing re-renders on width changes.
+     * This is used to trigger the visibility of the scroll progress line in the
+     * {@see FormScrollProgressLine.jsx} component
+     */
     useEffect(() => {
         const observer = new ResizeObserver((entries) => {
             for (const entry of entries) {
