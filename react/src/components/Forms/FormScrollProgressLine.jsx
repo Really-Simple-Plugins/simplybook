@@ -6,9 +6,9 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
 
   useEffect(() => {
     const updateScrollProgress = () => {
-      const scrollable =
+      const totalScrollableHeightInPixels =
         document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(Math.round((window.scrollY / scrollable) * 100));
+      setScrollProgress(Math.round((window.scrollY / totalScrollableHeightInPixels) * 100));
     };
 
     if (isPageScrollable) {
