@@ -8,7 +8,9 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
     const updateScrollProgress = () => {
       const totalScrollableHeightInPixels =
         document.documentElement.scrollHeight - window.innerHeight;
-      setScrollProgress(Math.round((window.scrollY / totalScrollableHeightInPixels) * 100));
+      const roundedScrollPercentage =
+        Math.round((window.scrollY / totalScrollableHeightInPixels) * 100);
+      setScrollProgress(roundedScrollPercentage);
     };
 
     if (isPageScrollable) {
