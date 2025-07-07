@@ -78,9 +78,8 @@ function Settings() {
     useEffect(() => {
         const observer = new ResizeObserver((entries) => {
             for (const entry of entries) {
-                // checking this so it doesn't trigger a rerender in
-                // FormScrollProgressLine on every resize event
-                if (entry.contentRect.height !== settingsFormHeight){
+                const heightChanged = entry.contentRect.height !== settingsFormHeight;
+                if (heightChanged){
                     setSettingsFormHeight(entry.contentRect.height);
                 }
             }
