@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useCrudContext } from '../../context/CrudContext';
+import LoginLink from '../Common/LoginLink';
 
 const ProvidersListField = ({  }) => {
     const {
@@ -251,14 +252,12 @@ const ProvidersListField = ({  }) => {
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
-                    <a
-                        href="https://simplybook.it"
-                        target="_blank"
-                        rel="noopener noreferrer"
+                    <LoginLink
+                        page="management/#providers"
                         className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
                     >
                         {__('Edit All Properties', 'simplybook')}
-                    </a>
+                    </LoginLink>
                     <button
                         type="button"
                         onClick={isCreatingNew ? handleCancel : handleAdd}
