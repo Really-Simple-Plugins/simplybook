@@ -26,7 +26,7 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
     /**
      * The settingsFormHeight variable is only used to trigger this useEffect.
      * Not using it in setIsPageScrollable() to remain consistent with the values
-     * used for scrollable in updateScrollProgress() above.
+     * used for totalScrollableHeightInPixels in updateScrollProgress() above.
      */
     useEffect(() => {
         const isPageScrollableOnRerender = document.documentElement.scrollHeight > window.innerHeight;
