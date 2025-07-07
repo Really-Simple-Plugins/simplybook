@@ -2,7 +2,7 @@
 Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
-Requires at least: 6.0
+Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
 Stable tag: 3.1.0
