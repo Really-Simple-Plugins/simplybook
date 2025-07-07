@@ -10,9 +10,15 @@ const FormScrollProgressLine = ({ settingsFormHeight }) => {
         document.documentElement.scrollHeight - window.innerHeight;
       setScrollProgress(Math.round((window.scrollY / scrollable) * 100));
     };
-    window.addEventListener("scroll", onScroll);
+
+    if (canScroll) {
+      window.addEventListener("scroll", onScroll);
+    } else {
+      window.removeEventListener("scroll", onScroll);
+    }
+
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [canScroll]);
 
   /**
    * The settingsFormHeight variable is only used to trigger useEffect.
