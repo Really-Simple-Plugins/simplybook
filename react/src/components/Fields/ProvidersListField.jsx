@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import useProviderData from '../../hooks/useProviderData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronRight, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useCrudContext } from '../../context/CrudContext';
 
@@ -134,7 +134,7 @@ const ProvidersListField = ({  }) => {
             const phonePattern = /^[+]?[0-9\s\-\(\)]{7,20}$/;
             if (!phonePattern.test(currentFormData.phone.trim())) {
                 console.error('Invalid phone number format');
-                alert(__('Please enter a valid phone number (7-20 digits, may include +, spaces, hyphens, and parentheses)', 'simplybook'));
+                alert(__('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook'));
                 return;
             }
         }
@@ -250,7 +250,6 @@ const ProvidersListField = ({  }) => {
     return (
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">{__('Manage Service Providers', 'simplybook')}</h3>
                 <div className="flex items-center gap-3">
                     <a
                         href="https://simplybook.it"
@@ -264,7 +263,7 @@ const ProvidersListField = ({  }) => {
                         type="button"
                         onClick={isCreatingNew ? handleCancel : handleAdd}
                         disabled={editingProvider}
-                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${
+                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                             isCreatingNew 
                                 ? 'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary'
                                 : 'bg-primary text-white hover:bg-primary-dark'
@@ -309,11 +308,41 @@ const ProvidersListField = ({  }) => {
                                 // Already editing - update the form data
                                 handleInputChange('is_visible', value);
                             } else {
-                                // Not editing - only update visibility override, don't open edit form
+                                // Not editing - update visibility override and trigger unsaved changes
                                 setVisibilityOverrides(prev => ({
                                     ...prev,
                                     [provider.id]: value
                                 }));
+                                // Trigger CRUD context to show unsaved changes
+                                setCrudContext({
+                                    type: 'edit',
+                                    itemType: 'provider',
+                                    onSave: () => {
+                                        // Create provider data with the visibility change
+                                        const providerData = {
+                                            ...provider,
+                                            is_visible: value
+                                        };
+                                        updateProvider({ id: provider.id, data: providerData }).then(() => {
+                                            setVisibilityOverrides(prev => {
+                                                const newOverrides = { ...prev };
+                                                delete newOverrides[provider.id];
+                                                return newOverrides;
+                                            });
+                                            setCrudContext(null);
+                                        });
+                                    },
+                                    onCancel: () => {
+                                        setVisibilityOverrides(prev => {
+                                            const newOverrides = { ...prev };
+                                            delete newOverrides[provider.id];
+                                            return newOverrides;
+                                        });
+                                        setCrudContext(null);
+                                    },
+                                    isLoading: isUpdating,
+                                    hasUnsavedChanges: true
+                                });
                             }
                         }}
                         isLoading={isUpdating || isDeleting}
@@ -394,7 +423,7 @@ const ProviderRow = ({
                 </div>
                 
                 {/* Right side: Actions */}
-                <div className="flex items-center space-x-3">
+                <div className="flex space-x-3">
                     {/* Trash Icon */}
                     <button
                         type="button"
@@ -477,7 +506,7 @@ const ProviderRow = ({
     );
 };
 
-const ProviderForm = ({ formData, onChange, isLoading, error }) => {
+const ProviderForm = ({ formData, onChange, error }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
@@ -486,7 +515,7 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Name', 'simplybook')} *
+                    {__('Service provider name', 'simplybook')} *
                 </label>
                 <input
                     type="text"
@@ -516,13 +545,14 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
                     value={formData.phone || ''}
                     onChange={(e) => onChange('phone', e.target.value)}
                     pattern="[+]?[0-9\s\-\(\)]{7,20}"
-                    title={__('Please enter a valid phone number (7-20 digits, may include +, spaces, hyphens, and parentheses)', 'simplybook')}
+                    title={__('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook')}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="+31 123 456 789"
                 />
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Quantity', 'simplybook')}
+                    {__('How many clients can be served at the same time?', 'simplybook')}
                 </label>
                 <input
                     type="number"
@@ -534,7 +564,7 @@ const ProviderForm = ({ formData, onChange, isLoading, error }) => {
             </div>
             <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Description', 'simplybook')}
+                    {__('Service provider description', 'simplybook')}
                 </label>
                 <textarea
                     value={formData.description || ''}

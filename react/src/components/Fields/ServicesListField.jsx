@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import useServicesData from '../../hooks/useServicesData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faChevronRight, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useCrudContext } from '../../context/CrudContext';
 
@@ -232,7 +232,6 @@ const ServicesListField = ({  }) => {
     return (
         <div className="w-full">
             <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">{__('Manage Services', 'simplybook')}</h3>
                 <div className="flex items-center gap-3">
                     <a
                         href="https://simplybook.it"
@@ -246,7 +245,7 @@ const ServicesListField = ({  }) => {
                         type="button"
                         onClick={isCreatingNew ? handleCancel : handleAdd}
                         disabled={editingService}
-                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold disabled:opacity-50 disabled:cursor-not-allowed ${
+                        className={`flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed ${
                             isCreatingNew 
                                 ? 'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary'
                                 : 'bg-primary text-white hover:bg-primary-dark'
@@ -291,11 +290,41 @@ const ServicesListField = ({  }) => {
                                 // Already editing - update the form data
                                 handleInputChange('is_visible', value);
                             } else {
-                                // Not editing - only update visibility override, don't open edit form
+                                // Not editing - update visibility override and trigger unsaved changes
                                 setVisibilityOverrides(prev => ({
                                     ...prev,
                                     [service.id]: value
                                 }));
+                                // Trigger CRUD context to show unsaved changes
+                                setCrudContext({
+                                    type: 'edit',
+                                    itemType: 'service',
+                                    onSave: () => {
+                                        // Create service data with the visibility change
+                                        const serviceData = {
+                                            ...service,
+                                            is_visible: value
+                                        };
+                                        updateService({ id: service.id, data: serviceData }).then(() => {
+                                            setVisibilityOverrides(prev => {
+                                                const newOverrides = { ...prev };
+                                                delete newOverrides[service.id];
+                                                return newOverrides;
+                                            });
+                                            setCrudContext(null);
+                                        });
+                                    },
+                                    onCancel: () => {
+                                        setVisibilityOverrides(prev => {
+                                            const newOverrides = { ...prev };
+                                            delete newOverrides[service.id];
+                                            return newOverrides;
+                                        });
+                                        setCrudContext(null);
+                                    },
+                                    isLoading: isUpdating,
+                                    hasUnsavedChanges: true
+                                });
                             }
                         }}
                         isLoading={isUpdating || isDeleting}
@@ -328,22 +357,6 @@ const ServiceRow = ({
                         isLoading,
                         error
                     }) => {
-    const formatPrice = (price) => {
-        return price ? `$${parseFloat(price).toFixed(2)}` : '-';
-    };
-
-    const formatDuration = (duration) => {
-        const hours = Math.floor(duration / 60);
-        const minutes = duration % 60;
-
-        if (hours > 0 && minutes > 0) {
-            return `${hours}h ${minutes}m`;
-        } else if (hours > 0) {
-            return `${hours}h`;
-        } else {
-            return `${minutes}m`;
-        }
-    };
 
     const handleVisibilityToggle = (e) => {
         e.stopPropagation();
@@ -393,7 +406,7 @@ const ServiceRow = ({
                 </div>
                 
                 {/* Right side: Actions */}
-                <div className="flex items-center space-x-3">
+                <div className="flex space-x-3">
                     {/* Trash Icon */}
                     <button
                         type="button"
@@ -474,7 +487,7 @@ const ServiceRow = ({
     );
 };
 
-const ServiceForm = ({ formData, onChange, isLoading, error }) => {
+const ServiceForm = ({ formData, onChange, error }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
@@ -483,7 +496,7 @@ const ServiceForm = ({ formData, onChange, isLoading, error }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Name', 'simplybook')} *
+                    {__('Service name', 'simplybook')} *
                 </label>
                 <input
                     type="text"
@@ -495,7 +508,7 @@ const ServiceForm = ({ formData, onChange, isLoading, error }) => {
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Price', 'simplybook')}
+                    {__('Service price', 'simplybook')}
                 </label>
                 <input
                     type="number"
@@ -508,7 +521,7 @@ const ServiceForm = ({ formData, onChange, isLoading, error }) => {
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Deposit Price', 'simplybook')}
+                    {__('Service deposit price', 'simplybook')}
                 </label>
                 <input
                     type="number"
@@ -521,7 +534,7 @@ const ServiceForm = ({ formData, onChange, isLoading, error }) => {
             </div>
             <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Duration (minutes)', 'simplybook')}
+                    {__('Service duration (minutes)', 'simplybook')}
                 </label>
                 <input
                     type="number"
@@ -544,7 +557,7 @@ const ServiceForm = ({ formData, onChange, isLoading, error }) => {
             </div>
             <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Description', 'simplybook')}
+                    {__('Service description', 'simplybook')}
                 </label>
                 <textarea
                     value={formData.description || ''}

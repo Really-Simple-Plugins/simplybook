@@ -61,14 +61,15 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
     {
         $route = $this->getRoute();
         
+        
         return [
             $route => [
-                'methods' => [\WP_REST_Server::READABLE, \WP_REST_Server::CREATABLE],
+                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'handleCollectionRequest'],
                 'permission_callback' => [$this, 'permissionCallback'],
             ],
             $route . '/(?P<id>[0-9]+)' => [
-                'methods' => [\WP_REST_Server::READABLE, \WP_REST_Server::CREATABLE, \WP_REST_Server::EDITABLE, \WP_REST_Server::DELETABLE],
+                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE . ',' . \WP_REST_Server::EDITABLE . ',' . \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'handleSingleRequest'],
                 'permission_callback' => [$this, 'permissionCallback'],
             ],
@@ -88,7 +89,7 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
         $method = $request->get_method();
         
         // For GET requests, check if user can manage options
-        if ($method === \WP_REST_Server::READABLE) {
+        if ($method === 'GET') {
             return current_user_can('manage_options');
         }
         
@@ -114,9 +115,9 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
 
         try {
             switch ($method) {
-                case \WP_REST_Server::READABLE:
+                case 'GET':
                     return $this->getItems($request);
-                case \WP_REST_Server::CREATABLE:
+                case 'POST':
                     return $this->createItem($request);
                 default:
                     return $this->sendHttpResponse(['error' => 'Method not allowed'], 405);
@@ -134,13 +135,16 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
         $method = $request->get_method();
         $itemId = $request->get_param('id');
 
+
         try {
             switch ($method) {
-                case \WP_REST_Server::READABLE:
+                case 'GET':
                     return $this->getItem($request, $itemId);
-                case \WP_REST_Server::EDITABLE:
+                case 'PUT':
+                case 'PATCH':
+                case 'POST':
                     return $this->updateItem($request, $itemId);
-                case \WP_REST_Server::DELETABLE:
+                case 'DELETE':
                     return $this->deleteItem($request, $itemId);
                 default:
                     return $this->sendHttpResponse(['error' => 'Method not allowed'], 405);

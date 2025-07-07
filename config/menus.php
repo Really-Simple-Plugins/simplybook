@@ -26,7 +26,7 @@ return [
         'groups' => [
             [
                 'id' => 'providers_list',
-                'title' => __('Manage Providers', 'simplybook'),
+                'title' => __('Manage Service Providers', 'simplybook'),
             ]
         ],
     ],

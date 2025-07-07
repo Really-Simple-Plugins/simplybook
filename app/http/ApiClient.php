@@ -1097,12 +1097,7 @@ class ApiClient
         } else {
             $result = $decodedResponse;
         }
-        
-        // Save color locally if provider was created successfully and we have an ID
-        if ($colorToSave && isset($result['data']['id'])) {
-            $this->saveProviderColor($result['data']['id'], $colorToSave);
-        }
-        
+
         return $result;
     }
 
@@ -1113,12 +1108,7 @@ class ApiClient
     {
         $this->validateProviderData($updatedData, ['is_visible']);
         $sanitizedId = sanitize_text_field($providerId);
-        
-        // Store color locally since SimplyBook API doesn't support it
-        if (isset($updatedData['color'])) {
-            $this->saveProviderColor($sanitizedId, $updatedData['color']);
-        }
-        
+
         // Map frontend fields to API fields and remove non-API fields
         $mappedData = $this->mapProviderFieldsForApi($updatedData);
         
@@ -1155,7 +1145,6 @@ class ApiClient
         // Make the delete request and check the response
         $response = $this->makeProviderRequest("admin/providers/{$sanitizedId}", 'DELETE');
         $this->clearProviderCache();
-        
         // SimplyBook API might return specific success indicators
         // If response is empty or has success indicator, consider it successful
         return true;
@@ -1918,34 +1907,6 @@ class ApiClient
 	private function getRequestUserAgent(): string
 	{
 		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
-	}
-
-	/**
-	 * Save provider color locally since SimplyBook API doesn't support it
-	 */
-	private function saveProviderColor(string $providerId, string $color): void
-	{
-		$colors = get_option('simplybook_provider_colors', []);
-		$colors[$providerId] = sanitize_hex_color($color) ?: '#3b82f6';
-		update_option('simplybook_provider_colors', $colors);
-	}
-
-	/**
-	 * Add local colors to provider data
-	 */
-	private function addProviderColors(array $providers): array
-	{
-		$colors = get_option('simplybook_provider_colors', []);
-		
-		foreach ($providers as &$provider) {
-			if (isset($provider['id']) && isset($colors[$provider['id']])) {
-				$provider['color'] = $colors[$provider['id']];
-			} else {
-				$provider['color'] = '#3b82f6'; // Default color
-			}
-		}
-		
-		return $providers;
 	}
 
 	// ========================================

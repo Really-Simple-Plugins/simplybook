@@ -97,8 +97,6 @@ class ProvidersEndpoint extends AbstractBaseEndpoint
             switch ($key) {
                 case 'name':
                 case 'phone':
-                    $escaped[$key] = is_string($value) ? esc_html($value) : $value;
-                    break;
                 case 'description':
                     $escaped[$key] = is_string($value) ? esc_textarea($value) : $value;
                     break;
@@ -130,4 +128,5 @@ class ProvidersEndpoint extends AbstractBaseEndpoint
         $qty = intval($value);
         return max(1, $qty); // Minimum 1
     }
+
 }
