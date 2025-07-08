@@ -232,6 +232,9 @@ class Plugin
                 new Services\SubscriptionDataService(),
             ),
             new Http\Endpoints\PublicThemeListEndpoint(),
+            new Http\Endpoints\ThemeColorEndpoint(
+                new Services\ThemeColorService()
+            ),
         ]);
     }
 
