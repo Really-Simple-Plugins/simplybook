@@ -13,15 +13,14 @@ Simply add a booking calendar to your site to schedule bookings, reservations, a
 
 == Description ==
 
-SimplyBook.me is the easiest way to start collecting bookings on your WordPress website. The plugin will allow you to register your free account and immediately publish your booking calendar on the front-end of your site. With a few clicks you can easily add your services and service providers, and design the most beautiful booking widget. You will be collecting appointments and reservations in no-time!
-
+SimplyBook.me is the easiest way to start collecting bookings on your WordPress website. The plugin will allow you to register your free account and immediately publish your booking calendar on the front-end of your site. With a few clicks, you can easily add your services and service providers, and design the most beautiful booking widget. You will be collecting appointments and reservations in no-time!
 * Easy appointment scheduling
 * Simple plugin onboarding and configuration
 * Manage your calendar and bookings using the powerful mobile app (iOS and Android)
 * Accept touchless payments via the app on your onsite checkout
 * High email deliverability for reservation confirmations and appointment reminders.
 * Create multiple services, providers, categories and locations
-* Send email and SMS notifications to your customers
+* Send email and SMS notifications to your customers for their bookings
 * Add "Book now" buttons on your Instagram, Facebook and Google Business Profile
 * Sell Memberships, packages & gift cards
 * Manage bookings for Classes & Events
@@ -35,11 +34,11 @@ SimplyBook.me is the easiest way to start collecting bookings on your WordPress 
 * Create multiple users related to providers
 * Accepting payments and/or deposits to confirm the bookings in the booking process
 
-SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions.
+SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools.
 
 = Why SimplyBook.me? =
 
-SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings and settings. On top of that you will get an admin app where you can manage all your bookings and accept payments on the go.Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
+SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings, calendar, and settings. On top of that you will get an admin app where you can manage all your bookings, handle appointments, adjust scheduling, and accept payments on the go. Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
 For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/</a>
 
 This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you familiarize yourself with the privacy policy and terms of use of SimplyBook.me at the following links:
@@ -56,13 +55,12 @@ Really Simple Plugins is the creator of most-used plugins Really Simple Security
 
 = Benefits of the Online booking system =
 
-Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book services outside of traditional office hours, an online booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
+Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
 Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
 
 == Installation ==
 
 = <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
-
 
 == Frequently Asked Questions ==
 
