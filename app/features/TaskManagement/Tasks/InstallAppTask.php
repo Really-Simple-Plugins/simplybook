@@ -30,33 +30,36 @@ class InstallAppTask extends AbstractTask
             'type' => 'button',
             'text' => esc_html__('More info','simplybook'),
             'modal' => [
-                'columns' => [
+                'background' => [
+                    'image' => App::env('plugin.assets_url') . 'img/QR-MODAL-BG.svg',
+                ],
+                'content' => [
                     [
-                        [
-                            'type' => 'title',
-                            'content' => esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
+                        'title' => [
+                            [
+                                esc_html__('Manage your bookings on the go with the Admin App!', 'simplybook'),
+                            ],
                         ],
-                        [
-                            'type' => 'text',
-                            'content' =>
+                        'text' => [
+                            [
                                 /* translators: %1$s: an & (ampersand) sign */
                                 sprintf(
                                     esc_html__('See new and upcoming bookings, access %1$s contact your clients, send payment links (coming soon) %1$s more with the Admin App.', 'simplybook'),
                                     '&'
                                 ),
+                            ],
+                            [
+                                esc_html__('Just scan one of these codes:', 'simplybook'),
+                            ],
                         ],
-                        [
-                            'type' => 'text',
-                            'content' => esc_html__('Just scan one of these codes:', 'simplybook'),
+                        'images' => [
+                            [
+                                'src' => App::env('plugin.assets_url') . 'img/Combined-QR-Codes.svg',
+                                'altText' => esc_html__('Two QR Codes - left to the App Store and right to the Google Play Store pages of the Admin App', 'simplybook'),
+                            ],
                         ],
-                        [
-                            'type' => 'img',
-                            'content' => App::env('plugin.assets_url') . 'img/Combined-QR-Codes.svg',
-                            'altText' => esc_html__('Two QR Codes - left to the App Store and right to the Google Play Store pages of the Admin App', 'simplybook'),
-                        ],
-                        [
-                            'type' => 'callsToAction',
-                            'content' => [
+                        'callsToAction' => [
+                            [
                                 [
                                     'button' => [
                                         'image' => App::env('plugin.assets_url') . 'img/App-Store-Btn.svg',
@@ -77,14 +80,14 @@ class InstallAppTask extends AbstractTask
                         ],
                     ],
                     [
-                        [
-                            'type' => 'img',
-                            'content' => App::env('plugin.assets_url') . 'img/QR-MODAL-PHONES.svg',
-                            'altText' => esc_html__('Two phones displaying pages of the Admin App', 'simplybook'),
+                        'images' => [
+                            [
+                                'src' => App::env('plugin.assets_url') . 'img/QR-MODAL-PHONES.svg',
+                                'altText' => esc_html__('Two phones displaying pages of the Admin App', 'simplybook'),
+                            ],
                         ],
-                    ]
+                    ],
                 ],
-	            'backgroundImage' => App::env('plugin.assets_url') . 'img/QR-MODAL-BG.svg',
             ],
         ];
     }
