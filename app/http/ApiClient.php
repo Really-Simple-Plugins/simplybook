@@ -1021,9 +1021,6 @@ class ApiClient
             'count' => count($providers),
         ]);
 
-        // Add local colors to providers
-        $providers = $this->addProviderColors($providers);
-        
         wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
         return $providers;
     }
@@ -1072,10 +1069,7 @@ class ApiClient
     public function createProvider(array $providerData): array
     {
         $this->validateProviderData($providerData, ['name', 'is_visible']);
-        
-        // Store color for later since we'll need the provider ID first
-        $colorToSave = $providerData['color'] ?? null;
-        
+
         // Map frontend fields to API fields and remove non-API fields
         $mappedData = $this->mapProviderFieldsForApi($providerData);
         $enrichedData = $this->enrichProviderDataWithDefaults($mappedData);
@@ -1914,21 +1908,21 @@ class ApiClient
 	// ========================================
 
 	/**
-	 * Get the service repository for fluent API
-	 * Usage: App::provide('client')->service()->find(123)
+	 * Get providers model for fluent API
+	 * Usage: App::provide('client')->providers()->find(2)
 	 */
-	public function service(): \SimplyBook\Repositories\ServiceRepository
+	public function providers(): \SimplyBook\Models\Provider
 	{
-		return new \SimplyBook\Repositories\ServiceRepository($this);
+		return new \SimplyBook\Models\Provider();
 	}
 
 	/**
-	 * Get the provider repository for fluent API
-	 * Usage: App::provide('client')->provider()->find(123)
+	 * Get services model for fluent API  
+	 * Usage: App::provide('client')->services()->find(2)
 	 */
-	public function provider(): \SimplyBook\Repositories\ProviderRepository
+	public function services(): \SimplyBook\Models\Service
 	{
-		return new \SimplyBook\Repositories\ProviderRepository($this);
+		return new \SimplyBook\Models\Service();
 	}
 
 }

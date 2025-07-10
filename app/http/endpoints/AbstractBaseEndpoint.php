@@ -77,33 +77,11 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
     }
 
     /**
-     * Generic permission callback for all CRUD operations
-     * Uses the extended defaultPermissionCallback with additional admin access check
+     * Generic permission callback for all CRUD operations.
      */
     public function permissionCallback(\WP_REST_Request $request): bool
     {
-        if (!$this->adminAccessAllowed()) {
-            return false;
-        }
-
-        $method = $request->get_method();
-        
-        // For GET requests, check if user can manage options
-        if ($method === 'GET') {
-            return current_user_can('manage_options');
-        }
-        
-        // For POST/PUT/DELETE requests, use defaultPermissionCallback
-        // which now handles all data-modifying methods
-        $endpointManager = new \SimplyBook\Managers\EndpointManager();
-        $result = $endpointManager->defaultPermissionCallback($request);
-        
-        // Handle WP_Error return type
-        if (is_wp_error($result)) {
-            return false;
-        }
-        
-        return $result;
+        return $this->adminAccessAllowed();
     }
 
     /**
@@ -160,21 +138,13 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
     protected function getItems(\WP_REST_Request $request): \WP_REST_Response
     {
         $client = \SimplyBook\App::provide('client');
-        $methodName = 'get' . $this->getResourceType() . 's';
+        $resource = $this->getResource();
         
-        // Validate that the method exists on the client
-        if (!method_exists($client, $methodName)) {
-            return $this->sendHttpResponse([
-                'error' => "API method {$methodName} not found"
-            ], 500);
-        }
+        $models = $client->$resource()->all();
+        $result = array_map(fn($model) => $model->toArray(), $models);
         
-        $result = $client->$methodName();
-        
-        // Escape output data for security
-        $escapedResult = $this->escapeOutputData($result ?: []);
-        
-        return $this->sendHttpResponse($escapedResult, true, 'Data retrieved successfully');
+        $escapedResult = $this->escapeOutputData($result);
+        return $this->sendHttpResponse($escapedResult);
     }
 
     /**
@@ -183,29 +153,15 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
     protected function getItem(\WP_REST_Request $request, string $itemId): \WP_REST_Response
     {
         $client = \SimplyBook\App::provide('client');
-        $methodName = 'get' . $this->getResourceType() . 's';
+        $resource = $this->getResource();
         
-        // Validate that the method exists on the client
-        if (!method_exists($client, $methodName)) {
-            return $this->sendHttpResponse([
-                'error' => "API method {$methodName} not found"
-            ], 500);
-        }
+        $item = $client->$resource()->find($itemId);
         
-        $items = $client->$methodName();
-        
-        // Filter to get the specific item
-        $item = array_filter($items, function($item) use ($itemId) {
-            return isset($item['id']) && $item['id'] == $itemId;
-        });
-        
-        if (empty($item)) {
+        if (!$item) {
             return $this->sendHttpResponse(['error' => ucfirst($this->getResourceName()) . ' not found'], 404);
         }
         
-        // Escape output data for security
-        $escapedItem = $this->escapeOutputData([array_values($item)[0]]);
-        
+        $escapedItem = $this->escapeOutputData([$item->toArray()]);
         return $this->sendHttpResponse($escapedItem[0]);
     }
 
@@ -222,20 +178,11 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
         }
 
         $sanitizedData = $this->sanitizeInputData($data);
-
         $client = \SimplyBook\App::provide('client');
-        $methodName = 'create' . $this->getResourceType();
+        $resource = $this->getResource();
         
-        // Validate that the method exists on the client
-        if (!method_exists($client, $methodName)) {
-            return $this->sendHttpResponse([
-                'error' => "API method {$methodName} not found"
-            ], 500);
-        }
-        
-        $result = $client->$methodName($sanitizedData);
-        
-        return $this->sendHttpResponse($result, 201);
+        $result = $client->$resource()->create($sanitizedData);
+        return $this->sendHttpResponse($result->toArray(), 201);
     }
 
     /**
@@ -255,20 +202,17 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
         }
 
         $sanitizedData = $this->sanitizeInputData($data);
-
         $client = \SimplyBook\App::provide('client');
-        $methodName = 'update' . $this->getResourceType();
+        $resource = $this->getResource();
         
-        // Validate that the method exists on the client
-        if (!method_exists($client, $methodName)) {
-            return $this->sendHttpResponse([
-                'error' => "API method {$methodName} not found"
-            ], 500);
+        $item = $client->$resource()->find($itemId);
+        
+        if (!$item) {
+            return $this->sendHttpResponse(['error' => ucfirst($resourceName) . ' not found'], 404);
         }
         
-        $result = $client->$methodName($itemId, $sanitizedData);
-        
-        return $this->sendHttpResponse($result);
+        $result = $item->update($sanitizedData);
+        return $this->sendHttpResponse($result->toArray());
     }
 
     /**
@@ -283,17 +227,15 @@ abstract class AbstractBaseEndpoint implements MultiEndpointInterface
         }
 
         $client = \SimplyBook\App::provide('client');
-        $methodName = 'delete' . $this->getResourceType();
+        $resource = $this->getResource();
         
-        // Validate that the method exists on the client
-        if (!method_exists($client, $methodName)) {
-            return $this->sendHttpResponse([
-                'error' => "API method {$methodName} not found"
-            ], 500);
+        $item = $client->$resource()->find($itemId);
+        
+        if (!$item) {
+            return $this->sendHttpResponse(['error' => ucfirst($resourceName) . ' not found'], 404);
         }
         
-        $result = $client->$methodName($itemId);
-        
+        $result = $item->delete();
         return $this->sendHttpResponse(['success' => $result]);
     }
 }

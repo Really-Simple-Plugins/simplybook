@@ -18,7 +18,7 @@ class ProvidersEndpoint extends AbstractBaseEndpoint
      */
     protected function getResource(): string
     {
-        return 'provider';
+        return 'providers';
     }
 
     /**
@@ -45,9 +45,6 @@ class ProvidersEndpoint extends AbstractBaseEndpoint
                 case 'qty':
                 case 'quantity':
                     $sanitized[$key] = $this->sanitizeQuantity($value);
-                    break;
-                case 'color':
-                    $sanitized[$key] = sanitize_hex_color($value) ?: '#3b82f6';
                     break;
                 case 'is_visible':
                     $sanitized[$key] = (bool) $value;
@@ -102,9 +99,6 @@ class ProvidersEndpoint extends AbstractBaseEndpoint
                     break;
                 case 'email':
                     $escaped[$key] = is_string($value) ? esc_html($value) : $value;
-                    break;
-                case 'color':
-                    $escaped[$key] = is_string($value) ? esc_attr($value) : $value;
                     break;
                 case 'qty':
                 case 'quantity':

@@ -18,7 +18,7 @@ class ServicesEndpoint extends AbstractBaseEndpoint
      */
     protected function getResource(): string
     {
-        return 'service';
+        return 'services';
     }
 
     /**
