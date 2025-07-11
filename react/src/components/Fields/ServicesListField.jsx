@@ -6,6 +6,7 @@ import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icon
 import clsx from 'clsx';
 import { useCrudContext } from '../../context/CrudContext';
 import LoginLink from '../Common/LoginLink';
+import useSpecialFeaturesData from "../../hooks/useSpecialFeaturesData";
 
 const ServicesListField = ({  }) => {
     const {
@@ -71,7 +72,7 @@ const ServicesListField = ({  }) => {
         if (isCreatingNew) {
             return;
         }
-        
+
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(serviceId)) {
             // Collapsing - close this row
@@ -85,14 +86,14 @@ const ServicesListField = ({  }) => {
             // Expanding - close any other expanded rows and open this one
             newExpanded.clear();
             newExpanded.add(serviceId);
-            
+
             // If another service was being edited or we're creating new, clear that state
             if (editingService && editingService !== serviceId) {
                 setEditingService(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
             }
-            
+
             setEditingService(serviceId);
             const newFormData = {
                 ...service,
@@ -118,10 +119,6 @@ const ServicesListField = ({  }) => {
 
         const serviceData = {
             name: currentFormData.name,
-            description: currentFormData.description || '',
-            price: parseFloat(currentFormData.price) || 0,
-            deposit_price: parseFloat(currentFormData.deposit_price) || 0,
-            tax_id: currentFormData.tax_id || '',
             duration: parseInt(currentFormData.duration) || 60,
             is_visible: currentFormData.is_visible
         };
@@ -154,6 +151,7 @@ const ServicesListField = ({  }) => {
                 });
                 setCrudContext(null);
             }).catch((error) => {
+                console.log(error)
                 console.error('Error updating service:', error);
             });
         }
@@ -181,10 +179,6 @@ const ServicesListField = ({  }) => {
         setIsCreatingNew(true);
         setFormData({
             name: '',
-            description: '',
-            price: '',
-            deposit_price: '',
-            tax_id: '',
             duration: '',
             is_visible: true
         });
@@ -348,7 +342,7 @@ const ServiceRow = ({
                         visibilityOverrides,
                         onVisibilityChange,
                         isLoading,
-                        error
+                        error,
                     }) => {
 
     const handleVisibilityToggle = (e) => {
@@ -359,12 +353,12 @@ const ServiceRow = ({
     };
 
     // Check visibility in order: form data (if editing) -> visibility overrides -> original data
-    const currentVisibility = isEditing && formData 
-        ? formData.is_visible 
-        : visibilityOverrides[service.id] !== undefined 
-        ? visibilityOverrides[service.id] 
+    const currentVisibility = isEditing && formData
+        ? formData.is_visible
+        : visibilityOverrides[service.id] !== undefined
+        ? visibilityOverrides[service.id]
         : service.is_visible;
-    
+
     // Count visible services (considering form state and visibility overrides)
     const visibleServicesCount = services.filter(s => {
         if (isEditing && s.id === service.id) {
@@ -373,10 +367,10 @@ const ServiceRow = ({
         // Check visibility overrides first, then original data
         return visibilityOverrides[s.id] !== undefined ? visibilityOverrides[s.id] : s.is_visible;
     }).length;
-    
+
     // Disable toggle if this is the last visible service and we're trying to hide it
     const isToggleDisabled = currentVisibility && visibleServicesCount <= 1;
-    
+
     // Disable delete if this is the last service
     const isDeleteDisabled = services.length <= 1;
 
@@ -386,7 +380,7 @@ const ServiceRow = ({
             isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
         )}>
             {/* Main row */}
-            <div 
+            <div
                 className={clsx(
                     "flex items-center justify-between p-4 rounded-t-lg",
                     isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
@@ -397,7 +391,7 @@ const ServiceRow = ({
                 <div className="flex items-center flex-1">
                     <div className="text-sm font-medium text-gray-900">{service.name}</div>
                 </div>
-                
+
                 {/* Right side: Actions */}
                 <div className="flex space-x-3">
                     {/* Trash Icon */}
@@ -413,9 +407,9 @@ const ServiceRow = ({
                     >
                         <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                     </button>
-                    
+
                     {/* Visibility Toggle */}
-                    <div 
+                    <div
                         className="h-6"
                         onClick={(e) => e.stopPropagation()}
                     >
@@ -423,7 +417,7 @@ const ServiceRow = ({
                             "relative inline-flex items-center",
                             isToggleDisabled ? "cursor-not-allowed" : "cursor-pointer"
                         )} title={
-                            isToggleDisabled 
+                            isToggleDisabled
                                 ? __('Cannot hide the last visible service', 'simplybook')
                                 : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
                         }
@@ -444,7 +438,7 @@ const ServiceRow = ({
                         )}></div>
                         </label>
                     </div>
-                    
+
                     {/* Dropdown Toggle */}
                     <button
                         type="button"
@@ -455,16 +449,16 @@ const ServiceRow = ({
                         className="p-1 rounded hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6"
                         title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
                     >
-                        <FontAwesomeIcon 
-                            icon={faChevronDown} 
-                            className={clsx("w-4 h-4 transition-transform duration-200", 
+                        <FontAwesomeIcon
+                            icon={faChevronDown}
+                            className={clsx("w-4 h-4 transition-transform duration-200",
                                 isExpanded && "rotate-180"
-                            )} 
+                            )}
                         />
                     </button>
                 </div>
             </div>
-            
+
             {/* Expanded section */}
             {isExpanded && (
                 <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
@@ -482,13 +476,16 @@ const ServiceRow = ({
 };
 
 const ServiceForm = ({ formData, onChange, error, serviceId }) => {
+
+    const {isPluginActive} = useSpecialFeaturesData();
+
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
-    
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Service name', 'simplybook')} *
                 </label>
@@ -500,33 +497,7 @@ const ServiceForm = ({ formData, onChange, error, serviceId }) => {
                     required
                 />
             </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service price', 'simplybook')}
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.price || ''}
-                    onChange={(e) => onChange('price', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service deposit price', 'simplybook')}
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.deposit_price || ''}
-                    onChange={(e) => onChange('deposit_price', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Service duration (minutes)', 'simplybook')}
                 </label>
@@ -537,28 +508,6 @@ const ServiceForm = ({ formData, onChange, error, serviceId }) => {
                     onChange={(e) => onChange('duration', e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="60"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Tax ID', 'simplybook')}
-                </label>
-                <input
-                    type="text"
-                    value={formData.tax_id || ''}
-                    onChange={(e) => onChange('tax_id', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service description', 'simplybook')}
-                </label>
-                <textarea
-                    value={formData.description || ''}
-                    onChange={(e) => onChange('description', e.target.value)}
-                    rows={3}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
             {/* Edit All Properties Button */}

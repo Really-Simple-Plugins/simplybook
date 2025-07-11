@@ -13,6 +13,7 @@ class AppServiceProvider extends Provider
         'request',
         'client',
         'simplybook_domains',
+        'http_entities', // After 'client' so client can be used in entities
     ];
 
     /**

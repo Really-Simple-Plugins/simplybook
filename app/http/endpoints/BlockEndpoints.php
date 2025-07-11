@@ -2,12 +2,22 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
+use SimplyBook\Http\Entities\Service;
+use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
-
     const ROUTE = 'internal';
+
+    protected Service $service;
+    protected ServiceProvider $serviceProvider;
+
+    public function __construct(Service $service, ServiceProvider $serviceProvider)
+    {
+        $this->service = $service;
+        $this->serviceProvider = $serviceProvider;
+    }
 
     /**
      * Always allow creating the routes to prevent errors while fetching data
@@ -97,7 +107,7 @@ class BlockEndpoints implements MultiEndpointInterface
             return [];
         }
 
-        return App::provide('client')->getServices(true);
+        return $this->service->all();
     }
 
     /**
@@ -105,13 +115,13 @@ class BlockEndpoints implements MultiEndpointInterface
      * also adds the 'any' provider to the response. And when the Gutenberg
      * block can handle the response.
      */
-    public function getProviders()
+    public function getProviders(): array
     {
         if (!$this->isAuthorized()) {
             return [];
         }
 
-        $providers = App::provide('client')->getProviders(true);
+        $providers = $this->serviceProvider->all();
 
         $isAnyProviderEnabled = App::provide('client')->isSpecialFeatureEnabled('any_unit');
         if ($isAnyProviderEnabled){

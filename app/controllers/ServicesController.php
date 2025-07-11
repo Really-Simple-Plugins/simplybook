@@ -2,16 +2,26 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\App;
-use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Http\Entities\Service;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class ServicesController implements ControllerInterface
 {
     use LegacyLoad;
 
-    public function register() {
+    /**
+     * The service entity that this controller uses to do requests.
+     */
+    protected Service $service;
+
+    public function __construct(Service $service)
+    {
+        $this->service = $service;
+    }
+
+    public function register()
+    {
         add_action('simplybook_after_company_registered', [$this, 'setInitialServiceName']);
     }
 
@@ -30,41 +40,20 @@ class ServicesController implements ControllerInterface
             return false; // abort if no service name is set
         }
 
-        $currentServices = App::provide('client')->get_services();
+        $currentServices = $this->service->all();
 
         // There are NO services or more than 1. Both wouldn't give us the
         // option to set the initial service name.
-        if ((count($currentServices) !== 1) || empty($currentServices[0])) {
+        if ((count($currentServices) !== 1) || empty($currentServices[0]) || !is_array($currentServices[0])) {
             return false;
         }
-
-        $mandatoryFields = [
-            'id',
-            'duration',
-            'is_visible',
-        ];
-
-        $initialService = new Storage($currentServices[0]);
-
-        foreach ($mandatoryFields as $field) {
-            if ($initialService->isEmpty($field)) {
-                return false; // abort updating invalid service
-            }
-        }
-
-        $updatedService = [
-            'name' => sanitize_text_field($initialServiceName),
-            'duration' => $initialService->getInt('duration'),
-            'is_visible' => $initialService->getBoolean('is_visible'),
-        ];
 
         try {
-            App::provide('client')->updateService(
-                $initialService->getString('id'),
-                $updatedService
-            );
+            $this->service->fill($currentServices[0]);
+            $this->service->name = sanitize_text_field($initialServiceName);
+            $this->service->update();
         } catch (\Exception $e) {
-            return false;
+            return false; // abort updating invalid service
         }
 
         return true;

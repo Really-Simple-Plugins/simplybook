@@ -22,7 +22,6 @@
     "autoload": {
         "psr-4": {
             "SimplyBook\\Http\\": "app/http",
-            "SimplyBook\\Models\\": "app/models",
             "SimplyBook\\Traits\\": "app/traits",
             "SimplyBook\\Managers\\": "app/managers",
             "SimplyBook\\Services\\": "app/services",
@@ -34,6 +33,7 @@
             "SimplyBook\\Utility\\": "app/support/utility",
             "SimplyBook\\Controllers\\": "app/controllers",
             "SimplyBook\\Builders\\": "app/support/builders",
+            "SimplyBook\\Http\\Entities\\": "app/http/entities",
             "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints"
         },
         "files": [

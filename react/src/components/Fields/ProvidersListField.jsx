@@ -69,7 +69,7 @@ const ProvidersListField = ({  }) => {
         if (isCreatingNew) {
             return;
         }
-        
+
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(providerId)) {
             // Collapsing - close this row
@@ -83,15 +83,15 @@ const ProvidersListField = ({  }) => {
             // Expanding - close any other expanded rows and open this one
             newExpanded.clear();
             newExpanded.add(providerId);
-            
+
             // If another provider was being edited or we're creating new, clear that state
             if (editingProvider && editingProvider !== providerId) {
                 setEditingProvider(null);
                 setFormData({});
                 setHasUnsavedChanges(false);
             }
-            
-            
+
+
             setEditingProvider(providerId);
             const newFormData = {
                 ...provider,
@@ -119,7 +119,7 @@ const ProvidersListField = ({  }) => {
             console.error('No provider name provided');
             return;
         }
-        
+
         // Validate email if provided
         if (currentFormData.email && currentFormData.email.trim()) {
             const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -129,7 +129,7 @@ const ProvidersListField = ({  }) => {
                 return;
             }
         }
-        
+
         // Validate phone number if provided
         if (currentFormData.phone && currentFormData.phone.trim()) {
             const phonePattern = /^[+]?[0-9\s\-\(\)]{7,20}$/;
@@ -139,17 +139,16 @@ const ProvidersListField = ({  }) => {
                 return;
             }
         }
-        
+
         if (!currentIsCreatingNew && !currentEditingProvider) {
             if (!currentFormData.id) {
                 console.error('No provider ID available for update');
                 return;
             }
         }
-        
+
         const providerData = {
             name: currentFormData.name,
-            description: currentFormData.description || '',
             qty: Math.max(parseInt(currentFormData.qty) || 1, 1),
             email: currentFormData.email || '',
             phone: currentFormData.phone || '',
@@ -201,7 +200,7 @@ const ProvidersListField = ({  }) => {
         setIsCreatingNew(false);
         setFormData({});
         setHasUnsavedChanges(false);
-        
+
         setCrudContext(null);
     };
 
@@ -210,7 +209,6 @@ const ProvidersListField = ({  }) => {
         setIsCreatingNew(true);
         setFormData({
             name: '',
-            description: '',
             qty: 1,
             email: '',
             phone: '',
@@ -354,20 +352,20 @@ const ProvidersListField = ({  }) => {
     );
 };
 
-const ProviderRow = ({ 
-    provider, 
+const ProviderRow = ({
+    provider,
     providers,
-    isExpanded, 
-    isEditing, 
+    isExpanded,
+    isEditing,
     isCreatingNew,
-    onToggle, 
-    onDelete, 
-    formData, 
-    onChange, 
+    onToggle,
+    onDelete,
+    formData,
+    onChange,
     visibilityOverrides,
     onVisibilityChange,
-    isLoading, 
-    error 
+    isLoading,
+    error
 }) => {
     const handleVisibilityToggle = (e) => {
         e.stopPropagation();
@@ -377,12 +375,12 @@ const ProviderRow = ({
     };
 
     // Check visibility in order: form data (if editing) -> visibility overrides -> original data
-    const currentVisibility = isEditing && formData 
-        ? formData.is_visible 
-        : visibilityOverrides[provider.id] !== undefined 
-        ? visibilityOverrides[provider.id] 
+    const currentVisibility = isEditing && formData
+        ? formData.is_visible
+        : visibilityOverrides[provider.id] !== undefined
+        ? visibilityOverrides[provider.id]
         : provider.is_visible;
-    
+
     // Count visible providers (considering form state and visibility overrides)
     const visibleProvidersCount = providers.filter(p => {
         if (isEditing && p.id === provider.id) {
@@ -391,10 +389,10 @@ const ProviderRow = ({
         // Check visibility overrides first, then original data
         return visibilityOverrides[p.id] !== undefined ? visibilityOverrides[p.id] : p.is_visible;
     }).length;
-    
+
     // Disable toggle if this is the last visible provider and we're trying to hide it
     const isToggleDisabled = currentVisibility && visibleProvidersCount <= 1;
-    
+
     // Disable delete if this is the last provider
     const isDeleteDisabled = providers.length <= 1;
 
@@ -404,7 +402,7 @@ const ProviderRow = ({
             isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
         )}>
             {/* Main row */}
-            <div 
+            <div
                 className={clsx(
                     "flex items-center justify-between p-4 rounded-t-lg",
                     isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
@@ -415,7 +413,7 @@ const ProviderRow = ({
                 <div className="flex items-center flex-1">
                     <div className="text-sm font-medium text-gray-900">{provider.name}</div>
                 </div>
-                
+
                 {/* Right side: Actions */}
                 <div className="flex space-x-3">
                     {/* Trash Icon */}
@@ -431,19 +429,19 @@ const ProviderRow = ({
                     >
                         <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                     </button>
-                    
+
                     {/* Visibility Toggle */}
-                    <div 
+                    <div
                         className=""
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <label 
+                        <label
                             className={clsx(
                                 "relative inline-flex items-center",
                                 isToggleDisabled ? "cursor-not-allowed" : "cursor-pointer"
-                            )} 
+                            )}
                             title={
-                                isToggleDisabled 
+                                isToggleDisabled
                                     ? __('Cannot hide the last visible service provider', 'simplybook')
                                     : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
                             }
@@ -464,7 +462,7 @@ const ProviderRow = ({
                         )}></div>
                         </label>
                     </div>
-                    
+
                     {/* Dropdown Toggle */}
                     <button
                         type="button"
@@ -475,16 +473,16 @@ const ProviderRow = ({
                         className="p-1 rounded hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6"
                         title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
                     >
-                        <FontAwesomeIcon 
-                            icon={faChevronDown} 
-                            className={clsx("w-4 h-4 transition-transform duration-200", 
+                        <FontAwesomeIcon
+                            icon={faChevronDown}
+                            className={clsx("w-4 h-4 transition-transform duration-200",
                                 isExpanded && "rotate-180"
-                            )} 
+                            )}
                         />
                     </button>
                 </div>
             </div>
-            
+
             {/* Expanded section */}
             {isExpanded && (
                 <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
@@ -505,7 +503,7 @@ const ProviderForm = ({ formData, onChange, error, providerId }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
-    
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-full">
@@ -554,17 +552,6 @@ const ProviderForm = ({ formData, onChange, error, providerId }) => {
                     min="1"
                     value={formData.qty || 1}
                     onChange={(e) => onChange('qty', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service provider description', 'simplybook')}
-                </label>
-                <textarea
-                    value={formData.description || ''}
-                    onChange={(e) => onChange('description', e.target.value)}
-                    rows={3}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
