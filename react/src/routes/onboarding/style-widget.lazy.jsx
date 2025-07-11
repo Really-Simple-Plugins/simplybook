@@ -18,19 +18,20 @@ export const Route = createLazyFileRoute(path)({
         const { colors: themeColors, isLoading: themeColorsLoading } = useThemeColors();
         const {onboardingCompleted} = useOnboardingData();
 
-        const [hasTimedOut, setHasTimedOut] = useState(false);
+        const [primaryColor, setPrimaryColor] = useState(null);
+        const [secondaryColor, setSecondaryColor] = useState(null);
+        const [activeColor, setActiveColor] = useState(null);
 
-        // Set timeout for loading
         useEffect(() => {
-            const timer = setTimeout(() => {
-                setHasTimedOut(true);
-            }, 3000); // 3 second timeout
+            if (themeColors) {
+                setPrimaryColor(themeColors.primary);
+                setSecondaryColor(themeColors.secondary);
+                setActiveColor(themeColors.active);
+            }
+        }, [themeColors]);
 
-            return () => clearTimeout(timer);
-        }, []);
-
-        // Show loading state until colors are loaded or timeout
-        const showColorPickers = !themeColorsLoading || hasTimedOut;
+        // Show loading state until colors are loaded
+        const showColorPickers = !themeColorsLoading;
 
         return (
             <>
@@ -55,26 +56,35 @@ export const Route = createLazyFileRoute(path)({
                                     className="mr-4"
                                     label={__('Primary', 'simplybook')}
                                     setting={{
-                                        value: themeColors.primary,
+                                        value: primaryColor,
                                         default: themeColors.primary,
                                         disabled: !onboardingCompleted,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setPrimaryColor(value);
                                     }}
                                 />
                                 <ColorPickerField
                                     className="mr-4"
                                     label={__('Secondary', 'simplybook')}
                                     setting={{
-                                        value: themeColors.secondary,
+                                        value: secondaryColor,
                                         default: themeColors.secondary,
                                         disabled: !onboardingCompleted,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setSecondaryColor(value);
                                     }}
                                 />
                                 <ColorPickerField
                                     label={__('Active', 'simplybook')}
                                     setting={{
-                                        value: themeColors.active,
+                                        value: activeColor,
                                         default: themeColors.active,
                                         disabled: !onboardingCompleted,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setActiveColor(value);
                                     }}
                                 />
                             </>
@@ -86,9 +96,9 @@ export const Route = createLazyFileRoute(path)({
                             disabled: !onboardingCompleted,
                             label: __('Next step', 'simplybook'),
                             modifyData: (data) => {
-                                data.primary_color = themeColors.primary;
-                                data.secondary_color = themeColors.secondary;
-                                data.active_color = themeColors.active;
+                                data.primary_color = primaryColor;
+                                data.secondary_color = secondaryColor;
+                                data.active_color = activeColor;
                                 return data;
                             }
                         }}
@@ -96,9 +106,9 @@ export const Route = createLazyFileRoute(path)({
                 </LeftColumn>
                 <RightColumn className={"items-center flex-col flex-wrap justify-center xl:col-span-5 col-span-12 relative w-full"}>
                     <Calendar
-                        primary={themeColors.primary}
-                        secondary={themeColors.secondary}
-                        active={themeColors.active}
+                        primary={primaryColor}
+                        secondary={secondaryColor}
+                        active={activeColor}
                         onboardingCompleted={onboardingCompleted}
                     />
                 </RightColumn>

@@ -2,24 +2,21 @@
 
 namespace SimplyBook\Services;
 
+use SimplyBook\Utility\ColorUtility;
+use SimplyBook\App;
+
 class ThemeColorService
 {
-    /**
-     * Fallback colors when theme colors cannot be retrieved
-     */
-    private const FALLBACK_COLORS = [
-        'primary' => '#FF3259',
-        'secondary' => '#000000',
-        'active' => '#055B78',
-        'background' => '#f7f7f7',
-        'foreground' => '#494949',
-        'text' => '#ffffff',
-    ];
 
     /**
-     * WordPress color preset mappings
+     * Maps WordPress theme color names to standardized keys.
+     * 
+     * Different themes use different names (primary vs accent vs main), 
+     * this ensures consistent color extraction across themes.
+     * 
+     * @var array<string, string[]>
      */
-    private const WP_COLOR_MAPPINGS = [
+    private array $wpColorMappings = [
         'primary' => ['primary', 'accent', 'main'],
         'secondary' => ['secondary', 'foreground', 'text'],
         'active' => ['tertiary', 'link', 'highlight'],
@@ -29,64 +26,70 @@ class ThemeColorService
     ];
 
     /**
-     * Get theme colors using WordPress theme API
+     * Get normalized theme colors from the active WordPress theme.
+     * 
+     * Uses fallback chain: Extendify → Global Styles → Theme JSON → defaults.
+     * 
+     * @return array<string, string> Color array with keys: primary, secondary, active, background, foreground, text
      */
     public function getThemeColors(): array
     {
-        // Try to get colors from global styles first
+        if ($this->isExtendifyTheme()) {
+            $colors = $this->getExtendifyColors();
+            if (!empty($colors)) {
+                return $this->normalizeColors($colors);
+            }
+        }
+        
         $colors = $this->getColorsFromGlobalStyles();
         
         if (empty($colors)) {
-            // Fall back to theme JSON resolver
             $colors = $this->getColorsFromThemeJson();
         }
         
         if (empty($colors)) {
-            // Final fallback to hardcoded defaults
-            $colors = self::FALLBACK_COLORS;
+            return $this->getFallbackColors();
         }
         
         return $this->normalizeColors($colors);
     }
 
     /**
-     * Get colors from WordPress global styles
+     * Extract colors from WordPress Global Styles API (WordPress 5.9+).
+     * 
+     * Checks color palette and element-specific colors (buttons) from Global Styles.
+     * Includes theme colors and Site Editor customizations.
+     * 
+     * @return array<string, string> Extracted colors, empty if unavailable
      */
-    private function getColorsFromGlobalStyles(): array
+    public function getColorsFromGlobalStyles(): array
     {
         if (!function_exists('wp_get_global_styles')) {
             return [];
         }
 
         $globalStyles = wp_get_global_styles();
-        $colors = [];
 
-        // Extract colors from global styles
         if (isset($globalStyles['color']['palette'])) {
             $palette = $globalStyles['color']['palette'];
-            $colors = $this->extractColorsFromPalette($palette);
+            return $this->extractColorsFromPalette($palette);
         }
 
-        // Try to get button colors specifically
-        if (isset($globalStyles['elements']['button']['color'])) {
-            $buttonColors = $globalStyles['elements']['button']['color'];
-            if (isset($buttonColors['background'])) {
-                $colors['primary'] = $this->parseColorValue($buttonColors['background']);
-            }
-            if (isset($buttonColors['text'])) {
-                $colors['text'] = $this->parseColorValue($buttonColors['text']);
-            }
-        }
-
-        return $colors;
+        return $this->extractColorsFromButtonElements($globalStyles);
     }
 
     /**
-     * Get colors from theme JSON resolver
+     * Extract colors from WordPress Theme JSON resolver.
+     * 
+     * Reads colors from theme.json files before user customizations.
+     * Fallback when Global Styles unavailable.
+     * 
+     * @return array<string, string> Extracted colors, empty if unavailable
      */
-    private function getColorsFromThemeJson(): array
+    public function getColorsFromThemeJson(): array
     {
-        if (!class_exists('WP_Theme_JSON_Resolver')) {
+        if (!class_exists('WP_Theme_JSON_Resolver')
+            || !function_exists('wp_get_theme') ) {
             return [];
         }
 
@@ -94,15 +97,21 @@ class ThemeColorService
             $theme = wp_get_theme()->get_stylesheet();
             $settings = \WP_Theme_JSON_Resolver::get_merged_data($theme)->get_settings();
             $themeColors = ($settings['color']['palette']['theme'] ?? []);
-            
-            return $this->extractColorsFromPalette($themeColors);
         } catch (\Exception $e) {
             return [];
         }
+        
+        return $this->extractColorsFromPalette($themeColors);
     }
 
     /**
-     * Extract colors from WordPress color palette
+     * Extract colors from palette and map to standardized keys.
+     * 
+     * Uses wpColorMappings to handle different theme naming conventions
+     * (e.g., 'accent' vs 'primary' both map to 'primary').
+     * 
+     * @param array $palette WordPress color palette with 'slug' and 'color' keys
+     * @return array<string, string> Mapped colors
      */
     private function extractColorsFromPalette(array $palette): array
     {
@@ -116,8 +125,7 @@ class ThemeColorService
             $slug = $color['slug'];
             $colorValue = $color['color'];
             
-            // Map WordPress color slugs to our color types
-            foreach (self::WP_COLOR_MAPPINGS as $ourType => $wpSlugs) {
+            foreach ($this->wpColorMappings as $ourType => $wpSlugs) {
                 if (in_array($slug, $wpSlugs, true)) {
                     $colors[$ourType] = $colorValue;
                     break;
@@ -129,48 +137,31 @@ class ThemeColorService
     }
 
     /**
-     * Parse color value from WordPress CSS variable format
+     * Extract colors from Global Styles button elements.
+     * 
+     * Fallback when no color palette available. Maps button background 
+     * to 'primary' and button text to 'text'.
+     * 
+     * @param array $globalStyles Global styles array from wp_get_global_styles()
+     * @return array<string, string> Extracted button colors
      */
-    private function parseColorValue(string $value): string
+    private function extractColorsFromButtonElements(array $globalStyles): array
     {
-        // Handle CSS variables like var(--wp--preset--color--primary)
-        if (strpos($value, 'var(--wp--preset--color--') === 0) {
-            $colorSlug = str_replace(['var(--wp--preset--color--', ')'], '', $value);
-            
-            // Try to get the actual color value from global styles
-            $globalStyles = wp_get_global_styles();
-            if (isset($globalStyles['color']['palette'])) {
-                foreach ($globalStyles['color']['palette'] as $color) {
-                    if (isset($color['slug']) && $color['slug'] === $colorSlug && isset($color['color'])) {
-                        return $color['color'];
-                    }
-                }
+        $colors = [];
+
+        if (isset($globalStyles['elements']['button']['color'])) {
+            $buttonColors = $globalStyles['elements']['button']['color'];
+            if (isset($buttonColors['background'])) {
+                $colors['primary'] = ColorUtility::parseColorValue($buttonColors['background']);
             }
-            
-            // Try to get from theme JSON if global styles failed
-            if (class_exists('WP_Theme_JSON_Resolver')) {
-                try {
-                    $theme = wp_get_theme()->get_stylesheet();
-                    $settings = \WP_Theme_JSON_Resolver::get_merged_data($theme)->get_settings();
-                    $allPalettes = array_merge(
-                        $settings['color']['palette']['theme'] ?? [],
-                        $settings['color']['palette']['default'] ?? [],
-                        $settings['color']['palette']['custom'] ?? []
-                    );
-                    
-                    foreach ($allPalettes as $color) {
-                        if (isset($color['slug']) && $color['slug'] === $colorSlug && isset($color['color'])) {
-                            return $color['color'];
-                        }
-                    }
-                } catch (\Exception $e) {
-                    // Fall through to return original value
-                }
+            if (isset($buttonColors['text'])) {
+                $colors['text'] = ColorUtility::parseColorValue($buttonColors['text']);
             }
         }
-        
-        return $value;
+
+        return $colors;
     }
+
 
     /**
      * Normalize colors to ensure we have all required colors
@@ -179,11 +170,11 @@ class ThemeColorService
     {
         $normalized = [];
         
-        foreach (self::FALLBACK_COLORS as $type => $fallback) {
+        $fallbackColors = $this->getFallbackColors();
+        foreach ($fallbackColors as $type => $fallback) {
             $colorValue = $colors[$type] ?? $fallback;
             
-            // Parse CSS variables to actual color values
-            $normalized[$type] = $this->parseColorValue($colorValue);
+            $normalized[$type] = ColorUtility::parseColorValue($colorValue);
         }
         
         return $normalized;
@@ -207,7 +198,7 @@ class ThemeColorService
             return [];
         }
 
-        return [
+        $rawColors = [
             'primary' => 'var(--wp--preset--color--primary)',
             'secondary' => 'var(--wp--preset--color--secondary)',
             'active' => 'var(--wp--preset--color--tertiary)',
@@ -215,29 +206,22 @@ class ThemeColorService
             'foreground' => 'var(--wp--preset--color--foreground)',
             'text' => 'var(--wp--preset--color--foreground-alt)',
         ];
+
+        $colors = [];
+        foreach ($rawColors as $type => $cssVar) {
+            $colors[$type] = ColorUtility::parseColorValue($cssVar);
+        }
+
+        return $colors;
     }
 
     /**
-     * Get theme colors formatted for SimplyBook widget
+     * Get fallback colors from config.
+     * 
+     * @return array<string, string> Fallback color array
      */
-    public function getWidgetColors(): array
+    private function getFallbackColors(): array
     {
-        $colors = $this->getThemeColors();
-        
-        return [
-            'primary' => $colors['primary'],
-            'secondary' => $colors['secondary'],
-            'active' => $colors['active'],
-            'booking_nav_bg_color' => $colors['primary'],
-            'sb_base_color' => $colors['secondary'],
-            'sb_available' => $colors['active'],
-            'body_bg_color' => $colors['background'],
-            'dark_font_color' => $colors['foreground'],
-            'light_font_color' => $colors['text'],
-            'btn_color_1' => $colors['primary'],
-            'sb_company_label_color' => $colors['primary'],
-            'sb_busy' => $colors['secondary'],
-            'link_color' => $colors['active'],
-        ];
+        return App::env('colors.fallback_colors', []);
     }
 }

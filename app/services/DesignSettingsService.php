@@ -11,7 +11,10 @@ class DesignSettingsService
     use LegacySave;
 
     /**
-     * The theme color service instance
+     * Lazy-loaded theme color service for WordPress color palette extraction.
+     * Provides default colors when users haven't set preferences.
+     * 
+     * @var ThemeColorService|null
      */
     private ?ThemeColorService $themeColorService = null;
 
@@ -271,11 +274,15 @@ class DesignSettingsService
     }
 
     /**
-     * Get the theme color service instance
+     * Get theme color service with lazy initialization.
+     * 
+     * Creates instance only when needed for efficient resource usage.
+     * 
+     * @return ThemeColorService
      */
-    private function getThemeColorService(): ThemeColorService
+    public function getThemeColorService(): ThemeColorService
     {
-        if ($this->themeColorService === null) {
+	    if ($this->themeColorService instanceof ThemeColorService === false) {
             $this->themeColorService = new ThemeColorService();
         }
         

@@ -1,6 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import HttpClient from "../api/requests/HttpClient";
 
+/**
+ * Get fallback colors from server-side config via wp_localize_script.
+ * 
+ * Colors are managed in /config/colors.php and made available 
+ * through DashboardController::localizedReactSettings().
+ */
+const getFallbackColors = () => {
+    return simplybook.fallback_colors;
+};
+
 const useThemeColors = () => {
     const client = new HttpClient();
     const route = 'theme_colors';
@@ -12,14 +22,7 @@ const useThemeColors = () => {
     });
 
     return {
-        colors: response?.data?.colors || {
-            primary: '#FF3259',
-            secondary: '#000000',
-            active: '#055B78',
-            background: '#f7f7f7',
-            foreground: '#494949',
-            text: '#ffffff',
-        },
+        colors: response?.data?.colors || getFallbackColors(),
         isExtendify: response?.data?.is_extendify || false,
         isLoading,
         error,
