@@ -42,12 +42,16 @@ class DashboardController implements ControllerInterface
     }
 
     /**
-     * Redirect to simplybook dashboard page on activation. React side will
-     * handle redirect to onboarding
+     * Redirect to simplybook dashboard page on activation, but only if the user
+     * manually activated the plugin via the plugins overview. React will handle
+     * redirect to onboarding if needed.
+     *
+     * @param string $pageSource The page where the activation was triggered,
+     * usually 'plugins.php' but can be other pages as well.
      */
-    public function maybeRedirectToDashboard(): void
+    public function maybeRedirectToDashboard(string $pageSource = ''): void
     {
-        if (App::provide('request')->getString('page') === 'simplybook') {
+        if ($pageSource !== 'plugins.php') {
             return;
         }
 
