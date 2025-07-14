@@ -58,13 +58,10 @@ export default function SettingsModal(options) {
                                 <SelectControl
                                     label={__('Predefined provider', 'simplybook')}
                                     value={attributes.provider}
-                                    options={[{ label: __('Select provider', 'simplybook'), value: 0 }, ...providers.map(provider => ({ label: provider.name, value: provider.id }))]}
+                                    options={[{ label: __('Select provider', 'simplybook'), value: "0" }, ...providers.map(provider => ({ label: provider.name, value: String(provider.id) }))]}
                                     onChange={(newProvider) => {
-                                        if(newProvider === 'any'){
-                                            setAttributes({ provider: 'any' });
-                                            return
-                                        }
-                                        setAttributes({ provider: parseInt(newProvider) })
+                                        // Cast provider as a String, because provider can have an ID like "any"
+                                        setAttributes({ provider: String(newProvider) });
                                     }}
                                 />
                             )}

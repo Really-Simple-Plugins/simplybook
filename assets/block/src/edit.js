@@ -51,28 +51,23 @@ export default function Edit(props) {
 	const closePreview = () => setIsPreviewOpen(false);
 
 	useEffect(() => {
-		if (locations.length > 0 && !attributes.location) {
-			setSelectedLocation(
-				locations.find(loc => loc.id === attributes.location)?.name
-			)
+		if (locations.length > 0) {
+			const location = locations.find(loc => loc.id === attributes.location);
+			setSelectedLocation(location ? location.name : null);
 		}
-		if (categories.length > 0 && !attributes.category) {
-			setSelectedCategory(
-				categories.find(cat => cat.id === attributes.category)?.name
-			)
+		if (categories.length > 0) {
+			const category = categories.find(cat => cat.id === attributes.category);
+			setSelectedCategory(category ? category.name : null);
 		}
-		if (services.length > 0 && !attributes.service) {
-			setSelectedService(
-				services.find(serv => serv.id === attributes.service)?.name
-			)
+		if (services.length > 0) {
+			const service = services.find(serv => serv.id === attributes.service);
+			setSelectedService(service ? service.name : null);
 		}
-		if (providers.length > 0 && !attributes.provider) {
-			setSelectedProvider(
-				providers.find(prov => prov.id === attributes.provider)?.name
-			)
+		if (providers.length > 0) {
+			const provider = providers.find(prov => String(prov.id) === String(attributes.provider));
+			setSelectedProvider(provider ? provider.name : null);
 		}
-	}, [locations, categories, services, providers]);
-
+	}, [locations, categories, services, providers, attributes]);
 
 	const saveParameters = () => {
 		setAttributes(attributes);
@@ -88,7 +83,6 @@ export default function Edit(props) {
 			</ToolbarGroup>
 		</BlockControls>
 	);
-
 
 	const previewWidget = () => {
 		let ajaxUrl = '/wp-admin/admin-ajax.php';
@@ -118,7 +112,6 @@ export default function Edit(props) {
 
 		//convert to string  'orem=ipsum&name=binny';
 		formData = new URLSearchParams(formData).toString();
-
 
 		let xhr = new XMLHttpRequest();
 		xhr.open('POST', ajaxUrl, true);
