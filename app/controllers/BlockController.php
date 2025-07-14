@@ -98,7 +98,7 @@ class BlockController implements ControllerInterface
      * front-end. Empty values are removed from the attributes array, the "any"
      * value is also removed from the attributes array.
      *
-     * @since 3.2.0 No longer filter out 'any', as this is a valid value for the
+     * @since 3.1.1 No longer filter out 'any', as this is a valid value for the
      * feature: "Any Employee selector" (/v2/management/#plugins/any_unit/)
      */
     public function addWidgetBlock(array $attributes = []): string

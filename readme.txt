@@ -1,11 +1,11 @@
 === SimplyBook.me - Booking and reservations calendar ===
-Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen, mircobaalmans
+Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.1.0
+Stable tag: 3.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,8 +86,18 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= Unreleased =
-* Fixed: Predefined provider wasn’t saved in the Gutenberg block under specific conditions.
+= 3.1.1 =
+* Added: bookingsystem.nu and simplybooking.io domains now supported at login.
+* Added: Notice shown when WordPress REST API is disabled.
+* Added: Improved error messages during sign-in.
+* Fixed: Redirects now work on subfolder installs.
+* Fixed: Account creation errors now handled correctly.
+* Fixed: Progress bar now loads properly in settings.
+* Fixed: Plugin styling no longer affects image alignment in WP menu.
+* Fixed: Predefined provider now saved correctly in Gutenberg block.
+* Fixed: Redirect to settings only happens when installed via plugins view.
+* Fixed: Upgrade error from 2.x to 3.x no longer occurs.
+* Fixed: Logout now works with object caching enabled.
 
 = 3.1.0 =
 * Added: markwolters and rvvelthuijsen are added as contributors.

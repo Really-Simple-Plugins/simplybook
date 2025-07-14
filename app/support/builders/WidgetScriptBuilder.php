@@ -142,7 +142,7 @@ class WidgetScriptBuilder
      * Sanitize an array of attributes by removing all attributes that are
      * not in the accepted attributes list and sanitizing the keys and values.
      *
-     * @since 3.2.0 Removed array_unique() on the return value to prevent
+     * @since 3.1.1 Removed array_unique() on the return value to prevent
      * removing an attribute, like "provider", with the same ID as another
      * attribute, like "service".
 	 */
