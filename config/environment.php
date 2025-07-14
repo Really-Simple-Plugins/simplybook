@@ -101,6 +101,8 @@ return [
             ['value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
             ['value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
             ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
+            ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
+            ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
             ['value' => 'login:simplybook.vip', 'label' => 'simplybook.vip'],
             ['value' => 'login:simplybook.cc', 'label' => 'simplybook.cc'],
             ['value' => 'login:simplybook.us', 'label' => 'simplybook.us'],
