@@ -170,7 +170,7 @@ export default function Edit(props) {
 						{!isUserAuthorized ? (
 							<p className="sb-widget-alert">
 								{__('You are not authorized in ', 'simplybook')}
-								<a href="/wp-admin/admin.php?page=simplybook-integration">{__('SimplyBook.me plugin', 'simplybook')}</a>
+								<a href={simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
 							</p>
 						) : (
 							<>

@@ -30,7 +30,7 @@ const ButtonLink: React.FC<ButtonLinkProps> = ({
 
     // Start fetch when the link is clicked
     fetchLinkData().then((response) => {
-        let link = response?.data?.simplybook_dashboard_url;
+        let link = response?.data?.simplybook_external_login_url;
 
         if (!link) {
             console.error("No link found in response");

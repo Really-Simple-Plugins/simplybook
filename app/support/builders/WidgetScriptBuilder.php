@@ -246,7 +246,7 @@ class WidgetScriptBuilder
             $message .= ' ' . sprintf(
                 /* translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag */
                 esc_html__('You can configure the plugin settings to display your customized widget %1$shere%2$s.', 'simplybook'),
-                '<a href="' . esc_url(App::env('plugin.admin_url')) . '">',
+                '<a href="' . esc_url(App::env('plugin.dashboard_url')) . '">',
                 '</a>'
             );
         }

@@ -22,7 +22,7 @@ return [
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
         'views_url' => plugin_dir_url(__DIR__).'app/views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
-        'admin_url' => admin_url('admin.php?page=simplybook-integration'),
+        'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
     ],
     'simplybook' => [
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',

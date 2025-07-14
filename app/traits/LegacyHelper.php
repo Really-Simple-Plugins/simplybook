@@ -163,19 +163,6 @@ trait LegacyHelper
     }
 
     /**
-     * Get the admin url
-     *
-     * @return string
-     */
-    public function admin_url( $path = '' ): string {
-        $url = add_query_arg([ 'page' => 'simplybook' ], admin_url( 'admin.php' ) );
-		if ( ! empty( $path ) ) {
-			$url .= $path;
-		}
-		return $url;
-    }
-
-    /**
      * Log a message if WP_DEBUG is enabled
      *
      * @param string | object | array $message

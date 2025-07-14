@@ -55,7 +55,7 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        wp_safe_redirect(App::env('plugin.admin_url'));
+        wp_safe_redirect(App::env('plugin.dashboard_url'));
         exit;
     }
 
@@ -238,6 +238,7 @@ class DashboardController implements ControllerInterface
                 'rest_namespace' => App::env('http.namespace'),
                 'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
+				'dashboard_url' => App::env('plugin.dashboard_url'),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),

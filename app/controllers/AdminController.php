@@ -37,7 +37,7 @@ class AdminController implements ControllerInterface
             return $links;
         }
 
-        $settings_link = '<a href="' . App::env('plugin.admin_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
+        $settings_link = '<a href="' . App::env('plugin.dashboard_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
         array_unshift($links, $settings_link);
 
         //support
