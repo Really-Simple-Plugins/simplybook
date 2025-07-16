@@ -53,10 +53,11 @@ export const Route = createLazyFileRoute(path)({
                         ) : (
                             <>
                                 <ColorPickerField
+                                    key={`primary-${primaryColor || themeColors.primary}`}
                                     className="mr-4"
                                     label={__('Primary', 'simplybook')}
                                     setting={{
-                                        value: primaryColor,
+                                        value: primaryColor || themeColors.primary,
                                         default: themeColors.primary,
                                         disabled: !onboardingCompleted,
                                     }}
@@ -65,10 +66,11 @@ export const Route = createLazyFileRoute(path)({
                                     }}
                                 />
                                 <ColorPickerField
+                                    key={`secondary-${secondaryColor || themeColors.secondary}`}
                                     className="mr-4"
                                     label={__('Secondary', 'simplybook')}
                                     setting={{
-                                        value: secondaryColor,
+                                        value: secondaryColor || themeColors.secondary,
                                         default: themeColors.secondary,
                                         disabled: !onboardingCompleted,
                                     }}
@@ -77,9 +79,10 @@ export const Route = createLazyFileRoute(path)({
                                     }}
                                 />
                                 <ColorPickerField
+                                    key={`active-${activeColor || themeColors.active}`}
                                     label={__('Active', 'simplybook')}
                                     setting={{
-                                        value: activeColor,
+                                        value: activeColor || themeColors.active,
                                         default: themeColors.active,
                                         disabled: !onboardingCompleted,
                                     }}

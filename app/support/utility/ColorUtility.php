@@ -4,49 +4,33 @@ namespace SimplyBook\Utility;
 
 /**
  * Utility for parsing WordPress color formats.
- * 
- * Converts CSS variables to hex colors via Global Styles and Theme JSON.
  */
 class ColorUtility
 {
-    /**
-     * Parse WordPress color values to hex format.
-     * 
-     * Resolves CSS variables via Global Styles and Theme JSON.
-     * 
-     * @param string $value Color value to parse
-     * @return string Hex color or original value if resolution fails
-     */
-    public static function parseColorValue(string $value): string
+    public function resolveColorToHex(string $value): string
     {
-        if (self::isCssVariable($value)) {
-            return self::resolveCssVariable($value);
+        if ($this->isCssVariable($value)) {
+            return $this->resolveCssVariable($value);
         }
         
         return $value;
     }
     
-    /**
-     * Check if value is a WordPress CSS variable.
-     */
-    private static function isCssVariable(string $value): bool
+    private function isCssVariable(string $value): bool
     {
         return strpos($value, 'var(--wp--preset--color--') === 0;
     }
     
-    /**
-     * Resolve CSS variable to hex color via Global Styles and Theme JSON.
-     */
-    private static function resolveCssVariable(string $cssVar): string
+    private function resolveCssVariable(string $cssVar): string
     {
-        $colorSlug = self::extractColorSlugFromCssVar($cssVar);
+        $colorSlug = $this->getCssVariableSlug($cssVar);
         
-        $resolvedColor = self::resolveFromGlobalStyles($colorSlug);
+        $resolvedColor = $this->findColorInGlobalStyles($colorSlug);
         if ($resolvedColor !== null) {
             return $resolvedColor;
         }
         
-        $resolvedColor = self::resolveFromThemeJson($colorSlug);
+        $resolvedColor = $this->findColorInThemeJson($colorSlug);
         if ($resolvedColor !== null) {
             return $resolvedColor;
         }
@@ -54,18 +38,12 @@ class ColorUtility
         return $cssVar;
     }
     
-    /**
-     * Extract color slug from CSS variable (e.g., "primary" from var(--wp--preset--color--primary)).
-     */
-    private static function extractColorSlugFromCssVar(string $cssVar): string
+    private function getCssVariableSlug(string $cssVar): string
     {
         return str_replace(['var(--wp--preset--color--', ')'], '', $cssVar);
     }
     
-    /**
-     * Resolve color slug via Global Styles palette.
-     */
-    private static function resolveFromGlobalStyles(string $colorSlug): ?string
+    private function findColorInGlobalStyles(string $colorSlug): ?string
     {
         if (!function_exists('wp_get_global_styles')) {
             return null;
@@ -85,10 +63,7 @@ class ColorUtility
         return null;
     }
     
-    /**
-     * Resolve color slug via Theme JSON system.
-     */
-    private static function resolveFromThemeJson(string $colorSlug): ?string
+    private function findColorInThemeJson(string $colorSlug): ?string
     {
         if (!class_exists('WP_Theme_JSON_Resolver')
             || !function_exists('wp_get_theme')) {

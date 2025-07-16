@@ -9,7 +9,6 @@
  * - WordPress theme colors cannot be retrieved
  * - Global Styles API fails
  * - Theme JSON parsing fails
- * - Extendify detection fails
  * - Network requests fail
  * 
  * Used by both server-side (ThemeColorService) and client-side (React components).

@@ -14,7 +14,6 @@ class DesignSettingsService
      * Lazy-loaded theme color service for WordPress color palette extraction.
      * Provides default colors when users haven't set preferences.
      * 
-     * @var ThemeColorService|null
      */
     private ?ThemeColorService $themeColorService = null;
 
@@ -278,7 +277,6 @@ class DesignSettingsService
      * 
      * Creates instance only when needed for efficient resource usage.
      * 
-     * @return ThemeColorService
      */
     public function getThemeColorService(): ThemeColorService
     {

@@ -47,16 +47,12 @@ class ThemeColorEndpoint implements SingleEndpointInterface
         ];
     }
 
-    /**
-     * Get theme colors from WordPress theme
-     */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $colors = $this->service->getThemeColors();
 
         return $this->sendHttpResponse([
             'colors' => $colors,
-            'is_extendify' => $this->service->isExtendifyTheme(),
         ]);
     }
 }

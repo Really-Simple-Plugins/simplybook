@@ -114,6 +114,16 @@ return [
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ],
+    'colors' => [
+        'fallback_colors' => [
+            'primary' => '#FF3259',
+            'secondary' => '#000000',
+            'active' => '#055B78',
+            'background' => '#f7f7f7',
+            'foreground' => '#494949',
+            'text' => '#ffffff',
+        ],
+    ],
     'http' => [
         'version' => 'v1',
         'namespace' => 'simplybook',

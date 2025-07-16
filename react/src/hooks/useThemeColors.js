@@ -17,13 +17,14 @@ const useThemeColors = () => {
 
     const { data: response, isLoading, error } = useQuery({
         queryKey: [route],
-        queryFn: () => client.setRoute(route).get(),
+        queryFn: () => {
+            return client.setRoute(route).get();
+        },
         refetchOnMount: 'always',
     });
 
     return {
         colors: response?.data?.colors || getFallbackColors(),
-        isExtendify: response?.data?.is_extendify || false,
         isLoading,
         error,
     };

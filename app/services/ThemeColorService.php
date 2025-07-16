@@ -7,61 +7,44 @@ use SimplyBook\App;
 
 class ThemeColorService
 {
+    private ColorUtility $colorUtility;
+
+    public function __construct()
+    {
+        $this->colorUtility = new ColorUtility();
+    }
 
     /**
      * Maps WordPress theme color names to standardized keys.
-     * 
-     * Different themes use different names (primary vs accent vs main), 
-     * this ensures consistent color extraction across themes.
-     * 
-     * @var array<string, string[]>
      */
     private array $wpColorMappings = [
         'primary' => ['primary', 'accent', 'main'],
-        'secondary' => ['secondary', 'foreground', 'text'],
-        'active' => ['tertiary', 'link', 'highlight'],
+        'secondary' => ['secondary', 'accent-2', 'tertiary'], // Hover style
+        'active' => ['tertiary', 'link', 'highlight', 'accent'], // Button-like elements
         'background' => ['background', 'base'],
         'foreground' => ['foreground', 'text'],
         'text' => ['base', 'contrast'],
     ];
 
-    /**
-     * Get normalized theme colors from the active WordPress theme.
-     * 
-     * Uses fallback chain: Extendify → Global Styles → Theme JSON → defaults.
-     * 
-     * @return array<string, string> Color array with keys: primary, secondary, active, background, foreground, text
-     */
     public function getThemeColors(): array
     {
-        if ($this->isExtendifyTheme()) {
-            $colors = $this->getExtendifyColors();
-            if (!empty($colors)) {
-                return $this->normalizeColors($colors);
-            }
-        }
-        
         $colors = $this->getColorsFromGlobalStyles();
-        
+
         if (empty($colors)) {
             $colors = $this->getColorsFromThemeJson();
         }
         
         if (empty($colors)) {
-            return $this->getFallbackColors();
+            $colors = $this->getColorsFromCssVariables();
         }
         
-        return $this->normalizeColors($colors);
+        if (empty($colors)) {
+            return $this->getFallbackColors();
+        }
+
+        return $this->ensureCompleteColors($colors);
     }
 
-    /**
-     * Extract colors from WordPress Global Styles API (WordPress 5.9+).
-     * 
-     * Checks color palette and element-specific colors (buttons) from Global Styles.
-     * Includes theme colors and Site Editor customizations.
-     * 
-     * @return array<string, string> Extracted colors, empty if unavailable
-     */
     public function getColorsFromGlobalStyles(): array
     {
         if (!function_exists('wp_get_global_styles')) {
@@ -72,20 +55,12 @@ class ThemeColorService
 
         if (isset($globalStyles['color']['palette'])) {
             $palette = $globalStyles['color']['palette'];
-            return $this->extractColorsFromPalette($palette);
+            return $this->mapPaletteToStandardColors($palette);
         }
 
-        return $this->extractColorsFromButtonElements($globalStyles);
+        return $this->getButtonColorsFromGlobalStyles($globalStyles);
     }
 
-    /**
-     * Extract colors from WordPress Theme JSON resolver.
-     * 
-     * Reads colors from theme.json files before user customizations.
-     * Fallback when Global Styles unavailable.
-     * 
-     * @return array<string, string> Extracted colors, empty if unavailable
-     */
     public function getColorsFromThemeJson(): array
     {
         if (!class_exists('WP_Theme_JSON_Resolver')
@@ -101,19 +76,10 @@ class ThemeColorService
             return [];
         }
         
-        return $this->extractColorsFromPalette($themeColors);
+        return $this->mapPaletteToStandardColors($themeColors);
     }
 
-    /**
-     * Extract colors from palette and map to standardized keys.
-     * 
-     * Uses wpColorMappings to handle different theme naming conventions
-     * (e.g., 'accent' vs 'primary' both map to 'primary').
-     * 
-     * @param array $palette WordPress color palette with 'slug' and 'color' keys
-     * @return array<string, string> Mapped colors
-     */
-    private function extractColorsFromPalette(array $palette): array
+    private function mapPaletteToStandardColors(array $palette): array
     {
         $colors = [];
         
@@ -136,68 +102,63 @@ class ThemeColorService
         return $colors;
     }
 
-    /**
-     * Extract colors from Global Styles button elements.
-     * 
-     * Fallback when no color palette available. Maps button background 
-     * to 'primary' and button text to 'text'.
-     * 
-     * @param array $globalStyles Global styles array from wp_get_global_styles()
-     * @return array<string, string> Extracted button colors
-     */
-    private function extractColorsFromButtonElements(array $globalStyles): array
+    private function getButtonColorsFromGlobalStyles(array $globalStyles): array
     {
         $colors = [];
 
+        // Extract button colors
         if (isset($globalStyles['elements']['button']['color'])) {
             $buttonColors = $globalStyles['elements']['button']['color'];
             if (isset($buttonColors['background'])) {
-                $colors['primary'] = ColorUtility::parseColorValue($buttonColors['background']);
+                $colors['primary'] = $this->colorUtility->resolveColorToHex($buttonColors['background']);
+                // Use button background for active state too (button-like elements)
+                $colors['active'] = $this->colorUtility->resolveColorToHex($buttonColors['background']);
             }
             if (isset($buttonColors['text'])) {
-                $colors['text'] = ColorUtility::parseColorValue($buttonColors['text']);
+                $colors['text'] = $this->colorUtility->resolveColorToHex($buttonColors['text']);
             }
+        }
+
+        // Extract button hover colors for secondary (hover style)
+        if (isset($globalStyles['elements']['button'][':hover']['color'])) {
+            $hoverColors = $globalStyles['elements']['button'][':hover']['color'];
+            if (isset($hoverColors['background'])) {
+                $colors['secondary'] = $this->colorUtility->resolveColorToHex($hoverColors['background']);
+            }
+        }
+
+        // Extract link colors as fallback for active state
+        if (isset($globalStyles['elements']['link']['color']['text']) && !isset($colors['active'])) {
+            $colors['active'] = $this->colorUtility->resolveColorToHex($globalStyles['elements']['link']['color']['text']);
         }
 
         return $colors;
     }
 
-
     /**
-     * Normalize colors to ensure we have all required colors
+     * Ensure we have all required colors, filling missing ones with fallbacks
      */
-    private function normalizeColors(array $colors): array
+    private function ensureCompleteColors(array $colors): array
     {
+
         $normalized = [];
         
         $fallbackColors = $this->getFallbackColors();
+        if (empty($fallbackColors)) {
+            return [];
+        }
+        
         foreach ($fallbackColors as $type => $fallback) {
             $colorValue = $colors[$type] ?? $fallback;
-            
-            $normalized[$type] = ColorUtility::parseColorValue($colorValue);
+
+            $normalized[$type] = $this->colorUtility->resolveColorToHex($colorValue);
         }
         
         return $normalized;
     }
 
-    /**
-     * Check if the current theme is Extendify
-     */
-    public function isExtendifyTheme(): bool
+    public function getColorsFromCssVariables(): array
     {
-        $theme = wp_get_theme();
-        return in_array($theme->get('TextDomain'), ['extendify', 'extendable'], true);
-    }
-
-    /**
-     * Get Extendify-specific colors if available
-     */
-    public function getExtendifyColors(): array
-    {
-        if (!$this->isExtendifyTheme()) {
-            return [];
-        }
-
         $rawColors = [
             'primary' => 'var(--wp--preset--color--primary)',
             'secondary' => 'var(--wp--preset--color--secondary)',
@@ -209,17 +170,12 @@ class ThemeColorService
 
         $colors = [];
         foreach ($rawColors as $type => $cssVar) {
-            $colors[$type] = ColorUtility::parseColorValue($cssVar);
+            $colors[$type] = $this->colorUtility->resolveColorToHex($cssVar);
         }
 
         return $colors;
     }
 
-    /**
-     * Get fallback colors from config.
-     * 
-     * @return array<string, string> Fallback color array
-     */
     private function getFallbackColors(): array
     {
         return App::env('colors.fallback_colors', []);
