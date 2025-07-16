@@ -63,7 +63,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
             return (
                 <button
                     onClick={ ()=>
-                        onModalOpen(task.action?.modal)
+                        onModalOpen(task.action?.modal?.id ? task.action.modal.id : "")
                     }
                     className={buttonClassName}
                 >

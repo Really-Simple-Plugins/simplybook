@@ -7,13 +7,12 @@ import BlockContent from "../Blocks/BlockContent";
 import useTaskData from "../../hooks/useTaskData";
 import TaskComponent from "../Tasks/TaskComponent";
 import SubscriptionDataListHorizontal from "./Partials/SubscriptionDataListHorizontal";
-import { TaskModal as TaskModalType } from "../../types/TaskModal";
 import TaskModal from "../Modals/TaskModal";
 
 const Progress = () => {
     const [showAll, setShowAll] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [taskModalContent, setTaskModalContent] = useState<TaskModalType>();
+    const [taskModalId, setTaskModalId] = useState("");
     const {tasks, isLoading, hasError, dismissTask, getRemainingTasks, getCompletionPercentage} = useTaskData();
 
     const displayedTasks = showAll ? tasks : getRemainingTasks();
@@ -21,9 +20,9 @@ const Progress = () => {
     const remainingTasks = getRemainingTasks();
     const hasModal = displayedTasks.some((task) => task.action?.modal);
 
-    const onModalOpen = (taskModal: TaskModalType | undefined) => {
+    const onModalOpen = (taskModalId: string) => {
+        setTaskModalId(taskModalId);
         setIsModalOpen(true);
-        setTaskModalContent(taskModal);
     };
     const onModalClose = () => {
         setIsModalOpen(false);
@@ -111,7 +110,7 @@ const Progress = () => {
             {hasModal && (
                 <TaskModal
                     isModalOpen={isModalOpen}
-                    taskModalContent={taskModalContent}
+                    taskModalId={taskModalId}
                     onModalClose={onModalClose}
                 />
             )}
