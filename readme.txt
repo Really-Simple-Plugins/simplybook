@@ -98,6 +98,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Redirect to settings only happens when installed via plugins view.
 * Fixed: Upgrade error from 2.x to 3.x no longer occurs.
 * Fixed: Logout now works with object caching enabled.
+* Fixed: Dashboard load issues resolved by preventing stale browser cache.
 
 = 3.1.0 =
 * Added: markwolters and rvvelthuijsen are added as contributors.
