@@ -26,10 +26,13 @@ class ThemeColorService
         'text' => ['base', 'contrast'],
     ];
 
+    /**
+     * Fallback chain: Global Styles → Theme JSON → CSS Variables → config defaults
+     */
     public function getThemeColors(): array
     {
         $colors = $this->getColorsFromGlobalStyles();
-
+        
         if (empty($colors)) {
             $colors = $this->getColorsFromThemeJson();
         }
@@ -45,6 +48,9 @@ class ThemeColorService
         return $this->ensureCompleteColors($colors);
     }
 
+    /**
+     * WordPress 5.9+ Global Styles API - includes user customizations
+     */
     public function getColorsFromGlobalStyles(): array
     {
         if (!function_exists('wp_get_global_styles')) {
@@ -61,6 +67,9 @@ class ThemeColorService
         return $this->getButtonColorsFromGlobalStyles($globalStyles);
     }
 
+    /**
+     * Theme JSON resolver - theme defaults before user customizations
+     */
     public function getColorsFromThemeJson(): array
     {
         if (!class_exists('WP_Theme_JSON_Resolver')
@@ -79,6 +88,9 @@ class ThemeColorService
         return $this->mapPaletteToStandardColors($themeColors);
     }
 
+    /**
+     * Maps various theme color names (accent, main, etc.) to standard keys
+     */
     private function mapPaletteToStandardColors(array $palette): array
     {
         $colors = [];
@@ -102,6 +114,9 @@ class ThemeColorService
         return $colors;
     }
 
+    /**
+     * Extracts button and link colors from Global Styles elements
+     */
     private function getButtonColorsFromGlobalStyles(array $globalStyles): array
     {
         $colors = [];
@@ -136,11 +151,10 @@ class ThemeColorService
     }
 
     /**
-     * Ensure we have all required colors, filling missing ones with fallbacks
+     * Fills missing colors with fallbacks and resolves CSS variables
      */
     private function ensureCompleteColors(array $colors): array
     {
-
         $normalized = [];
         
         $fallbackColors = $this->getFallbackColors();
@@ -150,13 +164,15 @@ class ThemeColorService
         
         foreach ($fallbackColors as $type => $fallback) {
             $colorValue = $colors[$type] ?? $fallback;
-
             $normalized[$type] = $this->colorUtility->resolveColorToHex($colorValue);
         }
         
         return $normalized;
     }
 
+    /**
+     * Standard WordPress CSS variables - works with any modern block theme
+     */
     public function getColorsFromCssVariables(): array
     {
         $rawColors = [
@@ -178,6 +194,6 @@ class ThemeColorService
 
     private function getFallbackColors(): array
     {
-        return App::env('colors.fallback_colors', []);
+        return App::env('colors.fallback_colors');
     }
 }

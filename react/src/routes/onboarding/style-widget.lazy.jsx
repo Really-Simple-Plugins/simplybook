@@ -31,7 +31,7 @@ export const Route = createLazyFileRoute(path)({
         }, [themeColors]);
 
         // Show loading state until colors are loaded
-        const showColorPickers = !themeColorsLoading;
+        const showColorPickers = !themeColorsLoading && themeColors;
 
         return (
             <>
@@ -53,38 +53,35 @@ export const Route = createLazyFileRoute(path)({
                         ) : (
                             <>
                                 <ColorPickerField
-                                    key={`primary-${primaryColor || themeColors.primary}`}
                                     className="mr-4"
                                     label={__('Primary', 'simplybook')}
                                     setting={{
-                                        value: primaryColor || themeColors.primary,
+                                        value: primaryColor,
                                         default: themeColors.primary,
-                                        disabled: !onboardingCompleted,
+                                        disabled: false,
                                     }}
                                     setColorOnClose={(value) => {
                                         setPrimaryColor(value);
                                     }}
                                 />
                                 <ColorPickerField
-                                    key={`secondary-${secondaryColor || themeColors.secondary}`}
                                     className="mr-4"
                                     label={__('Secondary', 'simplybook')}
                                     setting={{
-                                        value: secondaryColor || themeColors.secondary,
+                                        value: secondaryColor,
                                         default: themeColors.secondary,
-                                        disabled: !onboardingCompleted,
+                                        disabled: false,
                                     }}
                                     setColorOnClose={(value) => {
                                         setSecondaryColor(value);
                                     }}
                                 />
                                 <ColorPickerField
-                                    key={`active-${activeColor || themeColors.active}`}
                                     label={__('Active', 'simplybook')}
                                     setting={{
-                                        value: activeColor || themeColors.active,
+                                        value: activeColor,
                                         default: themeColors.active,
-                                        disabled: !onboardingCompleted,
+                                        disabled: false,
                                     }}
                                     setColorOnClose={(value) => {
                                         setActiveColor(value);

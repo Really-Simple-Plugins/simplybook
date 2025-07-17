@@ -7,6 +7,9 @@ namespace SimplyBook\Utility;
  */
 class ColorUtility
 {
+    /**
+     * Resolves CSS variables to hex, passes through regular colors
+     */
     public function resolveColorToHex(string $value): string
     {
         if ($this->isCssVariable($value)) {
@@ -21,6 +24,9 @@ class ColorUtility
         return strpos($value, 'var(--wp--preset--color--') === 0;
     }
     
+    /**
+     * Tries Global Styles first, then Theme JSON as fallback
+     */
     private function resolveCssVariable(string $cssVar): string
     {
         $colorSlug = $this->getCssVariableSlug($cssVar);
@@ -43,6 +49,9 @@ class ColorUtility
         return str_replace(['var(--wp--preset--color--', ')'], '', $cssVar);
     }
     
+    /**
+     * Searches Global Styles color palette for matching slug
+     */
     private function findColorInGlobalStyles(string $colorSlug): ?string
     {
         if (!function_exists('wp_get_global_styles')) {
@@ -63,6 +72,9 @@ class ColorUtility
         return null;
     }
     
+    /**
+     * Searches Theme JSON palettes (theme, default, custom) for matching slug
+     */
     private function findColorInThemeJson(string $colorSlug): ?string
     {
         if (!class_exists('WP_Theme_JSON_Resolver')

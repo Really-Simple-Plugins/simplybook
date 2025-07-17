@@ -4,7 +4,7 @@ import HttpClient from "../api/requests/HttpClient";
 /**
  * Get fallback colors from server-side config via wp_localize_script.
  * 
- * Colors are managed in /config/colors.php and made available 
+ * Colors are managed in /config/environment.php and made available 
  * through DashboardController::localizedReactSettings().
  */
 const getFallbackColors = () => {
@@ -24,7 +24,7 @@ const useThemeColors = () => {
     });
 
     return {
-        colors: response?.data?.colors || getFallbackColors(),
+        colors: isLoading ? null : (response?.data?.colors || getFallbackColors()),
         isLoading,
         error,
     };
