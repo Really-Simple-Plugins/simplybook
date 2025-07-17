@@ -54,7 +54,7 @@ class Plugin
     public function registerEnvironment()
     {
         if (!defined('SIMPLYBOOK_ENV')) {
-            define('SIMPLYBOOK_ENV', 'production');
+            define('SIMPLYBOOK_ENV', 'development');
         }
     }
 
@@ -73,8 +73,11 @@ class Plugin
      */
     public function activation()
     {
+        global $pagenow;
+
         // Set the flag on activation
         update_option('simplybook_activation_flag', true, false);
+        update_option('simplybook_activation_source_page', sanitize_text_field($pagenow), false);
 
         // Flush rewrite rules to ensure the new routes are available
         add_action('shutdown', 'flush_rewrite_rules');
@@ -92,12 +95,16 @@ class Plugin
             return;
         }
 
+        // Get the source page where the activation was triggered from
+        $source = get_option('simplybook_activation_source_page', 'unknown');
+
         // Remove the activation flag so the action doesn't run again. Do it
         // before the action so its deleted before anything can go wrong.
         delete_option('simplybook_activation_flag');
+        delete_option('simplybook_activation_source_page');
 
         // Gives possibility to hook into the activation process
-        do_action('simplybook_activation'); // !important
+        do_action('simplybook_activation', $source); // !important
     }
 
     /**
@@ -126,7 +133,7 @@ class Plugin
         /**
          * @deprecated 3.0.0 Use App::env('plugin.version') instead
          */
-        define('SIMPLYBOOK_VERSION', '3.1.0');
+        define('SIMPLYBOOK_VERSION', '3.1.1');
 
         /**
          * @deprecated 3.0.0 Use App::env('plugin.path') instead

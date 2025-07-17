@@ -3,7 +3,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
@@ -31,7 +31,8 @@ function Settings() {
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
-
+    const settingsFormRef = useRef();
+    const [settingsFormHeight, setSettingsFormHeight] = useState();
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -66,6 +67,25 @@ function Settings() {
     useEffect(() => {
         reset(currentFormValues);
     }, [settingsId, currentFormValues, reset]);
+
+    /**
+     * This useEffect sets up a ResizeObserver to monitor changes in the
+     * height of the settings form. It updates the `settingsFormHeight` state
+     * only on changes in height, preventing re-renders on width changes.
+     * This is used to trigger the visibility of the scroll progress line in the
+     * {@see FormScrollProgressLine.jsx} component
+     */
+    useEffect(() => {
+        const observer = new ResizeObserver((entries) => {
+            for (const entry of entries) {
+                const heightChanged = entry.contentRect.height !== settingsFormHeight;
+                if (heightChanged){
+                    setSettingsFormHeight(entry.contentRect.height);
+                }
+            }
+        });
+        observer.observe(settingsFormRef.current);
+    }, []);
 
     useBlocker({
         shouldBlockFn: () => {
@@ -120,7 +140,7 @@ function Settings() {
     }
 
     return (
-        <form className="col-span-12 lg:col-span-6">
+        <form className="col-span-12 lg:col-span-6" ref={settingsFormRef}>
             {currentForm.groups?.map((group) => {
                 const isLastGroup = lastGroup.id === group.id;
                 const currentGroupFields = currentFormFields.filter(
@@ -153,6 +173,7 @@ function Settings() {
                             });
                         })}
                         control={control}
+                        settingsFormHeight={settingsFormHeight}
                     />
                 </>
             )}

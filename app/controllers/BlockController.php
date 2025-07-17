@@ -36,8 +36,8 @@ class BlockController implements ControllerInterface
                     'default' => 0
                 ],
                 'provider' => [
-                    'type' => 'string', //any provide id = any
-                    'default' => 'any'
+                    'type' => 'string', // Provider ID can be a sting like "any"
+                    'default' => '0'
                 ],
                 'service' => [
                     'type' => 'integer',
@@ -77,6 +77,7 @@ class BlockController implements ControllerInterface
                 'rest_namespace' => App::env('http.namespace'),
                 'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
+                'dashboard_url' => App::env('plugin.dashboard_url'),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
             ]
@@ -96,11 +97,14 @@ class BlockController implements ControllerInterface
      * Render the SimplyBook Widget block when the block is displayed on the
      * front-end. Empty values are removed from the attributes array, the "any"
      * value is also removed from the attributes array.
+     *
+     * @since 3.1.1 No longer filter out 'any', as this is a valid value for the
+     * feature: "Any Employee selector" (/v2/management/#plugins/any_unit/)
      */
     public function addWidgetBlock(array $attributes = []): string
     {
         $attributes = array_filter($attributes, function ($value) {
-            return !empty($value) && $value !== 'any';
+            return !empty($value);
         });
 
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';

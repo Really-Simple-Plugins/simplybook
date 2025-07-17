@@ -4,7 +4,7 @@ import HttpClient from "../api/requests/HttpClient";
 
 const defaultLoginData: LoginData = {
     data: {
-        simplybook_dashboard_url: "",
+        simplybook_external_login_url: "",
     }
 };
 

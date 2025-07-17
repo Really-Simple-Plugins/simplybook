@@ -139,8 +139,13 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Sanitize an array of attributes
-     */
+     * Sanitize an array of attributes by removing all attributes that are
+     * not in the accepted attributes list and sanitizing the keys and values.
+     *
+     * @since 3.1.1 Removed array_unique() on the return value to prevent
+     * removing an attribute, like "provider", with the same ID as another
+     * attribute, like "service".
+	 */
     private function sanitizeAttributes(array $attributes, bool $lowercase = false): array
     {
         if ($lowercase) {
@@ -155,7 +160,7 @@ class WidgetScriptBuilder
 
             $sanitizedAttributes[sanitize_text_field($attribute)] = sanitize_text_field($value);
         }
-        return array_unique( $sanitizedAttributes );
+        return $sanitizedAttributes;
     }
 
     /**
@@ -246,7 +251,7 @@ class WidgetScriptBuilder
             $message .= ' ' . sprintf(
                 /* translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag */
                 esc_html__('You can configure the plugin settings to display your customized widget %1$shere%2$s.', 'simplybook'),
-                '<a href="' . esc_url(App::env('plugin.admin_url')) . '">',
+                '<a href="' . esc_url(App::env('plugin.dashboard_url')) . '">',
                 '</a>'
             );
         }
