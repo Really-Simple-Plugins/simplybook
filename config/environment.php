@@ -6,7 +6,7 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.1.0',
+        'version' => '3.1.1',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
@@ -22,7 +22,7 @@ return [
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
         'views_url' => plugin_dir_url(__DIR__).'app/views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
-        'admin_url' => admin_url('admin.php?page=simplybook-integration'),
+        'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
     ],
     'simplybook' => [
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
@@ -101,6 +101,8 @@ return [
             ['value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
             ['value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
             ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
+            ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
+            ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
             ['value' => 'login:simplybook.vip', 'label' => 'simplybook.vip'],
             ['value' => 'login:simplybook.cc', 'label' => 'simplybook.cc'],
             ['value' => 'login:simplybook.us', 'label' => 'simplybook.us'],

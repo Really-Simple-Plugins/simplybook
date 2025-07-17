@@ -40,7 +40,8 @@ const AuthenticationField = forwardRef(
                 return;
             }
 
-            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+            window.location.assign(simplybook.dashboard_url);
+
         };
 
         return (

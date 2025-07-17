@@ -13,7 +13,8 @@ import {ToastContainer} from "react-toastify";
 const FormFooter = ({
     onSubmit,
     control,
-    getValues
+    getValues,
+    settingsFormHeight,
 }) => {
     const {
         isDirty,
@@ -36,7 +37,7 @@ const FormFooter = ({
     const currentState = formStates.find(state => state.condition);
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
-            <FormScrollProgressLine />
+            <FormScrollProgressLine settingsFormHeight={settingsFormHeight} />
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
                     <p className={`text-sm text-${currentState.color}-500 flex items-center gap-2 p-0 m-0 mr-2`}>

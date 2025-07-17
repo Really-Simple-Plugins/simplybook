@@ -37,8 +37,6 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
     const setDisabled2FA = (watch2faFields.every((field) => field && field.trim() !== "",) === false);
 
     const handle2faSubmit = handleSubmit2fa(async (data) => {
-        // BUG getting 2fa error and not succesful with the 2fa
-        // API Error at simplybook/v1/onboarding/auth_two_fa?&token=a9lhs: 2fa Authentication failed with code 400
         const response = await request("onboarding/auth_two_fa", "POST", {
             auth_session_id: authSessionId,
             company_login: companyLogin,
@@ -51,11 +49,12 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
         switch (response?.status) {
             case "error":
                 setErrorMessage((response?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
-                console.error("2FA failed:", response); // Still log the error
+                console.error('SimplyBook.me API error: ' + response?.data?.response_message);
+                console.log(response); // Still log the error
                 break;
             case "success":
                 console.log("2FA successful:", response);
-                window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+                window.location.assign(simplybook.dashboard_url);
                 break;
             default:
                 setErrorMessage(__("An unknown error occurred. Please try again.", "simplybook"));
