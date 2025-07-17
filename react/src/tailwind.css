@@ -103,6 +103,13 @@ WP style overwrites
     padding-left: 0 !important;
 }
 
+/* Tailwind adds a base 'display: block' style on all imgs.
+This messes with some admin menu icons, so we overwrite it with 'initial'.
+Not overwriting for all imgs as Tailwind might rely on it under the hood. */
+#adminmenu .wp-menu-image img {
+    display: initial;
+}
+
 /**
 ======================================
 WCAG styles
@@ -238,7 +245,10 @@ Input global styles
     
     .checkbox-field {
         border: 2px solid transparent;
-    }    
+    }
+    img {
+        display: inline;
+    }
 }
 
 /**
