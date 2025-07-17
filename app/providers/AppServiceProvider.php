@@ -12,6 +12,7 @@ class AppServiceProvider extends Provider
         'simplybook_env', // Prioritized so it can be used in other providers
         'request',
         'client',
+        'simplybook_domains',
     ];
 
     /**
@@ -50,5 +51,27 @@ class AppServiceProvider extends Provider
         }
 
         return App::env('simplybook.api.'.$env);
+    }
+
+    /**
+     * Provides the SimplyBook domains based on the current environment.
+     * If in development mode, it adds the staging domain.
+     * @example App::provide('simplybook_domains')
+     */
+    public function provideSimplybookDomains(): array
+    {
+        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
+        $environmentData = $this->provideSimplybookEnv();
+
+        $domains = App::env('simplybook.domains');
+
+        if (($env === 'development') && !empty($environmentData['domain'])) {
+            $domains[] = [
+                'value' => 'default:' . $environmentData['domain'],
+                'label' => $environmentData['domain'],
+            ];
+        }
+
+        return $domains;
     }
 }

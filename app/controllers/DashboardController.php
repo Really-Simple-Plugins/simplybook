@@ -42,16 +42,20 @@ class DashboardController implements ControllerInterface
     }
 
     /**
-     * Redirect to simplybook dashboard page on activation. React side will
-     * handle redirect to onboarding
+     * Redirect to simplybook dashboard page on activation, but only if the user
+     * manually activated the plugin via the plugins overview. React will handle
+     * redirect to onboarding if needed.
+     *
+     * @param string $pageSource The page where the activation was triggered,
+     * usually 'plugins.php' but can be other pages as well.
      */
-    public function maybeRedirectToDashboard(): void
+    public function maybeRedirectToDashboard(string $pageSource = ''): void
     {
-        if (App::provide('request')->getString('page') === 'simplybook') {
+        if ($pageSource !== 'plugins.php') {
             return;
         }
 
-        wp_safe_redirect(App::env('plugin.admin_url'));
+        wp_safe_redirect(App::env('plugin.dashboard_url'));
         exit;
     }
 
@@ -105,7 +109,7 @@ class DashboardController implements ControllerInterface
 
         wp_enqueue_style(
             'simplybook-tailwind',
-            App::env('plugin.react_url') . '/build/tailwind.generated.css',
+            App::env('plugin.assets_url') . '/css/tailwind.generated.css',
             [],
             ($chunkTranslation['version'] ?? '')
         );
@@ -234,6 +238,7 @@ class DashboardController implements ControllerInterface
                 'rest_namespace' => App::env('http.namespace'),
                 'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
+				'dashboard_url' => App::env('plugin.dashboard_url'),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
@@ -242,7 +247,7 @@ class DashboardController implements ControllerInterface
                 'is_onboarding_completed' => $this->onboarding_completed(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
-                'simplybook_domains' => App::env('simplybook.domains'),
+                'simplybook_domains' => App::provide('simplybook_domains'),
                 'simplybook_countries' => App::countries(),
                 'support' => App::env('simplybook.support'),
             ]
