@@ -14,6 +14,7 @@ Simply add a booking calendar to your site to schedule bookings, reservations, a
 == Description ==
 
 SimplyBook.me is the easiest way to start collecting bookings on your WordPress website. The plugin will allow you to register your free account and immediately publish your booking calendar on the front-end of your site. With a few clicks, you can easily add your services and service providers, and design the most beautiful booking widget. You will be collecting appointments and reservations in no-time!
+
 * Easy appointment scheduling
 * Simple plugin onboarding and configuration
 * Manage your calendar and bookings using the powerful mobile app (iOS and Android)
