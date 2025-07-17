@@ -25,23 +25,23 @@ const InstallAppTaskModalContent = () => {
                     </div>
                     <div className="flex flex-col gap-3">
                         <div className="sm:max-w-[80%] lg:max-w-[70%]">
-                            <img src={assetsUrl + "img/Combined-QR-Codes.svg"} alt={__("Two QR Codes - left to the App Store and right to the Google Play Store pages of the Admin App", "simplybook")}/>
+                            <img src={assetsUrl + "img/download-app-qr-codes.svg"} alt={__("Two QR Codes - left to the App Store and right to the Google Play Store pages of the Admin App", "simplybook")}/>
                         </div>
                         <div className="flex flex-row gap-3 justify-around items-center w-full sm:max-w-[80%] lg:max-w-[70%]">
                             <a href="https://apps.apple.com/us/app/simplybook-me-admin/id1498910745" target="_blank">
-                                <img src={assetsUrl + "img/App-Store-Btn.svg"} alt={__("Download on the App Store", "simplybook")}/>
+                                <img src={assetsUrl + "img/download-on-app-store.svg"} alt={__("Download on the App Store", "simplybook")}/>
                             </a>
                             <a href="https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook" target="_blank">
-                                <img src={assetsUrl + "img/Google-Play-Btn.svg"} alt={__("Get it on Google Play", "simplybook")}/>
+                                <img src={assetsUrl + "img/get-it-on-google-play.svg"} alt={__("Get it on Google Play", "simplybook")}/>
                             </a>
                         </div>
                     </div>
                 </div>
                 <div className="hidden sm:flex flex-col gap-3 justify-center w-full min-h-full sm:max-w-1/2">
-                    <img src={assetsUrl + "img/QR-MODAL-PHONES.svg"} alt={__("Two phones displaying pages of the Admin App", "simplybook")}/>
+                    <img src={assetsUrl + "img/phone-app-preview.svg"} alt={__("Two phones displaying pages of the Admin App", "simplybook")}/>
                 </div>
             </div>
-            <ModalBackground image={assetsUrl + "img/QR-MODAL-BG.svg"}/>
+            <ModalBackground image={assetsUrl + "img/install-app-modal-background.svg"}/>
         </>
     );
 };
