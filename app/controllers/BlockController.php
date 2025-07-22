@@ -2,6 +2,7 @@
 
 use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Widgets\SimplyBookElementorWidget;
 
 class BlockController implements ControllerInterface
 {
@@ -12,20 +13,23 @@ class BlockController implements ControllerInterface
             return;
         }
 
-        add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorAssets']);
-        add_action('init', [$this, 'registerBlockType']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
+        add_action('init', [$this, 'registerGutenbergBlockType']);
+        
+        // Register Elementor widget
+        add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
     /**
-     * Register the SimplyBook Widget block
+     * Configure Gutenberg block with attributes and render callback.
      */
-    public function registerBlockType()
+    public function registerGutenbergBlockType()
     {
         register_block_type('simplybook/widget', [
             'title' => 'SimplyBook Widget',
             'icon' => 'simplybook',
             'category' => 'widgets',
-            'render_callback' => [$this, 'addWidgetBlock'],
+            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
             'attributes' => [
                 'location' => [
                     'type' => 'integer',
@@ -48,9 +52,9 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Enqueue the block editor assets
+     * Load scripts and styles for Gutenberg editor.
      */
-    public function enqueueBlockEditorAssets()
+    public function enqueueGutenbergBlockEditorAssets()
     {
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
         $indexJs = App::env('plugin.assets_url') . 'block/build/index.js';
@@ -94,14 +98,12 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Render the SimplyBook Widget block when the block is displayed on the
-     * front-end. Empty values are removed from the attributes array, the "any"
-     * value is also removed from the attributes array.
+     * Convert Gutenberg block to shortcode output. Filters empty values.
      *
      * @since 3.1.1 No longer filter out 'any', as this is a valid value for the
      * feature: "Any Employee selector" (/v2/management/#plugins/any_unit/)
      */
-    public function addWidgetBlock(array $attributes = []): string
+    public function renderGutenbergWidgetBlock(array $attributes = []): string
     {
         $attributes = array_filter($attributes, function ($value) {
             return !empty($value);
@@ -111,7 +113,7 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Convert the attributes array to a string to be used in a shortcode
+     * Format attributes as shortcode parameters.
      */
     private function attributesToString(array $attributes): string
     {
@@ -120,5 +122,21 @@ class BlockController implements ControllerInterface
             $result .= ' ' . sanitize_text_field($key) . '="' . sanitize_text_field($value) . '"';
         }
         return $result;
+    }
+
+    /**
+     * Add SimplyBook widget to Elementor if available.
+     *
+     * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager.
+     */
+    public function registerElementorWidget($widgets_manager): void
+    {
+        // Make sure Elementor is active
+        if (!did_action('elementor/loaded')) {
+            return;
+        }
+
+        // Register the widget
+        $widgets_manager->register(new SimplyBookElementorWidget());
     }
 }

@@ -33,7 +33,8 @@
             "SimplyBook\\Utility\\": "app/support/utility",
             "SimplyBook\\Controllers\\": "app/controllers",
             "SimplyBook\\Builders\\": "app/support/builders",
-            "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints"
+            "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints",
+            "SimplyBook\\Widgets\\": "app/support/widgets"
         },
         "files": [
             "app/App.php",
