@@ -3,9 +3,11 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Traits\IsAuthorized;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
+    use IsAuthorized;
 
     const ROUTE = 'internal';
 
@@ -45,22 +47,6 @@ class BlockEndpoints implements MultiEndpointInterface
                 'callback' => [$this, 'getProviders'],
             ],
         ];
-    }
-
-    /**
-     * Check if the user is authorized to use the plugin
-     */
-    public function isAuthorized(): bool
-    {
-        $cacheKey = 'simplybook_blockendpoints_is_authorized';
-        if ($cache = wp_cache_get($cacheKey, 'simplybook')) {
-            return $cache;
-        }
-
-        $isAuthorized = App::provide('client')->company_registration_complete();
-
-        wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
-        return $isAuthorized;
     }
 
     /**

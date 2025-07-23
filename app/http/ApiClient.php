@@ -1289,16 +1289,28 @@ class ApiClient
     }
 
     public function isSpecialFeatureEnabled($pluginKey){
+
+	    $cacheName = 'simplybook-feature-enabled-' . trim($pluginKey);
+	    $cached = wp_cache_get($cacheName, 'simplybook');
+	    if ($cached !== false) {
+		    return $cached;
+	    }
+
         $plugins = $this->getSpecialFeatureList();
         if(!$plugins){
-            return false;
+	        wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
+	        return false;
         }
         foreach($plugins as $plugin){
             if($plugin['key'] == $pluginKey){
-                return $plugin['is_active'];
+	            $isActive = (bool) $plugin['is_active'];
+	            wp_cache_set($cacheName, $isActive, 'simplybook', MINUTE_IN_SECONDS);
+	            return $isActive;
+
             }
         }
-        return false;
+	    wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
+	    return false;
     }
 
     protected function _log($error)

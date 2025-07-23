@@ -4,14 +4,16 @@ namespace SimplyBook\Widgets;
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use SimplyBook\App;
-use SimplyBook\Http\Endpoints\BlockEndpoints;
+use SimplyBook\Traits\IsAuthorized;
 
-class SimplyBookElementorWidget extends Widget_Base
+class ElementorWidget extends Widget_Base
 {
-    private const OPTION_VALUE = '0';
-    private const WIDGET_NAME = 'simplybook_widget';
-    private const WIDGET_ICON = 'eicon-calendar';
+    use IsAuthorized;
     
+	private const NAME = 'simplybook_widget';
+	// Default value for dropdowns, used to indicate no selection
+    private const OPTION_VALUE = '0';
+
     private $client;
     
     /**
@@ -19,7 +21,7 @@ class SimplyBookElementorWidget extends Widget_Base
      */
     public function get_name(): string
     {
-        return self::WIDGET_NAME;
+        return self::NAME;
     }
 
     /**
@@ -27,7 +29,7 @@ class SimplyBookElementorWidget extends Widget_Base
      */
     public function get_title(): string
     {
-        return esc_html__('SimplyBook Widget', 'simplybook');
+        return esc_html__('SimplyBook.me Widget', 'simplybook');
     }
 
     /**
@@ -35,15 +37,7 @@ class SimplyBookElementorWidget extends Widget_Base
      */
     public function get_icon(): string
     {
-        return self::WIDGET_ICON;
-    }
-
-    /**
-     * Groups widget in Elementor's panel sections.
-     */
-    public function get_categories(): array
-    {
-        return ['general'];
+        return 'eicon-calendar';
     }
 
     /**
@@ -51,7 +45,7 @@ class SimplyBookElementorWidget extends Widget_Base
      */
     public function get_keywords(): array
     {
-        return ['booking', 'calendar', 'appointment', 'simplybook'];
+        return ['booking', 'calendar', 'appointment', 'SimplyBook.me'];
     }
 
     /**
@@ -62,15 +56,19 @@ class SimplyBookElementorWidget extends Widget_Base
         $this->start_controls_section(
             'content_section',
             [
-                'label' => esc_html__('SimplyBook Settings', 'simplybook'),
+                'label' => esc_html__('SimplyBook.me Settings', 'simplybook'),
                 'tab' => Controls_Manager::TAB_CONTENT,
             ]
         );
 
-        $this->addServiceControl();
-        $this->addProviderControl();
-        $this->addLocationControl();
-        $this->addServiceCategoryControl();
+        if (!$this->IsAuthorized()) {
+            $this->addLoginRequiredControl();
+        } else {
+            $this->addServiceControl();
+            $this->addProviderControl();
+            $this->addLocationControl();
+            $this->addServiceCategoryControl();
+        }
 
         $this->end_controls_section();
     }
@@ -123,13 +121,9 @@ class SimplyBookElementorWidget extends Widget_Base
      */
     private function addLocationControl(): void
     {
-	    // Try to get client and check if the feature is enabled
-	    try {
-		    $client = $this->getClient();
-		    if (!$client->isSpecialFeatureEnabled('locations')) {
-			    return;
-		    }
-	    } catch (\Exception $e) {
+
+	    $client = $this->getClient();
+	    if (!$client->isSpecialFeatureEnabled('locations')) {
 		    return;
 	    }
 
@@ -150,13 +144,8 @@ class SimplyBookElementorWidget extends Widget_Base
     private function addServiceCategoryControl(): void
     {
 
-		// Try to get client and check if the feature is enabled
-	    try {
-		    $client = $this->getClient();
-		    if (!$client->isSpecialFeatureEnabled('event_category')) {
-			    return;
-		    }
-	    } catch (\Exception $e) {
+	    $client = $this->getClient();
+	    if (!$client->isSpecialFeatureEnabled('event_category')) {
 		    return;
 	    }
 
@@ -180,25 +169,21 @@ class SimplyBookElementorWidget extends Widget_Base
             self::OPTION_VALUE => esc_html__('Select a service', 'simplybook'),
         ];
 
-        try {
-            $client = $this->getClient();
-            if (!$client || !$this->isAuthorized()) {
-                return $options;
-            }
+        $client = $this->getClient();
+        if (!$client || !$this->isAuthorized()) {
+            return $options;
+        }
 
-            $services = $client->getServices(true);
+        $services = $client->getServices(true);
 
-            if (!is_array($services)) {
-                return $options;
+        if (!is_array($services)) {
+            return $options;
+        }
+
+        foreach ($services as $service) {
+            if (isset($service['id']) && isset($service['name'])) {
+                $options[$service['id']] = esc_html($service['name']);
             }
-            
-            foreach ($services as $service) {
-                if (isset($service['id']) && isset($service['name'])) {
-                    $options[$service['id']] = esc_html($service['name']);
-                }
-            }
-        } catch (\Exception $e) {
-            // Fail silently
         }
 
         return $options;
@@ -213,29 +198,25 @@ class SimplyBookElementorWidget extends Widget_Base
             self::OPTION_VALUE => esc_html__('Select a provider', 'simplybook'),
         ];
 
-        try {
-            $client = $this->getClient();
-            if (!$client || !$this->isAuthorized()) {
-                return $options;
-            }
+        $client = $this->getClient();
+        if (!$client || !$this->isAuthorized()) {
+            return $options;
+        }
 
-            // Check if "Any Provider" feature is enabled
-            if ($client->isSpecialFeatureEnabled('any_unit')) {
-                $options['any'] = esc_html__('Any provider', 'simplybook');
-            }
+        // Check if "Any Provider" feature is enabled
+        if ($client->isSpecialFeatureEnabled('any_unit')) {
+            $options['any'] = esc_html__('Any provider', 'simplybook');
+        }
 
-            $providers = $client->getProviders(true);
-            if (!is_array($providers)) {
-                return $options;
+        $providers = $client->getProviders(true);
+        if (!is_array($providers)) {
+            return $options;
+        }
+
+        foreach ($providers as $provider) {
+            if (isset($provider['id']) && isset($provider['name'])) {
+                $options[$provider['id']] = esc_html($provider['name']);
             }
-            
-            foreach ($providers as $provider) {
-                if (isset($provider['id']) && isset($provider['name'])) {
-                    $options[$provider['id']] = esc_html($provider['name']);
-                }
-            }
-        } catch (\Exception $e) {
-            // Fail silently
         }
 
         return $options;
@@ -250,29 +231,25 @@ class SimplyBookElementorWidget extends Widget_Base
             self::OPTION_VALUE => esc_html__('Select a location', 'simplybook'),
         ];
 
-        try {
-            $client = $this->getClient();
-            if (!$client || !$this->isAuthorized()) {
-                return $options;
-            }
+        $client = $this->getClient();
+        if (!$client || !$this->isAuthorized()) {
+            return $options;
+        }
 
-            // Only get locations if the feature is enabled
-            if (!$client->isSpecialFeatureEnabled('location')) {
-                return $options;
-            }
+        // Only get locations if the feature is enabled
+        if (!$client->isSpecialFeatureEnabled('location')) {
+            return $options;
+        }
 
-            $locations = $client->getLocations(true);
-            if (!is_array($locations)) {
-                return $options;
+        $locations = $client->getLocations(true);
+        if (!is_array($locations)) {
+            return $options;
+        }
+
+        foreach ($locations as $location) {
+            if (isset($location['id']) && isset($location['name'])) {
+                $options[$location['id']] = esc_html($location['name']);
             }
-            
-            foreach ($locations as $location) {
-                if (isset($location['id']) && isset($location['name'])) {
-                    $options[$location['id']] = esc_html($location['name']);
-                }
-            }
-        } catch (\Exception $e) {
-            // Fail silently
         }
 
         return $options;
@@ -287,29 +264,25 @@ class SimplyBookElementorWidget extends Widget_Base
             self::OPTION_VALUE => esc_html__('Select a category', 'simplybook'),
         ];
 
-        try {
-            $client = $this->getClient();
-            if (!$client || !$this->isAuthorized()) {
-                return $options;
-            }
+        $client = $this->getClient();
+        if (!$client || !$this->isAuthorized()) {
+            return $options;
+        }
 
-            // Only get categories if feature is enabled
-            if (!$client->isSpecialFeatureEnabled('event_category')) {
-                return $options;
-            }
+        // Only get categories if feature is enabled
+        if (!$client->isSpecialFeatureEnabled('event_category')) {
+            return $options;
+        }
 
-            $categories = $client->getCategories(true);
-            if (!is_array($categories)) {
-                return $options;
+        $categories = $client->getCategories(true);
+        if (!is_array($categories)) {
+            return $options;
+        }
+
+        foreach ($categories as $category) {
+            if (isset($category['id']) && isset($category['name'])) {
+                $options[$category['id']] = esc_html($category['name']);
             }
-            
-            foreach ($categories as $category) {
-                if (isset($category['id']) && isset($category['name'])) {
-                    $options[$category['id']] = esc_html($category['name']);
-                }
-            }
-        } catch (\Exception $e) {
-            // Fail silently
         }
 
         return $options;
@@ -318,19 +291,16 @@ class SimplyBookElementorWidget extends Widget_Base
     /**
      * Filters widget settings to only include valid SimplyBook shortcode parameters.
      * 
-     * Must match the attributes defined in BlockController::registerGutenbergBlockType()
-     * to ensure Gutenberg and Elementor generate identical shortcodes. SimplyBook's
-     * JavaScript widget expects these exact parameter names for pre-selection.
+     * Must match the controls we registered in this widget (in add_controls() calls)
      */
     private function buildShortcodeAttributes(array $settings): array
     {
         $attributes = [];
-        // These must match BlockController.php attributes for consistency
         $possibleAttributes = ['service', 'provider', 'location', 'category'];
         
         foreach ($possibleAttributes as $key) {
             $value = $settings[$key] ?? '';
-            if ($this->isValidOptionValue($value)) {
+            if (!empty($value)) {
                 $attributes[$key] = $value;
             }
         }
@@ -344,7 +314,7 @@ class SimplyBookElementorWidget extends Widget_Base
     private function buildShortcode(array $attributes): string
     {
         if (empty($attributes)) {
-            return '[' . self::WIDGET_NAME . ']';
+            return '[' . self::NAME . ']';
         }
         
         $attributePairs = array_map(
@@ -353,7 +323,7 @@ class SimplyBookElementorWidget extends Widget_Base
             array_values($attributes)
         );
         
-        return sprintf('[%s %s]', self::WIDGET_NAME, implode(' ', $attributePairs));
+        return sprintf('[%s %s]', self::NAME, implode(' ', $attributePairs));
     }
 
     /**
@@ -377,12 +347,25 @@ class SimplyBookElementorWidget extends Widget_Base
     }
 
     /**
-     * Uses BlockEndpoints' cached authorization check (60s cache).
+     * Shows login required message with dashboard link.
      */
-    private function isAuthorized(): bool
+    private function addLoginRequiredControl(): void
     {
-        $blockEndpoints = new BlockEndpoints();
-        return $blockEndpoints->isAuthorized();
+        $dashboardUrl = App::env('plugin.dashboard_url');
+        $loginMessage = sprintf(
+            '%s<br><br><a href="%s" target="_blank">%s</a>',
+            esc_html__('Please log in to SimplyBook.me to use this widget.', 'simplybook'),
+            esc_url($dashboardUrl),
+            esc_html__('Go to SimplyBook.me Dashboard', 'simplybook')
+        );
+        
+        $this->add_control(
+            'login_required',
+            [
+                'type' => Controls_Manager::RAW_HTML,
+                'raw' => $loginMessage,
+                'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
+            ]
+        );
     }
-
 }

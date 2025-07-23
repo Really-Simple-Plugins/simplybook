@@ -1,8 +1,9 @@
 <?php namespace SimplyBook\Controllers;
 
+use Elementor\Widgets_Manager;
 use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Widgets\SimplyBookElementorWidget;
+use SimplyBook\Widgets\ElementorWidget;
 
 class BlockController implements ControllerInterface
 {
@@ -16,7 +17,6 @@ class BlockController implements ControllerInterface
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
         add_action('init', [$this, 'registerGutenbergBlockType']);
         
-        // Register Elementor widget
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
@@ -26,7 +26,7 @@ class BlockController implements ControllerInterface
     public function registerGutenbergBlockType()
     {
         register_block_type('simplybook/widget', [
-            'title' => 'SimplyBook Widget',
+            'title' => 'SimplyBook.me Widget',
             'icon' => 'simplybook',
             'category' => 'widgets',
             'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
@@ -127,16 +127,10 @@ class BlockController implements ControllerInterface
     /**
      * Add SimplyBook widget to Elementor if available.
      *
-     * @param \Elementor\Widgets_Manager $widgets_manager Elementor widgets manager.
+     * @param Widgets_Manager $widgetsManager Elementor widgets manager.
      */
-    public function registerElementorWidget($widgets_manager): void
+    public function registerElementorWidget(Widgets_Manager $widgetsManager): void
     {
-        // Make sure Elementor is active
-        if (!did_action('elementor/loaded')) {
-            return;
-        }
-
-        // Register the widget
-        $widgets_manager->register(new SimplyBookElementorWidget());
+	    $widgetsManager->register(new ElementorWidget());
     }
 }
