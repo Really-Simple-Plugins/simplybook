@@ -10,20 +10,13 @@ trait HasApiAccess
     public function companyRegistrationIsCompleted(): bool
     {
         $cacheKey = 'simplybook_is_authorized';
-        
         if ($cache = wp_cache_get($cacheKey, 'simplybook')) {
             return $cache;
         }
 
-        try {
-            $client = App::provide('client');
-            $isAuthorized = $client && $client->company_registration_complete();
-        } catch (\Exception $e) {
-            $isAuthorized = false;
-        }
+        $isAuthorized = App::provide('client')->company_registration_complete();
 
         wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
-        
         return $isAuthorized;
     }
 }
