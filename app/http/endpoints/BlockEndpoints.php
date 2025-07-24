@@ -3,11 +3,11 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
 use SimplyBook\Interfaces\MultiEndpointInterface;
-use SimplyBook\Traits\IsAuthorized;
+use SimplyBook\Traits\HasApiAccess;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
-    use IsAuthorized;
+    use HasApiAccess;
 
     const ROUTE = 'internal';
 
@@ -28,7 +28,7 @@ class BlockEndpoints implements MultiEndpointInterface
         return [
             self::ROUTE . '/is-authorized' => [
                 'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'isAuthorized'],
+                'callback' => [$this, 'companyRegistrationIsCompleted'],
             ],
             self::ROUTE . '/locations' => [
                 'methods' => \WP_REST_Server::CREATABLE,
@@ -54,7 +54,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getLocations(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -66,7 +66,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getCategories()
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -79,7 +79,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getServices(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -93,7 +93,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getProviders()
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 

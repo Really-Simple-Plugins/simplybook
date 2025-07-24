@@ -2,12 +2,12 @@
 
 use SimplyBook\App;
 
-trait IsAuthorized 
+trait HasApiAccess
 {
     /**
      * Checks if SimplyBook registration is complete with 60s caching.
      */
-    protected function IsAuthorized(): bool
+    public function companyRegistrationIsCompleted(): bool
     {
         $cacheKey = 'simplybook_is_authorized';
         

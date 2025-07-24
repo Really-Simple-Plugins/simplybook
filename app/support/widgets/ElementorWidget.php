@@ -4,17 +4,18 @@ namespace SimplyBook\Widgets;
 use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use SimplyBook\App;
-use SimplyBook\Traits\IsAuthorized;
+use SimplyBook\Traits\HasApiAccess;
 
 class ElementorWidget extends Widget_Base
 {
-    use IsAuthorized;
+    use HasApiAccess;
     
 	private const NAME = 'simplybook_widget';
-	// Default value for dropdowns, used to indicate no selection
-    private const OPTION_VALUE = '0';
-
-    private $client;
+	/**
+	 * Default value for the dropdowns to indicate no selection
+	 * @var string
+	 */
+    private const DEFAULT_VALUE = '0';
     
     /**
      * Required by Elementor for widget registration.
@@ -61,7 +62,7 @@ class ElementorWidget extends Widget_Base
             ]
         );
 
-        if (!$this->IsAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             $this->addLoginRequiredControl();
         } else {
             $this->addServiceControl();
@@ -94,7 +95,7 @@ class ElementorWidget extends Widget_Base
             [
                 'label' => esc_html__('Service', 'simplybook'),
                 'type' => Controls_Manager::SELECT,
-                'default' => self::OPTION_VALUE,
+                'default' => self::DEFAULT_VALUE,
                 'options' => $this->getServicesOptions(),
             ]
         );
@@ -110,7 +111,7 @@ class ElementorWidget extends Widget_Base
             [
                 'label' => esc_html__('Service Provider', 'simplybook'),
                 'type' => Controls_Manager::SELECT,
-                'default' => self::OPTION_VALUE,
+                'default' => self::DEFAULT_VALUE,
                 'options' => $this->getProvidersOptions(),
             ]
         );
@@ -121,18 +122,17 @@ class ElementorWidget extends Widget_Base
      */
     private function addLocationControl(): void
     {
+        $client = App::provide('client');
+        if (!$client || !$client->isSpecialFeatureEnabled('locations')) {
+            return;
+        }
 
-	    $client = $this->getClient();
-	    if (!$client->isSpecialFeatureEnabled('locations')) {
-		    return;
-	    }
-
-	    $this->add_control(
+        $this->add_control(
             'location',
             [
                 'label' => esc_html__('Location', 'simplybook'),
                 'type' => Controls_Manager::SELECT,
-                'default' => self::OPTION_VALUE,
+                'default' => self::DEFAULT_VALUE,
                 'options' => $this->getLocationsOptions(),
             ]
         );
@@ -143,18 +143,17 @@ class ElementorWidget extends Widget_Base
      */
     private function addServiceCategoryControl(): void
     {
+        $client = App::provide('client');
+        if (!$client || !$client->isSpecialFeatureEnabled('event_category')) {
+            return;
+        }
 
-	    $client = $this->getClient();
-	    if (!$client->isSpecialFeatureEnabled('event_category')) {
-		    return;
-	    }
-
-	    $this->add_control(
+        $this->add_control(
             'category',
             [
                 'label' => esc_html__('Service Category', 'simplybook'),
                 'type' => Controls_Manager::SELECT,
-                'default' => self::OPTION_VALUE,
+                'default' => self::DEFAULT_VALUE,
                 'options' => $this->getServiceCategoriesOptions(),
             ]
         );
@@ -165,28 +164,20 @@ class ElementorWidget extends Widget_Base
      */
     private function getServicesOptions(): array
     {
-        $options = [
-            self::OPTION_VALUE => esc_html__('Select a service', 'simplybook'),
-        ];
-
-        $client = $this->getClient();
-        if (!$client || !$this->isAuthorized()) {
-            return $options;
+        $client = App::provide('client');
+        if (!$client || !$this->companyRegistrationIsCompleted()) {
+            return [self::DEFAULT_VALUE => esc_html__('Select a service', 'simplybook')];
         }
-
+        
         $services = $client->getServices(true);
-
         if (!is_array($services)) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a service', 'simplybook')];
         }
-
-        foreach ($services as $service) {
-            if (isset($service['id']) && isset($service['name'])) {
-                $options[$service['id']] = esc_html($service['name']);
-            }
-        }
-
-        return $options;
+        
+        return $this->buildOptionsFromApiData(
+            $services,
+            esc_html__('Select a service', 'simplybook')
+        );
     }
 
     /**
@@ -194,31 +185,29 @@ class ElementorWidget extends Widget_Base
      */
     private function getProvidersOptions(): array
     {
-        $options = [
-            self::OPTION_VALUE => esc_html__('Select a provider', 'simplybook'),
-        ];
-
-        $client = $this->getClient();
-        if (!$client || !$this->isAuthorized()) {
-            return $options;
+        $client = App::provide('client');
+        if (!$client || !$this->companyRegistrationIsCompleted()) {
+            return [self::DEFAULT_VALUE => esc_html__('Select a service provider', 'simplybook')];
         }
-
-        // Check if "Any Provider" feature is enabled
-        if ($client->isSpecialFeatureEnabled('any_unit')) {
-            $options['any'] = esc_html__('Any provider', 'simplybook');
-        }
-
+        
         $providers = $client->getProviders(true);
         if (!is_array($providers)) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a service provider', 'simplybook')];
         }
-
-        foreach ($providers as $provider) {
-            if (isset($provider['id']) && isset($provider['name'])) {
-                $options[$provider['id']] = esc_html($provider['name']);
-            }
+        
+        $options = $this->buildOptionsFromApiData(
+            $providers,
+            esc_html__('Select a service provider', 'simplybook')
+        );
+        
+        // Add "Any Provider" option if feature is enabled
+        if ($client->isSpecialFeatureEnabled('any_unit')) {
+            // Insert 'any' option after the default option
+            $defaultOption = array_slice($options, 0, 1, true);
+            $restOptions = array_slice($options, 1, null, true);
+            $options = $defaultOption + ['any' => esc_html__('Any provider', 'simplybook')] + $restOptions;
         }
-
+        
         return $options;
     }
 
@@ -227,32 +216,24 @@ class ElementorWidget extends Widget_Base
      */
     private function getLocationsOptions(): array
     {
-        $options = [
-            self::OPTION_VALUE => esc_html__('Select a location', 'simplybook'),
-        ];
-
-        $client = $this->getClient();
-        if (!$client || !$this->isAuthorized()) {
-            return $options;
+        $client = App::provide('client');
+        if (!$client || !$this->companyRegistrationIsCompleted()) {
+            return [self::DEFAULT_VALUE => esc_html__('Select a location', 'simplybook')];
         }
-
-        // Only get locations if the feature is enabled
+        
         if (!$client->isSpecialFeatureEnabled('location')) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a location', 'simplybook')];
         }
-
+        
         $locations = $client->getLocations(true);
         if (!is_array($locations)) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a location', 'simplybook')];
         }
-
-        foreach ($locations as $location) {
-            if (isset($location['id']) && isset($location['name'])) {
-                $options[$location['id']] = esc_html($location['name']);
-            }
-        }
-
-        return $options;
+        
+        return $this->buildOptionsFromApiData(
+            $locations,
+            esc_html__('Select a location', 'simplybook')
+        );
     }
 
     /**
@@ -260,38 +241,29 @@ class ElementorWidget extends Widget_Base
      */
     private function getServiceCategoriesOptions(): array
     {
-        $options = [
-            self::OPTION_VALUE => esc_html__('Select a category', 'simplybook'),
-        ];
-
-        $client = $this->getClient();
-        if (!$client || !$this->isAuthorized()) {
-            return $options;
+        $client = App::provide('client');
+        if (!$client || !$this->companyRegistrationIsCompleted()) {
+            return [self::DEFAULT_VALUE => esc_html__('Select a category', 'simplybook')];
         }
-
-        // Only get categories if feature is enabled
+        
         if (!$client->isSpecialFeatureEnabled('event_category')) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a category', 'simplybook')];
         }
-
+        
         $categories = $client->getCategories(true);
         if (!is_array($categories)) {
-            return $options;
+            return [self::DEFAULT_VALUE => esc_html__('Select a category', 'simplybook')];
         }
-
-        foreach ($categories as $category) {
-            if (isset($category['id']) && isset($category['name'])) {
-                $options[$category['id']] = esc_html($category['name']);
-            }
-        }
-
-        return $options;
+        
+        return $this->buildOptionsFromApiData(
+            $categories,
+            esc_html__('Select a category', 'simplybook')
+        );
     }
 
     /**
      * Filters widget settings to only include valid SimplyBook shortcode parameters.
-     * 
-     * Must match the controls we registered in this widget (in add_controls() calls)
+     * Parameters must match the controls we register in {@see add_controls()}.
      */
     private function buildShortcodeAttributes(array $settings): array
     {
@@ -327,23 +299,24 @@ class ElementorWidget extends Widget_Base
     }
 
     /**
-     * Excludes empty and '0' values from shortcode.
+     * Generic method to build options array from API data.
+     * 
+     * @param array $items API response items
+     * @param string $defaultLabel Default option label
      */
-    private function isValidOptionValue(string $value): bool
+    private function buildOptionsFromApiData(array $items, string $defaultLabel): array
     {
-        return !empty($value) && $value !== self::OPTION_VALUE;
-    }
+        $options = [
+            self::DEFAULT_VALUE => $defaultLabel,
+        ];
 
-    /**
-     * Lazy loads and caches the SimplyBook API client.
-     */
-    private function getClient()
-    {
-        if ($this->client === null) {
-            $this->client = App::provide('client');
+        foreach ($items as $item) {
+            if (isset($item['id']) && isset($item['name'])) {
+                $options[$item['id']] = esc_html($item['name']);
+            }
         }
 
-        return $this->client;
+        return $options;
     }
 
     /**
@@ -356,7 +329,7 @@ class ElementorWidget extends Widget_Base
             '%s<br><br><a href="%s" target="_blank">%s</a>',
             esc_html__('Please log in to SimplyBook.me to use this widget.', 'simplybook'),
             esc_url($dashboardUrl),
-            esc_html__('Go to SimplyBook.me Dashboard', 'simplybook')
+            esc_html__('Go to SimplyBook.me dashboard', 'simplybook')
         );
         
         $this->add_control(
