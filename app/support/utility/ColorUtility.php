@@ -12,6 +12,11 @@ class ColorUtility
      */
     public function resolveColorToHex(string $value): string
     {
+        // Handle color-mix() functions by extracting the base color
+        if (strpos($value, 'color-mix(') === 0) {
+            return $this->resolveColorMix($value);
+        }
+        
         if ($this->isCssVariable($value)) {
             return $this->resolveCssVariable($value);
         }
@@ -102,5 +107,25 @@ class ColorUtility
         }
         
         return null;
+    }
+    
+    /**
+     * Extracts base color from color-mix() functions
+     */
+    private function resolveColorMix(string $colorMix): string
+    {
+        // Extract CSS variable from color-mix function
+        if (preg_match('/var\(--wp--preset--color--(\w+)\)/', $colorMix, $matches)) {
+            $cssVar = 'var(--wp--preset--color--' . $matches[1] . ')';
+            $resolvedColor = $this->resolveCssVariable($cssVar);
+            
+            // If successfully resolved, return the base color
+            if ($resolvedColor !== $cssVar) {
+                return $resolvedColor;
+            }
+        }
+        
+        // Return original value if we can't parse - let fallback system handle it
+        return $colorMix;
     }
 }
