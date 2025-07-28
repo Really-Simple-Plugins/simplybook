@@ -8,13 +8,13 @@ import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
 import {ToastContainer} from "react-toastify";
 import { useParams } from "@tanstack/react-router";
+import { useCrudContext } from "../../context/CrudContext";
 
 const FormFooter = ({
     onSubmit,
     control,
     getValues,
-    
-    crudContext = null,
+
     showSettingsButtons = true
 }) => {
     const settingsFormState = control ? useFormState({ control }) : {};
@@ -24,6 +24,7 @@ const FormFooter = ({
         isValidating = false,
         isValid = true
     } = settingsFormState;
+    const {crudContext} = useCrudContext();
 
     const { isSavingSettings } = useSettingsData();
     const params = useParams({ from: '/settings/$settingsId' });

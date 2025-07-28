@@ -3,12 +3,12 @@ import useSettingsData from "../../hooks/useSettingsData";
 import { useForm } from "react-hook-form";
 import useSettingsMenu from "../../hooks/useSettingsMenu";
 import FormFooter from "../../components/Forms/FormFooter";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 import ToastNotice from "../../components/Errors/ToastNotice";
-import CrudContext, { useCrudContext } from "../../context/CrudContext";
+import { useCrudContext, CrudContextProvider } from "../../context/CrudContext";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -32,8 +32,8 @@ function Settings() {
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
-    
-    const [crudContext, setCrudContext] = useState(null);
+
+    const { crudContext } = useCrudContext();
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -123,7 +123,7 @@ function Settings() {
     }
 
     return (
-        <CrudContext.Provider value={{ crudContext, setCrudContext }}>
+        <CrudContextProvider>
             <form className="col-span-12 lg:col-span-6">
                 {currentForm.groups?.map((group) => {
                     const isLastGroup = lastGroup.id === group.id;
@@ -157,12 +157,11 @@ function Settings() {
                             });
                         })}
                         control={control}
-                        crudContext={crudContext}
                         showSettingsButtons={!crudContext}
                     />
                 )}
             </form>
-        </CrudContext.Provider>
+        </CrudContextProvider>
     );
 }
 
