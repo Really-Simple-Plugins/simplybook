@@ -18,12 +18,12 @@ class ThemeColorService
      * Maps WordPress theme color names to standardized keys.
      */
     private array $wpColorMappings = [
-        'primary' => ['primary', 'accent', 'main'],
-        'secondary' => ['secondary', 'accent-2', 'tertiary'], // Hover style
-        'active' => ['tertiary', 'link', 'highlight', 'accent'], // Button-like elements
+        'primary' => ['base', 'primary', 'main'],
+        'secondary' => ['contrast'],
+        'active' => ['accent-1', 'accent', 'tertiary'],
         'background' => ['background', 'base'],
         'foreground' => ['foreground', 'text'],
-        'text' => ['base', 'contrast'],
+        'text' => ['contrast', 'foreground'],
     ];
 
     /**
@@ -176,12 +176,12 @@ class ThemeColorService
     public function getColorsFromCssVariables(): array
     {
         $rawColors = [
-            'primary' => 'var(--wp--preset--color--primary)',
-            'secondary' => 'var(--wp--preset--color--secondary)',
-            'active' => 'var(--wp--preset--color--tertiary)',
+            'primary' => 'var(--wp--preset--color--base)',
+            'secondary' => 'var(--wp--preset--color--contrast)',
+            'active' => 'var(--wp--preset--color--accent-1)',
             'background' => 'var(--wp--preset--color--background)',
             'foreground' => 'var(--wp--preset--color--foreground)',
-            'text' => 'var(--wp--preset--color--foreground-alt)',
+            'text' => 'var(--wp--preset--color--contrast)',
         ];
 
         $colors = [];
