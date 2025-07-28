@@ -16,10 +16,11 @@ class ThemeColorService
 
     /**
      * Maps WordPress theme color names to standardized keys.
+     * For widget: primary=background, secondary=text, active=button
      */
     private array $wpColorMappings = [
-        'primary' => ['base', 'primary', 'main'],
-        'secondary' => ['contrast'],
+        'primary' => ['background', 'base'],
+        'secondary' => ['contrast', 'foreground'],
         'active' => ['accent-1', 'accent', 'tertiary'],
         'background' => ['background', 'base'],
         'foreground' => ['foreground', 'text'],
@@ -116,29 +117,30 @@ class ThemeColorService
 
     /**
      * Extracts button and link colors from Global Styles elements
+     * For widget: primary=background, secondary=text, active=button
      */
     private function getButtonColorsFromGlobalStyles(array $globalStyles): array
     {
         $colors = [];
 
-        // Extract button colors
+        // Extract theme background for primary
+        if (isset($globalStyles['color']['background'])) {
+            $colors['primary'] = $this->colorUtility->resolveColorToHex($globalStyles['color']['background']);
+        }
+
+        // Extract theme text for secondary
+        if (isset($globalStyles['color']['text'])) {
+            $colors['secondary'] = $this->colorUtility->resolveColorToHex($globalStyles['color']['text']);
+        }
+
+        // Extract button colors for active (button state)
         if (isset($globalStyles['elements']['button']['color'])) {
             $buttonColors = $globalStyles['elements']['button']['color'];
             if (isset($buttonColors['background'])) {
-                $colors['primary'] = $this->colorUtility->resolveColorToHex($buttonColors['background']);
-                // Use button background for active state too (button-like elements)
                 $colors['active'] = $this->colorUtility->resolveColorToHex($buttonColors['background']);
             }
             if (isset($buttonColors['text'])) {
                 $colors['text'] = $this->colorUtility->resolveColorToHex($buttonColors['text']);
-            }
-        }
-
-        // Extract button hover colors for secondary (hover style)
-        if (isset($globalStyles['elements']['button'][':hover']['color'])) {
-            $hoverColors = $globalStyles['elements']['button'][':hover']['color'];
-            if (isset($hoverColors['background'])) {
-                $colors['secondary'] = $this->colorUtility->resolveColorToHex($hoverColors['background']);
             }
         }
 
@@ -172,11 +174,12 @@ class ThemeColorService
 
     /**
      * Standard WordPress CSS variables - works with any modern block theme
+     * For widget: primary=background, secondary=text, active=button
      */
     public function getColorsFromCssVariables(): array
     {
         $rawColors = [
-            'primary' => 'var(--wp--preset--color--base)',
+            'primary' => 'var(--wp--preset--color--background)',
             'secondary' => 'var(--wp--preset--color--contrast)',
             'active' => 'var(--wp--preset--color--accent-1)',
             'background' => 'var(--wp--preset--color--background)',
