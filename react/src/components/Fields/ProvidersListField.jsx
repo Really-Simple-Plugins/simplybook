@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import useProviderData from '../../hooks/useProviderData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import clsx from 'clsx';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
-import LoginLink from '../Common/LoginLink';
+import ProviderRow from './Partials/ProviderRow';
+import ProviderForm from './Partials/ProviderForm';
 
 const ProvidersListField = ({  }) => {
     const {
@@ -149,6 +149,7 @@ const ProvidersListField = ({  }) => {
 
         const providerData = {
             name: currentFormData.name,
+            description: currentFormData.description || '',
             qty: Math.max(parseInt(currentFormData.qty) || 1, 1),
             email: currentFormData.email || '',
             phone: currentFormData.phone || '',
@@ -209,6 +210,7 @@ const ProvidersListField = ({  }) => {
         setIsCreatingNew(true);
         setFormData({
             name: '',
+            description: '',
             qty: 1,
             email: '',
             phone: '',
@@ -351,229 +353,5 @@ const ProvidersListField = ({  }) => {
         </div>
     );
 };
-
-const ProviderRow = ({
-    provider,
-    providers,
-    isExpanded,
-    isEditing,
-    isCreatingNew,
-    onToggle,
-    onDelete,
-    formData,
-    onChange,
-    visibilityOverrides,
-    onVisibilityChange,
-    isLoading,
-    error
-}) => {
-    const handleVisibilityToggle = (e) => {
-        e.stopPropagation();
-        if (onVisibilityChange) {
-            onVisibilityChange(e.target.checked);
-        }
-    };
-
-    // Check visibility in order: form data (if editing) -> visibility overrides -> original data
-    const currentVisibility = isEditing && formData
-        ? formData.is_visible
-        : visibilityOverrides[provider.id] !== undefined
-        ? visibilityOverrides[provider.id]
-        : provider.is_visible;
-
-    // Count visible providers (considering form state and visibility overrides)
-    const visibleProvidersCount = providers.filter(p => {
-        if (isEditing && p.id === provider.id) {
-            return currentVisibility;
-        }
-        // Check visibility overrides first, then original data
-        return visibilityOverrides[p.id] !== undefined ? visibilityOverrides[p.id] : p.is_visible;
-    }).length;
-
-    // Disable toggle if this is the last visible provider and we're trying to hide it
-    const isToggleDisabled = currentVisibility && visibleProvidersCount <= 1;
-
-    // Disable delete if this is the last provider
-    const isDeleteDisabled = providers.length <= 1;
-
-    return (
-        <div className={clsx(
-            "border border-gray-300 rounded-lg shadow-sm mb-6",
-            isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
-        )}>
-            {/* Main row */}
-            <div
-                className={clsx(
-                    "flex items-center justify-between p-4 rounded-t-lg",
-                    isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
-                )}
-                onClick={onToggle}
-            >
-                {/* Left side: Provider info */}
-                <div className="flex items-center flex-1">
-                    <div className="text-sm font-medium text-gray-900">{provider.name}</div>
-                </div>
-
-                {/* Right side: Actions */}
-                <div className="flex space-x-3">
-                    {/* Trash Icon */}
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onDelete();
-                        }}
-                        disabled={isEditing || isLoading || isDeleteDisabled}
-                        className="text-gray-500 hover:text-red-600 disabled:opacity-50 p-1 cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
-                        title={__('Delete Service Provider', 'simplybook')}
-                    >
-                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
-                    </button>
-
-                    {/* Visibility Toggle */}
-                    <div
-                        className=""
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <label
-                            className={clsx(
-                                "relative inline-flex items-center",
-                                isToggleDisabled ? "cursor-not-allowed" : "cursor-pointer"
-                            )}
-                            title={
-                                isToggleDisabled
-                                    ? __('Cannot hide the last visible service provider', 'simplybook')
-                                    : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
-                            }
-                        >
-                        <input
-                            type="checkbox"
-                            checked={currentVisibility || false}
-                            onChange={handleVisibilityToggle}
-                            disabled={isToggleDisabled}
-                            className="sr-only peer"
-                        />
-                        <div className={clsx(
-                            "w-10 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer",
-                            "peer-checked:bg-blue-600 peer-checked:after:translate-x-[1.125rem] peer-checked:after:border-white",
-                            "after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-200",
-                            "after:border after:rounded-full after:aspect-square after:h-4 after:w-4 after:transition-all",
-                            isToggleDisabled && "opacity-50 cursor-not-allowed"
-                        )}></div>
-                        </label>
-                    </div>
-
-                    {/* Dropdown Toggle */}
-                    <button
-                        type="button"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onToggle();
-                        }}
-                        className="p-1 rounded hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6"
-                        title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
-                    >
-                        <FontAwesomeIcon
-                            icon={faChevronDown}
-                            className={clsx("w-4 h-4 transition-transform duration-200",
-                                isExpanded && "rotate-180"
-                            )}
-                        />
-                    </button>
-                </div>
-            </div>
-
-            {/* Expanded section */}
-            {isExpanded && (
-                <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
-                    <ProviderForm
-                        formData={formData}
-                        onChange={onChange}
-                        isLoading={isLoading}
-                        error={error}
-                        providerId={provider.id}
-                    />
-                </div>
-            )}
-        </div>
-    );
-};
-
-const ProviderForm = ({ formData, onChange, error, providerId }) => {
-    if (!formData) {
-        return <div className="text-gray-500">Loading...</div>;
-    }
-
-    return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service provider name', 'simplybook')} *
-                </label>
-                <input
-                    type="text"
-                    value={formData.name || ''}
-                    onChange={(e) => onChange('name', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('E-mail', 'simplybook')}
-                </label>
-                <input
-                    type="email"
-                    value={formData.email || ''}
-                    onChange={(e) => onChange('email', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Phone', 'simplybook')}
-                </label>
-                <input
-                    type="tel"
-                    value={formData.phone || ''}
-                    onChange={(e) => onChange('phone', e.target.value)}
-                    pattern="[+]?[0-9\s\-\(\)]{7,20}"
-                    title={__('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook')}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="+31 123 456 789"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('How many clients can be served at the same time?', 'simplybook')}
-                </label>
-                <input
-                    type="number"
-                    min="1"
-                    value={formData.qty || 1}
-                    onChange={(e) => onChange('qty', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            {/* Edit All Properties Button */}
-            {providerId && (
-                <div className="col-span-full mt-4">
-                    <LoginLink
-                        page={`/v2/management/#providers/edit/details/${providerId}`}
-                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
-                    >
-                        {__('Edit All Properties', 'simplybook')}
-                    </LoginLink>
-                </div>
-            )}
-            {error && (
-                <div className="col-span-full text-red-600 text-sm">
-                    {error.message}
-                </div>
-            )}
-        </div>
-    );
-};
-
 
 export default ProvidersListField;

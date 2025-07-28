@@ -11,7 +11,7 @@ const useProviderData = () => {
         if (crudData.dataFetched && crudData.data?.length === 0) {
             triggerNotificationById('add_mandatory_provider');
         }
-    }, [crudData.dataFetched, crudData.data?.length, triggerNotificationById]);
+    }, [crudData.dataFetched, crudData.data?.length]);
     
     // Log errors
     useEffect(() => {
