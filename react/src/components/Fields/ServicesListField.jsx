@@ -2,10 +2,10 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { __ } from '@wordpress/i18n';
 import useServicesData from '../../hooks/useServicesData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronDown, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
-import clsx from 'clsx';
+import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
-import LoginLink from '../Common/LoginLink';
+import ServiceRow from './Partials/ServiceRow';
+import ServiceForm from './Partials/ServiceForm';
 
 const ServicesListField = ({  }) => {
     const {

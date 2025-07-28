@@ -4,7 +4,8 @@ import useProviderData from '../../hooks/useProviderData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
-
+import ProviderRow from './Partials/ProviderRow';
+import ProviderForm from './Partials/ProviderForm';
 
 const ProvidersListField = ({  }) => {
     const {
@@ -111,8 +112,11 @@ const ProvidersListField = ({  }) => {
 
     const handleSave = () => {
         const currentFormData = formDataRef.current;
+        console.log(currentFormData);
         const currentIsCreatingNew = isCreatingNewRef.current;
+        console.log(currentIsCreatingNew);
         const currentEditingProvider = editingProviderRef.current;
+        console.log(currentEditingProvider);
 
         if (!currentFormData.name) {
             console.error('No provider name provided');
