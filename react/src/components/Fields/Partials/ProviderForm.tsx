@@ -1,7 +1,24 @@
+import React from "react";
 import LoginLink from '../../Common/LoginLink';
 import { __ } from '@wordpress/i18n';
 
-const ProviderForm = ({ formData, onChange, isLoading, error, providerId }) => {
+type ProviderFormProps = {
+    formData: {
+        name: string,
+        email: string,
+        phone: string,
+        qty: number,
+        description: string,
+    },
+    onChange: (type: string, target: string) => void,
+    isLoading: boolean,
+    error: {
+        message: string,
+    },
+    providerId: number,
+}
+
+const ProviderForm: React.FC<ProviderFormProps> = ({ formData, onChange, isLoading, error, providerId }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }

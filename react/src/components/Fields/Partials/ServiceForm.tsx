@@ -1,7 +1,25 @@
+import React from "react";
 import LoginLink from "../../Common/LoginLink";
 import { __ } from "@wordpress/i18n";
 
-const ServiceForm = ({ formData, onChange, isLoading, error, serviceId }) => {
+type ServiceFormProps = {
+    formData: {
+        name: string,
+        price: string,
+        deposit_price: string,
+        duration: string,
+        tax_id: string,
+        description: string,
+    },
+    onChange: (type: string, target: string) => void,
+    isLoading: boolean,
+    error: {
+        message: string
+    },
+    serviceId: number,
+}
+
+const ServiceForm: React.FC<ServiceFormProps> = ({ formData, onChange, isLoading, error, serviceId }) => {
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }

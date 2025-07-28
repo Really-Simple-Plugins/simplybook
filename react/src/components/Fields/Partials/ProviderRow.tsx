@@ -5,22 +5,52 @@ import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { __ } from '@wordpress/i18n';
 
+type Provider = {
+    id: number,
+    is_visible: boolean,
+    name: string,
+}
 
-const ProviderRow = ({
-                         provider,
-                         providers,
-                         isExpanded,
-                         isEditing,
-                         isCreatingNew,
-                         onToggle,
-                         onDelete,
-                         formData,
-                         onChange,
-                         visibilityOverrides,
-                         onVisibilityChange,
-                         isLoading,
-                         error
-                     }) => {
+type ProviderRowProps = {
+    formData: {
+        name: string,
+        email: string,
+        phone: string,
+        qty: number,
+        description: string,
+        is_visible: boolean
+    },
+    onChange: (type: string, target: string) => void,
+    isLoading: boolean,
+    error: {
+        message: string,
+    },
+    provider: Provider,
+    providers: Provider[],
+    isExpanded: boolean,
+    isEditing: boolean,
+    isCreatingNew: boolean,
+    onToggle: () => void,
+    onDelete: () => void,
+    visibilityOverrides: [],
+    onVisibilityChange: (checked: boolean) => void,
+}
+
+const ProviderRow: React.FC<ProviderRowProps> = ({
+     provider,
+     providers,
+     isExpanded,
+     isEditing,
+     isCreatingNew,
+     onToggle,
+     onDelete,
+     formData,
+     onChange,
+     visibilityOverrides,
+     onVisibilityChange,
+     isLoading,
+     error
+}) => {
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
         if (onVisibilityChange) {

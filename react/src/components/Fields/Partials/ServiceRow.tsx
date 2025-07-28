@@ -5,21 +5,52 @@ import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { __ } from "@wordpress/i18n";
 import clsx from 'clsx';
 
-const ServiceRow = ({
-                        service,
-                        services,
-                        isExpanded,
-                        isEditing,
-                        isCreatingNew,
-                        onToggle,
-                        onDelete,
-                        formData,
-                        onChange,
-                        visibilityOverrides,
-                        onVisibilityChange,
-                        isLoading,
-                        error
-                    }) => {
+type Service = {
+    id: number,
+    is_visible: boolean,
+    name: string,
+}
+
+type ServiceRowProps = {
+    formData: {
+        name: string,
+        price: string,
+        deposit_price: string,
+        duration: string,
+        tax_id: string,
+        description: string,
+        is_visible: boolean,
+    },
+    onChange: (type: string, target: string) => void,
+    isLoading: boolean,
+    error: {
+        message: string,
+    },
+    service: Service,
+    services: Service[],
+    isExpanded: boolean,
+    isEditing: boolean,
+    isCreatingNew: boolean,
+    onToggle: () => void,
+    onDelete: () => void,
+    visibilityOverrides: [],
+    onVisibilityChange: (checked: boolean) => void,
+}
+const ServiceRow: React.FC<ServiceRowProps> = ({
+    service,
+    services,
+    isExpanded,
+    isEditing,
+    isCreatingNew,
+    onToggle,
+    onDelete,
+    formData,
+    onChange,
+    visibilityOverrides,
+    onVisibilityChange,
+    isLoading,
+    error
+}) => {
 
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
