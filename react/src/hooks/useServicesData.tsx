@@ -11,7 +11,7 @@ const useServicesData = () => {
         if (crudData.dataFetched && crudData.data?.length === 0) {
             triggerNotificationById('add_mandatory_service');
         }
-    }, [crudData.dataFetched, crudData.data?.length, triggerNotificationById]);
+    }, [crudData.dataFetched, crudData.data?.length]);
     
     // Log errors
     useEffect(() => {
