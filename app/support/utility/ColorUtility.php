@@ -115,7 +115,7 @@ class ColorUtility
     private function resolveColorMix(string $colorMix): string
     {
         // Extract CSS variable from color-mix function
-        if (preg_match('/var\(--wp--preset--color--(\w+)\)/', $colorMix, $matches)) {
+        if (preg_match('/var\(--wp--preset--color--([\w-]+)\)/', $colorMix, $matches)) {
             $cssVar = 'var(--wp--preset--color--' . $matches[1] . ')';
             $resolvedColor = $this->resolveCssVariable($cssVar);
             

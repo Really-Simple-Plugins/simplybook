@@ -117,7 +117,7 @@ class ThemeColorService
 
     /**
      * Extracts button and link colors from Global Styles elements
-     * For widget: primary=background, secondary=text, active=button
+     * For widget: primary=background, secondary=text, active=accent-1
      */
     private function getButtonColorsFromGlobalStyles(array $globalStyles): array
     {
@@ -133,20 +133,22 @@ class ThemeColorService
             $colors['secondary'] = $this->colorUtility->resolveColorToHex($globalStyles['color']['text']);
         }
 
-        // Extract button colors for active (button state)
-        if (isset($globalStyles['elements']['button']['color'])) {
-            $buttonColors = $globalStyles['elements']['button']['color'];
-            if (isset($buttonColors['background'])) {
-                $colors['active'] = $this->colorUtility->resolveColorToHex($buttonColors['background']);
-            }
-            if (isset($buttonColors['text'])) {
-                $colors['text'] = $this->colorUtility->resolveColorToHex($buttonColors['text']);
-            }
+        // For active color, prioritize accent-1 over button background
+        // This ensures we get the theme's primary accent color
+        $colors['active'] = $this->colorUtility->resolveColorToHex('var(--wp--preset--color--accent-1)');
+
+        // Extract button text color if available
+        if (isset($globalStyles['elements']['button']['color']['text'])) {
+            $colors['text'] = $this->colorUtility->resolveColorToHex($globalStyles['elements']['button']['color']['text']);
         }
 
-        // Extract link colors as fallback for active state
-        if (isset($globalStyles['elements']['link']['color']['text']) && !isset($colors['active'])) {
-            $colors['active'] = $this->colorUtility->resolveColorToHex($globalStyles['elements']['link']['color']['text']);
+        // If accent-1 couldn't be resolved, fall back to a button background
+        if ($colors['active'] === 'var(--wp--preset--color--accent-1)') {
+            if (isset($globalStyles['elements']['button']['color']['background'])) {
+                $colors['active'] = $this->colorUtility->resolveColorToHex($globalStyles['elements']['button']['color']['background']);
+            } elseif (isset($globalStyles['elements']['link']['color']['text'])) {
+                $colors['active'] = $this->colorUtility->resolveColorToHex($globalStyles['elements']['link']['color']['text']);
+            }
         }
 
         return $colors;
