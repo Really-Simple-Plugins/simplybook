@@ -15,7 +15,6 @@ class WidgetTrackingService
 	public const PAGES_WITH_WIDGET_OPTION = '_simplybook_pages_with_shortcode';
 	public const SHORTCODE_IDENTIFIER = 'simplybook_widget';
 	public const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
-	public const ELEMENTOR_WIDGET_IDENTIFIER = 'simplybook_widget';
 
 	private int $postId;
 	private \WP_Post $post;
@@ -208,7 +207,7 @@ class WidgetTrackingService
 	{
 		foreach ($elements as $element) {
 			// Check if this element is a SimplyBook widget
-			if (isset($element['widgetType']) && $element['widgetType'] === self::ELEMENTOR_WIDGET_IDENTIFIER) {
+			if (isset($element['widgetType']) && $element['widgetType'] === self::SHORTCODE_IDENTIFIER) {
 				return true;
 			}
 
