@@ -124,7 +124,7 @@ class ElementorWidget extends Widget_Base
     private function addLocationControl(): void
     {
         $client = App::provide('client');
-        if (!$client || !$client->isSpecialFeatureEnabled('locations')) {
+        if (!$client || !$client->isSpecialFeatureEnabled('location')) {
             return;
         }
 
