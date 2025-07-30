@@ -111,7 +111,7 @@ const useOnboardingData = () => {
                 try {
                     await httpClient.setRoute('onboarding/register_email').setPayload(data).post();
                 } catch (error) {
-                    setApiError(error.message || __("An error occurred while registering the email", "simplybook"));
+                    setApiError(error.message || __("An error occurred while registering the email.", "simplybook"));
                     return false;
                 }
 
