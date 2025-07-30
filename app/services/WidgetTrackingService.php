@@ -39,7 +39,7 @@ class WidgetTrackingService
 			);
 		}
 
-		return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER)
+		return $this->postHasShortcode()
 		       || $this->postHasGutenbergBlock()
 		       || $this->postHasElementorWidget();
 	}
@@ -153,6 +153,16 @@ class WidgetTrackingService
 		update_option(self::PAGES_WITH_WIDGET_OPTION, $posts);
 	}
 
+    /**
+     * Check if the post content contains the SimplyBook shortcode. This also
+     * tracks pages made with Elementor by users who use the Shortcode element
+     * instead of our custom block.
+     */
+    private function postHasShortcode(): bool
+    {
+        return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER);
+    }
+
 	/**
 	 * Check if the post content contains a SimplyBook Gutenberg block.
 	 */
@@ -185,7 +195,7 @@ class WidgetTrackingService
 
 		// Get Elementor data for this post
 		$elementorData = get_post_meta($this->postId, '_elementor_data', true);
-		
+
 		if (empty($elementorData)) {
 			return false;
 		}
