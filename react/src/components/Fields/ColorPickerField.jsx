@@ -1,9 +1,7 @@
-import {forwardRef, useEffect, useMemo, useState} from "react";
+import {forwardRef, useEffect, useState} from "react";
 import ColorPicker from "../Inputs/ColorPicker";
 import FieldWrapper from "../Forms/FieldWrapper";
 import * as Popover from '@radix-ui/react-popover';
-import useWaitForRegistrationCallback from "../../hooks/useWaitForRegistrationCallback";
-import debounce from "lodash.debounce"; // You can use lodash's debounce function
 
 /**
  * ColorPickerField component
