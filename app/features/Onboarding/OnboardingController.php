@@ -210,7 +210,7 @@ class OnboardingController implements FeatureInterface
      */
     public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
         $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
 
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
