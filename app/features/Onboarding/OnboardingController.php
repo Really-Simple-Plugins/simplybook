@@ -227,7 +227,7 @@ class OnboardingController implements FeatureInterface
         if (!$calendarPageIsAvailable) {
             return $this->service->sendHttpResponse([], false, esc_html__(
                 'Calendar page title should be available if you choose to generate this page.', 'simplybook'
-            ));
+            ), 503);
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
@@ -247,7 +247,7 @@ class OnboardingController implements FeatureInterface
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
-        ], $pageCreatedSuccessfully);
+        ], $pageCreatedSuccessfully, '', ($pageCreatedSuccessfully ? 200 : 400));
     }
 
     /**
@@ -404,6 +404,8 @@ class OnboardingController implements FeatureInterface
     /**
      * Method is used to finish the onboarding process. It is called when the
      * user has completed the onboarding process and wants to finish it.
+     *
+     * @param \WP_REST_Request $request Contains enitre onboarding data
      */
     public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -413,7 +415,7 @@ class OnboardingController implements FeatureInterface
         $success = $this->service->setOnboardingCompleted();
         if (!$success) {
             $message = esc_html__('An error occurred while finishing the onboarding process', 'simplybook');
-            $code = 500;
+            $code = 400;
         }
 
         return $this->service->sendHttpResponse([], $success, $message, $code);

@@ -3,8 +3,6 @@ import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
-import generatePages from "../api/endpoints/onBoarding/generatePages";
-import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
 import HttpClient from "../api/requests/HttpClient";
 
 const useOnboardingData = () => {
@@ -36,13 +34,15 @@ const useOnboardingData = () => {
      * and set the onboardingCompleted flag to true.
      */
     const handleManualImplementation = async (data) => {
-        let finishResponse = await finishOnboarding({data});
-        if (finishResponse.status !== "success") {
-            setApiError(finishResponse.message);
+        try {
+            await httpClient.setRoute('onboarding/finish_onboarding').setPayload(data).post();
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while finishing the onboarding.", "simplybook"));
             return false;
         }
 
         updateOnboardingCompleted(true);
+        setApiError('');
         return true;
     }
 
@@ -68,13 +68,15 @@ const useOnboardingData = () => {
             calendarPageUrl: data.calendarPageUrl,
         };
 
-        let pagesResponse = await generatePages({payload});
-        if (pagesResponse.status !== "success") {
-            setApiError(pagesResponse.message);
+        try {
+            await httpClient.setRoute('onboarding/generate_pages').setPayload(payload).post();
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while generating pages.", "simplybook"));
             return false;
         }
 
         updateOnboardingCompleted(true);
+        setApiError('');
         return true;
     }
 
