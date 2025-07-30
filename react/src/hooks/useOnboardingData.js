@@ -3,7 +3,6 @@ import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
-import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
 import generatePages from "../api/endpoints/onBoarding/generatePages";
 import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
 import HttpClient from "../api/requests/HttpClient";
@@ -235,11 +234,18 @@ const useOnboardingData = () => {
             id: 4,
             path: "/onboarding/style-widget",
             beforeSubmit: async (data) => {
-                await saveWidgetStyle({
-                    primary_color: data.primary_color,
-                    secondary_color: data.secondary_color,
-                    active_color: data.active_color,
-                });
+                try {
+                    await httpClient.setRoute('onboarding/save_widget_style').setPayload({
+                        primary_color: data.primary_color,
+                        secondary_color: data.secondary_color,
+                        active_color: data.active_color,
+                    }).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while saving the styles.", "simplybook"));
+                    return false;
+                }
+
+                setApiError('');
                 return true;
             },
             fields: [], // On purpose. All fields are in style-widget.lazy.jsx

@@ -196,7 +196,7 @@ class OnboardingController implements FeatureInterface
                 'message' => $e->getMessage(),
             ], false, esc_html__(
                 'Something went wrong while saving the widget style settings. Please try again.', 'simplybook'
-            ));
+            ), 400);
         }
 
         return $this->service->sendHttpResponse([], true, esc_html__(
