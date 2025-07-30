@@ -1,7 +1,6 @@
 import {useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import registerEmail from "../api/endpoints/onBoarding/registerEmail";
 import registerCompany from "../api/endpoints/onBoarding/registerCompany";
 import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
@@ -9,12 +8,15 @@ import { useState } from "react";
 import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
 import generatePages from "../api/endpoints/onBoarding/generatePages";
 import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
+import HttpClient from "../api/requests/HttpClient";
 
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
     const [apiError, setApiError] = useState("");
     const queryClient = useQueryClient();
     const { settings } = useSettingsData();
+
+    const httpClient = new HttpClient();
 
     // Fallback countries
     let mappedCountries = {
@@ -106,11 +108,14 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await registerEmail({ data });
-                if (response.status !== "success") {
-                    setApiError(response.message);
+                try {
+                    await httpClient.setRoute('onboarding/register_email').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while registering the email", "simplybook"));
                     return false;
                 }
+
+                setApiError('');
                 return true;
             },
         },
