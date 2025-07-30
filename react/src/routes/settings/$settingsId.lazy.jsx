@@ -88,6 +88,7 @@ function Settings() {
     }, []);
 
     useBlocker({
+        enableBeforeUnload: isDirty,
         shouldBlockFn: () => {
             if (!isDirty) {
                 return false; // Dont block
