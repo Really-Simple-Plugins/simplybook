@@ -1,8 +1,6 @@
 import {useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import registerCompany from "../api/endpoints/onBoarding/registerCompany";
-import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
 import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
@@ -199,12 +197,15 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await registerCompany({ data });
-                if (response?.status !== "success") {
-                    setApiError(response?.message ?? __('Unknown error encountered while registering your company. Please try again.', 'simplybook'));
+                try {
+                    await httpClient.setRoute('onboarding/company_registration').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while registering your company. Please try again.", "simplybook"));
                     return false;
                 }
-                setApiError("");
+
+                setApiError('');
+                return true;
             },
         },
         {
@@ -219,12 +220,14 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await confirmEmail({ data });
-                if (response.status !== "success") {
-                    setApiError(response.message);
+                try {
+                    await httpClient.setRoute('onboarding/confirm_email').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while confirming your email. Please try again.", "simplybook"));
                     return false;
                 }
-                setApiError("");
+
+                setApiError('');
                 return true;
             },
         },

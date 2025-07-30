@@ -127,7 +127,7 @@ class OnboardingController implements FeatureInterface
         if ($companyBuilder->isValid() === false) {
             return $this->service->sendHttpResponse([
                 'invalid_fields' => $companyBuilder->getInvalidFields(),
-            ], false, esc_html__('Please fill in all fields.', 'simplybook'));
+            ], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
@@ -137,7 +137,7 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->service->finishCompanyRegistration($response->data);
-        return $this->service->sendHttpResponse([], $response->success, $response->message);
+        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
     /**
@@ -168,11 +168,11 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('recaptchaToken')
             );
         } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
 
         $this->service->setCompletedStep(3);
-        return $this->service->sendHttpResponse([], $response->success, $response->message);
+        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
     /**
