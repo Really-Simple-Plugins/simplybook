@@ -7,9 +7,7 @@ import useSettingsData from "../../hooks/useSettingsData";
 import FormFieldWrapper from "../Forms/FormFieldWrapper";
 import {useEffect, useState} from "react";
 import Error from "../Errors/Error";
-import ButtonLink from "../Buttons/ButtonLink";
-import registerEmail from "../../api/endpoints/onBoarding/registerEmail";
-import retryOnboarding from "../../api/endpoints/onBoarding/retryOnboarding";
+import HttpClient from "../../api/requests/HttpClient";
 const OnboardingStep = ({
     path,
     title,
@@ -63,6 +61,8 @@ const OnboardingStep = ({
     const currentStep = getCurrentStep(path);
     const currentStepId = getCurrentStepId(path);
     const [disabled, setDisabled] = useState(!isValid);
+
+    const httpClient = new HttpClient();
 
     // Set disabled state based on isValid
     useEffect(() => {
@@ -162,12 +162,15 @@ const OnboardingStep = ({
      * back to step 1.
      */
     const restartOnboarding = async () => {
-        let response = await retryOnboarding();
-        if (response.status !== "success") {
-            setApiError(response.message);
+        try {
+            await httpClient.setRoute('onboarding/retry_onboarding').post();
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while restarting the onboarding.", "simplybook"));
             return false;
         }
+
         setOnboardingCompleted(false);
+        setApiError('');
         await navigate({to: getURLForStep(1)});
     }
 
