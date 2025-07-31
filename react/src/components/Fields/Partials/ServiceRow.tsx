@@ -91,8 +91,8 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                 onClick={onToggle}
             >
                 {/* Left side: Service info */}
-                <div className="flex items-center flex-1">
-                    <div className="text-sm font-medium text-gray-900">{service.name}</div>
+                <div className="flex items-center flex-1 max-w-2/3">
+                    <div className="text-sm font-medium text-gray-900 truncate">{service.name}</div>
                 </div>
 
                 {/* Right side: Actions */}
