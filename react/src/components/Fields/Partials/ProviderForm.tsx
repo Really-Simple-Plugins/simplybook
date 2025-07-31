@@ -9,7 +9,7 @@ type ProviderFormProps = {
         email: string,
         phone: string,
         qty: number,
-        description: string,
+        is_visible: boolean,
     },
     onChange: (type: string, target: string) => void,
     isLoading: boolean,
@@ -70,17 +70,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ formData, onChange, isLoadi
                     min="1"
                     value={formData.qty || 1}
                     onChange={(e) => onChange('qty', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service provider description', 'simplybook')}
-                </label>
-                <textarea
-                    value={formData.description || ''}
-                    onChange={(e) => onChange('description', e.target.value)}
-                    rows={3}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
