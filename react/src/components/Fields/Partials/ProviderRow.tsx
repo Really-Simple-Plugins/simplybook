@@ -92,8 +92,8 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                 onClick={onToggle}
             >
                 {/* Left side: Provider info */}
-                <div className="flex items-center flex-1">
-                    <div className="text-sm font-medium text-gray-900">{provider.name}</div>
+                <div className="flex items-center flex-1 max-w-2/3">
+                    <div className="text-sm font-medium text-gray-900 truncate">{provider.name}</div>
                 </div>
 
                 {/* Right side: Actions */}
