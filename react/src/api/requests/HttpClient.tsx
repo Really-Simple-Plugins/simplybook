@@ -34,135 +34,79 @@ class HttpClient {
     /**
      * Performs a GET request.
      * @returns The response data in JSON format.
-     * @throws An error if the response is not ok or route is not set.
+     * @throws Error if the response is not ok or route is not set.
      */
     async get() {
         if (!this.route) {
             throw new Error(__('Route is not set', 'simplybook'));
         }
 
-        return await fetch(this.route, {
+        const response = await fetch(this.route, {
             method: 'GET',
             headers: this.getMethodHeaders,
-        }).then(async (response) => {
-            console.log(response);
-            return {
-                json: await response.json().then((json) => (json)),
-                ok: response.ok,
-            }
-        }).then((response) => {
-            if (!response.ok){
-                return this.handleError(response.json);
-            }
-            return response.json;
-        }).catch((error) => {
-            return this.handleError(error);
         });
+        if (!response.ok) {
+            const errorData = await response.json();
+            return this.handleError(errorData);
+        }
+        return response.json();
 
-
-        // const response = await fetch(this.route, {
-        //     method: 'GET',
-        //     headers: this.getMethodHeaders,
-        // });
-        // if (!response.ok) {
-        //     let errorData;
-        //     try {
-        //         errorData = await response.json();
-        //     } catch (e) {
-        //         // If JSON parsing fails, response is likely HTML (PHP error)
-        //         const htmlText = await response.text();
-        //         throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
-        //     }
-        //     return this.handleError(errorData);
-        // }
-        // try {
-        //     return await response.json();
-        // } catch (e) {
-        //     // If JSON parsing fails, response is likely HTML (PHP error)
-        //     const message = e instanceof Error ? e.message : 'Unknown error';
-        //     throw new Error(`Invalid JSON response: ${message}`);
-        // }
     }
 
     /**
      * Performs a POST request.
-     * @param route - The API route or body data if route is already set.
      * @param data - The body of the POST request.
      * @returns The response data in JSON format.
-     * @throws An error if the response is not ok or route is not set.
+     * @throws Error if the response is not ok or route is not set.
      */
     async post(data?: any) {
-        console.log(this.route);
         if (!this.route) {
             throw new Error(__('Route is not set', 'simplybook'));
         }
 
-        const payload = data ?? this.payload;
-        if (!payload) {
-            throw new Error(__('Payload is not set', 'simplybook'));
+        if (!data) {
+            throw new Error(__('No data provided', 'simplybook'));
         }
 
-        return await fetch(this.route, {
+        const payload = {
+            ...this.payload,
+            ...(data && {...data}),
+        };
+
+        const response = await fetch(this.route, {
             method: 'POST',
             headers: this.postMethodHeaders,
             body: JSON.stringify({
                 ...payload,
                 nonce: NONCE,
             }),
-        }).then(async (response) => {
-            return {
-                json: await response.json().then((json) => (json)),
-                ok: response.ok,
-            }
-        }).then((response) => {
-            if (!response.ok){
-                return this.handleError(response.json);
-            }
-            return response.json;
-        }).catch((error) => {
-            return this.handleError(error);
         });
 
-
-        // const response = await fetch(this.route, {
-        //     method: 'POST',
-        //     headers: this.postMethodHeaders,
-        //     body: JSON.stringify({
-        //         ...payload,
-        //         nonce: NONCE,
-        //     }),
-        // });
-        // if (!response.ok) {
-        //     let errorData;
-        //     try {
-        //         errorData = await response.json();
-        //     } catch (e) {
-        //         // If JSON parsing fails, response is likely HTML (PHP error)
-        //         const htmlText = await response.text();
-        //         throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
-        //     }
-        //     return this.handleError(errorData);
-        // }
-        // try {
-        //     return await response.json();
-        // } catch (e) {
-        //     // If JSON parsing fails, response is likely HTML (PHP error)
-        //     const message = e instanceof Error ? e.message : 'Unknown error';
-        //     throw new Error(`Invalid JSON response: ${message}`);
-        // }
+        if (!response.ok) {
+            const errorData = await response.json();
+            return this.handleError(errorData);
+        }
+        return response.json();
     }
 
     /**
      * Performs a PUT request.
+     * @param data - The body of the POST request.
+     * @returns The response data in JSON format.
+     * @throws Error if the response is not ok or route is not set.
      */
     async put(data: any) {
         if (!this.route) {
             throw new Error(__('Route is not set. Use setRoute() before calling put()', 'simplybook'));
         }
 
+        if (!data) {
+            throw new Error(__('No data provided', 'simplybook'));
+        }
+
         const payload = {
-            ...data,
-            nonce: NONCE,
+            ...this.payload,
+            ...(data && {...data}),
         };
 
         const response = await fetch(this.route, {
@@ -170,28 +114,18 @@ class HttpClient {
             headers: this.postMethodHeaders,
             body: JSON.stringify(payload),
         });
+
         if (!response.ok) {
-            let errorData;
-            try {
-                errorData = await response.json();
-            } catch (e) {
-                // If JSON parsing fails, response is likely HTML (PHP error)
-                const htmlText = await response.text();
-                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
-            }
+            const errorData = await response.json();
             return this.handleError(errorData);
         }
-        try {
-            return await response.json();
-        } catch (e) {
-            // If JSON parsing fails, response is likely HTML (PHP error)
-            const message = e instanceof Error ? e.message : 'Unknown error';
-            throw new Error(`Invalid JSON response: ${message}`);
-        }
+        return response.json();
     }
 
     /**
      * Performs a DELETE request.
+     * @returns The response data in JSON format.
+     * @throws Error if the response is not ok or route is not set.
      */
     async delete() {
         if (!this.route) {
@@ -207,24 +141,12 @@ class HttpClient {
             headers: this.postMethodHeaders,
             body: JSON.stringify(payload),
         });
+
         if (!response.ok) {
-            let errorData;
-            try {
-                errorData = await response.json();
-            } catch (e) {
-                // If JSON parsing fails, response is likely HTML (PHP error)
-                const htmlText = await response.text();
-                throw new Error(`Server error (${response.status}): ${htmlText.substring(0, 100)}...`);
-            }
+            const errorData = await response.json();
             return this.handleError(errorData);
         }
-        try {
-            return await response.json();
-        } catch (e) {
-            // If JSON parsing fails, response is likely HTML (PHP error)
-            const message = e instanceof Error ? e.message : 'Unknown error';
-            throw new Error(`Invalid JSON response: ${message}`);
-        }
+        return response.json();
     }
 
     /**
@@ -274,6 +196,12 @@ class HttpClient {
             ...payload,
         };
         return this;
+    }
+
+    private resetPayload() {
+        this.payload = {
+            'nonce': NONCE,
+        }
     }
 
     /**
