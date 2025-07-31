@@ -183,10 +183,6 @@ const ServicesListField = ({  }) => {
         setFormData({
             name: '',
             description: '',
-            price: '',
-            deposit_price: '',
-            tax_id: '',
-            duration: '',
             is_visible: true
         });
         setHasUnsavedChanges(false);

@@ -210,7 +210,6 @@ const ProvidersListField = ({  }) => {
         setIsCreatingNew(true);
         setFormData({
             name: '',
-            description: '',
             qty: 1,
             email: '',
             phone: '',
