@@ -18,7 +18,6 @@ type ProviderRowProps = {
         email: string,
         phone: string,
         qty: number,
-        description: string,
         is_visible: boolean
     },
     onChange: (type: string, target: string) => void,
