@@ -1,5 +1,6 @@
 import {X_WP_NONCE, NONCE, SB_API_URL} from '../config';
 import {__} from "@wordpress/i18n";
+import { DataError } from "../helpers/DataError";
 
 /**
  * HttpClient class to handle HTTP requests.
@@ -281,7 +282,13 @@ class HttpClient {
      * @throws An error with a message.
      */
     private handleError(errorData: any) {
-        let error = __('An error occurred', 'simplybook');
+        console.log("errordata", errorData);
+        let error = __('An unknown error occurred. Please try again.', 'simplybook');
+        let fields;
+
+        if (errorData?.code === 'internal_server_error') {
+            throw new Error(error);
+        }
 
         if (typeof errorData === 'string') {
             error = errorData;
@@ -295,7 +302,11 @@ class HttpClient {
             error = errorData.error;
         }
 
-        throw new Error(error);
+        if (errorData?.data?.data) {
+            fields = errorData.data.data;
+        }
+
+        throw new DataError(error, fields);
     }
 }
 
