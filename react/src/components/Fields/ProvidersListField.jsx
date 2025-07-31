@@ -62,7 +62,7 @@ const ProvidersListField = ({  }) => {
         } else {
             setCrudContext(null);
         }
-    }, [isCreatingNew, editingProvider, isCreating, isUpdating, hasUnsavedChanges, setCrudContext]);
+    }, [isCreatingNew, editingProvider, isCreating, isUpdating, hasUnsavedChanges]);
 
     const toggleRow = useCallback((providerId, provider) => {
         // Don't allow expanding/editing providers when creating a new one

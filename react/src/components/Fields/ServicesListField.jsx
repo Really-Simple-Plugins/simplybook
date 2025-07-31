@@ -64,7 +64,7 @@ const ServicesListField = ({  }) => {
         } else {
             setCrudContext(null);
         }
-    }, [isCreatingNew, editingService, isCreating, isUpdating, hasUnsavedChanges, setCrudContext]);
+    }, [isCreatingNew, editingService, isCreating, isUpdating, hasUnsavedChanges]);
 
     const toggleRow = useCallback((serviceId, service) => {
         // Don't allow expanding/editing services when creating a new one
