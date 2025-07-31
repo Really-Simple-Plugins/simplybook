@@ -33,7 +33,7 @@ function Settings() {
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
 
-    const { crudContext } = useCrudContext();
+    // const { crudContext } = useCrudContext();
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -68,7 +68,7 @@ function Settings() {
     // that form values still contain data from a different settings tab.
     useEffect(() => {
         reset(currentFormValues);
-    }, [settingsId, currentFormValues, reset]);
+    }, [settingsId]);
 
     useBlocker({
         shouldBlockFn: () => {
@@ -157,7 +157,7 @@ function Settings() {
                             });
                         })}
                         control={control}
-                        showSettingsButtons={!crudContext}
+                        // showSettingsButtons={!crudContext}
                     />
                 )}
             </form>
