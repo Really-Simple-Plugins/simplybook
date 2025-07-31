@@ -95,11 +95,16 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             $this->entity->create(
                 $request->all()
             );
-        } catch (\Throwable $e) {
+        } catch (RestDataException $e) {
+            return $this->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
+        } catch (\InvalidArgumentException $e) {
             return $this->sendHttpResponse([], false, $e->getMessage(), 400);
+        } catch (\Throwable $e) {
+            return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
         }
 
         return $this->sendHttpResponse();
+//        return WP_ERROR;
     }
 
     /**
@@ -155,14 +160,23 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         try {
             $this->entity->fill($request->all());
             $this->entity->update();
+        } catch (RestDataException $e) {
+            return $this->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
+        } catch (\InvalidArgumentException $e) {
+            return $this->sendHttpResponse([], false, $e->getMessage(), 400);
         } catch (\Throwable $e) {
-            $data = ($e instanceof RestDataException) ? $e->getData() : ['error' => $e->getMessage()];
-            return $this->sendHttpResponse($data, false, esc_html__(
-                'Something went wrong while updating.', 'simplybook'
-            ), 400);
+            return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
         }
 
+//        catch (\Throwable $e) {
+//            $data = ($e instanceof RestDataException) ? $e->getData() : ['error' => $e->getMessage()];
+//            return $this->sendHttpResponse($data, false, esc_html__(
+//                'Something went wrong while updating.', 'simplybook'
+//            ), 400);
+//        }
+
         return $this->sendHttpResponse();
+//        return WP_ERROR;added better error handling
     }
 
     /**

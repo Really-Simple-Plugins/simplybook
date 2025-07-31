@@ -1610,13 +1610,13 @@ class ApiClient
         $responseBody = wp_remote_retrieve_body($response);
         $responseData = is_array($responseBody) ? $responseBody : json_decode($responseBody, true);
 
-        if ($responseCode !== 200) {
+        if (!($responseCode >= 200 && $responseCode < 300)) {
             throw (new RestDataException("HTTP Error {$responseCode}"))
                 ->setResponseCode($responseCode)
-                ->setData($responseData);
+                ->setData($responseData ?: []);
         }
 
-        return json_decode($responseBody, true);
+        return $responseData ?: [];
     }
 
     /**
