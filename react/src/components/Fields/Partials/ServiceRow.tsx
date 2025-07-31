@@ -14,11 +14,7 @@ type Service = {
 type ServiceRowProps = {
     formData: {
         name: string,
-        price: string,
-        deposit_price: string,
         duration: string,
-        tax_id: string,
-        description: string,
         is_visible: boolean,
     },
     onChange: (type: string, target: string) => void,
@@ -49,7 +45,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
     visibilityOverrides,
     onVisibilityChange,
     isLoading,
-    error
+    error,
 }) => {
 
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
