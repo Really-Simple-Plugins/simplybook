@@ -1,5 +1,8 @@
 <?php
 if (!function_exists('simplybookMePl_getAllowedHtmlEntities')) {
+    /**
+     * @deprecated 3.2.0
+     */
     function simplybookMePl_getAllowedHtmlEntities() {
         $allowedEnt = array(
             'a'=>array('href'=>array(),'title'=>array(),'target'=>array(), 'role'=>array(), 'aria-expanded'=>array(), 'data-target'=>array(), 'data-toggle'=>array(),),
@@ -49,17 +52,11 @@ if (!function_exists('simplybookMePl_getAllowedHtmlEntities')) {
 
 if (!function_exists('simplybook_is_wp_json_request')) {
     /**
-     * Check if the current request is a WP JSON request. This is better than
-     * the WordPress native function `wp_is_json_request()`, because that
-     * returns false when visiting /wp-json/ or ?rest_route= (for plain
-     * permalinks) endpoint. We need a rue value there to activate features that
-     * register REST routes. For example
-     * {@see \SimplyBook\Features\Onboarding\OnboardingController}
+     * Check if the current request is a WP JSON request.
      *
-     * @internal Ignore the phpcs errors for this method, as they are false
-     * positives. We do not actually use the $_GET or $_SERVER variables
-     * directly, but we need to check if they are set and contain the
-     * expected values.
+     * @deprecated 3.2.0 Was only used internally in {@see /config/features.php}
+     * and is therefor moved to
+     * {@see \SimplyBook\Helpers\FeatureHelper::requestIsRestRequest}
      */
     function simplybook_is_wp_json_request(): bool {
         $restUrlPrefix = trailingslashit(rest_get_url_prefix());
