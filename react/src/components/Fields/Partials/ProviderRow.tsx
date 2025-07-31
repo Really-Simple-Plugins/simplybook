@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { __ } from '@wordpress/i18n';
+import { DataError } from "../../../api/helpers/DataError";
 
 type Provider = {
     id: number,
@@ -22,9 +23,7 @@ type ProviderRowProps = {
     },
     onChange: (type: string, target: string) => void,
     isLoading: boolean,
-    error: {
-        message: string,
-    },
+    error: DataError,
     provider: Provider,
     providers: Provider[],
     isExpanded: boolean,
