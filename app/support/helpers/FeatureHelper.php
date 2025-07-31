@@ -96,12 +96,13 @@ class FeatureHelper
      */
     private static function userIsOnDashboard(): bool
     {
-        if (!isset($_SERVER['REQUEST_SCHEME'], $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI'])) {
-            return false;
-        }
+        $pageVisitedByUser = App::provide('request')->getString('page');
 
-        $requestUrl = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-        return $requestUrl === App::env('plugin.dashboard_url');
+        $simplybookPageComponents = wp_parse_url(App::env('plugin.dashboard_url'), PHP_URL_QUERY);
+        parse_str($simplybookPageComponents, $parsedQuery);
+        $simplybookDashboardPage = ($parsedQuery['page'] ?? '');
+
+        return $pageVisitedByUser === $simplybookDashboardPage;
     }
 
     /**
