@@ -1,6 +1,7 @@
 import React from "react";
 import LoginLink from '../../Common/LoginLink';
 import { __ } from '@wordpress/i18n';
+import { DataError } from "../../../api/helpers/DataError";
 
 type ProviderFormProps = {
     formData: {
@@ -12,9 +13,7 @@ type ProviderFormProps = {
     },
     onChange: (type: string, target: string) => void,
     isLoading: boolean,
-    error: {
-        message: string,
-    },
+    error: DataError,
     providerId: number,
 }
 
