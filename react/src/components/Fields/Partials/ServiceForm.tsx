@@ -5,11 +5,8 @@ import { __ } from "@wordpress/i18n";
 type ServiceFormProps = {
     formData: {
         name: string,
-        price: string,
-        deposit_price: string,
         duration: string,
-        tax_id: string,
-        description: string,
+        is_visible: boolean,
     },
     onChange: (type: string, target: string) => void,
     isLoading: boolean,
@@ -26,7 +23,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ formData, onChange, isLoading
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Service name', 'simplybook')} *
                 </label>
@@ -38,33 +35,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ formData, onChange, isLoading
                     required
                 />
             </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service price', 'simplybook')}
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.price || ''}
-                    onChange={(e) => onChange('price', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service deposit price', 'simplybook')}
-                </label>
-                <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.deposit_price || ''}
-                    onChange={(e) => onChange('deposit_price', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div>
+            <div className="col-span-full">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                     {__('Service duration (minutes)', 'simplybook')}
                 </label>
@@ -75,28 +46,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ formData, onChange, isLoading
                     onChange={(e) => onChange('duration', e.target.value)}
                     className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="60"
-                />
-            </div>
-            <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Tax ID', 'simplybook')}
-                </label>
-                <input
-                    type="text"
-                    value={formData.tax_id || ''}
-                    onChange={(e) => onChange('tax_id', e.target.value)}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-            </div>
-            <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service description', 'simplybook')}
-                </label>
-                <textarea
-                    value={formData.description || ''}
-                    onChange={(e) => onChange('description', e.target.value)}
-                    rows={3}
-                    className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
             </div>
             {/* Edit All Properties Button */}
