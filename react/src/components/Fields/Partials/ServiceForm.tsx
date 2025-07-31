@@ -1,6 +1,7 @@
 import React from "react";
 import LoginLink from "../../Common/LoginLink";
 import { __ } from "@wordpress/i18n";
+import useSpecialFeaturesData from "../../../hooks/useSpecialFeaturesData";
 
 type ServiceFormProps = {
     formData: {
@@ -17,6 +18,8 @@ type ServiceFormProps = {
 }
 
 const ServiceForm: React.FC<ServiceFormProps> = ({ formData, onChange, isLoading, error, serviceId }) => {
+    const { isPluginActive } = useSpecialFeaturesData();
+
     if (!formData) {
         return <div className="text-gray-500">Loading...</div>;
     }
