@@ -27,8 +27,8 @@ class FeatureHelper
 
     /**
      * Method is used to check if a feature is in scope. It will process the
-     * feature name and searches for a method that check if the feature is in
-     * scope. It used format: is{FeatureName}InScope. Where FeatureName is the
+     * feature name and searches for a method that checks if the feature is in
+     * scope. It uses format: is{FeatureName}InScope. Where FeatureName is the
      * name of the feature in snake_case.
      */
     public static function inScope(string $feature): bool
