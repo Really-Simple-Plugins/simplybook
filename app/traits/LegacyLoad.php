@@ -163,7 +163,7 @@ trait LegacyLoad {
 			return '';
 		}
 
-        // Decrypt with 32 byte key and forcefully no padded key.
+        // Decrypt with forcefully non-padded, 32 byte key
 		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
 
         // Fallback to legacy key, maybe encryption was done with the old one.
