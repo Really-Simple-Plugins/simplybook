@@ -117,12 +117,12 @@ trait LegacyHelper
 	public function encrypt_string($string): string
 	{
 		//@todo: use a different key for each wordpress setup
-		$key = '7*w$9pumLw5koJc#JT6';
+        $key = hash('sha256', '7*w$9pumLw5koJc#JT6', true);
 		$ivLength = openssl_cipher_iv_length('AES-256-CBC');
 		$iv = openssl_random_pseudo_bytes($ivLength);
 
 		// Use OPENSSL_RAW_DATA for new v2 tokens
-		$encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+		$encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
 
 		// Format: v2:base64(iv).base64(encrypted)
 		return 'v2:' . base64_encode($iv) . '.' . base64_encode($encrypted);

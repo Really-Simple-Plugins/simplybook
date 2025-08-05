@@ -118,12 +118,11 @@ trait LegacyLoad {
 	 */
 	public function decrypt_string($encrypted_string): string
 	{
-
 		if (empty($encrypted_string)) {
 			return '';
 		}
 
-		$key = '7*w$9pumLw5koJc#JT6';
+        $key = hash('sha256', '7*w$9pumLw5koJc#JT6', true);
 
 		// Check if it's a v2 token (new format)
 		if (strpos($encrypted_string, 'v2:') === 0) {
@@ -145,8 +144,10 @@ trait LegacyLoad {
 	 *
 	 * @since 3.1
 	 */
-	private function decrypt_string_v2(string $encrypted_string, string $key): string {
+	private function decrypt_string_v2(string $encrypted_string, string $key): string
+    {
 		$parts = explode('.', substr($encrypted_string, 3), 2);
+
 		if (count($parts) !== 2) {
 			$this->log("v2 token: invalid format — missing iv or ciphertext part.");
 			return '';
@@ -160,7 +161,7 @@ trait LegacyLoad {
 			return '';
 		}
 
-		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA, $iv);
+		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
 
 		if ($decrypted === false) {
 			$this->log("v2 token: openssl decryption failed.");
