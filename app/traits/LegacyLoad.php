@@ -122,14 +122,15 @@ trait LegacyLoad {
 			return '';
 		}
 
-        $key = hash('sha256', '7*w$9pumLw5koJc#JT6', true);
+        $legacyKey = '7*w$9pumLw5koJc#JT6';
+        $key = hash('sha256', $legacyKey, true);
 
 		// Check if it's a v2 token (new format)
 		if (strpos($encrypted_string, 'v2:') === 0) {
-			return $this->decrypt_string_v2($encrypted_string, $key);
+			return $this->decrypt_string_v2($encrypted_string, $key, $legacyKey);
 		}
 
-		return $this->decrypt_legacy_string($encrypted_string, $key);
+		return $this->decrypt_legacy_string($encrypted_string, $legacyKey);
 	}
 
 	/**
@@ -142,9 +143,10 @@ trait LegacyLoad {
 	 * @param string $encrypted_string The v2 format encrypted token (prefixed with "v2:").
 	 * @return string The decrypted token if valid, or an empty string if decryption fails.
 	 *
-	 * @since 3.1
+	 * @since 3.1.0
+     * @since 3.2.0 Added OPENSSL_DONT_ZERO_PAD_KEY when non-legacy key is used.
 	 */
-	private function decrypt_string_v2(string $encrypted_string, string $key): string
+	private function decrypt_string_v2(string $encrypted_string, string $key, string $legacyKey): string
     {
 		$parts = explode('.', substr($encrypted_string, 3), 2);
 
@@ -161,9 +163,16 @@ trait LegacyLoad {
 			return '';
 		}
 
+        // Decrypt with 32 byte key and forcefully no padded key.
 		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
 
-		if ($decrypted === false) {
+        // Fallback to legacy key, maybe encryption was done with the old one.
+        if (empty($decrypted)) {
+		    $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $legacyKey, OPENSSL_RAW_DATA, $iv);
+        }
+
+        // Still empty, abort.
+		if (empty($decrypted)) {
 			$this->log("v2 token: openssl decryption failed.");
 			return '';
 		}
