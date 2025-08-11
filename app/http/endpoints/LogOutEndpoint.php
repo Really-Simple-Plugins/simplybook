@@ -47,6 +47,10 @@ class LogOutEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
+        if ($request->get_param('user_confirmed') === false) {
+            return $this->sendHttpResponse([], true, esc_html__('User prevented logout.', 'simplybook'));
+        }
+
         $success = $this->delete_all_options();
         $message = esc_html__('User is logged out and will be redirected to onboarding.', 'simplybook');
         if (!$success) {
