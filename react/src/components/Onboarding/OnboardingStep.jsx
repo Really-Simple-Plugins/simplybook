@@ -163,7 +163,9 @@ const OnboardingStep = ({
      */
     const restartOnboarding = async () => {
         try {
-            await httpClient.setRoute('onboarding/retry_onboarding').post();
+            await httpClient.setRoute('onboarding/retry_onboarding').setPayload({
+                user_confirmed: true,
+            }).post();
         } catch (error) {
             setApiError(error.message || __("An error occurred while restarting the onboarding.", "simplybook"));
             return false;
