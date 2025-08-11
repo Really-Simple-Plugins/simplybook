@@ -102,7 +102,7 @@ class OnboardingController implements FeatureInterface
      */
     public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         $companyBuilder = (new CompanyBuilder())->buildFromArray(
             $storage->all()
@@ -147,7 +147,7 @@ class OnboardingController implements FeatureInterface
     public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $error = '';
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         if ($storage->isEmpty('recaptchaToken')) {
             // wp_kses_post to allow apostrophe in the message
@@ -221,7 +221,7 @@ class OnboardingController implements FeatureInterface
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'payload');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
