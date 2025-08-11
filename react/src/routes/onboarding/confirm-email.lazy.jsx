@@ -22,7 +22,7 @@ export const Route = createLazyFileRoute(path)({
         const httpClient = new HttpClient();
 
         const getRecaptchaSiteKey = async (attempt = 1) => {
-            const response = await httpClient.setRoute('onboarding/get_recaptcha_sitekey').post();
+            const response = await httpClient.setRoute('onboarding/get_recaptcha_sitekey').get();
 
             if (response?.data?.site_key) {
                 setSiteKey(response.data.site_key);

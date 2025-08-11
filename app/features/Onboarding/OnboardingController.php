@@ -44,7 +44,7 @@ class OnboardingController implements FeatureInterface
         ];
 
         $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'POST',
+            'methods' => 'GET',
             'callback' => [$this->service, 'getRecaptchaSitekey'],
         ];
 
