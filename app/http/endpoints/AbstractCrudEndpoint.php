@@ -6,6 +6,7 @@ use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Http\Entities\AbstractEntity;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Exceptions\FormException;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 abstract class AbstractCrudEndpoint implements MultiEndpointInterface
@@ -161,14 +162,17 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             $this->entity->update();
         } catch (RestDataException $e) {
             return $this->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
-        } catch (\InvalidArgumentException $e) {
-            return $this->sendHttpResponse([], false, $e->getMessage(), 400);
+        } catch (FormException $e) {
+            return new \WP_REST_Response([
+                'message' => $e->getMessage(),
+                'errors' => $e->getErrors()
+            ], 403);
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
         }
 
-
-        return $this->sendHttpResponse($this->entity->attributes());
+        $successMessage = $this->entity->name . ' ' . esc_html__('successfully saved!', 'simplybook');
+        return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
     /**

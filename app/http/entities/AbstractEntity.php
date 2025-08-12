@@ -5,6 +5,7 @@ use SimplyBook\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Exceptions\FormException;
 
 abstract class AbstractEntity
 {
@@ -223,27 +224,29 @@ abstract class AbstractEntity
 
     /**
      * Validate the required attributes of the entity.
-     * @throws \InvalidArgumentException
+     * @throws FormException
      */
     public function validate(): bool
     {
-        $invalid = [];
+        $errors = [];
 
         if ($this->exists()) {
             $this->required[] = $this->primaryKey;
         }
 
         foreach ($this->required as $attribute) {
-            if (!isset($this->attributes[$attribute])
-                || ($this->attributes[$attribute] === null || $this->attributes[$attribute] === '')) {
-                    $invalid[] = $attribute;
+            $requiredFieldIsEmpty = (
+                !isset($this->attributes[$attribute])
+                || ($this->attributes[$attribute] === null || $this->attributes[$attribute] === '')
+            );
+
+            if ($requiredFieldIsEmpty) {
+                $errors[$attribute] = esc_html__('Field is required.', 'simplybook');
             }
         }
 
-        if (!empty($invalid)) {
-            throw new \InvalidArgumentException(
-                sprintf('The following required attributes are missing or empty: %s', implode(', ', $invalid))
-            );
+        if (!empty($errors)) {
+            throw (new FormException())->setErrors($errors);
         }
 
         return true;
@@ -372,7 +375,7 @@ abstract class AbstractEntity
     /**
      * Update the entity in the SimplyBook API. Exceptions should be handled
      * by the caller for specific error handling.
-     * @throws \InvalidArgumentException|RestDataException
+     * @throws FormException|RestDataException
      * @internal Override this method if you want to customize the logic.
      */
     public function update(): bool
