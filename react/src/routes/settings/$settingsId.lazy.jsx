@@ -8,7 +8,7 @@ import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 import ToastNotice from "../../components/Errors/ToastNotice";
-import { useCrudContext, CrudContextProvider } from "../../context/CrudContext";
+import { CrudContextProvider } from "../../context/CrudContext";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -32,8 +32,6 @@ function Settings() {
     const { settings, saveSettings } = useSettingsData();
     const { currentForm } = useSettingsMenu();
     const toastNotice = new ToastNotice();
-
-    // const { crudContext } = useCrudContext();
 
     const currentFormFields = useMemo(
         () => settings.filter((setting) => setting.menu_id === settingsId),
@@ -157,7 +155,7 @@ function Settings() {
                             });
                         })}
                         control={control}
-                        // showSettingsButtons={!crudContext}
+                        showSettingsButtons={formHasSettings}
                     />
                 )}
             </form>
