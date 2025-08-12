@@ -234,8 +234,9 @@ abstract class AbstractEntity
         }
 
         foreach ($this->required as $attribute) {
-            if (!isset($this->attributes[$attribute]) || empty($this->attributes[$attribute])) {
-                $invalid[] = $attribute;
+            if (!isset($this->attributes[$attribute])
+                || ($this->attributes[$attribute] === null || $this->attributes[$attribute] === '')) {
+                    $invalid[] = $attribute;
             }
         }
 
