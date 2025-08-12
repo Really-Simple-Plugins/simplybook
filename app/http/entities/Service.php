@@ -52,11 +52,12 @@ class Service extends AbstractEntity
     }
 
     /**
-     * Sanitize the service ID as a text field.
+     * Ensure the service ID is a non-negative integer
      */
-    public function setIdAttribute($value): string
+    public function setIdAttribute($value): int
     {
-        return sanitize_text_field($value);
+        $id = intval($value);
+        return max(1, $id); // Ensure non-negative
     }
 
     /**

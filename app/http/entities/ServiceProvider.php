@@ -55,11 +55,12 @@ class ServiceProvider extends AbstractEntity
     }
 
     /**
-     * Sanitize the provider ID as a text field.
+     * Ensure the provider ID is a non-negative integer
      */
-    public function setIdAttribute($value): string
+    public function setIdAttribute($value): int
     {
-        return sanitize_text_field($value);
+        $id = intval($value);
+        return max(1, $id); // Ensure non-negative
     }
 
     /**
