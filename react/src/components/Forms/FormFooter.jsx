@@ -13,6 +13,7 @@ const FormFooter = ({
     onSubmit,
     control,
     getValues,
+    settingsFormHeight,
 }) => {
     const settingsFormState = control ? useFormState({ control }) : {};
     const {
@@ -85,14 +86,14 @@ const FormFooter = ({
 
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
-            <FormScrollProgressLine />
+            <FormScrollProgressLine settingsFormHeight={settingsFormHeight} />
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
                     <p className={`text-sm flex items-center gap-2 p-0 m-0 mr-2`}>
                         {currentState.message}
                     </p>
                 )}
-                
+
                 {/* Settings context buttons */}
                 {!crudState.itemType && (
                     <>
@@ -111,7 +112,7 @@ const FormFooter = ({
                         </ButtonLink>
                     </>
                 )}
-                
+
                 {/* CRUD context buttons */}
                 {crudState.itemType && (
                     <>

@@ -80,26 +80,25 @@ const formLogin = ({
                 data
             });
 
-            let response = request?.data;
+            if (request?.data && ('require2fa' in request.data) && (request.data.require2fa === true)) {
 
-            if (response?.data && ('require2fa' in response.data) && (response.data.require2fa === true)) {
-
-                setAuthSessionId(response.data.auth_session_id);
-                setCompanyLogin(response.data.company_login);
-                setUserLogin(response.data.user_login);
-                setDomain(response.data.domain);
-                setTwoFaProviders(response.data.allowed2fa_providers);
+                setAuthSessionId(request.data.auth_session_id);
+                setCompanyLogin(request.data.company_login);
+                setUserLogin(request.data.user_login);
+                setDomain(request.data.domain);
+                setTwoFaProviders(request.data.allowed2fa_providers);
 
                 setRequire2fa(true);
 
                 return;
             }
 
-            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+            window.location.assign(simplybook.dashboard_url);
 
         } catch (error) {
             setErrorMessage((error?.message ?? __('An unknown error occurred, please try again.', 'simplybook')));
-            console.log(error); // Still log the error
+            console.error('SimplyBook.me API error: ' + error?.data?.response_message);
+            console.log(error); // Still log the full error
         }
     };
 
