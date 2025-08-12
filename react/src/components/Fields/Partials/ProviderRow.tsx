@@ -1,99 +1,101 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ProviderForm from "./ProviderForm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChevronDown, faTrash } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { __ } from '@wordpress/i18n';
-import { DataError } from "../../../api/helpers/DataError";
-
-type Provider = {
-    id: number,
-    is_visible: boolean,
-    name: string,
-}
+import { useCrudContext } from "../../../context/CrudContext";
+import Provider from "../../../types/Provider";
+import useDomainData from "../../../hooks/useDomainData";
 
 type ProviderRowProps = {
-    formData: {
-        name: string,
-        email: string,
-        phone: string,
-        qty: number,
-        is_visible: boolean
-    },
-    onChange: (type: string, target: string) => void,
-    isLoading: boolean,
-    error: DataError,
     provider: Provider,
     providers: Provider[],
-    isExpanded: boolean,
-    isEditing: boolean,
-    isCreatingNew: boolean,
-    onToggle: () => void,
-    onDelete: () => void,
-    visibilityOverrides: [],
-    onVisibilityChange: (checked: boolean) => void,
+    isLoading: boolean,
 }
 
 const ProviderRow: React.FC<ProviderRowProps> = ({
      provider,
      providers,
-     isExpanded,
-     isEditing,
-     isCreatingNew,
-     onToggle,
-     onDelete,
-     formData,
-     onChange,
-     visibilityOverrides,
-     onVisibilityChange,
      isLoading,
-     error
 }) => {
+    const { crudState, dispatch, handleDeletingItem } = useCrudContext();
+    const { domain } = useDomainData();
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [isProviderVisible, setIsProviderVisible] = useState(false);
+    const [isOnlyVisibleProvider, setIsOnlyVisibleProvider] = useState(false);
+    const [isDeleteDisabled, setIsDeleteDisabled] = useState(providers.length <= 1);
+    const [providerHasErrors, setProviderHasErrors] = useState(false);
+
+    const hasPicture = provider.picture_preview && provider.picture_preview.length > 0;
+
+    useEffect(() => {
+        const isCurrentlyVisible = crudState.currentlyVisibleProviders?.find((id) => id === provider.id);
+        setIsProviderVisible(isCurrentlyVisible ? true : !!provider.is_visible);
+    }, []);
+
+    //TODO simplify
+    useEffect(() => {
+        const isOnlyProvider = crudState.providers?.every((providerToTest) => provider.id === providerToTest.id);
+        const isOnlyVisibleProviderAfterUpdate = crudState.currentlyVisibleProviders?.every((id) => provider.id === id);
+        if (isOnlyVisibleProviderAfterUpdate != undefined && (isOnlyVisibleProviderAfterUpdate != isOnlyVisibleProvider)) {
+            setIsOnlyVisibleProvider(isOnlyVisibleProviderAfterUpdate);
+        }
+        const shouldDeleteBeDisabled = isOnlyVisibleProviderAfterUpdate != undefined && isOnlyProvider != undefined ? (isOnlyVisibleProviderAfterUpdate || isOnlyProvider) : false;
+        if (shouldDeleteBeDisabled != isDeleteDisabled){
+            setIsDeleteDisabled(shouldDeleteBeDisabled);
+        }
+
+        const isCurrentlyVisible = crudState.currentlyVisibleProviders?.includes(provider.id);
+        if (isCurrentlyVisible != undefined && isCurrentlyVisible != isProviderVisible) {
+            setIsProviderVisible(isCurrentlyVisible);
+        }
+    }, [crudState]);
+
+    useEffect(() => {
+        const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[provider.id] : null;
+        if (errorsForThisProvider && !isExpanded){
+            setIsExpanded(true);
+        }
+        setProviderHasErrors(!!errorsForThisProvider);
+    }, [crudState.providerErrors]);
+
+    const toggleRow = () => {
+        setIsExpanded(!isExpanded);
+    }
+
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
-        if (onVisibilityChange) {
-            onVisibilityChange(event.target.checked);
-        }
+        dispatch({dispatchType: 'unsavedChangesToProviders', change: {item: {id: provider.id, is_visible: event.target.checked} }});
+        setIsProviderVisible(event.target.checked);
     };
 
-    // Check visibility in order: form data (if editing) -> visibility overrides -> original data
-    const currentVisibility = isEditing && formData
-        ? formData.is_visible
-        : visibilityOverrides[provider.id] !== undefined
-            ? visibilityOverrides[provider.id]
-            : provider.is_visible;
-
-    // Count visible providers (considering form state and visibility overrides)
-    const visibleProvidersCount = providers.filter(provider => {
-        if (isEditing && provider.id === provider.id) {
-            return currentVisibility;
-        }
-        // Check visibility overrides first, then original data
-        return visibilityOverrides[provider.id] !== undefined ? visibilityOverrides[provider.id] : provider.is_visible;
-    }).length;
-
-    // Disable toggle if this is the last visible provider and we're trying to hide it
-    const isToggleDisabled = currentVisibility && visibleProvidersCount <= 1;
-
-    // Disable delete if this is the last provider
-    const isDeleteDisabled = providers.length <= 1;
-
     return (
-        <div className={clsx(
-            "border border-gray-300 rounded-lg shadow-sm mb-6",
-            isCreatingNew ? "bg-gray-100 opacity-60" : "bg-gray-50"
-        )}>
+        <div className={"border border-gray-200 rounded-lg mb-6 bg-gray-50"}>
             {/* Main row */}
             <div
-                className={clsx(
-                    "flex items-center justify-between p-4 rounded-t-lg",
-                    isCreatingNew ? "cursor-not-allowed" : "hover:bg-gray-100 cursor-pointer"
-                )}
-                onClick={onToggle}
+                className={"flex items-center justify-between p-4 rounded-t-lg gap-2"}
+                onClick={() => {
+                    if(!providerHasErrors) {
+                        toggleRow();
+                    }
+                }}
             >
                 {/* Left side: Provider info */}
-                <div className="flex items-center flex-1 max-w-2/3">
-                    <div className="text-sm font-medium text-gray-900 truncate">{provider.name}</div>
+                <div className="flex space-x-3 flex-1 max-w-3/5">
+                    {/* Provider picture preview */}
+                    {hasPicture ?
+                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + provider.picture_preview}  alt={__('...', 'simplybook')}/>
+                        :
+                        <div className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full font-bold">
+                            {provider.name?.charAt(0).toUpperCase()}
+                        </div>
+                    }
+
+                    {/* Provider name */}
+                    <div className="flex items-center flex-1 max-w-2/3">
+                        <div className="text-sm font-medium text-gray-900 truncate">{provider.name}</div>
+                    </div>
                 </div>
 
                 {/* Right side: Actions */}
@@ -103,44 +105,44 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                         type="button"
                         onClick={(e) => {
                             e.stopPropagation();
-                            onDelete();
+                            handleDeletingItem(provider.id);
                         }}
-                        disabled={isEditing || isLoading || isDeleteDisabled}
-                        className="text-gray-500 hover:text-red-600 disabled:opacity-50 p-1 cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
-                        title={__('Delete Service Provider', 'simplybook')}
+                        disabled={ isLoading || isDeleteDisabled }
+                        className="text-gray-500 hover:text-red-600 hover:bg-red-100 disabled:opacity-50 p-1 rounded cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
+                        title={isDeleteDisabled ? __('Cannot delete the only visible service provider', 'simplybook') : __('Delete Service Provider', 'simplybook')}
                     >
                         <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
                     </button>
 
                     {/* Visibility Toggle */}
                     <div
-                        className=""
+                        className={"mt-[1px]"}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <label
                             className={clsx(
-                                "relative inline-flex items-center",
-                                isToggleDisabled ? "cursor-not-allowed" : "cursor-pointer"
+                                "relative inline-flex items-center mb-0",
+                                isOnlyVisibleProvider ? "cursor-not-allowed" : "cursor-pointer",
                             )}
                             title={
-                                isToggleDisabled
-                                    ? __('Cannot hide the last visible service provider', 'simplybook')
-                                    : currentVisibility ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
+                                isOnlyVisibleProvider
+                                    ? __('Cannot hide the only visible service provider', 'simplybook')
+                                    : isProviderVisible ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
                             }
                         >
                             <input
                                 type="checkbox"
-                                checked={currentVisibility || false}
+                                checked={isProviderVisible}
                                 onChange={handleVisibilityToggle}
-                                disabled={isToggleDisabled}
+                                disabled={isOnlyVisibleProvider}
                                 className="sr-only peer"
                             />
                             <div className={clsx(
-                                "w-10 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer",
-                                "peer-checked:bg-blue-600 peer-checked:after:translate-x-[1.125rem] peer-checked:after:border-white",
-                                "after:content-[''] after:absolute after:top-1 after:left-0.5 after:bg-white after:border-gray-200",
-                                "after:border after:rounded-full after:aspect-square after:h-4 after:w-4 after:transition-all",
-                                isToggleDisabled && "opacity-50 cursor-not-allowed"
+                                "w-8 h-[18px] bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer",
+                                "peer-checked:bg-blue-600 peer-checked:after:translate-x-[0.8rem] peer-checked:after:border-white",
+                                "after:content-[''] after:mx-[0.2rem] flex items-center after:left-0.5 after:bg-white after:border-gray-200",
+                                "after:border after:rounded-full after:aspect-square after:h-3 after:w-3 after:transition-all",
+                                isOnlyVisibleProvider && "opacity-50 cursor-not-allowed"
                             )}></div>
                         </label>
                     </div>
@@ -148,16 +150,19 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                     {/* Dropdown Toggle */}
                     <button
                         type="button"
+                        disabled={providerHasErrors}
                         onClick={(e) => {
                             e.stopPropagation();
-                            onToggle();
+                            toggleRow();
                         }}
-                        className="p-1 rounded hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6"
+                        className={clsx("px-1 rounded text-gray-500 active:ring-4 focus:ring-4 active:ring-blue-300 focus:ring-blue-300 hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6",
+                            providerHasErrors&& "pointer-events-none opacity-50 cursor-not-allowed"
+                        )}
                         title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
                     >
                         <FontAwesomeIcon
                             icon={faChevronDown}
-                            className={clsx("w-4 h-4 transition-transform duration-200",
+                            className={clsx("w-4 h-4 self-start mt-1 transition-transform duration-200",
                                 isExpanded && "rotate-180"
                             )}
                         />
@@ -169,10 +174,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
             {isExpanded && (
                 <div className="border-t border-gray-200 p-4 bg-gray-50 rounded-b-lg">
                     <ProviderForm
-                        formData={formData}
-                        onChange={onChange}
-                        isLoading={isLoading}
-                        error={error}
+                        provider={provider}
                         providerId={provider.id}
                     />
                 </div>
