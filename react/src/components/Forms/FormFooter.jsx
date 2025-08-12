@@ -14,8 +14,6 @@ const FormFooter = ({
     onSubmit,
     control,
     getValues,
-
-    showSettingsButtons = true
 }) => {
     const settingsFormState = control ? useFormState({ control }) : {};
     const {

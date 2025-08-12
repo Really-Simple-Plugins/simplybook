@@ -155,7 +155,6 @@ function Settings() {
                             });
                         })}
                         control={control}
-                        showSettingsButtons={formHasSettings}
                     />
                 )}
             </form>
