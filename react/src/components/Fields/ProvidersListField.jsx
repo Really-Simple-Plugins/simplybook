@@ -50,7 +50,7 @@ const ProvidersListField = () => {
             {/* If there's no providers and we're not loading, render message, else render Provider List */}
             {!crudState.isLoading && crudState.providers && crudState.providers.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                    {__(`No service providers found. ${providersRemaining > 0 ? 'Click "Add Service Provider" to create your first service provider.' : ''}`, 'simplybook')}
+                    {__('No service providers found.', 'simplybook') + (providersRemaining > 0 ? __('Click "Add Service Provider" to create your first service provider.', 'simplybook') : '')}
                 </div>
             ) : (
                 <div className="space-y-6">
