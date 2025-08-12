@@ -11,6 +11,7 @@ interface CrudDataReturn {
     dataFetched: boolean;
     isLoading: boolean;
     error: any;
+    get: () => Promise<any>;
     create: (data: any) => Promise<any>;
     update: (params: CrudDataParams) => Promise<any>;
     delete: (id: string | number) => Promise<any>;
@@ -26,7 +27,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
     const client = new HttpClient(route);
     const queryClient = useQueryClient();
 
-    const { isLoading, error, data: response } = useQuery({
+    const { refetch, isLoading, error, data: response } = useQuery({
         queryKey: [route],
         queryFn: () => client.get(),
         staleTime: 1000 * 60 * 5, // 5 minutes
@@ -95,6 +96,7 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
         dataFetched,
         isLoading: isLoading ?? false,
         error: error ?? null,
+        get: refetch,
         create: createMutation.mutateAsync,
         update: updateMutation.mutateAsync,
         delete: deleteMutation.mutateAsync,

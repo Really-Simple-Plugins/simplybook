@@ -25,6 +25,7 @@ const useProviderData = () => {
         providersFetched: crudData.dataFetched ?? false,
         isLoading: crudData.isLoading ?? false,
         error: crudData.error ?? null,
+        getProviders: crudData.get,
         createProvider: crudData.create,
         updateProvider: crudData.update,
         deleteProvider: crudData.delete,

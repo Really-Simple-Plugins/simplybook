@@ -25,6 +25,7 @@ const useServicesData = () => {
         servicesFetched: crudData.dataFetched ?? false,
         isLoading: crudData.isLoading ?? false,
         error: crudData.error ?? null,
+        getServices: crudData.get,
         createService: crudData.create,
         updateService: crudData.update,
         deleteService: crudData.delete,
