@@ -23,6 +23,27 @@ abstract class AbstractEntity
     abstract public function getInternalEndpoint(): string;
 
     /**
+     * Method should return an array of known errors per attribute. When an
+     * entity is updates or created the remote could return error messages
+     * per attribute that are not user-friendly. In those cases we translate
+     * known errors this way. For the implementation
+     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::buildTranslatedErrors}
+     *
+     * @example:
+     * [
+     *      'attribute_x' => [
+     *          'not dynamic part of error string' => esc_html__('User friendly translation of error.', 'simplybook'),
+     *      ],
+     *      // Real example from the {@see Service} class:
+     *      'duration' => [
+     *          // "Duration is not multiple of '60' minutes"
+     *          'is not multiple of' => esc_html__('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe.', 'simplybook'),
+     *       ]
+     * ]
+     */
+    abstract public function getKnownErrors(): array;
+
+    /**
      * The client to do API requests with.
      */
     protected ApiClient $client;
@@ -223,7 +244,10 @@ abstract class AbstractEntity
     }
 
     /**
-     * Validate the required attributes of the entity.
+     * Validate the required attributes of the entity. Errors format should be
+     * consistent with
+     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::processAttributesException}
+     *
      * @throws FormException
      */
     public function validate(): bool
@@ -241,7 +265,9 @@ abstract class AbstractEntity
             );
 
             if ($requiredFieldIsEmpty) {
-                $errors[$attribute] = esc_html__('Field is required.', 'simplybook');
+                $errors[$attribute] = [
+                    esc_html__('Field is required.', 'simplybook'),
+                ];
             }
         }
 

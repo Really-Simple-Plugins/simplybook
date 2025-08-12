@@ -52,6 +52,18 @@ class Service extends AbstractEntity
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getKnownErrors(): array
+    {
+        return [
+            'duration' => [
+                'is not multiple of' => esc_html__('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe.', 'simplybook'),
+            ],
+        ];
+    }
+
+    /**
      * Ensure the service ID is a non-negative integer
      */
     public function setIdAttribute($value): int

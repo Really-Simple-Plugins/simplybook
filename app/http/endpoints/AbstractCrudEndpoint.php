@@ -96,12 +96,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             $this->entity->create(
                 $request->all()
             );
-        } catch (RestDataException $e) {
-            return $this->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
-        } catch (\InvalidArgumentException $e) {
-            return $this->sendHttpResponse([], false, $e->getMessage(), 400);
         } catch (\Throwable $e) {
-            return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
+            return $this->processRequestThrowable($e, 'create');
         }
 
         return $this->sendHttpResponse($this->entity->attributes());
@@ -160,15 +156,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         try {
             $this->entity->fill($request->all());
             $this->entity->update();
-        } catch (RestDataException $e) {
-            return $this->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
-        } catch (FormException $e) {
-            return new \WP_REST_Response([
-                'message' => $e->getMessage(),
-                'errors' => $e->getErrors()
-            ], 403);
         } catch (\Throwable $e) {
-            return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
+            return $this->processRequestThrowable($e, 'update');
         }
 
         $successMessage = $this->entity->name . ' ' . esc_html__('successfully saved!', 'simplybook');
@@ -194,9 +183,137 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         return $this->sendHttpResponse();
     }
 
-    //TODO:
-    protected function substituteErrorMessages(\Error $errorData): string
+    /**
+     * Generically process any throwable that is caught while doing requests.
+     * Child classes could overwrite this method to specifically handle
+     * the throwable.
+     */
+    protected function processRequestThrowable(\Throwable $exception, string $action = ''): \WP_REST_Response
     {
-        return '';
+        if ($exception instanceof RestDataException) {
+            return $this->processRestDataException($exception, $action);
+        }
+
+        if ($exception instanceof FormException) {
+            return new \WP_REST_Response([
+                'message' => $exception->getMessage(),
+                'errors' => $exception->getErrors()
+            ], 403);
+        }
+
+        return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
     }
+
+    /**
+     * Default behavior for processing {@see RestDataException}. Child classes
+     * should overwrite for specific handling.
+     */
+    protected function processRestDataException(RestDataException $exception, string $action): \WP_REST_Response
+    {
+        switch ($action) {
+            case 'update':
+            case 'create':
+                return $this->processAttributesException($exception);
+            default:
+                return $this->sendHttpResponse($exception->getData(), false, $exception->getMessage(), $exception->getResponseCode());
+        }
+    }
+
+    /**
+     * Method specifically for handling an attribute exceptions. It should create
+     * translated, user-friendly, error messages based on the faulty attributes
+     * that we receive in the SimplyBook response. Errors format should be
+     * consistent with the entity validation method:
+     * {@see \SimplyBook\Http\Entities\AbstractEntity::validate}
+     */
+    protected function processAttributesException(RestDataException $exception): \WP_REST_Response
+    {
+        $exceptionData = $exception->getData();
+        if (empty($exceptionData['data'])) {
+            return new \WP_REST_Response([
+                'message' => esc_html__('An unknown error occurred while saving, please try again.', 'simplybook'),
+            ], 403);
+        }
+
+        $faultyFields = $exceptionData['data'];
+        $translatedErrors = $this->buildTranslatedErrors($faultyFields);
+
+        return new \WP_REST_Response([
+            'message' => esc_html__('An error occurred while saving, please try again.', 'simplybook'),
+            'errors' => $translatedErrors,
+        ], 403);
+    }
+
+    /**
+     * Build a per-attribute list of translated, known, error messages from raw
+     * validation errors. We do this because we want to show friendly,
+     * translated, messages only for errors we recognize, grouped by attribute.
+     *
+     * Steps:
+     * 1) Iterate the faulty fields; skip attributes without a known mapping.
+     * 2) For each error string, scan the attribute's known
+     *    "needle" => "translation" pairs.
+     * 3) If a needle appears (case-insensitive), collect its translation once
+     *    per attribute.
+     * 4) Only include attributes that ended up with at least one translation.
+     */
+    protected function buildTranslatedErrors(array $faultyFields, array $knownErrors = []): array
+    {
+        $translatedByAttribute = [];
+
+        if (empty($knownErrors)) {
+            $knownErrors = $this->entity->getKnownErrors();
+        }
+
+        foreach ($faultyFields as $attribute => $errors) {
+            if (!is_array($errors)) {
+                continue;
+            }
+
+            // Keep untranslated errors for unknown errors
+            if (!array_key_exists($attribute, $knownErrors)) {
+                $translatedByAttribute[$attribute] = $errors;
+                continue;
+            }
+
+            $knownAttributeErrors = $knownErrors[$attribute];
+            $translations = [];
+            $seen = [];
+
+            foreach ($errors as $key => $error) {
+                if (!is_string($error) || $error === '') {
+                    continue;
+                }
+
+                // First add untranslated error so we won't lose it.
+                $translations[$key] = $error;
+
+                foreach ($knownAttributeErrors as $needle => $translation) {
+                    if (empty($needle)) {
+                        continue;
+                    }
+
+                    if (stripos($error, (string) $needle) !== false) {
+                        if (!isset($seen[$translation])) {
+                            // Override untranslated error
+                            $translations[$key] = $translation;
+                            $seen[$translation] = true;
+                        } else {
+                            // Remove untranslated error if already seen
+                            unset($translations[$key]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if ($translations !== []) {
+                $translatedByAttribute[$attribute] = $translations;
+            }
+        }
+
+        return $translatedByAttribute;
+    }
+
+
 }
