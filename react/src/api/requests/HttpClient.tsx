@@ -64,23 +64,20 @@ class HttpClient {
             throw new Error(__('Route is not set', 'simplybook'));
         }
 
-        if (!data) {
-            throw new Error(__('No data provided', 'simplybook'));
+        if (!this.payload.payloadWasSet) {
+            this.setPayload(data);
         }
-
-        const payload = {
-            ...this.payload,
-            ...(data && {...data}),
-        };
 
         const response = await fetch(this.route, {
             method: 'POST',
             headers: this.postMethodHeaders,
             body: JSON.stringify({
-                ...payload,
+                ...this.payload,
                 nonce: NONCE,
             }),
         });
+
+        this.resetPayload();
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -100,8 +97,8 @@ class HttpClient {
             throw new Error(__('Route is not set. Use setRoute() before calling put()', 'simplybook'));
         }
 
-        if (!data) {
-            throw new Error(__('No data provided', 'simplybook'));
+        if (!this.payload.payloadWasSet) {
+            this.setPayload(data);
         }
 
         const payload = {
@@ -112,8 +109,10 @@ class HttpClient {
         const response = await fetch(this.route, {
             method: 'PUT',
             headers: this.postMethodHeaders,
-            body: JSON.stringify(payload),
+            body: JSON.stringify({...payload}),
         });
+
+        this.resetPayload();
 
         if (!response.ok) {
             const errorData = await response.json();
@@ -191,9 +190,13 @@ class HttpClient {
      * @returns The HttpClient instance.
      */
     public setPayload(payload: Record<string, any>) {
+        if(!payload){
+            throw new Error(__('Payload not set. Use setPayload().', 'simplybook'));
+        }
         this.payload = {
             ...this.payload,
             ...payload,
+            payloadWasSet: true,
         };
         return this;
     }
