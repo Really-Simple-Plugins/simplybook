@@ -39,10 +39,10 @@ trait HasRestAccess
     /**
      * Standardized response format
      *
-     * @param array $data - Data to return
-     * @param bool $status - If this action has completed successfully
-     * @param string $message - Message to return
-     * @param int $code - HTTP status code
+     * @param array $data Data to return
+     * @param bool $status If this action has completed successfully
+     * @param string $message Message to return
+     * @param int $code HTTP status code
      * @return \WP_REST_Response
      */
     public function sendHttpResponse(array $data = [], bool $status = true, string $message = '', int $code = 200): \WP_REST_Response
