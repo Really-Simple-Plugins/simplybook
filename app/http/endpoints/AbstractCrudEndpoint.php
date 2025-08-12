@@ -103,8 +103,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
         }
 
-        return $this->sendHttpResponse();
-//        return WP_ERROR;
+        return $this->sendHttpResponse($this->entity->attributes());
     }
 
     /**
@@ -168,15 +167,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
         }
 
-//        catch (\Throwable $e) {
-//            $data = ($e instanceof RestDataException) ? $e->getData() : ['error' => $e->getMessage()];
-//            return $this->sendHttpResponse($data, false, esc_html__(
-//                'Something went wrong while updating.', 'simplybook'
-//            ), 400);
-//        }
 
-        return $this->sendHttpResponse();
-//        return WP_ERROR;added better error handling
+        return $this->sendHttpResponse($this->entity->attributes());
     }
 
     /**
@@ -196,5 +188,11 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         }
 
         return $this->sendHttpResponse();
+    }
+
+    //TODO:
+    protected function substituteErrorMessages(\Error $errorData): string
+    {
+        return '';
     }
 }
