@@ -261,30 +261,30 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             const currentlyVisibleProviders = state.currentlyVisibleProviders ?? [];
             const isChangeToVisibility = Object.keys(action.change.item).includes('is_visible');
 
-            if (isProviderBackToOriginalState){
+            if (isProviderBackToOriginalState) {
                 const updatedProvidersList = state.unsavedProviders?.filter((provider)=> updatedProviderToSave.id != provider.id) ?? [];
                 return {
                     ...state,
                     unsavedProviders: updatedProvidersList,
                     providersHasUnsavedChanges: updatedProvidersList.length ? updatedProvidersList.length > 0 : false,
-                    ...(isChangeToVisibility && { currentlyVisibleServices: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
+                    ...(isChangeToVisibility && { currentlyVisibleProviders: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
                 };
             }
 
             const indexOfUnsavedProvider = state.unsavedProviders ? state.unsavedProviders.findIndex((provider)=>provider.id === updatedProviderToSave.id) : -1;
             const updatedUnsavedProvidersList = state.unsavedProviders ? [...state.unsavedProviders] : [];
 
-            if (indexOfUnsavedProvider != -1){
+            if (indexOfUnsavedProvider != -1) {
                 updatedUnsavedProvidersList[indexOfUnsavedProvider] = updatedProviderToSave;
             } else {
-                updatedUnsavedProvidersList.push(updatedProviderToSave)
+                updatedUnsavedProvidersList.push(updatedProviderToSave);
             }
 
             return {
                 ...state,
                 unsavedProviders: updatedUnsavedProvidersList,
                 providersHasUnsavedChanges: true,
-                ...(isChangeToVisibility && { currentlyVisibleServices: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
+                ...(isChangeToVisibility && { currentlyVisibleProviders: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
             };
         }
         case 'unsavedChangesToServices': {
