@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginLink from '../../Common/LoginLink';
 import { __ } from '@wordpress/i18n';
 import clsx from "clsx";
@@ -29,7 +29,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     useEffect(()=>{
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[providerId] : null;
         if (errorsForThisProvider && !crudState.providersHasUnsavedChanges) {
-            dispatch({dispatchType: 'clearAllErrorsForItem', change: {itemType: "provider", item: {id: providerId}}});
+            dispatch({dispatchType: 'clearAllErrorsForItem', change: {item: {id: providerId}}});
         }
     }, [crudState.providerErrors, crudState.providersHasUnsavedChanges]);
 
