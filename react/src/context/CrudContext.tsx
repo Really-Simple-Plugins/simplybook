@@ -204,7 +204,6 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
             }
 
             const data = formatItem({...unsavedItem});
-            console.log("data", data);
 
             if (unsavedItem.id === "new") {
                 createFunction(data).then((response) => {
@@ -315,7 +314,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             if (indexOfUnsavedService != -1){
                 updatedUnsavedServiceList[indexOfUnsavedService] = updatedServiceToSave;
             } else {
-                updatedUnsavedServiceList.push(updatedServiceToSave)
+                updatedUnsavedServiceList.push(updatedServiceToSave);
             }
 
             return {
@@ -432,7 +431,8 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
                 providersHasUnsavedChanges: updatedListOfUnsavedProviders.length  !== 0,
                 currentlyVisibleProviders: updatedListOfVisibleProviders,
             };
-        }case 'serviceUpdatedSuccessfully': {
+        }
+        case 'serviceUpdatedSuccessfully': {
             if (!action.change.item){
                 throw new Error("No service provided")
             }
@@ -583,6 +583,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             if (!field){
                 throw new Error("No field provided");
             }
+
             const currentErrorsForItemType = state.itemType === 'provider' ? state.providerErrors: state.serviceErrors;
             const currentErrorsForThisItem = action.change.item?.id && currentErrorsForItemType ? currentErrorsForItemType[action.change.item.id] : null;
 
@@ -624,7 +625,6 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             };
         }
         case 'savingChanged': {
-            console.log("saving changed", action.change.isSaving);
             return {
                 ...state,
                 isSaving: action.change.isSaving,
@@ -645,7 +645,7 @@ const setCurrentlyVisibleItems = (id: number, currentlyVisibleItems: (string | n
     switch (isVisible) {
         case true: {
             if (!isItemCurrentlyVisible) {
-                currentlyVisibleItems?.push(id);
+                currentlyVisibleItems.push(id);
             }
             updatedListOfVisibleItems = currentlyVisibleItems;
             break;
