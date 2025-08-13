@@ -233,8 +233,8 @@ class HttpClient {
             error = errorData.error;
         }
 
-        if (errorData?.errors) {
-            fields = errorData.errors;
+        if (errorData?.data?.data) {
+            fields = errorData.data.data;
         }
 
         throw new DataError(error, fields);

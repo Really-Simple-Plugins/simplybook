@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -11,7 +11,6 @@ import ButtonInput from "../Inputs/ButtonInput";
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
     const { providersRemaining, providersTotal, getSubscriptionData } = useSubscriptionData();
-    const [providerCount, setProviderCount] = useState(providersTotal - providersRemaining);
 
     useEffect(()=> {
         console.log(crudState);
@@ -20,10 +19,7 @@ const ProvidersListField = () => {
     useEffect(() => {
         getSubscriptionData().then((test) => {
             console.log(test);
-        });
-        if (crudState.providers) {
-            setProviderCount(crudState.providers.length);
-        }
+        })
     }, [crudState.providers]);
 
     const handleCancelCreatingNew = () => {
@@ -83,7 +79,7 @@ const ProvidersListField = () => {
                             </ButtonInput>
                         </div>
                         <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
-                            <span>{`Providers: ${providerCount} / ${providersTotal}`}</span>
+                            <span>{`Providers: ${providersTotal - providersRemaining} / ${providersTotal}`}</span>
                         </div>
                     </div>
 
