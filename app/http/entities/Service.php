@@ -59,6 +59,7 @@ class Service extends AbstractEntity
         return [
             'duration' => [
                 'is not multiple of' => esc_html__('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe.', 'simplybook'),
+                'is not between' => esc_html__('Duration invalid. Please enter a valid number between 5 and 1435.', 'simplybook'),
             ],
         ];
     }

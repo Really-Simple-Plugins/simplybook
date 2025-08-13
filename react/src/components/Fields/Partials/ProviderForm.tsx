@@ -34,11 +34,14 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     }, [crudState.providerErrors, crudState.providersHasUnsavedChanges]);
 
     const handleInputChange = (field : string, value: string | number) => {
-        const changesToUpdate = { id: providerId, [field]: value };
+        const changesToUpdate = { id: providerId, [field]: field === 'qty' && value !== '' ? Number(value): value };
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[providerId] : {};
         const fieldHasErrors = errorsForThisProvider ? Object.keys(errorsForThisProvider).includes(field) : false;
         if (fieldHasErrors) {
             dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: providerId, [field]: ''}}});
+        }
+        if (crudState.generalError) {
+            dispatch({dispatchType: 'generalError', change: {generalError: ''}})
         }
         dispatch({ dispatchType: 'unsavedChangesToProviders', change: {item: changesToUpdate }})
     };
@@ -53,30 +56,32 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
         switch (field) {
             case 'name': {
                 isValueValid = value !== '';
-                errorMessage = __('Provider name is required', 'simplybook');
+                errorMessage = [__('Provider name is required', 'simplybook')];
                 break;
             }
             case 'email': {
                 isValueValid = emailPattern.test(value) || value === '';
-                errorMessage = __('Please enter a valid email address (e.g., example@domain.com)', 'simplybook');
+                errorMessage = [__('Please enter a valid email address (e.g., example@domain.com)', 'simplybook')];
                 break;
             }
             case 'phone': {
                 isValueValid = phonePattern.test(value) || value === '';
-                errorMessage = __('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook');
+                errorMessage = [__('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook')];
                 break;
             }
             case 'qty': {
                 const valueToNumber = Number(value);
                 isValueValid = !isNaN(valueToNumber) && !(valueToNumber > 99 || valueToNumber === 0);
-                errorMessage = __('Please enter a valid number between 1 and 99', 'simplybook');
+                if (!(valueToNumber > 99)) {
+                    errorMessage = [__('Please enter a valid number between 1 and 99', 'simplybook')];
+                }
                 break;
             }
         }
 
         if (!isValueValid && errorMessage) {
             const errors = { [field]:  errorMessage};
-            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: providerId, ...errors}}});
+            dispatch({dispatchType: 'errorsOnFields', change: {providerErrors: {[providerId]: { ...errors }}}});
         } else if (crudState.providerErrors && crudState.providerErrors[providerId]) {
             dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: providerId, [field]: ''}}});
         }
@@ -104,7 +109,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['name'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['name']}</span>
+                        {crudState.providerErrors[providerId]['name'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ) : null}
             </div>
@@ -126,7 +133,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['email'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['email']}</span>
+                        {crudState.providerErrors[providerId]['email'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ): null}
             </div>
@@ -160,7 +169,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
 
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['phone']}</span>
+                        {crudState.providerErrors[providerId]['phone'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ) : null}
             </div>
@@ -182,8 +193,8 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                             handleInputChange('qty', trimmedValue);
                         }
                         if (trimmedValue === '') {
-                            const errors = { qty: __('Please enter a valid number between 1 and 99', 'simplybook')};
-                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: providerId, ...errors }}});
+                            const errors = { qty: [__('Please enter a valid number between 1 and 99', 'simplybook')]};
+                            dispatch({dispatchType: 'errorsOnFields', change: {providerErrors: {[providerId]: { ...errors }}}});
                         }
                     }}
                     onBlur={(e) => {
@@ -195,7 +206,9 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['qty'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['qty']}</span>
+                        {crudState.providerErrors[providerId]['qty'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ) : null}
             </div>
@@ -213,12 +226,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                     >
                         {__("Edit All Properties", "simplybook")}
                     </ButtonLink>
-                </div>
-            )}
-            {/* General error */}
-            {crudState.error && (
-                <div className="col-span-full text-red-600 text-sm">
-                    {crudState.error}
                 </div>
             )}
         </div>

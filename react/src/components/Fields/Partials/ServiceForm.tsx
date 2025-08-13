@@ -35,11 +35,14 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
     }, [crudState.serviceErrors, crudState.servicesHasUnsavedChanges]);
 
     const handleInputChange = (field : string, value: string | number) => {
-        const changesToUpdate = { id: serviceId, [field]: value };
+        const changesToUpdate = { id: serviceId, [field]: field === 'duration' && value !== '' ? Number(value) : value };
         const errorsForThisService = crudState.serviceErrors ? crudState.serviceErrors[serviceId] : {};
         const fieldHasErrors = errorsForThisService ? Object.keys(errorsForThisService).includes(field) : false;
         if (fieldHasErrors) {
             dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: serviceId, [field]: ''}}});
+        }
+        if (crudState.generalError) {
+            dispatch({dispatchType: 'generalError', change: {generalError: ''}})
         }
         dispatch({ dispatchType: 'unsavedChangesToServices', change: {item: changesToUpdate }});
     };
@@ -50,20 +53,20 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
         switch (field) {
             case 'name': {
                 isValueValid = value !== '';
-                errorMessage = __('Service name is required', 'simplybook');
+                errorMessage = [__('Service name is required', 'simplybook')];
                 break;
             }
             case 'duration': {
                 const valueToNumber = Number(value);
                 isValueValid = !isNaN(valueToNumber) && valueToNumber !== 0;
-                errorMessage = __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook');
+                errorMessage = [__('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')];
                 break;
             }
         }
 
         if (!isValueValid && errorMessage) {
             const errors = { [field]:  errorMessage};
-            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: serviceId, ...errors}}});
+            dispatch({dispatchType: 'errorsOnFields', change: {serviceErrors: {[serviceId]: { ...errors }}}});
         } else if (crudState.serviceErrors && crudState.serviceErrors[serviceId]) {
             dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: serviceId, [field]: ''}}});
         }
@@ -91,7 +94,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['name'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.serviceErrors[serviceId]['name']}</span>
+                        {crudState.serviceErrors[serviceId]['name'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ) : null}
             </div>
@@ -113,8 +118,8 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                             handleInputChange('duration', trimmedValue);
                         }
                         if (trimmedValue === '') {
-                            const errors = { duration: __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')};
-                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: serviceId, ...errors }}});
+                            const errors = { duration: [__('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')]};
+                            dispatch({dispatchType: 'errorsOnFields', change: {serviceErrors: {[serviceId]: { ...errors }}}});
                         }
                     }}
                     onBlur={(e) => {
@@ -126,7 +131,9 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['duration'] && (
                     <div>
-                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.serviceErrors[serviceId]['duration']}</span>
+                        {crudState.serviceErrors[serviceId]['duration'].map((error)=> (
+                            <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
+                        ))}
                     </div>
                 ): null}
             </div>
@@ -144,12 +151,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                     >
                         {__("Edit All Properties", "simplybook")}
                     </ButtonLink>
-                </div>
-            )}
-            {/* General error */}
-            {crudState.error && (
-                <div className="col-span-full text-red-600 text-sm">
-                    {crudState.error}
                 </div>
             )}
         </div>

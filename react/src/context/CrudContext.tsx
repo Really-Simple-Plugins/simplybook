@@ -49,7 +49,6 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
         crudStateReducer,
         initialCrudState
     );
-    //TODO
     const { getServices, createService, updateService, deleteService, isLoading: isServicesLoading, servicesFetched } = useServicesData();
     const { getProviders, createProvider, updateProvider, deleteProvider, isLoading: isProvidersLoading, providersFetched } = useProviderData();
     const toastNotice = new ToastNotice();
@@ -72,7 +71,7 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
                     return services;
                 }).catch((error) => {
                     console.error(error);
-                    dispatch({ dispatchType: "generalError", change: { error: error.message } })
+                    dispatch({ dispatchType: "generalError", change: { generalError: error.message } })
                 });
                 break;
             }
@@ -87,7 +86,7 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
                     return providers;
                 }).catch((error) => {
                     console.error(error);
-                    dispatch({ dispatchType: "generalError", change: { error: error.message } })
+                    dispatch({ dispatchType: "generalError", change: { generalError: error.message } })
                 });
                 break;
             }
@@ -129,14 +128,15 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
 
     const handleSave = () => {
         if (!crudState.unsavedProviders || !crudState.unsavedServices) {
-            dispatch({dispatchType: 'generalError', change: {error: __('There are no unsaved changes' ,'simplybook')}})
             throw new Error("Nothing to save");
+        }
+        if (crudState.generalError) {
+            dispatch({dispatchType: 'generalError', change: {generalError: ''}})
         }
 
         let unsavedItems;
         let createFunction;
         let updateFunction;
-        let successMessages;
         let errorMessages;
         let successDispatchType;
         switch (crudState.itemType) {
@@ -144,10 +144,6 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
                 unsavedItems = crudState.unsavedProviders;
                 createFunction = createProvider;
                 updateFunction = updateProvider;
-                successMessages = {
-                    create: __('Service Provider created successfully', 'simplybook'),
-                    update: __('Service Provider updated successfully', 'simplybook'),
-                };
                 errorMessages = {
                     create: __('Error creating Service Provider', 'simplybook'),
                     update: __('Error updating Service Provider', 'simplybook'),
@@ -162,10 +158,6 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
                 unsavedItems = crudState.unsavedServices;
                 createFunction = createService;
                 updateFunction = updateService;
-                successMessages = {
-                    create: __('Service created successfully', 'simplybook'),
-                    update:  __('Service updated successfully', 'simplybook'),
-                };
                 errorMessages = {
                     create: __('Error creating Service', 'simplybook'),
                     update: __('Error updating Service', 'simplybook'),
@@ -183,9 +175,17 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
         const errorCallback = (error: DataError, type: string = '', id: string | number) => {
             console.error('Error on save:', error);
             if (error.fields) {
-                dispatch({dispatchType: "errorsOnFields", change: {item: {id: id, ...error.fields}}});
+                dispatch(
+                    {
+                        dispatchType: "errorsOnFields",
+                        change: {
+                            ...(crudState.itemType === 'provider' && { providerErrors: { [id]: error.fields }}),
+                            ...(crudState.itemType === 'service' && { serviceErrors: { [id]: error.fields }}),
+                        },
+                    }
+                );
             } else {
-                dispatch({ dispatchType: "generalError", change: { error: error.message } })
+                dispatch({ dispatchType: "generalError", change: { generalError: error.message }});
             }
             toastNotice
                 .setMessage(type ? errorMessages[type] : __('An error occurred trying to save your changes', 'simplybook'))
@@ -196,7 +196,7 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
 
         for (let unsavedItem of unsavedItems) {
             if (!unsavedItem.name){
-                errorCallback(new DataError('No name provided', {name: __(`${crudState.itemType === 'provider' ? 'Provider' : 'Service'} name is required`, 'simplybook')}), '',  unsavedItem.id)
+                errorCallback(new DataError('No name provided', {name: __('Name is a required field.', 'simplybook')}), '',  unsavedItem.id)
             }
 
             if (!unsavedItem.id) {
@@ -208,7 +208,7 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
             if (unsavedItem.id === "new") {
                 createFunction(data).then((response) => {
                     dispatch({dispatchType: successDispatchType.create, change: {item: response.data}});
-                    toastNotice.setMessage(successMessages.create).setType("success").render();
+                    toastNotice.setMessage(response.message).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
                     errorCallback(error, 'create', "new");
@@ -216,7 +216,7 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
             } else {
                 updateFunction({ id: unsavedItem.id, data: data }).then((response) => {
                     dispatch({dispatchType: successDispatchType.update, change: {item: response.data}});
-                    toastNotice.setMessage(successMessages.update).setType("success").render();
+                    toastNotice.setMessage(response.message).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
                     errorCallback(error, 'update', unsavedItem.id);
@@ -377,6 +377,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
 
             return {
                 ...state,
+                generalError: '',
                 ...(state.itemType === 'provider' && {
                     providersHasUnsavedChanges: false,
                     currentlyVisibleProviders: updatedListOfVisibleItems,
@@ -533,19 +534,24 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             }
         }
         case 'errorsOnFields': {
-            if (!action.change.item) {
+            if (!action.change.providerErrors && !action.change.serviceErrors) {
                 throw new Error('No errors provided ');
             }
-            const replacedErrorMessages = replaceErrorMessages(action.change.item);
 
             let currentErrorsForItemType;
+            let newErrors;
+            let itemId;
             switch (state.itemType) {
                 case 'provider': {
                     currentErrorsForItemType = state.providerErrors;
+                    newErrors = action.change.providerErrors;
+                    itemId = action.change.providerErrors && Object.keys(action.change.providerErrors)[0];
                     break;
                 }
                 case 'service': {
                     currentErrorsForItemType = state.serviceErrors;
+                    newErrors = action.change.serviceErrors;
+                    itemId = action.change.serviceErrors && Object.keys(action.change.serviceErrors)[0];
                     break;
                 }
                 default: {
@@ -553,9 +559,9 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
                 }
             }
 
-            const currentErrorsForItem = action.change.item?.id && currentErrorsForItemType ? currentErrorsForItemType[action.change.item.id] : null;
-            const updatedErrorsForItem = {...currentErrorsForItem, ...replacedErrorMessages};
-            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && {[action.change.item.id]: { ...updatedErrorsForItem }})};
+            const currentErrorsForItem = itemId && currentErrorsForItemType ? currentErrorsForItemType[itemId] : null;
+            const updatedErrorsForItem = {...currentErrorsForItem, ...(itemId && newErrors && { ...newErrors[itemId] })};
+            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(itemId && {[itemId]: { ...updatedErrorsForItem }})};
 
             return {
                 ...state,
@@ -565,12 +571,12 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
 
         }
         case 'generalError': {
-            if (!action.change.error) {
+            if (typeof action.change.generalError !== 'string') {
                 throw new Error('No error provided');
             }
             return {
                 ...state,
-                error: action.change.error
+                generalError: action.change.generalError,
             };
         }
         case 'clearErrorsForField': {
@@ -594,8 +600,8 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && currentErrorsForThisItem && {[action.change.item.id]: currentErrorsForThisItem})};
 
             //If, after removing the error on the field, this item has no more fields with errors, delete the whole item from the error list
-            //Because the error always has 'id' as a key, length === 1 would mean no other keys have errors
-            if (currentErrorsForThisItem && Object.keys(currentErrorsForThisItem).length === 1) {
+            //length === 0 means no fields have errors anymore
+            if (currentErrorsForThisItem && Object.keys(currentErrorsForThisItem).length === 0) {
                 //@ts-ignore
                 delete updatedErrorsForItemType[action.change.item.id];
             }
@@ -614,6 +620,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             delete currentErrorsForItem[action.change.item.id];
             return {
                 ...state,
+                generalError: '',
                 ...(state.itemType === 'provider' && { providerErrors: {...currentErrorsForItem} }),
                 ...(state.itemType === 'service' && { serviceErrors: {...currentErrorsForItem} })
             };
@@ -673,45 +680,6 @@ const formatItem = (item: {[key: string | number]: string | number | boolean}) =
     }
 }
 
-//TODO: move to backend
-const replaceErrorMessages = (error: Provider | Service) => {
-    let replacedErrorMessages: {[key: string]: string} = {};
-    for (const [key, value] of Object.entries(error)) {
-        switch (key) {
-            case "email": {
-                if (value[0].includes("only once per day")) {
-                    replacedErrorMessages[key] = __("Email address can only be changed once per day.", 'simplybook');
-                } else if (value[0].includes("valid")) {
-                    replacedErrorMessages[key] = __("The email domain is not valid.", 'simplybook');
-                } else {
-                    replacedErrorMessages[key] = Array.isArray(value) ? value[0] : value;
-                }
-                break;
-            }
-            case "phone": {
-                if (value[0].includes("Invalid")) {
-                    replacedErrorMessages[key] = __("Phone format invalid. Please enter a valid phone number with country code (e.g., +31 123 456 789)", 'simplybook');
-                } else {
-                    replacedErrorMessages[key] = Array.isArray(value) ? value[0] : value;
-                }
-                break;
-            }
-            case "duration": {
-                if (value[0].includes("multiple")) {
-                    replacedErrorMessages[key] = __('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe', 'simplybook');
-                } else {
-                    replacedErrorMessages[key] = Array.isArray(value) ? value[0] : value;
-                }
-                break;
-            }
-            default: {
-                replacedErrorMessages[key] = Array.isArray(value) ? value[0] : value;
-            }
-        }
-    }
-    return replacedErrorMessages;
-}
-
 interface CrudState {
     itemType?: "service" | "provider" | null,
     item?: Provider | Service | null,
@@ -719,8 +687,8 @@ interface CrudState {
     services?: Service[],
     unsavedProviders?: Provider[],
     unsavedServices?: Service[],
-    providerErrors?: {[key: string | number]: Provider},
-    serviceErrors?: {[key: string | number]: Service},
+    providerErrors?: {[key: string | number]: {[key: string | number]: string[]}},
+    serviceErrors?: {[key: string | number]: {[key: string | number]: string[]}},
     currentlyVisibleProviders?: (number | string)[],
     currentlyVisibleServices?: (number | string)[],
     servicesHasUnsavedChanges?: boolean,
@@ -729,7 +697,7 @@ interface CrudState {
     providersHasUnsavedChanges?: boolean,
     isCreatingNewProvider?: boolean,
     isCreatingNewService?: boolean,
-    error?: string,
+    generalError?: string,
 }
 
 const initialCrudState: CrudState = {
@@ -747,5 +715,5 @@ const initialCrudState: CrudState = {
     providersHasUnsavedChanges: false,
     isCreatingNewProvider: false,
     isCreatingNewService: false,
-    error: '',
+    generalError: '',
 }

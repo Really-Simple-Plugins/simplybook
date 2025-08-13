@@ -100,7 +100,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
-        return $this->sendHttpResponse($this->entity->attributes());
+        $successMessage = $this->entity->name . ' ' . esc_html__('successfully saved!', 'simplybook');
+        return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
     /**

@@ -76,6 +76,7 @@ const FormFooter = ({
 
     // Form states for Provider and Service pages
     const crudStates = [
+        { condition: crudState.generalError, message: crudState.generalError},
         { condition: crudState.isSaving, message: __("Saving...", "simplybook")},
         { condition: cancelAllowed, message: __("You have unsaved changes", "simplybook")},
     ];
@@ -89,7 +90,7 @@ const FormFooter = ({
             <FormScrollProgressLine settingsFormHeight={settingsFormHeight} />
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
-                    <p className={`text-sm flex items-center gap-2 p-0 m-0 mr-2`}>
+                    <p className={`text-sm flex items-center gap-2 p-0 m-0 mr-2 ${crudState.generalError && 'text-red-600'}`}>
                         {currentState.message}
                     </p>
                 )}
