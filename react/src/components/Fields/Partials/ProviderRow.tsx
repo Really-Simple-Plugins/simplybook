@@ -30,8 +30,8 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
     const hasPicture = provider.picture_preview && provider.picture_preview.length > 0;
 
     useEffect(() => {
-        const isCurrentlyVisible = crudState.currentlyVisibleProviders?.find((id) => id === provider.id);
-        setIsProviderVisible(isCurrentlyVisible ? true : !!provider.is_visible);
+        const isCurrentlyVisible = crudState.currentlyVisibleProviders?.includes(provider.id);
+        setIsProviderVisible(isCurrentlyVisible ?? !!provider.is_visible);
     }, []);
 
     //TODO simplify
