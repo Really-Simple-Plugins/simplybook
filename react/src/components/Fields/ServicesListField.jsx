@@ -6,6 +6,7 @@ import { useCrudContext } from '../../context/CrudContext';
 import ServiceRow from './Partials/ServiceRow';
 import ServiceForm from './Partials/ServiceForm';
 import clsx from "clsx";
+import ButtonInput from "../Inputs/ButtonInput";
 
 const ServicesListField = () => {
     const {crudState, dispatch } = useCrudContext();
@@ -58,16 +59,16 @@ const ServicesListField = () => {
             {/* Create New Service Button */}
             <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-3">
-                    <button
+                    <ButtonInput
                         type="button"
-                        onClick={crudState.isCreatingNewService ? handleCancelCreatingNew : handleAdd}
+                        className="font-bold bg-secondary"
+                        onClick={crudState.isCreatingNewProvider ? handleCancelCreatingNew : handleAdd}
                         disabled={crudState.isSaving}
-                        className={clsx("flex items-center border border-gray-200 justify-center bg-gray-100 text-gray-900 hover:bg-gray-200 rounded-sm transition-all duration-200 px-3 py-1 text-sm cursor-pointer",
-                            crudState.isSaving && "opacity-50 cursor-not-allowed pointer-events-none")}
+                        btnVariant="square-small"
                     >
-                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-gray-500" />
-                        {crudState.isCreatingNewService ? __('Cancel New Service', 'simplybook') : __('Add Service', 'simplybook')}
-                    </button>
+                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold" />
+                        {crudState.isCreatingNewProvider ? __('Cancel New Service', 'simplybook') : __('Add Service', 'simplybook')}
+                    </ButtonInput>
                 </div>
             </div>
 
