@@ -36,15 +36,6 @@ const ProvidersListField = () => {
         );
     }
 
-    //TODO
-    if (false) {
-        return (
-            <div className="text-red-600 p-4 bg-red-50 rounded-md">
-                {crudState.error}
-            </div>
-        );
-    }
-
     return (
         <div className="w-full">
             {/* If there's no providers and we're not loading, render message, else render Provider List */}

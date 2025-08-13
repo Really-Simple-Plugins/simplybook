@@ -36,15 +36,6 @@ const ServicesListField = () => {
         );
     }
 
-    //TODO: new error property on crudstate for this
-    if (false) {
-        return (
-            <div className="text-red-600 p-4 bg-red-50 rounded-md">
-                {crudState.error}
-            </div>
-        );
-    }
-
     return (
         <div className="w-full">
             {/* If there's no services and we're not loading, render message, else render Services List */}
