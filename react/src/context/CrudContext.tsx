@@ -501,7 +501,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             };
         }
         case 'providerDeleted': {
-            if (action.change.item) {
+            if (!action.change.item) {
                 throw new Error('Item to delete not set');
             }
             const updatedListOfProviders = state.providers ? state.providers.filter((provider)=> provider.id !== action.change.item?.id) : [];
