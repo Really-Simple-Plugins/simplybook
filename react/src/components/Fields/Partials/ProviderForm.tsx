@@ -68,7 +68,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
             }
             case 'qty': {
                 const valueToNumber = Number(value);
-                isValueValid = !(isNaN(valueToNumber) || valueToNumber > 99);
+                isValueValid = !isNaN(valueToNumber) && !(valueToNumber > 99 || valueToNumber === 0);
                 errorMessage = __('Please enter a valid number between 1 and 99', 'simplybook');
                 break;
             }
@@ -174,11 +174,16 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                     pattern="[0-9]"
                     placeholder="1"
                     value={currentProviderState.qty}
+                    required
                     onChange={(e) => {
                         const trimmedValue = e.target.value.trim();
                         const isValid = trimmedValue === '' || validateValue('qty', trimmedValue);
                         if (isValid) {
                             handleInputChange('qty', trimmedValue);
+                        }
+                        if (trimmedValue === '') {
+                            const errors = { qty: __('Please enter a valid number between 1 and 99', 'simplybook')};
+                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: providerId, ...errors }}});
                         }
                     }}
                     onBlur={(e) => {

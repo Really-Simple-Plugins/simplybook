@@ -55,7 +55,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
             }
             case 'duration': {
                 const valueToNumber = Number(value);
-                isValueValid = !(isNaN(valueToNumber));
+                isValueValid = !isNaN(valueToNumber) && valueToNumber !== 0;
                 errorMessage = __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook');
                 break;
             }
@@ -79,7 +79,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 <input
                     id="service-name"
                     type="text"
-                    value={currentServiceState.name || ''}
+                    value={currentServiceState.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className={clsx(
                         "input-base-no-shadow",
@@ -105,11 +105,16 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                     pattern="[0-9]"
                     placeholder="60"
                     value={currentServiceState.duration}
+                    required
                     onChange={(e) => {
                         const trimmedValue = e.target.value.trim();
                         const isValid = trimmedValue === '' || validateValue('duration', trimmedValue);
                         if (isValid) {
                             handleInputChange('duration', trimmedValue);
+                        }
+                        if (trimmedValue === '') {
+                            const errors = { duration: __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')};
+                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: serviceId, ...errors }}});
                         }
                     }}
                     onBlur={(e) => {
