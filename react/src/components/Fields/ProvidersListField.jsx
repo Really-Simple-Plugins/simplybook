@@ -9,11 +9,17 @@ import useSubscriptionData from "../../hooks/useSubscriptionData";
 
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
-    const { providersRemaining, providersTotal } = useSubscriptionData();
+    const { providersRemaining, providersTotal, getSubscriptionData } = useSubscriptionData();
 
     useEffect(()=> {
         console.log(crudState);
     }, [crudState]);
+
+    useEffect(() => {
+        getSubscriptionData().then((test) => {
+            console.log(test);
+        })
+    }, [crudState.providers]);
 
     const handleCancelCreatingNew = () => {
         dispatch({dispatchType: "createNewCanceled"});
