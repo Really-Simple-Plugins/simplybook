@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
 import Service from "../../../types/Service";
 import useSpecialFeaturesData from "../../../hooks/useSpecialFeaturesData";
+import ButtonLink from "../../Buttons/ButtonLink";
 
 type ServiceFormProps = {
     service: Service,
@@ -54,7 +55,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
             }
             case 'duration': {
                 const valueToNumber = Number(value);
-                isValueValid = !(isNaN(valueToNumber));
+                isValueValid = !isNaN(valueToNumber) && valueToNumber !== 0;
                 errorMessage = __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook');
                 break;
             }
@@ -72,15 +73,16 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="service-name">
                     {__('Service name', 'simplybook')} *
                 </label>
                 <input
+                    id="service-name"
                     type="text"
-                    value={currentServiceState.name || ''}
+                    value={currentServiceState.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['name'] && "ring-2 ring-red-600" : null)}
                     required
                     onBlur={(e) => {
@@ -89,52 +91,62 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['name'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.serviceErrors[serviceId]['name']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.serviceErrors[serviceId]['name']}</span>
                     </div>
                 ) : null}
             </div>
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('Service duration (minutes)', 'simplybook')}
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="service-duration">
+                    {__('Service duration (minutes)', 'simplybook')} *
                 </label>
                 <input
+                    id="service-duration"
                     type="text"
                     pattern="[0-9]"
                     placeholder="60"
                     value={currentServiceState.duration}
+                    required
                     onChange={(e) => {
                         const trimmedValue = e.target.value.trim();
                         const isValid = trimmedValue === '' || validateValue('duration', trimmedValue);
                         if (isValid) {
                             handleInputChange('duration', trimmedValue);
                         }
+                        if (trimmedValue === '') {
+                            const errors = { duration: __('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')};
+                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: serviceId, ...errors }}});
+                        }
                     }}
                     onBlur={(e) => {
                         validateValue('duration', e.target.value.trim());
                     }}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['duration'] && "ring-2 ring-red-600" : null)}
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['duration'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.serviceErrors[serviceId]['duration']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.serviceErrors[serviceId]['duration']}</span>
                     </div>
                 ): null}
             </div>
             {/* Edit All Properties Button */}
             {serviceId && serviceId !== "new" && (
-                <div className="col-span-full mt-4">
-                    <LoginLink
-                        iconName="square-arrow-up-right"
-                        iconClass="px-2"
-                        page={`/v2/management/#services/edit/details/${serviceId}`}
-                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                <div className="mt-4 max-w-fit">
+                    <ButtonLink
+                        className="!border-sb-blue !text-sb-blue flex-row-reverse"
+                        icon={true}
+                        iconName="target-blank"
+                        iconClass="fa-regular"
+                        reverseIcon={true}
+                        btnVariant="square-ghost-small"
+                        loginLink={`/v2/management/#services/edit/details/${serviceId}`}
                     >
-                        {__('Edit All Properties', 'simplybook')}
-                    </LoginLink>
+                        {__("Edit All Properties", "simplybook")}
+                    </ButtonLink>
                 </div>
             )}
+            {/* General error */}
             {crudState.error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {crudState.error}

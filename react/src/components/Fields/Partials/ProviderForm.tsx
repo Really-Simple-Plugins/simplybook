@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginLink from '../../Common/LoginLink';
 import { __ } from '@wordpress/i18n';
 import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
 import Provider from "../../../types/Provider";
+import ButtonLink from "../../Buttons/ButtonLink";
 // import IntlTelInput from "intl-tel-input/reactWithUtils";
 // import "intl-tel-input/styles";
 
@@ -28,7 +29,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     useEffect(()=>{
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[providerId] : null;
         if (errorsForThisProvider && !crudState.providersHasUnsavedChanges) {
-            dispatch({dispatchType: 'clearAllErrorsForItem', change: {itemType: "provider", item: {id: providerId}}});
+            dispatch({dispatchType: 'clearAllErrorsForItem', change: {item: {id: providerId}}});
         }
     }, [crudState.providerErrors, crudState.providersHasUnsavedChanges]);
 
@@ -67,7 +68,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
             }
             case 'qty': {
                 const valueToNumber = Number(value);
-                isValueValid = !(isNaN(valueToNumber) || valueToNumber > 99);
+                isValueValid = !isNaN(valueToNumber) && !(valueToNumber > 99 || valueToNumber === 0);
                 errorMessage = __('Please enter a valid number between 1 and 99', 'simplybook');
                 break;
             }
@@ -85,15 +86,16 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="provider-name">
                     {__('Service provider name', 'simplybook')} *
                 </label>
                 <input
+                    id="provider-name"
                     type="text"
                     value={currentProviderState.name}
                     onChange={(e) => handleInputChange('name', e.target.value)}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['name'] && "ring-2 ring-red-600" : null)}
                     required
                     onBlur={(e) => {
@@ -102,15 +104,16 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['name'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.providerErrors[providerId]['name']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['name']}</span>
                     </div>
                 ) : null}
             </div>
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="provider-email">
                     {__('E-mail', 'simplybook')}
                 </label>
                 <input
+                    id="provider-email"
                     type="email"
                     value={currentProviderState.email}
                     onChange={(e) => handleInputChange('email', e.target.value)}
@@ -118,27 +121,28 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                         validateValue('email', e.target.value.trim());
                     }}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['email'] && "ring-2 ring-red-600" : null)}
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['email'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.providerErrors[providerId]['email']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['email']}</span>
                     </div>
                 ): null}
             </div>
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="provider-phone">
                     {__('Phone', 'simplybook')}
                 </label>
                 <input
+                    id="provider-phone"
                     type="tel"
                     value={currentProviderState.phone}
                     onChange={(e) => handleInputChange('phone', e.target.value)}
                     pattern="[+]?[0-9\s\-\(\)]{7,20}"
                     title={__('Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook')}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && "ring-2 ring-red-600" : null)}
                     placeholder="+31 123 456 789"
                     onBlur={(e) => {
@@ -156,52 +160,62 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
 
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.providerErrors[providerId]['phone']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['phone']}</span>
                     </div>
                 ) : null}
             </div>
             <div className="col-span-full">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {__('How many clients can be served at the same time?', 'simplybook')}
+                <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="provider-qty">
+                    {__('How many clients can be served at the same time?', 'simplybook')} *
                 </label>
                 <input
+                    id="provider-qty"
                     type="text"
                     pattern="[0-9]"
                     placeholder="1"
                     value={currentProviderState.qty}
+                    required
                     onChange={(e) => {
                         const trimmedValue = e.target.value.trim();
                         const isValid = trimmedValue === '' || validateValue('qty', trimmedValue);
                         if (isValid) {
                             handleInputChange('qty', trimmedValue);
                         }
+                        if (trimmedValue === '') {
+                            const errors = { qty: __('Please enter a valid number between 1 and 99', 'simplybook')};
+                            dispatch({dispatchType: 'errorsOnFields', change: {item: {id: providerId, ...errors }}});
+                        }
                     }}
                     onBlur={(e) => {
                         validateValue('qty', e.target.value.trim());
                     }}
                     className={clsx(
-                        "w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500",
+                        "input-base-no-shadow",
                         crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['qty'] && "ring-2 ring-red-600" : null)}
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['qty'] && (
                     <div>
-                        <span className={"text-red-600 ml-[1px]"}>{crudState.providerErrors[providerId]['qty']}</span>
+                        <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{crudState.providerErrors[providerId]['qty']}</span>
                     </div>
                 ) : null}
             </div>
             {/* Edit All Properties Button */}
             {providerId && providerId !== "new" && (
-                <div className="col-span-full mt-4">
-                    <LoginLink
-                        iconName="square-arrow-up-right"
-                        iconClass="px-2"
-                        page={`/v2/management/#providers/edit/details/${providerId}`}
-                        className="flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary text-sm font-bold"
+                <div className="mt-4 max-w-fit">
+                    <ButtonLink
+                        className="!border-sb-blue !text-sb-blue flex-row-reverse"
+                        icon={true}
+                        iconName="target-blank"
+                        iconClass="fa-regular"
+                        reverseIcon={true}
+                        btnVariant="square-ghost-small"
+                        loginLink={`/v2/management/#providers/edit/details/${providerId}`}
                     >
-                        {__('Edit All Properties', 'simplybook')}
-                    </LoginLink>
+                        {__("Edit All Properties", "simplybook")}
+                    </ButtonLink>
                 </div>
             )}
+            {/* General error */}
             {crudState.error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {crudState.error}

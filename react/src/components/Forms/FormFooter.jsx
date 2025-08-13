@@ -20,7 +20,7 @@ const FormFooter = ({
         isDirty = false,
         isSubmitting = false,
         isValidating = false,
-        isValid = true
+        isValid = true,
     } = settingsFormState;
     const { crudState, dispatch, saveItems } = useCrudContext();
     const { isSavingSettings } = useSettingsData();
@@ -34,12 +34,12 @@ const FormFooter = ({
         switch (crudState.itemType) {
             case "provider": {
                 setSavingAllowed(providersAllowedToSave);
-                setCancelAllowed(!crudState.isSaving && crudState.providersHasUnsavedChanges || crudState.isSaving);
+                setCancelAllowed(!crudState.isSaving && crudState.providersHasUnsavedChanges);
                 break;
             }
             case "service": {
                 setSavingAllowed(servicesAllowedToSave);
-                setCancelAllowed(!crudState.isSaving && crudState.servicesHasUnsavedChanges || crudState.isSaving);
+                setCancelAllowed(!crudState.isSaving && crudState.servicesHasUnsavedChanges);
                 break;
             }
         }

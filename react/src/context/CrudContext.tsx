@@ -204,19 +204,18 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
             }
 
             const data = formatItem({...unsavedItem});
-            console.log("data", data);
 
             if (unsavedItem.id === "new") {
-                createFunction(data).then((res) => {
-                    dispatch({dispatchType: successDispatchType.create, change: {item: res.data}});
+                createFunction(data).then((response) => {
+                    dispatch({dispatchType: successDispatchType.create, change: {item: response.data}});
                     toastNotice.setMessage(successMessages.create).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
                     errorCallback(error, 'create', "new");
                 });
             } else {
-                updateFunction({ id: unsavedItem.id, data: data }).then((res) => {
-                    dispatch({dispatchType: successDispatchType.update, change: {item: res.data}});
+                updateFunction({ id: unsavedItem.id, data: data }).then((response) => {
+                    dispatch({dispatchType: successDispatchType.update, change: {item: response.data}});
                     toastNotice.setMessage(successMessages.update).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
@@ -261,30 +260,30 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             const currentlyVisibleProviders = state.currentlyVisibleProviders ?? [];
             const isChangeToVisibility = Object.keys(action.change.item).includes('is_visible');
 
-            if (isProviderBackToOriginalState){
+            if (isProviderBackToOriginalState) {
                 const updatedProvidersList = state.unsavedProviders?.filter((provider)=> updatedProviderToSave.id != provider.id) ?? [];
                 return {
                     ...state,
                     unsavedProviders: updatedProvidersList,
                     providersHasUnsavedChanges: updatedProvidersList.length ? updatedProvidersList.length > 0 : false,
-                    ...(isChangeToVisibility && { currentlyVisibleServices: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
+                    ...(isChangeToVisibility && { currentlyVisibleProviders: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
                 };
             }
 
             const indexOfUnsavedProvider = state.unsavedProviders ? state.unsavedProviders.findIndex((provider)=>provider.id === updatedProviderToSave.id) : -1;
             const updatedUnsavedProvidersList = state.unsavedProviders ? [...state.unsavedProviders] : [];
 
-            if (indexOfUnsavedProvider != -1){
+            if (indexOfUnsavedProvider != -1) {
                 updatedUnsavedProvidersList[indexOfUnsavedProvider] = updatedProviderToSave;
             } else {
-                updatedUnsavedProvidersList.push(updatedProviderToSave)
+                updatedUnsavedProvidersList.push(updatedProviderToSave);
             }
 
             return {
                 ...state,
                 unsavedProviders: updatedUnsavedProvidersList,
                 providersHasUnsavedChanges: true,
-                ...(isChangeToVisibility && { currentlyVisibleServices: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
+                ...(isChangeToVisibility && { currentlyVisibleProviders: setCurrentlyVisibleItems(Number(updatedProviderToSave.id), currentlyVisibleProviders, !!updatedProviderToSave.is_visible) }),
             };
         }
         case 'unsavedChangesToServices': {
@@ -315,7 +314,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             if (indexOfUnsavedService != -1){
                 updatedUnsavedServiceList[indexOfUnsavedService] = updatedServiceToSave;
             } else {
-                updatedUnsavedServiceList.push(updatedServiceToSave)
+                updatedUnsavedServiceList.push(updatedServiceToSave);
             }
 
             return {
@@ -432,7 +431,8 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
                 providersHasUnsavedChanges: updatedListOfUnsavedProviders.length  !== 0,
                 currentlyVisibleProviders: updatedListOfVisibleProviders,
             };
-        }case 'serviceUpdatedSuccessfully': {
+        }
+        case 'serviceUpdatedSuccessfully': {
             if (!action.change.item){
                 throw new Error("No service provided")
             }
@@ -501,7 +501,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             };
         }
         case 'providerDeleted': {
-            if (action.change.item) {
+            if (!action.change.item) {
                 throw new Error('Item to delete not set');
             }
             const updatedListOfProviders = state.providers ? state.providers.filter((provider)=> provider.id !== action.change.item?.id) : [];
@@ -583,6 +583,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             if (!field){
                 throw new Error("No field provided");
             }
+
             const currentErrorsForItemType = state.itemType === 'provider' ? state.providerErrors: state.serviceErrors;
             const currentErrorsForThisItem = action.change.item?.id && currentErrorsForItemType ? currentErrorsForItemType[action.change.item.id] : null;
 
@@ -590,9 +591,9 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
                 //@ts-ignore
                 delete currentErrorsForThisItem[field];
             }
-            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && {[action.change.item.id]: currentErrorsForThisItem})};
+            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && currentErrorsForThisItem && {[action.change.item.id]: currentErrorsForThisItem})};
 
-            //If, after removing the error on the field, there are no more fields with errors, delete the whole item from the error list
+            //If, after removing the error on the field, this item has no more fields with errors, delete the whole item from the error list
             //Because the error always has 'id' as a key, length === 1 would mean no other keys have errors
             if (currentErrorsForThisItem && Object.keys(currentErrorsForThisItem).length === 1) {
                 //@ts-ignore
@@ -624,7 +625,6 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             };
         }
         case 'savingChanged': {
-            console.log("saving changed", action.change.isSaving);
             return {
                 ...state,
                 isSaving: action.change.isSaving,
@@ -645,7 +645,7 @@ const setCurrentlyVisibleItems = (id: number, currentlyVisibleItems: (string | n
     switch (isVisible) {
         case true: {
             if (!isItemCurrentlyVisible) {
-                currentlyVisibleItems?.push(id);
+                currentlyVisibleItems.push(id);
             }
             updatedListOfVisibleItems = currentlyVisibleItems;
             break;

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -6,14 +6,21 @@ import { useCrudContext } from '../../context/CrudContext';
 import ProviderRow from './Partials/ProviderRow';
 import ProviderForm from './Partials/ProviderForm';
 import useSubscriptionData from "../../hooks/useSubscriptionData";
+import ButtonInput from "../Inputs/ButtonInput";
 
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
-    const { providersRemaining, providersTotal } = useSubscriptionData();
+    const { providersRemaining, providersTotal, getSubscriptionData } = useSubscriptionData();
 
     useEffect(()=> {
         console.log(crudState);
     }, [crudState]);
+
+    useEffect(() => {
+        getSubscriptionData().then((test) => {
+            console.log(test);
+        })
+    }, [crudState.providers]);
 
     const handleCancelCreatingNew = () => {
         dispatch({dispatchType: "createNewCanceled"});
@@ -22,25 +29,16 @@ const ProvidersListField = () => {
 
     const defaultNewProvider = { id: "new", name: '', email: '', phone: '', qty: 1 };
 
-    const handleAdd = useCallback(() => {
+    const handleAdd = () => {
         dispatch({dispatchType: 'isCreatingNewChanged', change: { isCreatingNewProvider: true }});
         dispatch({dispatchType: 'unsavedChangesToProviders', change: { item: defaultNewProvider}});
-    }, []);
+    };
 
     if (!crudState.providers || crudState.isLoading) {
         return (
             <div className="flex items-center justify-center p-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                 <span className="ml-2">{__('Loading service providers...', 'simplybook')}</span>
-            </div>
-        );
-    }
-
-    //TODO
-    if (false) {
-        return (
-            <div className="text-red-600 p-4 bg-red-50 rounded-md">
-                {crudState.error}
             </div>
         );
     }
@@ -69,18 +67,19 @@ const ProvidersListField = () => {
                 <>
                     <div className="flex justify-between items-center mb-4">
                         <div className="flex items-center gap-3">
-                            <button
+                            <ButtonInput
                                 type="button"
-                                disabled={crudState.isSaving}
+                                className="font-bold bg-secondary"
                                 onClick={crudState.isCreatingNewProvider ? handleCancelCreatingNew : handleAdd}
-                                className={"flex items-center border border-gray-200 justify-center bg-gray-100 text-gray-900 hover:bg-gray-200 rounded-sm transition-all duration-200 px-3 py-1 text-sm cursor-pointer"}
+                                disabled={crudState.isSaving}
+                                btnVariant="square-small"
                             >
-                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-gray-500" />
+                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold" />
                                 {crudState.isCreatingNewProvider ? __('Cancel New Service Provider', 'simplybook') : __('Add Service Provider', 'simplybook')}
-                            </button>
+                            </ButtonInput>
                         </div>
-                        <div className={"rounded-md px-2 py-1 text-gray-900 bg-blue-100"}>
-                            <span>{`${providersRemaining} / ${providersTotal}`}</span>
+                        <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
+                            <span>{`Providers: ${providersTotal - providersRemaining} / ${providersTotal}`}</span>
                         </div>
                     </div>
 
