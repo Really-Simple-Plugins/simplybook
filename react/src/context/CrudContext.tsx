@@ -590,7 +590,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
                 //@ts-ignore
                 delete currentErrorsForThisItem[field];
             }
-            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && {[action.change.item.id]: currentErrorsForThisItem})};
+            const updatedErrorsForItemType = {...currentErrorsForItemType, ...(action.change.item.id && currentErrorsForThisItem && {[action.change.item.id]: currentErrorsForThisItem})};
 
             //If, after removing the error on the field, there are no more fields with errors, delete the whole item from the error list
             //Because the error always has 'id' as a key, length === 1 would mean no other keys have errors
