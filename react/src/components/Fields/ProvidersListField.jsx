@@ -77,7 +77,7 @@ const ProvidersListField = () => {
                             </button>
                         </div>
                         <div className={"rounded-md px-2 py-1 text-gray-900 bg-blue-100"}>
-                            <span>{`${providersRemaining} / ${providersTotal}`}</span>
+                            <span>{`${providersTotal - providersRemaining} / ${providersTotal}`}</span>
                         </div>
                     </div>
 
