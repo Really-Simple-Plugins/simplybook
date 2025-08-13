@@ -146,6 +146,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                     </ButtonLink>
                 </div>
             )}
+            {/* General error */}
             {crudState.error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {crudState.error}

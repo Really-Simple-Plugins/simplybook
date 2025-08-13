@@ -215,6 +215,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                     </ButtonLink>
                 </div>
             )}
+            {/* General error */}
             {crudState.error && (
                 <div className="col-span-full text-red-600 text-sm">
                     {crudState.error}
