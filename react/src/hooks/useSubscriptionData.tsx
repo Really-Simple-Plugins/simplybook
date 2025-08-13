@@ -11,7 +11,7 @@ const useSubscriptionData = () => {
     const route = 'subscription_data';
     const client = new HttpClient(route);
 
-    const {isLoading, error, data: response} = useQuery<SubscriptionData>({
+    const {isLoading, error, data: response, refetch} = useQuery<SubscriptionData>({
         queryKey: [route],
         queryFn: () => client.get(),
         staleTime: 1000 * 60 * 60,
@@ -38,6 +38,7 @@ const useSubscriptionData = () => {
         bookingsTotal: (response?.data?.limits?.sheduler_limit?.total ?? 0),
         providersRemaining: (response?.data?.limits?.provider_limit?.rest ?? 0),
         providersTotal: (response?.data?.limits?.provider_limit?.total ?? 0),
+        getSubscriptionData: refetch,
         isLoading: isLoading,
         hasError: (error !== null),
     }
