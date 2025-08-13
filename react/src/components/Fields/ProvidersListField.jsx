@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -22,10 +22,10 @@ const ProvidersListField = () => {
 
     const defaultNewProvider = { id: "new", name: '', email: '', phone: '', qty: 1 };
 
-    const handleAdd = useCallback(() => {
+    const handleAdd = () => {
         dispatch({dispatchType: 'isCreatingNewChanged', change: { isCreatingNewProvider: true }});
         dispatch({dispatchType: 'unsavedChangesToProviders', change: { item: defaultNewProvider}});
-    }, []);
+    };
 
     if (!crudState.providers || crudState.isLoading) {
         return (
