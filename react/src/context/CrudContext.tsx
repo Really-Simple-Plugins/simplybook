@@ -207,16 +207,16 @@ export const CrudContextProvider = ({children}: {children: React.ReactNode}) => 
             console.log("data", data);
 
             if (unsavedItem.id === "new") {
-                createFunction(data).then((res) => {
-                    dispatch({dispatchType: successDispatchType.create, change: {item: res.data}});
+                createFunction(data).then((response) => {
+                    dispatch({dispatchType: successDispatchType.create, change: {item: response.data}});
                     toastNotice.setMessage(successMessages.create).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
                     errorCallback(error, 'create', "new");
                 });
             } else {
-                updateFunction({ id: unsavedItem.id, data: data }).then((res) => {
-                    dispatch({dispatchType: successDispatchType.update, change: {item: res.data}});
+                updateFunction({ id: unsavedItem.id, data: data }).then((response) => {
+                    dispatch({dispatchType: successDispatchType.update, change: {item: response.data}});
                     toastNotice.setMessage(successMessages.update).setType("success").render();
                     dispatch({dispatchType: 'savingChanged', change: {isSaving: false}});
                 }).catch((error) => {
