@@ -118,14 +118,16 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                         className={"mt-[1px]"}
                         onClick={(e) => e.stopPropagation()}
                     >
-                        <label className={clsx(
+                        <label
+                            className={clsx(
                             "relative inline-flex items-center mb-0",
                             isOnlyVisibleService ? "cursor-not-allowed" : "cursor-pointer"
-                        )} title={
+                            )}
+                            title={
                             isOnlyVisibleService
                                 ? __('Cannot hide the last visible service', 'simplybook')
                                 : isServiceVisible ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
-                        }
+                            }
                         >
                             <input
                                 type="checkbox"
