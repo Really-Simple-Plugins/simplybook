@@ -23,7 +23,7 @@ interface CrudDataReturn {
     deleteError: any;
 }
 
-const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
+const useCrudData = (route: string): CrudDataReturn => {
     const client = new HttpClient(route);
     const queryClient = useQueryClient();
 

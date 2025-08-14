@@ -14,13 +14,10 @@ const ProvidersListField = () => {
     const [providerCount, setProviderCount] = useState(providersTotal - providersRemaining);
 
     useEffect(() => {
-        console.log(crudState);
-    }, [crudState]);
-
-    useEffect(() => {
-        getSubscriptionData().then((test) => {
-            console.log(test);
-        });
+        //TODO: after changes to caching
+        // getSubscriptionData().then((data) => {
+        //     console.log(data);
+        // });
         if (crudState.providers) {
             setProviderCount(crudState.providers.length);
         }

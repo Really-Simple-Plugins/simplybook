@@ -55,7 +55,6 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
         updateService,
         deleteService,
         isLoading: isServicesLoading,
-        servicesFetched
     } = useServicesData();
     const {
         getProviders,
@@ -63,7 +62,6 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
         updateProvider,
         deleteProvider,
         isLoading: isProvidersLoading,
-        providersFetched
     } = useProviderData();
     const toastNotice = new ToastNotice();
 

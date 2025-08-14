@@ -1,20 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
 import ServiceRow from './Partials/ServiceRow';
 import ServiceForm from './Partials/ServiceForm';
-import clsx from "clsx";
 import ButtonInput from "../Inputs/ButtonInput";
 
 const ServicesListField = () => {
     const { crudState, dispatch } = useCrudContext();
-
-    useEffect(() => {
-        console.log(crudState);
-        console.log(crudState.isSaving);
-    }, [crudState]);
 
     const handleCancelCreatingNew = () => {
         dispatch({ dispatchType: "createNewCanceled" });
