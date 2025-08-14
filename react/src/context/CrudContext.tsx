@@ -145,9 +145,6 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
     };
 
     const handleSave = () => {
-        if (!crudState.unsavedProviders || !crudState.unsavedServices) {
-            throw new Error("Nothing to save");
-        }
         if (crudState.generalError) {
             dispatch({ dispatchType: 'generalError', change: { generalError: '' } });
         }
@@ -190,6 +187,11 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
                 throw new Error('ItemType not set');
             }
         }
+        if (Object.keys(unsavedItems).length === 0) {
+            dispatch({ dispatchType: 'savingChanged', change: { isSaving: false } });
+            throw new Error("Nothing to save");
+        }
+
         const errorCallback = (error: DataError, type: string = '', id: string | number) => {
             console.error('Error on save:', error);
             if (error.fields) {
