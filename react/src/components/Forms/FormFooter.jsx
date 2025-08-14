@@ -47,7 +47,11 @@ const FormFooter = ({
 
     const handleSaveItems = () => {
         dispatch({ dispatchType: 'savingChanged', change: { isSaving: true } });
-        saveItems();
+        try {
+            saveItems();
+        } catch (error) {
+            dispatch({dispatchType: 'generalError', change: {generalError: error.message}})
+        }
     };
 
     useEffect(() => {
