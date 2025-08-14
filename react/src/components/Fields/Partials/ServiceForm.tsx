@@ -56,7 +56,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
         switch (field) {
             case 'name': {
                 isValueValid = value !== '';
-                errorMessage = [__('Service name is required', 'simplybook')];
+                errorMessage = [__('Name is a required field.', 'simplybook')];
                 break;
             }
             case 'duration': {

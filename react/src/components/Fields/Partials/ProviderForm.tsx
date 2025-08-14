@@ -55,7 +55,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
         switch (field) {
             case 'name': {
                 isValueValid = value !== '';
-                errorMessage = [__('Provider name is required', 'simplybook')];
+                errorMessage = [__('Name is a required field.', 'simplybook')];
                 break;
             }
             case 'email': {
