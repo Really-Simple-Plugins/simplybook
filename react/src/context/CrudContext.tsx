@@ -255,18 +255,17 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
     );
 };
 
-//TODO implement something like this so action.change is allowed to be partial and the actual state has accurate mandatory fields
 type PartialCrudState = Partial<CrudState>;
 
 interface CrudReducerAction {
     dispatchType: string,
-    change: CrudState,
+    change: PartialCrudState,
 }
 
 const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudState => {
     switch (action.dispatchType) {
         case 'crudItemTypeChanged': {
-            return { ...state, itemType: action.change.itemType };
+            return { ...state, itemType: action.change.itemType ? action.change.itemType : null };
         }
         case 'unsavedChangesToProviders': {
             if (!action.change.item) {
@@ -645,12 +644,18 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             };
         }
         case 'loadingChanged': {
+            if (action.change.isLoading === undefined) {
+                throw new Error("isLoading not set");
+            }
             return {
                 ...state,
                 isLoading: action.change.isLoading,
             };
         }
         case 'savingChanged': {
+            if (action.change.isSaving === undefined) {
+                throw new Error("isLoading not set");
+            }
             return {
                 ...state,
                 isSaving: action.change.isSaving,
@@ -700,23 +705,23 @@ const formatItem = (item: { [key: string | number]: string | number | boolean })
 };
 
 interface CrudState {
-    itemType?: "service" | "provider" | null,
+    itemType: "service" | "provider" | null,
     item?: Provider | Service | null,
     providers?: Provider[],
     services?: Service[],
-    unsavedProviders?: Provider[],
-    unsavedServices?: Service[],
-    providerErrors?: { [key: string | number]: { [key: string | number]: string[] } },
-    serviceErrors?: { [key: string | number]: { [key: string | number]: string[] } },
-    currentlyVisibleProviders?: (number | string)[],
-    currentlyVisibleServices?: (number | string)[],
-    servicesHasUnsavedChanges?: boolean,
-    isLoading?: boolean,
-    isSaving?: boolean,
-    providersHasUnsavedChanges?: boolean,
-    isCreatingNewProvider?: boolean,
-    isCreatingNewService?: boolean,
-    generalError?: string,
+    unsavedProviders: Provider[],
+    unsavedServices: Service[],
+    providerErrors: { [key: string | number]: { [key: string | number]: string[] } },
+    serviceErrors: { [key: string | number]: { [key: string | number]: string[] } },
+    currentlyVisibleProviders: (number | string)[],
+    currentlyVisibleServices: (number | string)[],
+    servicesHasUnsavedChanges: boolean,
+    isLoading: boolean,
+    isSaving: boolean,
+    providersHasUnsavedChanges: boolean,
+    isCreatingNewProvider: boolean,
+    isCreatingNewService: boolean,
+    generalError: string,
 }
 
 const initialCrudState: CrudState = {
