@@ -421,7 +421,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             const updatedListOfUnsavedProviders = state.unsavedProviders ? state.unsavedProviders?.filter((provider) => provider.id !== action.change.item?.id) : [];
             const updatedListOfAllProviders = state.providers ? state.providers.map((provider) => {
                 if (provider.id === action.change.item?.id) {
-                    return action.change.item;
+                    return {...provider, ...action.change.item};
                 }
                 return provider;
             }) : [];
@@ -460,7 +460,7 @@ const crudStateReducer = (state: CrudState, action: CrudReducerAction): CrudStat
             const updatedListOfUnsavedServices = state.unsavedServices ? state.unsavedServices?.filter((service) => service.id !== action.change.item?.id) : [];
             const updatedListOfAllServices = state.services ? state.services.map((service) => {
                 if (service.id === action.change.item?.id) {
-                    return action.change.item;
+                    return {...service, ...action.change.item};
                 }
                 return service;
             }) : [];
