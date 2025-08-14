@@ -37,17 +37,19 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
     //TODO simplify
     useEffect(() => {
         const isOnlyProvider = crudState.providers?.every((providerToTest) => provider.id === providerToTest.id);
-        const isOnlyVisibleProviderAfterUpdate = crudState.currentlyVisibleProviders?.every((id) => provider.id === id);
-        if (isOnlyVisibleProviderAfterUpdate != undefined && (isOnlyVisibleProviderAfterUpdate != isOnlyVisibleProvider)) {
+        const isOnlyVisibleProviderAfterUpdate = crudState.currentlyVisibleProviders.every((id) => provider.id === id);
+        if (isOnlyVisibleProviderAfterUpdate != isOnlyVisibleProvider) {
             setIsOnlyVisibleProvider(isOnlyVisibleProviderAfterUpdate);
         }
-        const shouldDeleteBeDisabled = isOnlyVisibleProviderAfterUpdate != undefined && isOnlyProvider != undefined ? (isOnlyVisibleProviderAfterUpdate || isOnlyProvider) : false;
+
+        const isOnlyCurrentlySavedVisibleProvider = crudState.providers?.filter((providerToTest) => providerToTest.is_visible).every((providerToTest) => provider.id === providerToTest.id);
+        const shouldDeleteBeDisabled = isOnlyCurrentlySavedVisibleProvider != undefined && isOnlyProvider != undefined ? (isOnlyCurrentlySavedVisibleProvider || isOnlyVisibleProviderAfterUpdate || isOnlyProvider) : false;
         if (shouldDeleteBeDisabled != isDeleteDisabled) {
             setIsDeleteDisabled(shouldDeleteBeDisabled);
         }
 
-        const isCurrentlyVisible = crudState.currentlyVisibleProviders?.includes(provider.id);
-        if (isCurrentlyVisible != undefined && isCurrentlyVisible != isProviderVisible) {
+        const isCurrentlyVisible = crudState.currentlyVisibleProviders.includes(provider.id);
+        if (isCurrentlyVisible != isProviderVisible) {
             setIsProviderVisible(isCurrentlyVisible);
         }
     }, [crudState]);

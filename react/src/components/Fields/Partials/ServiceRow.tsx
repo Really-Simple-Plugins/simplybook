@@ -29,23 +29,26 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
     const hasPicture = service.picture_preview && service.picture_preview.length > 0;
 
     useEffect(() => {
-        const isCurrentlyVisible = crudState.currentlyVisibleServices?.includes(service.id);
+        const isCurrentlyVisible = crudState.currentlyVisibleServices.includes(service.id);
         setIsServiceVisible(isCurrentlyVisible ?? !!service.is_visible);
     }, []);
 
     //TODO simplify
     useEffect(() => {
         const isOnlyService = crudState.services?.every((serviceToTest) => service.id === serviceToTest.id);
-        const isOnlyVisibleServiceAfterUpdate = crudState.currentlyVisibleServices?.every((id) => service.id === id);
-        if (isOnlyVisibleServiceAfterUpdate != undefined && (isOnlyVisibleServiceAfterUpdate != isOnlyVisibleService)) {
+        const isOnlyVisibleServiceAfterUpdate = crudState.currentlyVisibleServices.every((id) => service.id === id);
+        if (isOnlyVisibleServiceAfterUpdate != isOnlyVisibleService) {
             setIsOnlyVisibleService(isOnlyVisibleServiceAfterUpdate);
         }
-        const shouldDeleteBeDisabled = isOnlyVisibleServiceAfterUpdate != undefined && isOnlyService != undefined ? (isOnlyVisibleServiceAfterUpdate || isOnlyService) : false;
+
+        const isOnlyCurrentlySavedVisibleService = crudState.services?.filter((serviceToTest) => serviceToTest.is_visible).every((serviceToTest) => service.id === serviceToTest.id);
+        const shouldDeleteBeDisabled = isOnlyCurrentlySavedVisibleService != undefined && isOnlyService != undefined ? (isOnlyCurrentlySavedVisibleService || isOnlyVisibleServiceAfterUpdate || isOnlyService) : false;
         if (shouldDeleteBeDisabled != isDeleteDisabled) {
             setIsDeleteDisabled(shouldDeleteBeDisabled);
         }
-        const isCurrentlyVisible = crudState.currentlyVisibleServices?.includes(service.id);
-        if (isCurrentlyVisible != undefined && isCurrentlyVisible != isServiceVisible) {
+
+        const isCurrentlyVisible = crudState.currentlyVisibleServices.includes(service.id);
+        if (isCurrentlyVisible != isServiceVisible) {
             setIsServiceVisible(isCurrentlyVisible);
         }
     }, [crudState]);
