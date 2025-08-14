@@ -5,7 +5,7 @@ import React, {
     Dispatch,
     useEffect,
 } from 'react';
-import * as _ from "lodash";
+import _ from "lodash";
 import useProviderData from "../hooks/useProviderData";
 import useServicesData from "../hooks/useServicesData";
 import Provider from "../types/Provider";
