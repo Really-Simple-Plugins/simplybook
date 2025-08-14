@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import LoginLink from "../../Common/LoginLink";
 import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
