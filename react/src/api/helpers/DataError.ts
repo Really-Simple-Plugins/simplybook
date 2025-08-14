@@ -1,5 +1,6 @@
 export class DataError extends Error {
     public fields: {} | undefined;
+
     constructor(message: string, fields?: object, ...params: undefined[]) {
         super(message, ...params);
         this.name = "DataError";

@@ -13,7 +13,7 @@ const ProvidersListField = () => {
     const { providersRemaining, providersTotal, getSubscriptionData } = useSubscriptionData();
     const [providerCount, setProviderCount] = useState(providersTotal - providersRemaining);
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log(crudState);
     }, [crudState]);
 
@@ -27,15 +27,15 @@ const ProvidersListField = () => {
     }, [crudState.providers]);
 
     const handleCancelCreatingNew = () => {
-        dispatch({dispatchType: "createNewCanceled"});
-        dispatch({dispatchType: "clearAllErrorsForItem", change: {item: {id: "new"}}});
+        dispatch({ dispatchType: "createNewCanceled" });
+        dispatch({ dispatchType: "clearAllErrorsForItem", change: { item: { id: "new" } } });
     };
 
     const defaultNewProvider = { id: "new", name: '', email: '', phone: '', qty: 1 };
 
     const handleAdd = () => {
-        dispatch({dispatchType: 'isCreatingNewChanged', change: { isCreatingNewProvider: true }});
-        dispatch({dispatchType: 'unsavedChangesToProviders', change: { item: defaultNewProvider}});
+        dispatch({ dispatchType: 'isCreatingNewChanged', change: { isCreatingNewProvider: true } });
+        dispatch({ dispatchType: 'unsavedChangesToProviders', change: { item: defaultNewProvider } });
     };
 
     if (!crudState.providers || crudState.isLoading) {
@@ -78,7 +78,7 @@ const ProvidersListField = () => {
                                 disabled={crudState.isSaving}
                                 btnVariant="square-small"
                             >
-                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold" />
+                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold"/>
                                 {crudState.isCreatingNewProvider ? __('Cancel New Service Provider', 'simplybook') : __('Add Service Provider', 'simplybook')}
                             </ButtonInput>
                         </div>

@@ -81,7 +81,7 @@ function Settings() {
         const observer = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const heightChanged = entry.contentRect.height !== settingsFormHeight;
-                if (heightChanged){
+                if (heightChanged) {
                     setSettingsFormHeight(entry.contentRect.height);
                 }
             }
@@ -119,7 +119,7 @@ function Settings() {
         toastNotice.setMessage(
             __('Settings saved successfully', 'simplybook')
         ).setType("success").render();
-    }
+    };
 
     /**
      * Method to handle errors when saving settings. The method checks if
@@ -139,7 +139,7 @@ function Settings() {
                 error.message
             ).setType("error").render();
         });
-    }
+    };
 
     return (
         <CrudContextProvider>

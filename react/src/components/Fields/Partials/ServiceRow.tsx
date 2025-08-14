@@ -60,11 +60,14 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
 
     const toggleRow = () => {
         setIsExpanded(!isExpanded);
-    }
-    
+    };
+
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
-        dispatch({dispatchType: 'unsavedChangesToServices', change: {item: {id: service.id, is_visible: event.target.checked} }});
+        dispatch({
+            dispatchType: 'unsavedChangesToServices',
+            change: { item: { id: service.id, is_visible: event.target.checked } }
+        });
         setIsServiceVisible(event.target.checked);
     };
 
@@ -75,7 +78,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
             <div
                 className={"flex items-center justify-between p-4 rounded-t-lg  gap-2"}
                 onClick={() => {
-                    if(!serviceHasErrors) {
+                    if (!serviceHasErrors) {
                         toggleRow();
                     }
                 }}
@@ -84,7 +87,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                 <div className="flex space-x-3 flex-1 max-w-3/5">
                     {/* Service picture preview */}
                     {hasPicture ?
-                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + service.picture_preview}  alt={__('...', 'simplybook')}/>
+                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + service.picture_preview} alt={__('...', 'simplybook')}/>
                         :
                         <div className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full font-bold">
                             {service.name?.charAt(0).toUpperCase()}
@@ -106,11 +109,11 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                             e.stopPropagation();
                             handleDeletingItem(service.id);
                         }}
-                        disabled={ isLoading || isDeleteDisabled }
+                        disabled={isLoading || isDeleteDisabled}
                         className="text-gray-500 hover:text-red-600 hover:bg-red-100 disabled:opacity-50 p-1 cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
                         title={isDeleteDisabled ? __('Cannot delete the only visible service', 'simplybook') : __('Delete Service', 'simplybook')}
                     >
-                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
+                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4"/>
                     </button>
 
                     {/* Visibility Toggle */}
@@ -120,13 +123,13 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
                     >
                         <label
                             className={clsx(
-                            "relative inline-flex items-center mb-0",
-                            isOnlyVisibleService ? "cursor-not-allowed" : "cursor-pointer"
+                                "relative inline-flex items-center mb-0",
+                                isOnlyVisibleService ? "cursor-not-allowed" : "cursor-pointer"
                             )}
                             title={
-                            isOnlyVisibleService
-                                ? __('Cannot hide the last visible service', 'simplybook')
-                                : isServiceVisible ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
+                                isOnlyVisibleService
+                                    ? __('Cannot hide the last visible service', 'simplybook')
+                                    : isServiceVisible ? __('Visible', 'simplybook') : __('Hidden', 'simplybook')
                             }
                         >
                             <input

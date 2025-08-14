@@ -1,4 +1,4 @@
-import {useQuery, useMutation, useQueryClient} from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import HttpClient from "../api/requests/HttpClient";
 
 interface CrudDataParams {
@@ -48,23 +48,23 @@ const useCrudData = (route: string, resourceName: string): CrudDataReturn => {
         onMutate: async (params) => {
             // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
             await queryClient.cancelQueries({ queryKey: [route] });
-            
+
             // Snapshot the previous value
             const previousData = queryClient.getQueryData([route]);
-            
+
             // Optimistically update to the new value
             queryClient.setQueryData([route], (old: any) => {
                 if (!old?.data) return old;
                 return {
                     ...old,
-                    data: old.data.map((item: any) => 
-                        item.id === params.id 
+                    data: old.data.map((item: any) =>
+                        item.id === params.id
                             ? { ...item, ...params.data }
                             : item
                     )
                 };
             });
-            
+
             // Return a context object with the snapshotted value
             return { previousData };
         },

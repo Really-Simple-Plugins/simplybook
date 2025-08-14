@@ -12,7 +12,7 @@ type ServiceFormProps = {
     serviceId: Service['id'],
 }
 
-const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
+const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
     if (!service) {
         return <div className="text-gray-500">Loading...</div>;
     }
@@ -27,24 +27,27 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
     }, [crudState.unsavedServices]);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const errorsForThisService = crudState.serviceErrors ? crudState.serviceErrors[serviceId] : null;
         if (errorsForThisService && !crudState.servicesHasUnsavedChanges) {
-            dispatch({dispatchType: 'clearAllErrorsForItem', change: {item: {id: serviceId}}});
+            dispatch({ dispatchType: 'clearAllErrorsForItem', change: { item: { id: serviceId } } });
         }
     }, [crudState.serviceErrors, crudState.servicesHasUnsavedChanges]);
 
-    const handleInputChange = (field : string, value: string | number) => {
-        const changesToUpdate = { id: serviceId, [field]: field === 'duration' && value !== '' ? Number(value) : value };
+    const handleInputChange = (field: string, value: string | number) => {
+        const changesToUpdate = {
+            id: serviceId,
+            [field]: field === 'duration' && value !== '' ? Number(value) : value
+        };
         const errorsForThisService = crudState.serviceErrors ? crudState.serviceErrors[serviceId] : {};
         const fieldHasErrors = errorsForThisService ? Object.keys(errorsForThisService).includes(field) : false;
         if (fieldHasErrors) {
-            dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: serviceId, [field]: ''}}});
+            dispatch({ dispatchType: 'clearErrorsForField', change: { item: { id: serviceId, [field]: '' } } });
         }
         if (crudState.generalError) {
-            dispatch({dispatchType: 'generalError', change: {generalError: ''}})
+            dispatch({ dispatchType: 'generalError', change: { generalError: '' } });
         }
-        dispatch({ dispatchType: 'unsavedChangesToServices', change: {item: changesToUpdate }});
+        dispatch({ dispatchType: 'unsavedChangesToServices', change: { item: changesToUpdate } });
     };
 
     const validateValue = (field: string, value: string): boolean => {
@@ -65,13 +68,13 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
         }
 
         if (!isValueValid && errorMessage) {
-            const errors = { [field]:  errorMessage};
-            dispatch({dispatchType: 'errorsOnFields', change: {serviceErrors: {[serviceId]: { ...errors }}}});
+            const errors = { [field]: errorMessage };
+            dispatch({ dispatchType: 'errorsOnFields', change: { serviceErrors: { [serviceId]: { ...errors } } } });
         } else if (crudState.serviceErrors && crudState.serviceErrors[serviceId]) {
-            dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: serviceId, [field]: ''}}});
+            dispatch({ dispatchType: 'clearErrorsForField', change: { item: { id: serviceId, [field]: '' } } });
         }
         return isValueValid;
-    }
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -94,7 +97,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['name'] && (
                     <div>
-                        {crudState.serviceErrors[serviceId]['name'].map((error)=> (
+                        {crudState.serviceErrors[serviceId]['name'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>
@@ -118,8 +121,11 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                             handleInputChange('duration', trimmedValue);
                         }
                         if (trimmedValue === '') {
-                            const errors = { duration: [__('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')]};
-                            dispatch({dispatchType: 'errorsOnFields', change: {serviceErrors: {[serviceId]: { ...errors }}}});
+                            const errors = { duration: [__('Please enter a valid number that is a multiple of your selected timeframe', 'simplybook')] };
+                            dispatch({
+                                dispatchType: 'errorsOnFields',
+                                change: { serviceErrors: { [serviceId]: { ...errors } } }
+                            });
                         }
                     }}
                     onBlur={(e) => {
@@ -131,11 +137,11 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service  }) => {
                 />
                 {crudState.serviceErrors && crudState.serviceErrors[serviceId] ? crudState.serviceErrors[serviceId]['duration'] && (
                     <div>
-                        {crudState.serviceErrors[serviceId]['duration'].map((error)=> (
+                        {crudState.serviceErrors[serviceId]['duration'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>
-                ): null}
+                ) : null}
             </div>
             {/* Edit All Properties Button */}
             {serviceId && serviceId !== "new" && (

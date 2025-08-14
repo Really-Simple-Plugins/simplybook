@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import LoginLink from '../../Common/LoginLink';
 import { __ } from '@wordpress/i18n';
 import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
@@ -26,24 +25,24 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     }, [crudState.unsavedProviders]);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[providerId] : null;
         if (errorsForThisProvider && !crudState.providersHasUnsavedChanges) {
-            dispatch({dispatchType: 'clearAllErrorsForItem', change: {item: {id: providerId}}});
+            dispatch({ dispatchType: 'clearAllErrorsForItem', change: { item: { id: providerId } } });
         }
     }, [crudState.providerErrors, crudState.providersHasUnsavedChanges]);
 
-    const handleInputChange = (field : string, value: string | number) => {
-        const changesToUpdate = { id: providerId, [field]: field === 'qty' && value !== '' ? Number(value): value };
+    const handleInputChange = (field: string, value: string | number) => {
+        const changesToUpdate = { id: providerId, [field]: field === 'qty' && value !== '' ? Number(value) : value };
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[providerId] : {};
         const fieldHasErrors = errorsForThisProvider ? Object.keys(errorsForThisProvider).includes(field) : false;
         if (fieldHasErrors) {
-            dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: providerId, [field]: ''}}});
+            dispatch({ dispatchType: 'clearErrorsForField', change: { item: { id: providerId, [field]: '' } } });
         }
         if (crudState.generalError) {
-            dispatch({dispatchType: 'generalError', change: {generalError: ''}})
+            dispatch({ dispatchType: 'generalError', change: { generalError: '' } });
         }
-        dispatch({ dispatchType: 'unsavedChangesToProviders', change: {item: changesToUpdate }})
+        dispatch({ dispatchType: 'unsavedChangesToProviders', change: { item: changesToUpdate } });
     };
 
     const validateValue = (field: string, value: string): boolean => {
@@ -80,13 +79,13 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
         }
 
         if (!isValueValid && errorMessage) {
-            const errors = { [field]:  errorMessage};
-            dispatch({dispatchType: 'errorsOnFields', change: {providerErrors: {[providerId]: { ...errors }}}});
+            const errors = { [field]: errorMessage };
+            dispatch({ dispatchType: 'errorsOnFields', change: { providerErrors: { [providerId]: { ...errors } } } });
         } else if (crudState.providerErrors && crudState.providerErrors[providerId]) {
-            dispatch({dispatchType: 'clearErrorsForField', change: {item: {id: providerId, [field]: ''}}});
+            dispatch({ dispatchType: 'clearErrorsForField', change: { item: { id: providerId, [field]: '' } } });
         }
         return isValueValid;
-    }
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -109,7 +108,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['name'] && (
                     <div>
-                        {crudState.providerErrors[providerId]['name'].map((error)=> (
+                        {crudState.providerErrors[providerId]['name'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>
@@ -133,11 +132,11 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['email'] && (
                     <div>
-                        {crudState.providerErrors[providerId]['email'].map((error)=> (
+                        {crudState.providerErrors[providerId]['email'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>
-                ): null}
+                ) : null}
             </div>
             <div className="col-span-full">
                 <label className="cursor-pointer pb-1 font-medium text-black text-label block" htmlFor="provider-phone">
@@ -169,7 +168,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
 
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && (
                     <div>
-                        {crudState.providerErrors[providerId]['phone'].map((error)=> (
+                        {crudState.providerErrors[providerId]['phone'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>
@@ -193,8 +192,11 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                             handleInputChange('qty', trimmedValue);
                         }
                         if (trimmedValue === '') {
-                            const errors = { qty: [__('Please enter a valid number between 1 and 99', 'simplybook')]};
-                            dispatch({dispatchType: 'errorsOnFields', change: {providerErrors: {[providerId]: { ...errors }}}});
+                            const errors = { qty: [__('Please enter a valid number between 1 and 99', 'simplybook')] };
+                            dispatch({
+                                dispatchType: 'errorsOnFields',
+                                change: { providerErrors: { [providerId]: { ...errors } } }
+                            });
                         }
                     }}
                     onBlur={(e) => {
@@ -206,7 +208,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                 />
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['qty'] && (
                     <div>
-                        {crudState.providerErrors[providerId]['qty'].map((error)=> (
+                        {crudState.providerErrors[providerId]['qty'].map((error) => (
                             <span className={"font-medium text-red-600 ml-[1px] block mt-1"}>{error}</span>
                         ))}
                     </div>

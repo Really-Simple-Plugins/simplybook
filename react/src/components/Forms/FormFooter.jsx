@@ -4,7 +4,7 @@ import { useFormState } from "react-hook-form";
 import useSettingsData from "../../hooks/useSettingsData";
 import ButtonLink from "../Buttons/ButtonLink";
 import PreviewButtonInput from "../Inputs/PreviewButton";
-import {ToastContainer} from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { useParams } from "@tanstack/react-router";
 import { useCrudContext } from "../../context/CrudContext";
 import { useEffect, useState } from "react";
@@ -46,39 +46,39 @@ const FormFooter = ({
     }, [crudState]);
 
     const handleSaveItems = () => {
-        dispatch({dispatchType: 'savingChanged', change: {isSaving: true}});
+        dispatch({ dispatchType: 'savingChanged', change: { isSaving: true } });
         saveItems();
-    }
+    };
 
     useEffect(() => {
         switch (params?.settingsId) {
             case 'providers': {
-                dispatch({dispatchType: "crudItemTypeChanged", change: { itemType: 'provider' }});
+                dispatch({ dispatchType: "crudItemTypeChanged", change: { itemType: 'provider' } });
                 break;
             }
             case 'services': {
-                dispatch({dispatchType: "crudItemTypeChanged", change: { itemType: 'service' }});
+                dispatch({ dispatchType: "crudItemTypeChanged", change: { itemType: 'service' } });
                 break;
             }
             default: {
-                dispatch({dispatchType: "crudItemTypeChanged", change: { itemType: null }});
+                dispatch({ dispatchType: "crudItemTypeChanged", change: { itemType: null } });
             }
         }
-    }, [params])
+    }, [params]);
 
     // Form states for Design page
     const settingsStates = [
-        { condition: isSubmitting, message: __("Saving...", "simplybook")},
-        { condition: isValidating, message: __("Validating...", "simplybook")},
-        { condition: !isValid, message: __("Form contains errors", "simplybook")},
-        { condition: isDirty, message: __("You have unsaved changes", "simplybook")},
+        { condition: isSubmitting, message: __("Saving...", "simplybook") },
+        { condition: isValidating, message: __("Validating...", "simplybook") },
+        { condition: !isValid, message: __("Form contains errors", "simplybook") },
+        { condition: isDirty, message: __("You have unsaved changes", "simplybook") },
     ];
 
     // Form states for Provider and Service pages
     const crudStates = [
-        { condition: crudState.generalError, message: crudState.generalError},
-        { condition: crudState.isSaving, message: __("Saving...", "simplybook")},
-        { condition: cancelAllowed, message: __("You have unsaved changes", "simplybook")},
+        { condition: crudState.generalError, message: crudState.generalError },
+        { condition: crudState.isSaving, message: __("Saving...", "simplybook") },
+        { condition: cancelAllowed, message: __("You have unsaved changes", "simplybook") },
     ];
 
     const currentState = !crudState.itemType
@@ -87,7 +87,7 @@ const FormFooter = ({
 
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
-            <FormScrollProgressLine settingsFormHeight={settingsFormHeight} />
+            <FormScrollProgressLine settingsFormHeight={settingsFormHeight}/>
             <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
                 {currentState && (
                     <p className={`text-sm flex items-center gap-2 p-0 m-0 mr-2 ${crudState.generalError && 'text-red-600'}`}>
@@ -119,7 +119,7 @@ const FormFooter = ({
                     <>
                         <ButtonLink
                             btnVariant={'tertiary-small'}
-                            onClick={() => dispatch({dispatchType: 'cancelAllUnsavedChanges'})}
+                            onClick={() => dispatch({ dispatchType: 'cancelAllUnsavedChanges' })}
                             disabled={!cancelAllowed}
                         >
                             {__("Cancel", "simplybook")}
@@ -148,7 +148,7 @@ const FormFooter = ({
             />
         </div>
     );
-}
+};
 
 FormFooter.displayName = "FormFooter";
 

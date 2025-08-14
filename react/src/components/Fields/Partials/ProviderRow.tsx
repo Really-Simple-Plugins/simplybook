@@ -42,7 +42,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
             setIsOnlyVisibleProvider(isOnlyVisibleProviderAfterUpdate);
         }
         const shouldDeleteBeDisabled = isOnlyVisibleProviderAfterUpdate != undefined && isOnlyProvider != undefined ? (isOnlyVisibleProviderAfterUpdate || isOnlyProvider) : false;
-        if (shouldDeleteBeDisabled != isDeleteDisabled){
+        if (shouldDeleteBeDisabled != isDeleteDisabled) {
             setIsDeleteDisabled(shouldDeleteBeDisabled);
         }
 
@@ -54,7 +54,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
 
     useEffect(() => {
         const errorsForThisProvider = crudState.providerErrors ? crudState.providerErrors[provider.id] : null;
-        if (errorsForThisProvider && !isExpanded){
+        if (errorsForThisProvider && !isExpanded) {
             setIsExpanded(true);
         }
         setProviderHasErrors(!!errorsForThisProvider);
@@ -62,11 +62,14 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
 
     const toggleRow = () => {
         setIsExpanded(!isExpanded);
-    }
+    };
 
     const handleVisibilityToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.stopPropagation();
-        dispatch({dispatchType: 'unsavedChangesToProviders', change: {item: {id: provider.id, is_visible: event.target.checked} }});
+        dispatch({
+            dispatchType: 'unsavedChangesToProviders',
+            change: { item: { id: provider.id, is_visible: event.target.checked } }
+        });
         setIsProviderVisible(event.target.checked);
     };
 
@@ -76,7 +79,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
             <div
                 className={"flex items-center justify-between p-4 rounded-t-lg gap-2"}
                 onClick={() => {
-                    if(!providerHasErrors) {
+                    if (!providerHasErrors) {
                         toggleRow();
                     }
                 }}
@@ -85,7 +88,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                 <div className="flex space-x-3 flex-1 max-w-3/5">
                     {/* Provider picture preview */}
                     {hasPicture ?
-                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + provider.picture_preview}  alt={__('...', 'simplybook')}/>
+                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + provider.picture_preview} alt={__('...', 'simplybook')}/>
                         :
                         <div className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full font-bold">
                             {provider.name?.charAt(0).toUpperCase()}
@@ -111,7 +114,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                         className="text-gray-500 hover:text-red-600 hover:bg-red-100 disabled:opacity-50 p-1 rounded cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
                         title={isDeleteDisabled ? __('Cannot delete the only visible service provider', 'simplybook') : __('Delete Service Provider', 'simplybook')}
                     >
-                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4" />
+                        <FontAwesomeIcon icon={faTrash} className="w-4 h-4"/>
                     </button>
 
                     {/* Visibility Toggle */}
@@ -156,7 +159,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                             toggleRow();
                         }}
                         className={clsx("px-1 rounded text-gray-500 active:ring-4 focus:ring-4 active:ring-blue-300 focus:ring-blue-300 hover:bg-gray-200 transition-transform duration-200 cursor-pointer flex items-center h-6",
-                            providerHasErrors&& "pointer-events-none opacity-50 cursor-not-allowed"
+                            providerHasErrors && "pointer-events-none opacity-50 cursor-not-allowed"
                         )}
                         title={isExpanded ? __('Collapse', 'simplybook') : __('Expand', 'simplybook')}
                     >

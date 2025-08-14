@@ -1,5 +1,5 @@
-import {X_WP_NONCE, NONCE, SB_API_URL} from '../config';
-import {__} from "@wordpress/i18n";
+import { X_WP_NONCE, NONCE, SB_API_URL } from '../config';
+import { __ } from "@wordpress/i18n";
 import { DataError } from "../helpers/DataError";
 
 /**
@@ -9,7 +9,7 @@ class HttpClient {
     private route: string | null = null;
     private getMethodHeaders: Record<string, string> = {
         'X-WP-NONCE': X_WP_NONCE,
-    }
+    };
 
     private postMethodHeaders: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -19,7 +19,7 @@ class HttpClient {
 
     private payload: Record<string, any> = {
         'nonce': NONCE,
-    }
+    };
 
     /**
      * Constructor to initialize the route URL.
@@ -103,13 +103,13 @@ class HttpClient {
 
         const payload = {
             ...this.payload,
-            ...(data && {...data}),
+            ...(data && { ...data }),
         };
 
         const response = await fetch(this.route, {
             method: 'PUT',
             headers: this.postMethodHeaders,
-            body: JSON.stringify({...payload}),
+            body: JSON.stringify({ ...payload }),
         });
 
         this.resetPayload();
@@ -190,7 +190,7 @@ class HttpClient {
      * @returns The HttpClient instance.
      */
     public setPayload(payload: Record<string, any>) {
-        if(!payload){
+        if (!payload) {
             throw new Error(__('Payload not set. Use setPayload().', 'simplybook'));
         }
         this.payload = {
@@ -204,7 +204,7 @@ class HttpClient {
     private resetPayload() {
         this.payload = {
             'nonce': NONCE,
-        }
+        };
     }
 
     /**
@@ -213,7 +213,6 @@ class HttpClient {
      * @throws An error with a message.
      */
     private handleError(errorData: any) {
-        console.log("errordata", errorData);
         let error = __('An unknown error occurred. Please try again.', 'simplybook');
         let fields;
 

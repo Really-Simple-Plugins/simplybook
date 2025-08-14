@@ -9,23 +9,23 @@ import clsx from "clsx";
 import ButtonInput from "../Inputs/ButtonInput";
 
 const ServicesListField = () => {
-    const {crudState, dispatch } = useCrudContext();
+    const { crudState, dispatch } = useCrudContext();
 
-    useEffect(()=> {
+    useEffect(() => {
         console.log(crudState);
         console.log(crudState.isSaving);
     }, [crudState]);
 
     const handleCancelCreatingNew = () => {
-        dispatch({dispatchType: "createNewCanceled"});
-        dispatch({dispatchType: "clearAllErrorsForItem", change: {item: {id: "new"}}});
+        dispatch({ dispatchType: "createNewCanceled" });
+        dispatch({ dispatchType: "clearAllErrorsForItem", change: { item: { id: "new" } } });
     };
 
     const defaultNewService = { id: "new", name: '', duration: 60 };
 
     const handleAdd = () => {
-        dispatch({dispatchType: 'isCreatingNewChanged', change: { isCreatingNewService: true }});
-        dispatch({dispatchType: 'unsavedChangesToServices', change: { item: defaultNewService}});
+        dispatch({ dispatchType: 'isCreatingNewChanged', change: { isCreatingNewService: true } });
+        dispatch({ dispatchType: 'unsavedChangesToServices', change: { item: defaultNewService } });
     };
 
     if (!crudState.services || crudState.isLoading) {
@@ -66,7 +66,7 @@ const ServicesListField = () => {
                         disabled={crudState.isSaving}
                         btnVariant="square-small"
                     >
-                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold" />
+                        <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold"/>
                         {crudState.isCreatingNewProvider ? __('Cancel New Service', 'simplybook') : __('Add Service', 'simplybook')}
                     </ButtonInput>
                 </div>
