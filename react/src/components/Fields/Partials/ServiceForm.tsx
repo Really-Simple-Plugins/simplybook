@@ -15,8 +15,6 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
     if (!service) {
         return <div className="text-gray-500">Loading...</div>;
     }
-    //TODO
-    const { isPluginActive } = useSpecialFeaturesData();
     const { crudState, dispatch } = useCrudContext();
     const [currentServiceState, setCurrentServiceState] = useState<Service>(service);
 
