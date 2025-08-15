@@ -190,9 +190,10 @@ class HttpClient {
      * @returns The HttpClient instance.
      */
     public setPayload(payload: Record<string, any>) {
-        if (!payload) {
-            throw new Error(__('Payload not set. Use setPayload().', 'simplybook'));
+        if (this.isValidPayload(payload) === false) {
+            throw new Error(__('Payload must be a non-empty object.', 'simplybook'));
         }
+
         this.payload = {
             ...this.payload,
             ...payload,
@@ -201,6 +202,31 @@ class HttpClient {
         return this;
     }
 
+    /**
+     * Method is used for validating incoming payloads from mixed JS/TS sources.
+     * It ensures we only accept non-empty plain objects (no arrays, no
+     * Dates/Maps, etc.).
+     * @param value the payload data to check
+     * @return boolean
+     */
+    public isValidPayload(value: unknown): value is Record<string, unknown> {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) {
+            return false;
+        }
+
+        // Accept plain objects with either Object.prototype or null prototype.
+        const proto = Object.getPrototypeOf(value);
+        if (proto !== Object.prototype && proto !== null) {
+            return false;
+        }
+
+        return Object.keys(value as object).length > 0;
+    }
+
+    /**
+     * Reset payload data to default value. Useful for instances where the
+     * client is used multiple times.
+     */
     private resetPayload() {
         this.payload = {
             'nonce': NONCE,
