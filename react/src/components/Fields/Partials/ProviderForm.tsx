@@ -157,14 +157,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                         validateValue('phone', e.target.value.trim());
                     }}
                 />
-                {/*<IntlTelInput*/}
-                {/*    onChangeNumber={(e)=> console.log(e)}*/}
-                {/*    // onChangeValidity={(e)=> console.log(e)}*/}
-                {/*    // onChangeErrorCode={(e)=> console.log(e)}*/}
-                {/*    initOptions={{*/}
-                {/*        initialCountry: "us",*/}
-                {/*    }}*/}
-                {/*/>*/}
 
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && (
                     <div>
