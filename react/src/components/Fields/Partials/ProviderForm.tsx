@@ -4,8 +4,6 @@ import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
 import Provider from "../../../types/Provider";
 import ButtonLink from "../../Buttons/ButtonLink";
-// import IntlTelInput from "intl-tel-input/reactWithUtils";
-// import "intl-tel-input/styles";
 
 type ProviderFormProps = {
     provider: Provider,
