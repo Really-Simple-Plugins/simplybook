@@ -14,7 +14,7 @@ type ProviderFormProps = {
 
 const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => {
     if (!provider) {
-        return <div className="text-gray-500">Loading...</div>;
+        return <div className="text-gray-500">{__('Loading', 'simplybook')}...</div>;
     }
     const { crudState, dispatch } = useCrudContext();
     const [currentProviderState, setCurrentProviderState] = useState<Provider>(provider);
