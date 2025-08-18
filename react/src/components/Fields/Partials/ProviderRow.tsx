@@ -88,7 +88,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                 <div className="flex space-x-3 flex-1 max-w-3/5">
                     {/* Provider picture preview */}
                     {hasPicture ?
-                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + provider.picture_preview} alt={__('...', 'simplybook')}/>
+                        <img className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full" src={domain + provider.picture_preview} alt="..."/>
                         :
                         <div className="w-20 h-20 min-w-[36px] max-w-[36px] max-h-[36px] bg-blue-100 text-xs flex items-center justify-center overflow-hidden rounded-full font-bold">
                             {provider.name?.charAt(0).toUpperCase()}

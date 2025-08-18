@@ -4,8 +4,6 @@ import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
 import Provider from "../../../types/Provider";
 import ButtonLink from "../../Buttons/ButtonLink";
-// import IntlTelInput from "intl-tel-input/reactWithUtils";
-// import "intl-tel-input/styles";
 
 type ProviderFormProps = {
     provider: Provider,
@@ -14,7 +12,7 @@ type ProviderFormProps = {
 
 const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => {
     if (!provider) {
-        return <div className="text-gray-500">Loading...</div>;
+        return <div className="text-gray-500">{__('Loading', 'simplybook')}...</div>;
     }
     const { crudState, dispatch } = useCrudContext();
     const [currentProviderState, setCurrentProviderState] = useState<Provider>(provider);
@@ -158,14 +156,6 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                         validateValue('phone', e.target.value.trim());
                     }}
                 />
-                {/*<IntlTelInput*/}
-                {/*    onChangeNumber={(e)=> console.log(e)}*/}
-                {/*    // onChangeValidity={(e)=> console.log(e)}*/}
-                {/*    // onChangeErrorCode={(e)=> console.log(e)}*/}
-                {/*    initOptions={{*/}
-                {/*        initialCountry: "us",*/}
-                {/*    }}*/}
-                {/*/>*/}
 
                 {crudState.providerErrors && crudState.providerErrors[providerId] ? crudState.providerErrors[providerId]['phone'] && (
                     <div>
