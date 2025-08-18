@@ -7,6 +7,7 @@ import ProviderRow from './Partials/ProviderRow';
 import ProviderForm from './Partials/ProviderForm';
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import ButtonInput from "../Inputs/ButtonInput";
+import { useBlocker } from "@tanstack/react-router";
 
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
@@ -22,6 +23,21 @@ const ProvidersListField = () => {
             setProviderCount(crudState.providers.length);
         }
     }, [crudState.providers]);
+
+    useBlocker({
+        shouldBlockFn: ({ next }) => {
+            if (next.pathname.includes("settings")) {
+                return false; // Don't block within the settings page, all unsaved changes are stored in context
+            }
+
+            const shouldLeave = window.confirm(
+                __('You have unsaved changes. Are you sure you want to leave?\n\nYour changes will be lost.', 'simplybook'),
+            );
+
+            return !shouldLeave;
+        },
+        enableBeforeUnload: crudState.unsavedProviders.length && crudState.unsavedServices.length,
+    });
 
     const handleCancelCreatingNew = () => {
         dispatch({ dispatchType: "createNewCanceled" });

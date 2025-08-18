@@ -6,9 +6,25 @@ import { useCrudContext } from '../../context/CrudContext';
 import ServiceRow from './Partials/ServiceRow';
 import ServiceForm from './Partials/ServiceForm';
 import ButtonInput from "../Inputs/ButtonInput";
+import { useBlocker } from "@tanstack/react-router";
 
 const ServicesListField = () => {
     const { crudState, dispatch } = useCrudContext();
+
+    useBlocker({
+        shouldBlockFn: ({ next }) => {
+            if (next.pathname.includes("settings")) {
+                return false; // Don't block within the settings page, all unsaved changes are stored in context
+            }
+
+            const shouldLeave = window.confirm(
+                __('You have unsaved changes. Are you sure you want to leave?\n\nYour changes will be lost.', 'simplybook'),
+            );
+
+            return !shouldLeave;
+        },
+        enableBeforeUnload: crudState.unsavedProviders.length && crudState.unsavedServices.length,
+    });
 
     const handleCancelCreatingNew = () => {
         dispatch({ dispatchType: "createNewCanceled" });
