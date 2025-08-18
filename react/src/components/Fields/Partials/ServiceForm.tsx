@@ -3,7 +3,6 @@ import { __ } from "@wordpress/i18n";
 import clsx from "clsx";
 import { useCrudContext } from "../../../context/CrudContext";
 import Service from "../../../types/Service";
-import useSpecialFeaturesData from "../../../hooks/useSpecialFeaturesData";
 import ButtonLink from "../../Buttons/ButtonLink";
 
 type ServiceFormProps = {

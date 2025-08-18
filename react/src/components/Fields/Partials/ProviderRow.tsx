@@ -11,13 +11,11 @@ import useDomainData from "../../../hooks/useDomainData";
 type ProviderRowProps = {
     provider: Provider,
     providers: Provider[],
-    isLoading: boolean,
 }
 
 const ProviderRow: React.FC<ProviderRowProps> = ({
      provider,
      providers,
-     isLoading,
 }) => {
     const { crudState, dispatch, handleDeletingItem } = useCrudContext();
     const { domain } = useDomainData();
@@ -112,7 +110,7 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                             e.stopPropagation();
                             handleDeletingItem(provider.id);
                         }}
-                        disabled={ isLoading || isDeleteDisabled }
+                        disabled={ crudState.isLoading || isDeleteDisabled }
                         className="text-gray-500 hover:text-red-600 hover:bg-red-100 disabled:opacity-50 p-1 rounded cursor-pointer disabled:cursor-not-allowed flex items-center h-6"
                         title={isDeleteDisabled ? __('Cannot delete the only visible service provider', 'simplybook') : __('Delete Service Provider', 'simplybook')}
                     >
