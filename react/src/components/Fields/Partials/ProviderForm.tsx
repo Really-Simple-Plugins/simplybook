@@ -22,7 +22,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
     useEffect(() => {
         const providerInUnsavedList = crudState.unsavedProviders?.find((providerToTest) => providerToTest.id === providerId);
         setCurrentProviderState(providerInUnsavedList ?? provider);
-    }, [crudState.unsavedProviders]);
+    }, []);
 
 
     useEffect(() => {
@@ -42,6 +42,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
         if (crudState.generalError) {
             dispatch({ dispatchType: 'generalError', change: { generalError: '' } });
         }
+        setCurrentProviderState((prevState) => ({...prevState, ...changesToUpdate}));
         dispatch({ dispatchType: 'unsavedChangesToProviders', change: { item: changesToUpdate } });
     };
 

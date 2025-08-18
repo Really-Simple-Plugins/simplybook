@@ -21,7 +21,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
     useEffect(() => {
         const serviceInUnsavedList = crudState.unsavedServices?.find((serviceToTest) => serviceToTest.id === serviceId);
         setCurrentServiceState(serviceInUnsavedList ?? service);
-    }, [crudState.unsavedServices]);
+    }, []);
 
 
     useEffect(() => {
@@ -44,6 +44,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
         if (crudState.generalError) {
             dispatch({ dispatchType: 'generalError', change: { generalError: '' } });
         }
+        setCurrentServiceState(prevState => ({...prevState, ...changesToUpdate}));
         dispatch({ dispatchType: 'unsavedChangesToServices', change: { item: changesToUpdate } });
     };
 
