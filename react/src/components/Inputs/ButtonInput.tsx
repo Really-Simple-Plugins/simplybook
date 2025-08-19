@@ -16,7 +16,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
     
     let buttonVariants = clsx(
         // Base styles
-        "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1",
+        "flex items-center justify-center rounded-full transition-all duration-200 px-3 py-1 text-sm",
         {
             'bg-primary text-white hover:bg-primary-dark !p-4 text-base' : btnVariant == 'primary',
             'bg-primary text-white hover:bg-primary-dark ' : btnVariant == 'primary-small',
@@ -26,9 +26,9 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
             'bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary': btnVariant == 'tertiary-small',
             'border-2 border-black bg-transparent !p-4 text-base' : btnVariant == 'ghost',
             'border-2 border-black bg-transparent' : btnVariant == 'ghost-small',
-            'bg-primary text-white rounded-md hover:bg-primary-dark !p-4 text-base': btnVariant == 'square',
+            'border-2 border-inherit bg-primary text-white rounded-md text-base': btnVariant == 'square',
+            'border-2 border-primary text-primary rounded-md text-base': btnVariant == 'square-ghost',
             'rounded-md text-white': btnVariant == 'square-small',
-            'border-2 border-primary text-primary rounded-md !p-4 text-base': btnVariant == 'square-ghost',
             'border-2 border-primary text-primary rounded-md': btnVariant == 'square-ghost-small',
 
             // Disabled styles
@@ -38,7 +38,7 @@ const ButtonInput: React.FC<ButtonInputProps> = ({
     );
 
     //if props.className is not empty, replace className with props.className
-    if (className.length>0) {
+    if (className.length > 0) {
         buttonVariants = buttonVariants + ' ' + className;
     }
 
