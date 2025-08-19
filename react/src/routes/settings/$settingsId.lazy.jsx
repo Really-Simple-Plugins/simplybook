@@ -106,7 +106,8 @@ function Settings() {
             }
 
             return !shouldLeave;
-        }
+        },
+        enableBeforeUnload: isDirty,
     });
 
     /**

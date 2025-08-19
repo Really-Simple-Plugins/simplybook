@@ -26,7 +26,8 @@ const ProvidersListField = () => {
 
     useBlocker({
         shouldBlockFn: ({ next }) => {
-            if (next.pathname.includes("settings")) {
+            const hasAnyUnsavedChanges = crudState.unsavedServices.length !== 0 || crudState.unsavedProviders.length !== 0;
+            if (next.pathname.includes("settings") || !hasAnyUnsavedChanges) {
                 return false; // Don't block within the settings page, all unsaved changes are stored in context
             }
 
@@ -36,7 +37,7 @@ const ProvidersListField = () => {
 
             return !shouldLeave;
         },
-        enableBeforeUnload: crudState.unsavedProviders.length && crudState.unsavedServices.length,
+        enableBeforeUnload: crudState.unsavedServices.length !== 0 || crudState.unsavedProviders.length !== 0,
     });
 
     const handleCancelCreatingNew = () => {
