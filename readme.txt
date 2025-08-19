@@ -34,6 +34,7 @@ SimplyBook.me is the easiest way to start collecting bookings on your WordPress 
 * Create individual schedules for staff
 * Create multiple users related to providers
 * Accepting payments and/or deposits to confirm the bookings in the booking process
+* Easily implement your booking widget with a Gutenberg block, Elementor Widget or a shortcode
 
 SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools.
 
