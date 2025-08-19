@@ -70,10 +70,10 @@ const ProvidersListField = () => {
                         <div className="flex items-center gap-3">
                             <ButtonInput
                                 type="button"
-                                className="font-bold bg-secondary"
+                                className="font-bold border-secondary bg-secondary text-white"
                                 onClick={crudState.isCreatingNewProvider ? handleCancelCreatingNew : handleAdd}
                                 disabled={crudState.isSaving}
-                                btnVariant="square-small"
+                                btnVariant="square"
                             >
                                 <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold"/>
                                 {crudState.isCreatingNewProvider ? __('Cancel New Service Provider', 'simplybook') : __('Add Service Provider', 'simplybook')}
