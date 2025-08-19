@@ -76,7 +76,7 @@ const ServiceRow: React.FC<ServiceRowProps> = ({
 
 
     return (
-        <div className={"border border-gray-200 rounded-lg mb-6 bg-gray-50"}>
+        <div className={"border border-gray-200 rounded-lg mb-4 bg-gray-50"}>
             {/* Main row */}
             <div
                 className={"flex items-center justify-between p-4 rounded-t-lg  gap-2"}
