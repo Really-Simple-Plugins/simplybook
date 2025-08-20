@@ -88,6 +88,17 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.2.0 =
+* Added: Widget can now be implemented using a SimplyBook.me Elementor block.
+* Added: Theme styling is used as a default style for the widget during onboarding.
+* Added: Tasks on the dashboard can now open a popup for more information.
+* Changed: Services and Service Providers can now be managed in the plugin.
+* Changed: Reduced load of the plugin on the WordPress admin.
+* Changed: Improved connection stability with the SimplyBook.me system.
+* Changed: Improved Swedish translations.
+* Fixed: Leave-page warning now only appears when there are unsaved changes.
+* Fixed: Added missing button spacing in the dashboard.
+
 = 3.1.1 =
 * Added: bookingsystem.nu and simplybooking.io domains now supported at login.
 * Added: Notice shown when WordPress REST API is disabled.
