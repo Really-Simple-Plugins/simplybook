@@ -8,7 +8,7 @@ use SimplyBook\Helpers\Event;
  * Service for tracking which pages/posts contain SimplyBook widgets.
  *
  * This service handles the business logic for monitoring widget usage across
- * WordPress posts and pages, including both shortcodes and Gutenberg blocks.
+ * WordPress posts and pages, including shortcodes, Gutenberg blocks, and Elementor widgets.
  */
 class WidgetTrackingService
 {
@@ -39,8 +39,9 @@ class WidgetTrackingService
 			);
 		}
 
-		return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER)
-		       || $this->postHasGutenbergBlock();
+		return $this->postHasShortcode()
+		       || $this->postHasGutenbergBlock()
+		       || $this->postHasElementorWidget();
 	}
 
 	/**
@@ -152,6 +153,16 @@ class WidgetTrackingService
 		update_option(self::PAGES_WITH_WIDGET_OPTION, $posts);
 	}
 
+    /**
+     * Check if the post content contains the SimplyBook shortcode. This also
+     * tracks pages made with Elementor by users who use the Shortcode element
+     * instead of our custom block.
+     */
+    private function postHasShortcode(): bool
+    {
+        return has_shortcode($this->post->post_content, self::SHORTCODE_IDENTIFIER);
+    }
+
 	/**
 	 * Check if the post content contains a SimplyBook Gutenberg block.
 	 */
@@ -164,6 +175,61 @@ class WidgetTrackingService
 		}
 
 		return has_block(self::GUTENBERG_BLOCK_IDENTIFIER, $this->post->post_content);
+	}
+
+	/**
+	 * Check if the post contains a SimplyBook Elementor widget.
+	 */
+	private function postHasElementorWidget(): bool
+	{
+		if ($this->hasPost() === false) {
+			throw new \RuntimeException(
+				sprintf('%s: No post set, post could not be fetched.', __METHOD__)
+			);
+		}
+
+		// Check if Elementor is active and this post uses Elementor
+		if (!class_exists('\Elementor\Plugin')) {
+			return false;
+		}
+
+		// Get Elementor data for this post
+		$elementorData = get_post_meta($this->postId, '_elementor_data', true);
+
+		if (empty($elementorData)) {
+			return false;
+		}
+
+		// Parse JSON data
+		$data = json_decode($elementorData, true);
+		if (!is_array($data)) {
+			return false;
+		}
+
+		// Recursively search for SimplyBook widgets in the Elementor structure
+		return $this->elementorDataContainsWidget($data);
+	}
+
+	/**
+	 * Recursively search Elementor data structure for SimplyBook widgets.
+	 */
+	private function elementorDataContainsWidget(array $elements): bool
+	{
+		foreach ($elements as $element) {
+			// Check if this element is a SimplyBook widget
+			if (isset($element['widgetType']) && $element['widgetType'] === self::SHORTCODE_IDENTIFIER) {
+				return true;
+			}
+
+			// Recursively check child elements
+			if (isset($element['elements']) && is_array($element['elements'])) {
+				if ($this->elementorDataContainsWidget($element['elements'])) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
