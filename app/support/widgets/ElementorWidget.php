@@ -5,6 +5,8 @@ use Elementor\Controls_Manager;
 use Elementor\Widget_Base;
 use SimplyBook\App;
 use SimplyBook\Traits\HasApiAccess;
+use SimplyBook\Http\Entities\Service;
+use SimplyBook\Http\Entities\ServiceProvider;
 
 class ElementorWidget extends Widget_Base
 {
@@ -169,9 +171,10 @@ class ElementorWidget extends Widget_Base
             return []; // we shouldn't be here
         }
 
-        $services = App::provide('client')->getServices(true);
+        $serviceEntity = new Service();
+
         return $this->buildOptionsFromApiData(
-            is_array($services) ? $services : [],
+            $serviceEntity->all(),
             esc_html__('Select a service', 'simplybook')
         );
     }
@@ -185,9 +188,10 @@ class ElementorWidget extends Widget_Base
             return []; // we shouldn't be here
         }
 
-        $providers = App::provide('client')->getProviders(true);
+        $providerEntity = new ServiceProvider();
+
         $options = $this->buildOptionsFromApiData(
-            is_array($providers) ? $providers : [],
+            $providerEntity->all(),
             esc_html__('Select a service provider', 'simplybook')
         );
 
