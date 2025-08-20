@@ -44,7 +44,7 @@ class OnboardingController implements FeatureInterface
         ];
 
         $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'POST',
+            'methods' => 'GET',
             'callback' => [$this->service, 'getRecaptchaSitekey'],
         ];
 
@@ -102,7 +102,7 @@ class OnboardingController implements FeatureInterface
      */
     public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         $companyBuilder = (new CompanyBuilder())->buildFromArray(
             $storage->all()
@@ -127,7 +127,7 @@ class OnboardingController implements FeatureInterface
         if ($companyBuilder->isValid() === false) {
             return $this->service->sendHttpResponse([
                 'invalid_fields' => $companyBuilder->getInvalidFields(),
-            ], false, esc_html__('Please fill in all fields.', 'simplybook'));
+            ], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
@@ -137,7 +137,7 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->service->finishCompanyRegistration($response->data);
-        return $this->service->sendHttpResponse([], $response->success, $response->message);
+        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
     /**
@@ -147,7 +147,7 @@ class OnboardingController implements FeatureInterface
     public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $error = '';
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         if ($storage->isEmpty('recaptchaToken')) {
             // wp_kses_post to allow apostrophe in the message
@@ -168,11 +168,11 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('recaptchaToken')
             );
         } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
 
         $this->service->setCompletedStep(3);
-        return $this->service->sendHttpResponse([], $response->success, $response->message);
+        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
     /**
@@ -196,7 +196,7 @@ class OnboardingController implements FeatureInterface
                 'message' => $e->getMessage(),
             ], false, esc_html__(
                 'Something went wrong while saving the widget style settings. Please try again.', 'simplybook'
-            ));
+            ), 400);
         }
 
         return $this->service->sendHttpResponse([], true, esc_html__(
@@ -210,7 +210,7 @@ class OnboardingController implements FeatureInterface
      */
     public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
         $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
 
         return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
@@ -221,13 +221,13 @@ class OnboardingController implements FeatureInterface
      */
     public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData, 'payload');
+        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
             return $this->service->sendHttpResponse([], false, esc_html__(
                 'Calendar page title should be available if you choose to generate this page.', 'simplybook'
-            ));
+            ), 503);
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
@@ -247,7 +247,7 @@ class OnboardingController implements FeatureInterface
 
         return $this->service->sendHttpResponse([
             'calendar_page_id' => $calendarPageID,
-        ], $pageCreatedSuccessfully);
+        ], $pageCreatedSuccessfully, '', ($pageCreatedSuccessfully ? 200 : 400));
     }
 
     /**
@@ -404,6 +404,8 @@ class OnboardingController implements FeatureInterface
     /**
      * Method is used to finish the onboarding process. It is called when the
      * user has completed the onboarding process and wants to finish it.
+     *
+     * @param \WP_REST_Request $request Contains enitre onboarding data
      */
     public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -413,7 +415,7 @@ class OnboardingController implements FeatureInterface
         $success = $this->service->setOnboardingCompleted();
         if (!$success) {
             $message = esc_html__('An error occurred while finishing the onboarding process', 'simplybook');
-            $code = 500;
+            $code = 400;
         }
 
         return $this->service->sendHttpResponse([], $success, $message, $code);

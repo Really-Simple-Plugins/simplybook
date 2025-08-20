@@ -2,11 +2,11 @@ import { createLazyFileRoute } from "@tanstack/react-router";
 import {__} from "@wordpress/i18n";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import { useEffect, useRef, useState } from "react";
-import getRecaptchaSiteKey from "../../api/endpoints/onBoarding/getRecaptchaSitekey";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
+import HttpClient from "../../api/requests/HttpClient";
 
 const path = "/onboarding/confirm-email";
 
@@ -17,11 +17,29 @@ export const Route = createLazyFileRoute(path)({
         const recaptchaContainerRef = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
         const [confirmationCode, setConfirmationCode] = useState("");
+        const [siteKey, setSiteKey] = useState("");
 
-        const setupRecaptcha = async () => {
-            //get sitekey first, loading script has to wait.
-            let siteKey = await getRecaptchaSiteKey();
+        const httpClient = new HttpClient();
 
+        const getRecaptchaSiteKey = async (attempt = 1) => {
+            const response = await httpClient.setRoute('onboarding/get_recaptcha_sitekey').get();
+
+            if (response?.data?.site_key) {
+                setSiteKey(response.data.site_key);
+                return;
+            }
+
+            if (attempt > 5) {
+                console.error("Recaptcha site key is still missing after 5 attempts.");
+                return null;
+            }
+
+            console.warn("Recaptcha site key is missing or empty, retrying in 3 seconds. Attempt:", attempt);
+            await new Promise(resolve => setTimeout(resolve, 3000));
+            return getRecaptchaSiteKey(attempt + 1);
+        };
+
+        const setupRecaptcha = async (siteKey) => {
             const script = document.createElement("script");
             script.src = "https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit";
             script.async = true;
@@ -45,9 +63,9 @@ export const Route = createLazyFileRoute(path)({
         }
 
         useEffect(() => {
-            if (!recaptchaRendered) {
+            if (!recaptchaRendered && siteKey) {
                 setRecaptchaRendered(true);
-                setupRecaptcha();
+                setupRecaptcha(siteKey);
             }
 
             // Cleanup function to remove the script and callback when the component unmounts
@@ -58,6 +76,10 @@ export const Route = createLazyFileRoute(path)({
                     document.body.removeChild(existingScript);
                 }
             };
+        }, [siteKey]);
+
+        useEffect(() => {
+            getRecaptchaSiteKey();
         }, []);
 
         return (

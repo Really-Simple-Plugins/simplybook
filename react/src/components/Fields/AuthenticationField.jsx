@@ -34,9 +34,9 @@ const AuthenticationField = forwardRef(
             }
 
             try {
-                await client.post({
+                await client.setPayload({
                     user_confirmed: confirmed,
-                });
+                }).post();
             } catch (error) {
                 console.error("Logout request failed", error);
                 return;

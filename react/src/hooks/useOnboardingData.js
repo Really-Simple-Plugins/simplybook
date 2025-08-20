@@ -1,20 +1,17 @@
 import {useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import registerEmail from "../api/endpoints/onBoarding/registerEmail";
-import registerCompany from "../api/endpoints/onBoarding/registerCompany";
-import confirmEmail from "../api/endpoints/onBoarding/confirmEmail";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
-import saveWidgetStyle from "../api/endpoints/onBoarding/saveWidgetStyle";
-import generatePages from "../api/endpoints/onBoarding/generatePages";
-import finishOnboarding from "../api/endpoints/onBoarding/finishOnboarding";
+import HttpClient from "../api/requests/HttpClient";
 
 const useOnboardingData = () => {
     const { getValue } = useSettingsData();
     const [apiError, setApiError] = useState("");
     const queryClient = useQueryClient();
     const { settings } = useSettingsData();
+
+    const httpClient = new HttpClient();
 
     // Fallback countries
     let mappedCountries = {
@@ -37,13 +34,15 @@ const useOnboardingData = () => {
      * and set the onboardingCompleted flag to true.
      */
     const handleManualImplementation = async (data) => {
-        let finishResponse = await finishOnboarding({data});
-        if (finishResponse.status !== "success") {
-            setApiError(finishResponse.message);
+        try {
+            await httpClient.setRoute('onboarding/finish_onboarding').setPayload(data).post();
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while finishing the onboarding.", "simplybook"));
             return false;
         }
 
         updateOnboardingCompleted(true);
+        setApiError('');
         return true;
     }
 
@@ -69,13 +68,15 @@ const useOnboardingData = () => {
             calendarPageUrl: data.calendarPageUrl,
         };
 
-        let pagesResponse = await generatePages({payload});
-        if (pagesResponse.status !== "success") {
-            setApiError(pagesResponse.message);
+        try {
+            await httpClient.setRoute('onboarding/generate_pages').setPayload(payload).post();
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while generating pages.", "simplybook"));
             return false;
         }
 
         updateOnboardingCompleted(true);
+        setApiError('');
         return true;
     }
 
@@ -106,11 +107,14 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await registerEmail({ data });
-                if (response.status !== "success") {
-                    setApiError(response.message);
+                try {
+                    await httpClient.setRoute('onboarding/register_email').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while registering the email.", "simplybook"));
                     return false;
                 }
+
+                setApiError('');
                 return true;
             },
         },
@@ -194,12 +198,15 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await registerCompany({ data });
-                if (response?.status !== "success") {
-                    setApiError(response?.message ?? __('Unknown error encountered while registering your company. Please try again.', 'simplybook'));
+                try {
+                    await httpClient.setRoute('onboarding/company_registration').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while registering your company. Please try again.", "simplybook"));
                     return false;
                 }
-                setApiError("");
+
+                setApiError('');
+                return true;
             },
         },
         {
@@ -214,12 +221,14 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                let response = await confirmEmail({ data });
-                if (response.status !== "success") {
-                    setApiError(response.message);
+                try {
+                    await httpClient.setRoute('onboarding/confirm_email').setPayload(data).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while confirming your email. Please try again.", "simplybook"));
                     return false;
                 }
-                setApiError("");
+
+                setApiError('');
                 return true;
             },
         },
@@ -227,11 +236,18 @@ const useOnboardingData = () => {
             id: 4,
             path: "/onboarding/style-widget",
             beforeSubmit: async (data) => {
-                await saveWidgetStyle({
-                    primary_color: data.primary_color,
-                    secondary_color: data.secondary_color,
-                    active_color: data.active_color,
-                });
+                try {
+                    await httpClient.setRoute('onboarding/save_widget_style').setPayload({
+                        primary_color: data.primary_color,
+                        secondary_color: data.secondary_color,
+                        active_color: data.active_color,
+                    }).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while saving the styles.", "simplybook"));
+                    return false;
+                }
+
+                setApiError('');
                 return true;
             },
             fields: [], // On purpose. All fields are in style-widget.lazy.jsx

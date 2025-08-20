@@ -1,7 +1,7 @@
 // @ts-ignore
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useState } from "react";
-import isPageTitleAvailable from "../api/endpoints/onBoarding/isPageTitleAvailable";
+import HttpClient from "../api/requests/HttpClient";
 
 /**
  * Hook to manage page URL availability checking with debouncing.
@@ -10,14 +10,18 @@ const usePageAvailability = (initialUrl: string, debounceDelay = 500) => {
     const [pageUrl, setPageUrl] = useState(initialUrl);
     const [pageAvailable, setPageAvailable] = useState(false);
 
+    const httpClient = new HttpClient();
+
     /**
      * Checks if the provided page URL is available.
      */
     const checkPageAvailability = async (url: string) => {
-        // @ts-ignore
-        const response = await isPageTitleAvailable({ data: { url } });
-        // @ts-ignore
-        return response.status === "success";
+        try {
+            const response = await httpClient.setRoute('onboarding/is_page_title_available').setPayload({url}).post();
+            return response.status === "success";
+        } catch (error) {
+            return false;
+        }
     };
 
     /**
