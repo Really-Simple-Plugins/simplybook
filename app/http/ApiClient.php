@@ -1159,20 +1159,35 @@ class ApiClient
     }
 
     /**
-     * Check if a special feature is enabled
+     * Method is used to check if the special feature related to the plugin key is
+     * enabled or not.
+     * @uses wp_cache_set(), wp_cache_get()
      */
-    public function isSpecialFeatureEnabled(string $pluginKey): bool
+    public function isSpecialFeatureEnabled(string $featureKey): bool
     {
-        $plugins = $this->getSpecialFeatureList();
-        if(!$plugins){
+        $cacheName = 'simplybook-feature-enabled-' . trim($featureKey);
+        if ($cached = wp_cache_get($cacheName, 'simplybook')) {
+            return $cached;
+        }
+
+        $features = $this->getSpecialFeatureList();
+        if (empty($features)) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
-        foreach($plugins as $plugin){
-            if($plugin['key'] == $pluginKey){
-                return $plugin['is_active'];
+
+        $isActive = false;
+        foreach ($features as $feature) {
+            if (!isset($feature['key']) || ($feature['key'] !== $featureKey)) {
+                continue;
             }
+
+            $isActive = (bool) $feature['is_active'];
+            break;
         }
-        return false;
+
+        wp_cache_set($cacheName, $isActive, 'simplybook', MINUTE_IN_SECONDS);
+        return $isActive;
     }
 
     protected function _log($error)

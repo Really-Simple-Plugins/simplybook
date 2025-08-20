@@ -2,12 +2,15 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
+use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
+    use HasApiAccess;
+
     const ROUTE = 'internal';
 
     protected Service $service;
@@ -58,27 +61,11 @@ class BlockEndpoints implements MultiEndpointInterface
     }
 
     /**
-     * Check if the user is authorized to use the plugin
-     */
-    public function isAuthorized(): bool
-    {
-        $cacheKey = 'simplybook_blockendpoints_is_authorized';
-        if ($cache = wp_cache_get($cacheKey, 'simplybook')) {
-            return $cache;
-        }
-
-        $isAuthorized = App::provide('client')->company_registration_complete();
-
-        wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
-        return $isAuthorized;
-    }
-
-    /**
      * Return the locations as an array.
      */
     public function getLocations(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -90,7 +77,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getCategories()
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -103,7 +90,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getServices(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -117,7 +104,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getProviders(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 

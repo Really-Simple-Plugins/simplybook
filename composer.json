@@ -30,6 +30,7 @@
             "SimplyBook\\Interfaces\\": "app/interfaces",
             "SimplyBook\\Exceptions\\": "app/exceptions",
             "SimplyBook\\Helpers\\": "app/support/helpers",
+            "SimplyBook\\Widgets\\": "app/support/widgets",
             "SimplyBook\\Utility\\": "app/support/utility",
             "SimplyBook\\Controllers\\": "app/controllers",
             "SimplyBook\\Builders\\": "app/support/builders",
