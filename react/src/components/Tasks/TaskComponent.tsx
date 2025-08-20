@@ -4,7 +4,7 @@ import LoginLink from "../Common/LoginLink";
 import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
 
-const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className }) => {
+const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className, onModalOpen }) => {
 
     const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
         if (premium || special_feature) {
@@ -32,7 +32,8 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
 
         const buttonClassName = clsx(
             "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem] text-nowrap",
-            !taskIsDismissable() && "mr-8"  // Add margin only when NOT dismissable
+            !taskIsDismissable() && "mr-8",  // Add margin only when NOT dismissable
+            task.action.modal && "cursor-pointer",
         );
 
         if (task.action.text && task.action.link) {
@@ -55,6 +56,19 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
                 >
                     {task.action.text}
                 </LoginLink>
+            );
+        }
+
+        if (task.action.text && task.action.modal) {
+            return (
+                <button
+                    onClick={ ()=>
+                        onModalOpen(task.action?.modal?.id ? task.action.modal.id : "")
+                    }
+                    className={buttonClassName}
+                >
+                    {task.action.text}
+                </button>
             );
         }
 

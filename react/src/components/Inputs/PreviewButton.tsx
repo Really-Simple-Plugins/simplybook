@@ -2,7 +2,6 @@ import React, {useState} from "react";
 import {__} from "@wordpress/i18n";
 import Modal from "../Common/Modal";
 import useWidgetData from "../../hooks/useWidgetData";
-import ButtonLink from "../Buttons/ButtonLink";
 
 type PreviewButtonInputProps = {
     btnVariant?: string;
@@ -73,18 +72,13 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
             >
                 {__('Preview', 'simplybook')}   
             </button>
-            {/* <ButtonLink
-                btnVariant={btnVariant}
-                onClick={onClick}
-            >
-                {__('Preview', 'simplybook')}
-            </ButtonLink> */}
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                title={__('Preview', 'simplybook')}
-                closeButton={__('Close', 'simplybook')}
             >
+                <div id="modal-header" className={"leading-none"}>
+                    <h2>{__('Preview', 'simplybook')}</h2>
+                </div>
                 <div id="sbw_z0hg2i_calendar" className={"h-[70vh] overflow-y-scroll my-4"}></div>
             </Modal>
         </>

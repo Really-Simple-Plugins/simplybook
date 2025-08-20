@@ -12,5 +12,8 @@ export interface Task {
         link?: string;
         login_link?: string;
         target?: string;
+        modal?: {
+            id: string;
+        }
     };
 }
