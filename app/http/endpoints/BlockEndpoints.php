@@ -39,7 +39,7 @@ class BlockEndpoints implements MultiEndpointInterface
         return [
             self::ROUTE . '/is-authorized' => [
                 'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'isAuthorized'],
+                'callback' => [$this, 'companyRegistrationIsCompleted'],
             ],
             self::ROUTE . '/locations' => [
                 'methods' => \WP_REST_Server::CREATABLE,
