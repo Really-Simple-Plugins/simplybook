@@ -11,6 +11,13 @@ class DesignSettingsService
     use LegacySave;
 
     /**
+     * Lazy-loaded theme color service for WordPress color palette extraction.
+     * Provides default colors when users haven't set preferences.
+     * 
+     */
+    private ?ThemeColorService $themeColorService = null;
+
+    /**
      * Property to cache the configuration for the design settings. Do not use
      * this property directly, instead us the method
      * {@see getDesignConfiguration} to be sure you get the latest
@@ -266,6 +273,21 @@ class DesignSettingsService
     }
 
     /**
+     * Get theme color service with lazy initialization.
+     * 
+     * Creates instance only when needed for efficient resource usage.
+     * 
+     */
+    public function getThemeColorService(): ThemeColorService
+    {
+	    if ($this->themeColorService instanceof ThemeColorService === false) {
+            $this->themeColorService = new ThemeColorService();
+        }
+        
+        return $this->themeColorService;
+    }
+
+    /**
      * Get the default design settings from the design.php config file. The
      * color parameters can be used to override the default values for primary,
      * secondary and active colors. This is used in the onboarding process when
@@ -277,6 +299,15 @@ class DesignSettingsService
     {
         $designConfig = App::fields()->get('design');
         $defaultDesignSettings = [];
+        
+        // Get theme colors if no specific colors are provided
+        if (empty($primary) && empty($secondary) && empty($active)) {
+            $themeColors = $this->getThemeColorService()->getThemeColors();
+            $primary = $themeColors['primary'];
+            $secondary = $themeColors['secondary'];
+            $active = $themeColors['active'];
+        }
+        
         foreach ($designConfig as $settingID => $config) {
 
             if (isset($config['default'])) {

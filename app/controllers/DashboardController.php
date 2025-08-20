@@ -250,6 +250,7 @@ class DashboardController implements ControllerInterface
                 'simplybook_domains' => App::provide('simplybook_domains'),
                 'simplybook_countries' => App::countries(),
                 'support' => App::env('simplybook.support'),
+                'fallback_colors' => App::env('colors.fallback_colors', []),
             ]
         );
     }
