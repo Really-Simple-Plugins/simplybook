@@ -4,7 +4,7 @@ namespace SimplyBook\Services;
 
 use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Exceptions\SettingsException;
+use SimplyBook\Exceptions\FormException;
 
 class DesignSettingsService
 {
@@ -241,7 +241,7 @@ class DesignSettingsService
         }
 
         if (!empty($errors)) {
-            throw (new SettingsException())->setErrors($errors);
+            throw (new FormException())->setErrors($errors);
         }
 
         return true;

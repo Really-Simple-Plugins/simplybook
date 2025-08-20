@@ -168,7 +168,6 @@ trait LegacyLoad {
 		}
 
 		if (!preg_match('/^[a-f0-9]{64}$/i', $decrypted)) {
-			$this->log("v2 token: decrypted result did not match expected 64-character hex format.");
 			return '';
 		}
 

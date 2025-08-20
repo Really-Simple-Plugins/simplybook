@@ -2,12 +2,12 @@
 
 namespace SimplyBook\Exceptions;
 
-class SettingsException extends \Exception
+class FormException extends \Exception
 {
     /**
-     * The setting errors
+     * The errors
      */
-    protected array $settingErrors = [];
+    protected array $errors = [];
 
     /**
      * The accepted error keys
@@ -23,9 +23,9 @@ class SettingsException extends \Exception
      * the error.
      * @throws \Exception Should be uncaught to know we're doing it wrong
      */
-    public function setErrors(array $settingErrors): SettingsException
+    public function setErrors(array $errors): FormException
     {
-        foreach ($settingErrors as $fields) {
+        foreach ($errors as $fields) {
             foreach ($fields as $key => $errorData) {
                 if (!empty($this->acceptedErrorKeys) && !in_array($key, $this->acceptedErrorKeys)) {
                     throw new \Exception('The key ' . esc_html($key) . ' is not accepted in the data array.');
@@ -33,15 +33,15 @@ class SettingsException extends \Exception
             }
         }
 
-        $this->settingErrors = $settingErrors;
+        $this->errors = $errors;
         return $this;
     }
 
     /**
-     * Get the setting errors from the exception
+     * Get the errors from the exception
      */
     public function getErrors(): array
     {
-        return $this->settingErrors;
+        return $this->errors;
     }
 }

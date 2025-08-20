@@ -33,6 +33,7 @@
             "SimplyBook\\Utility\\": "app/support/utility",
             "SimplyBook\\Controllers\\": "app/controllers",
             "SimplyBook\\Builders\\": "app/support/builders",
+            "SimplyBook\\Http\\Entities\\": "app/http/entities",
             "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints"
         },
         "files": [

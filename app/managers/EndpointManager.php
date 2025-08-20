@@ -79,6 +79,7 @@ final class EndpointManager
      * instantiated before this manager is called and the controller should
      * hook into the simplybook_rest_routes filter to add its own routes.
      * @uses apply_filters simplybook_rest_routes
+     * @throws \InvalidArgumentException
      */
     public function registerWordPressRestRoutes(): void
     {
@@ -88,6 +89,12 @@ final class EndpointManager
             $version = ($data['version'] ?? $this->version);
             $callback = ($data['callback'] ?? null);
             $middleware = ($data['middleware'] ?? null);
+
+            if (!is_callable($callback)) {
+                throw new \InvalidArgumentException(
+                    sprintf('The callback for the route "%s" is not callable.', $route)
+                );
+            }
 
             $arguments = [
                 'methods' => ($data['methods'] ?? 'GET'),
@@ -162,7 +169,10 @@ final class EndpointManager
     {
         $method = $request->get_method();
         $nonce = $request->get_param('nonce');
-        if (($method === 'POST') && ($this->verifyNonce($nonce) === false)) {
+
+        // For methods that modify data, verify the nonce
+        $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
+        if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
             return new \WP_Error(
                 'rest_forbidden',
                 esc_html__('Forbidden.', 'simplybook'),

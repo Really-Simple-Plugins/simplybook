@@ -1,35 +1,40 @@
-import {useQuery} from "@tanstack/react-query";
-import HttpClient from "../api/requests/HttpClient";
-import {useNotifications} from "../context/NotificationContext";
+import { useEffect } from 'react';
+import useCrudData from './useCrudData';
+import { useNotifications } from '../context/NotificationContext';
 
-const useServicesData = (): object => {
-
+const useServicesData = () => {
+    const crudData = useCrudData('services');
     const { triggerNotificationById } = useNotifications();
 
-    const route = 'services';
-    const client = new HttpClient(route);
+    // Trigger notification when services array is empty
+    useEffect(() => {
+        if (crudData.dataFetched && crudData.data?.length === 0) {
+            triggerNotificationById('add_mandatory_service');
+        }
+    }, [crudData.dataFetched, crudData.data?.length]);
 
-    // Query for fetching settings from server
-    const {isLoading, error, data: response} = useQuery({
-        queryKey: [route],
-        queryFn: () => client.get(),
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 0,
-    });
-
-    if (error !== null) {
-        console.error('Error fetching services: ', error.message);
-    }
-
-    if (response?.data?.length === 0) {
-        triggerNotificationById('add_mandatory_service');
-    }
+    // Log errors
+    useEffect(() => {
+        if (crudData.error) {
+            console.error('Error fetching services: ', crudData.error.message);
+        }
+    }, [crudData.error]);
 
     return {
-        services: response?.data,
-        servicesFetched: !isLoading,
-        servicesHasError: (error !== null),
-        servicesMessage: (response?.message ?? error?.message),
+        services: crudData.data ?? [],
+        servicesFetched: crudData.dataFetched ?? false,
+        isLoading: crudData.isLoading ?? false,
+        error: crudData.error ?? null,
+        getServices: crudData.get,
+        createService: crudData.create,
+        updateService: crudData.update,
+        deleteService: crudData.delete,
+        isCreating: crudData.isCreating ?? false,
+        isUpdating: crudData.isUpdating ?? false,
+        isDeleting: crudData.isDeleting ?? false,
+        createError: crudData.createError ?? null,
+        updateError: crudData.updateError ?? null,
+        deleteError: crudData.deleteError ?? null,
     };
 };
 

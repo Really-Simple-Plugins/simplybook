@@ -8,6 +8,7 @@ import { __ } from "@wordpress/i18n";
 import SettingsGroupBlock from "../../components/Settings/SettingsGroupBlock";
 import { useBlocker } from "@tanstack/react-router";
 import ToastNotice from "../../components/Errors/ToastNotice";
+import { CrudContextProvider } from "../../context/CrudContext";
 
 const useSettingsLoader = (settingsId) => {
     const menuData = window.simplybook?.settings_menu || [];
@@ -56,6 +57,7 @@ function Settings() {
         handleSubmit,
         control,
         reset,
+        setValue,
         formState: { isDirty },
         getValues,
     } = useForm({
@@ -66,7 +68,7 @@ function Settings() {
     // that form values still contain data from a different settings tab.
     useEffect(() => {
         reset(currentFormValues);
-    }, [settingsId, currentFormValues, reset]);
+    }, [settingsId, currentFormValues]);
 
     /**
      * This useEffect sets up a ResizeObserver to monitor changes in the
@@ -79,7 +81,7 @@ function Settings() {
         const observer = new ResizeObserver((entries) => {
             for (const entry of entries) {
                 const heightChanged = entry.contentRect.height !== settingsFormHeight;
-                if (heightChanged){
+                if (heightChanged) {
                     setSettingsFormHeight(entry.contentRect.height);
                 }
             }
@@ -104,7 +106,8 @@ function Settings() {
             }
 
             return !shouldLeave;
-        }
+        },
+        enableBeforeUnload: isDirty,
     });
 
     /**
@@ -117,7 +120,7 @@ function Settings() {
         toastNotice.setMessage(
             __('Settings saved successfully', 'simplybook')
         ).setType("success").render();
-    }
+    };
 
     /**
      * Method to handle errors when saving settings. The method checks if
@@ -137,32 +140,33 @@ function Settings() {
                 error.message
             ).setType("error").render();
         });
-    }
+    };
 
     return (
-        <form className="col-span-12 lg:col-span-6" ref={settingsFormRef}>
-            {currentForm.groups?.map((group) => {
-                const isLastGroup = lastGroup.id === group.id;
-                const currentGroupFields = currentFormFields.filter(
-                    (field) => field.group_id === group.id,
-                );
+        <CrudContextProvider>
+            <form className="col-span-12 lg:col-span-6" ref={settingsFormRef}>
+                {currentForm.groups?.map((group) => {
+                    const isLastGroup = lastGroup.id === group.id;
+                    const currentGroupFields = currentFormFields.filter(
+                        (field) => field.group_id === group.id,
+                    );
 
-                return (
-                    <SettingsGroupBlock
-                        key={group.id}
-                        group={group}
-                        currentGroupFields={currentGroupFields}
-                        control={control}
-                        isLastGroup={isLastGroup}
-                        formHasSettings={formHasSettings}
-                        getValues={getValues}
-                        reset={reset}
-                    />
-                );
-            })}
+                    return (
+                        <SettingsGroupBlock
+                            key={group.id}
+                            group={group}
+                            currentGroupFields={currentGroupFields}
+                            control={control}
+                            isLastGroup={isLastGroup}
+                            formHasSettings={formHasSettings}
+                            getValues={getValues}
+                            setValue={setValue}
+                            reset={reset}
+                        />
+                    );
+                })}
 
-            {formHasSettings && (
-                <>
+                {formHasSettings && (
                     <FormFooter
                         getValues={getValues}
                         onSubmit={handleSubmit((formData) => {
@@ -175,9 +179,9 @@ function Settings() {
                         control={control}
                         settingsFormHeight={settingsFormHeight}
                     />
-                </>
-            )}
-        </form>
+                )}
+            </form>
+        </CrudContextProvider>
     );
 }
 

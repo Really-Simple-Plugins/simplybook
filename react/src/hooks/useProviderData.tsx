@@ -1,35 +1,40 @@
-import {useQuery} from "@tanstack/react-query";
-import HttpClient from "../api/requests/HttpClient";
-import {useNotifications} from "../context/NotificationContext";
+import { useEffect } from 'react';
+import useCrudData from './useCrudData';
+import { useNotifications } from '../context/NotificationContext';
 
-const useProviderData = (): object => {
-
+const useProviderData = () => {
+    const crudData = useCrudData('providers');
     const { triggerNotificationById } = useNotifications();
 
-    const route = 'providers';
-    const client = new HttpClient(route);
+    // Trigger notification when providers array is empty
+    useEffect(() => {
+        if (crudData.dataFetched && crudData.data?.length === 0) {
+            triggerNotificationById('add_mandatory_provider');
+        }
+    }, [crudData.dataFetched, crudData.data?.length]);
 
-    // Query for fetching settings from server
-    const {isLoading, error, data: response} = useQuery({
-        queryKey: [route],
-        queryFn: () => client.get(),
-        staleTime: 1000 * 60 * 5, // 5 minutes
-        retry: 0,
-    });
-
-    if (error !== null) {
-        console.error('Error fetching providers: ', error.message);
-    }
-
-    if (response?.data?.length === 0) {
-        triggerNotificationById('add_mandatory_provider');
-    }
+    // Log errors
+    useEffect(() => {
+        if (crudData.error) {
+            console.error('Error fetching providers: ', crudData.error.message);
+        }
+    }, [crudData.error]);
 
     return {
-        providers: response?.data,
-        providersFetched: !isLoading,
-        providersHasError: (error !== null),
-        providersMessage: (response?.message ?? error?.message),
+        providers: crudData.data ?? [],
+        providersFetched: crudData.dataFetched ?? false,
+        isLoading: crudData.isLoading ?? false,
+        error: crudData.error ?? null,
+        getProviders: crudData.get,
+        createProvider: crudData.create,
+        updateProvider: crudData.update,
+        deleteProvider: crudData.delete,
+        isCreating: crudData.isCreating ?? false,
+        isUpdating: crudData.isUpdating ?? false,
+        isDeleting: crudData.isDeleting ?? false,
+        createError: crudData.createError ?? null,
+        updateError: crudData.updateError ?? null,
+        deleteError: crudData.deleteError ?? null,
     };
 };
 

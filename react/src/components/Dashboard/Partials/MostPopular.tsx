@@ -16,7 +16,7 @@ const MostPopular: React.FC<MostPopularProps> = ({
                     <div className="flex flex-wrap justify-between items-start w-full">
                         <p className="text-succes text-xs font-semibold m-0 mb-1">{title}</p>
                         <div className="flex justify-between w-full">
-                            <p className="text-base font-medium m-0 ">{(bookingAmount === 0 ? __('Not yet calculated...', 'simplybook') : mostPopularName)}</p>
+                            <p className="text-base font-medium m-0 ">{(bookingAmount === 0 ? __('Not yet calculated', 'simplybook') + '...' : mostPopularName)}</p>
                             {(bookingAmount > 0) && (
                                 <p className="text-succes text-base m-0 ml-1">{bookingAmount}</p>
                             )}
