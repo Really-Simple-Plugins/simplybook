@@ -325,7 +325,7 @@ class ApiClient
         }
 
         //check if we have a token
-        $refresh_token = $this->get_token($type, true );
+        $refresh_token = $this->get_token($type, true);
         if (empty($refresh_token) && $type === 'admin') {
             $this->releaseRefreshLock($type);
             $this->automaticAuthenticationFallback($type);
