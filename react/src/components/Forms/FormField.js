@@ -13,23 +13,29 @@ import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
 import AuthenticationField from "../Fields/AuthenticationField";
 import ThemeField from "../Fields/ThemeField";
+import ProvidersListField from "../Fields/ProvidersListField";
+import ServicesListField from "../Fields/ServicesListField";
 import useFieldValidation from "../../hooks/useFieldValidation";
 
 const fieldComponents = {
     text: TextField,
+    textarea: TextField,
+    number: TextField,
     api: TextField,
     hidden: HiddenField,
     checkbox: CheckboxField,
     select: SelectField,
     colorpicker: ColorPickerField,
     implementation: ImplementationField,
-    list:ListField,
+    list: ListField,
     palettes: PalettesField,
     authentication: AuthenticationField,
     theme: ThemeField,
+    providers_list: ProvidersListField,
+    services_list: ServicesListField,
 };
 
-const FormField = memo(({ setting, control, reset, ...props } ) => {
+const FormField = memo(({ setting, control, setValue: formSetValue, getValues: formGetValues, reset, ...props } ) => {
     if (setting.visible === false) {
         return (
             <input type="hidden" defaultValue={setting.value || setting.default} />
@@ -100,6 +106,8 @@ const FormField = memo(({ setting, control, reset, ...props } ) => {
                     help={setting.help}
                     options={setting.options}
                     control={control}
+                    setValue={formSetValue}
+                    getValues={formGetValues}
                     reset={reset}
                     {...props}
                     {...fieldComponents[setting.type]}

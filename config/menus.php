@@ -22,12 +22,24 @@ return [
     'providers' => [
         'id' => 'providers',
         'title' => __('Service Providers', 'simplybook'),
-        'has_settings' => false,
+        'has_settings' => true,
+        'groups' => [
+            [
+                'id' => 'providers_list',
+                'title' => __('Manage Service Providers', 'simplybook'),
+            ]
+        ],
     ],
     'services' => [
         'id' => 'services',
         'title' => __('Services', 'simplybook'),
-        'has_settings' => false,
+        'has_settings' => true,
+        'groups' => [
+            [
+                'id' => 'services_list',
+                'title' => __('Manage Services', 'simplybook'),
+            ]
+        ],
     ],
     'design' => [
         'id' => 'design',

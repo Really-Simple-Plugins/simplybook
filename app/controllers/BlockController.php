@@ -1,7 +1,9 @@
 <?php namespace SimplyBook\Controllers;
 
+use Elementor\Widgets_Manager;
 use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Widgets\ElementorWidget;
 
 class BlockController implements ControllerInterface
 {
@@ -12,20 +14,22 @@ class BlockController implements ControllerInterface
             return;
         }
 
-        add_action('enqueue_block_editor_assets', [$this, 'enqueueBlockEditorAssets']);
-        add_action('init', [$this, 'registerBlockType']);
+        add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
+        add_action('init', [$this, 'registerGutenbergBlockType']);
+        
+        add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
     /**
-     * Register the SimplyBook Widget block
+     * Configure Gutenberg block with attributes and render callback.
      */
-    public function registerBlockType()
+    public function registerGutenbergBlockType()
     {
         register_block_type('simplybook/widget', [
-            'title' => 'SimplyBook Widget',
+            'title' => 'SimplyBook.me Widget',
             'icon' => 'simplybook',
             'category' => 'widgets',
-            'render_callback' => [$this, 'addWidgetBlock'],
+            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
             'attributes' => [
                 'location' => [
                     'type' => 'integer',
@@ -36,8 +40,8 @@ class BlockController implements ControllerInterface
                     'default' => 0
                 ],
                 'provider' => [
-                    'type' => 'string', //any provide id = any
-                    'default' => 'any'
+                    'type' => 'string', // Provider ID can be a sting like "any"
+                    'default' => '0'
                 ],
                 'service' => [
                     'type' => 'integer',
@@ -48,9 +52,9 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Enqueue the block editor assets
+     * Load scripts and styles for Gutenberg editor.
      */
-    public function enqueueBlockEditorAssets()
+    public function enqueueGutenbergBlockEditorAssets()
     {
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
         $indexJs = App::env('plugin.assets_url') . 'block/build/index.js';
@@ -77,6 +81,7 @@ class BlockController implements ControllerInterface
                 'rest_namespace' => App::env('http.namespace'),
                 'rest_version' => App::env('http.version'),
                 'site_url' => site_url(),
+                'dashboard_url' => App::env('plugin.dashboard_url'),
                 'assets_url' => App::env('plugin.assets_url'),
                 'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
             ]
@@ -93,21 +98,22 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Render the SimplyBook Widget block when the block is displayed on the
-     * front-end. Empty values are removed from the attributes array, the "any"
-     * value is also removed from the attributes array.
+     * Convert Gutenberg block to shortcode output. Filters empty values.
+     *
+     * @since 3.1.1 No longer filter out 'any', as this is a valid value for the
+     * feature: "Any Employee selector" (/v2/management/#plugins/any_unit/)
      */
-    public function addWidgetBlock(array $attributes = []): string
+    public function renderGutenbergWidgetBlock(array $attributes = []): string
     {
         $attributes = array_filter($attributes, function ($value) {
-            return !empty($value) && $value !== 'any';
+            return !empty($value);
         });
 
         return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
     }
 
     /**
-     * Convert the attributes array to a string to be used in a shortcode
+     * Format attributes as shortcode parameters.
      */
     private function attributesToString(array $attributes): string
     {
@@ -116,5 +122,15 @@ class BlockController implements ControllerInterface
             $result .= ' ' . sanitize_text_field($key) . '="' . sanitize_text_field($value) . '"';
         }
         return $result;
+    }
+
+    /**
+     * Add SimplyBook widget to Elementor if available.
+     *
+     * @param Widgets_Manager $widgetsManager Elementor widgets manager.
+     */
+    public function registerElementorWidget(Widgets_Manager $widgetsManager): void
+    {
+	    $widgetsManager->register(new ElementorWidget());
     }
 }

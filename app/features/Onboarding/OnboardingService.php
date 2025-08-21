@@ -63,7 +63,7 @@ class OnboardingService
      */
     public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData, 'data');
+        $storage = $this->retrieveHttpStorage($request, $ajaxData);
 
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
         $submittedEmailAddress = $storage->getEmail('email');
@@ -78,7 +78,7 @@ class OnboardingService
             ]);
         }
 
-        return $this->sendHttpResponse([], $success, $message);
+        return $this->sendHttpResponse([], $success, $message, ($success ? 200 : 400));
     }
 
     /**

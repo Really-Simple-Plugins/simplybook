@@ -1,56 +1,13 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
-use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Interfaces\SingleEndpointInterface;
-
-class ServicesEndpoint implements SingleEndpointInterface
+/**
+ * This CRUD endpoint does not override any methods from the parent class, so
+ * it will inherit the default behavior for handling requests.
+ *
+ * @uses \SimplyBook\Http\Entities\Service as the entity for this endpoint.
+ */
+class ServicesEndpoint extends AbstractCrudEndpoint
 {
-    use HasRestAccess;
-    use HasAllowlistControl;
-
-    const ROUTE = 'services';
-
-    /**
-     * Only enable this endpoint if the user has access to the admin area
-     */
-    public function enabled(): bool
-    {
-        return $this->adminAccessAllowed();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function registerRoute(): string
-    {
-        return self::ROUTE;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function registerArguments(): array
-    {
-        return [
-            'methods' => \WP_REST_Server::READABLE,
-            'callback' => [$this, 'callback'],
-        ];
-    }
-
-    /**
-     * Return services as a WP_REST_Response.
-     * @example [
-     *      ['id'=>1,'name'=>'test'],
-     *      ['id'=>2,'name'=>'Autobanden wissel'],
-     * ];
-     * @see https://simplybook.me/en/api/developer-api/tab/rest_api#method_GET_/admin/services
-     */
-    public function callback(\WP_REST_Request $request): \WP_REST_Response
-    {
-        $services = App::provide('client')->get_services();
-        return $this->sendHttpResponse($services);
-    }
+    // No overrides needed, using default behavior from AbstractCrudEndpoint
 }

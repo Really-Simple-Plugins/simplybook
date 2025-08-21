@@ -8,7 +8,7 @@ if (!defined('ABSPATH')) {
 return [
     'Onboarding' => [
         'enabled' => FeatureHelper::isEnabled('onboarding'),
-        'inScope' => is_admin() || simplybook_is_wp_json_request(),
+        'inScope' => FeatureHelper::inScope('onboarding'),
         'pro' => false,
         'dependencies' => [
             'Service',
@@ -17,7 +17,7 @@ return [
     ],
     'TaskManagement' => [
         'enabled' => FeatureHelper::isEnabled('task_management'),
-        'inScope' => true, // Should be able to listen everywhere
+        'inScope' => FeatureHelper::inScope('task_management'),
         'pro' => false,
         'priorityFiles' => [
             'Tasks' . DIRECTORY_SEPARATOR . 'AbstractTask',
@@ -25,7 +25,7 @@ return [
     ],
     'Notifications' => [
         'enabled' => FeatureHelper::isEnabled('notifications'),
-        'inScope' => true, // Should be able to listen everywhere
+        'inScope' => FeatureHelper::inScope('notifications'),
         'pro' => false,
         'priorityFiles' => [
             'Notices' . DIRECTORY_SEPARATOR . 'AbstractNotice',

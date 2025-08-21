@@ -2,12 +2,25 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\App;
+use SimplyBook\Traits\HasApiAccess;
+use SimplyBook\Http\Entities\Service;
+use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoints implements MultiEndpointInterface
 {
+    use HasApiAccess;
 
     const ROUTE = 'internal';
+
+    protected Service $service;
+    protected ServiceProvider $serviceProvider;
+
+    public function __construct(Service $service, ServiceProvider $serviceProvider)
+    {
+        $this->service = $service;
+        $this->serviceProvider = $serviceProvider;
+    }
 
     /**
      * Always allow creating the routes to prevent errors while fetching data
@@ -26,7 +39,7 @@ class BlockEndpoints implements MultiEndpointInterface
         return [
             self::ROUTE . '/is-authorized' => [
                 'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'isAuthorized'],
+                'callback' => [$this, 'companyRegistrationIsCompleted'],
             ],
             self::ROUTE . '/locations' => [
                 'methods' => \WP_REST_Server::CREATABLE,
@@ -48,27 +61,11 @@ class BlockEndpoints implements MultiEndpointInterface
     }
 
     /**
-     * Check if the user is authorized to use the plugin
-     */
-    public function isAuthorized(): bool
-    {
-        $cacheKey = 'simplybook_blockendpoints_is_authorized';
-        if ($cache = wp_cache_get($cacheKey, 'simplybook')) {
-            return $cache;
-        }
-
-        $isAuthorized = App::provide('client')->company_registration_complete();
-
-        wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
-        return $isAuthorized;
-    }
-
-    /**
      * Return the locations as an array.
      */
     public function getLocations(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -80,7 +77,7 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getCategories()
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
@@ -93,11 +90,11 @@ class BlockEndpoints implements MultiEndpointInterface
      */
     public function getServices(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
-        return App::provide('client')->getServices(true);
+        return $this->service->all();
     }
 
     /**
@@ -105,13 +102,13 @@ class BlockEndpoints implements MultiEndpointInterface
      * also adds the 'any' provider to the response. And when the Gutenberg
      * block can handle the response.
      */
-    public function getProviders()
+    public function getProviders(): array
     {
-        if (!$this->isAuthorized()) {
+        if (!$this->companyRegistrationIsCompleted()) {
             return [];
         }
 
-        $providers = App::provide('client')->getProviders(true);
+        $providers = $this->serviceProvider->all();
 
         $isAnyProviderEnabled = App::provide('client')->isSpecialFeatureEnabled('any_unit');
         if ($isAnyProviderEnabled){

@@ -1,5 +1,5 @@
 export interface LoginData {
   data: {
-      simplybook_dashboard_url: string
+      simplybook_external_login_url: string
   }
 }

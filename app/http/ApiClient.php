@@ -161,7 +161,7 @@ class ApiClient
     /**
      * Build the endpoint
      */
-    protected function endpoint(string $path, string $companyDomain = '', bool $secondVersion = true): string
+    public function endpoint(string $path, string $companyDomain = '', bool $secondVersion = true): string
     {
         $base = 'https://user-api' . ($secondVersion ? '-v2.' : '.');
 
@@ -310,11 +310,8 @@ class ApiClient
                 $this->update_token( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
                 $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
-            } else {
-                $this->log("Error during token retrieval");
             }
-        } else {
-            $this->log("Error during token retrieval: ".$request->get_error_message());		}
+        }
     }
 
     /**
@@ -328,7 +325,7 @@ class ApiClient
         }
 
         //check if we have a token
-        $refresh_token = $this->get_token($type, true );
+        $refresh_token = $this->get_token($type, true);
         if (empty($refresh_token) && $type === 'admin') {
             $this->releaseRefreshLock($type);
             $this->automaticAuthenticationFallback($type);
@@ -753,9 +750,8 @@ class ApiClient
             esc_html__('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message,
-            'data' => get_object_vars($response->data),
+            'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
         ]);
-
     }
 
     /**
@@ -914,107 +910,6 @@ class ApiClient
     }
 
     /**
-     * Get list of SimplyBook.me services
-     *
-     * @return array
-     */
-    public function get_services(): array {
-        if ( !$this->company_registration_complete() ){
-            return [];
-        }
-
-        if ($cache = wp_cache_get('simplybook_services', 'simplybook')) {
-            return $cache;
-        }
-
-        $response = $this->api_call('admin/services', [], 'GET');
-        $services = $response['data'] ?? [];
-
-        if (empty($services)) {
-            Event::dispatch(Event::EMPTY_SERVICES);
-            return $services;
-        }
-
-        Event::dispatch(Event::HAS_SERVICES, [
-            'count' => count($services),
-        ]);
-
-        wp_cache_set('simplybook_services', $services, 'simplybook', MINUTE_IN_SECONDS);
-        return $services;
-    }
-
-    /**
-     * Update service based on service ID. Make sure to pass at least the
-     * mandatory fields: duration and is_visible, besides of course the ID.
-     */
-    public function updateService(string $serviceId, array $updatedData): array
-    {
-        $mandatoryFields = [
-            'duration',
-            'is_visible',
-        ];
-
-        foreach ($mandatoryFields as $field) {
-            if (!isset($updatedData[$field])) {
-                throw new \InvalidArgumentException("Missing mandatory field: $field");
-            }
-        }
-
-        $endpoint = $this->endpoint('admin/services/' . sanitize_text_field($serviceId));
-        $response = wp_safe_remote_request($endpoint, [
-            'method' => 'PUT',
-            'headers' => $this->get_headers(true, 'admin'),
-            'body' => json_encode($updatedData),
-            'timeout' => 15,
-            'sslverify' => true,
-        ]);
-
-        if (is_wp_error($response)) {
-            throw (new RestDataException($response->get_error_message()))
-                ->setResponseCode($response->get_error_code())
-                ->setData($response->get_error_data());
-        }
-
-        $responseCode = wp_remote_retrieve_response_code($response);
-        if ($responseCode !== 200) {
-            throw (new RestDataException($response->get_error_message()))
-                ->setResponseCode($responseCode)
-                ->setData($response->get_error_data());
-        }
-
-        return json_decode(wp_remote_retrieve_body($response), true);
-    }
-
-    /**
-     * Get list of SimplyBook.me providers
-     */
-    public function get_providers(): array
-    {
-        if ( !$this->company_registration_complete() ){
-            return [];
-        }
-
-        if ($cache = wp_cache_get('simplybook_providers', 'simplybook')) {
-            return $cache;
-        }
-
-        $response = $this->api_call('admin/providers', [], 'GET');
-        $providers = $response['data'] ?? [];
-
-        if (empty($providers)) {
-            Event::dispatch(Event::EMPTY_PROVIDERS);
-            return $providers;
-        }
-
-        Event::dispatch(Event::HAS_PROVIDERS, [
-            'count' => count($providers),
-        ]);
-
-        wp_cache_set('simplybook_providers', $providers, 'simplybook', MINUTE_IN_SECONDS);
-        return $providers;
-    }
-
-    /**
      * Get all subscription data
      */
     public function get_subscription_data(): array
@@ -1106,8 +1001,7 @@ class ApiClient
      *
      * @return array
      */
-
-    protected function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array
+    public function api_call( string $path, array $data = [], string $type='POST', int $attempt = 1 ): array
     {
         if ($this->authenticationFailedFlag) {
             return []; // Prevent us even trying.
@@ -1218,39 +1112,9 @@ class ApiClient
         return false;
     }
 
-    //GET https://user-api-v2.simplybook.me/admin/providers?filter[search]=mike&filter[service_id]=1
-    //Content-Type: application/json
-    //X-Company-Login: <insert your company login>
-    //X-Token: <insert your token from auth step>
-    //Response in JSON format
-    //With cache data on 30 minutes
-    public function getProviders(bool $onlyValues = false)
-    {
-        $cacheKey = 'sb_plugin_providers' . $this->_commonCacheKey;
-
-        if (($result = get_transient($cacheKey)) !== false) {
-            return $result['data'];
-        }
-
-        $response = $this->api_call('admin/providers', [], 'GET');
-        $result = $response['data'] ?? [];
-
-        return $onlyValues ? array_values($result) : $result;
-    }
-
-    public function getServices(bool $onlyValues = false)
-    {
-        $cacheKey = 'sb_plugin_services' . $this->_commonCacheKey;
-        if (($result = get_transient($cacheKey)) !== false) {
-            return $result['data'];
-        }
-
-        $response = $this->api_call('admin/services', [], 'GET');
-        $result = $response['data'] ?? [];
-
-        return $onlyValues ? array_values($result) : $result;
-    }
-
+    /**
+     * @todo - maybe this can be an Entity in the future?
+     */
     public function getCategories(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_categories' . $this->_commonCacheKey;
@@ -1264,6 +1128,9 @@ class ApiClient
         return $onlyValues ? array_values($result) : $result;
     }
 
+    /**
+     * @todo - maybe this can be an Entity in the future?
+     */
     public function getLocations(bool $onlyValues = false)
     {
         $cacheKey = 'sb_plugin_locations' . $this->_commonCacheKey;
@@ -1277,6 +1144,9 @@ class ApiClient
         return $onlyValues ? array_values($result) : $result;
     }
 
+    /**
+     * @todo - maybe this can be an Entity in the future?
+     */
     public function getSpecialFeatureList()
     {
         $cacheKey = 'sb_plugin_plugins' . $this->_commonCacheKey;
@@ -1288,17 +1158,36 @@ class ApiClient
         return $response['data'] ?? [];
     }
 
-    public function isSpecialFeatureEnabled($pluginKey){
-        $plugins = $this->getSpecialFeatureList();
-        if(!$plugins){
+    /**
+     * Method is used to check if the special feature related to the plugin key is
+     * enabled or not.
+     * @uses wp_cache_set(), wp_cache_get()
+     */
+    public function isSpecialFeatureEnabled(string $featureKey): bool
+    {
+        $cacheName = 'simplybook-feature-enabled-' . trim($featureKey);
+        if ($cached = wp_cache_get($cacheName, 'simplybook')) {
+            return $cached;
+        }
+
+        $features = $this->getSpecialFeatureList();
+        if (empty($features)) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
-        foreach($plugins as $plugin){
-            if($plugin['key'] == $pluginKey){
-                return $plugin['is_active'];
+
+        $isActive = false;
+        foreach ($features as $feature) {
+            if (!isset($feature['key']) || ($feature['key'] !== $featureKey)) {
+                continue;
             }
+
+            $isActive = (bool) $feature['is_active'];
+            break;
         }
-        return false;
+
+        wp_cache_set($cacheName, $isActive, 'simplybook', MINUTE_IN_SECONDS);
+        return $isActive;
     }
 
     protected function _log($error)
@@ -1373,22 +1262,16 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_message());
+	        throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        if ($responseCode != 200) {
+	        $this->throwSpecificLoginErrorResponse($responseCode, $response);
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
-        $responseCode = wp_remote_retrieve_response_code($response);
-
-        if ($responseCode != 200) {
-            throw (new RestDataException(
-                esc_html__('Failed logging in, please verify your credentials.', 'simplybook')
-            ))->setResponseCode(500)->setData([
-                'response_code' => $responseCode,
-                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown error', 'simplybook')),
-            ]);
-        }
-
-        if (!isset($responseBody['token'])) {
+        if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
                 esc_html__('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
@@ -1435,21 +1318,16 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_message());
+            throw new \Exception($response->get_error_code() . " ". $response->get_error_message());
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-            throw (new RestDataException(
-                esc_html__('Failed two factor authentication, please verify your credentials.', 'simplybook')
-            ))->setData([
-                'response_code' => $responseCode,
-                'response_message' => ($responseBody['message'] ?? esc_html__('Unknown 2FA error', 'simplybook')),
-            ]);
+			$this->throwSpecificLoginErrorResponse($responseCode, $response, true);
         }
 
-        $response = json_decode(wp_remote_retrieve_body($response), true);
-        if (!isset($response['token'])) {
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+        if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
                 esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
@@ -1458,8 +1336,61 @@ class ApiClient
             ]);
         }
 
-        return $response;
+        return $responseBody;
     }
+
+	/**
+	 * Handles api related login errors based on the response code and if it is
+     * a 2FA call. When there is no specific case throw a RestDataException with
+     * a more generic message.
+     *
+     * Codes:
+     * 400 = Wrong login or 2FA code
+     * 403 = Too many attempts
+     * 404 = SB generated a 404 page with the given company login
+     * Else generic failed attempt message
+	 *
+	 * @throws RestDataException
+	 */
+	public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false)
+    {
+        $response = (array) $response; // Ensure we have an array
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+
+        $responseMessage = esc_html__('No error received from remote.', 'simplybook');
+        if (is_array($responseBody) && !empty($responseBody['message'])) {
+            $responseMessage = $responseBody['message'];
+        }
+
+        switch ($responseCode) {
+            case 400:
+                $message = esc_html__('Invalid login or password, please try again.', 'simplybook');
+                if ($isTwoFactorAuth) {
+                    $message = esc_html__('Incorrect 2FA authentication code, please try again.', 'simplybook');
+                }
+                break;
+            case 403:
+                $message = esc_html__('Too many login attempts. Verify your credentials and try again in a few minutes.', 'simplybook');
+                break;
+            case 404:
+                $message = esc_html__("Could not find a company associated with that company login.", 'simplybook');
+                break;
+            default:
+                $message = esc_html__('Authentication failed, please verify your credentials.', 'simplybook');
+        }
+
+        $exception = new RestDataException($message);
+        $exception->setData([
+            'response_code' => $responseCode,
+            'response_message' => $responseMessage,
+        ]);
+
+        // 2Fa uses request() on client side thus needs a 200 response code.
+        // Default is 500 to end up in the catch() function.
+        $exception->setResponseCode($isTwoFactorAuth ? 200 : 500);
+
+        throw $exception;
+	}
 
     /**
      * Request to send an SMS code to the user for two-factor authentication.
@@ -1645,4 +1576,142 @@ class ApiClient
 		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
 	}
 
+    /**
+     * Helper method to easily do a GET request to a specific endpoint on the
+     * SimplyBook.me API.
+     * @throws \Exception
+     */
+    public function get(string $endpoint)
+    {
+        if ($this->company_registration_complete() === false) {
+            throw new \Exception('Company registration is not complete.');
+        }
+
+        if ($cache = $this->getRequestCache($endpoint)) {
+            return $cache;
+        }
+
+        $response = $this->request('GET', $endpoint);
+
+        $this->setRequestCache($endpoint, $response);
+
+        return $response;
+    }
+
+    /**
+     * Helper method to easily do a PUT request to a specific endpoint on the
+     * SimplyBook.me API.
+     * @throws RestDataException
+     */
+    public function put($endpoint, string $payload): array
+    {
+        return $this->request('PUT', $endpoint, $payload);
+    }
+
+    /**
+     * Helper method to easily do a POST request to a specific endpoint on the
+     * SimplyBook.me API.
+     * @throws RestDataException
+     */
+    public function post($endpoint, string $payload): array
+    {
+        return $this->request('POST', $endpoint, $payload);
+    }
+
+    /**
+     * Helper method to easily do a DELETE request to a specific endpoint on the
+     * SimplyBook.me API.
+     * @throws RestDataException
+     */
+    public function delete($endpoint): array
+    {
+        return $this->request('DELETE', $endpoint);
+    }
+
+    /**
+     * Helper method to easily do a request to a specific endpoint on the
+     * SimplyBook.me API.
+     * @throws RestDataException
+     */
+    public function request(string $method, string $endpoint, string $payload = ''): array
+    {
+        $requestType = str_contains($endpoint, 'admin') ? 'admin' : 'public';
+
+        $requestArgs = [
+            'method' => $method,
+            'headers' => $this->get_headers(true, $requestType),
+            'timeout' => 15,
+            'sslverify' => true,
+        ];
+
+        if (!empty($payload)) {
+            $requestArgs['body'] = $payload;
+        }
+
+        $response = wp_safe_remote_request(
+            $this->endpoint($endpoint),
+            $requestArgs
+        );
+
+        // Ensure we get fresh data next time we do a request to this endpoint.
+        $this->clearRequestCache($endpoint);
+
+        if (is_wp_error($response)) {
+            throw (new RestDataException($response->get_error_message()))
+                ->setResponseCode($response->get_error_code())
+                ->setData($response->get_error_data());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $responseMessage = wp_remote_retrieve_response_message($response);
+        $responseBody = wp_remote_retrieve_body($response);
+        $responseData = is_array($responseBody) ? $responseBody : json_decode($responseBody, true);
+
+        if (!($responseCode >= 200 && $responseCode < 300)) {
+            throw (new RestDataException($responseMessage))
+                ->setResponseCode($responseCode)
+                ->setData($responseData ?: []);
+        }
+
+        return $responseData ?: [];
+    }
+
+    /**
+     * Clear the request cache for a specific endpoint. This is used to ensure
+     * we get fresh data from the API.
+     * @uses wp_cache_delete
+     */
+    private function clearRequestCache(string $endpoint): void
+    {
+        wp_cache_delete($this->requestKey($endpoint), 'simplybook');
+    }
+
+    /**
+     * Set the request cache for a specific endpoint. This is used to cache the
+     * response data for a specific endpoint.
+     * @uses wp_cache_set
+     */
+    private function setRequestCache(string $endpoint, array $data): void
+    {
+        wp_cache_set($this->requestKey($endpoint), $data, 'simplybook', MINUTE_IN_SECONDS);
+    }
+
+    /**
+     * Get the request cache for a specific endpoint. This is used to retrieve
+     * cached data for a specific endpoint.
+     * @uses wp_cache_get
+     */
+    private function getRequestCache(string $endpoint)
+    {
+        return wp_cache_get($this->requestKey($endpoint), 'simplybook');
+    }
+
+    /**
+     * Generate a unique cache key for a specific endpoint. This is used to
+     * store and retrieve cached data for a specific endpoint.
+     */
+    private function requestKey(string $endpoint): string
+    {
+        return 'simplybook/' . $endpoint;
+    }
 }

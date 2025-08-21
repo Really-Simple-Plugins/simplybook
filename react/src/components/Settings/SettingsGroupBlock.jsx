@@ -8,7 +8,7 @@ import PreviewButtonInput from "../Inputs/PreviewButton";
 import clsx from "clsx";
 
 const SettingsGroupBlock = memo(
-    ({ group, currentGroupFields, control, isLastGroup, formHasSettings, getValues, reset }) => {
+    ({ group, currentGroupFields, control, isLastGroup, formHasSettings, getValues, setValue, reset }) => {
         const className = isLastGroup && formHasSettings ? "rounded-b-none" : "mb-5";
 
         return (
@@ -16,7 +16,7 @@ const SettingsGroupBlock = memo(
                 <BlockHeading className="mb-[0.70rem]" title={group.title} help={group?.help ?? ''}/>
                 <BlockContent className="px-4">
                     <div className="flex flex-wrap justify-between">
-                        <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues} reset={reset}/>
+                        <FormFieldWrapper fields={currentGroupFields} control={control} getValues={getValues} setValue={setValue} reset={reset}/>
                     </div>
                 </BlockContent>
             </Block>

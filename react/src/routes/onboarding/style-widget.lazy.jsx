@@ -3,25 +3,35 @@ import { __ } from "@wordpress/i18n";
 import Calendar from "../../components/Common/Calendar";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import ColorPickerField from "../../components/Fields/ColorPickerField";
 import useOnboardingData from "../../hooks/useOnboardingData";
+import useThemeColors from "../../hooks/useThemeColors";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
+import Icon from "../../components/Common/Icon";
 
 const path = "/onboarding/style-widget";
 export const Route = createLazyFileRoute(path)({
 
     component: () => {
 
-        const defaultPrimary = '#FF3259';
-        const defaultSecondary = '#000000';
-        const defaultActive = '#055B78';
-
-        const [primaryColor, setPrimaryColor] = useState(defaultPrimary);
-        const [secondaryColor, setSecondaryColor] = useState(defaultSecondary);
-        const [activeColor, setActiveColor] = useState(defaultActive);
-
+        const { colors: themeColors, isLoading: themeColorsLoading } = useThemeColors();
         const {onboardingCompleted} = useOnboardingData();
+
+        const [primaryColor, setPrimaryColor] = useState(null);
+        const [secondaryColor, setSecondaryColor] = useState(null);
+        const [activeColor, setActiveColor] = useState(null);
+
+        useEffect(() => {
+            if (themeColors) {
+                setPrimaryColor(themeColors.primary);
+                setSecondaryColor(themeColors.secondary);
+                setActiveColor(themeColors.active);
+            }
+        }, [themeColors]);
+
+        // Show loading state until colors are loaded
+        const showColorPickers = !themeColorsLoading && themeColors;
 
         return (
             <>
@@ -35,41 +45,50 @@ export const Route = createLazyFileRoute(path)({
                         </h1>
                     </div>
                     <div className={"flex flex-wrap justify-center mt-12 mb-12"}>
-                        <ColorPickerField
-                            className="mr-4"
-                            label={__('Primary', 'simplybook')}
-                            setting={{
-                                value: primaryColor,
-                                default: defaultPrimary,
-                                disabled: !onboardingCompleted,
-                            }}
-                            setColorOnClose={(value) => {
-                                setPrimaryColor(value);
-                            }}
-                        />
-                        <ColorPickerField
-                            className="mr-4"
-                            label={__('Secondary', 'simplybook')}
-                            setting={{
-                                value: secondaryColor,
-                                default: defaultSecondary,
-                                disabled: !onboardingCompleted,
-                            }}
-                            setColorOnClose={(value) => {
-                                setSecondaryColor(value);
-                            }}
-                        />
-                        <ColorPickerField
-                            label={__('Active', 'simplybook')}
-                            setting={{
-                                value: activeColor,
-                                default: defaultActive,
-                                disabled: !onboardingCompleted,
-                            }}
-                            setColorOnClose={(value) => {
-                                setActiveColor(value);
-                            }}
-                        />
+                        {!showColorPickers ? (
+                            <div className="flex items-center justify-center py-8">
+                                <Icon name="spinner" className="animate-spin mr-2" />
+                                <span>{__('Loading theme colors...', 'simplybook')}</span>
+                            </div>
+                        ) : (
+                            <>
+                                <ColorPickerField
+                                    className="mr-4"
+                                    label={__('Primary', 'simplybook')}
+                                    setting={{
+                                        value: primaryColor,
+                                        default: themeColors.primary,
+                                        disabled: false,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setPrimaryColor(value);
+                                    }}
+                                />
+                                <ColorPickerField
+                                    className="mr-4"
+                                    label={__('Secondary', 'simplybook')}
+                                    setting={{
+                                        value: secondaryColor,
+                                        default: themeColors.secondary,
+                                        disabled: false,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setSecondaryColor(value);
+                                    }}
+                                />
+                                <ColorPickerField
+                                    label={__('Active', 'simplybook')}
+                                    setting={{
+                                        value: activeColor,
+                                        default: themeColors.active,
+                                        disabled: false,
+                                    }}
+                                    setColorOnClose={(value) => {
+                                        setActiveColor(value);
+                                    }}
+                                />
+                            </>
+                        )}
                     </div>
                     <OnboardingStep
                         path={path}

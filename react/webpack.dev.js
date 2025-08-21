@@ -6,8 +6,8 @@ module.exports = {
   ...defaultConfig,
   output: {
     ...defaultConfig.output,
-    filename: "[name].js",
-    chunkFilename: "[name].js",
+    filename: "[name].[contenthash].js",
+    chunkFilename: "[name].[contenthash].js",
   },
   resolve: {
     ...defaultConfig.resolve,

@@ -2,15 +2,12 @@
 defined( 'ABSPATH' ) or die();
 
 return [
-	'services' => [
-		'id'       => 'services',
+	'services_management' => [
+		'id'       => 'services_management',
 		'menu_id'  => 'services',
-		'group_id' => 'services',
-		'source' => 'services',
-		'edit_link' => 'v2/management/#services/edit/details/{ID}',
-		'link'     => 'v2/management/#services',
-		'type'     => 'list',
+		'group_id' => 'services_list',
+		'type'     => 'services_list',
 		'label'    => __('Services', 'simplybook'),
-		'default'  => false,
+		'control'  => 'self',
 	],
 ];

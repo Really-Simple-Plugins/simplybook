@@ -58,7 +58,7 @@ class LoginUrlEndpoint implements SingleEndpointInterface
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         return $this->sendHttpResponse([
-            'simplybook_dashboard_url' => $this->service->getLoginUrl(),
+            'simplybook_external_login_url' => $this->service->getLoginUrl(),
         ]);
     }
 }

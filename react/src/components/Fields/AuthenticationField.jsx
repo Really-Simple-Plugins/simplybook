@@ -27,20 +27,29 @@ const AuthenticationField = forwardRef(
             e.preventDefault();
 
             const confirmed = window.confirm(
-                __("Are you sure you want to logout? All settings will be lost.", "simplybook")
+                sprintf(
+                    // Translators: %1$s and %2$s are placeholders for line breaks and bullet points
+                    __("Are you sure you want to logout?%1$sAll settings will be lost.%2$sYou need to reset your booking page(s) manually.", "simplybook"),
+                    "\n\n- ",
+                    "\n- "
+                )
             );
+
             if (!confirmed) {
                 return;
             }
 
             try {
-                await client.post();
+                await client.setPayload({
+                    user_confirmed: confirmed,
+                }).post();
             } catch (error) {
                 console.error("Logout request failed", error);
                 return;
             }
 
-            window.location.href = "/wp-admin/admin.php?page=simplybook-integration";
+            window.location.assign(simplybook.dashboard_url);
+
         };
 
         return (

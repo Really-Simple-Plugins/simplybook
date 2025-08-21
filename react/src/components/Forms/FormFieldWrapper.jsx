@@ -10,7 +10,7 @@ import clsx from "clsx";
  * @returns {Element}
  * @constructor
  */
-const FormFieldWrapper = ({ fields, control, getValues, reset }) => {
+const FormFieldWrapper = ({ fields, control, getValues, setValue, reset }) => {
 
     return (
         <>
@@ -21,6 +21,8 @@ const FormFieldWrapper = ({ fields, control, getValues, reset }) => {
                     setting={field} 
                     key={field.id} 
                     control={control} 
+                    setValue={setValue}
+                    getValues={getValues}
                     reset={reset}
                 />
             ))}

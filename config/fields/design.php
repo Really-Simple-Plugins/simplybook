@@ -1,6 +1,22 @@
 <?php
 defined( 'ABSPATH' ) or die( );
 
+/**
+ * Get theme colors for default values
+ */
+function getThemeColorsForDefaults(): array {
+    static $themeColors = null;
+    
+    if ($themeColors === null) {
+        $themeColorService = new \SimplyBook\Services\ThemeColorService();
+        $themeColors = $themeColorService->getThemeColors();
+    }
+    
+    return $themeColors;
+}
+
+$themeColors = getThemeColorsForDefaults();
+
 return
 	[
         'timeline_type' => [
@@ -212,44 +228,44 @@ return
                 ],
                 'sb_base_color' => [
                     'id' => 'sb_base_color',
-                    'default' => '#000000',
+                    'default' => $themeColors['secondary'],
                     'is_secondary' => true,
                 ],
                 'booking_nav_bg_color' => [
                     'id' => 'booking_nav_bg_color',
-                    'default' => '#FF3259',
+                    'default' => $themeColors['primary'],
                     'is_primary' => true,
                 ],
                 'body_bg_color' => [
                     'id' => 'body_bg_color',
-                    'default' => '#f7f7f7',
+                    'default' => $themeColors['background'],
                 ],
                 'dark_font_color' => [
                     'id' => 'dark_font_color',
-                    'default' => '#494949',
+                    'default' => $themeColors['foreground'],
                 ],
                 'light_font_color' => [
                     'id' => 'light_font_color',
-                    'default' => '#ffffff',
+                    'default' => $themeColors['text'],
                 ],
                 'btn_color_1' => [
                     'id' => 'btn_color_1',
-                    'default' => '#FF3259',
+                    'default' => $themeColors['primary'],
                     'is_primary' => true,
                 ],
                 'sb_company_label_color' => [
                     'id' => 'sb_company_label_color',
-                    'default' => '#FF3259',
+                    'default' => $themeColors['primary'],
                     'is_primary' => true,
                 ],
                 'sb_busy' => [
                     'id' => 'sb_busy',
-                    'default' => '#000000',
+                    'default' => $themeColors['secondary'],
                     'is_secondary' => true,
                 ],
                 'sb_available' => [
                     'id' => 'sb_available',
-                    'default' => '#055B78',
+                    'default' => $themeColors['active'],
                     'is_active' => true,
                 ],
                 'sb_review_image' => [
@@ -262,7 +278,7 @@ return
                 ],
                 'link_color' => [
                     'id' => 'link_color',
-                    'default' => '#e49092',
+                    'default' => $themeColors['active'],
                 ],
             ]
         ],
