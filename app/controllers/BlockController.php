@@ -15,8 +15,10 @@ class BlockController implements ControllerInterface
         }
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
-        add_action('init', [$this, 'registerGutenbergBlockType']);
-        
+        add_action('init', [$this, 'registerGutenbergBlockType'], 20);
+        // Also register the block during activation to handle auto-installation
+        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']);
+
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
@@ -25,30 +27,48 @@ class BlockController implements ControllerInterface
      */
     public function registerGutenbergBlockType()
     {
-        register_block_type('simplybook/widget', [
-            'title' => 'SimplyBook.me Widget',
-            'icon' => 'simplybook',
-            'category' => 'widgets',
-            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-            'attributes' => [
-                'location' => [
-                    'type' => 'integer',
-                    'default' => 0
+        // Check if the block is already registered to prevent duplicate registration
+        if (\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+            return;
+        }
+
+        $block_json_path = App::env('plugin.assets_path') . '/block/build/block.json';
+
+        // Use register_block_type_from_metadata for better compatibility with auto-installation
+        if (file_exists($block_json_path)) {
+            register_block_type_from_metadata(
+                dirname($block_json_path),
+                [
+                    'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+                ]
+            );
+        } else {
+            // Fallback to manual registration if block.json is not found
+            register_block_type('simplybook/widget', [
+                'title' => 'SimplyBook.me Widget',
+                'icon' => 'simplybook',
+                'category' => 'widgets',
+                'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+                'attributes' => [
+                    'location' => [
+                        'type' => 'integer',
+                        'default' => 0
+                    ],
+                    'category' => [
+                        'type' => 'integer',
+                        'default' => 0
+                    ],
+                    'provider' => [
+                        'type' => 'string', // Provider ID can be a sting like "any"
+                        'default' => '0'
+                    ],
+                    'service' => [
+                        'type' => 'integer',
+                        'default' => 0
+                    ],
                 ],
-                'category' => [
-                    'type' => 'integer',
-                    'default' => 0
-                ],
-                'provider' => [
-                    'type' => 'string', // Provider ID can be a sting like "any"
-                    'default' => '0'
-                ],
-                'service' => [
-                    'type' => 'integer',
-                    'default' => 0
-                ],
-            ],
-        ]);
+            ]);
+        }
     }
 
     /**
@@ -56,6 +76,12 @@ class BlockController implements ControllerInterface
      */
     public function enqueueGutenbergBlockEditorAssets()
     {
+        // Only enqueue assets if the block is registered
+        if (!\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+            // Try to register the block again if it's not registered yet
+            $this->registerGutenbergBlockType();
+        }
+
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
         $indexJs = App::env('plugin.assets_url') . 'block/build/index.js';
         $indexCss = App::env('plugin.assets_url') . 'block/build/index.css';
