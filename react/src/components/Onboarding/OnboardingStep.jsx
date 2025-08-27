@@ -18,6 +18,7 @@ const OnboardingStep = ({
     secondaryButton = null,
     customHtml = null,
     syncFieldConfig,
+    onSubmitError = null,
 }) => {
 
     const {
@@ -115,10 +116,18 @@ const OnboardingStep = ({
             try {
                 const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
                 if (shouldContinue === false) {
+                    // Call onSubmitError callback if provided (for reCAPTCHA reset)
+                    if (onSubmitError) {
+                        onSubmitError();
+                    }
                     setDisabled(false);
                     return; // Cancel submission only if beforeSubmit explicitly returns false
                 }
             } catch (error) {
+                // Call onSubmitError callback if provided (for reCAPTCHA reset)
+                if (onSubmitError) {
+                    onSubmitError();
+                }
                 setDisabled(false);
                 console.error('Submission cancelled:', error);
                 return; // Cancel submission if beforeSubmit throws an error
