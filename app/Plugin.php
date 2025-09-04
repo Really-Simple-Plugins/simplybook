@@ -201,6 +201,7 @@ class Plugin
                 new Http\Entities\Service(),
             ),
             new Controllers\ReviewController(),
+            new Controllers\TrialExpirationController(),
 	        new Controllers\WidgetTrackingController(
 		        new Services\WidgetTrackingService()
 	        ),
