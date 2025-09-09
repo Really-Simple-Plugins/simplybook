@@ -2,7 +2,8 @@
 namespace SimplyBook\Traits;
 
 use SimplyBook\App;
-use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Traits\HasAllowlistControl;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -13,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Give proper name and make it follow Single Responsibility Principle
  */
 trait LegacyLoad {
+	use HasLogging;
+	use HasAllowlistControl;
 	public $fields = [];
 	public $values_loaded = false;
 
@@ -273,7 +276,7 @@ trait LegacyLoad {
                 ] );
 
                 //only preload field values for logged in admins
-                if ( $load_values && $this->user_can_manage() ) {
+                if ( $load_values && $this->adminAccessAllowed() ) {
                     $value          = $this->get_option( $field['id'], $field['default'] );
                     $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
                 }

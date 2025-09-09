@@ -4,14 +4,12 @@ namespace SimplyBook\Controllers;
 use SimplyBook\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
-use SimplyBook\Traits\LegacyHelper;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class DashboardController implements ControllerInterface
 {
-    use LegacyHelper; // Needed for Load lol, bad stuffs
     use LegacyLoad; // Needed for get_option
     use HasViews;
     use HasUserAccess;

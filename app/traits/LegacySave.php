@@ -10,7 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait LegacySave {
     use LegacyLoad;
-    use LegacyHelper;
+    use HasTokenManagement;
+    use HasLogging;
+    use HasAllowlistControl;
+    use HasEncryption;
 
     /**
      * Fields that are not changeable by the user
@@ -186,7 +189,7 @@ trait LegacySave {
      */
     public function update_option($key, $value, bool $staleOverride = false, array $config = []): bool
     {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return false;
         }
 
@@ -232,7 +235,7 @@ trait LegacySave {
 	 */
 	public function delete_option($key): void
 	{
-		if ( !$this->user_can_manage() ) {
+		if ( !$this->adminAccessAllowed() ) {
 			return;
 		}
 
@@ -323,7 +326,7 @@ trait LegacySave {
      */
     public function delete_all_options(bool $private = false): bool
     {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return false;
         }
 

@@ -5,6 +5,8 @@ use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class CompanyRegistrationEndpoint implements SingleEndpointInterface
@@ -12,14 +14,17 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
+    use HasLogging;
 
     const ROUTE = 'company_registration';
 
     private string $callbackUrl;
+    private CallbackUrlService $callbackUrlService;
 
     public function __construct()
     {
-        $this->callbackUrl = $this->get_callback_url();
+        $this->callbackUrlService = new CallbackUrlService();
+        $this->callbackUrl = $this->callbackUrlService->get_callback_url();
     }
 
     /**
@@ -88,7 +93,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->update_option('company_id', $storage->getInt('company_id'), true);
 
         // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
-        $this->cleanup_callback_url();
+        $this->callbackUrlService->cleanup_callback_url();
 
         /**
          * Action: simplybook_after_company_registered

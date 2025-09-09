@@ -11,7 +11,9 @@ use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasTokenManagement;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Builders\CompanyBuilder;
@@ -24,7 +26,9 @@ class ApiClient
 {
     use LegacyLoad;
     use LegacySave;
-    use LegacyHelper;
+    use HasTokenManagement;
+    use HasLogging;
+    use HasAllowlistControl;
 
     protected JsonRpcClient $jsonRpcClient;
 
@@ -266,21 +270,6 @@ class ApiClient
         return $headers;
     }
 
-    /**
-     * Get a token
-     * @param string $type //public or admin
-     * @param bool $refresh
-     * @return string
-     */
-    public function get_token( string $type = 'public', bool $refresh = false ) : string {
-        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
-        if ( $refresh ) {
-            $type = $type . '_refresh';
-        }
-        $token = get_option("simplybook_token_" . $type, '');
-
-        return $this->decrypt_string($token);
-    }
 
     /**
      * Get public token
@@ -510,7 +499,7 @@ class ApiClient
      * @return string
      */
     protected function generate_callback_url(): string {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return '';
         }
 
@@ -553,43 +542,7 @@ class ApiClient
         delete_option('simplybook_company_login');
     }
 
-    /**
-     * Check if we have a valid token
-     *
-     * @param string $type
-     *
-     * @return bool
-     */
-    protected function token_is_valid( string $type = 'public' ): bool {
-        $refresh_token = $this->get_token($type, true );
-        $type = in_array($type, ['public', 'admin']) ? $type : 'public';
-        if ( $type === 'admin' ) {
-            $expires = get_option( 'simplybook_refresh_company_token_expiration', 0 );
-        } else {
-            $expires = get_option( 'simplybook_refresh_token_expiration', 0 );
-        }
 
-        if ( !$refresh_token || !$expires ) {
-            return false;
-        }
-        if ( $expires < time() ) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Clear tokens
-     *
-     * @return void
-     */
-
-    protected function clear_tokens(): void {
-        delete_option('simplybook_token_refresh');
-        delete_option('simplybook_refresh_token_expiration');
-        delete_option('simplybook_refresh_company_token_expiration');
-        delete_option('simplybook_token');
-    }
 
     /**
      * Check if authorization is valid and complete
@@ -627,7 +580,7 @@ class ApiClient
      */
     public function register_company(): ApiResponseDTO
     {
-        if ($this->user_can_manage() === false) {
+        if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
                 esc_html__('You are not authorized to do this.', 'simplybook')
             );
@@ -835,7 +788,7 @@ class ApiClient
      */
     public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
     {
-        if ($this->user_can_manage() === false) {
+        if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
                 esc_html__('You are not authorized to do this.', 'simplybook')
             );
