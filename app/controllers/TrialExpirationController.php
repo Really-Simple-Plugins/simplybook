@@ -35,9 +35,11 @@ o    public function register(): void
         $isExpired = $trialInfo['is_expired'];
         $companyId = $this->getCompanyId();
 
-        if ($isExpired) {
-            $message = __('Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!', 'simplybook');
-        } else {
+        
+            $message = esc_html__('Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!', 'simplybook');
+        
+        // Allmost expired.
+        if (($isExpired === false) && ($daysRemaining > 0)) {
             $message = sprintf(
                 // translators: %d is replaced by the number of days remaining
                 __('Your free SimplyBook.me trial period will expire in %d days. Discover which plans best suit your site to continue gathering bookings!', 'simplybook'),
