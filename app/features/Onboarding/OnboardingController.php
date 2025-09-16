@@ -11,9 +11,12 @@ use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Services\WidgetTrackingService;
+use SimplyBook\Traits\HasAllowlistControl;
 
 class OnboardingController implements FeatureInterface
 {
+    use HasAllowlistControl;
+
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
 
@@ -25,6 +28,11 @@ class OnboardingController implements FeatureInterface
 
     public function register()
     {
+        // Check if the user has admin access permissions
+        if (!$this->adminAccessAllowed()) {
+            return;
+        }
+
         add_filter('simplybook_rest_routes', [$this, 'addRoutes']);
     }
 

@@ -43,24 +43,12 @@ class FeatureHelper
     }
 
     /**
-     * Onboarding feature is enabled when a company has NOT been registered yet
-     * AND the user has appropriate admin access permissions.
+     * Onboarding feature is enabled when a company has NOT been registered yet.
      */
     private static function isOnboardingEnabled(): bool
     {
-        // First check if onboarding hasn't been completed yet
-        $onboardingNotCompleted = get_option('simplybook_onboarding_completed', false) === false;
-
-        // If onboarding is already completed, no need to check permissions
-        if (!$onboardingNotCompleted) {
-            return false;
-        }
-
-        // Create an instance to use the trait method
-        $instance = new self();
-        
-        // Check if the user has admin access permissions
-        return $instance->adminAccessAllowed();
+        // Check if onboarding hasn't been completed yet
+        return get_option('simplybook_onboarding_completed', false) === false;
     }
 
     /**
