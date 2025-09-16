@@ -16,8 +16,7 @@ class BlockController implements ControllerInterface
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
         add_action('init', [$this, 'registerGutenbergBlockType'], 20);
-        // Also register the block during activation to handle auto-installation
-        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']);
+        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']); // For auto-installation purposes
 
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
