@@ -16,8 +16,7 @@ class BlockController implements ControllerInterface
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
         add_action('init', [$this, 'registerGutenbergBlockType'], 20);
-        // Also register the block during activation to handle auto-installation
-        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']);
+        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']); // For auto-installation purposes
 
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
@@ -25,50 +24,59 @@ class BlockController implements ControllerInterface
     /**
      * Configure Gutenberg block with attributes and render callback.
      */
-    public function registerGutenbergBlockType()
+    /**
+     * Configure Gutenberg block with attributes and render callback.
+     * @since 3.3.0 Added usage of register_block_type_from_metadata for better
+     * compatibility with auto-installation.
+     */
+    public function registerGutenbergBlockType(): void
     {
         // Check if the block is already registered to prevent duplicate registration
-        if (class_exists( '\WP_Block_Type_Registry' ) && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        if (class_exists( '\WP_Block_Type_Registry' ) && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        $blockMetaData = App::env('plugin.assets_path') . '/block/build/block.json';
+        if (file_exists($blockMetaData) === false) {
+            $this->registerGutenbergBlockTypeManually();
             return;
         }
 
-        $block_json_path = App::env('plugin.assets_path') . '/block/build/block.json';
+        register_block_type_from_metadata($blockMetaData, [
+            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+            // Optioneel description toevoegen om de entry in de .json te
+            // overschrijven aangezien het anders niet vertaald kan worden.
+            'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
+        ]);
+    }
 
-        // Use register_block_type_from_metadata for better compatibility with auto-installation
-        if (file_exists($block_json_path)) {
-            register_block_type_from_metadata(
-                dirname($block_json_path),
-                [
-                    'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-                ]
-            );
-        } else {
-            // Fallback to manual registration if block.json is not found
-            register_block_type('simplybook/widget', [
-                'title' => 'SimplyBook.me Widget',
-                'icon' => 'simplybook',
-                'category' => 'widgets',
-                'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-                'attributes' => [
-                    'location' => [
-                        'type' => 'integer',
-                        'default' => 0
-                    ],
-                    'category' => [
-                        'type' => 'integer',
-                        'default' => 0
-                    ],
-                    'provider' => [
-                        'type' => 'string', // Provider ID can be a sting like "any"
-                        'default' => '0'
-                    ],
-                    'service' => [
-                        'type' => 'integer',
-                        'default' => 0
-                    ],
+    /**
+     * Manually configure Gutenberg block without the use of the block.json file.
+     * @since 3.3.0 added as a fallback method for {@see registerGutenbergBlockType}
+     */
+    private function registerGutenbergBlockTypeManually(): void
+    {
+        register_block_type('simplybook/widget', [
+            'title' => 'SimplyBook.me Widget',
+            'icon' => 'simplybook',
+            'category' => 'widgets',
+            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+            'attributes' => [
+                'location' => [
+                    'type' => 'integer',
+                    'default' => 0
                 ],
-            ]);
-        }
+                'category' => [
+                    'type' => 'integer',
+                    'default' => 0
+                ],
+                'provider' => [
+                    'type' => 'string', // Provider ID can be a sting like "any"
+                    'default' => '0'
+                ],
+                'service' => [
+                    'type' => 'integer',
+                    'default' => 0
+                ],
+            ],
+        ]);
     }
 
     /**
