@@ -26,12 +26,8 @@ o    public function register(): void
      */
     public function showTrialExpirationNotice(): void
     {
-        if ($this->canRenderTrialNotice() === false) {
-            return;
-        }
-
         $trialInfo = $this->getTrialInfo();
-        if ($trialInfo === null) {
+        if ($this->canRenderTrialNotice($trialInfo) === false) {
             return;
         }
 
