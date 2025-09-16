@@ -116,10 +116,8 @@ const OnboardingStep = ({
             try {
                 const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
                 if (shouldContinue === false) {
-                    // Call onSubmitError callback if provided (for reCAPTCHA reset)
-                    if (onSubmitError) {
-                        onSubmitError();
-                    }
+                    // Call onSubmitError callback if provided
+                    onSubmitError?.();
                     setDisabled(false);
                     return; // Cancel submission only if beforeSubmit explicitly returns false
                 }
