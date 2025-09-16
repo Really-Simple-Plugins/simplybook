@@ -87,8 +87,8 @@ o    public function register(): void
      */
     private function getTrialInfo(): ?array
     {
-        $subscriptionData = App::provide('subscription_data')->all();
-        
+        $subscriptionData = App::provide('client')->get_subscription_data();
+
         if (empty($subscriptionData)) {
             return null;
         }
@@ -98,9 +98,15 @@ o    public function register(): void
             return null;
         }
 
-        $trialEndDate = Carbon::parse($subscriptionData['trial_end']);
+	    // Catch Carbon throwable
+	    try {
+		    $trialEndDate = Carbon::parse($subscriptionData['trial_end']);
+	    } catch (\Throwable $e) {
+		    return null;
+	    }
+
         $now = Carbon::now();
-        
+
         $isExpired = $now->isAfter($trialEndDate);
         $daysRemaining = $isExpired ? 0 : $now->diffInDays($trialEndDate, false);
 
