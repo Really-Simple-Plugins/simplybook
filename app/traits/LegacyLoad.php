@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 trait LegacyLoad {
 	use HasLogging;
 	use HasAllowlistControl;
+
 	public $fields = [];
 	public $values_loaded = false;
 
