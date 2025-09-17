@@ -117,7 +117,7 @@ class OnboardingController implements FeatureInterface
         $companyBuilder->setTerms($tempTerms);
 
         $companyBuilder->setPassword(
-            $this->service->encrypt_string(
+            $this->service->encryptString(
                 wp_generate_password(24, false)
             )
         );
@@ -375,7 +375,7 @@ class OnboardingController implements FeatureInterface
     {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setUserLogin($userLogin)->setPassword(
-            $this->service->encrypt_string($password)
+            $this->service->encryptString($password)
         );
 
         $this->service->storeCompanyData($companyBuilder);

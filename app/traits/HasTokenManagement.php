@@ -1,97 +1,110 @@
-<?php
-namespace SimplyBook\Traits;
-
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
+<?php namespace SimplyBook\Traits;
 
 trait HasTokenManagement
 {
     use HasEncryption;
 
+    private const TOKEN_PATTERN = '/^[a-f0-9]{64}$/i';
+    private const VALID_TOKEN_TYPES = ['public', 'admin', 'user'];
+
     /**
-     * Sanitize the api token
-     * @param string $token
-     * @return string
+     * Sanitizes an API token to ensure it matches the expected format.
      */
-    public function sanitize_token($token): string
+    public function sanitizeToken(string $token): string
     {
         $token = trim($token);
-        if (preg_match('/^[a-f0-9]{64}$/i', $token)) {
+
+        if (preg_match(self::TOKEN_PATTERN, $token)) {
             return $token;
-        } else {
+        }
+
+        return '';
+    }
+
+    /**
+     * Updates a token in the database after sanitizing and encrypting it.
+     */
+    public function updateToken(string $token, string $type = 'public', bool $refresh = false): void
+    {
+        $type = $this->validateTokenType($type);
+
+        if ($refresh) {
+            $type .= '_refresh';
+        }
+
+        $sanitizedToken = $this->sanitizeToken($token);
+        $encryptedToken = $this->encryptString($sanitizedToken);
+
+        update_option("simplybook_token_{$type}", $encryptedToken);
+    }
+
+    /**
+     * Retrieves and decrypts a token from the database.
+     */
+    public function getToken(string $type = 'public', bool $refresh = false): string
+    {
+        $type = $this->validateTokenType($type);
+
+        if ($refresh) {
+            $type .= '_refresh';
+        }
+
+        $encryptedToken = get_option("simplybook_token_{$type}", '');
+
+        if (empty($encryptedToken)) {
             return '';
         }
+
+        return $this->decryptString($encryptedToken);
     }
 
     /**
-     * get a token
-     *
-     * @param string $token
-     * @param string $type //public or admin
-     * @param bool $refresh
-     *
-     * @return void
+     * Checks if a token is valid and not expired.
      */
-    public function update_token( string $token, string $type = 'public', bool $refresh = false ): void {
-        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
-        if ( $refresh ) {
-            $type = $type . '_refresh';
-        }
-        $token = $this->sanitize_token( $token );
-        update_option("simplybook_token_$type", $this->encrypt_string($token) );
-    }
+    public function tokenIsValid(string $type = 'public'): bool
+    {
+        $refreshToken = $this->getToken($type, true);
 
-    /**
-     * Get a token
-     * @param string $type //public or admin
-     * @param bool $refresh
-     * @return string
-     */
-    public function get_token( string $type = 'public', bool $refresh = false ) : string {
-        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
-        if ( $refresh ) {
-            $type = $type . '_refresh';
-        }
-        $token = get_option("simplybook_token_" . $type, '');
-
-        return $this->decrypt_string($token);
-    }
-
-    /**
-     * Check if we have a valid token
-     *
-     * @param string $type
-     *
-     * @return bool
-     */
-    protected function token_is_valid( string $type = 'public' ): bool {
-        $refresh_token = $this->get_token($type, true );
-        $type = in_array($type, ['public', 'admin']) ? $type : 'public';
-        if ( $type === 'admin' ) {
-            $expires = get_option( 'simplybook_refresh_company_token_expiration', 0 );
-        } else {
-            $expires = get_option( 'simplybook_refresh_token_expiration', 0 );
-        }
-
-        if ( !$refresh_token || !$expires ) {
+        if (empty($refreshToken)) {
             return false;
         }
-        if ( $expires < time() ) {
-            return false;
-        }
-        return true;
+
+        $expires = $this->getTokenExpiration($type);
+
+        return $expires > time();
     }
 
     /**
-     * Clear tokens
-     *
-     * @return void
+     * Clears all stored tokens from the database.
      */
-    protected function clear_tokens(): void {
+    public function clearTokens(): void
+    {
         delete_option('simplybook_token_refresh');
         delete_option('simplybook_refresh_token_expiration');
         delete_option('simplybook_refresh_company_token_expiration');
         delete_option('simplybook_token');
     }
+
+    /**
+     * Validates and normalizes the token type.
+     */
+    protected function validateTokenType(string $type): string
+    {
+        return in_array($type, self::VALID_TOKEN_TYPES, true) ? $type : 'public';
+    }
+
+    /**
+     * Gets the expiration timestamp for a given token type.
+     */
+    protected function getTokenExpiration(string $type): int
+    {
+        $type = $this->validateTokenType($type);
+
+        if ($type === 'admin') {
+            return (int) get_option('simplybook_refresh_company_token_expiration', 0);
+        }
+
+        return (int) get_option('simplybook_refresh_token_expiration', 0);
+    }
+
 }

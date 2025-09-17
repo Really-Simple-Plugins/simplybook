@@ -134,11 +134,11 @@ trait LegacySave {
         }
 
         if (!empty($authData['token'])) {
-            $this->update_token($authData['token'], 'admin');
+            $this->updateToken($authData['token'], 'admin');
         }
 
         if (!empty($authData['refresh_token'])) {
-            $this->update_token($authData['refresh_token'], 'admin', true);
+            $this->updateToken($authData['refresh_token'], 'admin', true);
         }
 
         if (!empty($authData['login'])) {
@@ -219,7 +219,7 @@ trait LegacySave {
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
         if ($config['encrypt'] ?? false) {
-            $value = $this->encrypt_string($value);
+            $value = $this->encryptString($value);
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);

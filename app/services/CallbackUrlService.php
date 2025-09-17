@@ -1,9 +1,6 @@
 <?php
-namespace SimplyBook\Services;
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit;
-}
+namespace SimplyBook\Services;
 
 use SimplyBook\Traits\HasAllowlistControl;
 
@@ -11,25 +8,36 @@ class CallbackUrlService
 {
     use HasAllowlistControl;
 
+    private const CALLBACK_URL_OPTION = 'simplybook_callback_url';
+    private const CALLBACK_URL_EXPIRES_OPTION = 'simplybook_callback_url_expires';
+
     /**
-     * Get the temporary callback URL. Return empty string if the URL is expired
-     *
-     * @return string
+     * Retrieves the temporary callback URL if it hasn't expired.
+     * Automatically cleans up expired URLs.
      */
-    public function get_callback_url(): string {
-        $callback_url = get_option('simplybook_callback_url', '' );
-        $expires = get_option('simplybook_callback_url_expires' );
-        if ( $expires > time() ) {
-            return $callback_url;
+    public function getCallbackUrl(): string
+    {
+        $callbackUrl = get_option(self::CALLBACK_URL_OPTION, '');
+        $expires = get_option(self::CALLBACK_URL_EXPIRES_OPTION, 0);
+
+        if ($expires > time()) {
+            return $callbackUrl;
         }
 
-        //expired URL
-        delete_option('simplybook_callback_url');
+        // Expired URL - clean it up
+        if (!empty($callbackUrl)) {
+            delete_option(self::CALLBACK_URL_OPTION);
+        }
+
         return '';
     }
 
-    public function cleanup_callback_url() {
-        delete_option('simplybook_callback_url' );
-        delete_option('simplybook_callback_url_expires' );
+    /**
+     * Removes the callback URL and its expiration time from the database.
+     */
+    public function cleanupCallbackUrl(): void
+    {
+        delete_option(self::CALLBACK_URL_OPTION);
+        delete_option(self::CALLBACK_URL_EXPIRES_OPTION);
     }
 }

@@ -69,7 +69,7 @@ trait LegacyLoad {
 	    }
 
         if ( $field['encrypt'] ) {
-            $value = $this->decrypt_string($value);
+            $value = $this->decryptString($value);
         }
 
         if ( $field['type'] === 'checkbox' ) {
