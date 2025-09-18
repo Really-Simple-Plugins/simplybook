@@ -5,14 +5,16 @@ use Carbon\Carbon;
 use SimplyBook\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class TrialExpirationController implements ControllerInterface
 {
     use HasViews;
     use HasAllowlistControl;
+    use LegacyLoad;
 
-o    public function register(): void
+    public function register(): void
     {
         if ($this->adminAccessAllowed() === false) {
             return;
@@ -27,17 +29,15 @@ o    public function register(): void
     public function showTrialExpirationNotice(): void
     {
         $trialInfo = $this->getTrialInfo();
-        if ($this->canRenderTrialNotice($trialInfo) === false) {
+        if ($this->canRenderTrialNotice() === false) {
             return;
         }
 
         $daysRemaining = $trialInfo['days_remaining'];
         $isExpired = $trialInfo['is_expired'];
-        $companyId = $this->getCompanyId();
 
-        
-            $message = esc_html__('Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!', 'simplybook');
-        
+        $message = esc_html__('Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!', 'simplybook');
+
         // Allmost expired.
         if (($isExpired === false) && ($daysRemaining > 0)) {
             $message = sprintf(
@@ -47,9 +47,14 @@ o    public function register(): void
             );
         }
 
+        // Build the upgrade URL using the same pattern as DomainEndpoint
+        $domain = $this->get_domain();
+        $companyLogin = App::provide('client')->get_company_login();
+        $upgradeUrl = "https://$companyLogin.secure.$domain/v2/r/payment-widget#/";
+
         $this->render('admin/trial-notice', [
             'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'upgradeUrl' => sprintf('https://app.simplybook.me/v2/payment-widget#/%s', $companyId),
+            'upgradeUrl' => $upgradeUrl,
             'message' => $message,
         ]);
     }
@@ -120,12 +125,4 @@ o    public function register(): void
         ];
     }
 
-    /**
-     * Get the company ID for the upgrade URL
-     */
-    private function getCompanyId(): string
-    {
-        $options = get_option('simplybook_options', []);
-        return isset($options['company_id']) ? (string) $options['company_id'] : '';
-    }
 }
