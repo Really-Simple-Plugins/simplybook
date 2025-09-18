@@ -23,26 +23,25 @@ class BlockController implements ControllerInterface
 
     /**
      * Configure Gutenberg block with attributes and render callback.
-     */
-    /**
-     * Configure Gutenberg block with attributes and render callback.
      * @since 3.3.0 Added usage of register_block_type_from_metadata for better
      * compatibility with auto-installation.
      */
     public function registerGutenbergBlockType(): void
     {
         // Check if the block is already registered to prevent duplicate registration
-        if (class_exists( '\WP_Block_Type_Registry' ) && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
-        $blockMetaData = App::env('plugin.assets_path') . '/block/build/block.json';
-        if (file_exists($blockMetaData) === false) {
-            $this->registerGutenbergBlockTypeManually();
-            return;
+        if (class_exists( '\WP_Block_Type_Registry' ) && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+			return;
         }
+
+	    $blockMetaData = App::env( 'plugin.assets_path' ) . '/block/build/block.json';
+	    if ( file_exists( $blockMetaData ) === false ) {
+		    $this->registerGutenbergBlockTypeManually();
+		    return;
+	    }
 
         register_block_type_from_metadata($blockMetaData, [
             'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-            // Optioneel description toevoegen om de entry in de .json te
-            // overschrijven aangezien het anders niet vertaald kan worden.
+	        // Overwrite the .json entry to support translations.
             'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
         ]);
     }
