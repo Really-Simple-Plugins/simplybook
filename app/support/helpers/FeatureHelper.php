@@ -4,14 +4,12 @@ namespace SimplyBook\Helpers;
 
 use SimplyBook\App;
 use SimplyBook\Utility\StringUtility;
-use SimplyBook\Traits\HasAllowlistControl;
 
 /**
  * Helper class to check if a feature should be loaded.
  */
 class FeatureHelper
 {
-    use HasAllowlistControl;
     /**
      * Method is used to check if a feature is enabled. It will process the
      * feature name and searches for a method that check if the feature is
