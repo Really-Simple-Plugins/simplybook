@@ -123,9 +123,7 @@ const OnboardingStep = ({
                 }
             } catch (error) {
                 // Call onSubmitError callback if provided (for reCAPTCHA reset)
-                if (onSubmitError) {
-                    onSubmitError();
-                }
+                onSubmitError?.();
                 setDisabled(false);
                 console.error('Submission cancelled:', error);
                 return; // Cancel submission if beforeSubmit throws an error
