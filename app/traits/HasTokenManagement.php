@@ -4,7 +4,6 @@ trait HasTokenManagement
 {
     use HasEncryption;
 
-    private const TOKEN_PATTERN = '/^[a-f0-9]{64}$/i';
     private const VALID_TOKEN_TYPES = ['public', 'admin', 'user'];
 
     /**
@@ -14,7 +13,7 @@ trait HasTokenManagement
     {
         $token = trim($token);
 
-        if (preg_match(self::TOKEN_PATTERN, $token)) {
+        if (preg_match('/^[a-f0-9]{64}$/i', $token)) {
             return $token;
         }
 
