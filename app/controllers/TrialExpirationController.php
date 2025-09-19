@@ -93,6 +93,8 @@ class TrialExpirationController implements ControllerInterface
         // Check cache first
         $cacheKey = 'simplybook_trial_info';
         $cachedInfo = wp_cache_get($cacheKey, 'simplybook');
+	    $cacheDuration = (5 * MINUTE_IN_SECONDS);
+		$cacheGroup = 'simplybook';
         if ($cachedInfo !== false) {
             return $cachedInfo;
         }
@@ -100,13 +102,13 @@ class TrialExpirationController implements ControllerInterface
         $subscriptionData = App::provide('client')->get_subscription_data();
 
         if (empty($subscriptionData)) {
-            wp_cache_set($cacheKey, null, 'simplybook', 300);
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         // Check if we have trial end date in subscription data
         if (!isset($subscriptionData['trial_end'])) {
-            wp_cache_set($cacheKey, null, 'simplybook', 300);
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
@@ -114,7 +116,7 @@ class TrialExpirationController implements ControllerInterface
 	    try {
 		    $trialEndDate = Carbon::parse($subscriptionData['trial_end']);
 	    } catch (\Throwable $e) {
-		    wp_cache_set($cacheKey, null, 'simplybook', 300);
+		    wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
 		    return null;
 	    }
 
@@ -125,7 +127,7 @@ class TrialExpirationController implements ControllerInterface
 
         // Don't show notice if more than 30 days have passed since expiration
         if ($isExpired && $now->diffInDays($trialEndDate) > 30) {
-            wp_cache_set($cacheKey, null, 'simplybook', 300);
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
@@ -135,8 +137,7 @@ class TrialExpirationController implements ControllerInterface
             'trial_end_date' => $trialEndDate->toDateTimeString(),
         ];
 
-        // Cache the result for 5 minutes
-        wp_cache_set($cacheKey, $trialInfo, 'simplybook', 300);
+        wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
 
         return $trialInfo;
     }
