@@ -45,7 +45,6 @@ class FeatureHelper
      */
     private static function isOnboardingEnabled(): bool
     {
-        // Check if onboarding hasn't been completed yet
         return get_option('simplybook_onboarding_completed', false) === false;
     }
 
