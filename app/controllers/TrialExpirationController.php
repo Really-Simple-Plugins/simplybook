@@ -3,6 +3,7 @@ namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
 use SimplyBook\App;
+use SimplyBook\Services\SubscriptionDataService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Traits\LegacyLoad;
@@ -13,6 +14,13 @@ class TrialExpirationController implements ControllerInterface
     use HasViews;
     use HasAllowlistControl;
     use LegacyLoad;
+
+    private SubscriptionDataService $service;
+
+    public function __construct(SubscriptionDataService $service)
+    {
+        $this->service = $service;
+    }
 
     public function register(): void
     {
@@ -99,7 +107,14 @@ class TrialExpirationController implements ControllerInterface
             return $cachedInfo;
         }
 
-        $subscriptionData = App::provide('client')->get_subscription_data();
+        $subscriptionData = $this->service->all(true);
+
+        if (empty($subscriptionData)) {
+            $subscriptionData = $this->service->fetch();
+            if (!empty($subscriptionData)) {
+                $subscriptionData = $this->service->save($subscriptionData);
+            }
+        }
 
         if (empty($subscriptionData)) {
             wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
