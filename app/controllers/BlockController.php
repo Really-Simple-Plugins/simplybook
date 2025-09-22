@@ -79,12 +79,16 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Load scripts and styles for Gutenberg editor.
+     * Load scripts and styles for Gutenberg editor. If the widget is not yet
+     * registered in the current context, ensure it's registered before
+     * enqueuing assets. This prevents issues in auto-installation situations.
      */
     public function enqueueGutenbergBlockEditorAssets()
     {
-        // Ensure the block is registered before enqueuing assets
-        if (class_exists('\WP_Block_Type_Registry') && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        if (
+            class_exists('\WP_Block_Type_Registry')
+            && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')
+        ) {
             $this->registerGutenbergBlockType();
         }
 
