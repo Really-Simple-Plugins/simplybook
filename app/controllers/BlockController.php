@@ -83,9 +83,9 @@ class BlockController implements ControllerInterface
      */
     public function enqueueGutenbergBlockEditorAssets()
     {
-        // Only enqueue assets if the block is registered
-        if (class_exists( '\WP_Block_Type_Registry' ) && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
-            return;
+        // Ensure the block is registered before enqueuing assets
+        if (class_exists( '\WP_Block_Type_Registry' ) && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+            $this->registerGutenbergBlockType();
         }
 
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
