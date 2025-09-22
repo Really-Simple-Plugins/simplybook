@@ -29,11 +29,11 @@ class BlockController implements ControllerInterface
     public function registerGutenbergBlockType(): void
     {
         // Check if the block is already registered to prevent duplicate registration
-        if (class_exists( '\WP_Block_Type_Registry' ) && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        if (class_exists('\WP_Block_Type_Registry') && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
 			return;
         }
 
-	    $blockMetaData = App::env( 'plugin.assets_path' ) . '/block/build/block.json';
+	    $blockMetaData = App::env('plugin.assets_path') . '/block/build/block.json';
 	    if ( file_exists( $blockMetaData ) === false ) {
 		    $this->registerGutenbergBlockTypeManually();
 		    return;
@@ -84,7 +84,7 @@ class BlockController implements ControllerInterface
     public function enqueueGutenbergBlockEditorAssets()
     {
         // Ensure the block is registered before enqueuing assets
-        if (class_exists( '\WP_Block_Type_Registry' ) && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        if (class_exists('\WP_Block_Type_Registry') && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
             $this->registerGutenbergBlockType();
         }
 
