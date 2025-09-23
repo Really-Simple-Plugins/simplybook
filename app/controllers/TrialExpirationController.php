@@ -113,13 +113,8 @@ class TrialExpirationController implements ControllerInterface
             $subscriptionData = $this->service->restore();
         }
 
-        if (empty($subscriptionData)) {
-            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
-            return null;
-        }
-
         // Check if we have trial end date in subscription data
-        if (!isset($subscriptionData['trial_end'])) {
+        if (empty($subscriptionData) || !isset($subscriptionData['trial_end'])) {
             wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
