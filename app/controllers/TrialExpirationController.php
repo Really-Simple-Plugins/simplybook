@@ -110,10 +110,7 @@ class TrialExpirationController implements ControllerInterface
         $subscriptionData = $this->service->all(true);
 
         if (empty($subscriptionData)) {
-            $subscriptionData = $this->service->fetch();
-            if (!empty($subscriptionData)) {
-                $subscriptionData = $this->service->save($subscriptionData);
-            }
+            $subscriptionData = $this->service->restore();
         }
 
         if (empty($subscriptionData)) {
