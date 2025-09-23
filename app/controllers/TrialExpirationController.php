@@ -100,9 +100,9 @@ class TrialExpirationController implements ControllerInterface
     {
         // Check cache first
         $cacheKey = 'simplybook_trial_info';
-        $cachedInfo = wp_cache_get($cacheKey, 'simplybook');
-	    $cacheDuration = (5 * MINUTE_IN_SECONDS);
 		$cacheGroup = 'simplybook';
+        $cachedInfo = wp_cache_get($cacheKey, $cacheGroup);
+	    $cacheDuration = (5 * MINUTE_IN_SECONDS);
         if ($cachedInfo !== false) {
             return $cachedInfo;
         }
