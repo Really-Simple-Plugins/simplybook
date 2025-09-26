@@ -113,35 +113,31 @@ class TrialExpirationController implements ControllerInterface
             $subscriptionData = $this->service->restore();
         }
 
-        // Check if we have trial end date in subscription data
-        if (empty($subscriptionData) || !isset($subscriptionData['trial_end'])) {
+        if (empty($subscriptionData)) {
             wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
-	    // Catch Carbon throwable
-	    try {
-		    $trialEndDate = Carbon::parse($subscriptionData['trial_end']);
-	    } catch (\Throwable $e) {
-		    wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
-		    return null;
-	    }
+        // Only show notice for Trial subscriptions
+        $subscriptionName = ($subscriptionData['subscription_name'] ?? '');
+        if ($subscriptionName !== 'Trial') {
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
+            return null;
+        }
 
-        $now = Carbon::now();
-
-        $isExpired = $now->isAfter($trialEndDate);
-        $daysRemaining = $isExpired ? 0 : $now->diffInDays($trialEndDate, false);
+        // Get expiration data from API
+        $isExpired = ($subscriptionData['is_expired'] ?? false);
+        $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
         // Don't show notice if more than 30 days have passed since expiration
-        if ($isExpired && $now->diffInDays($trialEndDate) > 30) {
+        if ($isExpired && abs($expireIn) > 30) {
             wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         $trialInfo = [
             'is_expired' => $isExpired,
-            'days_remaining' => max(0, $daysRemaining),
-            'trial_end_date' => $trialEndDate->toDateTimeString(),
+            'days_remaining' => max(0, (int) $expireIn),
         ];
 
         wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
