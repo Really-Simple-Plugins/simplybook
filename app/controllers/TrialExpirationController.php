@@ -3,6 +3,7 @@ namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
 use SimplyBook\App;
+use SimplyBook\Services\LoginUrlService;
 use SimplyBook\Services\SubscriptionDataService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -15,11 +16,13 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
-    private SubscriptionDataService $service;
+    private SubscriptionDataService $subscriptionService;
+    private LoginUrlService $loginUrlService;
 
-    public function __construct(SubscriptionDataService $service)
+    public function __construct(SubscriptionDataService $subscriptionService, LoginUrlService $loginUrlService)
     {
-        $this->service = $service;
+        $this->subscriptionService = $subscriptionService;
+        $this->loginUrlService = $loginUrlService;
     }
 
     public function register(): void
@@ -55,10 +58,8 @@ class TrialExpirationController implements ControllerInterface
             );
         }
 
-        // Build the upgrade URL using the same pattern as DomainEndpoint
-        $domain = $this->get_domain();
-        $companyLogin = App::provide('client')->get_company_login();
-        $upgradeUrl = "https://$companyLogin.secure.$domain/v2/r/payment-widget#/";
+        // Build the upgrade URL with SSO support
+        $upgradeUrl = $this->loginUrlService->getLoginUrlWithPath('v2/r/payment-widget#');
 
         $this->render('admin/trial-notice', [
             'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
@@ -112,10 +113,10 @@ class TrialExpirationController implements ControllerInterface
             return $cachedInfo;
         }
 
-        $subscriptionData = $this->service->all(true);
+        $subscriptionData = $this->subscriptionService->all(true);
 
         if (empty($subscriptionData)) {
-            $subscriptionData = $this->service->restore();
+            $subscriptionData = $this->subscriptionService->restore();
         }
 
         if (empty($subscriptionData)) {

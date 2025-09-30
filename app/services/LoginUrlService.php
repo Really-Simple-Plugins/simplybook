@@ -57,6 +57,30 @@ class LoginUrlService
     }
 
     /**
+     * Returns the login URL with a specific path. This method handles both
+     * SSO hash URLs and direct URLs correctly.
+     *
+     * @param string $path The path to navigate to after login (e.g., 'v2/r/payment-widget')
+     * @return string The full URL with the path correctly appended
+     */
+    public function getLoginUrlWithPath(string $path): string
+    {
+        $loginUrl = $this->getLoginUrl();
+
+        // Remove leading slash from path if present
+        $path = ltrim($path, '/');
+
+        // Check if this is a hash-based SSO URL
+        if (strpos($loginUrl, 'by-hash') !== false) {
+            // For hash URLs, use the back_url parameter
+            return $loginUrl . '?back_url=/' . $path . '/';
+        }
+
+        // For direct URLs, append the path directly
+        return $loginUrl . '/' . $path . '/';
+    }
+
+    /**
      * Method fetches a new login URL for the user and stores it in the options.
      * Returns the login URL containing the login hash WITHOUT trailing slash.
      */

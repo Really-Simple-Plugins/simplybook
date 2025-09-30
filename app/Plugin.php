@@ -202,7 +202,8 @@ class Plugin
             ),
             new Controllers\ReviewController(),
             new Controllers\TrialExpirationController(
-                new Services\SubscriptionDataService()
+                new Services\SubscriptionDataService(),
+                new Services\LoginUrlService()
             ),
 	        new Controllers\WidgetTrackingController(
 		        new Services\WidgetTrackingService()
