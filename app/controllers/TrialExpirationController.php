@@ -89,6 +89,11 @@ class TrialExpirationController implements ControllerInterface
             return false;
         }
 
+        // Don't show notice if the trial expired more than 30 days ago
+        if ($trialInfo['is_expired'] && $trialInfo['days_since_expiration'] > 30) {
+            return false;
+        }
+
         // Show if expired or expiring in 2 days or less
         return $trialInfo['is_expired'] || $trialInfo['days_remaining'] <= 2;
     }
@@ -129,15 +134,10 @@ class TrialExpirationController implements ControllerInterface
         $isExpired = ($subscriptionData['is_expired'] ?? false);
         $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
-        // Don't show notice if more than 30 days have passed since expiration
-        if ($isExpired && abs($expireIn) > 30) {
-            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
-            return null;
-        }
-
+        // Return trial information
         $trialInfo = [
             'is_expired' => $isExpired,
-            'days_remaining' => max(0, (int) $expireIn),
+            'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
         ];
 
         wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
