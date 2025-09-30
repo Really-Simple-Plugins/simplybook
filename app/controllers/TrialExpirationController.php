@@ -138,6 +138,7 @@ class TrialExpirationController implements ControllerInterface
         $trialInfo = [
             'is_expired' => $isExpired,
             'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
+            'days_since_expiration' => $isExpired ? abs((int) $expireIn) : 0,
         ];
 
         wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
