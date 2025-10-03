@@ -3,6 +3,7 @@ namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
 use SimplyBook\App;
+use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -16,6 +17,12 @@ class ReviewController implements ControllerInterface
     private string $reviewNonceName = 'rsp_review_nonce';
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
+    private NoticeDismissalService $noticeDismissalService;
+
+    public function __construct(NoticeDismissalService $noticeDismissalService)
+    {
+        $this->noticeDismissalService = $noticeDismissalService;
+    }
 
     public function register(): void
     {
@@ -23,6 +30,7 @@ class ReviewController implements ControllerInterface
             return;
         }
 
+        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showLeaveReviewNotice']);
         add_action('admin_init', [$this, 'processReviewFormSubmit']);
     }
@@ -90,6 +98,12 @@ class ReviewController implements ControllerInterface
      */
     private function canRenderReviewNotice(): bool
     {
+        // Check if user dismissed via X button
+        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'review')) {
+            return false;
+        }
+
+        // Check if user dismissed via form button
         $previousChoice = get_option('simplybook_review_notice_choice');
         if ($previousChoice === 'never') {
             return false;
@@ -152,6 +166,35 @@ class ReviewController implements ControllerInterface
         $thirtyDaysAgo = Carbon::now()->subDays(30);
 
         return $timestamp->isBefore($thirtyDaysAgo);
+    }
+
+    /**
+     * Enqueue scripts for notice dismiss functionality
+     */
+    public function enqueueScripts(): void
+    {
+        // Only enqueue if the notice will be shown
+        if ($this->canRenderReviewNotice() === false) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'simplybook-notice-dismiss',
+            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
+            [],
+            App::env('plugin.version'),
+            false
+        );
+
+        wp_add_inline_script(
+            'simplybook-notice-dismiss',
+            sprintf(
+                'window.simplebookNotices = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url('simplybook/v1/notices/dismiss'))),
+                wp_json_encode(wp_create_nonce('wp_rest'))
+            ),
+            'before'
+        );
     }
 
     /**

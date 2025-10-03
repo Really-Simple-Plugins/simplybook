@@ -2,7 +2,6 @@
 /**
  * Variables that should be passed to the view
  * @var string $logoUrl
- * @var string $upgradeUrl
  * @var string $message
  */
 ?>
@@ -30,8 +29,6 @@
     }
     .rsp-trial .rsp-buttons-row {
         margin-top:10px;
-        display: flex;
-        align-items: center;
     }
     .rsp-trial .rsp-trial-content {
         margin-left: 30px;
@@ -54,7 +51,12 @@
         <div class="rsp-trial-content">
             <?php echo wp_kses_post(wpautop($message)); ?>
             <div class="rsp-buttons-row">
-                <a class="button button-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($upgradeUrl); ?>">
+                <a
+                    class="button button-primary"
+                    href="#"
+                    data-sso-path="v2/r/payment-widget#"
+                    data-loading-text="<?php echo esc_attr(__('Loading...', 'simplybook')); ?>"
+                >
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>
             </div>

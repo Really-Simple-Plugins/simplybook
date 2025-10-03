@@ -200,10 +200,12 @@ class Plugin
             new Controllers\ServicesController(
                 new Http\Entities\Service(),
             ),
-            new Controllers\ReviewController(),
+            new Controllers\ReviewController(
+                new Services\NoticeDismissalService()
+            ),
             new Controllers\TrialExpirationController(
                 new Services\SubscriptionDataService(),
-                new Services\LoginUrlService()
+                new Services\NoticeDismissalService()
             ),
 	        new Controllers\WidgetTrackingController(
 		        new Services\WidgetTrackingService()
@@ -254,6 +256,9 @@ class Plugin
             new Http\Endpoints\PublicThemeListEndpoint(),
             new Http\Endpoints\ThemeColorEndpoint(
                 new Services\ThemeColorService()
+            ),
+            new Http\Endpoints\NoticesDismissEndpoint(
+                new Services\NoticeDismissalService()
             ),
         ]);
     }

@@ -1,10 +1,9 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use Carbon\Carbon;
 use SimplyBook\App;
-use SimplyBook\Services\LoginUrlService;
 use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Traits\LegacyLoad;
@@ -17,12 +16,12 @@ class TrialExpirationController implements ControllerInterface
     use LegacyLoad;
 
     private SubscriptionDataService $subscriptionService;
-    private LoginUrlService $loginUrlService;
+    private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(SubscriptionDataService $subscriptionService, LoginUrlService $loginUrlService)
+    public function __construct(SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
     {
         $this->subscriptionService = $subscriptionService;
-        $this->loginUrlService = $loginUrlService;
+        $this->noticeDismissalService = $noticeDismissalService;
     }
 
     public function register(): void
@@ -31,12 +30,10 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
+        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showTrialExpirationNotice']);
     }
 
-    /**
-     * Show a notice about trial expiration
-     */
     public function showTrialExpirationNotice(): void
     {
         if ($this->canRenderTrialNotice() === false) {
@@ -49,7 +46,6 @@ class TrialExpirationController implements ControllerInterface
 
         $message = esc_html__('Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!', 'simplybook');
 
-        // Allmost expired.
         if (($isExpired === false) && ($daysRemaining > 0)) {
             $message = sprintf(
                 // translators: %d is replaced by the number of days remaining
@@ -58,57 +54,89 @@ class TrialExpirationController implements ControllerInterface
             );
         }
 
-        // Build the upgrade URL with SSO support
-        $upgradeUrl = $this->loginUrlService->getLoginUrlWithPath('v2/r/payment-widget#');
-
         $this->render('admin/trial-notice', [
             'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'upgradeUrl' => $upgradeUrl,
             'message' => $message,
         ]);
     }
 
-    /**
-     * Check if the trial notice can be rendered
-     */
+    public function enqueueScripts(): void
+    {
+        if ($this->canRenderTrialNotice() === false) {
+            return;
+        }
+
+        wp_enqueue_script(
+            'simplybook-admin-sso',
+            App::env('plugin.assets_url') . 'js/sso/admin-sso-links.js',
+            [],
+            App::env('plugin.version'),
+            false
+        );
+
+        wp_add_inline_script(
+            'simplybook-admin-sso',
+            sprintf(
+                'window.simplebookSSO = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url('simplybook/v1/get_login_url'))),
+                wp_json_encode(wp_create_nonce('wp_rest'))
+            ),
+            'before'
+        );
+
+        wp_enqueue_script(
+            'simplybook-notice-dismiss',
+            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
+            [],
+            App::env('plugin.version'),
+            false
+        );
+
+        wp_add_inline_script(
+            'simplybook-notice-dismiss',
+            sprintf(
+                'window.simplebookNotices = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url('simplybook/v1/notices/dismiss'))),
+                wp_json_encode(wp_create_nonce('wp_rest'))
+            ),
+            'before'
+        );
+    }
+
     private function canRenderTrialNotice(): bool
     {
-        // Check if company registration is complete
+        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
+            return false;
+        }
+
         if (App::provide('client')->company_registration_complete() === false) {
             return false;
         }
 
-        // Don't show on edit screens
         $screen = get_current_screen();
         if ($screen && ('post' === $screen->base)) {
             return false;
         }
 
-        // Check if trial is approaching expiration or expired
         $trialInfo = $this->getTrialInfo();
         if ($trialInfo === null) {
             return false;
         }
 
-        // Don't show notice if the trial expired more than 30 days ago
         if ($trialInfo['is_expired'] && $trialInfo['days_since_expiration'] > 30) {
             return false;
         }
 
-        // Show if expired or expiring in 2 days or less
         return $trialInfo['is_expired'] || $trialInfo['days_remaining'] <= 2;
     }
 
-    /**
-     * Get trial information from subscription data
-     */
     private function getTrialInfo(): ?array
     {
-        // Check cache first
         $cacheKey = 'simplybook_trial_info';
-		$cacheGroup = 'simplybook';
+        $cacheGroup = 'simplybook';
         $cachedInfo = wp_cache_get($cacheKey, $cacheGroup);
-	    $cacheDuration = (5 * MINUTE_IN_SECONDS);
+        $cacheDuration = (5 * MINUTE_IN_SECONDS);
+
         if ($cachedInfo !== false) {
             return $cachedInfo;
         }
@@ -124,18 +152,15 @@ class TrialExpirationController implements ControllerInterface
             return null;
         }
 
-        // Only show notice for Trial subscriptions
         $subscriptionName = ($subscriptionData['subscription_name'] ?? '');
         if ($subscriptionName !== 'Trial') {
             wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
-        // Get expiration data from API
         $isExpired = ($subscriptionData['is_expired'] ?? false);
         $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
-        // Return trial information
         $trialInfo = [
             'is_expired' => $isExpired,
             'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
@@ -146,5 +171,4 @@ class TrialExpirationController implements ControllerInterface
 
         return $trialInfo;
     }
-
 }
