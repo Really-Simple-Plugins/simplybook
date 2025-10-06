@@ -19,15 +19,21 @@
     function init() {
         // Single event listener for all notices
         document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('notice-dismiss') || e.target.closest('.notice-dismiss')) {
-                const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
-                if (notice) {
-                    const noticeType = notice?.dataset.noticeType;
-                    if (noticeType) {
-                        dismissNotice(noticeType);
-                    }
-                }
+            if (!e.target.classList.contains('notice-dismiss') && !e.target.closest('.notice-dismiss')) {
+                return;
             }
+
+            const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
+            if (!notice) {
+                return;
+            }
+
+            const noticeType = notice.dataset.noticeType;
+            if (!noticeType) {
+                return;
+            }
+
+            dismissNotice(noticeType);
         });
     }
 
