@@ -24,12 +24,9 @@
             }
 
             const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
-            if (!notice) {
-                return;
-            }
+            const noticeType = notice?.dataset.noticeType;
 
-            const noticeType = notice.dataset.noticeType;
-            if (!noticeType) {
+            if (!notice || !noticeType) {
                 return;
             }
 
