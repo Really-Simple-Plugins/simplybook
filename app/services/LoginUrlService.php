@@ -26,16 +26,28 @@ class LoginUrlService
     /**
      * Returns the login URL for the user. If the login URL is not valid or has
      * expired, a new login URL will be fetched. If the user should be logged in
-     * already then the dashboard URL will be returned.
+     * already, then the dashboard URL will be returned.
+     *
+     * @param string|null $path Optional path to append to the login URL
      */
-    public function getLoginUrl(): string
+    public function getLoginUrl(?string $path = null): string
     {
         $loginUrlCreationDate = get_option(self::LOGIN_URL_CREATION_DATE_OPTION, '');
 
-        if ($this->userShouldBeLoggedIn($loginUrlCreationDate)) {
-            return $this->getDashboardUrl();
+        $loginUrl = $this->userShouldBeLoggedIn($loginUrlCreationDate)
+            ? $this->getDashboardUrl()
+            : $this->fetchNewAutomaticLoginUrl();
+
+		// Add path if not empty
+        if (!empty($path)) {
+            $path = ltrim($path, '/');
+            if (strpos($loginUrl, 'by-hash') !== false) {
+                return $loginUrl . '?back_url=/' . $path . '/';
+            }
+            return $loginUrl . '/' . $path . '/';
         }
-        return $this->fetchNewAutomaticLoginUrl();
+
+        return $loginUrl;
     }
 
     /**
@@ -53,25 +65,6 @@ class LoginUrlService
 
         $userLoggedThreshold = Carbon::now()->subHour();
         return Carbon::parse($loginUrlCreationDate)->isAfter($userLoggedThreshold);
-    }
-
-    /**
-     * Returns the login URL with a specific path. This method handles both
-     * SSO hash URLs and direct URLs correctly.
-     *
-     * @param string $path The path to navigate to after login
-     * (e.g., 'v2/r/payment-widget') - leading slashes are removed
-     */
-    public function getLoginUrlWithPath(string $path): string
-    {
-        $path = ltrim($path, '/');
-
-        $loginUrl = $this->getLoginUrl();
-        if (strpos($loginUrl, 'by-hash') !== false) {
-            return $loginUrl . '?back_url=/' . $path . '/';
-        }
-
-        return $loginUrl . '/' . $path . '/';
     }
 
     /**

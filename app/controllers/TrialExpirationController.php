@@ -4,6 +4,8 @@ namespace SimplyBook\Controllers;
 use SimplyBook\App;
 use SimplyBook\Services\SubscriptionDataService;
 use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Http\Endpoints\LoginUrlEndpoint;
+use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Traits\LegacyLoad;
@@ -77,8 +79,10 @@ class TrialExpirationController implements ControllerInterface
         wp_add_inline_script(
             'simplybook-admin-sso',
             sprintf(
-                'window.simplebookSSO = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url('simplybook/v1/get_login_url'))),
+                'const simplebookSSOConfig = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url(
+                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . LoginUrlEndpoint::ROUTE
+                ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),
             'before'
@@ -95,8 +99,10 @@ class TrialExpirationController implements ControllerInterface
         wp_add_inline_script(
             'simplybook-notice-dismiss',
             sprintf(
-                'window.simplebookNotices = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url('simplybook/v1/notices/dismiss'))),
+                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url(
+                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),
             'before'

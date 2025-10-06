@@ -55,7 +55,7 @@
                     class="button button-primary"
                     href="#"
                     data-sso-path="v2/r/payment-widget#"
-                    data-loading-text="<?php echo esc_attr(__('Loading...', 'simplybook')); ?>"
+                    data-loading-text="<?php echo esc_attr(__('Redirecting..', 'simplybook')); ?>"
                 >
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>

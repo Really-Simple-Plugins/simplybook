@@ -1,8 +1,6 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use Carbon\Carbon;
-use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Services\LoginUrlService;
@@ -59,23 +57,12 @@ class LoginUrlEndpoint implements SingleEndpointInterface
         ];
     }
 
-    /**
-     * If the Login URL is requested this method will return a response with the
-     * login URL and the direct URL. Optionally accepts a path parameter to
-     * generate a URL that redirects to a specific page after login.
-     */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $path = $request->get_param('path');
 
-        if (!empty($path)) {
-            $loginUrl = $this->service->getLoginUrlWithPath($path);
-        } else {
-            $loginUrl = $this->service->getLoginUrl();
-        }
-
         return $this->sendHttpResponse([
-            'simplybook_external_login_url' => $loginUrl,
+            'simplybook_external_login_url' => $this->service->getLoginUrl($path),
         ]);
     }
 }

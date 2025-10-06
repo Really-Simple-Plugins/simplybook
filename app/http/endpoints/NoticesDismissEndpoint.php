@@ -46,9 +46,6 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
                     'type' => 'string',
                     'description' => 'The type of notice to dismiss',
                     'sanitize_callback' => 'sanitize_text_field',
-                    'validate_callback' => function($param) {
-                        return in_array($param, $this->service->getAllowedNoticeTypes(), true);
-                    },
                 ],
             ],
         ];
@@ -58,15 +55,6 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
     {
         $noticeType = $request->get_param('notice_type');
         $userId = get_current_user_id();
-
-        if (!$userId) {
-            return $this->sendHttpResponse(
-                [],
-                false,
-                esc_html__('User not authenticated.', 'simplybook'),
-                401
-            );
-        }
 
         $success = $this->service->dismissNotice($userId, $noticeType);
 

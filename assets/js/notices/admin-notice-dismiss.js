@@ -34,13 +34,12 @@
     }
 
     function dismissNotice(noticeType) {
-        const config = window.simplebookNotices || {};
+        const config = simplybookNoticesConfig || {};
 
         if (!config.restUrl || !config.nonce) {
             return;
         }
 
-        // Send REST API request to persist dismiss
         fetch(config.restUrl, {
             method: 'POST',
             headers: {
@@ -51,9 +50,5 @@
             body: JSON.stringify({ notice_type: noticeType })
         });
     }
-
-    // Expose init for dynamic content
-    window.simplebookNotices = window.simplebookNotices || {};
-    window.simplebookNotices.init = init;
 
 })();

@@ -3,10 +3,6 @@ namespace SimplyBook\Services;
 
 class NoticeDismissalService
 {
-    private const ALLOWED_NOTICE_TYPES = [
-        'trial',
-        'review',
-    ];
 
     private const META_KEY = 'simplybook_dismissed_notices';
 
@@ -19,9 +15,6 @@ class NoticeDismissalService
      */
     public function dismissNotice(int $userId, string $noticeType): bool
     {
-        if (!$this->isValidNoticeType($noticeType)) {
-            return false;
-        }
 
         $dismissedNotices = $this->getDismissedNotices($userId);
 
@@ -50,11 +43,6 @@ class NoticeDismissalService
         return in_array($noticeType, $dismissedNotices, true);
     }
 
-    public function getAllowedNoticeTypes(): array
-    {
-        return self::ALLOWED_NOTICE_TYPES;
-    }
-
     private function getDismissedNotices(int $userId): array
     {
         $dismissed = get_user_meta($userId, self::META_KEY, true);
@@ -62,8 +50,4 @@ class NoticeDismissalService
         return is_array($dismissed) ? $dismissed : [];
     }
 
-    private function isValidNoticeType(string $noticeType): bool
-    {
-        return in_array($noticeType, self::ALLOWED_NOTICE_TYPES, true);
-    }
 }

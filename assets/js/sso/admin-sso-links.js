@@ -26,7 +26,7 @@
         e.preventDefault();
 
         const link = e.currentTarget;
-        const config = window.simplebookSSO || {};
+        const config = simplebookSSOConfig || {};
         const path = link.dataset.ssoPath;
         const originalText = link.textContent;
         const loadingText = link.dataset.loadingText;
@@ -72,9 +72,5 @@
         link.removeAttribute('aria-busy');
         link.textContent = originalText;
     }
-
-    // Expose init for dynamic content
-    window.simplebookSSO = window.simplebookSSO || {};
-    window.simplebookSSO.init = init;
 
 })();
