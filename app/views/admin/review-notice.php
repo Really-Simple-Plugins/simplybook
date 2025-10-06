@@ -63,7 +63,7 @@
     <?php endif; ?>
 </style>
 
-<div id="message" class="updated fade notice is-dismissible rsp-review really-simple-plugins">
+<div id="message" class="updated fade notice is-dismissible rsp-review really-simple-plugins" data-notice-type="review">
     <div class="rsp-container">
         <div class="rsp-review-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
         <form class="rsp-review-form" action="" method="POST">

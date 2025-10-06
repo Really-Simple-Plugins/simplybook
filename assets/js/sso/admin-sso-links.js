@@ -53,9 +53,9 @@
         .then(function(response) {
             return response.json();
         })
-        .then(function(data) {
-            if (data && data.data && data.data.simplybook_external_login_url) {
-                window.location.href = data.data.simplybook_external_login_url;
+        .then(function(response) {
+            if (response?.data?.simplybook_external_login_url) {
+                window.location.href = response.data.simplybook_external_login_url;
             } else {
                 restoreLink(link, originalText);
             }

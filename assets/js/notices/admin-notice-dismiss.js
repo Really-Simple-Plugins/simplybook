@@ -20,13 +20,9 @@
         // Single event listener for all notices
         document.addEventListener('click', function(e) {
             if (e.target.classList.contains('notice-dismiss') || e.target.closest('.notice-dismiss')) {
-                const notice = e.target.closest('.notice.is-dismissible[class*="rsp-"]');
+                const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
                 if (notice) {
-                    // Extract notice type from class name (e.g., 'rsp-trial' -> 'trial')
-                    const noticeType = Array.from(notice.classList)
-                        .find(cls => cls.startsWith('rsp-'))
-                        ?.replace('rsp-', '');
-
+                    const noticeType = notice?.dataset.noticeType;
                     if (noticeType) {
                         dismissNotice(noticeType);
                     }
