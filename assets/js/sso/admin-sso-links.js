@@ -26,12 +26,11 @@
         e.preventDefault();
 
         const link = e.currentTarget;
-        const config = simplebookSSOConfig || {};
-        const path = link.dataset.ssoPath;
+        const path = link.dataset?.ssoPath;
         const originalText = link.textContent;
-        const loadingText = link.dataset.loadingText;
+        const loadingText = link.dataset?.loadingText;
 
-        if (!config.restUrl || !config.nonce || !path) {
+        if (!simplebookSSOConfig?.restUrl || !simplebookSSOConfig?.nonce || !path) {
             return;
         }
 
@@ -44,10 +43,10 @@
         }
 
         // Fetch and redirect
-        fetch(config.restUrl + '?path=' + encodeURIComponent(path), {
+        fetch(simplebookSSOConfig.restUrl + '?path=' + encodeURIComponent(path), {
             method: 'GET',
             headers: {
-                'X-WP-Nonce': config.nonce
+                'X-WP-Nonce': simplebookSSOConfig.nonce
             },
             credentials: 'same-origin'
         })

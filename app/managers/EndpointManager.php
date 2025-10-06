@@ -102,7 +102,7 @@ final class EndpointManager
                 'permission_callback' => ($data['permission_callback'] ?? [$this, 'defaultPermissionCallback']),
             ];
 
-            if (isset($data['args'])) {
+            if (!empty($data['args'])) {
                 $arguments['args'] = $data['args'];
             }
 

@@ -38,17 +38,18 @@ class LoginUrlService
             ? $this->getDashboardUrl()
             : $this->fetchNewAutomaticLoginUrl();
 
-		// Add path if not empty
-        if (!empty($path)) {
-            $path = ltrim($path, '/');
-            if (strpos($loginUrl, 'by-hash') !== false) {
-                return $loginUrl . '?back_url=/' . $path . '/';
-            }
-            return $loginUrl . '/' . $path . '/';
-        }
+		// Return the URL if path is empty
+	    if (empty($path)) {
+		    return $loginUrl;
+	    }
 
-        return $loginUrl;
-    }
+	    $path = ltrim($path, '/');
+	    if (strpos($loginUrl, 'by-hash') !== false) {
+		    return $loginUrl . '?back_url=/' . $path . '/';
+	    }
+
+	    return $loginUrl . '/' . $path . '/';
+	}
 
     /**
      * Method checks if the user should be logged in already. This is based on

@@ -34,9 +34,8 @@
     }
 
     function dismissNotice(noticeType) {
-        const config = simplybookNoticesConfig || {};
 
-        if (!config.restUrl || !config.nonce) {
+        if (!simplybookNoticesConfig?.restUrl || !simplybookNoticesConfig?.nonce) {
             return;
         }
 
