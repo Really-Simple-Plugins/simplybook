@@ -4,12 +4,12 @@ import {__} from "@wordpress/i18n";
 const LiveAgent = (props: { style?: string }) => {
     const [chatButton, setChatButton] = useState<any>(null);
 
-    useEffect(() => {
-        // @ts-ignore - TypeScript does not recognize simplybook as a global
-        if (!window.simplybook?.support?.enabled) {
-            return;
-        }
+    // @ts-ignore - TypeScript does not recognize simplybook as a global
+    if (!window.simplybook?.support?.enabled) {
+        return;
+    }
 
+    useEffect(() => {
         const script = document.createElement("script");
         script.id = "la_x2s6df8d";
         script.defer = true;
