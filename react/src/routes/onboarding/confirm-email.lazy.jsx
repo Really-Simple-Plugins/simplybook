@@ -15,6 +15,7 @@ export const Route = createLazyFileRoute(path)({
     component: () => {
         const {setRecaptchaToken} = useOnboardingData();
         const recaptchaContainerRef = useRef(null);
+        const recaptchaWidgetId = useRef(null);
         const [recaptchaRendered, setRecaptchaRendered] = useState(false);
         const [confirmationCode, setConfirmationCode] = useState("");
         const [siteKey, setSiteKey] = useState("");
@@ -39,6 +40,13 @@ export const Route = createLazyFileRoute(path)({
             return getRecaptchaSiteKey(attempt + 1);
         };
 
+        const resetRecaptcha = () => {
+            if (window.grecaptcha && recaptchaWidgetId.current !== null) {
+                window.grecaptcha.reset(recaptchaWidgetId.current);
+                setRecaptchaToken(null);
+            }
+        };
+
         const setupRecaptcha = async (siteKey) => {
             const script = document.createElement("script");
             script.src = "https://www.google.com/recaptcha/api.js?onload=onloadRecaptchaCallback&render=explicit";
@@ -49,7 +57,7 @@ export const Route = createLazyFileRoute(path)({
                 // Define the callback function globally to ensure it's accessible by reCAPTCHA
                 window.onloadRecaptchaCallback = () => {
                     if (window.grecaptcha && recaptchaContainerRef.current) {
-                        window.grecaptcha.render(recaptchaContainerRef.current, {
+                        recaptchaWidgetId.current = window.grecaptcha.render(recaptchaContainerRef.current, {
                             sitekey: siteKey,
                             callback: (recaptchaToken) => {
                                 setRecaptchaToken(recaptchaToken);
@@ -107,6 +115,7 @@ export const Route = createLazyFileRoute(path)({
                             label: __("Verify email", "simplybook"),
                             showLoader: true
                         }}
+                        onSubmitError={resetRecaptcha}
                     />
                 </LeftColumn>
                 <RightColumn className={"flex flex-col justify-center col-span-5"}>
