@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.2.0
+Stable tag: 3.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,12 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.2.1 =
+* Added: Admin notice for (soon) expired trial subscription.
+* Changed: Onboarding endpoints are now limited to admin area only.
+* Fixed: ReCaptcha now resets after invalid email code preventing persistent failure.
+* Fixed: Installing plugin during Gutenberg block insert no longer errors.
+
 = 3.2.0 =
 * Added: Widget can now be implemented using a SimplyBook.me Elementor block.
 * Added: Theme styling is used as a default style for the widget during onboarding.
