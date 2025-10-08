@@ -4,7 +4,7 @@ trait HasTokenManagement
 {
     use HasEncryption;
 
-    private const VALID_TOKEN_TYPES = ['public', 'admin', 'user'];
+    private array $validTokenTypes = ['public', 'admin', 'user'];
 
     /**
      * Sanitizes an API token to ensure it matches the expected format.
@@ -89,7 +89,7 @@ trait HasTokenManagement
      */
     protected function validateTokenType(string $type): string
     {
-        return in_array($type, self::VALID_TOKEN_TYPES, true) ? $type : 'public';
+        return in_array($type, $this->validTokenTypes, true) ? $type : 'public';
     }
 
     /**
