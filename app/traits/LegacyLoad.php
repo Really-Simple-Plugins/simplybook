@@ -2,7 +2,8 @@
 namespace SimplyBook\Traits;
 
 use SimplyBook\App;
-use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Traits\HasEncryption;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -13,6 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Give proper name and make it follow Single Responsibility Principle
  */
 trait LegacyLoad {
+	use HasAllowlistControl;
+	use HasEncryption;
+
 	public $fields = [];
 	public $values_loaded = false;
 
@@ -66,7 +70,7 @@ trait LegacyLoad {
 	    }
 
         if ( $field['encrypt'] ) {
-            $value = $this->decrypt_string($value);
+            $value = $this->decryptString($value);
         }
 
         if ( $field['type'] === 'checkbox' ) {
@@ -98,139 +102,6 @@ trait LegacyLoad {
 
         return $company[$key] ?? [];
     }
-
-
-	/**
-	 * Decrypts an encrypted token string with backward compatibility support.
-	 *
-	 * This function acts as a dispatcher that automatically detects the token format
-	 * and delegates to the appropriate decryption method:
-	 * - V2 format: "v2:base64(iv).base64(encrypted)"
-	 * - Legacy format: base64(iv + encrypted)
-	 *
-	 * @param string $encrypted_string The encrypted token to decrypt.
-	 * @return string The decrypted token if valid, or an empty string if invalid.
-	 *
-	 * @since 3.1 Added support for v2 format with OPENSSL_RAW_DATA
-	 * @example
-	 * $decrypted = decrypt_string("v2: abc123.xyz789"); // Returns the original token
-	 * $decrypted = decrypt_string("legacy_encrypted_data"); // Also works with old tokens
-	 */
-	public function decrypt_string($encrypted_string): string
-	{
-		if (empty($encrypted_string)) {
-			return '';
-		}
-
-        $legacyKey = '7*w$9pumLw5koJc#JT6';
-        $key = hash('sha256', $legacyKey, true);
-
-		// Check if it's a v2 token (new format)
-		if (strpos($encrypted_string, 'v2:') === 0) {
-			return $this->decrypt_string_v2($encrypted_string, $key, $legacyKey);
-		}
-
-		return $this->decrypt_legacy_string($encrypted_string, $legacyKey);
-	}
-
-	/**
-	 * Decrypts a v2 format encrypted token.
-	 *
-	 * V2 tokens use the format "v2:base64(iv).base64(encrypted)" and employ
-	 * an OPENSSL_RAW_DATA flag for decryption. This format separates the IV and
-	 * ciphertext with base64 encoding for each component.
-	 *
-	 * @param string $encrypted_string The v2 format encrypted token (prefixed with "v2:").
-	 * @return string The decrypted token if valid, or an empty string if decryption fails.
-	 *
-	 * @since 3.1.0
-     * @since 3.2.0 Added OPENSSL_DONT_ZERO_PAD_KEY when non-legacy key is used.
-	 */
-	private function decrypt_string_v2(string $encrypted_string, string $key, string $legacyKey): string
-    {
-		$parts = explode('.', substr($encrypted_string, 3), 2);
-
-		if (count($parts) !== 2) {
-			$this->log("v2 token: invalid format — missing iv or ciphertext part.");
-			return '';
-		}
-
-		$iv = base64_decode($parts[0], true);
-		$encrypted = base64_decode($parts[1], true);
-
-		if ($iv === false || $encrypted === false) {
-			$this->log("v2 token: base64 decode failed (iv: " . ($iv === false ? 'invalid' : 'ok') . ", encrypted: " . ($encrypted === false ? 'invalid' : 'ok') . ")");
-			return '';
-		}
-
-        // Decrypt with forcefully non-padded, 32 byte key
-		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
-
-        // Fallback to legacy key, maybe encryption was done with the old one.
-        if (empty($decrypted)) {
-		    $decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $legacyKey, OPENSSL_RAW_DATA, $iv);
-        }
-
-        // Still empty, abort.
-		if (empty($decrypted)) {
-			$this->log("v2 token: openssl decryption failed.");
-			return '';
-		}
-
-		if (!preg_match('/^[a-f0-9]{64}$/i', $decrypted)) {
-			return '';
-		}
-
-		return $decrypted;
-	}
-
-	/**
-	 * Decrypts a legacy format encrypted token.
-	 *
-	 * Legacy tokens use the format base64(iv + encrypted) where the IV and
-	 * ciphertext are concatenated before base64 encoding. This method includes
-	 * fallback logic for double base64 encoding scenarios and uses flag=0
-	 * for OpenSSL decryption.
-	 *
-	 * @param string $encrypted_string The legacy format encrypted token.
-	 * @return string The decrypted token if valid, or an empty string if decryption fails.
-	 *
-	 * @since 3.1
-	 */
-	private function decrypt_legacy_string(string $encrypted_string, string $key): string {
-		// Legacy tokens
-		$data = base64_decode($encrypted_string, true);
-		$ivLength = openssl_cipher_iv_length('AES-256-CBC');
-
-		if ($data === false || strlen($data) < $ivLength) {
-			$this->log("legacy token: decoded data too short, trying double base64 decoding...");
-
-			$data = base64_decode($data, true);
-
-			if ($data === false || strlen($data) < $ivLength) {
-				$this->log("legacy token: double base64 decoding failed or still too short (length: " . strlen($data) . ").");
-				return '';
-			}
-		}
-
-		$iv = substr($data, 0, $ivLength);
-		$encrypted = substr($data, $ivLength);
-
-		$decrypted = openssl_decrypt($encrypted, 'AES-256-CBC', $key, 0, $iv);
-
-		if ($decrypted === false) {
-			$this->log("legacy token: openssl decryption failed.");
-			return '';
-		}
-
-		if (!preg_match('/^[a-f0-9]{64}$/i', $decrypted)) {
-			$this->log("legacy token: decrypted result did not match expected 64-character hex format.");
-			return '';
-		}
-
-		return $decrypted;
-	}
-
 
     /**
      * Get fields array for the settings
@@ -273,7 +144,7 @@ trait LegacyLoad {
                 ] );
 
                 //only preload field values for logged in admins
-                if ( $load_values && $this->user_can_manage() ) {
+                if ( $load_values && $this->adminAccessAllowed() ) {
                     $value          = $this->get_option( $field['id'], $field['default'] );
                     $field['value'] = apply_filters( 'simplybook_field_value_' . $field['id'], $value, $field );
                 }

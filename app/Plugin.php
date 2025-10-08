@@ -236,7 +236,9 @@ class Plugin
             ),
             new Http\Endpoints\DomainEndpoint(),
             new Http\Endpoints\RemotePluginsEndpoint(),
-            new Http\Endpoints\CompanyRegistrationEndpoint(),
+            new Http\Endpoints\CompanyRegistrationEndpoint(
+                new Services\CallbackUrlService()
+            ),
             new Http\Endpoints\WaitForRegistrationEndpoint(),
             new Http\Endpoints\RelatedPluginEndpoints(
                 new Services\RelatedPluginService(),

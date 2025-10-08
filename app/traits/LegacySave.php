@@ -10,7 +10,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 trait LegacySave {
     use LegacyLoad;
-    use LegacyHelper;
+    use HasTokenManagement;
+    use HasLogging;
+    use HasAllowlistControl;
+    use HasEncryption;
 
     /**
      * Fields that are not changeable by the user
@@ -131,11 +134,11 @@ trait LegacySave {
         }
 
         if (!empty($authData['token'])) {
-            $this->update_token($authData['token'], 'admin');
+            $this->updateToken($authData['token'], 'admin');
         }
 
         if (!empty($authData['refresh_token'])) {
-            $this->update_token($authData['refresh_token'], 'admin', true);
+            $this->updateToken($authData['refresh_token'], 'admin', true);
         }
 
         if (!empty($authData['login'])) {
@@ -186,7 +189,7 @@ trait LegacySave {
      */
     public function update_option($key, $value, bool $staleOverride = false, array $config = []): bool
     {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return false;
         }
 
@@ -216,7 +219,7 @@ trait LegacySave {
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
         if ($config['encrypt'] ?? false) {
-            $value = $this->encrypt_string($value);
+            $value = $this->encryptString($value);
         }
         $options[$key] = $value;
         update_option('simplybook_options', $options);
@@ -232,7 +235,7 @@ trait LegacySave {
 	 */
 	public function delete_option($key): void
 	{
-		if ( !$this->user_can_manage() ) {
+		if ( !$this->adminAccessAllowed() ) {
 			return;
 		}
 
@@ -323,7 +326,7 @@ trait LegacySave {
      */
     public function delete_all_options(bool $private = false): bool
     {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return false;
         }
 

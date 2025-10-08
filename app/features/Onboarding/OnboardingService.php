@@ -4,14 +4,14 @@ use SimplyBook\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Utility\StringUtility;
 use SimplyBook\Builders\CompanyBuilder;
 
 class OnboardingService
 {
-    use LegacyHelper;
+    use HasEncryption;
     use LegacySave;
     use HasRestAccess;
 

@@ -11,7 +11,9 @@ use SimplyBook\Helpers\Event;
 use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Traits\LegacyHelper;
+use SimplyBook\Traits\HasTokenManagement;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Builders\CompanyBuilder;
@@ -24,7 +26,9 @@ class ApiClient
 {
     use LegacyLoad;
     use LegacySave;
-    use LegacyHelper;
+    use HasTokenManagement;
+    use HasLogging;
+    use HasAllowlistControl;
 
     protected JsonRpcClient $jsonRpcClient;
 
@@ -79,14 +83,14 @@ class ApiClient
         }
 
         //if we have a token, check if it needs to be refreshed
-        if ( !$this->get_token('public') ) {
+        if ( !$this->getToken('public') ) {
             $this->get_public_token();
         } else {
-            if ( !$this->token_is_valid('public') ) {
+            if ( !$this->tokenIsValid('public') ) {
                 $this->refresh_token();
             }
 
-            if ( !empty($this->get_token('admin') ) && !$this->token_is_valid('admin') ) {
+            if ( !empty($this->getToken('admin') ) && !$this->tokenIsValid('admin') ) {
                 $this->refresh_token('admin');
             }
         }
@@ -142,7 +146,7 @@ class ApiClient
     public function company_registration_complete(): bool
     {
         //check if the callback has been completed, resulting in a company/admin token.
-        if ( !$this->get_token('admin') ) {
+        if ( !$this->getToken('admin') ) {
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
 
             $oneHourAgo = Carbon::now()->subHour();
@@ -247,7 +251,7 @@ class ApiClient
         );
 
         if ( $include_token ) {
-            $token = $this->get_token($token_type);
+            $token = $this->getToken($token_type);
             if ( empty($token) ) {
                 switch ($token_type) {
                     case 'public':
@@ -257,7 +261,7 @@ class ApiClient
                         $this->refresh_token('admin');
                         break;
                 }
-                $token = $this->get_token($token_type);
+                $token = $this->getToken($token_type);
             }
             $headers['X-Token'] = $token;
             $headers['X-Company-Login' ] = $this->get_company_login();
@@ -266,21 +270,6 @@ class ApiClient
         return $headers;
     }
 
-    /**
-     * Get a token
-     * @param string $type //public or admin
-     * @param bool $refresh
-     * @return string
-     */
-    public function get_token( string $type = 'public', bool $refresh = false ) : string {
-        $type = in_array($type, ['public', 'admin', 'user']) ? $type : 'public';
-        if ( $refresh ) {
-            $type = $type . '_refresh';
-        }
-        $token = get_option("simplybook_token_" . $type, '');
-
-        return $this->decrypt_string($token);
-    }
 
     /**
      * Get public token
@@ -288,7 +277,7 @@ class ApiClient
      * @return void
      */
     public function get_public_token(): void {
-        if ( $this->token_is_valid() ) {
+        if ( $this->tokenIsValid() ) {
             return;
         }
         $request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
@@ -306,8 +295,8 @@ class ApiClient
             if ( isset($request->token) ) {
                 delete_option('simplybook_token_error' );
                 $expiration = time() + $request->expires_in;
-                $this->update_token( $request->token );
-                $this->update_token( $request->refresh_token, 'public', true );
+                $this->updateToken( $request->token );
+                $this->updateToken( $request->refresh_token, 'public', true );
                 update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
                 $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
             }
@@ -325,7 +314,7 @@ class ApiClient
         }
 
         //check if we have a token
-        $refresh_token = $this->get_token($type, true);
+        $refresh_token = $this->getToken($type, true);
         if (empty($refresh_token) && $type === 'admin') {
             $this->releaseRefreshLock($type);
             $this->automaticAuthenticationFallback($type);
@@ -338,7 +327,7 @@ class ApiClient
             return;
         }
 
-        if ( $this->token_is_valid($type) ) {
+        if ( $this->tokenIsValid($type) ) {
             $this->releaseRefreshLock($type);
             return;
         }
@@ -349,7 +338,7 @@ class ApiClient
 
         // Invalidate the one-time use token as we are about to use it for
         // refreshing the token. This prevents re-use.
-        $this->update_token('', $type, true);
+        $this->updateToken('', $type, true);
 
         if ( $type === 'admin' ){
             $path = 'admin/auth/refresh-token';
@@ -389,8 +378,8 @@ class ApiClient
 
             if ( isset($request->token) && isset($request->refresh_token) ) {
                 delete_option('simplybook_token_error' );
-                $this->update_token( $request->token, $type );
-                $this->update_token( $request->refresh_token, $type, true );
+                $this->updateToken( $request->token, $type );
+                $this->updateToken( $request->refresh_token, $type, true );
                 $expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
                 $expires = $request->expires_in ?? 3600;
                 update_option($expires_option, time() + $expires);
@@ -455,7 +444,7 @@ class ApiClient
                 $domain,
                 $this->get_company_login(),
                 $sanitizedCompany->user_login,
-                $this->decrypt_string($sanitizedCompany->password)
+                $this->decryptString($sanitizedCompany->password)
             );
         } catch (\Exception $e) {
             Event::dispatch(Event::AUTH_FAILED);
@@ -510,7 +499,7 @@ class ApiClient
      * @return string
      */
     protected function generate_callback_url(): string {
-        if ( !$this->user_can_manage() ) {
+        if ( !$this->adminAccessAllowed() ) {
             return '';
         }
 
@@ -553,43 +542,7 @@ class ApiClient
         delete_option('simplybook_company_login');
     }
 
-    /**
-     * Check if we have a valid token
-     *
-     * @param string $type
-     *
-     * @return bool
-     */
-    protected function token_is_valid( string $type = 'public' ): bool {
-        $refresh_token = $this->get_token($type, true );
-        $type = in_array($type, ['public', 'admin']) ? $type : 'public';
-        if ( $type === 'admin' ) {
-            $expires = get_option( 'simplybook_refresh_company_token_expiration', 0 );
-        } else {
-            $expires = get_option( 'simplybook_refresh_token_expiration', 0 );
-        }
 
-        if ( !$refresh_token || !$expires ) {
-            return false;
-        }
-        if ( $expires < time() ) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Clear tokens
-     *
-     * @return void
-     */
-
-    protected function clear_tokens(): void {
-        delete_option('simplybook_token_refresh');
-        delete_option('simplybook_refresh_token_expiration');
-        delete_option('simplybook_refresh_company_token_expiration');
-        delete_option('simplybook_token');
-    }
 
     /**
      * Check if authorization is valid and complete
@@ -597,7 +550,7 @@ class ApiClient
     public function isAuthenticated(): bool
     {
         //check if we have a token
-        if (!$this->token_is_valid('admin')) {
+        if (!$this->tokenIsValid('admin')) {
             $this->refresh_token('admin');
         }
 
@@ -616,7 +569,7 @@ class ApiClient
 
     public function reset_registration(){
         $this->delete_company_login();
-        $this->clear_tokens();
+        $this->clearTokens();
         delete_option('simplybook_completed_step');
     }
 
@@ -627,7 +580,7 @@ class ApiClient
      */
     public function register_company(): ApiResponseDTO
     {
-        if ($this->user_can_manage() === false) {
+        if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
                 esc_html__('You are not authorized to do this.', 'simplybook')
             );
@@ -640,7 +593,7 @@ class ApiClient
         }
 
         //check if we have a token
-        if ($this->token_is_valid() === false) {
+        if ($this->tokenIsValid() === false) {
             $this->get_public_token();
         }
 
@@ -680,8 +633,8 @@ class ApiClient
                     "lng" => $coordinates['lng'],
                     "timezone" => $this->get_timezone_string(),
                     "country_id" => $sanitizedCompany->country,
-                    "password" => $this->decrypt_string($sanitizedCompany->password),
-                    "retype_password" => $this->decrypt_string($sanitizedCompany->password),
+                    "password" => $this->decryptString($sanitizedCompany->password),
+                    "retype_password" => $this->decryptString($sanitizedCompany->password),
                     'categories' => [$sanitizedCompany->category],
                     'lang' => $this->get_locale(),
                     'marketing_consent' => false,
@@ -835,7 +788,7 @@ class ApiClient
      */
     public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
     {
-        if ($this->user_can_manage() === false) {
+        if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
                 esc_html__('You are not authorized to do this.', 'simplybook')
             );
@@ -1021,11 +974,11 @@ class ApiClient
         //for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
         $token_type = str_contains( $path, 'admin' ) ? 'admin' : 'public';
 
-        if ( !$this->token_is_valid($token_type) ) {
+        if ( !$this->tokenIsValid($token_type) ) {
             //try to refresh
             $this->refresh_token($token_type);
             //still not valid
-            if ( !$this->token_is_valid($token_type) ) {
+            if ( !$this->tokenIsValid($token_type) ) {
                 $this->log("Token not valid, cannot make API call");
                 return [];
             }
@@ -1430,8 +1383,8 @@ class ApiClient
      */
     public function saveAuthenticationData(string $token, string $refreshToken, string $companyDomain, string $companyLogin, int $companyId, string $tokenType = 'admin'): void
     {
-        $this->update_token($token, $tokenType);
-        $this->update_token($refreshToken, $tokenType, true );
+        $this->updateToken($token, $tokenType);
+        $this->updateToken($refreshToken, $tokenType, true );
 
         $this->update_option('domain', $companyDomain, $this->duringOnboardingFlag, [
             'type' => 'hidden',
@@ -1500,7 +1453,7 @@ class ApiClient
             $this->endpoint('public', '', false)
         )->setHeaders([
             'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->get_token('public'),
+            'X-User-Token: ' . $this->getToken('public'),
         ])->getThemeList();
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
@@ -1544,7 +1497,7 @@ class ApiClient
             $this->endpoint('public', '', false)
         )->setHeaders([
             'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->get_token('public'),
+            'X-User-Token: ' . $this->getToken('public'),
         ])->getTimelineList();
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();

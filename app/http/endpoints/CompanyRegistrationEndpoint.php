@@ -5,6 +5,8 @@ use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class CompanyRegistrationEndpoint implements SingleEndpointInterface
@@ -12,14 +14,15 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     use LegacySave;
     use HasRestAccess;
     use HasAllowlistControl;
+    use HasLogging;
 
     const ROUTE = 'company_registration';
 
-    private string $callbackUrl;
+    protected CallbackUrlService $callbackUrlService;
 
-    public function __construct()
+    public function __construct(CallbackUrlService $callbackUrlService)
     {
-        $this->callbackUrl = $this->get_callback_url();
+        $this->callbackUrlService = $callbackUrlService;
     }
 
     /**
@@ -28,7 +31,8 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
      */
     public function enabled(): bool
     {
-        return !empty($this->callbackUrl) && $this->adminAccessAllowed();
+        $callbackUrl = $this->callbackUrlService->getCallbackUrl();
+        return !empty($callbackUrl) && $this->adminAccessAllowed();
     }
 
     /**
@@ -36,7 +40,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
      */
     public function registerRoute(): string
     {
-        return self::ROUTE . '/' . $this->callbackUrl;
+        return self::ROUTE . '/' . $this->callbackUrlService->getCallbackUrl();
     }
 
     /**
@@ -79,8 +83,8 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
             ], 400);
         }
 
-        $this->update_token($storage->getString('token'), 'admin');
-        $this->update_token($storage->getString('refresh_token'), 'admin', true);
+        $this->updateToken($storage->getString('token'), 'admin');
+        $this->updateToken($storage->getString('refresh_token'), 'admin', true);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
 
@@ -88,7 +92,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
         $this->update_option('company_id', $storage->getInt('company_id'), true);
 
         // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
-        $this->cleanup_callback_url();
+        $this->callbackUrlService->cleanupCallbackUrl();
 
         /**
          * Action: simplybook_after_company_registered
