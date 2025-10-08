@@ -102,6 +102,10 @@ final class EndpointManager
                 'permission_callback' => ($data['permission_callback'] ?? [$this, 'defaultPermissionCallback']),
             ];
 
+            if (!empty($data['args'])) {
+                $arguments['args'] = $data['args'];
+            }
+
             register_rest_route($this->namespace . '/' . $version, $route, $arguments);
         }
     }

@@ -26,18 +26,30 @@ class LoginUrlService
     /**
      * Returns the login URL for the user. If the login URL is not valid or has
      * expired, a new login URL will be fetched. If the user should be logged in
-     * already then the dashboard URL will be returned.
+     * already, then the dashboard URL will be returned.
+     *
+     * @param string|null $path Optional path to append to the login URL
      */
-    public function getLoginUrl(): string
+    public function getLoginUrl(?string $path = null): string
     {
         $loginUrlCreationDate = get_option(self::LOGIN_URL_CREATION_DATE_OPTION, '');
 
-        if ($this->userShouldBeLoggedIn($loginUrlCreationDate)) {
-            return $this->getDashboardUrl();
-        }
+        $loginUrl = $this->userShouldBeLoggedIn($loginUrlCreationDate)
+            ? $this->getDashboardUrl()
+            : $this->fetchNewAutomaticLoginUrl();
 
-        return $this->fetchNewAutomaticLoginUrl();
-    }
+		// Return the URL if path is empty
+	    if (empty($path)) {
+		    return $loginUrl;
+	    }
+
+	    $path = ltrim($path, '/');
+	    if (strpos($loginUrl, 'by-hash') !== false) {
+		    return $loginUrl . '?back_url=/' . $path . '/';
+	    }
+
+	    return $loginUrl . '/' . $path . '/';
+	}
 
     /**
      * Method checks if the user should be logged in already. This is based on
