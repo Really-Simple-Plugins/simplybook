@@ -15,15 +15,42 @@ class BlockController implements ControllerInterface
         }
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
-        add_action('init', [$this, 'registerGutenbergBlockType']);
-        
+        add_action('init', [$this, 'registerGutenbergBlockType'], 20);
+        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']); // For auto-installation purposes
+
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
     /**
      * Configure Gutenberg block with attributes and render callback.
+     * @since 3.3.0 Added usage of register_block_type_from_metadata for better
+     * compatibility with auto-installation.
      */
-    public function registerGutenbergBlockType()
+    public function registerGutenbergBlockType(): void
+    {
+        // Check if the block is already registered to prevent duplicate registration
+        if (class_exists('\WP_Block_Type_Registry') && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+			return;
+        }
+
+	    $blockMetaData = App::env('plugin.assets_path') . '/block/build/block.json';
+	    if ( file_exists( $blockMetaData ) === false ) {
+		    $this->registerGutenbergBlockTypeManually();
+		    return;
+	    }
+
+        register_block_type_from_metadata($blockMetaData, [
+            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+	        // Overwrite the .json entry to support translations.
+            'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
+        ]);
+    }
+
+    /**
+     * Manually configure Gutenberg block without the use of the block.json file.
+     * @since 3.3.0 added as a fallback method for {@see registerGutenbergBlockType}
+     */
+    private function registerGutenbergBlockTypeManually(): void
     {
         register_block_type('simplybook/widget', [
             'title' => 'SimplyBook.me Widget',
@@ -52,10 +79,19 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Load scripts and styles for Gutenberg editor.
+     * Load scripts and styles for Gutenberg editor. If the widget is not yet
+     * registered in the current context, ensure it's registered before
+     * enqueuing assets. This prevents issues in auto-installation situations.
      */
     public function enqueueGutenbergBlockEditorAssets()
     {
+        if (
+            class_exists('\WP_Block_Type_Registry')
+            && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')
+        ) {
+            $this->registerGutenbergBlockType();
+        }
+
         $assetsData = include(App::env('plugin.assets_path') . '/block/build/index.asset.php');
         $indexJs = App::env('plugin.assets_url') . 'block/build/index.js';
         $indexCss = App::env('plugin.assets_url') . 'block/build/index.css';
