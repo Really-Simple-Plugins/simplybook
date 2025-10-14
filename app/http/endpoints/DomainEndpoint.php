@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasRestAccess;

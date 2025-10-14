@@ -1,6 +1,6 @@
 <?php namespace SimplyBook\Traits;
 
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Support\Helpers\Storage;
 
 trait HasRestAccess
 {

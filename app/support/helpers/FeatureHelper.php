@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyBook\Helpers;
+namespace SimplyBook\Support\Helpers;
 
-use SimplyBook\App;
-use SimplyBook\Utility\StringUtility;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Utility\StringUtility;
 
 /**
  * Helper class to check if a feature should be loaded.

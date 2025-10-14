@@ -1,6 +1,9 @@
 <?php
 namespace SimplyBook\Services;
 
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+
 class NoticeDismissalService
 {
 
@@ -43,11 +46,46 @@ class NoticeDismissalService
         return in_array($noticeType, $dismissedNotices, true);
     }
 
+    /**
+     * Return an array of dismissed notices for a specific user
+     */
     private function getDismissedNotices(int $userId): array
     {
         $dismissed = get_user_meta($userId, self::META_KEY, true);
 
         return is_array($dismissed) ? $dismissed : [];
+    }
+
+    /**
+     * Call this method to enqueue the required scripts for the dismissal
+     * functionality to work. You can only execute this method in the
+     * admin_enqueue_scripts filter.
+     */
+    public function enqueue()
+    {
+        if (current_filter() !== 'admin_enqueue_scripts') {
+            return;
+        }
+
+        wp_enqueue_script(
+            'simplybook-notice-dismiss',
+            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
+            [],
+            App::env('plugin.version'),
+            false
+        );
+
+        wp_add_inline_script(
+            'simplybook-notice-dismiss',
+            sprintf(
+                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
+                wp_json_encode(esc_url_raw(rest_url(
+                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                ))),
+                wp_json_encode(wp_create_nonce('wp_rest'))
+            ),
+            'before'
+        );
     }
 
 }

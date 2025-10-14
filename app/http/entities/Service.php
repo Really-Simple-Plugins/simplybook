@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Entities;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 
 /**
  * Service entity class for managing services in the SimplyBook API. This

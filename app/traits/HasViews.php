@@ -1,6 +1,6 @@
 <?php namespace SimplyBook\Traits;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 
 trait HasViews
 {

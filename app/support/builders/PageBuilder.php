@@ -1,4 +1,4 @@
-<?php namespace SimplyBook\Builders;
+<?php namespace SimplyBook\Support\Builders;
 
 class PageBuilder
 {

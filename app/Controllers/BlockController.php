@@ -1,9 +1,9 @@
 <?php namespace SimplyBook\Controllers;
 
+use SimplyBook\Bootstrap\App;
 use Elementor\Widgets_Manager;
-use SimplyBook\App;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Widgets\ElementorWidget;
+use SimplyBook\Support\Widgets\ElementorWidget;
 
 class BlockController implements ControllerInterface
 {

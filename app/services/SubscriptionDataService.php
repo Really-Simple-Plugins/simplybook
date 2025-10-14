@@ -3,9 +3,9 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Helpers\Event;
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Support\Helpers\Storage;
 
 class SubscriptionDataService
 {

@@ -1,10 +1,10 @@
 <?php namespace SimplyBook\Managers;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 
 final class EndpointManager
 {

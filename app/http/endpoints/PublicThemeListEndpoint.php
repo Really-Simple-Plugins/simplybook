@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;

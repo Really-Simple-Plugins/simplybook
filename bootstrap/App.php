@@ -1,9 +1,9 @@
 <?php
-namespace SimplyBook;
+namespace SimplyBook\Bootstrap;
 
 use Adbar\Dot;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Helpers\Request;
+use SimplyBook\Support\Helpers\Request;
 
 final class App
 {

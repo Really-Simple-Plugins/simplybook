@@ -1,13 +1,13 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Utility\StringUtility;
-use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Utility\StringUtility;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingService
 {

@@ -1,5 +1,5 @@
 <?php
-use SimplyBook\Helpers\FeatureHelper;
+use SimplyBook\Support\Helpers\FeatureHelper;
 
 if (!defined('ABSPATH')) {
     exit;

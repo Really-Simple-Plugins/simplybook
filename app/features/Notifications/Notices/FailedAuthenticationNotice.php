@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 
 class FailedAuthenticationNotice extends AbstractNotice
 {

@@ -1,11 +1,10 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
 use SimplyBook\Traits\LegacySave;
+use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Traits\HasLogging;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 

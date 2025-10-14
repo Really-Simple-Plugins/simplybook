@@ -1,17 +1,17 @@
 <?php
 namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Helpers\Storage;
-use SimplyBook\Builders\PageBuilder;
-use SimplyBook\Utility\StringUtility;
-use SimplyBook\Builders\CompanyBuilder;
 use SimplyBook\Exceptions\ApiException;
+use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Support\Builders\PageBuilder;
+use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Services\WidgetTrackingService;
-use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
 {

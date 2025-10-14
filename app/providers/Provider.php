@@ -1,9 +1,9 @@
 <?php
 namespace SimplyBook\Providers;
 
-use SimplyBook\App;
-use SimplyBook\Utility\StringUtility;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\ProviderInterface;
+use SimplyBook\Support\Utility\StringUtility;
 
 class Provider implements ProviderInterface
 {

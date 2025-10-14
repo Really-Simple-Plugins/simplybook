@@ -2,7 +2,7 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;

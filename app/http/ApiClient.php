@@ -6,18 +6,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Helpers\Event;
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasLogging;
-use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
-use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Traits\HasTokenManagement;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)

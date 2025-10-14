@@ -1,4 +1,4 @@
-<?php namespace SimplyBook\Helpers;
+<?php namespace SimplyBook\Support\Helpers;
 
 use SimplyBook\Traits\LegacySave;
 
@@ -9,7 +9,7 @@ class Uninstall
     /**
      * Handle plugin uninstallation.
      * @internal Method is currently hooked as the uninstallation callback
-     * {@see \SimplyBook\Plugin::boot}
+     * {@see \SimplyBook\Bootstrap\Plugin::boot}
      */
     public function handlePluginUninstall(): void
     {

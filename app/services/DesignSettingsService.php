@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Exceptions\FormException;
 
@@ -13,7 +13,7 @@ class DesignSettingsService
     /**
      * Lazy-loaded theme color service for WordPress color palette extraction.
      * Provides default colors when users haven't set preferences.
-     * 
+     *
      */
     private ?ThemeColorService $themeColorService = null;
 
@@ -274,16 +274,16 @@ class DesignSettingsService
 
     /**
      * Get theme color service with lazy initialization.
-     * 
+     *
      * Creates instance only when needed for efficient resource usage.
-     * 
+     *
      */
     public function getThemeColorService(): ThemeColorService
     {
 	    if ($this->themeColorService instanceof ThemeColorService === false) {
             $this->themeColorService = new ThemeColorService();
         }
-        
+
         return $this->themeColorService;
     }
 
@@ -299,7 +299,7 @@ class DesignSettingsService
     {
         $designConfig = App::fields()->get('design');
         $defaultDesignSettings = [];
-        
+
         // Get theme colors if no specific colors are provided
         if (empty($primary) && empty($secondary) && empty($active)) {
             $themeColors = $this->getThemeColorService()->getThemeColors();
@@ -307,7 +307,7 @@ class DesignSettingsService
             $secondary = $themeColors['secondary'];
             $active = $themeColors['active'];
         }
-        
+
         foreach ($designConfig as $settingID => $config) {
 
             if (isset($config['default'])) {
