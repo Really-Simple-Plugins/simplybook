@@ -2,12 +2,11 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Services\NoticeDismissalService;
-use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\NoticeDismissalService;
 
 class ReviewController implements ControllerInterface
 {
@@ -179,25 +178,7 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        wp_enqueue_script(
-            'simplybook-notice-dismiss',
-            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
-            [],
-            App::env('plugin.version'),
-            false
-        );
-
-        wp_add_inline_script(
-            'simplybook-notice-dismiss',
-            sprintf(
-                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url(
-                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
-                ))),
-                wp_json_encode(wp_create_nonce('wp_rest'))
-            ),
-            'before'
-        );
+        $this->noticeDismissalService->enqueue();
     }
 
     /**

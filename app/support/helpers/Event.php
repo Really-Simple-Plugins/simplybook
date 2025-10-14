@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Helpers;
+namespace SimplyBook\Support\Helpers;
 
 /**
  * Event class to handle SimplyBook events. Useful for dispatching events and

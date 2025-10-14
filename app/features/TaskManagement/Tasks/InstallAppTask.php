@@ -2,8 +2,6 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\App;
-
 class InstallAppTask extends AbstractTask
 {
     const IDENTIFIER = 'install_sb_app';

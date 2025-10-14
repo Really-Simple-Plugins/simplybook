@@ -1,6 +1,11 @@
 <?php
-namespace SimplyBook;
+namespace SimplyBook\Bootstrap;
 
+use SimplyBook\Http;
+use SimplyBook\Services;
+use SimplyBook\Providers;
+use SimplyBook\Controllers;
+use SimplyBook\Support\Helpers;
 use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
@@ -31,7 +36,7 @@ class Plugin
     {
         register_activation_hook(App::env('plugin.base_file'), [$this, 'activation']);
         register_deactivation_hook(App::env('plugin.base_file'), [$this, 'deactivation']);
-        register_uninstall_hook(App::env('plugin.base_file'), 'SimplyBook\Plugin::uninstall');
+        register_uninstall_hook(App::env('plugin.base_file'), 'bootstrap\Plugin');
 
         $this->registerConstants();
         $this->registerEnvironment();
@@ -74,6 +79,9 @@ class Plugin
     public function activation()
     {
         global $pagenow;
+
+        // Remember activation time
+        update_option('simplybook_activation_unix_timestamp', time(), false);
 
         // Set the flag on activation
         update_option('simplybook_activation_flag', true, false);
@@ -210,6 +218,9 @@ class Plugin
 	        new Controllers\WidgetTrackingController(
 		        new Services\WidgetTrackingService()
 	        ),
+            new Controllers\OnboardingNoticeController(
+                new Services\NoticeDismissalService()
+            ),
         ]);
     }
 

@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Notifications;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 
 class NotificationListener
 {

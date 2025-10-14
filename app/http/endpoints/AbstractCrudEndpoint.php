@@ -1,8 +1,8 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Http\Entities\AbstractEntity;
 use SimplyBook\Exceptions\RestDataException;

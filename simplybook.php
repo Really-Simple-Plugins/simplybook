@@ -26,5 +26,5 @@
 require_once __DIR__ . '/vendor/autoload_packages.php';
 
 // Boot the plugin.
-$plugin = new \SimplyBook\Plugin();
+$plugin = new SimplyBook\Bootstrap\Plugin();
 $plugin->boot();

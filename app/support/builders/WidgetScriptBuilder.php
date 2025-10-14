@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyBook\Builders;
+namespace SimplyBook\Support\Builders;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;

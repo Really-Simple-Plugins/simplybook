@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 
 /**
  * Service for tracking which pages/posts contain SimplyBook widgets.

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Utility;
+namespace SimplyBook\Support\Utility;
 
 /**
  * Utility class for String manipulation.

@@ -2,13 +2,13 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Support\Helpers\Storage;
 
 class RelatedPluginService
 {
     /**
      * Should be a Storage object based on one entry in the related config
-     * {@see \SimplyBook\App::related}
+     * {@see \SimplyBook\Bootstrap\App::related}
      */
     protected Storage $pluginConfig;
 

@@ -1,13 +1,13 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use SimplyBook\App;
-use SimplyBook\Helpers\Event;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Exceptions\BuilderException;
-use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
+use SimplyBook\Support\Builders\WidgetScriptBuilder;
 
 class WidgetController implements ControllerInterface
 {

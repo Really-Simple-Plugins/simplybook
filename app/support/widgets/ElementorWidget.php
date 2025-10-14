@@ -1,9 +1,9 @@
 <?php
-namespace SimplyBook\Widgets;
+namespace SimplyBook\Support\Widgets;
 
-use Elementor\Controls_Manager;
+use SimplyBook\Bootstrap\App;
 use Elementor\Widget_Base;
-use SimplyBook\App;
+use Elementor\Controls_Manager;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;

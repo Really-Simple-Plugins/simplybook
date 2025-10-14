@@ -1,11 +1,11 @@
 <?php
 namespace SimplyBook\Http\Entities;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Utility\StringUtility;
-use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Exceptions\FormException;
+use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Support\Utility\StringUtility;
 
 abstract class AbstractEntity
 {

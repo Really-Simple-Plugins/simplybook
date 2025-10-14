@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;

@@ -1,7 +1,7 @@
 <?php namespace SimplyBook\Managers;
 
-use SimplyBook\App;
-use SimplyBook\Plugin;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Bootstrap\Plugin;
 use SimplyBook\Interfaces\FeatureInterface;
 
 final class FeatureManager
@@ -77,15 +77,10 @@ final class FeatureManager
 
     /**
      * Get the feature namespace.
-     *
-     * @uses ReflectionClass to get the namespace of the Plugin class assuming
-     * that the main Plugin class exists and is in the root of the Plugin
-     * directory.
      */
     private function getFeatureNamespace(string $featureName, bool $needsPro = false): string
     {
-        $reflection = new \ReflectionClass(Plugin::class);
-        return $reflection->getNamespaceName() . '\Features\\' . ($needsPro ? 'Pro\\' : '') . $featureName . '\\';
+        return 'SimplyBook\Features\\' . ($needsPro ? 'Pro\\' : '') . $featureName . '\\';
     }
 
     /**

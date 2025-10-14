@@ -1,10 +1,10 @@
 <?php
 namespace SimplyBook\Providers;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Helpers\Request;
 use SimplyBook\Http\JsonRpcClient;
+use SimplyBook\Support\Helpers\Request;
 
 class AppServiceProvider extends Provider
 {

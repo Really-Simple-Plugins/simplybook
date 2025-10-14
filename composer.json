@@ -21,25 +21,10 @@
     },
     "autoload": {
         "psr-4": {
-            "SimplyBook\\Http\\": "app/http",
-            "SimplyBook\\Traits\\": "app/traits",
-            "SimplyBook\\Managers\\": "app/managers",
-            "SimplyBook\\Services\\": "app/services",
-            "SimplyBook\\Http\\DTO\\": "app/http/dto",
-            "SimplyBook\\Providers\\": "app/providers",
-            "SimplyBook\\Interfaces\\": "app/interfaces",
-            "SimplyBook\\Exceptions\\": "app/exceptions",
-            "SimplyBook\\Helpers\\": "app/support/helpers",
-            "SimplyBook\\Widgets\\": "app/support/widgets",
-            "SimplyBook\\Utility\\": "app/support/utility",
-            "SimplyBook\\Controllers\\": "app/controllers",
-            "SimplyBook\\Builders\\": "app/support/builders",
-            "SimplyBook\\Http\\Entities\\": "app/http/entities",
-            "SimplyBook\\Http\\Endpoints\\": "app/http/endpoints"
+            "SimplyBook\\": "app",
+            "SimplyBook\\Bootrstap\\": "bootstrap"
         },
         "files": [
-            "app/App.php",
-            "app/Plugin.php",
             "helpers.php"
         ]
     },

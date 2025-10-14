@@ -1,9 +1,7 @@
 <?php
 namespace SimplyBook\Traits;
 
-use SimplyBook\App;
-use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Traits\HasEncryption;
+use SimplyBook\Bootstrap\App;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

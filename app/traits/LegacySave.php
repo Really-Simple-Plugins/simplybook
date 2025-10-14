@@ -1,6 +1,6 @@
 <?php
 namespace SimplyBook\Traits;
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
