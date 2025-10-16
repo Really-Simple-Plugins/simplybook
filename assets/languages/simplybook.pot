@@ -2,14 +2,14 @@
 # This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: SimplyBook.me - Booking and reservations calendar 3.2.1\n"
+"Project-Id-Version: SimplyBook.me - Booking and reservations calendar 3.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/simplybook\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-10-08T09:04:04+00:00\n"
+"POT-Creation-Date: 2025-10-16T11:48:38+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: simplybook\n"
@@ -39,7 +39,7 @@ msgstr ""
 msgid "https://really-simple-plugins.com"
 msgstr ""
 
-#: app/controllers/AdminController.php:40
+#: app/Controllers/AdminController.php:46
 #: react/build/79.712c746b580f9980027a.js:1
 #: react/build/107.00e9e978ad301065b8c0.js:1
 #: react/src/components/Settings/SettingsMenu.jsx:16
@@ -47,53 +47,53 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: app/controllers/AdminController.php:44
+#: app/Controllers/AdminController.php:50
 msgid "Support"
 msgstr ""
 
 #. translators: %1$s and %2$s are replaced with opening and closing tags to bold the text
-#: app/controllers/AdminController.php:61
+#: app/Controllers/AdminController.php:67
 msgid "The %1$sSimplyBook.me%2$s plugin relies on the %1$sWordPress REST API%2$s to register new accounts. However, the REST API is currently inaccessible to logged-out users. Please ensure that the REST API is enabled and publicly accessible."
 msgstr ""
 
-#: app/controllers/BlockController.php:45
+#: app/Controllers/BlockController.php:51
 msgid "A widget for Simplybook.me"
 msgstr ""
 
-#: app/controllers/DashboardController.php:77
-#: app/controllers/DashboardController.php:78
-#: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:29
+#: app/Controllers/DashboardController.php:86
+#: app/Controllers/DashboardController.php:87
+#: app/Features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:29
 msgid "SimplyBook.me"
 msgstr ""
 
 #. translators: %1$d is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
-#: app/controllers/ReviewController.php:50
+#: app/Controllers/ReviewController.php:52
 msgid "Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s."
 msgstr ""
 
-#: app/controllers/ScheduleController.php:16
+#: app/Controllers/ScheduleController.php:16
 msgid "Once every day"
 msgstr ""
 
-#: app/controllers/TrialExpirationController.php:49
+#: app/Controllers/TrialExpirationController.php:50
 msgid "Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!"
 msgstr ""
 
 #. translators: %d is replaced by the number of days remaining
-#: app/controllers/TrialExpirationController.php:54
+#: app/Controllers/TrialExpirationController.php:55
 msgid "Your free SimplyBook.me trial period will expire in %d days. Discover which plans best suit your site to continue gathering bookings!"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:14
+#: app/Features/Notifications/Notices/AddMandatoryProviderNotice.php:14
 msgid "No Providers configured"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:22
-#: app/features/TaskManagement/Tasks/AddMandatoryProviderTask.php:29
+#: app/Features/Notifications/Notices/AddMandatoryProviderNotice.php:22
+#: app/Features/TaskManagement/Tasks/AddMandatoryProviderTask.php:29
 msgid "Please configure at least one Service Provider"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryProviderNotice.php:47
+#: app/Features/Notifications/Notices/AddMandatoryProviderNotice.php:47
 #: react/build/18.dda60173f985be980376.js:1
 #: react/build/107.00e9e978ad301065b8c0.js:1
 #: react/build/167.e823be3a69b27a68a9c9.js:1
@@ -105,17 +105,17 @@ msgstr ""
 msgid "Add Service Provider"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:14
+#: app/Features/Notifications/Notices/AddMandatoryServiceNotice.php:14
 msgid "No Services configured"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:22
-#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:29
+#: app/Features/Notifications/Notices/AddMandatoryServiceNotice.php:22
+#: app/Features/TaskManagement/Tasks/AddMandatoryServiceTask.php:29
 msgid "Please configure at least one Service"
 msgstr ""
 
-#: app/features/Notifications/Notices/AddMandatoryServiceNotice.php:47
-#: app/features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
+#: app/Features/Notifications/Notices/AddMandatoryServiceNotice.php:47
+#: app/Features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
 #: react/build/18.dda60173f985be980376.js:1
 #: react/build/107.00e9e978ad301065b8c0.js:1
 #: react/build/167.e823be3a69b27a68a9c9.js:1
@@ -127,183 +127,183 @@ msgstr ""
 msgid "Add Service"
 msgstr ""
 
-#: app/features/Notifications/Notices/FailedAuthenticationNotice.php:23
+#: app/Features/Notifications/Notices/FailedAuthenticationNotice.php:23
 msgid "Connection lost"
 msgstr ""
 
-#: app/features/Notifications/Notices/FailedAuthenticationNotice.php:31
+#: app/Features/Notifications/Notices/FailedAuthenticationNotice.php:31
 msgid "We’ve lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect."
 msgstr ""
 
-#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:14
+#: app/Features/Notifications/Notices/MaxedOutProvidersNotice.php:14
 msgid "Maximum number of Providers reached"
 msgstr ""
 
-#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:22
+#: app/Features/Notifications/Notices/MaxedOutProvidersNotice.php:22
 msgid "Please upgrade your plan to configure more Service Providers, or delete existing Providers if you want to add more."
 msgstr ""
 
-#: app/features/Notifications/Notices/MaxedOutProvidersNotice.php:47
-#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:47
+#: app/Features/Notifications/Notices/MaxedOutProvidersNotice.php:47
+#: app/Features/Notifications/Notices/MaxedOutServicesNotice.php:47
 msgid "Upgrade now"
 msgstr ""
 
-#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:14
+#: app/Features/Notifications/Notices/MaxedOutServicesNotice.php:14
 msgid "Maximum number of Services reached"
 msgstr ""
 
-#: app/features/Notifications/Notices/MaxedOutServicesNotice.php:22
+#: app/Features/Notifications/Notices/MaxedOutServicesNotice.php:22
 msgid "Please upgrade your plan to configure more Services, or delete existing Services if you want to add more."
 msgstr ""
 
-#: app/features/Notifications/Notices/PublishWidgetNotice.php:39
+#: app/Features/Notifications/Notices/PublishWidgetNotice.php:39
 msgid "No booking widget detected!"
 msgstr ""
 
-#: app/features/Notifications/Notices/PublishWidgetNotice.php:47
+#: app/Features/Notifications/Notices/PublishWidgetNotice.php:47
 msgid "It seems that you haven’t published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:138
-#: app/features/Onboarding/OnboardingController.php:280
-#: app/features/Onboarding/OnboardingController.php:322
+#: app/Features/Onboarding/OnboardingController.php:140
+#: app/Features/Onboarding/OnboardingController.php:282
+#: app/Features/Onboarding/OnboardingController.php:324
 msgid "Please fill in all fields."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:162
+#: app/Features/Onboarding/OnboardingController.php:164
 msgid "Please verify you're not a robot."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:166
+#: app/Features/Onboarding/OnboardingController.php:168
 msgid "Please enter the confirmation code."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:205
+#: app/Features/Onboarding/OnboardingController.php:207
 msgid "Something went wrong while saving the widget style settings. Please try again."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:210
+#: app/Features/Onboarding/OnboardingController.php:212
 msgid "Successfully saved widget style settings"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:236
+#: app/Features/Onboarding/OnboardingController.php:238
 msgid "Calendar page title should be available if you choose to generate this page."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:299
+#: app/Features/Onboarding/OnboardingController.php:301
 msgid "Unknown error occurred, please verify your credentials."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:306
+#: app/Features/Onboarding/OnboardingController.php:308
 msgid "Login successful."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:339
+#: app/Features/Onboarding/OnboardingController.php:341
 msgid "Unknown 2FA error occurred, please verify your credentials."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:344
+#: app/Features/Onboarding/OnboardingController.php:346
 msgid "Successfully authenticated user"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:409
+#: app/Features/Onboarding/OnboardingController.php:411
 msgid "Successfully requested SMS code"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:421
+#: app/Features/Onboarding/OnboardingController.php:423
 msgid "Successfully finished onboarding!"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:425
+#: app/Features/Onboarding/OnboardingController.php:427
 msgid "An error occurred while finishing the onboarding process"
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:439
+#: app/Features/Onboarding/OnboardingController.php:441
 msgid "Successfully removed all previous data."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingController.php:442
+#: app/Features/Onboarding/OnboardingController.php:444
 msgid "An error occurred while trying to remove previous data."
 msgstr ""
 
-#: app/features/Onboarding/OnboardingService.php:72
+#: app/Features/Onboarding/OnboardingService.php:79
 msgid "Please enter a valid email address and accept the terms and conditions"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AbstractTask.php:207
+#: app/Features/TaskManagement/Tasks/AbstractTask.php:207
 msgid "Premium"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AbstractTask.php:211
+#: app/Features/TaskManagement/Tasks/AbstractTask.php:211
 msgid "Special feature"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:24
+#: app/Features/TaskManagement/Tasks/AcceptPaymentsTask.php:24
 msgid "Accept payments via SimplyBook.me"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AcceptPaymentsTask.php:34
-#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:34
-#: app/features/TaskManagement/Tasks/InstallAppTask.php:31
-#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:34
+#: app/Features/TaskManagement/Tasks/AcceptPaymentsTask.php:34
+#: app/Features/TaskManagement/Tasks/GatherClientInfoTask.php:34
+#: app/Features/TaskManagement/Tasks/InstallAppTask.php:29
+#: app/Features/TaskManagement/Tasks/PostOnSocialMediaTask.php:34
 msgid "More info"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AddAllProvidersTask.php:23
+#: app/Features/TaskManagement/Tasks/AddAllProvidersTask.php:23
 msgid "Have you added all Service Providers?"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AddAllProvidersTask.php:33
+#: app/Features/TaskManagement/Tasks/AddAllProvidersTask.php:33
 msgid "Add Providers"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AddAllServicesTask.php:23
+#: app/Features/TaskManagement/Tasks/AddAllServicesTask.php:23
 msgid "Have you added all your Services?"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AddAllServicesTask.php:33
+#: app/Features/TaskManagement/Tasks/AddAllServicesTask.php:33
 msgid "Add Services"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/AddMandatoryProviderTask.php:39
+#: app/Features/TaskManagement/Tasks/AddMandatoryProviderTask.php:39
 msgid "Add Provider"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/CustomizeDesignTask.php:19
+#: app/Features/TaskManagement/Tasks/CustomizeDesignTask.php:19
 msgid "Customize your booking widget"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/CustomizeDesignTask.php:29
+#: app/Features/TaskManagement/Tasks/CustomizeDesignTask.php:29
 msgid "Design settings"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:27
+#: app/Features/TaskManagement/Tasks/FailedAuthenticationTask.php:27
 msgid "We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings."
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/FailedAuthenticationTask.php:37
+#: app/Features/TaskManagement/Tasks/FailedAuthenticationTask.php:37
 msgid "General settings"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/GatherClientInfoTask.php:24
+#: app/Features/TaskManagement/Tasks/GatherClientInfoTask.php:24
 msgid "Gather information from your clients upon booking"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:19
+#: app/Features/TaskManagement/Tasks/GoToSimplyBookSystemTask.php:19
 msgid "Discover the full functionality on SimplyBook.me"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/InstallAppTask.php:21
+#: app/Features/TaskManagement/Tasks/InstallAppTask.php:19
 msgid "Install the SimplyBook.me app for iOS or Android"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/MaxedOutProvidersTask.php:34
+#: app/Features/TaskManagement/Tasks/MaxedOutProvidersTask.php:34
 msgid "You have reached the maximum number of Service Providers for your plan"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/MaxedOutProvidersTask.php:44
-#: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:45
-#: app/features/TaskManagement/Tasks/TrialExpiredTask.php:45
+#: app/Features/TaskManagement/Tasks/MaxedOutProvidersTask.php:44
+#: app/Features/TaskManagement/Tasks/MaximumBookingsTask.php:45
+#: app/Features/TaskManagement/Tasks/TrialExpiredTask.php:45
 #: react/build/18.dda60173f985be980376.js:1
 #: react/build/79.712c746b580f9980027a.js:1
 #: react/build/107.00e9e978ad301065b8c0.js:1
@@ -316,319 +316,298 @@ msgstr ""
 msgid "Upgrade"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/MaximumBookingsTask.php:35
+#: app/Features/TaskManagement/Tasks/MaximumBookingsTask.php:35
 msgid "You have reached the maximum number of bookings for your plan"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/PostOnSocialMediaTask.php:24
+#: app/Features/TaskManagement/Tasks/PostOnSocialMediaTask.php:24
 msgid "Post your social media content and create ads"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:47
+#: app/Features/TaskManagement/Tasks/PublishWidgetTask.php:47
 msgid "Publish the booking widget on the front-end of your site."
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/PublishWidgetTask.php:57
+#: app/Features/TaskManagement/Tasks/PublishWidgetTask.php:57
 msgid "Show shortcodes"
 msgstr ""
 
-#: app/features/TaskManagement/Tasks/TrialExpiredTask.php:35
+#: app/Features/TaskManagement/Tasks/TrialExpiredTask.php:35
 msgid "Your Trial period has expired! Please consider all premium features!"
 msgstr ""
 
-#: app/http/ApiClient.php:585
-#: app/http/ApiClient.php:793
+#: app/Http/ApiClient.php:599
+#: app/Http/ApiClient.php:807
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: app/http/ApiClient.php:591
+#: app/Http/ApiClient.php:605
 msgid "Too many attempts to register company, please try again in a minute."
 msgstr ""
 
-#: app/http/ApiClient.php:605
+#: app/Http/ApiClient.php:619
 msgid "Please fill in all company data."
 msgstr ""
 
-#: app/http/ApiClient.php:650
+#: app/Http/ApiClient.php:664
 msgid "Something went wrong while registering your company. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:662
+#: app/Http/ApiClient.php:676
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/http/ApiClient.php:695
+#: app/Http/ApiClient.php:709
 msgid "The company name is not allowed. Please change the company name."
 msgstr ""
 
-#: app/http/ApiClient.php:703
+#: app/Http/ApiClient.php:717
 msgid "Unknown error encountered while registering your company. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:801
+#: app/Http/ApiClient.php:815
 msgid "Something went wrong, are you sure you started the company registration?"
 msgstr ""
 
-#: app/http/ApiClient.php:820
+#: app/Http/ApiClient.php:834
 msgid "Something went wrong while confirming your email. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:828
+#: app/Http/ApiClient.php:842
 msgid "Email successfully confirmed."
 msgstr ""
 
-#: app/http/ApiClient.php:832
+#: app/Http/ApiClient.php:846
 msgid "Unknown error encountered while confirming your email. Please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:834
+#: app/Http/ApiClient.php:848
 msgid "This confirmation code is not valid."
 msgstr ""
 
-#: app/http/ApiClient.php:1229
+#: app/Http/ApiClient.php:1243
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1232
+#: app/Http/ApiClient.php:1246
 msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1285
+#: app/Http/ApiClient.php:1299
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/http/ApiClient.php:1288
+#: app/Http/ApiClient.php:1302
 msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
-#: app/http/ApiClient.php:1313
+#: app/Http/ApiClient.php:1327
 msgid "No error received from remote."
 msgstr ""
 
-#: app/http/ApiClient.php:1320
+#: app/Http/ApiClient.php:1334
 msgid "Invalid login or password, please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:1322
+#: app/Http/ApiClient.php:1336
 msgid "Incorrect 2FA authentication code, please try again."
 msgstr ""
 
-#: app/http/ApiClient.php:1326
+#: app/Http/ApiClient.php:1340
 msgid "Too many login attempts. Verify your credentials and try again in a few minutes."
 msgstr ""
 
-#: app/http/ApiClient.php:1329
+#: app/Http/ApiClient.php:1343
 msgid "Could not find a company associated with that company login."
 msgstr ""
 
-#: app/http/ApiClient.php:1332
+#: app/Http/ApiClient.php:1346
 msgid "Authentication failed, please verify your credentials."
 msgstr ""
 
-#: app/http/ApiClient.php:1409
+#: app/Http/ApiClient.php:1423
 #: react/build/843.f6b4fb618126e6186962.js:1
 #: react/src/components/Modals/SignInModal.jsx:15
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/http/ApiClient.php:1410
+#: app/Http/ApiClient.php:1424
 msgid "SMS"
 msgstr ""
 
-#: app/http/ApiClient.php:1416
+#: app/Http/ApiClient.php:1430
 msgid "Unknown 2FA provider"
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:68
-#: app/http/endpoints/AbstractCrudEndpoint.php:126
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:68
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:126
 msgid "Method not allowed"
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:92
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:92
 msgid "Could not create entity, no data provided."
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:103
-#: app/http/endpoints/AbstractCrudEndpoint.php:164
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:103
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:164
 msgid "successfully saved!"
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:144
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:144
 msgid "Entity not found!"
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:181
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:181
 msgid "Something went wrong while deleting."
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:205
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:205
 msgid "An unknown error occurred. Please try again later."
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:235
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:235
 msgid "An unknown error occurred while saving, please try again."
 msgstr ""
 
-#: app/http/endpoints/AbstractCrudEndpoint.php:243
+#: app/Http/Endpoints/AbstractCrudEndpoint.php:243
 msgid "An error occurred while saving, please try again."
 msgstr ""
 
-#: app/http/endpoints/BlockEndpoints.php:118
-#: app/support/widgets/ElementorWidget.php:206
+#: app/Http/Endpoints/BlockEndpoints.php:120
+#: app/Support/Widgets/ElementorWidget.php:206
 msgid "Any provider"
 msgstr ""
 
-#: app/http/endpoints/LogOutEndpoint.php:51
+#: app/Http/Endpoints/LogOutEndpoint.php:51
 msgid "User prevented logout."
 msgstr ""
 
-#: app/http/endpoints/LogOutEndpoint.php:55
+#: app/Http/Endpoints/LogOutEndpoint.php:55
 msgid "User is logged out and will be redirected to onboarding."
 msgstr ""
 
-#: app/http/endpoints/LogOutEndpoint.php:57
+#: app/Http/Endpoints/LogOutEndpoint.php:57
 msgid "Failed to log out user."
 msgstr ""
 
-#: app/http/endpoints/NoticesDismissEndpoint.php:65
+#: app/Http/Endpoints/NoticesDismissEndpoint.php:65
 msgid "Failed to dismiss notice."
 msgstr ""
 
-#: app/http/endpoints/NoticesDismissEndpoint.php:73
+#: app/Http/Endpoints/NoticesDismissEndpoint.php:73
 msgid "Notice dismissed successfully."
 msgstr ""
 
-#: app/http/endpoints/PublicThemeListEndpoint.php:60
+#: app/Http/Endpoints/PublicThemeListEndpoint.php:67
 msgid "No themes found"
 msgstr ""
 
-#: app/http/endpoints/SettingEndpoints.php:114
+#: app/Http/Endpoints/SettingEndpoints.php:114
 msgid "Error processing settings"
 msgstr ""
 
-#: app/http/entities/AbstractEntity.php:269
+#: app/Http/Entities/AbstractEntity.php:263
 msgid "Field is required."
 msgstr ""
 
-#: app/http/entities/Service.php:61
+#: app/Http/Entities/Service.php:62
 msgid "Duration invalid. Please enter a valid number that is a multiple of your selected timeframe."
 msgstr ""
 
-#: app/http/entities/Service.php:62
+#: app/Http/Entities/Service.php:63
 msgid "Duration invalid. Please enter a valid number between 5 and 1435."
 msgstr ""
 
-#: app/http/entities/ServiceProvider.php:64
+#: app/Http/Entities/ServiceProvider.php:65
 msgid "Phone format invalid. Please enter a valid phone number with country code (e.g., +31 123 456 789)"
 msgstr ""
 
-#: app/http/entities/ServiceProvider.php:65
+#: app/Http/Entities/ServiceProvider.php:66
 msgid "Phone format invalid. Please enter a valid phone number without using letters."
 msgstr ""
 
-#: app/http/entities/ServiceProvider.php:68
-#: app/http/entities/ServiceProvider.php:69
-#: app/http/entities/ServiceProvider.php:70
+#: app/Http/Entities/ServiceProvider.php:69
+#: app/Http/Entities/ServiceProvider.php:70
+#: app/Http/Entities/ServiceProvider.php:71
 msgid "The email address is invalid. Please verify your input and try again."
 msgstr ""
 
-#: app/http/entities/ServiceProvider.php:71
+#: app/Http/Entities/ServiceProvider.php:72
 msgid "The email address can only be changed once per day."
 msgstr ""
 
-#: app/managers/EndpointManager.php:182
+#: app/Managers/EndpointManager.php:185
 msgid "Forbidden."
 msgstr ""
 
-#: app/services/DesignSettingsService.php:196
+#: app/Services/DesignSettingsService.php:196
 msgid "Invalid value for setting"
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:248
+#: app/Support/Builders/WidgetScriptBuilder.php:248
 msgid "This is a demo SimplyBook.me widget."
 msgstr ""
 
 #. translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag
-#: app/support/builders/WidgetScriptBuilder.php:253
+#: app/Support/Builders/WidgetScriptBuilder.php:253
 msgid "You can configure the plugin settings to display your customized widget %1$shere%2$s."
 msgstr ""
 
-#: app/support/builders/WidgetScriptBuilder.php:260
+#: app/Support/Builders/WidgetScriptBuilder.php:260
 msgid "Notice"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:36
+#: app/Support/Widgets/ElementorWidget.php:36
 #: assets/block/build/index.js:1
 #: assets/block/src/edit.js:157
 #: assets/block/build/index.js:138
 msgid "SimplyBook.me Widget"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:63
+#: app/Support/Widgets/ElementorWidget.php:63
 msgid "SimplyBook.me Settings"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:99
+#: app/Support/Widgets/ElementorWidget.php:99
 #: react/build/79.712c746b580f9980027a.js:1
 msgid "Service"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:115
+#: app/Support/Widgets/ElementorWidget.php:115
 #: react/build/79.712c746b580f9980027a.js:1
 msgid "Service Provider"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:136
+#: app/Support/Widgets/ElementorWidget.php:136
 msgid "Location"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:157
+#: app/Support/Widgets/ElementorWidget.php:157
 msgid "Service Category"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:178
+#: app/Support/Widgets/ElementorWidget.php:178
 msgid "Select a service"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:195
+#: app/Support/Widgets/ElementorWidget.php:195
 msgid "Select a service provider"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:221
+#: app/Support/Widgets/ElementorWidget.php:221
 msgid "Select a location"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:237
+#: app/Support/Widgets/ElementorWidget.php:237
 msgid "Select a category"
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:307
+#: app/Support/Widgets/ElementorWidget.php:307
 msgid "Please log in to SimplyBook.me to use this widget."
 msgstr ""
 
-#: app/support/widgets/ElementorWidget.php:309
+#: app/Support/Widgets/ElementorWidget.php:309
 msgid "Go to the SimplyBook.me dashboard"
-msgstr ""
-
-#: app/views/admin/rest-api-notice.php:52
-#: app/views/admin/review-notice.php:83
-msgid "Don't show again"
-msgstr ""
-
-#: app/views/admin/review-notice.php:75
-msgid "Leave a review"
-msgstr ""
-
-#: app/views/admin/review-notice.php:79
-msgid "Maybe later"
-msgstr ""
-
-#: app/views/admin/trial-notice.php:58
-msgid "Redirecting.."
-msgstr ""
-
-#: app/views/admin/trial-notice.php:60
-msgid "Discover plans"
 msgstr ""
 
 #: config/countries.php:6
@@ -1619,135 +1598,135 @@ msgstr ""
 msgid "Calendar shortcode"
 msgstr ""
 
-#: config/fields/design.php:28
-#: config/fields/design.php:177
+#: config/fields/design.php:30
+#: config/fields/design.php:179
 msgid "Flexible"
 msgstr ""
 
-#: config/fields/design.php:29
-#: config/fields/design.php:175
+#: config/fields/design.php:31
+#: config/fields/design.php:177
 msgid "Modern"
 msgstr ""
 
-#: config/fields/design.php:30
-#: config/fields/design.php:173
+#: config/fields/design.php:32
+#: config/fields/design.php:175
 msgid "Flexible weekly"
 msgstr ""
 
-#: config/fields/design.php:31
-#: config/fields/design.php:178
+#: config/fields/design.php:33
+#: config/fields/design.php:180
 msgid "Slots weekly"
 msgstr ""
 
-#: config/fields/design.php:32
-#: config/fields/design.php:181
+#: config/fields/design.php:34
+#: config/fields/design.php:183
 msgid "Modern Provider"
 msgstr ""
 
-#: config/fields/design.php:33
-#: config/fields/design.php:174
+#: config/fields/design.php:35
+#: config/fields/design.php:176
 msgid "Flexible Provider"
 msgstr ""
 
-#: config/fields/design.php:34
-#: config/fields/design.php:179
+#: config/fields/design.php:36
+#: config/fields/design.php:181
 msgid "Weekly classes"
 msgstr ""
 
-#: config/fields/design.php:36
+#: config/fields/design.php:38
 msgid "Calendar layout"
 msgstr ""
 
-#: config/fields/design.php:45
+#: config/fields/design.php:47
 msgid "Datepicker type"
 msgstr ""
 
-#: config/fields/design.php:48
+#: config/fields/design.php:50
 msgid "Inline Datepicker"
 msgstr ""
 
-#: config/fields/design.php:49
+#: config/fields/design.php:51
 msgid "Top Calendar"
 msgstr ""
 
-#: config/fields/design.php:58
+#: config/fields/design.php:60
 msgid "RTL"
 msgstr ""
 
 #. translators: %s - IS or IS NOT
-#: config/fields/design.php:62
+#: config/fields/design.php:64
 msgid "When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL."
 msgstr ""
 
-#: config/fields/design.php:75
+#: config/fields/design.php:77
 msgid "Allow switch to ADA"
 msgstr ""
 
-#: config/fields/design.php:77
+#: config/fields/design.php:79
 msgid "This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability."
 msgstr ""
 
-#: config/fields/design.php:89
+#: config/fields/design.php:91
 msgid "Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones."
 msgstr ""
 
-#: config/fields/design.php:92
+#: config/fields/design.php:94
 msgid "Clear the session of each widget initialization"
 msgstr ""
 
-#: config/fields/design.php:169
+#: config/fields/design.php:171
 msgid "Theme"
 msgstr ""
 
-#: config/fields/design.php:176
+#: config/fields/design.php:178
 msgid "Default"
 msgstr ""
 
-#: config/fields/design.php:180
+#: config/fields/design.php:182
 msgid "Daily classes"
 msgstr ""
 
-#: config/fields/design.php:182
+#: config/fields/design.php:184
 msgid "As slots"
 msgstr ""
 
-#: config/fields/design.php:183
+#: config/fields/design.php:185
 msgid "As table"
 msgstr ""
 
-#: config/fields/design.php:184
+#: config/fields/design.php:186
 msgid "Block"
 msgstr ""
 
-#: config/fields/design.php:185
+#: config/fields/design.php:187
 msgid "List"
 msgstr ""
 
-#: config/fields/design.php:186
+#: config/fields/design.php:188
 msgid "Single page"
 msgstr ""
 
-#: config/fields/design.php:187
+#: config/fields/design.php:189
 msgid "Display calendar"
 msgstr ""
 
-#: config/fields/design.php:188
+#: config/fields/design.php:190
 msgid "Base theme color"
 msgstr ""
 
-#: config/fields/design.php:189
+#: config/fields/design.php:191
 msgid "Show only available time"
 msgstr ""
 
-#: config/fields/design.php:190
+#: config/fields/design.php:192
 msgid "Hide unavailable days on calendar"
 msgstr ""
 
-#: config/fields/design.php:191
+#: config/fields/design.php:193
 msgid "Display calendar layout sidebar"
 msgstr ""
 
-#: config/fields/design.php:192
+#: config/fields/design.php:194
 msgid "Image scale mode"
 msgstr ""
 
@@ -1821,6 +1800,36 @@ msgstr ""
 
 #: config/related.php:39
 msgid "Terms & Conditions"
+msgstr ""
+
+#: views/admin/complete-onboarding-notice.php:75
+msgid "Complete onboarding"
+msgstr ""
+
+#: views/admin/complete-onboarding-notice.php:79
+msgid "Remind me later later"
+msgstr ""
+
+#: views/admin/complete-onboarding-notice.php:83
+#: views/admin/rest-api-notice.php:52
+#: views/admin/review-notice.php:83
+msgid "Don't show again"
+msgstr ""
+
+#: views/admin/review-notice.php:75
+msgid "Leave a review"
+msgstr ""
+
+#: views/admin/review-notice.php:79
+msgid "Maybe later"
+msgstr ""
+
+#: views/admin/trial-notice.php:58
+msgid "Redirecting.."
+msgstr ""
+
+#: views/admin/trial-notice.php:60
+msgid "Discover plans"
 msgstr ""
 
 #: assets/block/build/index.js:1
