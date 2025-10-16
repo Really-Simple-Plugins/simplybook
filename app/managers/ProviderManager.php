@@ -1,25 +1,34 @@
-<?php namespace SimplyBook\Managers;
+<?php
+
+declare(strict_types=1);
+
+namespace SimplyBook\Managers;
 
 use SimplyBook\Interfaces\ProviderInterface;
 
-final class ProviderManager
+final class ProviderManager extends AbstractManager
 {
     /**
-     * Register a providers as long as it implements the ProviderInterface
-     * @uses do_action simplybook_providers_loaded
+     * @inheritDoc
      */
-    public function registerProviders(array $providers)
+    public function isRegistrable(object $class): bool
     {
-        // Reject all given providers when they do not implement the ProviderInterface
-        $providers = array_filter($providers, function ($provider) {
-            return $provider instanceof ProviderInterface;
-        });
+        return $class instanceof ProviderInterface;
+    }
 
-        // Serve each provider
-        foreach ($providers as $provider) {
-            $provider->provide();
-        }
+    /**
+     * @inheritDoc
+     */
+    public function registerClass(object $class): void
+    {
+        $class->provide();
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function afterRegister(): void
+    {
         do_action('simplybook_providers_loaded');
     }
 }

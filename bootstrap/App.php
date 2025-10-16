@@ -1,211 +1,222 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SimplyBook\Bootstrap;
 
-use Adbar\Dot;
-use SimplyBook\Http\ApiClient;
-use SimplyBook\Support\Helpers\Request;
-
-final class App
+/**
+ * Container class that provides dependency injection capabilities to manage
+ * object creation and resolution. Class is used for retrieving and injecting
+ * dependencies in a structured and reusable way. This is important because it
+ * decouples classes from concrete implementations (new..) and makes the
+ * codebase easier to test and maintain.
+ */
+class App
 {
-    private static Dot $env;
-    private static Dot $menus;
-    private static Dot $fields;
-    private static Dot $related;
-    private static Dot $features;
-    private static Dot $providers;
-    private static Dot $countries;
-
     /**
-     * Static method to get data from the environment. Method ensures loading
-     *  is only done once and just in time.
-     * @return mixed
+     * Singleton instance holder. Ensures a single container is shared across
+     * the plugin without globals.
      */
-    public static function env(string $key)
-    {
-        if (empty(self::$env)) {
-            self::$env = self::dotFromPath(dirname(__FILE__, 2).'/config/environment.php');
-        }
-        return self::$env->get($key);
-    }
+    private static ?App $instance = null;
 
     /**
-     * Static method to get and load the features' config. Method ensures loading
-     * is only done once and just in time.
-     * @return mixed
-     */
-    public static function features(?string $key = null)
-    {
-        if (empty(self::$features)) {
-            self::$features = self::dotFromPath(dirname(__FILE__, 2).'/config/features.php');
-        }
-        return self::$features->get($key);
-    }
-
-    /**
-     * Static method to get data from the menus. Method ensures loading
-     * is only done once and just in time.
+     * Registry of service factories indexed by identifier. Allows registering
+     * lazy factory closures for services.
      *
-     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-     * @return mixed
-     * @throws \LogicException If the method is called before the init hook
+     * @var array<string, \Closure>
      */
-    public static function menus(?string $key = null)
+    private array $registry = [];
+
+    /**
+     * Instances of resolved services, indexed by identifier. Used to prevent
+     * multiple instantiations and store created services.
+     */
+    private array $instances = [];
+
+    /**
+     * Private constructor to enforce the singleton pattern. Prevents direct
+     * instantiation; use getInstance() instead.
+     */
+    private function __construct() {}
+
+    /**
+     * Retrieve the shared container instance. Provides a central access point
+     * to the container for the plugin.
+     */
+    public static function getInstance(): self
     {
-        if (doing_action('init') === false && did_action('init') === 0) {
-            throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
+        if (self::$instance === null) {
+            self::$instance = new self();
         }
 
-        if (empty(self::$menus)) {
-            self::$menus = self::dotFromPath(dirname(__FILE__, 2).'/config/menus.php');
-        }
-
-        return (empty($key) ? self::$menus : self::$menus->get($key));
+        return self::$instance;
     }
 
     /**
-     * Static method to get related data for this plugin. Method ensures loading
-     * is only done once and just in time.
+     * Register a service factory. Defers service creation until first use. The
+     * provided Closure will be called with no arguments when the service is
+     * resolved.
+     */
+    public function set(string $name, \Closure $value): void
+    {
+        $this->registry[$name] ??= $value;
+    }
+
+    /**
+     * Resolve an identifier to an object instance. It first checks the registry
+     * for a factory. If none is found, it calls {@see make} to perform
+     * constructor autowiring.
      *
-     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-     * @return mixed
-     * @throws \LogicException If the method is called before the init hook
+     * @throws \Exception If the target is not instantiable or cannot resolve a dependency.
+     * @throws \ReflectionException If reflection fails.
      */
-    public static function related(?string $key = null)
+    public function get(string $class): object
     {
-        if (doing_action('init') === false && did_action('init') === 0) {
-            throw new \LogicException('Menus can only be accessed after the init hook due to the use of translations.');
+        // Makes sure we memoize the Closure responses
+        if (array_key_exists($class, $this->instances)) {
+            return $this->instances[$class];
         }
 
-        if (empty(self::$related)) {
-            self::$related = self::dotFromPath(dirname(__FILE__, 2).'/config/related.php');
+        if (array_key_exists($class, $this->registry)) {
+            $instance = ($this->registry[$class])();
+            $this->instances[$class] = $instance; // See above
+            return $instance;
         }
 
-        return (empty($key) ? self::$related : self::$related->get($key));
+        return $this->make($class);
     }
 
     /**
-     * Static method to get fields config for this plugin. Method ensures loading
-     * is only done once and just in time.
+     * Method is used for on-demand construction of an object using constructor
+     * autowiring without touching the registry. When a constructor parameter
+     * asks for the Container itself, the current Container instance is injected
+     * instead of creating a new Container. Class-typed dependencies are
+     * resolved via {@see get} so factories from the registry are honored, while
+     * scalars or unresolved parameters require defaults or will result in an
+     * exception. This keeps "make" safe for ad-hoc instances you may later
+     * choose to register manually.
      *
-     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-     * @return mixed
-     * @throws \LogicException If the method is called before the init hook
-     */
-    public static function fields(?string $key = null)
-    {
-        if (doing_action('init') === false && did_action('init') === 0) {
-            throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
-        }
-
-        if (empty(self::$fields)) {
-            self::$fields = self::dotFromPath(dirname(__FILE__, 2).'/config/fields', true);
-        }
-
-        return (empty($key) ? self::$fields : self::$fields->get($key));
-    }
-
-    /**
-     * Static method to get countries config for this plugin. Method ensures
-     * loading is only done once and just in time.
+     * @param string $class The class to make. Dependencies are injected.
+     * @param bool $register Made classes are registered in the container on
+     * true. Useful for optimization on multi-used classes.
+     * @param bool $registerDependencies Made dependency classes are registered
+     * in the container on true. Useful for optimization on multi-used classes.
      *
-     * @see https://make.wordpress.org/core/2024/10/21/i18n-improvements-6-7/#Enhanced-support-for-only-using-PHP-translation-files
-     * @return mixed
-     * @throws \LogicException If the method is called before the init hook
+     * @throws \Exception If the target is not instantiable or a dependency cannot be resolved.
+     * @throws \ReflectionException If reflection fails.
      */
-    public static function countries(?string $key = null)
+    public function make(string $class, bool $register = true, bool $registerDependencies = true): object
     {
-        if (doing_action('init') === false && did_action('init') === 0) {
-            throw new \LogicException('Fields can only be accessed after the init hook due to the use of translations.');
+        $reflector = new \ReflectionClass($class);
+
+        if ($reflector->isInstantiable() === false) {
+            throw new \Exception("Target [{$class}] is not instantiable.");
         }
 
-        if (empty(self::$countries)) {
-            self::$countries = self::dotFromPath(dirname(__FILE__, 2).'/config/countries.php');
+        $constructor = $reflector->getConstructor();
+
+        if ($constructor === null) {
+            return new $class();
         }
 
-        return (empty($key) ? self::$countries : self::$countries->get($key));
-    }
+        $arguments = [];
+        $parameters = $constructor->getParameters();
 
-    /**
-     * Static method to get data from the providers.
-     *
-     * @internal Adding the return type of the provided functionality helps
-     * your IDE with code completion. For example; these return types are
-     * provided by the {@see AppServiceProvider}
-     *
-     * @return mixed|ApiClient|Request
-     * @throws \InvalidArgumentException If the key is not available in the providers
-     */
-    public static function provide($key)
-    {
-        if (!self::$providers->has($key)) {
-            throw new \InvalidArgumentException("No " . esc_html($key) . " available as a provided functionality.");
-        }
+        foreach ($parameters as $parameter) {
+            $type = $parameter->getType();
 
-        return self::$providers->get($key);
-    }
-
-    /**
-     * Register a provided service to the application
-     * @throws \LogicException If the method is called on or after the init hook
-     */
-    public static function register(string $key, $value)
-    {
-        if (doing_action('init') || did_action('init')) {
-            throw new \LogicException('Register a provided before the init hook to make it available in the application.');
-        }
-
-        if (empty(self::$providers)) {
-            self::$providers = new Dot();
-        }
-
-        self::$providers->set($key, $value);
-    }
-
-    /**
-     * Return a config file as a Dot instance. If path is a directory, it will
-     * merge all the files in the directory.
-     * @param bool $prefixWithFileName Can be used to prefix the keys with the
-     * filename when loading a directory. Can be useful to bundle the config
-     * data of a file under the filename which makes it easier to retrieve a
-     * single fields config with App::fields('company') for example.
-     * @throws \InvalidArgumentException
-     */
-    private static function dotFromPath(string $path, bool $prefixWithFileName = false): Dot
-    {
-        if (!file_exists($path)) {
-            throw new \InvalidArgumentException("Unloadable configuration file " . esc_html($path) . " provided.");
-        }
-
-        $data = [];
-
-        if (is_dir($path)) {
-
-            // This makes sure that if the dir contains another dir, it will
-            // load the files in that dir as well.
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS)
-            );
-
-            foreach ($iterator as $file) {
-                if (pathinfo($file, PATHINFO_EXTENSION) !== 'php') {
+            // No type hinted: allow default value, otherwise we cannot resolve.
+            if ($type === null) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    $arguments[] = $parameter->getDefaultValue();
                     continue;
                 }
 
-                $fileData = require $file;
+                throw new \Exception(sprintf(
+                    'Cannot resolve untyped parameter $%s for [%s] without a default value.',
+                    $parameter->getName(),
+                    $class
+                ));
+            }
 
-                if ($prefixWithFileName) {
-                    $fileName = pathinfo($file, PATHINFO_FILENAME);
-                    $fileData = [
-                        $fileName => $fileData
-                    ];
+            // For PHP 7.4 only ReflectionNamedType exists (no unions).
+            if ($type instanceof \ReflectionNamedType === false) {
+                throw new \Exception(sprintf(
+                    'Unsupported parameter type for $%s in [%s].',
+                    $parameter->getName(),
+                    $class
+                ));
+            }
+
+            // If nullable and no default, we still must supply something;
+            if ($type->isBuiltin()) {
+                if ($parameter->isDefaultValueAvailable()) {
+                    $arguments[] = $parameter->getDefaultValue();
+                    continue;
                 }
 
-                $data = array_merge($data, $fileData);
+                throw new \Exception(sprintf(
+                    'Cannot autowire builtin parameter $%s (%s) for [%s]. Provide a default or register a factory.',
+                    $parameter->getName(),
+                    $type->getName(),
+                    $class
+                ));
             }
-        } else {
-            $data = require $path;
+
+            $dependencyClass = $type->getName();
+
+            // Inject the current container, never a new one.
+            if ($dependencyClass === self::class) {
+                $arguments[] = $this;
+                continue;
+            }
+
+            // Using get() will also resolve dependencies of dependencies
+            $dependency = $this->get($dependencyClass);
+
+            // Dependencies are often for multi-use and therefor adding them
+            // to the registry is beneficial for speed
+            if ($registerDependencies === true) {
+                $this->set($dependencyClass, static function() use ($dependency) {
+                    return $dependency;
+                });
+            }
+
+            $arguments[] = $this->get($dependencyClass);
         }
 
-        return new Dot($data);
+        $made = new $class(...$arguments);
+
+        if ($register) {
+            $this->set($class, static function() use ($made) {
+                return $made;
+            });
+        }
+
+        return $made;
+    }
+
+    /**
+     * Calls {@see get} immediately for unknown properties.
+     *
+     * @throws \Exception If the target is not instantiable.
+     * @throws \ReflectionException If reflection fails.
+     */
+    public function __get(string $name): object
+    {
+        return $this->get($name);
+    }
+
+    /**
+     * Helper method to be able to do static calls like so:
+     * App::config()->getString('env.plugin.name');
+     *
+     * Instead of:
+     * App::config->getString('env.plugin.name');
+     */
+    public static function __callStatic(string $name, array $arguments = [])
+    {
+        $instance = self::getInstance();
+        return call_user_func([$instance, 'get'], $name);
     }
 }

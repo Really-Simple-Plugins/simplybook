@@ -9,13 +9,20 @@ class StatisticsService
 {
     const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Fetch the statistic data from the SimplyBook API
      * @return array The statistics
      */
     public function fetch(): array
     {
-        return App::provide('client')->get_statistics();
+        return $this->app->client->get_statistics();
     }
 
     /**

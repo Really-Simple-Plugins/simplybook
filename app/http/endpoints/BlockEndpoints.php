@@ -13,11 +13,13 @@ class BlockEndpoints implements MultiEndpointInterface
 
     const ROUTE = 'internal';
 
+    protected App $app;
     protected Service $service;
     protected ServiceProvider $serviceProvider;
 
-    public function __construct(Service $service, ServiceProvider $serviceProvider)
+    public function __construct(App $app, Service $service, ServiceProvider $serviceProvider)
     {
+        $this->app = $app;
         $this->service = $service;
         $this->serviceProvider = $serviceProvider;
     }
@@ -69,7 +71,7 @@ class BlockEndpoints implements MultiEndpointInterface
             return [];
         }
 
-        return App::provide('client')->getLocations(true);
+        return $this->app->client->getLocations(true);
     }
 
     /**
@@ -81,7 +83,7 @@ class BlockEndpoints implements MultiEndpointInterface
             return [];
         }
 
-        return App::provide('client')->getCategories(true);
+        return $this->app->client->getCategories(true);
     }
 
     /**
@@ -110,7 +112,7 @@ class BlockEndpoints implements MultiEndpointInterface
 
         $providers = $this->serviceProvider->all();
 
-        $isAnyProviderEnabled = App::provide('client')->isSpecialFeatureEnabled('any_unit');
+        $isAnyProviderEnabled = $this->app->client->isSpecialFeatureEnabled('any_unit');
         if ($isAnyProviderEnabled){
             //add any provider to the response
             $anyProvider = [

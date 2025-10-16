@@ -13,10 +13,12 @@ class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
+    private App $app;
     protected DesignSettingsService $service;
 
-    public function __construct(DesignSettingsService $service)
+    public function __construct(App $app, DesignSettingsService $service)
     {
+        $this->app = $app;
         $this->service = $service;
     }
 
@@ -71,7 +73,7 @@ class WidgetController implements ControllerInterface
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
                 ->isAuthenticated(
-                    App::provide('client')->isAuthenticated()
+                    $this->app->client->isAuthenticated()
                 )
                 ->withHTML();
 
@@ -94,6 +96,6 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', App::env('simplybook.widget_script_url'), [], App::env('simplybook.widget_script_version'), false);
+        wp_enqueue_script('simplybook_widget_scripts', $this->app->env->getUrl('simplybook.widget_script_url'), [], $this->app->env->getString('simplybook.widget_script_version'), false);
     }
 }

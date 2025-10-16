@@ -14,7 +14,7 @@ class TaskManagementController implements FeatureInterface
     public function __construct()
     {
         $this->service = new TaskManagementService(
-            new TaskManagementRepository
+            new TaskManagementRepository()
         );
 
         $this->endpoints = new TaskManagementEndpoints($this->service);

@@ -197,8 +197,15 @@ class ThemeColorService
         return $colors;
     }
 
-    private function getFallbackColors(): array
+    public function getFallbackColors(): array
     {
-        return App::env('colors.fallback_colors');
+        return [
+            'primary' => '#FF3259',
+            'secondary' => '#000000',
+            'active' => '#055B78',
+            'background' => '#f7f7f7',
+            'foreground' => '#494949',
+            'text' => '#ffffff',
+        ];
     }
 }

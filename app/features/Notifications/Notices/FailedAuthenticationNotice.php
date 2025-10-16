@@ -11,7 +11,7 @@ class FailedAuthenticationNotice extends AbstractNotice
     public function __construct()
     {
         $this->setActive(
-            App::provide('client')->authenticationHasFailed()
+            App::client()->authenticationHasFailed()
         );
     }
 

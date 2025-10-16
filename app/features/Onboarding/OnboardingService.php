@@ -15,6 +15,13 @@ class OnboardingService
     use LegacySave;
     use HasRestAccess;
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Store the onboarding step in the general options without autoload
      */
@@ -31,7 +38,7 @@ class OnboardingService
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
 
-        App::provide('client')->clearFailedAuthenticationFlag();
+        $this->app->client->clearFailedAuthenticationFlag();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {

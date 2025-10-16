@@ -13,6 +13,13 @@ class TipsTricksEndpoint implements SingleEndpointInterface
 
     const ROUTE = 'tips_and_tricks';
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Only enable this endpoint if the user has access to the admin area
      */
@@ -45,7 +52,7 @@ class TipsTricksEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $tipsAndTricks = App::env('simplybook.tips_and_tricks');
+        $tipsAndTricks = $this->app->env->get('simplybook.tips_and_tricks');
         return $this->sendHttpResponse($tipsAndTricks);
     }
 }
