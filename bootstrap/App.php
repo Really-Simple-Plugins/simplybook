@@ -4,12 +4,21 @@ declare(strict_types=1);
 
 namespace SimplyBook\Bootstrap;
 
+use SimplyBook\Http\ApiClient;
+use SimplyBook\Support\Helpers\Storage;
+
 /**
  * Container class that provides dependency injection capabilities to manage
  * object creation and resolution. Class is used for retrieving and injecting
  * dependencies in a structured and reusable way. This is important because it
  * decouples classes from concrete implementations (new..) and makes the
  * codebase easier to test and maintain.
+ *
+ * @property-read Storage config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
+ * @property-read Storage env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
+ * @property-read Storage request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
+ * @property-read Storage files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
+ * @property-read ApiClient client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
  */
 class App
 {
