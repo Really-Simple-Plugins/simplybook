@@ -17,7 +17,7 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.2.1',
+        'version' => '3.2.2',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
