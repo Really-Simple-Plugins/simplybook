@@ -6,8 +6,14 @@ use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
 
 class NoticeDismissalService
 {
-
     private const META_KEY = 'simplybook_dismissed_notices';
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Dismiss a notice for a specific user
@@ -69,9 +75,9 @@ class NoticeDismissalService
 
         wp_enqueue_script(
             'simplybook-notice-dismiss',
-            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
+            $this->app->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
             [],
-            App::env('plugin.version'),
+            $this->app->env->getString('plugin.version'),
             false
         );
 
@@ -80,7 +86,7 @@ class NoticeDismissalService
             sprintf(
                 'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                    $this->app->env->getString('http.namespace') . '/' . $this->app->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

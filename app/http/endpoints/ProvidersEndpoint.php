@@ -13,6 +13,13 @@ class ProvidersEndpoint implements SingleEndpointInterface
 
     const ROUTE = 'providers';
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Only enable this endpoint if the user has access to the admin area
      */
@@ -50,7 +57,7 @@ class ProvidersEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $providers = App::provide('client')->get_providers();
+        $providers = $this->app->client->get_providers();
         return $this->sendHttpResponse($providers);
     }
 }

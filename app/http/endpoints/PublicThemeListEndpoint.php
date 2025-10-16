@@ -14,6 +14,13 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
 
     const ROUTE = 'theme_list';
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Only enable this endpoint if the user has access to the admin area
      */
@@ -50,7 +57,7 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
         try {
             $themeList = apply_filters(
                 'simplybook_public_theme_list',
-                App::provide('client')->getThemeList()
+                $this->app->client->getThemeList()
             );
         } catch (\Exception $e) {
             return $this->sendHttpResponse([], false, $e->getMessage(), 404);

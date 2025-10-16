@@ -15,10 +15,13 @@ class OnboardingNoticeController implements ControllerInterface
 
     private string $completeOnboardingAction = 'rsp_onboarding_notice_form_submit';
     private string $completeOnboardingNonceName = 'rsp_onboarding_notice_nonce';
+
+    private App $app;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(NoticeDismissalService $noticeDismissalService)
+    public function __construct(App $app, NoticeDismissalService $noticeDismissalService)
     {
+        $this->app = $app;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -45,13 +48,13 @@ class OnboardingNoticeController implements ControllerInterface
         $noticeMessage = sprintf(
             // translators: %1$s and %2$s are replaced with opening and closing a tag containing hyperlink
             __('Hi! You have activated the SimplyBook.me plugin, but not yet completed the plugin onboarding. Take a minute to %1$scomplete the onboarding%2$s to immediately start collecting bookings on your site!'),
-            '<a href="' . App::env('plugin.dashboard_url') . '">',
+            '<a href="' . $this->app->env->getUrl('plugin.dashboard_url') . '">',
             '</a>'
         );
 
         $this->render('admin/complete-onboarding-notice', [
-            'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'onboardingUrl' => App::env('plugin.dashboard_url'),
+            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'onboardingUrl' => $this->app->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
             'completeOnboardingAction' => $this->completeOnboardingAction,
             'completeOnboardingNonceName' => $this->completeOnboardingNonceName,
@@ -63,18 +66,16 @@ class OnboardingNoticeController implements ControllerInterface
      */
     public function processCompleteOnboardingNoticeFormSubmit(): void
     {
-        if (App::provide('request')->fromGlobal()->isEmpty('rsp_complete_onboarding_notice_form')) {
+        if ($this->app->request->isEmpty('rsp_complete_onboarding_notice_form')) {
             return;
         }
 
-        $request = App::provide('request')->fromGlobal();
-
-        $nonce = $request->get($this->completeOnboardingNonceName);
+        $nonce = $this->app->request->get($this->completeOnboardingNonceName);
         if (wp_verify_nonce($nonce, $this->completeOnboardingAction) === false) {
             return; // Invalid nonce
         }
 
-        $choice = $request->getString('rsp_onboarding_notice_choice');
+        $choice = $this->app->request->getString('rsp_onboarding_notice_choice');
         if ($choice === 'later') {
             update_option('simplybook_complete_onboarding_notice_dismissed_time', time(), false);
             update_option('simplybook_complete_onboarding_notice_choice', 'later', false);
@@ -96,37 +97,49 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function canRenderNotice(): bool
     {
-        // Only show notice for users that did not complete the onboarding
-        if (App::provide('client')->company_registration_complete()) {
-            return false;
-        }
-
-        // Check if user dismissed via X button
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
-            return false;
-        }
-
-        // Check if user dismissed via form button
-        $previousChoice = get_option('simplybook_complete_onboarding_notice_choice');
-        if ($previousChoice === 'never') {
-            return false;
-        }
-
-        if ($this->pluginInstallationTimeSuitableForNotice() === false) {
-            return false;
-        }
-
-        if ($this->noticeDismissedTimeHasPassed() === false) {
-            return false;
+        $cacheName = 'can_render_onboarding_notice';
+        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+            return $cache;
         }
 
         // Prevent showing the notice on edit screen, as gutenberg removes the
         // class which makes it editable. Also hide if user is on plugin page.
         $screen = get_current_screen();
         if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
+        // Check if user dismissed via form button
+        $previousChoice = get_option('simplybook_complete_onboarding_notice_choice');
+        if ($previousChoice === 'never') {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        if ($this->pluginInstallationTimeSuitableForNotice() === false) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        if ($this->noticeDismissedTimeHasPassed() === false) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        // Check if user dismissed via X button
+        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        // Abort if the onboarding was completed prior
+        if (get_option('simplybook_onboarding_completed', false) !== false) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        wp_cache_set($cacheName, true, 'simplybook', MINUTE_IN_SECONDS);
         return true;
     }
 

@@ -1,6 +1,7 @@
 <?php
 namespace SimplyBook\Http\Entities;
 
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Support\Helpers\Event;
 
 /**
@@ -132,7 +133,7 @@ class ServiceProvider extends AbstractEntity
     public function all(): array
     {
         try {
-            $response = $this->client->get($this->getEndpoint());
+            $response = App::getInstance()->client->get($this->getEndpoint());
         } catch (\Throwable $e) {
             return [];
         }

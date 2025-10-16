@@ -2,7 +2,18 @@
     exit;
 }
 
-// The environment config can be used BEFORE the 'init' hook.
+/**
+ * This file is NOT loaded in the config. All other files áre loaded in one
+ * config object in the container. This file is loaded separately via
+ * the {@see \SimplyBook\Providers\ConfigServiceProvider}
+ *
+ * Request this information from the container class
+ * {@see \SimplyBook\Bootstrap\App} using $this->app->env. This is a
+ * {@see \SimplyBook\Support\Helpers\Storage} class.
+ *
+ * This information can be used early in the WordPress lifecycle because no
+ * translations are used.
+ */
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
@@ -23,6 +34,10 @@ return [
         'views_url' => plugin_dir_url(__DIR__).'views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
         'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+    ],
+    'http' => [
+        'version' => 'v1',
+        'namespace' => 'simplybook',
     ],
     'simplybook' => [
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
@@ -115,19 +130,5 @@ return [
             ['value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
-    ],
-    'colors' => [
-        'fallback_colors' => [
-            'primary' => '#FF3259',
-            'secondary' => '#000000',
-            'active' => '#055B78',
-            'background' => '#f7f7f7',
-            'foreground' => '#494949',
-            'text' => '#ffffff',
-        ],
-    ],
-    'http' => [
-        'version' => 'v1',
-        'namespace' => 'simplybook',
-    ],
+    ]
 ];

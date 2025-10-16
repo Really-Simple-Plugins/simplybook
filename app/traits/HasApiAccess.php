@@ -14,7 +14,7 @@ trait HasApiAccess
             return $cache;
         }
 
-        $isAuthorized = App::provide('client')->company_registration_complete();
+        $isAuthorized = App::client()->company_registration_complete();
 
         wp_cache_set($cacheKey, $isAuthorized, 'simplybook', 60);
         return $isAuthorized;

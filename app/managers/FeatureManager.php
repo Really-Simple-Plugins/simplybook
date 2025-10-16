@@ -1,27 +1,76 @@
-<?php namespace SimplyBook\Managers;
+<?php
 
-use SimplyBook\Bootstrap\App;
-use SimplyBook\Bootstrap\Plugin;
+declare(strict_types=1);
+
+namespace SimplyBook\Managers;
+
 use SimplyBook\Interfaces\FeatureInterface;
-
-final class FeatureManager
+/**
+ * This manager dynamically fetches the features of the plugin. It differs from
+ * other manager classes due to this nature. By preventing any class usage of
+ * features we prevent composer from loading the feature file entirely until
+ * first use. This prevents overhead from loading features that are no longer
+ * needed. We prevent loading feature files by utilizing the
+ * {@see AbstractLoader} class at {@see FeatureManager:92}
+ */
+final class FeatureManager extends AbstractManager
 {
+    private const PRO_FEATURE_HANDLE = 'Pro:';
+
+    /**
+     * @inheritDoc
+     */
+    public function isRegistrable(object $class): bool
+    {
+        return $class instanceof FeatureInterface;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function registerClass(object $class): void
+    {
+        $class->register();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function afterRegister(): void
+    {
+        do_action('simplybook_features_loaded');
+    }
+
     /**
      * Register and load all features from the src/features directory. This
      * method automatically loads all classes from the features directory and
      * injects the dependency classes into the Controller class if they exist.
-     * @uses do_action simplybook_features_loaded
+     * @uses do_action rss_core_features_loaded
      */
-    public function registerFeatures(array $features)
+    public function registerFeatures(): void
     {
-        foreach ($features as $featureName => $settings) {
-            $enabled = ($settings['enabled'] ?? false);
-            $inScope = ($settings['inScope'] ?? true);
-            $needsPro = ($settings['pro'] ?? false);
+        $featureClasses = $this->getFeatureClasses();
+        $this->register($featureClasses);
+    }
 
-            // Check if the feature should be loaded
-            if (!$enabled || !$inScope || ($needsPro && !App::env('plugin.pro'))) {
-                continue;
+    /**
+     * Dynamically build and then return an array of feature classes that are
+     * saved in the features path of the plugin.
+     */
+    public function getFeatureClasses(): array
+    {
+        $features = $this->getFeatures();
+        $featureClasses = [];
+
+        foreach ($features as $featureName) {
+
+            $needsPro = strpos($featureName, self::PRO_FEATURE_HANDLE) !== false;
+            if ($needsPro && !$this->app->env->getBoolean('plugin.pro')) {
+                continue; // Pro not installed, don't register pro features
+            }
+
+            if ($needsPro) {
+                $featureName = substr($featureName, strlen(self::PRO_FEATURE_HANDLE));
             }
 
             // Check if the feature directory exists
@@ -30,40 +79,60 @@ final class FeatureManager
                 continue;
             }
 
-            // Load all classes from the feature directory
-            $priorityFiles = ($settings['priorityFiles'] ?? []);
-            $loaded = $this->loadAllFeatureFiles($featuresPath, $priorityFiles);
-            if ($loaded === false) {
-                continue;
-            }
-
             // Get the feature namespace
             $prefix = $this->getFeatureNamespace($featureName, $needsPro) . $featureName;
 
+            // Get the {FeatureName}Loader class for the feature
+            if (class_exists($prefix . 'Loader') === false) {
+                continue;
+            }
+
+            $loader = $this->app->make($prefix . 'Loader', false, false);
+            if (!$loader->isEnabled() || !$loader->inScope()) {
+                continue;
+            }
+
             // The controller is the backbone of a feature
-            $controllerClass = $prefix . 'Controller';
-            if (!class_exists($controllerClass)) {
-                continue;
-            }
-
-            $dependencies = [];
-            if (!empty($settings['dependencies'])) {
-                $dependencies = $this->resolveDependencies($settings['dependencies'], $prefix);
-            }
-
-            // Start the feature by instantiating the controller
-            $instance = new $controllerClass(... $dependencies);
-
-            // Reject all given feature Controllers when they do not implement
-            // the FeatureInterface
-            if (!$instance instanceof FeatureInterface) {
-                continue;
-            }
-
-            $instance->register();
+            $featureClasses[] = $prefix . 'Controller';
         };
 
-        do_action('simplybook_features_loaded');
+        return $featureClasses;
+    }
+
+    /**
+     * Get all feature directory names. Includes "Pro" features prefixed
+     * with {@see PRO_FEATURE_HANDLE}.
+     */
+    private function getFeatures(): array
+    {
+        $featuresPath = $this->app->env->getString('plugin.feature_path');
+        $features = [];
+
+        foreach (new \DirectoryIterator($featuresPath) as $fileInfo) {
+            if ($fileInfo->isDot() || !$fileInfo->isDir()) {
+                continue;
+            }
+
+            $proEnabled = $this->app->env->getBoolean('plugin.pro');
+            $skipPro = ($proEnabled === false && $fileInfo->getFilename() === 'Pro');
+            if ($skipPro) {
+                continue;
+            }
+
+            if ($fileInfo->getFilename() === 'Pro') {
+                foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
+                    if ($proInfo->isDot() || !$proInfo->isDir()) {
+                        continue;
+                    }
+                    $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
+                }
+                continue;
+            }
+
+            $features[] = $fileInfo->getFilename();
+        }
+
+        return $features;
     }
 
     /**
@@ -72,7 +141,7 @@ final class FeatureManager
      */
     private function getFeaturePath(string $featureName, bool $needsPro): string
     {
-        return App::env('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
+        return $this->app->env->getString('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
     }
 
     /**
@@ -81,55 +150,5 @@ final class FeatureManager
     private function getFeatureNamespace(string $featureName, bool $needsPro = false): string
     {
         return 'SimplyBook\Features\\' . ($needsPro ? 'Pro\\' : '') . $featureName . '\\';
-    }
-
-    /**
-     * Resolve the dependencies for the given feature.
-     * @throws \LogicException when a dependency does not exist.
-     */
-    private function resolveDependencies(array $dependencies, string $featureNamespace): array
-    {
-        return array_map(function ($dependency) use ($featureNamespace) {
-            $fullClassName = $featureNamespace . $dependency;
-
-            // if $dependency starts with a backslash, it's a fully qualified
-            // class name, and we can instantiate it directly
-            if ($dependency[0] === '\\') {
-                $fullClassName = $dependency;
-            }
-
-            if (!class_exists($fullClassName)) {
-                throw new \LogicException("Dependency " . esc_html($fullClassName) . " does not exist.");
-            }
-
-            return new $fullClassName();
-        }, $dependencies);
-    }
-
-    /**
-     * Load all files for the current feature from the given directory. This
-     * method will even load files from subdirectories.
-     */
-    private function loadAllFeatureFiles(string $directory, array $priorityFiles = []): bool
-    {
-        if (!is_dir($directory)) {
-            return false;
-        }
-
-        if (!empty($priorityFiles)) {
-            foreach ($priorityFiles as $priorityFile) {
-                require_once trailingslashit($directory) . $priorityFile . '.php';
-            }
-        }
-
-        $recursivelyFoundFilesInDirectory = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS),
-        );
-
-        foreach ($recursivelyFoundFilesInDirectory as $file) {
-            require_once $file->getPathname();
-        }
-
-        return true;
     }
 }

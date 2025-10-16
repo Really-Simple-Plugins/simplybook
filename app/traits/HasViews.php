@@ -10,7 +10,7 @@ trait HasViews
      */
     public function view(string $path, array $variables = [], string $extension = 'php'): string
     {
-        $basePath = App::env('plugin.view_path');
+        $basePath = App::env()->getString('plugin.view_path');
         $filePath = realpath($basePath . $path . '.' . $extension);
 
         // Someone is doing something dirty
