@@ -76,7 +76,7 @@
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
                 <button type="submit" class="link" name="rsp_onboarding_notice_choice" value="later">
-                    <?php esc_html_e('Remind me later later', 'simplybook'); ?>
+                    <?php esc_html_e('Remind me later', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
                 <button type="submit" class="link" name="rsp_onboarding_notice_choice" value="never">
