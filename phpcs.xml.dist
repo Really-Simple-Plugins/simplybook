@@ -24,6 +24,14 @@
     <!-- Tokenizer/env -->
     <config name="php_version" value="70400"/>
 
+    git mv app/Http/dto tmp
+    git mv tmp app/Http/DTO
+    git mv app/Http/endpoints tmp
+    git mv tmp app/Http/Endpoints
+    git mv app/Http/entities tmp
+    git mv tmp app/Http/Entities
+
+
     <!-- Base standard -->
     <rule ref="PSR12"/>
 
