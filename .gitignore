@@ -81,4 +81,7 @@ assets/languages/*
 !assets/languages/*.pot
 
 # Ignore PHP CodeSniffer report
-/assets/phpcs.txt
+phpcs-report.txt
+
+# Ignore PHP CodeSniffer local config
+phpcs.xml
