@@ -3,13 +3,20 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Helpers\Event;
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Support\Helpers\Storage;
 
 class SubscriptionDataService
 {
     const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Fetch the subscription data from the SimplyBook API
@@ -17,7 +24,7 @@ class SubscriptionDataService
      */
     public function fetch(): array
     {
-        return App::provide('client')->get_subscription_data();
+        return $this->app->client->get_subscription_data();
     }
 
     /**

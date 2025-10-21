@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;

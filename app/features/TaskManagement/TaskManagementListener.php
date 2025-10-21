@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Support\Helpers\Event;
 
 class TaskManagementListener
 {

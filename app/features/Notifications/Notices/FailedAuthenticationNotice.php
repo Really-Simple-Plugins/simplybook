@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 
 class FailedAuthenticationNotice extends AbstractNotice
 {
@@ -11,7 +11,7 @@ class FailedAuthenticationNotice extends AbstractNotice
     public function __construct()
     {
         $this->setActive(
-            App::provide('client')->authenticationHasFailed()
+            App::client()->authenticationHasFailed()
         );
     }
 

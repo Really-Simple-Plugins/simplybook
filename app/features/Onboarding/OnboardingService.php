@@ -1,19 +1,26 @@
 <?php namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Helpers\Storage;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Utility\StringUtility;
-use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Utility\StringUtility;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingService
 {
     use HasEncryption;
     use LegacySave;
     use HasRestAccess;
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Store the onboarding step in the general options without autoload
@@ -31,7 +38,7 @@ class OnboardingService
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
 
-        App::provide('client')->clearFailedAuthenticationFlag();
+        $this->app->client->clearFailedAuthenticationFlag();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {

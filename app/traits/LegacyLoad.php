@@ -1,9 +1,7 @@
 <?php
 namespace SimplyBook\Traits;
 
-use SimplyBook\App;
-use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Traits\HasEncryption;
+use SimplyBook\Bootstrap\App;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -126,7 +124,7 @@ trait LegacyLoad {
 		}
 
         $fields = [];
-        $fieldsConfig = App::fields()->all();
+        $fieldsConfig = App::config()->get('fields');
         $fieldsConfig = apply_filters( 'simplybook_fields', $fieldsConfig );
 
         foreach ( $fieldsConfig as $groupID => $fieldGroup ) {
@@ -165,7 +163,7 @@ trait LegacyLoad {
 	 */
 	public function menu(): array
 	{
-		$menus = App::menus()->all();
+		$menus = App::config()->get('menus');
 		$menus = apply_filters('simplybook_menu', $menus);
 
 		foreach ( $menus as $key => $menu ) {
@@ -209,7 +207,7 @@ trait LegacyLoad {
             return $savedDomain;
         }
 
-        $environment = App::provide('simplybook_env');
+        $environment = App::env()->get('simplybook.api');
         if (empty($environment['domain'])) {
             throw new \LogicException('SimplyBook domain is not set in the environment.');
         }

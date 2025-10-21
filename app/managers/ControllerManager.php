@@ -1,26 +1,34 @@
-<?php namespace SimplyBook\Managers;
+<?php
+
+declare(strict_types=1);
+
+namespace SimplyBook\Managers;
 
 use SimplyBook\Interfaces\ControllerInterface;
 
-final class ControllerManager
+final class ControllerManager extends AbstractManager
 {
     /**
-     * Register a single controller as long as it implements the
-     * ControllerInterface.
-     * @uses do_action simplybook_controllers_loaded
+     * @inheritDoc
      */
-    public function registerControllers(array $controllers)
+    public function isRegistrable(object $class): bool
     {
-        // Reject all controllers when they do not implement ControllerInterface
-        $controllers = array_filter($controllers, function ($controller) {
-            return $controller instanceof ControllerInterface;
-        });
+        return $class instanceof ControllerInterface;
+    }
 
-        // Serve each provider
-        foreach ($controllers as $controller) {
-            $controller->register();
-        }
+    /**
+     * @inheritDoc
+     */
+    public function registerClass(object $class): void
+    {
+        $class->register();
+    }
 
+    /**
+     * @inheritDoc
+     */
+    public function afterRegister(): void
+    {
         do_action('simplybook_controllers_loaded');
     }
 }

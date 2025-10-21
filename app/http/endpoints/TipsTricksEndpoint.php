@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -12,6 +12,13 @@ class TipsTricksEndpoint implements SingleEndpointInterface
     use HasAllowlistControl;
 
     const ROUTE = 'tips_and_tricks';
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -45,7 +52,7 @@ class TipsTricksEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $tipsAndTricks = App::env('simplybook.tips_and_tricks');
+        $tipsAndTricks = $this->app->env->get('simplybook.tips_and_tricks');
         return $this->sendHttpResponse($tipsAndTricks);
     }
 }

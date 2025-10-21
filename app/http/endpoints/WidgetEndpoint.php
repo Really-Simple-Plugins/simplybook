@@ -4,9 +4,9 @@ namespace SimplyBook\Http\Endpoints;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
-use SimplyBook\Builders\WidgetScriptBuilder;
 use SimplyBook\Services\DesignSettingsService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Support\Builders\WidgetScriptBuilder;
 
 class WidgetEndpoint implements MultiEndpointInterface
 {

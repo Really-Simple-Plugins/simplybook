@@ -2,8 +2,8 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Utility\ColorUtility;
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Utility\ColorUtility;
 
 class ThemeColorService
 {
@@ -33,15 +33,15 @@ class ThemeColorService
     public function getThemeColors(): array
     {
         $colors = $this->getColorsFromGlobalStyles();
-        
+
         if (empty($colors)) {
             $colors = $this->getColorsFromThemeJson();
         }
-        
+
         if (empty($colors)) {
             $colors = $this->getColorsFromCssVariables();
         }
-        
+
         if (empty($colors)) {
             return $this->getFallbackColors();
         }
@@ -85,7 +85,7 @@ class ThemeColorService
         } catch (\Exception $e) {
             return [];
         }
-        
+
         return $this->mapPaletteToStandardColors($themeColors);
     }
 
@@ -95,15 +95,15 @@ class ThemeColorService
     private function mapPaletteToStandardColors(array $palette): array
     {
         $colors = [];
-        
+
         foreach ($palette as $color) {
             if (!isset($color['slug']) || !isset($color['color'])) {
                 continue;
             }
-            
+
             $slug = $color['slug'];
             $colorValue = $color['color'];
-            
+
             foreach ($this->wpColorMappings as $ourType => $wpSlugs) {
                 if (in_array($slug, $wpSlugs, true)) {
                     $colors[$ourType] = $colorValue;
@@ -111,7 +111,7 @@ class ThemeColorService
                 }
             }
         }
-        
+
         return $colors;
     }
 
@@ -160,17 +160,17 @@ class ThemeColorService
     private function ensureCompleteColors(array $colors): array
     {
         $normalized = [];
-        
+
         $fallbackColors = $this->getFallbackColors();
         if (empty($fallbackColors)) {
             return [];
         }
-        
+
         foreach ($fallbackColors as $type => $fallback) {
             $colorValue = $colors[$type] ?? $fallback;
             $normalized[$type] = $this->colorUtility->resolveColorToHex($colorValue);
         }
-        
+
         return $normalized;
     }
 
@@ -197,8 +197,15 @@ class ThemeColorService
         return $colors;
     }
 
-    private function getFallbackColors(): array
+    public function getFallbackColors(): array
     {
-        return App::env('colors.fallback_colors');
+        return [
+            'primary' => '#FF3259',
+            'secondary' => '#000000',
+            'active' => '#055B78',
+            'background' => '#f7f7f7',
+            'foreground' => '#494949',
+            'text' => '#ffffff',
+        ];
     }
 }

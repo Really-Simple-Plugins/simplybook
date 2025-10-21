@@ -6,18 +6,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Helpers\Event;
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
-use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasLogging;
-use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
-use SimplyBook\Builders\CompanyBuilder;
+use SimplyBook\Traits\HasTokenManagement;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -30,6 +30,7 @@ class ApiClient
     use HasLogging;
     use HasAllowlistControl;
 
+    protected App $app;
     protected JsonRpcClient $jsonRpcClient;
 
     /**
@@ -46,7 +47,7 @@ class ApiClient
     /**
      * The key is used to fetch the public token for the current user.
      */
-    protected string $app_key;
+    protected string $applicationKey;
 
     /**
      * Flag to use when the authentication failed indefinitely. This is used to
@@ -64,16 +65,21 @@ class ApiClient
      * Construct is executed on plugins_loaded on purpose. This way even
      * visitors can refresh invalid tokens.
      *
-     * @param JsonRpcClient $client
-     * @param array $environment Dependency: App::provide('simplybook_env')
      * @throws \LogicException For developers.
      */
-    public function __construct(JsonRpcClient $client, array $environment)
+    public function __construct(App $app, JsonRpcClient $client)
     {
-        $this->jsonRpcClient = $client;
-        $this->app_key = ($environment['app_key'] ?? '');
+        $this->app = $app;
+        $environment = $this->app->env->get('simplybook.api', []);
 
-        if (empty($this->app_key)) {
+        if (empty($environment)) {
+            throw new \LogicException('Register the environment for the application in the container');
+        }
+
+        $this->jsonRpcClient = $client;
+        $this->applicationKey = ($environment['app_key'] ?? '');
+
+        if (empty($this->applicationKey)) {
             throw new \LogicException('Provide the key of the application in the environment');
         }
 
@@ -145,6 +151,11 @@ class ApiClient
      */
     public function company_registration_complete(): bool
     {
+        $cacheName = 'company_registration_complete';
+        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+            return $cache;
+        }
+
         //check if the callback has been completed, resulting in a company/admin token.
         if ( !$this->getToken('admin') ) {
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
@@ -157,8 +168,11 @@ class ApiClient
                 $this->delete_company_login();
             }
 
+            wp_cache_set($cacheName, $cacheName, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
+
+        wp_cache_set($cacheName, $cacheName, 'simplybook', (MINUTE_IN_SECONDS * 10));
         return true;
     }
 
@@ -286,7 +300,7 @@ class ApiClient
             'sslverify' => true,
             'body' => json_encode(
                 array(
-                    'api_key' => $this->app_key,
+                    'api_key' => $this->applicationKey,
                 )),
         ) );
 
@@ -1526,7 +1540,7 @@ class ApiClient
 	 */
 	private function getRequestUserAgent(): string
 	{
-		return "SimplyBookPlugin/" . App::env('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+		return "SimplyBookPlugin/" . $this->app->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
 	}
 
     /**

@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyBook\Builders;
+namespace SimplyBook\Support\Builders;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
@@ -126,7 +126,7 @@ class WidgetScriptBuilder
      */
     private function setWidgetTemplate(string $widgetType): void
     {
-        $widgetTypeTemplate = App::env('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
+        $widgetTypeTemplate = App::env()->getString('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
         if (!file_exists($widgetTypeTemplate)) {
             throw new BuilderException('Widget template not found');
         }
@@ -237,7 +237,7 @@ class WidgetScriptBuilder
      */
     private function getDemoWidgetServerUrl(): string
     {
-        return App::env('simplybook.demo_widget_server_url');
+        return App::env()->getUrl('simplybook.demo_widget_server_url');
     }
 
     /**
@@ -251,7 +251,7 @@ class WidgetScriptBuilder
             $message .= ' ' . sprintf(
                 /* translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag */
                 esc_html__('You can configure the plugin settings to display your customized widget %1$shere%2$s.', 'simplybook'),
-                '<a href="' . esc_url(App::env('plugin.dashboard_url')) . '">',
+                '<a href="' . App::env()->getUrl('plugin.dashboard_url') . '">',
                 '</a>'
             );
         }

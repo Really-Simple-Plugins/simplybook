@@ -1,15 +1,14 @@
 <?php
 namespace SimplyBook\Controllers;
 
-use SimplyBook\App;
-use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Traits\HasViews;
+use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Http\Endpoints\LoginUrlEndpoint;
-use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
-use SimplyBook\Traits\HasViews;
-use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Traits\LegacyLoad;
-use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\SubscriptionDataService;
 
 class TrialExpirationController implements ControllerInterface
 {
@@ -17,11 +16,13 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
+    private App $app;
     private SubscriptionDataService $subscriptionService;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
+    public function __construct(App $app, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
     {
+        $this->app = $app;
         $this->subscriptionService = $subscriptionService;
         $this->noticeDismissalService = $noticeDismissalService;
     }
@@ -57,7 +58,7 @@ class TrialExpirationController implements ControllerInterface
         }
 
         $this->render('admin/trial-notice', [
-            'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
         ]);
     }
@@ -68,11 +69,13 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
+        $this->noticeDismissalService->enqueue();
+
         wp_enqueue_script(
             'simplybook-admin-sso',
-            App::env('plugin.assets_url') . 'js/sso/admin-sso-links.js',
+            $this->app->env->getUrl('plugin.assets_url') . 'js/sso/admin-sso-links.js',
             [],
-            App::env('plugin.version'),
+            $this->app->env->getString('plugin.version'),
             false
         );
 
@@ -81,55 +84,47 @@ class TrialExpirationController implements ControllerInterface
             sprintf(
                 'const simplebookSSOConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . LoginUrlEndpoint::ROUTE
+                    $this->app->env->getString('http.namespace') . '/' . $this->app->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),
             'before'
         );
 
-        wp_enqueue_script(
-            'simplybook-notice-dismiss',
-            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
-            [],
-            App::env('plugin.version'),
-            false
-        );
-
-        wp_add_inline_script(
-            'simplybook-notice-dismiss',
-            sprintf(
-                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url(
-                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
-                ))),
-                wp_json_encode(wp_create_nonce('wp_rest'))
-            ),
-            'before'
-        );
     }
 
     private function canRenderTrialNotice(): bool
     {
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
-            return false;
-        }
-
-        if (App::provide('client')->company_registration_complete() === false) {
-            return false;
+        $cacheName = 'can_render_trial_expiration_notice';
+        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+            return $cache;
         }
 
         $screen = get_current_screen();
-        if ($screen && ('post' === $screen->base)) {
+        if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+            return false;
+        }
+
+        // User who did not complete the onboarding shouldn't see this notice
+        if (get_option('simplybook_onboarding_completed', false) === false) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         $trialInfo = $this->getTrialInfo();
         if ($trialInfo === null) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         if ($trialInfo['is_expired'] && $trialInfo['days_since_expiration'] > 30) {
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
