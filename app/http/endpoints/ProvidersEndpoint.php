@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -12,6 +12,13 @@ class ProvidersEndpoint implements SingleEndpointInterface
     use HasAllowlistControl;
 
     const ROUTE = 'providers';
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -50,7 +57,7 @@ class ProvidersEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $providers = App::provide('client')->get_providers();
+        $providers = $this->app->client->get_providers();
         return $this->sendHttpResponse($providers);
     }
 }

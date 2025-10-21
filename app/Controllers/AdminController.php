@@ -2,7 +2,7 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -12,10 +12,16 @@ class AdminController implements ControllerInterface
     use HasViews;
     use HasAllowlistControl;
 
+    private App $app;
     private string $restApiAction = 'resp_rest_api_notice_form_submit';
     private string $restApiNonceName = 'resp_rest_api_notice_nonce';
     private string $restApiAccessibleOptionName = 'simplybook_rest_api_accessible';
     private string $restApiValidationTimeOptionName = 'simplybook_rest_api_validation_time';
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     public function register(): void
     {
@@ -23,7 +29,7 @@ class AdminController implements ControllerInterface
             return;
         }
 
-        add_filter('plugin_action_links_' . App::env('plugin.base_file'), [$this, 'addPluginSettingsAction']);
+        add_filter('plugin_action_links_' . $this->app->env->getString('plugin.base_file'), [$this, 'addPluginSettingsAction']);
         add_action('admin_notices', [$this, 'showRestApiNotice']);
         add_action('admin_init', [$this, 'processRestApiNoticeFormSubmit']);
     }
@@ -37,11 +43,11 @@ class AdminController implements ControllerInterface
             return $links;
         }
 
-        $settings_link = '<a href="' . App::env('plugin.dashboard_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
+        $settings_link = '<a href="' . $this->app->env->getUrl('plugin.dashboard_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
         array_unshift($links, $settings_link);
 
         //support
-        $support = '<a rel="noopener noreferrer" target="_blank" href="' . esc_attr(App::env('simplybook.support_url')) . '">' . esc_html__('Support', 'simplybook') . '</a>';
+        $support = '<a rel="noopener noreferrer" target="_blank" href="' . esc_attr($this->app->env->getUrl('simplybook.support_url')) . '">' . esc_html__('Support', 'simplybook') . '</a>';
         array_unshift($links, $support);
 
         return $links;
@@ -75,12 +81,11 @@ class AdminController implements ControllerInterface
      */
     public function processRestApiNoticeFormSubmit(): void
     {
-        $request = App::provide('request')->fromGlobal();
-        if ($request->isEmpty('simplybook_rest_api_notice_form')) {
+        if ($this->app->request->isEmpty('simplybook_rest_api_notice_form')) {
             return;
         }
 
-        $nonce = $request->get($this->restApiNonceName);
+        $nonce = $this->app->request->get($this->restApiNonceName);
         if (wp_verify_nonce($nonce, $this->restApiAction) === false) {
             return; // Invalid nonce
         }

@@ -1,9 +1,9 @@
 <?php
-namespace SimplyBook\Widgets;
+namespace SimplyBook\Support\Widgets;
 
-use Elementor\Controls_Manager;
+use SimplyBook\Bootstrap\App;
 use Elementor\Widget_Base;
-use SimplyBook\App;
+use Elementor\Controls_Manager;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
@@ -125,7 +125,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addLocationControl(): void
     {
-        $client = App::provide('client');
+        $client = App::client();
         if (!$client || !$client->isSpecialFeatureEnabled('location')) {
             return;
         }
@@ -146,7 +146,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addServiceCategoryControl(): void
     {
-        $client = App::provide('client');
+        $client = App::client();
         if (!$client || !$client->isSpecialFeatureEnabled('event_category')) {
             return;
         }
@@ -196,7 +196,7 @@ class ElementorWidget extends Widget_Base
         );
 
         // Return early if "Any Provider" feature is not enabled
-        if (App::provide('client')->isSpecialFeatureEnabled('any_unit') === false) {
+        if (App::client()->isSpecialFeatureEnabled('any_unit') === false) {
             return $options;
         }
 
@@ -211,11 +211,11 @@ class ElementorWidget extends Widget_Base
      */
     private function getLocationsOptions(): array
     {
-        if (!$this->companyRegistrationIsCompleted() || !App::provide('client')->isSpecialFeatureEnabled('location')) {
+        if (!$this->companyRegistrationIsCompleted() || !App::client()->isSpecialFeatureEnabled('location')) {
             return []; // we shouldn't be here
         }
 
-        $locations = App::provide('client')->getLocations(true);
+        $locations = App::client()->getLocations(true);
         return $this->buildOptionsFromApiData(
             is_array($locations) ? $locations : [],
             esc_html__('Select a location', 'simplybook')
@@ -227,11 +227,11 @@ class ElementorWidget extends Widget_Base
      */
     private function getServiceCategoriesOptions(): array
     {
-        if (!$this->companyRegistrationIsCompleted() || !App::provide('client')->isSpecialFeatureEnabled('event_category')) {
+        if (!$this->companyRegistrationIsCompleted() || !App::client()->isSpecialFeatureEnabled('event_category')) {
             return []; // we shouldn't be here
         }
 
-        $categories = App::provide('client')->getCategories(true);
+        $categories = App::client()->getCategories(true);
         return $this->buildOptionsFromApiData(
             is_array($categories) ? $categories : [],
             esc_html__('Select a category', 'simplybook')
@@ -301,7 +301,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addLoginRequiredControl(): void
     {
-        $dashboardUrl = App::env('plugin.dashboard_url');
+        $dashboardUrl = App::env()->getUrl('plugin.dashboard_url');
         $loginMessage = sprintf(
             '%s<br><br><a href="%s" target="_blank">%s</a>',
             esc_html__('Please log in to SimplyBook.me to use this widget.', 'simplybook'),

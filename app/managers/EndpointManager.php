@@ -1,12 +1,11 @@
 <?php namespace SimplyBook\Managers;
 
-use SimplyBook\App;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 
-final class EndpointManager
+final class EndpointManager extends AbstractManager
 {
     use HasNonces;
     use HasAllowlistControl;
@@ -15,31 +14,35 @@ final class EndpointManager
     private string $namespace;
     private array $routes = [];
 
-    public function __construct()
+    /**
+     * @inheritDoc
+     */
+    public function isRegistrable(object $class): bool
     {
-        $this->version = App::env('http.version');
-        $this->namespace = App::env('http.namespace');
+        return ($class instanceof SingleEndpointInterface
+            || $class instanceof MultiEndpointInterface
+        );
     }
 
     /**
-     * Register a single endpoint as long as it implements the
-     * EndpointInterface or MultiEndpointInterface.
-     * @uses do_action simplybook_endpoints_loaded
+     * @inheritDoc
      */
-    public function registerEndpoints(array $endpoints)
+    public function registerClass(object $class): void
     {
-        foreach ($endpoints as $endpoint) {
-            if ($endpoint instanceof SingleEndpointInterface) {
-                $this->registerSingleEndpointRoute($endpoint);
-            }
-
-            if ($endpoint instanceof MultiEndpointInterface) {
-                $this->registerMultiEndpointRoute($endpoint);
-            }
-
-            // Skip endpoints not implementing any interface
+        if ($class instanceof SingleEndpointInterface) {
+            $this->registerSingleEndpointRoute($class);
         }
 
+        if ($class instanceof MultiEndpointInterface) {
+            $this->registerMultiEndpointRoute($class);
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function afterRegister(): void
+    {
         $this->registerWordPressRestRoutes();
         do_action('simplybook_endpoints_loaded');
     }
@@ -86,7 +89,7 @@ final class EndpointManager
         $routes = $this->getPluginRestRoutes();
 
         foreach ($routes as $route => $data) {
-            $version = ($data['version'] ?? $this->version);
+            $version = ($data['version'] ?? $this->app->env->getString('http.version'));
             $callback = ($data['callback'] ?? null);
             $middleware = ($data['middleware'] ?? null);
 
@@ -97,7 +100,7 @@ final class EndpointManager
             }
 
             $arguments = [
-                'methods' => ($data['methods'] ?? 'GET'),
+                'methods' => $this->normalizeMethods($data['methods'] ?? 'GET'),
                 'callback' => $this->callbackMiddleware($callback, $middleware),
                 'permission_callback' => ($data['permission_callback'] ?? [$this, 'defaultPermissionCallback']),
             ];
@@ -106,7 +109,7 @@ final class EndpointManager
                 $arguments['args'] = $data['args'];
             }
 
-            register_rest_route($this->namespace . '/' . $version, $route, $arguments);
+            register_rest_route($this->app->env->getString('http.namespace') . '/' . $version, $route, $arguments);
         }
     }
 
@@ -185,5 +188,29 @@ final class EndpointManager
         }
 
         return true;
+    }
+
+    /**
+     * Process the given methods and compare them to the allowed
+     * {@see \WP_REST_Server::ALLMETHODS} methods. Remove unwanted entries and
+     * cleanup method usage from, for example, "get " to "GET".
+     *
+     * @return string From "get, POSt, fake" to "GET,POST"
+     */
+    private function normalizeMethods(string $methods): string
+    {
+        // Split into array, trim whitespace and uppercase entries
+        $methodsArray = array_map('trim', explode(',', $methods));
+        $methodsArray = array_map('strtoupper', $methodsArray);
+
+        // Split allowed entries into array and trim whitespaces
+        $allowedMethodsArray = array_map('trim', explode(',', \WP_REST_Server::ALLMETHODS));
+
+        // Keep only allowed methods
+        $methodsArray = array_intersect($methodsArray, $allowedMethodsArray);
+        $methodsArray = array_values(array_unique($methodsArray));
+
+        // Convert back to CSV format for register_rest_route usage
+        return implode(',', $methodsArray);
     }
 }

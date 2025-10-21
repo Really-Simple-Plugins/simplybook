@@ -1,11 +1,11 @@
 <?php
 namespace SimplyBook\Http\Entities;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Utility\StringUtility;
-use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Exceptions\FormException;
+use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Support\Utility\StringUtility;
 
 abstract class AbstractEntity
 {
@@ -44,11 +44,6 @@ abstract class AbstractEntity
     abstract public function getKnownErrors(): array;
 
     /**
-     * The client to do API requests with.
-     */
-    protected ApiClient $client;
-
-    /**
      * The entity's fillable attributes
      */
     protected array $fillable = [];
@@ -85,7 +80,6 @@ abstract class AbstractEntity
      */
     public function __construct()
     {
-        $this->client = App::provide('client');
         $this->registerConditionalProperties();
     }
 
@@ -102,7 +96,7 @@ abstract class AbstractEntity
     {
         /**
          *  @example
-         *  if ($this->client->isSpecialFeatureEnabled('paid_events')) {
+         *  if (App::client()->isSpecialFeatureEnabled('paid_events')) {
          *      $this->fillable[] = 'price';
          *      $this->required[] = 'price';
          *  }
@@ -183,7 +177,7 @@ abstract class AbstractEntity
      */
     protected function setAttribute(string $key, $value): void
     {
-        $setterMethod = 'set' . StringUtility::snakeToUpperCamelCase($key) . 'Attribute';
+        $setterMethod = 'set' . StringUtility::snakeToPascalCase($key) . 'Attribute';
 
         if (method_exists($this, $setterMethod)) {
             $value = $this->$setterMethod($value);
@@ -344,7 +338,7 @@ abstract class AbstractEntity
             return null;
         }
 
-        $getterMethod = 'get' . StringUtility::snakeToUpperCamelCase($key) . 'Attribute';
+        $getterMethod = 'get' . StringUtility::snakeToPascalCase($key) . 'Attribute';
         if (method_exists($this, $getterMethod)) {
             return $this->$getterMethod($this->attributes[$key]);
         }
@@ -373,7 +367,7 @@ abstract class AbstractEntity
         $id = ($id ?: $this->id);
 
         $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($id);
-        $entityData = $this->client->get($endpoint);
+        $entityData = App::client()->get($endpoint);
 
         if (empty($entityData)) {
             throw new RestDataException('Entity not found');
@@ -390,7 +384,7 @@ abstract class AbstractEntity
     public function all(): array
     {
         try {
-            $response = $this->client->get($this->getEndpoint());
+            $response = App::client()->get($this->getEndpoint());
         } catch (\Throwable $e) {
             return [];
         }
@@ -409,7 +403,7 @@ abstract class AbstractEntity
         $this->validate();
 
         $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($this->id);
-        $this->client->put($endpoint, $this->json());
+        App::client()->put($endpoint, $this->json());
 
         return true;
     }
@@ -429,7 +423,7 @@ abstract class AbstractEntity
         }
 
         $endpoint = trailingslashit($this->getEndpoint()) . $id;
-        $this->client->delete($endpoint);
+        App::client()->delete($endpoint);
 
         return true;
     }
@@ -448,7 +442,7 @@ abstract class AbstractEntity
 
         $this->validate();
 
-        $response = $this->client->post(
+        $response = App::client()->post(
             $this->getEndpoint(),
             $this->json()
         );

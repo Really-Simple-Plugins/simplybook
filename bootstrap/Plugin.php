@@ -1,5 +1,5 @@
 <?php
-namespace SimplyBook;
+namespace SimplyBook\Bootstrap;
 
 use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
@@ -8,6 +8,7 @@ use SimplyBook\Managers\ControllerManager;
 
 class Plugin
 {
+    private App $app;
     private FeatureManager $featureManager;
     private ProviderManager $providerManager;
     private EndpointManager $endpointManager;
@@ -18,10 +19,12 @@ class Plugin
      */
     public function __construct()
     {
-        $this->featureManager = new FeatureManager();
-        $this->providerManager = new ProviderManager();
-        $this->controllerManager = new ControllerManager();
-        $this->endpointManager = new EndpointManager();
+        $this->app = App::getInstance();
+
+        $this->featureManager = new FeatureManager($this->app);
+        $this->providerManager = new ProviderManager($this->app);
+        $this->controllerManager = new ControllerManager($this->app);
+        $this->endpointManager = new EndpointManager($this->app);
     }
 
     /**
@@ -29,16 +32,16 @@ class Plugin
      */
     public function boot()
     {
-        register_activation_hook(App::env('plugin.base_file'), [$this, 'activation']);
-        register_deactivation_hook(App::env('plugin.base_file'), [$this, 'deactivation']);
-        register_uninstall_hook(App::env('plugin.base_file'), 'SimplyBook\Plugin::uninstall');
-
-        $this->registerConstants();
         $this->registerEnvironment();
+
+        $pluginBaseFile = (plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php');
+        register_activation_hook($pluginBaseFile, [$this, 'activation']);
+        register_deactivation_hook($pluginBaseFile, [$this, 'deactivation']);
+        register_uninstall_hook($pluginBaseFile, 'SimplyBook\Bootstrap\Plugin::uninstall');
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
-        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
+        add_action('simplybook_providers_loaded', [$this->featureManager, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
@@ -74,6 +77,9 @@ class Plugin
     public function activation()
     {
         global $pagenow;
+
+        // Remember activation time
+        update_option('simplybook_activation_unix_timestamp', time(), false);
 
         // Set the flag on activation
         update_option('simplybook_activation_flag', true, false);
@@ -120,35 +126,8 @@ class Plugin
      */
     public static function uninstall()
     {
-        $uninstallInstance = new Helpers\Uninstall();
+        $uninstallInstance = new \SimplyBook\Helpers\Uninstall();
         $uninstallInstance->handlePluginUninstall();
-    }
-
-    /**
-     * Register plugin constants
-     * @deprecated 3.0.0
-     */
-    private function registerConstants()
-    {
-        /**
-         * @deprecated 3.0.0 Use App::env('plugin.version') instead
-         */
-        define('SIMPLYBOOK_VERSION', '3.2.1');
-
-        /**
-         * @deprecated 3.0.0 Use App::env('plugin.path') instead
-         */
-        define('SIMPLYBOOK_PATH', plugin_dir_path(dirname(__FILE__)));
-
-        /**
-         * @deprecated 3.0.0 Use App::env('plugin.url') instead
-         */
-        define('SIMPLYBOOK_URL', plugin_dir_url(dirname(__FILE__)));
-
-        /**
-         * @deprecated 3.0.0 Use App::env('plugin.base_file') instead
-         */
-        define('SIMPLYBOOK_PLUGIN', plugin_basename(dirname(__FILE__, 2)). '/' . plugin_basename(dirname(__DIR__)) . '.php');
     }
 
     /**
@@ -160,19 +139,11 @@ class Plugin
      */
     public function registerProviders()
     {
-        $this->providerManager->registerProviders([
-            new Providers\AppServiceProvider(),
+        $this->providerManager->register([
+            \SimplyBook\Providers\ConfigServiceProvider::class,
+            \SimplyBook\Providers\RequestServiceProvider::class,
+            \SimplyBook\Providers\ClientServiceProvider::class,
         ]);
-    }
-
-    /**
-     * Register Plugin features. Hooked into simplybook_providers_loaded to make
-     * sure providers are already available to the whole app.
-     * @uses do_action simplybook_features_loaded
-     */
-    public function registerFeatures()
-    {
-        $this->featureManager->registerFeatures(App::features());
     }
 
     /**
@@ -182,34 +153,20 @@ class Plugin
      */
     public function registerControllers()
     {
-        $this->controllerManager->registerControllers([
-            new Controllers\DashboardController(),
-            new Controllers\AdminController(),
-            new Controllers\SettingsController(),
-            new Controllers\CapabilityController(
-                new Services\CapabilityService(),
-            ),
-            new Controllers\ScheduleController(),
-            new Controllers\WidgetController(
-                new Services\DesignSettingsService()
-            ),
-            new Controllers\BlockController(),
-            new Controllers\DesignSettingsController(
-                new Services\DesignSettingsService()
-            ),
-            new Controllers\ServicesController(
-                new Http\Entities\Service(),
-            ),
-            new Controllers\ReviewController(
-                new Services\NoticeDismissalService()
-            ),
-            new Controllers\TrialExpirationController(
-                new Services\SubscriptionDataService(),
-                new Services\NoticeDismissalService()
-            ),
-	        new Controllers\WidgetTrackingController(
-		        new Services\WidgetTrackingService()
-	        ),
+        $this->controllerManager->register([
+            \SimplyBook\Controllers\DashboardController::class,
+            \SimplyBook\Controllers\AdminController::class,
+            \SimplyBook\Controllers\SettingsController::class,
+            \SimplyBook\Controllers\CapabilityController::class,
+            \SimplyBook\Controllers\ScheduleController::class,
+            \SimplyBook\Controllers\WidgetController::class,
+            \SimplyBook\Controllers\BlockController::class,
+            \SimplyBook\Controllers\DesignSettingsController::class,
+            \SimplyBook\Controllers\ServicesController::class,
+            \SimplyBook\Controllers\ReviewController::class,
+            \SimplyBook\Controllers\TrialExpirationController::class,
+            \SimplyBook\Controllers\WidgetTrackingController::class,
+            \SimplyBook\Controllers\OnboardingNoticeController::class,
         ]);
     }
 
@@ -220,48 +177,25 @@ class Plugin
      */
     public function registerEndpoints()
     {
-        $this->endpointManager->registerEndpoints([
-            new Http\Endpoints\LoginUrlEndpoint(
-                new Services\LoginUrlService(),
-            ),
-            new Http\Endpoints\ServicesEndpoint(
-                new Http\Entities\Service(),
-            ),
-            new Http\Endpoints\ServicesProvidersEndpoint(
-                new Http\Entities\ServiceProvider(),
-            ),
-            new Http\Endpoints\SettingEndpoints(),
-            new Http\Endpoints\WidgetEndpoint(
-                new Services\DesignSettingsService()
-            ),
-            new Http\Endpoints\DomainEndpoint(),
-            new Http\Endpoints\RemotePluginsEndpoint(),
-            new Http\Endpoints\CompanyRegistrationEndpoint(
-                new Services\CallbackUrlService()
-            ),
-            new Http\Endpoints\WaitForRegistrationEndpoint(),
-            new Http\Endpoints\RelatedPluginEndpoints(
-                new Services\RelatedPluginService(),
-            ),
-            new Http\Endpoints\BlockEndpoints(
-                new Http\Entities\Service(),
-                new Http\Entities\ServiceProvider(),
-            ),
-            new Http\Endpoints\LogOutEndpoint(),
-            new Http\Endpoints\TipsTricksEndpoint(),
-            new Http\Endpoints\StatisticsEndpoint(
-                new Services\StatisticsService(),
-            ),
-            new Http\Endpoints\SubscriptionEndpoints(
-                new Services\SubscriptionDataService(),
-            ),
-            new Http\Endpoints\PublicThemeListEndpoint(),
-            new Http\Endpoints\ThemeColorEndpoint(
-                new Services\ThemeColorService()
-            ),
-            new Http\Endpoints\NoticesDismissEndpoint(
-                new Services\NoticeDismissalService()
-            ),
+        $this->endpointManager->register([
+            \SimplyBook\Http\Endpoints\LoginUrlEndpoint::class,
+            \SimplyBook\Http\Endpoints\ServicesEndpoint::class,
+            \SimplyBook\Http\Endpoints\ServicesProvidersEndpoint::class,
+            \SimplyBook\Http\Endpoints\SettingEndpoints::class,
+            \SimplyBook\Http\Endpoints\WidgetEndpoint::class,
+            \SimplyBook\Http\Endpoints\DomainEndpoint::class,
+            \SimplyBook\Http\Endpoints\RemotePluginsEndpoint::class,
+            \SimplyBook\Http\Endpoints\CompanyRegistrationEndpoint::class,
+            \SimplyBook\Http\Endpoints\WaitForRegistrationEndpoint::class,
+            \SimplyBook\Http\Endpoints\RelatedPluginEndpoints::class,
+            \SimplyBook\Http\Endpoints\BlockEndpoints::class,
+            \SimplyBook\Http\Endpoints\LogOutEndpoint::class,
+            \SimplyBook\Http\Endpoints\TipsTricksEndpoint::class,
+            \SimplyBook\Http\Endpoints\StatisticsEndpoint::class,
+            \SimplyBook\Http\Endpoints\SubscriptionEndpoints::class,
+            \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
+            \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
+            \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
         ]);
     }
 
@@ -279,7 +213,7 @@ class Plugin
     public function checkForUpgrades(): void
     {
         $previousSavedVersion = (string) get_option('_simplybook_current_version', '');
-        if ($previousSavedVersion === App::env('plugin.version')) {
+        if ($previousSavedVersion === $this->app->env->getString('plugin.version')) {
             return; // Nothing to do
         }
 
@@ -294,11 +228,11 @@ class Plugin
         // Trigger upgrade hook if we are upgrading from a previous version.
         // Action can be used by Controllers to hook into the upgrade process
         if (!empty($previousSavedVersion)) {
-            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, App::env('plugin.version'));
+            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, $this->app->env->getString('plugin.version'));
         }
 
         // Also makes sure $previousSavedVersion will only be empty one time
-        update_option('_simplybook_current_version', App::env('plugin.version'), false);
+        update_option('_simplybook_current_version', $this->app->env->getString('plugin.version'), false);
     }
 
     /**

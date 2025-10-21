@@ -1,7 +1,5 @@
 <?php namespace SimplyBook\Traits;
 
-use SimplyBook\App;
-
 trait HasNonces
 {
     /**

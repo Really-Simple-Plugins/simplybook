@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -15,6 +15,12 @@ class RemotePluginsEndpoint implements SingleEndpointInterface
     use HasAllowlistControl;
 
     const ROUTE = 'get_plugins';
+
+    private App $app;
+
+    public function __construct(App $app) {
+        $this->app = $app;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -49,7 +55,7 @@ class RemotePluginsEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $plugins = App::provide('client')->get_plugins();
+        $plugins = $this->app->client->get_plugins();
         return $this->sendHttpResponse($plugins);
     }
 }

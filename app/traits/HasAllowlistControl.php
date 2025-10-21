@@ -1,5 +1,7 @@
 <?php namespace SimplyBook\Traits;
 
+use SimplyBook\Bootstrap\App;
+
 trait HasAllowlistControl
 {
 
@@ -42,17 +44,18 @@ trait HasAllowlistControl
      */
     public function restRequestIsAllowed(): bool
     {
+        $pluginHttpNamespace = App::env()->getString('http.namespace');
         $validWpJsonRequest = (
             isset($_SERVER['REQUEST_URI'])
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-            && (strpos($_SERVER['REQUEST_URI'], '/simplybook/v') !== false)
+            && (strpos($_SERVER['REQUEST_URI'], $pluginHttpNamespace) !== false)
         );
 
         $validPlainPermalinksRequest = (
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             isset($_GET['rest_route'])
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
-            && (strpos($_GET['rest_route'], 'simplybook/v') !== false)
+            && (strpos($_GET['rest_route'], $pluginHttpNamespace) !== false)
         );
 
         if ($validWpJsonRequest === false && $validPlainPermalinksRequest === false) {

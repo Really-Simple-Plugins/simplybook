@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Helpers\Storage;
+use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 

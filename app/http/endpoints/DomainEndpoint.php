@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasRestAccess;
@@ -16,6 +16,13 @@ class DomainEndpoint implements SingleEndpointInterface
     use HasAllowlistControl;
 
     const ROUTE = 'get_domain';
+
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
 
     /**
      * Only enable this endpoint if the user has access to the admin area
@@ -50,7 +57,7 @@ class DomainEndpoint implements SingleEndpointInterface
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $domain = $this->get_domain();
-        $companyLoginPath = App::provide('client')->get_company_login();
+        $companyLoginPath = $this->app->client->get_company_login();
 
         return $this->sendHttpResponse([
             'domain' => "https://$companyLoginPath.secure.$domain/",

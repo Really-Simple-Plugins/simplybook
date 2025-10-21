@@ -3,7 +3,7 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
 
 class LoginUrlService
@@ -12,6 +12,13 @@ class LoginUrlService
 
     const LOGIN_URL_CREATION_DATE_OPTION = 'simplybook_login_url_creation_date';
 
+    private App $app;
+
+    public function __construct(App $app)
+    {
+        $this->app = $app;
+    }
+
     /**
      * Returns de SimplyBook dashboard URL containing the company path and the
      * SimplyBook domain WITHOUT trailing slash.
@@ -19,7 +26,7 @@ class LoginUrlService
     public function getDashboardUrl(): string
     {
         $simplyBookDomain = $this->get_domain();
-        $simplyBookCompanyPath = App::provide('client')->get_company_login();
+        $simplyBookCompanyPath = $this->app->client->get_company_login();
         return "https://$simplyBookCompanyPath.secure.$simplyBookDomain";
     }
 
@@ -75,7 +82,7 @@ class LoginUrlService
     protected function fetchNewAutomaticLoginUrl(): string
     {
         try {
-            $loginHashData = App::provide('client')->createLoginHash();
+            $loginHashData = $this->app->client->createLoginHash();
         } catch (\Exception $e) {
             return $this->getDashboardUrl();
         }

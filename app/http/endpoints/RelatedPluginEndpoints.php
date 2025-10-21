@@ -1,7 +1,7 @@
 <?php
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\App;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\RelatedPluginService;
@@ -12,10 +12,12 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
+    private App $app;
     private RelatedPluginService $service;
 
-    public function __construct(RelatedPluginService $service)
+    public function __construct(App $app, RelatedPluginService $service)
     {
+        $this->app = $app;
         $this->service = $service;
     }
 
@@ -87,7 +89,7 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
      */
     public function buildRelatedPluginData(string $targetPluginSlug = ''): array
     {
-        $plugins = App::related('plugins');
+        $plugins = $this->app->config->get('related.plugins');
 
         if (!empty($targetPluginSlug)) {
             $plugins = array_filter($plugins, function($plugin) use ($targetPluginSlug){

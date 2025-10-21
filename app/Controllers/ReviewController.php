@@ -2,12 +2,11 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\App;
-use SimplyBook\Services\NoticeDismissalService;
-use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\NoticeDismissalService;
 
 class ReviewController implements ControllerInterface
 {
@@ -18,10 +17,13 @@ class ReviewController implements ControllerInterface
     private string $reviewNonceName = 'rsp_review_nonce';
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
+
+    private App $app;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(NoticeDismissalService $noticeDismissalService)
+    public function __construct(App $app, NoticeDismissalService $noticeDismissalService)
     {
+        $this->app = $app;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -49,13 +51,13 @@ class ReviewController implements ControllerInterface
             // translators: %1$d is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
             __('Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s.', 'simplybook'),
             $this->getAmountOfBookings(),
-            '<a href="' . App::env('simplybook.support_url') . '"  rel="noopener noreferrer"  target="_blank">',
+            '<a href="' . $this->app->env->getUrl('simplybook.support_url') . '"  rel="noopener noreferrer"  target="_blank">',
             '</a>'
         );
 
         $this->render('admin/review-notice', [
-            'logoUrl' => App::env('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'reviewUrl' => App::env('simplybook.review_url'),
+            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'reviewUrl' => $this->app->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
             'reviewAction' => $this->reviewAction,
             'reviewNonceName' => $this->reviewNonceName,
@@ -67,18 +69,16 @@ class ReviewController implements ControllerInterface
      */
     public function processReviewFormSubmit(): void
     {
-        if (App::provide('request')->fromGlobal()->isEmpty('rsp_review_form')) {
+        if ($this->app->request->isEmpty('rsp_review_form')) {
             return;
         }
 
-        $request = App::provide('request')->fromGlobal();
-
-        $nonce = $request->get($this->reviewNonceName);
+        $nonce = $this->app->request->get($this->reviewNonceName);
         if (wp_verify_nonce($nonce, $this->reviewAction) === false) {
             return; // Invalid nonce
         }
 
-        $choice = $request->getString('rsp_review_choice');
+        $choice = $this->app->request->getString('rsp_review_choice');
         if ($choice === 'later') {
             update_option('simplybook_review_notice_dismissed_time', time(), false);
             update_option('simplybook_review_notice_choice', 'later', false);
@@ -179,25 +179,7 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        wp_enqueue_script(
-            'simplybook-notice-dismiss',
-            App::env('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
-            [],
-            App::env('plugin.version'),
-            false
-        );
-
-        wp_add_inline_script(
-            'simplybook-notice-dismiss',
-            sprintf(
-                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url(
-                    App::env('http.namespace') . '/' . App::env('http.version') . '/' . NoticesDismissEndpoint::ROUTE
-                ))),
-                wp_json_encode(wp_create_nonce('wp_rest'))
-            ),
-            'before'
-        );
+        $this->noticeDismissalService->enqueue();
     }
 
     /**
@@ -211,7 +193,7 @@ class ReviewController implements ControllerInterface
             return $this->bookingsAmount; // Object cache
         }
 
-        $statistics = App::provide('client')->get_statistics();
+        $statistics = $this->app->client->get_statistics();
         if (empty($statistics)) {
             $this->bookingsAmount = 0;
             return $this->bookingsAmount;

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Utility;
+namespace SimplyBook\Support\Utility;
 
 /**
  * Utility class for String manipulation.
@@ -27,7 +27,7 @@ class StringUtility
     /**
      * Convert a string from snake_case to UpperCamelCase.
      */
-    public static function snakeToUpperCamelCase(string $string): string
+    public static function snakeToPascalCase(string $string): string
     {
         return str_replace('_', '', ucwords($string, '_'));
     }

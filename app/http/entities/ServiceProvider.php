@@ -1,7 +1,8 @@
 <?php
 namespace SimplyBook\Http\Entities;
 
-use SimplyBook\Helpers\Event;
+use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Event;
 
 /**
  * ServiceProvider entity class for managing services in the SimplyBook API.
@@ -132,7 +133,7 @@ class ServiceProvider extends AbstractEntity
     public function all(): array
     {
         try {
-            $response = $this->client->get($this->getEndpoint());
+            $response = App::getInstance()->client->get($this->getEndpoint());
         } catch (\Throwable $e) {
             return [];
         }

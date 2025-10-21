@@ -2,27 +2,42 @@
     exit;
 }
 
-// The environment config can be used BEFORE the 'init' hook.
+/**
+ * This file is NOT loaded in the config. All other files áre loaded in one
+ * config object in the container. This file is loaded separately via
+ * the {@see \SimplyBook\Providers\ConfigServiceProvider}
+ *
+ * Request this information from the container class
+ * {@see \SimplyBook\Bootstrap\App} using $this->app->env. This is a
+ * {@see \SimplyBook\Support\Helpers\Storage} class.
+ *
+ * This information can be used early in the WordPress lifecycle because no
+ * translations are used.
+ */
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.2.1',
+        'version' => '3.2.2',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
         'assets_path' => dirname(__DIR__). DIRECTORY_SEPARATOR .'assets' . DIRECTORY_SEPARATOR,
         'lang_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
-        'view_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
-        'feature_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'features' . DIRECTORY_SEPARATOR,
+        'view_path' => dirname(__DIR__).DIRECTORY_SEPARATOR.'views'. DIRECTORY_SEPARATOR,
+        'feature_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Features' . DIRECTORY_SEPARATOR,
         'react_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'react',
         'dir'  => plugin_basename(dirname(__DIR__)),
         'base_file' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
         'lang' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages',
         'url'  => plugin_dir_url(__DIR__),
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
-        'views_url' => plugin_dir_url(__DIR__).'app/views/',
+        'views_url' => plugin_dir_url(__DIR__).'views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
         'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+    ],
+    'http' => [
+        'version' => 'v1',
+        'namespace' => 'simplybook',
     ],
     'simplybook' => [
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
@@ -115,19 +130,5 @@ return [
             ['value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
-    ],
-    'colors' => [
-        'fallback_colors' => [
-            'primary' => '#FF3259',
-            'secondary' => '#000000',
-            'active' => '#055B78',
-            'background' => '#f7f7f7',
-            'foreground' => '#494949',
-            'text' => '#ffffff',
-        ],
-    ],
-    'http' => [
-        'version' => 'v1',
-        'namespace' => 'simplybook',
-    ],
+    ]
 ];
