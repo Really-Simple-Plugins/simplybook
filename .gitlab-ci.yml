@@ -1,3 +1,28 @@
 workflow:
   rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+
+stages:
+  - quality
+
+.default_php_job:
+  image: php:7.4-cli
+  before_script:
+    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    - composer install --no-interaction --no-progress --prefer-dist
+  cache:
+    key: "$CI_COMMIT_REF_SLUG-composer"
+    paths:
+      - vendor/
+
+phpcs:
+  stage: quality
+  extends: .default_php_job
+  script:
+    - vendor/bin/phpcs --report=full --report-file=phpcs-report.txt
+  artifacts:
+    when: always
+    paths:
+      - phpcs-report.txt
+    expire_in: 1 week
