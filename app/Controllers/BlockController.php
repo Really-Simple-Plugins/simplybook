@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Controllers;
+<?php
+
+namespace SimplyBook\Controllers;
 
 use SimplyBook\Bootstrap\App;
 use Elementor\Widgets_Manager;

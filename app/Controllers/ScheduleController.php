@@ -1,5 +1,7 @@
 <?php
+
 namespace SimplyBook\Controllers;
+
 use SimplyBook\Interfaces\ControllerInterface;
 
 class ScheduleController implements ControllerInterface

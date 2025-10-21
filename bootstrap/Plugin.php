@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SimplyBook\Bootstrap;
 
 use SimplyBook\Managers\FeatureManager;

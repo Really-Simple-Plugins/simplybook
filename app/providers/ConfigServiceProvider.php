@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Providers;
 
 use SimplyBook\Support\Helpers\Storage;

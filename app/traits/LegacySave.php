@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Traits;
 use SimplyBook\Support\Helpers\Event;
 

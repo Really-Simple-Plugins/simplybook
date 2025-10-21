@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;

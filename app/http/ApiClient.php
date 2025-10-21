@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http;
 
 if ( ! defined( 'ABSPATH' ) ) {

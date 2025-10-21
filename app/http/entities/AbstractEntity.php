@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Entities;
 
 use SimplyBook\Bootstrap\App;

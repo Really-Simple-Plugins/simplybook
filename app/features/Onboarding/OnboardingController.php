@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Bootstrap\App;

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Services;
 
 use SimplyBook\Bootstrap\App;

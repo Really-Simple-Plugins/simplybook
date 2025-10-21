@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Support\Widgets;
 
 use SimplyBook\Bootstrap\App;

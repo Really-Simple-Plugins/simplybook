@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Services\CapabilityService;
