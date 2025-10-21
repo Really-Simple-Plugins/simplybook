@@ -20,7 +20,6 @@
     <arg name="encoding" value="utf-8"/>
     <arg name="extensions" value="php"/>
     <arg name="colors"/>
-    <arg name="report-file" value="phpcs-report.txt"/>
 
     <!-- Tokenizer/env -->
     <config name="php_version" value="70400"/>
