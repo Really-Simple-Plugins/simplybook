@@ -27,7 +27,7 @@ trait HasEncryption
         $iv = openssl_random_pseudo_bytes($ivLength);
 
         // Use OPENSSL_RAW_DATA for new v2 tokens
-        $encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, OPENSSL_RAW_DATA|OPENSSL_DONT_ZERO_PAD_KEY, $iv);
+        $encrypted = openssl_encrypt($string, 'AES-256-CBC', $key, OPENSSL_RAW_DATA | OPENSSL_DONT_ZERO_PAD_KEY, $iv);
 
         // Format: v2:base64(iv).base64(encrypted)
         return 'v2:' . base64_encode($iv) . '.' . base64_encode($encrypted);

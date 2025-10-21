@@ -14,7 +14,7 @@ class WidgetEndpoint implements MultiEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_widget';
+    public const ROUTE = 'get_widget';
 
     protected DesignSettingsService $service;
 

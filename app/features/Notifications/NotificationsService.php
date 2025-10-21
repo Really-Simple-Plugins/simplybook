@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Interfaces\NoticeInterface;
-use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 
 class NotificationsService
 {

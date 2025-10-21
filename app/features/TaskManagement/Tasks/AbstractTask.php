@@ -6,18 +6,18 @@ use SimplyBook\Interfaces\TaskInterface;
 
 abstract class AbstractTask implements TaskInterface
 {
-    const STATUS_OPEN = 'open';
-    const STATUS_URGENT = 'urgent';
-    const STATUS_DISMISSED = 'dismissed';
-    const STATUS_COMPLETED = 'completed';
-    const STATUS_PREMIUM = 'premium';
-    const STATUS_HIDDEN = 'hidden';
+    public const STATUS_OPEN = 'open';
+    public const STATUS_URGENT = 'urgent';
+    public const STATUS_DISMISSED = 'dismissed';
+    public const STATUS_COMPLETED = 'completed';
+    public const STATUS_PREMIUM = 'premium';
+    public const STATUS_HIDDEN = 'hidden';
 
     /**
      * Override this constant to define the identifier of the task. This
      * identifier is used to identify the task in the database and in the UI.
      */
-    const IDENTIFIER = '';
+    public const IDENTIFIER = '';
 
     /**
      * Override this property to define the version of the task. This version is
@@ -230,5 +230,4 @@ abstract class AbstractTask implements TaskInterface
             'action' => $this->getAction(),
         ];
     }
-
 }

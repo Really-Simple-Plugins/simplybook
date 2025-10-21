@@ -4,7 +4,7 @@ namespace SimplyBook\Features\Notifications\Notices;
 
 class AddMandatoryServiceNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'add_mandatory_service';
+    public const IDENTIFIER = 'add_mandatory_service';
 
     /**
      * @inheritDoc

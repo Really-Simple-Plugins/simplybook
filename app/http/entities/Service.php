@@ -132,5 +132,4 @@ class Service extends AbstractEntity
 
         return $services;
     }
-
 }

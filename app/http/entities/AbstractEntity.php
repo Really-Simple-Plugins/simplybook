@@ -3,7 +3,6 @@
 namespace SimplyBook\Http\Entities;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;

@@ -145,7 +145,6 @@ class DesignSettingsService
         }
 
         foreach ($saveAsDesignSettings as $key => $value) {
-
             if (in_array($key, $this->blockList, true)) {
                 continue;
             }
@@ -244,7 +243,6 @@ class DesignSettingsService
                     'message' => $errorMessage,
                 ];
             }
-
         }
 
         if (!empty($errors)) {
@@ -280,7 +278,7 @@ class DesignSettingsService
      */
     public function getThemeColorService(): ThemeColorService
     {
-	    if ($this->themeColorService instanceof ThemeColorService === false) {
+        if ($this->themeColorService instanceof ThemeColorService === false) {
             $this->themeColorService = new ThemeColorService();
         }
 
@@ -309,7 +307,6 @@ class DesignSettingsService
         }
 
         foreach ($designConfig as $settingID => $config) {
-
             if (isset($config['default'])) {
                 $defaultDesignSettings[$settingID] = $config['default'];
             }
@@ -368,5 +365,4 @@ class DesignSettingsService
 
         return "https://$login.$domain";
     }
-
 }

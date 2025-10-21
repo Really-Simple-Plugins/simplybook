@@ -9,7 +9,7 @@ use SimplyBook\Support\Helpers\Storage;
 
 class SubscriptionDataService
 {
-    const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
+    public const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
 
     private App $app;
 
@@ -89,7 +89,7 @@ class SubscriptionDataService
 
         if ($strict === false) {
             $this->dispatchDataLoaded($subscriptionData);
-            wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
+            wp_cache_set($cacheName, $subscriptionData, 'simplybook', self::DATA_TIME_THRESHOLD);
             return $subscriptionData;
         }
 
@@ -99,7 +99,7 @@ class SubscriptionDataService
         }
 
         $this->dispatchDataLoaded($subscriptionData);
-        wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
+        wp_cache_set($cacheName, $subscriptionData, 'simplybook', self::DATA_TIME_THRESHOLD);
         return $subscriptionData;
     }
 
@@ -126,5 +126,4 @@ class SubscriptionDataService
     {
         Event::dispatch(Event::SUBSCRIPTION_DATA_LOADED, $subscriptionData);
     }
-
 }

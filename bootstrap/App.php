@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace SimplyBook\Bootstrap;
 
-use SimplyBook\Http\ApiClient;
-use SimplyBook\Support\Helpers\Storage;
-
 /**
  * Container class that provides dependency injection capabilities to manage
  * object creation and resolution. Class is used for retrieving and injecting
@@ -14,11 +11,11 @@ use SimplyBook\Support\Helpers\Storage;
  * decouples classes from concrete implementations (new..) and makes the
  * codebase easier to test and maintain.
  *
- * @property-read Storage config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
- * @property-read Storage env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
- * @property-read Storage request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
- * @property-read Storage files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
- * @property-read ApiClient client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
+ * @property-read \SimplyBook\Support\Helpers\Storage config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
+ * @property-read \SimplyBook\Support\Helpers\Storage env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
+ * @property-read \SimplyBook\Support\Helpers\Storage request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
+ * @property-read \SimplyBook\Support\Helpers\Storage files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
+ * @property-read \SimplyBook\Http\ApiClient client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
  */
 class App
 {
@@ -46,7 +43,9 @@ class App
      * Private constructor to enforce the singleton pattern. Prevents direct
      * instantiation; use getInstance() instead.
      */
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * Retrieve the shared container instance. Provides a central access point

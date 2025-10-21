@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package SimplyBook.me - Booking and reservations calendar
  * @author Really Simple Plugins

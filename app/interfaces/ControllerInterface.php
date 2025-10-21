@@ -2,8 +2,6 @@
 
 namespace SimplyBook\Interfaces;
 
-use SimplyBook\Managers\ControllerManager;
-
 /**
  * This interface can be used to register a controller. Controllers will only
  * be accepted and registered by {@see ControllerManager} when they implement

@@ -18,7 +18,7 @@ class ConfigServiceProvider extends Provider
     public function provideEnv(): Storage
     {
         $env = new Storage(
-            require dirname(__FILE__, 3).'/config/env.php'
+            require dirname(__FILE__, 3) . '/config/env.php'
         );
 
         if ($env->isNotEmpty('simplybook.api')) {
@@ -40,7 +40,7 @@ class ConfigServiceProvider extends Provider
      */
     public function provideConfig(): Storage
     {
-        return $this->storageFromPath(dirname(__FILE__, 3).'/config', ['env'], true);
+        return $this->storageFromPath(dirname(__FILE__, 3) . '/config', ['env'], true);
     }
 
     /**
@@ -169,6 +169,4 @@ class ConfigServiceProvider extends Provider
 
         return new Storage($data);
     }
-
-
 }

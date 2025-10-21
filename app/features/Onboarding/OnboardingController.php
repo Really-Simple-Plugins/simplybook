@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -203,16 +202,14 @@ class OnboardingController implements FeatureInterface
         try {
             do_action('simplybook_save_onboarding_widget_style', $storage);
         } catch (\Exception $e) {
+            $message = esc_html__('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, esc_html__(
-                'Something went wrong while saving the widget style settings. Please try again.', 'simplybook'
-            ), 400);
+            ], false, $message, 400);
         }
 
-        return $this->service->sendHttpResponse([], true, esc_html__(
-            'Successfully saved widget style settings', 'simplybook'
-        ));
+        $message = esc_html__('Successfully saved widget style settings', 'simplybook');
+        return $this->service->sendHttpResponse([], true, $message);
     }
 
     /**
@@ -236,9 +233,8 @@ class OnboardingController implements FeatureInterface
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
-            return $this->service->sendHttpResponse([], false, esc_html__(
-                'Calendar page title should be available if you choose to generate this page.', 'simplybook'
-            ), 503);
+            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
+            return $this->service->sendHttpResponse([], false, $message, 503);
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
@@ -286,7 +282,6 @@ class OnboardingController implements FeatureInterface
         try {
             $response = $this->app->client->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
-
             $exceptionData = $e->getData();
 
             // Data given was valid, so save it.
@@ -294,8 +289,7 @@ class OnboardingController implements FeatureInterface
                 $this->saveLoginCompanyData($userLogin, $userPassword);
             }
 
-	        return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
-
+            return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -453,18 +447,18 @@ class OnboardingController implements FeatureInterface
      * that there is a published post with the SimplyBook.me widget shortcode
      * or the Gutenberg block.
      */
-	public function validatePublishedWidget(): void {
-		$cache = wp_cache_get( 'simplybook_widget_published', 'simplybook' );
-		if ( $cache === true ) {
-			$this->widgetService->setPublishWidgetCompleted();
+    public function validatePublishedWidget(): void
+    {
+        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
+        if ($cache === true) {
+            $this->widgetService->setPublishWidgetCompleted();
+            return;
+        }
 
-			return;
-		}
-
-		// Check if any widgets are currently published
-		if ( $this->widgetService->hasTrackedPosts() ) {
-			$this->widgetService->setPublishWidgetCompleted();
-			wp_cache_set( 'simplybook_widget_published', true, 'simplybook' );
-		}
-	}
+        // Check if any widgets are currently published
+        if ($this->widgetService->hasTrackedPosts()) {
+            $this->widgetService->setPublishWidgetCompleted();
+            wp_cache_set('simplybook_widget_published', true, 'simplybook');
+        }
+    }
 }

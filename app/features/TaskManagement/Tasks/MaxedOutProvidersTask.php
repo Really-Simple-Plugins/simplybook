@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class MaxedOutProvidersTask extends AbstractTask
 {
-    const IDENTIFIER = 'maxed_out_providers';
+    public const IDENTIFIER = 'maxed_out_providers';
 
     /**
      * @inheritDoc
@@ -41,7 +41,7 @@ class MaxedOutProvidersTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade','simplybook'),
+            'text' => esc_html__('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget',
         ];
     }

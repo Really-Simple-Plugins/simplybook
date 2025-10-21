@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
@@ -184,5 +183,4 @@ class OnboardingService
     {
         delete_option('simplybook_temporary_onboarding_data');
     }
-
 }

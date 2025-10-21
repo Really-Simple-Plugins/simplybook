@@ -6,7 +6,6 @@ use SimplyBook\Bootstrap\App;
 
 trait HasAllowlistControl
 {
-
     /**
      * Check if the current code execution allows access to the admin area.
      * This is the case when:
@@ -21,7 +20,7 @@ trait HasAllowlistControl
      */
     public function adminAccessAllowed(): bool
     {
-        $wpcli = defined( 'WP_CLI' ) && WP_CLI;
+        $wpcli = defined('WP_CLI') && WP_CLI;
         $currentUserCanVisitAdmin = (is_admin() && current_user_can('simplybook_manage'));
 
         return $currentUserCanVisitAdmin || $this->restRequestIsAllowed() || wp_doing_cron() || $wpcli;

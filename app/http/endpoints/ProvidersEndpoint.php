@@ -12,7 +12,7 @@ class ProvidersEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'providers';
+    public const ROUTE = 'providers';
 
     private App $app;
 

@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class AddMandatoryServiceTask extends AbstractTask
 {
-    const IDENTIFIER = 'add_mandatory_service';
+    public const IDENTIFIER = 'add_mandatory_service';
 
     /**
      * @inheritDoc
@@ -26,7 +26,7 @@ class AddMandatoryServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service','simplybook');
+        return esc_html__('Please configure at least one Service', 'simplybook');
     }
 
     /**
@@ -36,7 +36,7 @@ class AddMandatoryServiceTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add Service','simplybook'),
+            'text' => esc_html__('Add Service', 'simplybook'),
             'link' => 'settings/services',
         ];
     }

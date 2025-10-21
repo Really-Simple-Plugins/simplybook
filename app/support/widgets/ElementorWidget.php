@@ -13,17 +13,18 @@ class ElementorWidget extends Widget_Base
 {
     use HasApiAccess;
 
-	private const NAME = 'simplybook_widget';
+    private const NAME = 'simplybook_widget';
 
-	/**
-	 * Default value for the dropdowns to indicate no selection
-	 * @var string
-	 */
+    /**
+     * Default value for the dropdowns to indicate no selection
+     * @var string
+     */
     private const DEFAULT_VALUE = '0';
 
     /**
      * Required by Elementor for widget registration.
      */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_name(): string
     {
         return self::NAME;
@@ -32,6 +33,7 @@ class ElementorWidget extends Widget_Base
     /**
      * Shows in the Elementor widget panel.
      */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_title(): string
     {
         return esc_html__('SimplyBook.me Widget', 'simplybook');
@@ -40,6 +42,7 @@ class ElementorWidget extends Widget_Base
     /**
      * Uses Elementor's icon library (eicon-*).
      */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_icon(): string
     {
         return 'eicon-calendar';
@@ -48,6 +51,7 @@ class ElementorWidget extends Widget_Base
     /**
      * Helps users find this widget when searching.
      */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_keywords(): array
     {
         return ['booking', 'calendar', 'appointment', 'SimplyBook.me'];
@@ -56,6 +60,7 @@ class ElementorWidget extends Widget_Base
     /**
      * Registers all widget controls (dropdowns) for the Elementor editor.
      */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function register_controls(): void
     {
         $this->start_controls_section(

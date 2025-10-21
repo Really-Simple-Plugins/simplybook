@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Support\Utility\ColorUtility;
 
 class ThemeColorService
@@ -73,8 +72,10 @@ class ThemeColorService
      */
     public function getColorsFromThemeJson(): array
     {
-        if (!class_exists('WP_Theme_JSON_Resolver')
-            || !function_exists('wp_get_theme') ) {
+        if (
+            !class_exists('WP_Theme_JSON_Resolver')
+            || !function_exists('wp_get_theme')
+        ) {
             return [];
         }
 

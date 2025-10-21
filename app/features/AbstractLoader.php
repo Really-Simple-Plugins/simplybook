@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace SimplyBook\Features;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Managers\FeatureManager;
 
 /**
  * Each Feature should have a {FeatureName}Loader class that extends this
- * abstract loader. The {@see FeatureManager} will use the loader to
- * determine if a feature should be loaded.
+ * abstract loader. The {@see FeatureManager} will use the loader to determine
+ * if a feature should be loaded.
  *
  * @internal Without loading all the feature classes, composer will prevent
  * requiring the files entirely. Even tho the Feature namespace falls
@@ -83,5 +82,4 @@ abstract class AbstractLoader
 
         return (strpos($currentRequestUri, $restUrlPrefix) !== false) || $isPlainPermalink;
     }
-
 }

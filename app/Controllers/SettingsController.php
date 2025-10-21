@@ -44,13 +44,13 @@ class SettingsController implements ControllerInterface
     {
         $user = wp_get_current_user();
         $options = get_option('simplybook_options', []);
-        if ( empty($this->get_option('email') ) ) {
-            $options['email'] = sanitize_email( $user->user_email );
+        if (empty($this->get_option('email'))) {
+            $options['email'] = sanitize_email($user->user_email);
         }
-        if ( empty($this->get_option('company_name') ) ) {
-            $options['company_name'] = get_bloginfo( 'name' );
+        if (empty($this->get_option('company_name'))) {
+            $options['company_name'] = get_bloginfo('name');
         }
-        if ( empty($this->get_option('country')) && !empty($this->getCountryByLocale()) ) {
+        if (empty($this->get_option('country')) && !empty($this->getCountryByLocale())) {
             $options['country'] = $this->getCountryByLocale();
         }
         update_option('simplybook_options', $options);
@@ -65,10 +65,10 @@ class SettingsController implements ControllerInterface
         $locale = get_locale();
         $locale = explode('_', $locale);
 
-        if ( count($locale) < 2 ) {
+        if (count($locale) < 2) {
             return '';
         }
 
-        return strtoupper( $locale[1] );
+        return strtoupper($locale[1]);
     }
 }

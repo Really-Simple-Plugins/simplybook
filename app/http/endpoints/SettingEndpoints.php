@@ -7,7 +7,6 @@ use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Interfaces\MultiEndpointInterface;
-use SimplyBook\Controllers\DesignSettingsController;
 
 class SettingEndpoints implements MultiEndpointInterface
 {
@@ -15,7 +14,7 @@ class SettingEndpoints implements MultiEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'settings';
+    public const ROUTE = 'settings';
 
     /**
      * Only enable this endpoint if the user has access to the admin area

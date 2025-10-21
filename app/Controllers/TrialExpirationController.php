@@ -91,7 +91,6 @@ class TrialExpirationController implements ControllerInterface
             ),
             'before'
         );
-
     }
 
     private function canRenderTrialNotice(): bool

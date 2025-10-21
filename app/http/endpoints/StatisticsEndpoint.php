@@ -12,11 +12,12 @@ class StatisticsEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'statistics';
+    public const ROUTE = 'statistics';
 
     private StatisticsService $service;
 
-    public function __construct(StatisticsService $service) {
+    public function __construct(StatisticsService $service)
+    {
         $this->service = $service;
     }
 

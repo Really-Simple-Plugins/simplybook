@@ -162,7 +162,6 @@ class RelatedPluginService
 
         $this->cancelShepherdTour();
         return true;
-
     }
 
     /**
@@ -204,7 +203,7 @@ class RelatedPluginService
      */
     protected function pluginFileExists(): bool
     {
-        return file_exists(trailingslashit(WP_PLUGIN_DIR).$this->pluginConfig->getString('activation_slug'));
+        return file_exists(trailingslashit(WP_PLUGIN_DIR) . $this->pluginConfig->getString('activation_slug'));
     }
 
     /**
@@ -258,9 +257,8 @@ class RelatedPluginService
     public function cancelShepherdTour(): void
     {
         $prefix = $this->pluginConfig->getString('options_prefix');
-        update_site_option($prefix.'_tour_started', false);
-        update_site_option($prefix.'_tour_shown_once', true);
-        delete_transient($prefix.'_redirect_to_settings');
+        update_site_option($prefix . '_tour_started', false);
+        update_site_option($prefix . '_tour_shown_once', true);
+        delete_transient($prefix . '_redirect_to_settings');
     }
-
 }

@@ -16,7 +16,7 @@ class DomainEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_domain';
+    public const ROUTE = 'get_domain';
 
     private App $app;
 

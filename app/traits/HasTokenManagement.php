@@ -107,5 +107,4 @@ trait HasTokenManagement
 
         return (int) get_option('simplybook_refresh_token_expiration', 0);
     }
-
 }

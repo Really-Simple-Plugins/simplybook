@@ -14,7 +14,7 @@ class LoginUrlEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_login_url';
+    public const ROUTE = 'get_login_url';
 
     private LoginUrlService $service;
 

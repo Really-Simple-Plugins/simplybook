@@ -20,7 +20,8 @@ class DashboardController implements ControllerInterface
     private App $app;
     private ThemeColorService $themeColorService;
 
-    public function __construct(App $app, ThemeColorService $themeColorService) {
+    public function __construct(App $app, ThemeColorService $themeColorService)
+    {
         $this->app = $app;
         $this->themeColorService = $themeColorService;
     }
@@ -190,7 +191,7 @@ class DashboardController implements ControllerInterface
             if (strpos($filename, 'index.') === 0) {
                 if (substr($filename, - 3) === '.js') {
                     $jsFileName = $filename;
-                } else if (substr($filename, - 10) === '.asset.php') {
+                } elseif (substr($filename, - 10) === '.asset.php') {
                     $assetFilename = $filename;
                 }
             }
@@ -246,13 +247,13 @@ class DashboardController implements ControllerInterface
                 'rest_namespace' => $this->app->env->getString('http.namespace'),
                 'rest_version' => $this->app->env->getString('http.version'),
                 'site_url' => site_url(),
-				'dashboard_url' => $this->app->env->getUrl('plugin.dashboard_url'),
+                'dashboard_url' => $this->app->env->getUrl('plugin.dashboard_url'),
                 'assets_url' => $this->app->env->getUrl('plugin.assets_url'),
-                'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
+                'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
-                'is_onboarding_completed' => $this->onboarding_completed(),
+                'is_onboarding_completed' => $this->isOnboardingCompleted(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => $this->app->env->get('simplybook.domains'),
@@ -263,7 +264,8 @@ class DashboardController implements ControllerInterface
         );
     }
 
-    private function onboarding_completed(): bool {
+    private function isOnboardingCompleted(): bool
+    {
         return get_option('simplybook_onboarding_completed', false);
     }
 

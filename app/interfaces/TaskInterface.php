@@ -2,8 +2,6 @@
 
 namespace SimplyBook\Interfaces;
 
-use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
-
 interface TaskInterface
 {
     /**

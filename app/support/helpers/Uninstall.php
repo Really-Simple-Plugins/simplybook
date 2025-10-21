@@ -20,5 +20,4 @@ class Uninstall
             $instance->delete_all_options(true);
         }
     }
-
 }

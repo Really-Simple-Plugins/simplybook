@@ -93,7 +93,7 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
         $plugins = $this->app->config->get('related.plugins');
 
         if (!empty($targetPluginSlug)) {
-            $plugins = array_filter($plugins, function($plugin) use ($targetPluginSlug){
+            $plugins = array_filter($plugins, function($plugin) use ($targetPluginSlug) {
                 return isset($plugin['slug']) && ($plugin['slug'] === $targetPluginSlug);
             });
         }
