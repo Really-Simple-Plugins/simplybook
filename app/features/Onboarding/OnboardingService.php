@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Features\Onboarding;
+<?php
+
+namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;

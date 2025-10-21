@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Support\Helpers;
+<?php
+
+namespace SimplyBook\Support\Helpers;
 
 /**
  * Wrapper for easy access to request data with Dot notation.
