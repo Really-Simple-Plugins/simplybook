@@ -79,3 +79,6 @@ react/.npmrc
 assets/languages/*
 !assets/languages/index.php
 !assets/languages/*.pot
+
+# Ignore PHP CodeSniffer report
+/assets/phpcs.txt
