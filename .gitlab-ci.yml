@@ -9,6 +9,13 @@ stages:
 .default_php_job:
   image: php:7.4-cli
   before_script:
+    # System deps Composer needs
+    - apt-get update -y
+    - apt-get install -y --no-install-recommends git unzip libzip-dev
+    - docker-php-ext-configure zip
+    - docker-php-ext-install -j"$(nproc)" zip
+
+    # Composer
     - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     - composer install --no-interaction --no-progress --prefer-dist
   cache:
@@ -20,7 +27,12 @@ phpcs:
   stage: quality
   extends: .default_php_job
   script:
-    - vendor/bin/phpcs --report=full --report-file=phpcs-report.txt
+    - |
+      set +e
+      vendor/bin/phpcs --report=full --report-file=phpcs-report.txt
+      PHPCS_EXIT=$?
+      [ -f phpcs-report.txt ] || echo "PHPCS did not produce a report. Check job logs." > phpcs-report.txt
+      exit $PHPCS_EXIT
   artifacts:
     when: always
     paths:
