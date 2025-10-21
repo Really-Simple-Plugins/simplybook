@@ -31,5 +31,4 @@ class StringUtility
     {
         return str_replace('_', '', ucwords($string, '_'));
     }
-
 }

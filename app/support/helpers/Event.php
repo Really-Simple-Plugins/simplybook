@@ -13,18 +13,18 @@ class Event
     /**
      * Event names
      */
-    const EMPTY_SERVICES = 'empty_services';
-    const EMPTY_PROVIDERS = 'empty_providers';
-    const HAS_SERVICES = 'has_services';
-    const HAS_PROVIDERS = 'has_providers';
-    const NAVIGATE_TO_SIMPLYBOOK = 'navigate_to_simplybook';
-    const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
-    const SPECIAL_FEATURES_LOADED = 'special_features_loaded';
-    const AUTH_FAILED = 'auth_failed';
-    const AUTH_SUCCEEDED = 'auth_succeeded';
-    const CALENDAR_PUBLISHED = 'calendar_published';
-	const CALENDAR_UNPUBLISHED = 'calendar_unpublished';
-    const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
+    public const EMPTY_SERVICES = 'empty_services';
+    public const EMPTY_PROVIDERS = 'empty_providers';
+    public const HAS_SERVICES = 'has_services';
+    public const HAS_PROVIDERS = 'has_providers';
+    public const NAVIGATE_TO_SIMPLYBOOK = 'navigate_to_simplybook';
+    public const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
+    public const SPECIAL_FEATURES_LOADED = 'special_features_loaded';
+    public const AUTH_FAILED = 'auth_failed';
+    public const AUTH_SUCCEEDED = 'auth_succeeded';
+    public const CALENDAR_PUBLISHED = 'calendar_published';
+    public const CALENDAR_UNPUBLISHED = 'calendar_unpublished';
+    public const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
 
     /**
      * Execute a WordPress event based on our constants.

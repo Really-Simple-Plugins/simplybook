@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class FailedAuthenticationTask extends AbstractTask
 {
-    const IDENTIFIER = 'failed_authentication';
+    public const IDENTIFIER = 'failed_authentication';
 
     /**
      * @inheritDoc
@@ -24,7 +24,7 @@ class FailedAuthenticationTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings.','simplybook');
+        return esc_html__('We’ve lost connection to your SimplyBook.me account. Reconnect by logging out via the general settings.', 'simplybook');
     }
 
     /**
@@ -34,7 +34,7 @@ class FailedAuthenticationTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('General settings','simplybook'),
+            'text' => esc_html__('General settings', 'simplybook'),
             'link' => 'settings/general',
         ];
     }

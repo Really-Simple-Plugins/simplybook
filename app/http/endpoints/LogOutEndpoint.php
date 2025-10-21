@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\LegacySave;
@@ -12,7 +13,7 @@ class LogOutEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'logout';
+    public const ROUTE = 'logout';
 
     /**
      * Only enable this endpoint if the user has access to the admin area

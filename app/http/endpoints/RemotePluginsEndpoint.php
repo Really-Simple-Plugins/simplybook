@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Bootstrap\App;
@@ -14,11 +15,12 @@ class RemotePluginsEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'get_plugins';
+    public const ROUTE = 'get_plugins';
 
     private App $app;
 
-    public function __construct(App $app) {
+    public function __construct(App $app)
+    {
         $this->app = $app;
     }
 

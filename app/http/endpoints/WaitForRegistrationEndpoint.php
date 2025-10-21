@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
@@ -10,7 +11,7 @@ class WaitForRegistrationEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'check_registration_callback_status';
+    public const ROUTE = 'check_registration_callback_status';
 
     /**
      * Only enable this endpoint if the user has access to the admin area

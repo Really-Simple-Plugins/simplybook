@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<ruleset name="SimplyBook.me – PSR12 + PSR4 (Slevomat)">
+    <description>PSR-12 formatting and PSR-4-ish checks using Slevomat. No WordPress sniffs.</description>
+
+    <!-- Scope -->
+    <file>app</file>
+    <file>bootstrap</file>
+    <file>simplybook.php</file>
+
+    <!-- Ignore third-party / generated -->
+    <exclude-pattern>vendor/*</exclude-pattern>
+    <exclude-pattern>node_modules/*</exclude-pattern>
+
+    <!-- Ignore legacy or external code -->
+    <exclude-pattern>app/Traits/LegacyLoad.php</exclude-pattern>
+    <exclude-pattern>app/Traits/LegacySave.php</exclude-pattern>
+    <exclude-pattern>app/Http/ApiClient.php</exclude-pattern>
+
+    <!-- Runner args -->
+    <arg name="encoding" value="utf-8"/>
+    <arg name="extensions" value="php"/>
+    <arg name="colors"/>
+
+    <!-- Tokenizer/env -->
+    <config name="php_version" value="70400"/>
+
+    <!-- Base standard -->
+    <rule ref="PSR12"/>
+
+    <rule ref="Squiz.Functions.MultiLineFunctionDeclaration">
+      <exclude name="Squiz.Functions.MultiLineFunctionDeclaration.SpaceAfterFunction"/>
+    </rule>
+
+    <!--Trust that developers will do this properly at their own discretion -->
+    <rule ref="Generic.Files.LineLength">
+      <exclude name="Generic.Files.LineLength.TooLong"/>
+    </rule>
+
+    <!-- Slevomat: PSR-4 filename↔type + namespace hygiene -->
+    <rule ref="SlevomatCodingStandard.Files.TypeNameMatchesFileName">
+    <properties>
+      <property name="rootNamespaces" type="array">
+        <element key="app" value="SimplyBook"/>
+        <element key="bootstrap" value="SimplyBook\Bootstrap"/>
+      </property>
+    </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing"/>
+
+    <!-- Let Slevomat treat PHPDoc/annotations as valid usages -->
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="true"/>
+        </properties>
+    </rule>
+
+    <!-- Side-effects guard; excluding front controller/bootstrapper -->
+    <rule ref="PSR1.Files.SideEffects">
+    <exclude-pattern>simplybook.php</exclude-pattern>
+    </rule>
+
+    <!-- PHPCompatibility:  -->
+    <rule ref="PHPCompatibility"/>
+    <config name="testVersion" value="7.4-8.3"/>
+</ruleset>

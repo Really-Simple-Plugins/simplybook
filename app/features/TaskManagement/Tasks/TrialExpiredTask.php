@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class TrialExpiredTask extends AbstractTask
 {
-    const IDENTIFIER = 'trial_expired';
+    public const IDENTIFIER = 'trial_expired';
 
     /**
      * @inheritDoc
@@ -42,7 +42,7 @@ class TrialExpiredTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade','simplybook'),
+            'text' => esc_html__('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget#/',
         ];
     }

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Entities;
 
 use SimplyBook\Bootstrap\App;
@@ -131,5 +132,4 @@ class Service extends AbstractEntity
 
         return $services;
     }
-
 }

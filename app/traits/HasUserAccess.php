@@ -1,7 +1,9 @@
-<?php namespace SimplyBook\Traits;
+<?php
 
-trait HasUserAccess {
+namespace SimplyBook\Traits;
 
+trait HasUserAccess
+{
     /**
      * Return the first name of the current user
      */
@@ -33,5 +35,4 @@ trait HasUserAccess {
         wp_cache_set($cacheName, $firstName, $cacheGroup);
         return $firstName;
     }
-
 }

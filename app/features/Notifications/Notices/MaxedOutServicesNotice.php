@@ -4,7 +4,7 @@ namespace SimplyBook\Features\Notifications\Notices;
 
 class MaxedOutServicesNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'maxed_out_services';
+    public const IDENTIFIER = 'maxed_out_services';
 
     /**
      * @inheritDoc

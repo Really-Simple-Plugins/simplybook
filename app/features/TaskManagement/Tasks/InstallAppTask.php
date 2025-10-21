@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class InstallAppTask extends AbstractTask
 {
-    const IDENTIFIER = 'install_sb_app';
+    public const IDENTIFIER = 'install_sb_app';
 
     /**
      * @inheritDoc
@@ -16,7 +16,7 @@ class InstallAppTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Install the SimplyBook.me app for iOS or Android','simplybook');
+        return esc_html__('Install the SimplyBook.me app for iOS or Android', 'simplybook');
     }
 
     /**
@@ -26,7 +26,7 @@ class InstallAppTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info','simplybook'),
+            'text' => esc_html__('More info', 'simplybook'),
             'modal' => [
                 'id' => 'install_app_task',
             ],

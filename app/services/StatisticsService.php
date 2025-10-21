@@ -7,7 +7,7 @@ use SimplyBook\Bootstrap\App;
 
 class StatisticsService
 {
-    const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
+    public const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
 
     private App $app;
 
@@ -63,7 +63,7 @@ class StatisticsService
         }
 
         if ($strict === false) {
-            wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
+            wp_cache_set($cacheName, $subscriptionData, 'simplybook', self::DATA_TIME_THRESHOLD);
             return $subscriptionData;
         }
 
@@ -73,7 +73,7 @@ class StatisticsService
             return [];
         }
 
-        wp_cache_set($cacheName, $subscriptionData, 'simplybook',  self::DATA_TIME_THRESHOLD);
+        wp_cache_set($cacheName, $subscriptionData, 'simplybook', self::DATA_TIME_THRESHOLD);
         return $subscriptionData;
     }
 }

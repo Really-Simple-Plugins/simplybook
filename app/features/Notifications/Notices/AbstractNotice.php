@@ -6,14 +6,14 @@ use SimplyBook\Interfaces\NoticeInterface;
 
 abstract class AbstractNotice implements NoticeInterface
 {
-    const TYPE_INFO = 'info';
-    const TYPE_WARNING = 'warning';
+    public const TYPE_INFO = 'info';
+    public const TYPE_WARNING = 'warning';
 
     /**
      * Override this constant to define the identifier of the Notice. This
      * identifier is used to identify the Notice in the database and in the UI.
      */
-    const IDENTIFIER = '';
+    public const IDENTIFIER = '';
 
     /**
      * Override this property to define the version of the Notice. This version is
@@ -133,5 +133,4 @@ abstract class AbstractNotice implements NoticeInterface
             'action' => $this->getAction(),
         ];
     }
-
 }

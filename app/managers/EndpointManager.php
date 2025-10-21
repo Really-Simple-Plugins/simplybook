@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Managers;
+<?php
+
+namespace SimplyBook\Managers;
 
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;

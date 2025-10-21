@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Interfaces;
+<?php
+
+namespace SimplyBook\Interfaces;
 
 /**
  * This interface can be used instead of {@see SingleEndpointInterface} to register

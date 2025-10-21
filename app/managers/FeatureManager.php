@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace SimplyBook\Managers;
 
 use SimplyBook\Interfaces\FeatureInterface;
+
 /**
  * This manager dynamically fetches the features of the plugin. It differs from
  * other manager classes due to this nature. By preventing any class usage of
@@ -63,7 +64,6 @@ final class FeatureManager extends AbstractManager
         $featureClasses = [];
 
         foreach ($features as $featureName) {
-
             $needsPro = strpos($featureName, self::PRO_FEATURE_HANDLE) !== false;
             if ($needsPro && !$this->app->env->getBoolean('plugin.pro')) {
                 continue; // Pro not installed, don't register pro features

@@ -2,11 +2,9 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Features\Onboarding\OnboardingController;
-
 class PublishWidgetTask extends AbstractTask
 {
-    const IDENTIFIER = 'publish_widget_on_frontend';
+    public const IDENTIFIER = 'publish_widget_on_frontend';
 
     /**
      * This option is used to track if the user has already created the widget
@@ -14,10 +12,10 @@ class PublishWidgetTask extends AbstractTask
      * initial setup of the TaskManagement feature. Flag is set to true in
      *  {@see OnboardingService::setPublishWidgetCompleted}
      *
-     * @internal cannot be used in the {@see OnboardingController} because
-     * the feature is not loaded during onboarding.
+     * @internal cannot be used in the {@see OnboardingController} because the
+     * feature is not loaded during onboarding.
      */
-    const COMPLETED_FLAG = 'simplybook_calendar_published_task_completed';
+    public const COMPLETED_FLAG = 'simplybook_calendar_published_task_completed';
 
     /**
      * Not required as tracking the task is difficult. For example: if someone
@@ -44,7 +42,7 @@ class PublishWidgetTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Publish the booking widget on the front-end of your site.','simplybook');
+        return esc_html__('Publish the booking widget on the front-end of your site.', 'simplybook');
     }
 
     /**
@@ -54,7 +52,7 @@ class PublishWidgetTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Show shortcodes','simplybook'),
+            'text' => esc_html__('Show shortcodes', 'simplybook'),
             'link' => 'settings/general',
         ];
     }

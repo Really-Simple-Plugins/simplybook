@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class GoToSimplyBookSystemTask extends AbstractTask
 {
-    const IDENTIFIER = 'go_to_simplybook_system';
+    public const IDENTIFIER = 'go_to_simplybook_system';
 
     /**
      * @inheritDoc
@@ -26,7 +26,7 @@ class GoToSimplyBookSystemTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('SimplyBook.me','simplybook'),
+            'text' => esc_html__('SimplyBook.me', 'simplybook'),
             'login_link' => '/v2/dashboard/new',
         ];
     }

@@ -10,7 +10,8 @@ class DesignSettingsController implements ControllerInterface
 {
     protected DesignSettingsService $service;
 
-    public function __construct(DesignSettingsService $service) {
+    public function __construct(DesignSettingsService $service)
+    {
         $this->service = $service;
     }
 
@@ -106,5 +107,4 @@ class DesignSettingsController implements ControllerInterface
         $field['value'] = $designSettings[$id];
         return $field;
     }
-
 }

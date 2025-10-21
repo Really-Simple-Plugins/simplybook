@@ -14,7 +14,7 @@ class NotificationsController implements FeatureInterface
     public function __construct()
     {
         $this->service = new NotificationsService(
-            new NotificationsRepository
+            new NotificationsRepository()
         );
 
         $this->endpoints = new NotificationsEndpoints($this->service);

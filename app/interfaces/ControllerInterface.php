@@ -1,6 +1,6 @@
-<?php namespace SimplyBook\Interfaces;
+<?php
 
-use SimplyBook\Managers\ControllerManager;
+namespace SimplyBook\Interfaces;
 
 /**
  * This interface can be used to register a controller. Controllers will only

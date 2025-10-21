@@ -10,7 +10,7 @@ class LoginUrlService
 {
     use LegacyLoad;
 
-    const LOGIN_URL_CREATION_DATE_OPTION = 'simplybook_login_url_creation_date';
+    public const LOGIN_URL_CREATION_DATE_OPTION = 'simplybook_login_url_creation_date';
 
     private App $app;
 
@@ -45,18 +45,18 @@ class LoginUrlService
             ? $this->getDashboardUrl()
             : $this->fetchNewAutomaticLoginUrl();
 
-		// Return the URL if path is empty
-	    if (empty($path)) {
-		    return $loginUrl;
-	    }
+        // Return the URL if path is empty
+        if (empty($path)) {
+            return $loginUrl;
+        }
 
-	    $path = ltrim($path, '/');
-	    if (strpos($loginUrl, 'by-hash') !== false) {
-		    return $loginUrl . '?back_url=/' . $path . '/';
-	    }
+        $path = ltrim($path, '/');
+        if (strpos($loginUrl, 'by-hash') !== false) {
+            return $loginUrl . '?back_url=/' . $path . '/';
+        }
 
-	    return $loginUrl . '/' . $path . '/';
-	}
+        return $loginUrl . '/' . $path . '/';
+    }
 
     /**
      * Method checks if the user should be logged in already. This is based on

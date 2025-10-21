@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\LegacySave;
@@ -15,7 +16,7 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     use HasAllowlistControl;
     use HasLogging;
 
-    const ROUTE = 'company_registration';
+    public const ROUTE = 'company_registration';
 
     protected CallbackUrlService $callbackUrlService;
 

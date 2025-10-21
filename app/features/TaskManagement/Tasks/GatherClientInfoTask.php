@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class GatherClientInfoTask extends AbstractTask
 {
-    const IDENTIFIER = 'special_feature_gather_client_info';
+    public const IDENTIFIER = 'special_feature_gather_client_info';
 
     /**
      * @inheritDoc
@@ -31,7 +31,7 @@ class GatherClientInfoTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info','simplybook'),
+            'text' => esc_html__('More info', 'simplybook'),
             'login_link' => 'v2/management/#additional-fields',
         ];
     }

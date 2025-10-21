@@ -2,11 +2,9 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-use SimplyBook\Features\Onboarding\OnboardingService;
-
 class PublishWidgetNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'publish_widget_on_frontend';
+    public const IDENTIFIER = 'publish_widget_on_frontend';
 
     /**
      * This option is used to track if the user has already created the widget
@@ -17,7 +15,7 @@ class PublishWidgetNotice extends AbstractNotice
      * @internal cannot be used in the {@see OnboardingController} because
      *  the feature is not loaded during onboarding.
      */
-    const COMPLETED_FLAG = 'simplybook_calendar_published_notification_completed';
+    public const COMPLETED_FLAG = 'simplybook_calendar_published_notification_completed';
 
     public function __construct()
     {

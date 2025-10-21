@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
@@ -41,11 +42,11 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
         return [
             $route => [
-                'methods' => \WP_REST_Server::READABLE.','.\WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'handleCollectionRequest'],
             ],
-            $route.'/(?P<id>[0-9]+)' => [
-                'methods' => \WP_REST_Server::READABLE.','.\WP_REST_Server::CREATABLE.','.\WP_REST_Server::EDITABLE.','.\WP_REST_Server::DELETABLE,
+            $route . '/(?P<id>[0-9]+)' => [
+                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE . ',' . \WP_REST_Server::EDITABLE . ',' . \WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'handleSingleRequest'],
             ],
         ];
@@ -67,7 +68,6 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             default:
                 return $this->sendHttpResponse([], false, esc_html__('Method not allowed', 'simplybook'), 405);
         }
-
     }
 
     /**
@@ -315,6 +315,4 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
         return $translatedByAttribute;
     }
-
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\DTO;
 
 class ApiResponseDTO

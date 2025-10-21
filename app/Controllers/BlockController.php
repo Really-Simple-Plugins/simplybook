@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Controllers;
+<?php
+
+namespace SimplyBook\Controllers;
 
 use SimplyBook\Bootstrap\App;
 use Elementor\Widgets_Manager;
@@ -9,7 +11,8 @@ class BlockController implements ControllerInterface
 {
     private App $app;
 
-    public function __construct(App $app) {
+    public function __construct(App $app)
+    {
         $this->app = $app;
     }
 
@@ -36,18 +39,18 @@ class BlockController implements ControllerInterface
     {
         // Check if the block is already registered to prevent duplicate registration
         if (class_exists('\WP_Block_Type_Registry') && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
-			return;
+            return;
         }
 
-	    $blockMetaData = $this->app->env->getString('plugin.assets_path') . '/block/build/block.json';
-	    if ( file_exists( $blockMetaData ) === false ) {
-		    $this->registerGutenbergBlockTypeManually();
-		    return;
-	    }
+        $blockMetaData = $this->app->env->getString('plugin.assets_path') . '/block/build/block.json';
+        if (file_exists($blockMetaData) === false) {
+            $this->registerGutenbergBlockTypeManually();
+            return;
+        }
 
         register_block_type_from_metadata($blockMetaData, [
             'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-	        // Overwrite the .json entry to support translations.
+            // Overwrite the .json entry to support translations.
             'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
         ]);
     }
@@ -125,7 +128,7 @@ class BlockController implements ControllerInterface
                 'site_url' => site_url(),
                 'dashboard_url' => $this->app->env->getUrl('plugin.dashboard_url'),
                 'assets_url' => $this->app->env->getUrl('plugin.assets_url'),
-                'debug' => defined( 'SIMPLYBOOK_DEBUG' ) && SIMPLYBOOK_DEBUG,
+                'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
             ]
         );
 
@@ -173,6 +176,6 @@ class BlockController implements ControllerInterface
      */
     public function registerElementorWidget(Widgets_Manager $widgetsManager): void
     {
-	    $widgetsManager->register(new ElementorWidget());
+        $widgetsManager->register(new ElementorWidget());
     }
 }

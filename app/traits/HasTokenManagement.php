@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Traits;
+<?php
+
+namespace SimplyBook\Traits;
 
 trait HasTokenManagement
 {
@@ -105,5 +107,4 @@ trait HasTokenManagement
 
         return (int) get_option('simplybook_refresh_token_expiration', 0);
     }
-
 }

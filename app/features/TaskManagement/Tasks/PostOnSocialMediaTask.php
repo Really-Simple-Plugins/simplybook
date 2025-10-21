@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class PostOnSocialMediaTask extends AbstractTask
 {
-    const IDENTIFIER = 'special_feature_post_on_social_media';
+    public const IDENTIFIER = 'special_feature_post_on_social_media';
 
     /**
      * @inheritDoc
@@ -31,7 +31,7 @@ class PostOnSocialMediaTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info','simplybook'),
+            'text' => esc_html__('More info', 'simplybook'),
             'login_link' => 'v2/metric',
         ];
     }

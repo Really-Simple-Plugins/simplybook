@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
@@ -11,7 +12,7 @@ class ThemeColorEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'theme_colors';
+    public const ROUTE = 'theme_colors';
 
     protected ThemeColorService $service;
 

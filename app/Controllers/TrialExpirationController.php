@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Bootstrap\App;
@@ -90,7 +91,6 @@ class TrialExpirationController implements ControllerInterface
             ),
             'before'
         );
-
     }
 
     private function canRenderTrialNotice(): bool

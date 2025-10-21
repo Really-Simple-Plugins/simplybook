@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Traits;
+<?php
+
+namespace SimplyBook\Traits;
 
 use SimplyBook\Bootstrap\App;
 
@@ -18,7 +20,9 @@ trait HasViews
             throw new \LogicException('Given path is not valid: ' . esc_html($filePath));
         }
 
-        if (empty($filePath) || !file_exists($filePath) || !is_readable($filePath)) return '';
+        if (empty($filePath) || !file_exists($filePath) || !is_readable($filePath)) {
+            return '';
+        }
 
         extract($variables);
 
@@ -38,5 +42,4 @@ trait HasViews
         // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $this->view($path, $variables, $extension);
     }
-
 }

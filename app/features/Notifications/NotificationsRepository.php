@@ -6,7 +6,7 @@ use SimplyBook\Interfaces\NoticeInterface;
 
 class NotificationsRepository
 {
-    const OPTION_NAME = 'simplybook_notices';
+    public const OPTION_NAME = 'simplybook_notices';
 
     /** @var NoticeInterface[] */
     private array $notices = [];

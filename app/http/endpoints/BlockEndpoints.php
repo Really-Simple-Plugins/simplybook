@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Bootstrap\App;
@@ -11,7 +12,7 @@ class BlockEndpoints implements MultiEndpointInterface
 {
     use HasApiAccess;
 
-    const ROUTE = 'internal';
+    public const ROUTE = 'internal';
 
     protected App $app;
     protected Service $service;
@@ -113,7 +114,7 @@ class BlockEndpoints implements MultiEndpointInterface
         $providers = $this->serviceProvider->all();
 
         $isAnyProviderEnabled = $this->app->client->isSpecialFeatureEnabled('any_unit');
-        if ($isAnyProviderEnabled){
+        if ($isAnyProviderEnabled) {
             //add any provider to the response
             $anyProvider = [
                 'id' => 'any',

@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Support\Helpers;
+<?php
+
+namespace SimplyBook\Support\Helpers;
 
 use SimplyBook\Traits\LegacySave;
 
@@ -18,5 +20,4 @@ class Uninstall
             $instance->delete_all_options(true);
         }
     }
-
 }

@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 class MaximumBookingsTask extends AbstractTask
 {
-    const IDENTIFIER = 'maximum_bookings_task';
+    public const IDENTIFIER = 'maximum_bookings_task';
 
     /**
      * @inheritDoc
@@ -42,7 +42,7 @@ class MaximumBookingsTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade','simplybook'),
+            'text' => esc_html__('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget#/',
         ];
     }

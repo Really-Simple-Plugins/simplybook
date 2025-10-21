@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Entities;
 
 use SimplyBook\Bootstrap\App;
@@ -102,7 +103,7 @@ class ServiceProvider extends AbstractEntity
     /**
      * Sanitize the provider email as a valid email address.
      */
-    protected function setEmailAttribute($value):  string
+    protected function setEmailAttribute($value): string
     {
         return sanitize_email($value);
     }
@@ -150,5 +151,4 @@ class ServiceProvider extends AbstractEntity
 
         return $providers;
     }
-
 }

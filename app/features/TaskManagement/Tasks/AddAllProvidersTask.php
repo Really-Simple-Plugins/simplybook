@@ -8,7 +8,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
  */
 class AddAllProvidersTask extends AbstractTask
 {
-    const IDENTIFIER = 'add_all_providers';
+    public const IDENTIFIER = 'add_all_providers';
 
     /**
      * @inheritDoc
@@ -20,7 +20,7 @@ class AddAllProvidersTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Have you added all Service Providers?','simplybook');
+        return esc_html__('Have you added all Service Providers?', 'simplybook');
     }
 
     /**
@@ -30,7 +30,7 @@ class AddAllProvidersTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add Providers','simplybook'),
+            'text' => esc_html__('Add Providers', 'simplybook'),
             'login_link' => '/v2/management/#providers',
         ];
     }

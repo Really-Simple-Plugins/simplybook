@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
@@ -11,11 +12,12 @@ class SubscriptionEndpoints implements MultiEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'subscription_data';
+    public const ROUTE = 'subscription_data';
 
     private SubscriptionDataService $service;
 
-    public function __construct(SubscriptionDataService $service) {
+    public function __construct(SubscriptionDataService $service)
+    {
         $this->service = $service;
     }
 

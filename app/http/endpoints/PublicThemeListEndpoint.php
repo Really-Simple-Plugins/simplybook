@@ -12,7 +12,7 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'theme_list';
+    public const ROUTE = 'theme_list';
 
     private App $app;
 

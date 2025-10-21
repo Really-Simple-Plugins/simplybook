@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Services;
 
 use SimplyBook\Bootstrap\App;
@@ -93,5 +94,4 @@ class NoticeDismissalService
             'before'
         );
     }
-
 }

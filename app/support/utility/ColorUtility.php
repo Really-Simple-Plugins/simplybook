@@ -82,8 +82,10 @@ class ColorUtility
      */
     private function findColorInThemeJson(string $colorSlug): ?string
     {
-        if (!class_exists('WP_Theme_JSON_Resolver')
-            || !function_exists('wp_get_theme')) {
+        if (
+            !class_exists('WP_Theme_JSON_Resolver')
+            || !function_exists('wp_get_theme')
+        ) {
             return null;
         }
 

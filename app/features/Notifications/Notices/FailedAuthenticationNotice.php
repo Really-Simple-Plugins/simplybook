@@ -6,7 +6,7 @@ use SimplyBook\Bootstrap\App;
 
 class FailedAuthenticationNotice extends AbstractNotice
 {
-    const IDENTIFIER = 'failed_authentication';
+    public const IDENTIFIER = 'failed_authentication';
 
     public function __construct()
     {

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Bootstrap\App;
@@ -11,7 +12,7 @@ class TipsTricksEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'tips_and_tricks';
+    public const ROUTE = 'tips_and_tricks';
 
     private App $app;
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\LegacySave;
@@ -13,7 +14,7 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
     use HasRestAccess;
     use HasAllowlistControl;
 
-    const ROUTE = 'notices/dismiss';
+    public const ROUTE = 'notices/dismiss';
 
     private NoticeDismissalService $service;
 

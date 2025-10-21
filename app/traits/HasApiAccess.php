@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Traits;
+<?php
+
+namespace SimplyBook\Traits;
 
 use SimplyBook\Bootstrap\App;
 

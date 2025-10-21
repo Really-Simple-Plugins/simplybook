@@ -1,4 +1,5 @@
 <?php
+
 namespace SimplyBook\Exceptions;
 
 class ApiException extends \Exception

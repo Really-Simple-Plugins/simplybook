@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 namespace SimplyBook\Bootstrap;
 
 use SimplyBook\Managers\FeatureManager;
@@ -259,5 +262,4 @@ class Plugin
         wp_cache_set('simplybook_was_legacy_plugin_active', ($count > 0), 'simplybook');
         return $count > 0;
     }
-
 }

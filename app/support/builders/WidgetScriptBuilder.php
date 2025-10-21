@@ -145,7 +145,7 @@ class WidgetScriptBuilder
      * @since 3.1.1 Removed array_unique() on the return value to prevent
      * removing an attribute, like "provider", with the same ID as another
      * attribute, like "service".
-	 */
+     */
     private function sanitizeAttributes(array $attributes, bool $lowercase = false): array
     {
         if ($lowercase) {
@@ -262,19 +262,18 @@ class WidgetScriptBuilder
         ]);
     }
 
-	/**
-	 * The demo widget should be shown if the server URL is not set in the
+    /**
+     * The demo widget should be shown if the server URL is not set in the
      * widget settings. This is used to display a demo widget when the
      * plugin is not configured yet.
      *
      * @internal The widget works even when the plugin lost connection to the
      * SimplyBook account of the user so that is not a condition to show the
      * demo widget.
-	 */
-	public function showDemoWidget(?array $widgetSettings = null): bool
-	{
-		$widgetSettings = $widgetSettings ?? $this->widgetSettings;
-		return empty($widgetSettings['server']);
-	}
-
+     */
+    public function showDemoWidget(?array $widgetSettings = null): bool
+    {
+        $widgetSettings = $widgetSettings ?? $this->widgetSettings;
+        return empty($widgetSettings['server']);
+    }
 }

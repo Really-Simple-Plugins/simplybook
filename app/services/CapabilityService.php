@@ -1,4 +1,6 @@
-<?php namespace SimplyBook\Services;
+<?php
+
+namespace SimplyBook\Services;
 
 class CapabilityService
 {

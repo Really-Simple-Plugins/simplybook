@@ -9,7 +9,7 @@ use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;
 
 class TaskManagementRepository
 {
-    const OPTION_NAME = 'simplybook_tasks';
+    public const OPTION_NAME = 'simplybook_tasks';
 
     /** @var TaskInterface[] */
     private array $tasks = [];
