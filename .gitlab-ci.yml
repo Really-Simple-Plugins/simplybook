@@ -39,7 +39,7 @@ test:phpcs:
       PHPCS_EXIT=$?
       # If there are errors, generate report
       if [ "$PHPCS_EXIT" -ne 0 ]; then
-        vendor/bin/phpcs --report=full --report-file=phpcs-report.txt --report-checkstyle=phpcs-checkstyle.xml
+        vendor/bin/phpcs --report=full --report-file=$CI_PROJECT_DIR/phpcs-report.txt --report-checkstyle=$CI_PROJECT_DIR/phpcs-checkstyle.xml
       fi
       # Exit with the original $PHPCS_EXIT
       exit $PHPCS_EXIT
