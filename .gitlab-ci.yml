@@ -1,17 +1,18 @@
 stages:
   - test
 
-setup:php:
+# Setup PHP + Composer template
+.setup_php:
   image: php:7.4-cli
   before_script:
     # OS deps for Composer (needed for dist/source installs)
-    - apt-get update -y
-    - apt-get install -y --no-install-recommends git unzip libzip-dev
-    - docker-php-ext-configure zip
-    - docker-php-ext-install -j"$(nproc)" zip
+    - apt-get update -qq
+    - apt-get install -yqq --no-install-recommends git unzip libzip-dev > /dev/null
+    - docker-php-ext-configure zip >/dev/null
+    - docker-php-ext-install -j"$(nproc)" zip >/dev/null
 
     # Composer (verified install)
-    - wget -qO installer.sig https://composer.github.io/installer.sig
+    - curl -sSL https://composer.github.io/installer.sig -o installer.sig
     - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
     - php -r "if (hash_file('SHA384', 'composer-setup.php') !== trim(file_get_contents('installer.sig'))) { echo 'Invalid composer installer'.PHP_EOL; unlink('composer-setup.php'); exit(1); }"
     - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
@@ -24,9 +25,10 @@ setup:php:
     paths:
       - vendor/
 
+# PHP CodeSniffer checks
 test:phpcs:
   stage: test
-  extends: setup:php
+  extends: .setup_php
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
