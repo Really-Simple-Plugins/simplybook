@@ -44,9 +44,8 @@ test:phpcs:
       if [ "$PHPCS_EXIT" -ne 0 ]; then
         echo "⚠️  PHPCS found errors, generating reports..."
         vendor/bin/phpcs -q \
-          --report=full \
-          --report-file=$CI_PROJECT_DIR/phpcs-report.txt \
-          --report-checkstyle=$CI_PROJECT_DIR/phpcs-checkstyle.xml
+          --report=full --report-file=phpcs-report.txt \
+          --report-checkstyle=phpcs-checkstyle.xml
       else
         echo "✅ PHPCS passed without errors."
       fi
