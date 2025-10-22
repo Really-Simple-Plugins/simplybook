@@ -19,7 +19,7 @@ stages:
     - rm -f composer-setup.php installer.sig
 
     # Install PHP deps (fast & deterministic with lock file from repo)
-    - composer install --no-interaction --no-progress --prefer-dist
+    - composer install --no-interaction --no-progress --prefer-dist --quiet
   cache:
     key: "$CI_COMMIT_REF_SLUG-composer"
     paths:
@@ -33,17 +33,16 @@ test:phpcs:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
   script:
-    # 1) Run PHPCS once without writing a report
-    - vendor/bin/phpcs
-    # 2) Capture exit code
-    - PHPCS_EXIT=$?
-    # 3) If there are errors, generate report
-    - | #multiline step
+    - | #multiline step to preserve PHPCS_EXIT between steps
+      # Run PHPCS once without writing a report and capture exit code
+      vendor/bin/phpcs
+      PHPCS_EXIT=$?
+      # If there are errors, generate report
       if [ "$PHPCS_EXIT" -ne 0 ]; then
         vendor/bin/phpcs --report=full --report-file=phpcs-report.txt --report-checkstyle=phpcs-checkstyle.xml
       fi
-    # 4) Exit with the original PHPCS status (fails pipeline on errors)
-    - exit $PHPCS_EXIT
+      # Exit with the original $PHPCS_EXIT
+      exit $PHPCS_EXIT
   artifacts:
     when: on_failure
     paths:
