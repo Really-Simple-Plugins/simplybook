@@ -33,13 +33,14 @@ test:phpcs:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
   script:
-    - | #multiline step to preserve PHPCS_EXIT between steps
+    - |
       echo "🔍 Running PHPCS check..."
+      set +e
       vendor/bin/phpcs -q
       PHPCS_EXIT=$?
+      set -e
       echo "PHPCS exit code: $PHPCS_EXIT"
 
-      # If there are errors, generate report
       if [ "$PHPCS_EXIT" -ne 0 ]; then
         echo "⚠️  PHPCS found errors, generating reports..."
         vendor/bin/phpcs -q \
@@ -50,7 +51,6 @@ test:phpcs:
         echo "✅ PHPCS passed without errors."
       fi
 
-      # Exit with the original $PHPCS_EXIT
       exit $PHPCS_EXIT
   artifacts:
     when: on_failure
