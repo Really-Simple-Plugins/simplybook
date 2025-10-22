@@ -1,40 +1,50 @@
-workflow:
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-    - when: never
-
 stages:
-  - quality
+  - test
 
-.default_php_job:
+setup:php:
   image: php:7.4-cli
   before_script:
-    # System deps Composer needs
+    # OS deps for Composer (needed for dist/source installs)
     - apt-get update -y
     - apt-get install -y --no-install-recommends git unzip libzip-dev
     - docker-php-ext-configure zip
     - docker-php-ext-install -j"$(nproc)" zip
 
-    # Composer
-    - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+    # Composer (verified install)
+    - wget -qO installer.sig https://composer.github.io/installer.sig
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php -r "if (hash_file('SHA384', 'composer-setup.php') !== trim(file_get_contents('installer.sig'))) { echo 'Invalid composer installer'.PHP_EOL; unlink('composer-setup.php'); exit(1); }"
+    - php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+    - rm -f composer-setup.php installer.sig
+
+    # Install PHP deps (fast & deterministic with lock file from repo)
     - composer install --no-interaction --no-progress --prefer-dist
   cache:
     key: "$CI_COMMIT_REF_SLUG-composer"
     paths:
       - vendor/
 
-phpcs:
-  stage: quality
-  extends: .default_php_job
+test:phpcs:
+  stage: test
+  extends: setup:php
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
   script:
-    - |
-      set +e
-      vendor/bin/phpcs --report=full --report-file=phpcs-report.txt
-      PHPCS_EXIT=$?
-      [ -f phpcs-report.txt ] || echo "PHPCS did not produce a report. Check job logs." > phpcs-report.txt
-      exit $PHPCS_EXIT
+    # 1) Run PHPCS once without writing a report
+    - vendor/bin/phpcs
+    # 2) Capture exit code
+    - PHPCS_EXIT=$?
+    # 3) If there are errors, generate report
+    - | #multiline step
+      if [ "$PHPCS_EXIT" -ne 0 ]; then
+        vendor/bin/phpcs --report=full --report-file=phpcs-report.txt --report-checkstyle=phpcs-checkstyle.xml
+      fi
+    # 4) Exit with the original PHPCS status (fails pipeline on errors)
+    - exit $PHPCS_EXIT
   artifacts:
-    when: always
+    when: on_failure
     paths:
       - phpcs-report.txt
+      - phpcs-checkstyle.xml
     expire_in: 1 week
