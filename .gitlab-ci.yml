@@ -33,13 +33,11 @@ test:phpcs:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
   script:
-    - |
-      echo "🔍 Running PHPCS check..."
+    - | # Multiline script
       set +e
       vendor/bin/phpcs -q
       PHPCS_EXIT=$?
       set -e
-      echo "PHPCS exit code: $PHPCS_EXIT"
 
       if [ "$PHPCS_EXIT" -ne 0 ]; then
         echo "⚠️  PHPCS found errors, generating reports..."
