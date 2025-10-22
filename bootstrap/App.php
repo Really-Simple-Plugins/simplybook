@@ -11,11 +11,11 @@ namespace SimplyBook\Bootstrap;
  * decouples classes from concrete implementations (new..) and makes the
  * codebase easier to test and maintain.
  *
- * @property-read \SimplyBook\Support\Helpers\Storage config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
- * @property-read \SimplyBook\Support\Helpers\Storage env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
- * @property-read \SimplyBook\Support\Helpers\Storage request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
- * @property-read \SimplyBook\Support\Helpers\Storage files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
- * @property-read \SimplyBook\Http\ApiClient client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
+ * @property-read \SimplyBook\Support\Helpers\Storage $config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
+ * @property-read \SimplyBook\Support\Helpers\Storage $env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
+ * @property-read \SimplyBook\Support\Helpers\Storage $request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
+ * @property-read \SimplyBook\Support\Helpers\Storage $files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
+ * @property-read \SimplyBook\Http\ApiClient $client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
  */
 class App
 {
@@ -28,14 +28,14 @@ class App
     /**
      * Registry of service factories indexed by identifier. Allows registering
      * lazy factory closures for services.
-     *
-     * @var array<string, \Closure>
+     * @var array<string, \Closure> $registry
      */
     private array $registry = [];
 
     /**
      * Instances of resolved services, indexed by identifier. Used to prevent
      * multiple instantiations and store created services.
+     * @var array<string, object> $instances
      */
     private array $instances = [];
 
@@ -71,14 +71,16 @@ class App
     }
 
     /**
-     * Resolve an identifier to an object instance. It first checks the registry
+     * Resolve an identifier to a mixed instance. It first checks the registry
      * for a factory. If none is found, it calls {@see make} to perform
      * constructor autowiring.
      *
+     * @param class-string $class
+     * @return mixed
      * @throws \Exception If the target is not instantiable or cannot resolve a dependency.
      * @throws \ReflectionException If reflection fails.
      */
-    public function get(string $class): object
+    public function get(string $class)
     {
         // Makes sure we memoize the Closure responses
         if (array_key_exists($class, $this->instances)) {
@@ -104,7 +106,7 @@ class App
      * exception. This keeps "make" safe for ad-hoc instances you may later
      * choose to register manually.
      *
-     * @param string $class The class to make. Dependencies are injected.
+     * @param class-string $class The class to make. Dependencies are injected.
      * @param bool $register Made classes are registered in the container on
      * true. Useful for optimization on multi-used classes.
      * @param bool $registerDependencies Made dependency classes are registered
@@ -171,6 +173,7 @@ class App
                 ));
             }
 
+            /** @var class-string $dependencyClass */
             $dependencyClass = $type->getName();
 
             // Inject the current container, never a new one.
@@ -220,11 +223,14 @@ class App
      * App::config()->getString('env.plugin.name');
      *
      * Instead of:
-     * App::config->getString('env.plugin.name');
+     * App::getInstance()->config->getString('env.plugin.name');
+     *
+     * @param list<mixed> $arguments
+     * @return mixed
+     * @throws \ReflectionException
      */
     public static function __callStatic(string $name, array $arguments = [])
     {
-        $instance = self::getInstance();
-        return call_user_func([$instance, 'get'], $name);
+        return self::getInstance()->get($name);
     }
 }
