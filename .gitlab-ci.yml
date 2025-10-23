@@ -34,7 +34,7 @@ phpcs:reviewdog:
   script:
     - |
       # Install reviewdog
-      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
 
       # Run PHPCS but don't abort the shell on non-zero
       set +e
@@ -64,7 +64,7 @@ phpcs:reviewdog:
         -filter-mode=diff_context \
         -level=warning \
         -fail-level=any \
-        < phpcs-checkstyle.xml
+        < phpcs-checkstyle.xml >/dev/nul
 
       exit "$PHPCS_EXIT"
   artifacts:
