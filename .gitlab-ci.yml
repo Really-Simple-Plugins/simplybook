@@ -39,6 +39,8 @@ test:phpcs:reviewdog:
       # Run PHPCS but don't abort the shell on non-zero
       set +e
       vendor/bin/phpcs -q --report=checkstyle > phpcs-checkstyle.xml
+      # Add line and column to the message
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml
       PHPCS_EXIT=$?
       set -e
 
