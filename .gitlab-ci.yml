@@ -68,7 +68,7 @@ phpcs:reviewdog:
         -filter-mode=diff_context \
         -level=warning \
         -fail-level=any \
-        < phpcs-checkstyle.xml >/dev/nul
+        < phpcs-checkstyle.xml >/dev/null
 
       exit "$PHPCS_EXIT"
   artifacts:
