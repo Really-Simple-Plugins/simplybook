@@ -33,15 +33,16 @@ test:phpcs:reviewdog:
     - when: never
   script:
     - |
-      # Install reviewdog in-path (quiet)
+      # Install reviewdog
       curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
 
-      # Run PHPCS and capture exit code, but always produce checkstyle for reviewdog
-      # -q keeps logs quiet unless there's a fatal/config error
+      # Run PHPCS but don't abort the shell on non-zero
+      set +e
       vendor/bin/phpcs -q --report=checkstyle > phpcs-checkstyle.xml
-      PHPCS_EXIT=$?  # 0 = clean, 1 = violations, 2/3 = config/usage error
+      PHPCS_EXIT=$?
+      set -e
 
-      # Post inline MR comments; FAIL if any finding (warning or error) exists
+      # Post inline MR comments; FAIL if any finding (warnings or errors) exists
       reviewdog -f=checkstyle \
         -name="PHPCS" \
         -reporter=gitlab-mr-discussion \
@@ -50,13 +51,11 @@ test:phpcs:reviewdog:
         -fail-level=any \
         < phpcs-checkstyle.xml
 
-      # If PHPCS itself had a config/usage error, fail hard with that code
+      # Hard-fail on PHPCS config/usage errors, otherwise mirror PHPCS (0/1)
       if [ "$PHPCS_EXIT" -ge 2 ]; then
         echo "PHPCS failed (config/usage)."
         exit "$PHPCS_EXIT"
       fi
-
-      # Otherwise mirror PHPCS status: 0 (pass) or 1 (violations) to block MR
       exit "$PHPCS_EXIT"
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
