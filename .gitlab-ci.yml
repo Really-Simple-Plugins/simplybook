@@ -1,5 +1,5 @@
 stages:
-  - test
+  - lint
 
 # Setup PHP + Composer template
 .setup_php:
@@ -25,8 +25,8 @@ stages:
     paths:
       - vendor/
 
-test:phpcs:reviewdog:
-  stage: test
+phpcs:reviewdog:
+  stage: lint
   extends: .setup_php
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -39,15 +39,23 @@ test:phpcs:reviewdog:
       # Run PHPCS but don't abort the shell on non-zero
       set +e
 
-      # Create Checkstyle report with PHPCS
-      vendor/bin/phpcs -q --report=checkstyle > phpcs-checkstyle.xml
-
-      # Add line and column to the message in the checkstyle report
-      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml
+      # Create reports with PHPCS - checkstyle for reviewdog
+      vendor/bin/phpcs -q \
+      --report=full --report-file=phpcs-report.txt \
+      --report-checkstyle=phpcs-checkstyle.xml
 
       # Remember the PHPCS result
       PHPCS_EXIT=$?
       set -e
+
+      # If no errors were reported, exit successfully
+      if [ "$PHPCS_EXIT" -eq 0 ]; then
+        echo "PHPCS: clean!"
+        exit 0
+      fi
+
+      # Add line and column to the message in the checkstyle report
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml
 
       # Post inline MR comments; FAIL if any finding (warnings or errors) exists
       reviewdog -f=checkstyle \
@@ -58,11 +66,13 @@ test:phpcs:reviewdog:
         -fail-level=any \
         < phpcs-checkstyle.xml
 
-      # Hard-fail on PHPCS config/usage errors, otherwise mirror PHPCS (0/1)
-      if [ "$PHPCS_EXIT" -ge 2 ]; then
-        exit "$PHPCS_EXIT"
-      fi
       exit "$PHPCS_EXIT"
+  artifacts:
+    when: on_failure
+    paths:
+      - phpcs-checkstyle.xml
+      - phpcs-report.txt
+    expire_in: 1 week
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
     REVIEWDOG_GITLAB_API_TOKEN: "$MR_REVIEW_GITLAB_API_TOKEN"
