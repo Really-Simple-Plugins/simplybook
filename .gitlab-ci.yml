@@ -31,20 +31,33 @@ test:phpcs:reviewdog:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
-
-  before_script:
-    # Install reviewdog binary
-    - curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
-
   script:
     - |
-      vendor/bin/phpcs --report=checkstyle \
-      | reviewdog -f=checkstyle \
-          -name="PHPCS" \
-          -reporter=gitlab-mr-discussion \
-          -filter-mode=nofilter \
-          -level=warning \
-          -fail-level=any
+      # Install reviewdog in-path (quiet)
+      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin
+
+      # Run PHPCS and capture exit code, but always produce checkstyle for reviewdog
+      # -q keeps logs quiet unless there's a fatal/config error
+      vendor/bin/phpcs -q --report=checkstyle > phpcs-checkstyle.xml
+      PHPCS_EXIT=$?  # 0 = clean, 1 = violations, 2/3 = config/usage error
+
+      # Post inline MR comments; FAIL if any finding (warning or error) exists
+      reviewdog -f=checkstyle \
+        -name="PHPCS" \
+        -reporter=gitlab-mr-discussion \
+        -filter-mode=diff_context \
+        -level=warning \
+        -fail-level=any \
+        < phpcs-checkstyle.xml
+
+      # If PHPCS itself had a config/usage error, fail hard with that code
+      if [ "$PHPCS_EXIT" -ge 2 ]; then
+        echo "PHPCS failed (config/usage)."
+        exit "$PHPCS_EXIT"
+      fi
+
+      # Otherwise mirror PHPCS status: 0 (pass) or 1 (violations) to block MR
+      exit "$PHPCS_EXIT"
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
     REVIEWDOG_GITLAB_API_TOKEN: "$REVIEWDOG_GITLAB_API_TOKEN"
