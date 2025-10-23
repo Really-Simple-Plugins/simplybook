@@ -76,35 +76,3 @@ phpcs:reviewdog:
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
     REVIEWDOG_GITLAB_API_TOKEN: "$MR_REVIEW_GITLAB_API_TOKEN"
-
-#
-## PHP CodeSniffer checks
-#test:phpcs:
-#  stage: test
-#  extends: .setup_php
-#  rules:
-#    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-#    - when: never
-#  script:
-#    - | # Multiline script
-#      set +e
-#      vendor/bin/phpcs -q
-#      PHPCS_EXIT=$?
-#      set -e
-#
-#      if [ "$PHPCS_EXIT" -ne 0 ]; then
-#        echo "⚠️  PHPCS found errors, generating reports..."
-#        vendor/bin/phpcs -q \
-#          --report=full --report-file=phpcs-report.txt \
-#          --report-checkstyle=phpcs-checkstyle.xml
-#      else
-#        echo "✅ PHPCS passed without errors."
-#      fi
-#
-#      exit $PHPCS_EXIT
-#  artifacts:
-#    when: on_failure
-#    paths:
-#      - phpcs-report.txt
-#      - phpcs-checkstyle.xml
-#    expire_in: 1 week
