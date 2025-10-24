@@ -173,7 +173,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Reads if the task is required
+     * @inheritDoc
      */
     public function isRequired(): bool
     {

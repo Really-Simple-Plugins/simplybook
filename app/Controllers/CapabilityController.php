@@ -42,7 +42,7 @@ class CapabilityController implements ControllerInterface
      */
     public function addCapabilityToNewSubsite(\WP_Site $newSite, array $args): void
     {
-        switch_to_blog($newSite->blog_id);
+        switch_to_blog((int) $newSite->blog_id);
         $this->service->addSiteCapability('simplybook_manage', false);
         restore_current_blog();
     }

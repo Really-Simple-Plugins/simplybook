@@ -57,9 +57,7 @@ abstract class AbstractNotice implements NoticeInterface
     abstract public function getRoute(): string;
 
     /**
-     * Use this method to set the notice as active based on a server-side
-     * condition. By default, a notice can activate based on a client-side
-     * condition.
+     * @inheritDoc
      */
     public function setActive(bool $state = false): void
     {

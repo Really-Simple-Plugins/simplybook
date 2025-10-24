@@ -51,4 +51,9 @@ interface TaskInterface
      * required are 'id', 'text', 'status', 'type' and 'action'.
      */
     public function toArray(): array;
+
+    /**
+     * Reads if the task is required
+     */
+    public function isRequired(): bool;
 }

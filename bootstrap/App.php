@@ -12,10 +12,15 @@ namespace SimplyBook\Bootstrap;
  * codebase easier to test and maintain.
  *
  * @property-read \SimplyBook\Support\Helpers\Storage $config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
+ * @method static \SimplyBook\Support\Helpers\Storage config()
  * @property-read \SimplyBook\Support\Helpers\Storage $env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
+ * @method static \SimplyBook\Support\Helpers\Storage env()
  * @property-read \SimplyBook\Support\Helpers\Storage $request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
+ * @method static \SimplyBook\Support\Helpers\Storage request()
  * @property-read \SimplyBook\Support\Helpers\Storage $files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
+ * @method static \SimplyBook\Support\Helpers\Storage files()
  * @property-read \SimplyBook\Http\ApiClient $client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
+ * @method static \SimplyBook\Http\ApiClient client()
  */
 class App
 {

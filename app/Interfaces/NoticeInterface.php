@@ -34,4 +34,11 @@ interface NoticeInterface
      * required are 'id', 'text', 'status', 'type' and 'action'.
      */
     public function toArray(): array;
+
+    /**
+     * Use this method to set the notice as active based on a server-side
+     * condition. By default, a notice can activate based on a client-side
+     * condition.
+     */
+    public function setActive(bool $state = false): void;
 }

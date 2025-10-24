@@ -26,7 +26,7 @@ class WidgetTrackingController implements ControllerInterface
      */
     public function register(): void
     {
-        add_action('save_post', [$this, 'handlePostSave'], 10, 3);
+        add_action('save_post', [$this, 'handlePostSave'], 10, 2);
         add_action('delete_post', [$this, 'handlePostDelete']);
         add_action('trashed_post', [$this, 'handlePostTrashed']);
     }
@@ -36,7 +36,6 @@ class WidgetTrackingController implements ControllerInterface
      */
     public function handlePostSave(int $postId, \WP_Post $post): void
     {
-
         if ($this->shouldProcessSavedPost($postId, $post) !== true) {
             return;
         }

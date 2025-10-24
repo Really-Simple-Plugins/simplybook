@@ -175,9 +175,9 @@ class Storage extends Dot
 
     /**
      * Returns a boolean if the value of one of the keys is considered empty.
-     * @param array<TKey>|int|string|null $keys
+     * @param array<int, TKey|int|string> $keys
      */
-    public function isOneEmpty($keys = []): bool
+    public function isOneEmpty(array $keys = []): bool
     {
         foreach ($keys as $key) {
             if ($this->isEmpty($key)) {

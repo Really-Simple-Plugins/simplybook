@@ -7,6 +7,9 @@ use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;
 
+/**
+ * Allow d
+ */
 abstract class AbstractEntity
 {
     /**

@@ -94,7 +94,7 @@ class CompanyBuilder
         return $this;
     }
 
-    public function setTerms(string $terms): CompanyBuilder
+    public function setTerms(bool $terms): CompanyBuilder
     {
         $this->terms = $terms;
         return $this;
