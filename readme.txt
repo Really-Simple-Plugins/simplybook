@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 3.2.2
+Stable tag: 3.2.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,9 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.2.2.1 =
+* Fixed: Error on uninstall.
+
 = 3.2.2 =
 * Added: Admin notice for stale plugin users.
 * Changed: Plugin now uses new code architecture.
