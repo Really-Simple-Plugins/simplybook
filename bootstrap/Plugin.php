@@ -129,7 +129,7 @@ class Plugin
      */
     public static function uninstall()
     {
-        $uninstallInstance = new \SimplyBook\Helpers\Uninstall();
+        $uninstallInstance = new \SimplyBook\Support\Helpers\Uninstall();
         $uninstallInstance->handlePluginUninstall();
     }
 
