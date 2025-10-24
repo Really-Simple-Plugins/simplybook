@@ -1,5 +1,5 @@
 stages:
-  - test
+  - lint
 
 # Setup PHP + Composer template
 .setup_php:
@@ -25,33 +25,58 @@ stages:
     paths:
       - vendor/
 
-# PHP CodeSniffer checks
-test:phpcs:
-  stage: test
+phpcs:reviewdog:
+  stage: lint
   extends: .setup_php
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
     - when: never
   script:
-    - | # Multiline script
+    - |
+      echo "PHPCS: Starting.."
+
+      # Run PHPCS but don't abort the shell on non-zero
       set +e
-      vendor/bin/phpcs -q
+
+      # Create reports with PHPCS - checkstyle for reviewdog
+      vendor/bin/phpcs -q \
+      --report=full --report-file=phpcs-report.txt \
+      --report-checkstyle=phpcs-checkstyle.xml
+
+      # Remember the PHPCS result
       PHPCS_EXIT=$?
       set -e
 
-      if [ "$PHPCS_EXIT" -ne 0 ]; then
-        echo "⚠️  PHPCS found errors, generating reports..."
-        vendor/bin/phpcs -q \
-          --report=full --report-file=phpcs-report.txt \
-          --report-checkstyle=phpcs-checkstyle.xml
-      else
-        echo "✅ PHPCS passed without errors."
+      # If no errors were reported, exit successfully
+      if [ "$PHPCS_EXIT" -eq 0 ]; then
+        echo "PHPCS: clean!"
+        exit 0
       fi
 
-      exit $PHPCS_EXIT
+      echo "PHPCS: issues found -> creating automatic code review with reviewdog."
+
+      # Install reviewdog
+      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+
+      # Add line and column to the message in the checkstyle report
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml
+
+      # Post inline MR comments; FAIL if any finding (warnings or errors) exists
+      reviewdog -f=checkstyle \
+        -name="PHPCS" \
+        -reporter=gitlab-mr-discussion \
+        -filter-mode=diff_context \
+        -level=warning \
+        -fail-level=any \
+        < phpcs-checkstyle.xml >/dev/null
+
+      exit "$PHPCS_EXIT"
   artifacts:
     when: on_failure
     paths:
-      - phpcs-report.txt
       - phpcs-checkstyle.xml
+      - phpcs-report.txt
     expire_in: 1 week
+  variables:
+    REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
+    REVIEWDOG_GITLAB_API_TOKEN: "$MR_REVIEW_GITLAB_API_TOKEN"
