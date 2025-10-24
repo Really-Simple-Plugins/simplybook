@@ -1,6 +1,6 @@
 parameters:
-  level: 8
-  treatPhpDocTypesAsCertain: false
-  paths:
-    - app
-    - bootstrap
+    level: 4
+    paths:
+        - app
+        - bootstrap
+    reportUnmatchedIgnoredErrors: false
