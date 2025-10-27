@@ -101,7 +101,7 @@ class BlockEndpoints implements MultiEndpointInterface
     }
 
     /**
-     * Deprecated when the {@see \SimplyBook\Http\Endpoints\ProvidersEndpoint}
+     * Deprecated when the {@see \SimplyBook\Http\Endpoints\ServicesProvidersEndpoint}
      * also adds the 'any' provider to the response. And when the Gutenberg
      * block can handle the response.
      */
