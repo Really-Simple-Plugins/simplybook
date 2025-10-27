@@ -62,7 +62,8 @@ abstract class AbstractManager
     {
         foreach ($classes as $fullyClassifiedName) {
             if (is_string($fullyClassifiedName) === false) {
-                throw new \LogicException("Class must be a fully qualified name: " . esc_html($fullyClassifiedName));
+                $type = gettype($fullyClassifiedName);
+                throw new \LogicException("Class must be a fully qualified name. Given type: $type");
             }
 
             $class = $this->app->make($fullyClassifiedName, $this->useRegistry, $this->useRegistryForDependencies);
