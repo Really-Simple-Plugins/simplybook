@@ -3,11 +3,15 @@ parameters:
     paths:
         - app
         - bootstrap
+    excludePaths:
+        # Elementor code is out of context in CI
+        - app/Support/Widgets/ElementorWidget.php
     dynamicConstantNames:
         EXTENDIFY_PARTNER_ID: string|null
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         - identifier: return.void
           message: '#^Action callback returns .+ but should not return anything\.$#'
+        # Ignore Elementor Errors in BlockController for example
         - identifier: class.notFound
           message: '#\b(Elementor)\\#'
