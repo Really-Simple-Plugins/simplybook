@@ -4,6 +4,8 @@ namespace SimplyBook\Http;
 
 /**
  * JSON-RPC Client class
+ * @method mixed getThemeList()
+ * @method mixed getTimelineList()
  */
 class JsonRpcClient
 {
