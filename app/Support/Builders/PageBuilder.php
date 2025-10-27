@@ -63,6 +63,7 @@ class PageBuilder
             'post_type' => $this->type,
         ];
 
+        /** @var int|\WP_Error $insertedPageId */
         $insertedPageId = wp_insert_post($page);
         if (is_wp_error($insertedPageId)) {
             return -1;
@@ -87,6 +88,7 @@ class PageBuilder
             'post_type' => $this->type,
         ];
 
+        /** @var int|\WP_Error $updatedPostId */
         $updatedPostId = wp_update_post($page);
         if (is_wp_error($updatedPostId)) {
             return -1;
