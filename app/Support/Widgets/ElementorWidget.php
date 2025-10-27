@@ -131,8 +131,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addLocationControl(): void
     {
-        $client = App::client();
-        if (!$client || !$client->isSpecialFeatureEnabled('location')) {
+        if (!App::client()->isSpecialFeatureEnabled('location')) {
             return;
         }
 
@@ -152,8 +151,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addServiceCategoryControl(): void
     {
-        $client = App::client();
-        if (!$client || !$client->isSpecialFeatureEnabled('event_category')) {
+        if (!App::client()->isSpecialFeatureEnabled('event_category')) {
             return;
         }
 
