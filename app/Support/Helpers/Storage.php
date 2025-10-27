@@ -14,6 +14,16 @@ use Adbar\Dot;
 class Storage extends Dot
 {
     /**
+     * Create a new Storage instance with dot notation functionality from the
+     * parent {@see Dot} class. This internal class is extendable but the
+     * construct should not be overridable, it is therefor made final.
+     */
+    final public function __construct($items = [], $parse = false, $delimiter = ".")
+    {
+        parent::__construct($items, $parse, $delimiter);
+    }
+
+    /**
      * Returns the parameter keys.
      */
     public function keys(): array
@@ -166,7 +176,7 @@ class Storage extends Dot
 
     /**
      * Returns a boolean if the value is considered not empty.
-     * @param array<TKey>|int|string|null $keys
+     * @param array<array-key>|int|string|null $keys
      */
     public function isNotEmpty($keys = null): bool
     {
@@ -175,7 +185,7 @@ class Storage extends Dot
 
     /**
      * Returns a boolean if the value of one of the keys is considered empty.
-     * @param array<int, TKey|int|string> $keys
+     * @param array<int,array-key> $keys
      */
     public function isOneEmpty(array $keys = []): bool
     {
