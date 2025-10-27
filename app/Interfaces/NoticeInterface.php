@@ -16,12 +16,12 @@ interface NoticeInterface
 
     /**
      * Method is used to add a link to the UI of the notice item.
-     * @example (normal link)
+     * Example (normal link):
      *  [
      *       'text' => 'Link text',
      *       'link' => 'https://example.com' | '/services/new,
      *  ]
-     * @example (login link)
+     * Example (login link):
      * [
      *      'text' => 'Link text',
      *      'login_link' => '/v2/management/',
