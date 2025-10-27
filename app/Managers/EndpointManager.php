@@ -12,8 +12,6 @@ final class EndpointManager extends AbstractManager
     use HasNonces;
     use HasAllowlistControl;
 
-    private string $version;
-    private string $namespace;
     private array $routes = [];
 
     /**
