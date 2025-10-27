@@ -1505,7 +1505,7 @@ class ApiClient
 	 */
 	private function getReferrer(): string
 	{
-		return (defined('\EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+		return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
 	}
 
 	/**
