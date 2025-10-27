@@ -1182,25 +1182,6 @@ class ApiClient
     }
 
     /**
-     * Check if we have an error status stored
-     * @return bool
-     */
-    private function api_is_ok(): bool
-    {
-        $api_status = get_option('simplybook_api_status');
-        if ( !isset($api_status['status']) ) {
-            //nothing saved yet, assume ok.
-            return true;
-        }
-        if ( $api_status['status'] === 'error' && $api_status['time'] > time() - HOUR_IN_SECONDS ) {
-            return false;
-        }
-
-        //success, or last fail was an hour ago, try again.
-        return true;
-    }
-
-    /**
      * Authenticate an existing user with the API by company login, user login
      * and password. If successful, the token is stored in the options.
      *
