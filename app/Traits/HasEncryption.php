@@ -89,7 +89,7 @@ trait HasEncryption
      */
     private function decryptLegacyString(string $encryptedString, string $legacyKey): string
     {
-        $data = base64_decode($encryptedString);
+        $data = base64_decode($encryptedString, true);
 
         if ($data === false) {
             return '';
@@ -99,7 +99,7 @@ trait HasEncryption
 
         if (strlen($data) < $ivLength) {
             // Try double base64 decoding for legacy compatibility
-            $data = base64_decode($data);
+            $data = base64_decode($data, true);
             if ($data === false || strlen($data) < $ivLength) {
                 return '';
             }
