@@ -52,6 +52,6 @@
         "lint": "vendor/bin/phpcs --report=full",
         "lint:report": "vendor/bin/phpcs --report=full --report-file=phpcs-report.txt",
         "lint:summary": "vendor/bin/phpcs --report=summary",
-        "line:summary:report": "vendor/bin/phpcs --report=summary --report-file=phpcs-report.txt"
+        "lint:summary:report": "vendor/bin/phpcs --report=summary --report-file=phpcs-report.txt"
     }
 }
