@@ -100,7 +100,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
-        $successMessage = $this->entity->name . ' ' . esc_html__('successfully saved!', 'simplybook');
+        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -161,7 +161,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'update');
         }
 
-        $successMessage = $this->entity->name . ' ' . esc_html__('successfully saved!', 'simplybook');
+        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -173,7 +173,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
     protected function deleteEntity(Storage $request): \WP_REST_Response
     {
         try {
-            $this->entity->id = $request->getString('id');
+            $this->entity->setPrimaryValue($request->getString('id'));
             $this->entity->delete();
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([

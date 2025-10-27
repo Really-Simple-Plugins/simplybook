@@ -7,11 +7,15 @@ use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;
 
-/**
- * Allow d
- */
 abstract class AbstractEntity
 {
+    /**
+     * Return the name of the entity. This can either be a generic name that
+     * represents the entity. Or a property like 'name' {@see Service}
+     * or {@see ServiceProvider}
+     */
+    abstract public function getName(): string;
+
     /**
      * Get the remote endpoint URL for this entity. Used internally in the
      * entity class for easy access.
@@ -84,6 +88,17 @@ abstract class AbstractEntity
     public function __construct()
     {
         $this->registerConditionalProperties();
+    }
+
+    /**
+     * Method is used so set the main identifier of a local entity object to
+     * the one on the remote. Currently used to delete an entity by id
+     * {@see AbstractCrudEndpoint}
+     * @param mixed $value Usually a string value
+     */
+    public function setPrimaryValue($value): void
+    {
+        $this->attributes[$this->primaryKey] = $value;
     }
 
     /**
@@ -229,7 +244,7 @@ abstract class AbstractEntity
      */
     public function has(string $name): bool
     {
-        return isset($this->attributes[$name]) && null !== $this->attributes[$name];
+        return isset($this->attributes[$name]);
     }
 
     /**
@@ -256,9 +271,10 @@ abstract class AbstractEntity
         }
 
         foreach ($this->required as $attribute) {
+            // No empty() check to prevent falsy matches
             $requiredFieldIsEmpty = (
                 !isset($this->attributes[$attribute])
-                || ($this->attributes[$attribute] === null || $this->attributes[$attribute] === '')
+                || $this->attributes[$attribute] === ''
             );
 
             if ($requiredFieldIsEmpty) {
@@ -361,15 +377,15 @@ abstract class AbstractEntity
     }
 
     /**
-     * Find a entity by ID. If no ID is provided, use the current instance.
-     * Throws an exception if the entity is not found.
+     * Find an entity by its primary. If no primary is provided, use the current
+     * instance. Throws an exception if the entity is not found.
      * @throws \Exception|RestDataException
      */
-    public function find(string $id = ''): AbstractEntity
+    public function find(string $primary = ''): AbstractEntity
     {
-        $id = ($id ?: $this->id);
+        $primary = ($primary ?: $this->{$this->primaryKey});
 
-        $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($id);
+        $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($primary);
         $entityData = App::client()->get($endpoint);
 
         if (empty($entityData)) {
@@ -405,7 +421,7 @@ abstract class AbstractEntity
     {
         $this->validate();
 
-        $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($this->id);
+        $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($this->{$this->primaryKey});
         App::client()->put($endpoint, $this->json());
 
         return true;
@@ -418,14 +434,14 @@ abstract class AbstractEntity
      * @throws \InvalidArgumentException|RestDataException
      * @internal Override this method if you want to customize the logic.
      */
-    public function delete(string $id = ''): bool
+    public function delete(string $primary = ''): bool
     {
-        $id = ($id ?: $this->id);
-        if (empty($id)) {
-            throw new \InvalidArgumentException('Entity ID is required for deletion');
+        $primary = ($primary ?: $this->{$this->primaryKey});
+        if (empty($primary)) {
+            throw new \InvalidArgumentException('Entity primary is required for deletion');
         }
 
-        $endpoint = trailingslashit($this->getEndpoint()) . $id;
+        $endpoint = trailingslashit($this->getEndpoint()) . $primary;
         App::client()->delete($endpoint);
 
         return true;

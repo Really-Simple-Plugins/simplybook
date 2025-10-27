@@ -40,6 +40,14 @@ class Service extends AbstractEntity
     /**
      * @inheritDoc
      */
+    public function getName(): string
+    {
+        return $this->name ?: esc_html__('Service', 'simplybook');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getEndpoint(): string
     {
         return 'admin/services';
