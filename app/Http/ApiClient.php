@@ -1608,15 +1608,21 @@ class ApiClient
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseMessage = wp_remote_retrieve_response_message($response);
         $responseBody = wp_remote_retrieve_body($response);
-        $responseData = is_array($responseBody) ? $responseBody : json_decode($responseBody, true);
 
-        if (!($responseCode >= 200 && $responseCode < 300)) {
-            throw (new RestDataException($responseMessage))
-                ->setResponseCode($responseCode)
-                ->setData($responseData ?: []);
+        $responseData = json_decode($responseBody, true);
+        $jsonError = json_last_error();
+
+        if ($jsonError !== JSON_ERROR_NONE) {
+            $responseData = [];
         }
 
-        return $responseData ?: [];
+        if ($responseCode < 200 || $responseCode >= 300) {
+            throw (new RestDataException($responseMessage))
+                ->setResponseCode($responseCode)
+                ->setData($responseData);
+        }
+
+        return $responseData;
     }
 
     /**
