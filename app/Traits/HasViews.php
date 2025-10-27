@@ -20,7 +20,7 @@ trait HasViews
             throw new \LogicException('Given path is not valid: ' . esc_html($filePath));
         }
 
-        if (empty($filePath) || !file_exists($filePath) || !is_readable($filePath)) {
+        if (!file_exists($filePath) || !is_readable($filePath)) {
             return '';
         }
 
