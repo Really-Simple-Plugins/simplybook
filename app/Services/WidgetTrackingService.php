@@ -17,7 +17,7 @@ class WidgetTrackingService
     public const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
 
     private int $postId;
-    private \WP_Post $post;
+    private ?\WP_Post $post = null;
 
     /**
      * Set the current post for processing.
