@@ -996,10 +996,21 @@ class ApiClient
             $response_body = wp_remote_get($this->endpoint( $path ), $args );
         }
 
-        $response_code = wp_remote_retrieve_response_code( $response_body );
-        if ( !is_wp_error( $response_body)) {
-            $response = json_decode( wp_remote_retrieve_body( $response_body ), true );
+        if (is_wp_error( $response_body ) ) {
+            $message = "WP_Error during api call for path: $path. Error: " . $response_body->get_error_message();
+            $this->log($message);
+
+            update_option('simplybook_api_status', [
+                'status' => 'error',
+                'time' => time(),
+                'error' => esc_sql($message),
+            ]);
+
+            return [];
         }
+
+        $response_code = wp_remote_retrieve_response_code( $response_body );
+        $response = json_decode( wp_remote_retrieve_body( $response_body ), true );
 
         if ( $response_code === 200 ) {
             update_option('simplybook_api_status', [
@@ -1012,31 +1023,33 @@ class ApiClient
             $cache[ $path_type ] = $response;
             update_option('simplybook_persistent_cache', $cache, false);
             return $response;
-        } else {
-            if ( isset($response['message'])) {
-                $message = $response['message'];
-            } else if (isset($response->message)){
-                $message = $response->message;
-            } else {
-                $message = '';
-            }
-            if ( $attempt===1 &&  str_contains( $message, 'Token Expired')) {
-                //invalid token, refresh.
-                $this->refresh_token($token_type);
-                $this->api_call( $path, $data, $type, $attempt + 1 );
-            }
-            $this->log("Error during $path_type retrieval: ".$message);
-
-            /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
-            $msg = "response code: " . $response_code . ", response body: ".print_r($response_body,true);
-
-            update_option('simplybook_api_status', array(
-                'status' => 'error',
-                'error' => esc_sql($msg),
-                'time' => time(),
-            ) );
-            $this->_log($msg);
         }
+
+        $message = '';
+        if ( isset($response['message'])) {
+            $message = $response['message'];
+        } elseif (isset($response->message)){
+            $message = $response->message;
+        }
+
+        if ( $attempt === 1 && str_contains( $message, 'Token Expired')) {
+            //invalid token, refresh.
+            $this->refresh_token($token_type);
+            return $this->api_call( $path, $data, $type, $attempt + 1 );
+        }
+
+        $this->log("Error during $path_type retrieval: ".$message);
+
+        /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
+        $msg = "response code: " . $response_code . ", response body: ".print_r($response_body,true);
+
+        $this->_log($msg);
+        update_option('simplybook_api_status', array(
+            'status' => 'error',
+            'error' => esc_sql($msg),
+            'time' => time(),
+        ) );
+
         return [];
     }
 
