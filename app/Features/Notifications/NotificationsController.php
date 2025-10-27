@@ -34,15 +34,16 @@ class NotificationsController implements FeatureInterface
      * This method returns an array of Notice objects that should be added
      * to the database.
      *
-     * @return NoticeInterface[]
      * @internal New Notices should be added here. Upgrade the Notice version if
      * the Notice should be updated. If a Notice should be removed, remove the
      * Notice from this list.
+     *
+     * @return array<int,NoticeInterface>
+     * @throws \LogicException
      */
     private function getNoticeObjects(): array
     {
-        // Add new notices here
-        $pluginNotices = [
+        return [
             new Notices\AddMandatoryProviderNotice(),
             new Notices\MaxedOutProvidersNotice(),
             new Notices\AddMandatoryServiceNotice(),
@@ -50,10 +51,6 @@ class NotificationsController implements FeatureInterface
             new Notices\FailedAuthenticationNotice(),
             new Notices\PublishWidgetNotice(),
         ];
-
-        return array_filter($pluginNotices, function ($notice) {
-            return $notice instanceof NoticeInterface;
-        });
     }
 
     /**

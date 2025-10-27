@@ -38,12 +38,12 @@ class TaskManagementController implements FeatureInterface
      * task should be updated. If a task should be removed, remove the task from
      * this list.
      *
-     * @return TaskInterface[]
+     * @return array<int,TaskInterface>
+     * @throws \LogicException
      */
     private function getTaskObjects(): array
     {
-        // Add new tasks here
-        $pluginTasks = [
+        return [
             new Tasks\FailedAuthenticationTask(),
             new Tasks\PublishWidgetTask(),
             new Tasks\AddMandatoryServiceTask(),
@@ -60,10 +60,6 @@ class TaskManagementController implements FeatureInterface
             new Tasks\PostOnSocialMediaTask(),
             new Tasks\GatherClientInfoTask(),
         ];
-
-        return array_filter($pluginTasks, function ($task) {
-            return $task instanceof TaskInterface;
-        });
     }
 
     /**
