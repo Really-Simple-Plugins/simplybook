@@ -75,7 +75,7 @@ class JsonRpcClient
         $result = json_decode($response, false);
 
         if ($result->id != $currentId) {
-            throw new \Exception('Incorrect response id (request id: ' . esc_html($currentId) . ', response id: ' . esc_html($result->id) . ')' . "\n\nResponse: " . esc_html($response));
+            throw new \Exception('Incorrect response id (request id: ' . $currentId . ', response id: ' . esc_html($result->id) . ')' . "\n\nResponse: " . esc_html($response));
         }
 
         if (isset($result->error) && $result->error) {
