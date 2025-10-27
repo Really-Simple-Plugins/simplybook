@@ -449,7 +449,7 @@ class ApiClient
         }
 
         $validateBasedOnDomainConfig = did_action('init');
-        $domain = $this->get_domain($validateBasedOnDomainConfig);
+        $domain = $this->get_domain((bool) $validateBasedOnDomainConfig);
 
         $companyData = $this->get_company();
         $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
