@@ -723,25 +723,6 @@ class ApiClient
     }
 
     /**
-     * Get user full name to set as the default provider
-     *
-     * @return string
-     */
-    private function get_user_full_name(): string {
-        $user = wp_get_current_user();
-        $first_name = $user->first_name;
-        $last_name = $user->last_name;
-        if ( !empty($first_name) && !empty($last_name) ) {
-            return $first_name . ' ' . $last_name;
-        }
-
-        if ( !empty($user->user_nicename)) {
-            return $user->user_nicename;
-        }
-        return $user->display_name;
-    }
-
-    /**
      * Get the description for the company, with fallbacks.
      * @return string
      */
