@@ -41,6 +41,7 @@ phpcs:reviewdog:
 
       # Create reports with PHPCS - checkstyle for reviewdog
       vendor/bin/phpcs -q \
+      --standard=phpcs.xml.dist \
       --report=full --report-file=phpcs-report.txt \
       --report-checkstyle=phpcs-checkstyle.xml
 
@@ -92,9 +93,16 @@ phpstan:reviewdog:
     - |
       echo "PHPStan: Starting.."
 
-      # Run PHPStan with checkstyle output
+      # Run PHPStan but don't abort the shell on non-zero
       set +e
-      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=checkstyle --no-progress > phpstan-checkstyle.xml
+
+      # Create reports with PHPStan - checkstyle for reviewdog
+      vendor/bin/phpstan analyse --configuration=phpstan.neon.dist \
+      --memory-limit=2048M \
+      --error-format=checkstyle \
+      --no-progress > phpstan-checkstyle.xml
+      
+      # Remember the PHPStan result
       PHPSTAN_EXIT=$?
       set -e
 
