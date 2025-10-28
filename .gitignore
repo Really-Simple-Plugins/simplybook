@@ -80,8 +80,10 @@ assets/languages/*
 !assets/languages/index.php
 !assets/languages/*.pot
 
-# Ignore PHP CodeSniffer report
+# Ignore PHPCS and PHPStan reports
 phpcs-report.txt
+phpstan-report.txt
 
-# Ignore PHP CodeSniffer local config
+# Ignore PHPCS and PHPStan local configs
 phpcs.xml
+phpstan.neon
