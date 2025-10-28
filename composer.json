@@ -54,6 +54,7 @@
         "lint:summary": "vendor/bin/phpcs --report=summary",
         "lint:summary:report": "vendor/bin/phpcs --report=summary --report-file=phpcs-report.txt",
         "quality": "vendor/bin/phpstan analyse --memory-limit=2048M",
-        "quality:report": "vendor/bin/phpstan analyse --memory-limit=2048M > phpstan-report.txt"
+        "quality:report": "vendor/bin/phpstan analyse --memory-limit=2048M > phpstan-report.txt",
+        "quality:diagnose": "vendor/bin/phpstan diagnose --memory-limit=2048M"
     }
 }
