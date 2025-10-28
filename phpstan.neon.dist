@@ -1,6 +1,7 @@
 parameters:
     level: 6
     paths:
+        - simplybook.php
         - app
         - bootstrap
     excludePaths:
