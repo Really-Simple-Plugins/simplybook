@@ -78,7 +78,7 @@ class BlockEndpoints implements MultiEndpointInterface
     /**
      * Return the categories as an array.
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         if (!$this->companyRegistrationIsCompleted()) {
             return [];

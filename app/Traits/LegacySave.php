@@ -33,11 +33,10 @@ trait LegacySave {
      * Get options the old way
      *
      * @deprecated
-     * @param $key
-     * @param $default
+     * @param mixed $default
      * @return mixed
      */
-    public function get_config_obsolete($key, $default = null)
+    public function get_config_obsolete(string $key, $default = null)
     {
         $key = 'simplybookMePl_' . $key;
         $value = get_option($key);
@@ -177,8 +176,7 @@ trait LegacySave {
 
     /**
      * Save data in the config
-     * @param $key
-     * @param $value
+     * @param mixed $value
      * @param bool $staleOverride Flag to indicate that you as a developer knows
      * that the field is stale, and you want to save it anyway. This is used
      * in the onboarding process for example. If false, stale fields
@@ -188,7 +186,7 @@ trait LegacySave {
      * this loads translations as well and can trigger the "jit" error.
      * @return bool
      */
-    public function update_option($key, $value, bool $staleOverride = false, array $config = []): bool
+    public function update_option(string $key, $value, bool $staleOverride = false, array $config = []): bool
     {
         if ( !$this->adminAccessAllowed() ) {
             return false;
@@ -229,12 +227,8 @@ trait LegacySave {
 
 	/**
 	 * Delete an option from the settings array
-	 *
-	 * @param $key
-	 *
-	 * @return void
 	 */
-	public function delete_option($key): void
+	public function delete_option(string $key): void
 	{
 		if ( !$this->adminAccessAllowed() ) {
 			return;
@@ -248,7 +242,8 @@ trait LegacySave {
 		update_option('simplybook_options', $options);
 	}
 
-    public function update_options( $fields ): void {
+    public function update_options(array $fields): void
+    {
         foreach ( $fields as $field ) {
 			$this->update_option( $field['id'], $field['value'] );
         }
@@ -258,12 +253,11 @@ trait LegacySave {
 
     /**
      * Sanitize a value based on the field type
-     *
-     * @param $value
-     * @param string $type
+     * @param mixed $value
      * @return int|string
      */
-    public function sanitize_field( $value, $type, $regex = '' ) {
+    public function sanitize_field($value, string $type, string $regex = '')
+    {
         switch ( $type ) {
             case 'checkbox':
             case 'number':

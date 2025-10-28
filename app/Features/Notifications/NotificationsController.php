@@ -21,7 +21,7 @@ class NotificationsController implements FeatureInterface
         $this->listener = new NotificationListener($this->service);
     }
 
-    public function register()
+    public function register(): void
     {
         $this->endpoints->register();
         $this->listener->listen();

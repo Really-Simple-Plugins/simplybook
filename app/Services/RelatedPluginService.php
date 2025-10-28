@@ -24,7 +24,7 @@ class RelatedPluginService
      * Use this method as the default way to set the plugin config. For an
      * example see {@see \SimplyBook\Http\Endpoints\RelatedPluginEndpoints}
      */
-    public function setPluginConfig(array $pluginConfig)
+    public function setPluginConfig(array $pluginConfig): void
     {
         $this->pluginConfig = new Storage($pluginConfig);
     }

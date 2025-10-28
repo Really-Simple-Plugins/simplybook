@@ -16,7 +16,7 @@ class BlockController implements ControllerInterface
         $this->app = $app;
     }
 
-    public function register()
+    public function register(): void
     {
         if (!function_exists('register_block_type')) {
             // Block editor is not available.
@@ -92,7 +92,7 @@ class BlockController implements ControllerInterface
      * registered in the current context, ensure it's registered before
      * enqueuing assets. This prevents issues in auto-installation situations.
      */
-    public function enqueueGutenbergBlockEditorAssets()
+    public function enqueueGutenbergBlockEditorAssets(): void
     {
         if (
             class_exists('\WP_Block_Type_Registry')

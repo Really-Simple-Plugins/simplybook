@@ -320,10 +320,9 @@ class ApiClient
 
     /**
      * Refresh the token
-     *
-     * @return void
      */
-    public function refresh_token($type = 'public'): void {
+    public function refresh_token(string $type = 'public'): void
+    {
         if ($this->isRefreshLocked($type)) {
             return;
         }
@@ -440,7 +439,7 @@ class ApiClient
      * user. Currently used when refreshing a token results in a 401
      * error on when decrypting an existing token fails.
      */
-    private function automaticAuthenticationFallback(string $type)
+    private function automaticAuthenticationFallback(string $type): void
     {
         // Company login can be empty for fresh accounts
         if ($this->authenticationFailedFlag || empty($this->get_company_login(false))) {
@@ -582,7 +581,8 @@ class ApiClient
         return true;
     }
 
-    public function reset_registration(){
+    public function reset_registration(): void
+    {
         $this->delete_company_login();
         $this->clearTokens();
         delete_option('simplybook_completed_step');
@@ -1054,30 +1054,28 @@ class ApiClient
     }
 
     /**
-     *
-     *
-     * Below old api functions
+     * Check if we have a valid API Connection
      */
-
-
-    public function checkApiConnection(){
+    public function checkApiConnection(): bool
+    {
         $response = wp_remote_get($this->endpoint('admin'));
 
-        //if reponse 401 and valid json - api is working
-        if(wp_remote_retrieve_response_code($response) == 401){
+        // if response 401 and valid json - api is working
+        if (wp_remote_retrieve_response_code($response) == 401) {
             $result = wp_remote_retrieve_body($response);
             $result = json_decode($result, true);
-            if($result && isset($result['code']) && $result['code'] == 401){
+            if ($result && isset($result['code']) && $result['code'] == 401) {
                 return true;
             }
         }
+
         return false;
     }
 
     /**
      * @todo - maybe this can be an Entity in the future?
      */
-    public function getCategories(bool $onlyValues = false)
+    public function getCategories(bool $onlyValues = false): array
     {
         $cacheKey = 'sb_plugin_categories' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
@@ -1093,7 +1091,7 @@ class ApiClient
     /**
      * @todo - maybe this can be an Entity in the future?
      */
-    public function getLocations(bool $onlyValues = false)
+    public function getLocations(bool $onlyValues = false): array
     {
         $cacheKey = 'sb_plugin_locations' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
@@ -1109,7 +1107,7 @@ class ApiClient
     /**
      * @todo - maybe this can be an Entity in the future?
      */
-    public function getSpecialFeatureList()
+    public function getSpecialFeatureList(): array
     {
         $cacheKey = 'sb_plugin_plugins' . $this->_commonCacheKey;
         if (($result = get_transient($cacheKey)) !== false) {
@@ -1152,7 +1150,10 @@ class ApiClient
         return $isActive;
     }
 
-    protected function _log($error)
+    /**
+     * @param mixed $error
+     */
+    protected function _log($error): void
     {
         // Return if WP_DEBUG is not enabled
         if ( !defined('WP_DEBUG') || !WP_DEBUG ) {
@@ -1295,7 +1296,7 @@ class ApiClient
 	 *
 	 * @throws RestDataException
 	 */
-	public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false)
+	public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false): void
     {
         $response = (array) $response; // Ensure we have an array
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
@@ -1524,7 +1525,7 @@ class ApiClient
      * SimplyBook.me API.
      * @throws \Exception
      */
-    public function get(string $endpoint)
+    public function get(string $endpoint): array
     {
         if ($this->company_registration_complete() === false) {
             throw new \Exception('Company registration is not complete.');
@@ -1546,7 +1547,7 @@ class ApiClient
      * SimplyBook.me API.
      * @throws RestDataException
      */
-    public function put($endpoint, string $payload): array
+    public function put(string $endpoint, string $payload): array
     {
         return $this->request('PUT', $endpoint, $payload);
     }
@@ -1556,7 +1557,7 @@ class ApiClient
      * SimplyBook.me API.
      * @throws RestDataException
      */
-    public function post($endpoint, string $payload): array
+    public function post(string $endpoint, string $payload): array
     {
         return $this->request('POST', $endpoint, $payload);
     }
@@ -1566,7 +1567,7 @@ class ApiClient
      * SimplyBook.me API.
      * @throws RestDataException
      */
-    public function delete($endpoint): array
+    public function delete(string $endpoint): array
     {
         return $this->request('DELETE', $endpoint);
     }
@@ -1649,6 +1650,7 @@ class ApiClient
      * Get the request cache for a specific endpoint. This is used to retrieve
      * cached data for a specific endpoint.
      * @uses wp_cache_get
+     * @return false|mixed
      */
     private function getRequestCache(string $endpoint)
     {

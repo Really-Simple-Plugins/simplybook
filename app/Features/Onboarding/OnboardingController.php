@@ -28,7 +28,7 @@ class OnboardingController implements FeatureInterface
         $this->widgetService = $widgetTrackingService;
     }
 
-    public function register()
+    public function register(): void
     {
         // Check if the user has admin access permissions
         if (!$this->adminAccessAllowed()) {
@@ -227,7 +227,7 @@ class OnboardingController implements FeatureInterface
     /**
      * Generate default shortcode pages
      */
-    public function generateDefaultPages($request, $ajaxData = []): \WP_REST_Response
+    public function generateDefaultPages(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
@@ -376,7 +376,7 @@ class OnboardingController implements FeatureInterface
      * lost. To see this fallback look at {@see ApiClient::refresh_token} on
      * line 352.
      */
-    protected function saveLoginCompanyData(string $userLogin, string $password)
+    protected function saveLoginCompanyData(string $userLogin, string $password): void
     {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setUserLogin($userLogin)->setPassword(

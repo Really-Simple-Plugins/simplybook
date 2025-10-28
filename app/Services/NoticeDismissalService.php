@@ -68,7 +68,7 @@ class NoticeDismissalService
      * functionality to work. You can only execute this method in the
      * admin_enqueue_scripts filter.
      */
-    public function enqueue()
+    public function enqueue(): void
     {
         if (current_filter() !== 'admin_enqueue_scripts') {
             return;

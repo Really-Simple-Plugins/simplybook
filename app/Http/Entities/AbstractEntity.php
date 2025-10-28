@@ -156,7 +156,7 @@ abstract class AbstractEntity
     /**
      * Register the current entity as initializing.
      */
-    protected function enableFirstInitialize()
+    protected function enableFirstInitialize(): void
     {
         $this->initializing = true;
     }
@@ -164,7 +164,7 @@ abstract class AbstractEntity
     /**
      * Register the current entity as initialized.
      */
-    protected function disableFirstInitialize()
+    protected function disableFirstInitialize(): void
     {
         $this->initializing = false;
     }
@@ -183,6 +183,7 @@ abstract class AbstractEntity
 
     /**
      * Check if the key is fillable.
+     * @param mixed $key
      */
     protected function isFillable($key): bool
     {
@@ -192,6 +193,7 @@ abstract class AbstractEntity
     /**
      * Set an attribute and register it as changed if it is different from the
      * previous value.
+     * @param mixed $value
      */
     protected function setAttribute(string $key, $value): void
     {

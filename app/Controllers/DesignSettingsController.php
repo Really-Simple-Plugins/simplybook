@@ -15,7 +15,7 @@ class DesignSettingsController implements ControllerInterface
         $this->service = $service;
     }
 
-    public function register()
+    public function register(): void
     {
         add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);
         add_action('simplybook_save_onboarding_widget_style', [$this, 'saveOnboardingWidgetStyle']);

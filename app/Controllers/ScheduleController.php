@@ -6,7 +6,7 @@ use SimplyBook\Interfaces\ControllerInterface;
 
 class ScheduleController implements ControllerInterface
 {
-    public function register()
+    public function register(): void
     {
         add_filter('cron_schedules', [$this, 'registerSimplyBookSchedules']);
         add_action('plugins_loaded', [$this, 'startSimplyBookSchedules']);

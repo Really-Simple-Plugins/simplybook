@@ -14,5 +14,5 @@ interface ControllerInterface
      * {@see ControllerManager} will make sure the method is called in the boot
      * process of the plugin.
      */
-    public function register();
+    public function register(): void;
 }

@@ -85,6 +85,7 @@ class ServiceProvider extends AbstractEntity
 
     /**
      * Ensure the provider ID is a non-negative integer
+     * @param mixed $value
      */
     public function setIdAttribute($value): int
     {
@@ -94,6 +95,7 @@ class ServiceProvider extends AbstractEntity
 
     /**
      * Sanitize the provider name as a text field.
+     * @param mixed $value
      */
     protected function setNameAttribute($value): string
     {
@@ -102,6 +104,7 @@ class ServiceProvider extends AbstractEntity
 
     /**
      * Ensure the visibility status is a boolean.
+     * @param mixed $value
      */
     protected function setIsVisibleAttribute($value): bool
     {
@@ -110,6 +113,7 @@ class ServiceProvider extends AbstractEntity
 
     /**
      * Sanitize the provider email as a valid email address.
+     * @param mixed $value
      */
     protected function setEmailAttribute($value): string
     {
@@ -120,6 +124,7 @@ class ServiceProvider extends AbstractEntity
      * Sanitize the provider phone number as a text field.
      * This is a simple sanitization, you might want to use a more complex
      * validation depending on your requirements.
+     * @param mixed $value
      */
     protected function setPhoneAttribute($value): string
     {
@@ -129,6 +134,7 @@ class ServiceProvider extends AbstractEntity
     /**
      * Ensure the provider quantity is a non-negative integer. SimplyBook.me
      * requires a positive quantity, so we ensure it's at least 1.
+     * @param mixed $value
      */
     protected function setQtyAttribute($value): int
     {

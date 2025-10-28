@@ -17,7 +17,7 @@ class TaskManagementEndpoints
         $this->service = $service;
     }
 
-    public function register()
+    public function register(): void
     {
         add_filter('simplybook_rest_routes', [$this, 'addTaskRoutes']);
     }

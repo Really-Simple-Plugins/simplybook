@@ -54,7 +54,7 @@ class OnboardingService
      * In that case the data given should be based on the data returned in the
      * ApiResponseDTO from the successful {@see ApiClient::register_company()}
      */
-    public function finishCompanyRegistration(array $data)
+    public function finishCompanyRegistration(array $data): void
     {
         $responseDataStorage = new Storage($data);
 

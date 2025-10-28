@@ -21,7 +21,7 @@ class TaskManagementController implements FeatureInterface
         $this->listener = new TaskManagementListener($this->service);
     }
 
-    public function register()
+    public function register(): void
     {
         $this->endpoints->register();
         $this->listener->listen();

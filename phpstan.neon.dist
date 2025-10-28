@@ -1,5 +1,5 @@
 parameters:
-    level: 5
+    level: 6
     paths:
         - app
         - bootstrap
@@ -12,6 +12,13 @@ parameters:
     ignoreErrors:
         - identifier: return.void
           message: '#^Action callback returns .+ but should not return anything\.$#'
+
         # Ignore Elementor Errors in BlockController for example
         - identifier: class.notFound
           message: '#\b(Elementor)\\#'
+
+        # We accept just the type "array" instead of "array<int,string>"
+        - identifier: missingType.iterableValue
+
+        # Some stubs report generics for, for example, WP_REST_Request. This is not needed in the WordPress context.
+        - identifier: missingType.generics

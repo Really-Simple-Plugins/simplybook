@@ -20,7 +20,7 @@ class ServicesController implements ControllerInterface
         $this->service = $service;
     }
 
-    public function register()
+    public function register(): void
     {
         add_action('simplybook_after_company_registered', [$this, 'setInitialServiceName']);
     }

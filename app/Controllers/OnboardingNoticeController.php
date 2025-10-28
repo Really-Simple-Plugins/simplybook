@@ -172,6 +172,7 @@ class OnboardingNoticeController implements ControllerInterface
 
     /**
      * Check if the timestamp is after the given amount of days ago.
+     * @param string|float|int $timestamp
      */
     private function timestampIsAfter($timestamp, int $daysAgo = 7): bool
     {

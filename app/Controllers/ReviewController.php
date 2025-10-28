@@ -161,6 +161,7 @@ class ReviewController implements ControllerInterface
 
     /**
      * Check if the timestamp is more than 30 days ago.
+     * @param float|int|string $timestamp
      */
     private function timestampIsThirtyDaysAgo($timestamp): bool
     {

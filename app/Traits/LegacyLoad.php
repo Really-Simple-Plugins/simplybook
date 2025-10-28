@@ -16,10 +16,10 @@ trait LegacyLoad {
 	use HasAllowlistControl;
 	use HasEncryption;
 
-	public $fields = [];
-	public $values_loaded = false;
+	public array $fields = [];
+	public bool $values_loaded = false;
 
-    public $counter = 0;
+    public int $counter = 0;
 
     /**
      * Get a field by ID
@@ -196,7 +196,7 @@ trait LegacyLoad {
      * translation errors while loading the fields.
      * @throws \LogicException For developers
      */
-    public function get_domain(bool $validate = true)
+    public function get_domain(bool $validate = true): string
     {
         if ($cache = wp_cache_get('simplybook_get_domain_legacy_load', 'simplybook')) {
             return $cache;

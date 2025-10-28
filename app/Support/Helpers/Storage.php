@@ -145,7 +145,7 @@ class Storage extends Dot
     /**
      * Returns the parameter value typecast as float.
      */
-    public function getFloat(string $key, $default = 0): float
+    public function getFloat(string $key, float $default = 0): float
     {
         return (float) $this->get($key, $default);
     }
@@ -154,7 +154,7 @@ class Storage extends Dot
      * Returns the parameter value filtered as a boolean. Uses flag:
      * FILTER_VALIDATE_BOOLEAN
      */
-    public function getBoolean(string $key, $default = false): bool
+    public function getBoolean(string $key, bool $default = false): bool
     {
         return $this->filter($key, $default, FILTER_VALIDATE_BOOLEAN);
     }
@@ -200,6 +200,8 @@ class Storage extends Dot
 
     /**
      * Filter key.
+     * @param mixed $default
+     * @param array|int $options
      * @return mixed
      * @see http://php.net/manual/en/function.filter-var.php
      */

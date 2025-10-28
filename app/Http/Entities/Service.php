@@ -76,6 +76,7 @@ class Service extends AbstractEntity
 
     /**
      * Ensure the service ID is a non-negative integer
+     * @param mixed $value
      */
     public function setIdAttribute($value): int
     {
@@ -85,6 +86,7 @@ class Service extends AbstractEntity
 
     /**
      * Sanitize the service name as a text field.
+     * @param mixed $value
      */
     protected function setNameAttribute($value): string
     {
@@ -93,6 +95,7 @@ class Service extends AbstractEntity
 
     /**
      * Ensure the service price is a non-negative float.
+     * @param mixed $value
      */
     protected function setPriceAttribute($value): float
     {
@@ -102,6 +105,7 @@ class Service extends AbstractEntity
 
     /**
      * Ensure the service duration is a positive integer (minimum 1 minute).
+     * @param mixed $value
      */
     protected function setDurationAttribute($value): int
     {
@@ -111,6 +115,7 @@ class Service extends AbstractEntity
 
     /**
      * Ensure the visibility status is a boolean.
+     * @param mixed $value
      */
     protected function setIsVisibleAttribute($value): bool
     {

@@ -23,7 +23,7 @@ class WidgetController implements ControllerInterface
         $this->service = $service;
     }
 
-    public function register()
+    public function register(): void
     {
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
 

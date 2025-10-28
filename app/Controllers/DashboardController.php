@@ -26,7 +26,7 @@ class DashboardController implements ControllerInterface
         $this->themeColorService = $themeColorService;
     }
 
-    public function register()
+    public function register(): void
     {
         if ($this->userCanManage() === false) {
             return;
@@ -109,7 +109,7 @@ class DashboardController implements ControllerInterface
     /**
      * Enqueue the Tailwind CSS for the dashboard in the header
      */
-    public function enqueueDashboardStyles()
+    public function enqueueDashboardStyles(): void
     {
         $chunkTranslation = $this->getReactChunkTranslations();
         if (empty($chunkTranslation)) {

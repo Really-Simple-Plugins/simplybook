@@ -10,7 +10,7 @@ class SettingsController implements ControllerInterface
     // todo
     use LegacySave;
 
-    public function register()
+    public function register(): void
     {
         add_action('simplybook_activation', [$this, 'handlePluginActivation']);
         add_action('simplybook_plugin_version_upgrade', [$this, 'handlePluginUpgrade'], 10, 2);

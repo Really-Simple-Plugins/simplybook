@@ -50,6 +50,7 @@ class DesignSettingsService
     /**
      * Get the configuration for the design settings. This is used to validate
      * the settings.
+     * @return mixed|array
      */
     public function getDesignConfiguration()
     {
@@ -66,7 +67,7 @@ class DesignSettingsService
      * @uses wp_cache_get
      * @uses wp_cache_set Set the cache for 60 seconds.
      */
-    public function getDesignOptions()
+    public function getDesignOptions(): array
     {
         if ($cache = wp_cache_get('design_settings', 'simplybook')) {
             return $cache;
@@ -112,7 +113,7 @@ class DesignSettingsService
      * will also remove the obsolete theme settings with key:
      * simplybookMePl_widget_settings
      */
-    public function handleLegacyDesignUpgrade()
+    public function handleLegacyDesignUpgrade(): void
     {
         $legacyDesignSettings = $this->get_config_obsolete('widget_settings');
 

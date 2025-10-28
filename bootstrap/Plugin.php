@@ -9,7 +9,7 @@ use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
 
-class Plugin
+final class Plugin
 {
     private App $app;
     private FeatureManager $featureManager;
@@ -33,7 +33,7 @@ class Plugin
     /**
      * Boot the plugin
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerEnvironment();
 
@@ -57,7 +57,7 @@ class Plugin
      * default value is production and can be [production|development].
      * See {@see config/environment.php} for the actual values.
      */
-    public function registerEnvironment()
+    public function registerEnvironment(): void
     {
         if (!defined('SIMPLYBOOK_ENV')) {
             define('SIMPLYBOOK_ENV', 'development');
@@ -67,7 +67,7 @@ class Plugin
     /**
      * Load the plugin text domain for translations
      */
-    public function loadPluginTextDomain()
+    public function loadPluginTextDomain(): void
     {
         load_plugin_textdomain('simplybook');
     }
@@ -77,7 +77,7 @@ class Plugin
      * options table to indicate that the plugin is being activated. Flag is
      * used by {@see fireActivationHook} to run the activation hook only once.
      */
-    public function activation()
+    public function activation(): void
     {
         global $pagenow;
 
@@ -98,7 +98,7 @@ class Plugin
      * {@see activation} and is used to determine if the plugin is being
      * activated. This method removes the flag after it has been used.
      */
-    public function fireActivationHook()
+    public function fireActivationHook(): void
     {
         if (get_option('simplybook_activation_flag', false) === false) {
             return;
@@ -119,7 +119,7 @@ class Plugin
     /**
      * Method that fires on deactivation
      */
-    public function deactivation()
+    public function deactivation(): void
     {
         // Silence is golden
     }
@@ -127,7 +127,7 @@ class Plugin
     /**
      * Method that fires on uninstall
      */
-    public static function uninstall()
+    public static function uninstall(): void
     {
         $uninstallInstance = new \SimplyBook\Support\Helpers\Uninstall();
         $uninstallInstance->handlePluginUninstall();
@@ -140,7 +140,7 @@ class Plugin
      * providerManager to fire the simplybook_providers_loaded action.
      * @uses do_action simplybook_providers_loaded
      */
-    public function registerProviders()
+    public function registerProviders(): void
     {
         $this->providerManager->register([
             \SimplyBook\Providers\ConfigServiceProvider::class,
@@ -154,7 +154,7 @@ class Plugin
      * features are available to the Controllers.
      * @uses do_action simplybook_controllers_loaded
      */
-    public function registerControllers()
+    public function registerControllers(): void
     {
         $this->controllerManager->register([
             \SimplyBook\Controllers\DashboardController::class,
@@ -178,7 +178,7 @@ class Plugin
      * rest_api_init to make sure the REST API is available.
      * @uses do_action simplybook_endpoints_loaded
      */
-    public function registerEndpoints()
+    public function registerEndpoints(): void
     {
         $this->endpointManager->register([
             \SimplyBook\Http\Endpoints\LoginUrlEndpoint::class,
