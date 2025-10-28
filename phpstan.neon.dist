@@ -10,6 +10,7 @@ parameters:
         EXTENDIFY_PARTNER_ID: string|null
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
+        # Ignore errors for add_action and add_filter callbacks that have a return type declared
         - identifier: return.void
           message: '#^Action callback returns .+ but should not return anything\.$#'
 
