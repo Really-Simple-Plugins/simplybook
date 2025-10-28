@@ -60,7 +60,7 @@ phpcs:reviewdog:
       curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
 
       # Add line and column to the message in the checkstyle report
-      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpcs-checkstyle.xml || true
 
       # Post inline MR comments; FAIL if any finding (warnings or errors) exists
       reviewdog -f=checkstyle \
@@ -108,6 +108,9 @@ phpstan:reviewdog:
 
       # Install reviewdog
       curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+
+      # Add line and column to the message in the checkstyle report
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*column="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4\5\6 (line:\2:\4)"|g' phpstan-checkstyle.xml || true
 
       # Post inline MR comments; fail the job on any findings
       reviewdog -f=checkstyle \
