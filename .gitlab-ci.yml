@@ -1,5 +1,6 @@
 stages:
   - lint
+  - quality
 
 # Setup PHP + Composer template
 .setup_php:
@@ -76,6 +77,59 @@ phpcs:reviewdog:
     paths:
       - phpcs-checkstyle.xml
       - phpcs-report.txt
+    expire_in: 1 week
+  variables:
+    REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
+    REVIEWDOG_GITLAB_API_TOKEN: "$MR_REVIEW_GITLAB_API_TOKEN"
+
+phpstan:reviewdog:
+  stage: quality
+  extends: .setup_php
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  script:
+    - |
+      echo "PHPStan: Starting.."
+
+      # Run PHPStan (human-readable table report)
+      set +e
+      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=table --no-progress > phpstan-report.txt
+      PHPSTAN_EXIT=$?
+      set -e
+
+      # Exit silently if all clean
+      if [ "$PHPSTAN_EXIT" -eq 0 ]; then
+        echo "PHPStan: clean!"
+        exit 0
+      fi
+
+      echo "PHPStan: issues found -> generating checkstyle report and posting with reviewdog."
+
+      # Generate checkstyle report only when issues exist
+      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=checkstyle --no-progress > phpstan-checkstyle.xml
+
+      # Install reviewdog only if missing (phpcs job may have installed it already)
+      if ! command -v reviewdog >/dev/null 2>&1; then
+        curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh \
+          | sh -s -- -b /usr/local/bin >/dev/null
+      fi
+
+      # Post inline MR comments; fail the job on any findings
+      reviewdog -f=checkstyle \
+        -name="PHPStan" \
+        -reporter=gitlab-mr-discussion \
+        -filter-mode=diff_context \
+        -level=warning \
+        -fail-level=any \
+        < phpstan-checkstyle.xml >/dev/null
+
+      exit "$PHPSTAN_EXIT"
+  artifacts:
+    when: on_failure
+    paths:
+      - phpstan-checkstyle.xml
+      - phpstan-report.txt
     expire_in: 1 week
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
