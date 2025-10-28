@@ -92,9 +92,9 @@ phpstan:reviewdog:
     - |
       echo "PHPStan: Starting.."
 
-      # Run PHPStan (human-readable table report)
+      # Run PHPStan with checkstyle output
       set +e
-      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=table --no-progress > phpstan-report.txt
+      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=checkstyle --no-progress > phpstan-checkstyle.xml
       PHPSTAN_EXIT=$?
       set -e
 
@@ -106,14 +106,8 @@ phpstan:reviewdog:
 
       echo "PHPStan: issues found -> generating checkstyle report and posting with reviewdog."
 
-      # Generate checkstyle report only when issues exist
-      vendor/bin/phpstan analyse --memory-limit=2048M --error-format=checkstyle --no-progress > phpstan-checkstyle.xml
-
-      # Install reviewdog only if missing (phpcs job may have installed it already)
-      if ! command -v reviewdog >/dev/null 2>&1; then
-        curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh \
-          | sh -s -- -b /usr/local/bin >/dev/null
-      fi
+      # Install reviewdog
+      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
 
       # Post inline MR comments; fail the job on any findings
       reviewdog -f=checkstyle \
@@ -129,7 +123,6 @@ phpstan:reviewdog:
     when: on_failure
     paths:
       - phpstan-checkstyle.xml
-      - phpstan-report.txt
     expire_in: 1 week
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
