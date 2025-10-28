@@ -64,7 +64,7 @@ phpcs:reviewdog:
 
       # Post inline MR comments; FAIL if any finding (warnings or errors) exists
       reviewdog -f=checkstyle \
-        -name="Lint (PHPCS)" \
+        -name="PHPCS" \
         -reporter=gitlab-mr-discussion \
         -filter-mode=diff_context \
         -level=warning \
@@ -114,7 +114,7 @@ phpstan:reviewdog:
 
       # Post inline MR comments; fail the job on any findings
       reviewdog -f=checkstyle \
-        -name="Quality (PHPStan)" \
+        -name="PHPStan" \
         -reporter=gitlab-mr-discussion \
         -filter-mode=diff_context \
         -level=warning \
