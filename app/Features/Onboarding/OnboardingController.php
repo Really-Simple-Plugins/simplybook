@@ -169,7 +169,7 @@ class OnboardingController implements FeatureInterface
         }
 
         if (!empty($error)) {
-            return $this->service->sendHttpResponse([], false, $error);
+            return $this->service->sendHttpResponse([], false, $error, 400);
         }
 
         try {
@@ -181,7 +181,11 @@ class OnboardingController implements FeatureInterface
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
 
-        $this->service->setCompletedStep(3);
+        // Only mark step as completed if the API call was successful
+        if ($response->success) {
+            $this->service->setCompletedStep(3);
+        }
+
         return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
