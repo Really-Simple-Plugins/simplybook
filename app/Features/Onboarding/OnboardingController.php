@@ -174,7 +174,7 @@ class OnboardingController implements FeatureInterface
 
         try {
             $response = $this->app->client->confirm_email(
-                $storage->getInt('confirmation-code'),
+                $storage->getString('confirmation-code'),
                 $storage->getString('recaptchaToken')
             );
         } catch (ApiException $e) {
