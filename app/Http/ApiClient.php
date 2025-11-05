@@ -32,7 +32,6 @@ class ApiClient
     use HasAllowlistControl;
 
     protected App $app;
-    protected JsonRpcClient $jsonRpcClient;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -68,7 +67,7 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(App $app, JsonRpcClient $client)
+    public function __construct(App $app)
     {
         $this->app = $app;
         $environment = $this->app->env->get('simplybook.api', []);
@@ -77,7 +76,6 @@ class ApiClient
             throw new \LogicException('Register the environment for the application in the container');
         }
 
-        $this->jsonRpcClient = $client;
         $this->applicationKey = ($environment['app_key'] ?? '');
 
         if (empty($this->applicationKey)) {
@@ -1412,7 +1410,6 @@ class ApiClient
 
     /**
      * Get the list of themes available for the company
-     * @uses \SimplyBook\Http\JsonRpcClient
      * @throws \Exception
      */
     public function getThemeList(): array
@@ -1440,15 +1437,14 @@ class ApiClient
             return $cachedOption;
         }
 
-        $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public', '', false)
-        )->setHeaders([
-            'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->getToken('public'),
-        ])->getThemeList();
+        $response = $this->post('public', json_encode([
+            'jsonrpc' => '2.0',
+            'method' => 'getThemeList',
+            'id' => 1,
+        ]));
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
-        $data['themes'] = $response;
+        $data['themes'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_theme_list', $data);
         wp_cache_add('simplybook_theme_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
@@ -1457,7 +1453,6 @@ class ApiClient
 
     /**
      * Get the timeline setting options that are available for the company
-     * @uses \SimplyBook\Http\JsonRpcClient
      */
     public function getTimelineList(): array
     {
@@ -1484,19 +1479,18 @@ class ApiClient
             return $cachedOption;
         }
 
-        $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public', '', false)
-        )->setHeaders([
-            'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->getToken('public'),
-        ])->getTimelineList();
+        $response = $this->post('public', json_encode([
+            'jsonrpc' => '2.0',
+            'method' => 'getTimelineList',
+            'id' => 1,
+        ]));
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
-        $data['list'] = $response;
+        $data['list'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_timeline_list', $data);
-        wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
-        return $response;
+        wp_cache_add('simplybook_timeline_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $data;
     }
 
 	/**
@@ -1592,8 +1586,11 @@ class ApiClient
             $requestArgs['body'] = $payload;
         }
 
+        // For JSON RPC endpoints (endpoint is exactly 'public'), use v1 API
+        $useV2 = ($endpoint !== 'public');
+
         $response = wp_safe_remote_request(
-            $this->endpoint($endpoint),
+            $this->endpoint($endpoint, '', $useV2),
             $requestArgs
         );
 
