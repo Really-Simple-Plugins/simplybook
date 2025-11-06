@@ -29,20 +29,20 @@ const TipsTricks = () => {
                 controls={undefined}
             />
             <BlockContent className="px-4 flex items-center">
-                <div className="flex flex-col justify-start gap-x-4">
+                <div className="flex flex-col gap-1.5 mb-2.5 text-sm leading-relaxed w-full">
                     {loadingCompleted && (
                         data.data.items.map((item: any, i: number) => (
-                            <Tip className="mb-2 w-[48%]" key={`trick-${i}`} title={item.title} link={item.link} content={item.content} />
+                            <Tip key={`trick-${i}`} link={item.link} content={item.content} />
                         ))
                     )}
                 </div>
             </BlockContent>
-            <BlockFooter className="pt-2">
-                <ButtonLink 
+            <BlockFooter>
+                <ButtonLink
                     reverseIcon={true}
                     iconName="target-blank"
-                    className={"border-sb-blue text-sb-blue"} 
-                    link={data?.data.all ?? '#'} 
+                    className={"border-sb-blue text-sb-blue"}
+                    link={data?.data.all ?? '#'}
                     target={"_blank"}
                     btnVariant={"square-ghost-small"}
                 >
