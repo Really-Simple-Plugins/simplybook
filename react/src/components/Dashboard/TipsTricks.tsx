@@ -29,7 +29,7 @@ const TipsTricks = () => {
                 controls={undefined}
             />
             <BlockContent className="px-4 flex items-center">
-                <div className="flex flex-col gap-1.5 mb-2.5 text-sm leading-relaxed w-full">
+                <div className="flex flex-col gap-1.5 mb-2.5 text-sm w-full">
                     {loadingCompleted && (
                         data.data.items.map((item: any, i: number) => (
                             <Tip key={`trick-${i}`} link={item.link} content={item.content} />
