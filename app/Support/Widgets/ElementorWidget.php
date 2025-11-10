@@ -71,7 +71,7 @@ class ElementorWidget extends Widget_Base
             ]
         );
 
-        if (!$this->companyRegistrationIsCompleted()) {
+        if (get_option('simplybook_onboarding_completed', false) === false) {
             $this->addLoginRequiredControl();
         } else {
             $this->addServiceControl();

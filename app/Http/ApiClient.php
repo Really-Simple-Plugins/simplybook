@@ -169,11 +169,21 @@ class ApiClient
                 $this->delete_company_login();
             }
 
-            wp_cache_set($cacheName, $cacheName, 'simplybook', MINUTE_IN_SECONDS);
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
 
-        wp_cache_set($cacheName, $cacheName, 'simplybook', (MINUTE_IN_SECONDS * 10));
+	    // If the token exists, and the onboarding is completed, we know
+	    // the company registration is complete, and we can cache for a longer
+	    // time.
+	    $isOnboardingCompleted = ( get_option('simplybook_onboarding_completed', false) !== false );
+	    if ( $isOnboardingCompleted ) {
+		    $cacheTime = DAY_IN_SECONDS;
+	    } else {
+		    $cacheTime = MINUTE_IN_SECONDS * 10;
+	    }
+
+        wp_cache_set($cacheName, true, 'simplybook', $cacheTime);
         return true;
     }
 
