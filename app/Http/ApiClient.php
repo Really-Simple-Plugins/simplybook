@@ -183,7 +183,7 @@ class ApiClient
 	    // If the token exists, and the onboarding is completed, we know
 	    // the company registration is complete, and we can cache for a longer
 	    // time.
-	    $isOnboardingCompleted = (get_option( 'simplybook_onboarding_completed', false ) !== false);
+	    $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
 	    $cacheTime = MINUTE_IN_SECONDS * 10;
 	    if ($isOnboardingCompleted) {
 		    $cacheTime = DAY_IN_SECONDS;
