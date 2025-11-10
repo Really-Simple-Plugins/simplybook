@@ -10,7 +10,7 @@ const Tip: React.FC<TipsProps> = ({
 }) => {
     return (
         <Link
-            className="group flex items-center gap-2.5 transition-colors duration-300 ease-in-out hover:text-primary hover:[&>svg]:text-primary no-underline min-w-0"
+            className="group flex items-center gap-2 transition-colors duration-300 ease-in-out text-black hover:text-primary hover:[&>svg]:text-primary no-underline min-w-0"
             target="_blank"
             to={link}
             title={content}
