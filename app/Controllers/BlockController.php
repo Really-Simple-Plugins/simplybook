@@ -154,7 +154,10 @@ class BlockController implements ControllerInterface
             return !empty($value);
         });
 
-        return '[simplybook_widget' . $this->attributesToString($attributes) . ']';
+        $shortcode = '[simplybook_widget' . $this->attributesToString($attributes) . ']';
+
+        // Process the shortcode explicitly for FSE compatibility
+        return do_shortcode($shortcode);
     }
 
     /**
