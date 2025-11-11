@@ -32,7 +32,7 @@ class MaximumBookingsTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('You have reached the maximum number of bookings for your plan', 'simplybook');
+        return __('You have reached the maximum number of bookings for your plan', 'simplybook');
     }
 
     /**
@@ -42,7 +42,7 @@ class MaximumBookingsTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade', 'simplybook'),
+            'text' => __('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget#/',
         ];
     }

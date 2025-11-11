@@ -21,7 +21,7 @@ class AcceptPaymentsTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Accept payments via SimplyBook.me', 'simplybook');
+        return __('Accept payments via SimplyBook.me', 'simplybook');
     }
 
     /**
@@ -31,7 +31,7 @@ class AcceptPaymentsTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info', 'simplybook'),
+            'text' => __('More info', 'simplybook'),
             'login_link' => 'v2/management/#plugins/paid_events',
         ];
     }

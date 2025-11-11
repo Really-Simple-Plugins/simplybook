@@ -11,7 +11,7 @@ class AddMandatoryServiceNotice extends AbstractNotice
      */
     public function getTitle(): string
     {
-        return esc_html__('No Services configured', 'simplybook');
+        return __('No Services configured', 'simplybook');
     }
 
     /**
@@ -19,7 +19,7 @@ class AddMandatoryServiceNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service', 'simplybook');
+        return __('Please configure at least one Service', 'simplybook');
     }
 
     /**
@@ -44,7 +44,7 @@ class AddMandatoryServiceNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => esc_html__('Add Service', 'simplybook'),
+            'text' => __('Add Service', 'simplybook'),
             'login_link' => '/v2/management/#services/edit/details/add',
         ];
     }

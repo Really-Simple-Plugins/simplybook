@@ -21,7 +21,7 @@ class GatherClientInfoTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Gather information from your clients upon booking', 'simplybook');
+        return __('Gather information from your clients upon booking', 'simplybook');
     }
 
     /**
@@ -31,7 +31,7 @@ class GatherClientInfoTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info', 'simplybook'),
+            'text' => __('More info', 'simplybook'),
             'login_link' => 'v2/management/#additional-fields',
         ];
     }

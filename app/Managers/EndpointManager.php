@@ -182,7 +182,7 @@ final class EndpointManager extends AbstractManager
         if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
             return new \WP_Error(
                 'rest_forbidden',
-                esc_html__('Forbidden.', 'simplybook'),
+                __('Forbidden.', 'simplybook'),
                 ['status' => 403]
             );
         }

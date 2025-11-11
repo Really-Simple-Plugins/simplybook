@@ -20,7 +20,7 @@ class AddAllServicesTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Have you added all your Services?', 'simplybook');
+        return __('Have you added all your Services?', 'simplybook');
     }
 
     /**
@@ -30,7 +30,7 @@ class AddAllServicesTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add Services', 'simplybook'),
+            'text' => __('Add Services', 'simplybook'),
             'login_link' => '/v2/management/#services',
         ];
     }

@@ -26,7 +26,7 @@ class AddMandatoryServiceTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service', 'simplybook');
+        return __('Please configure at least one Service', 'simplybook');
     }
 
     /**
@@ -36,7 +36,7 @@ class AddMandatoryServiceTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add Service', 'simplybook'),
+            'text' => __('Add Service', 'simplybook'),
             'link' => 'settings/services',
         ];
     }

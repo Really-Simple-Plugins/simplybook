@@ -193,7 +193,7 @@ class DesignSettingsService
             }
 
             $invalid = false;
-            $errorMessage = esc_html__('Invalid value for setting', 'simplybook') . ': ' . ($config['label'] ?? $config['id']);
+            $errorMessage = __('Invalid value for setting', 'simplybook') . ': ' . ($config['label'] ?? $config['id']);
 
             // Saved value does not match regex
             if (!empty($config['regex']) && (preg_match($config['regex'], $value) !== 1)) {

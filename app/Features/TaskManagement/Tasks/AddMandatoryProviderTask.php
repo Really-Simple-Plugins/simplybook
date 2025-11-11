@@ -26,7 +26,7 @@ class AddMandatoryProviderTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service Provider', 'simplybook');
+        return __('Please configure at least one Service Provider', 'simplybook');
     }
 
     /**
@@ -36,7 +36,7 @@ class AddMandatoryProviderTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Add Provider', 'simplybook'),
+            'text' => __('Add Provider', 'simplybook'),
             'link' => 'settings/providers',
         ];
     }

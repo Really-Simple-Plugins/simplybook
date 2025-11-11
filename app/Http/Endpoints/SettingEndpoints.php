@@ -111,7 +111,7 @@ class SettingEndpoints implements MultiEndpointInterface
         } catch (FormException $e) {
             return $this->sendHttpResponse([
                 'errors' => $e->getErrors(),
-            ], false, esc_html__('Error processing settings', 'simplybook'));
+            ], false, __('Error processing settings', 'simplybook'));
         }
 
         $fields = $this->fields(true);

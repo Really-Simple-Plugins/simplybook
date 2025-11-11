@@ -16,7 +16,7 @@ class CustomizeDesignTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Customize your booking widget', 'simplybook');
+        return __('Customize your booking widget', 'simplybook');
     }
 
     /**
@@ -26,7 +26,7 @@ class CustomizeDesignTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Design settings', 'simplybook'),
+            'text' => __('Design settings', 'simplybook'),
             'link' => 'settings/design',
         ];
     }
