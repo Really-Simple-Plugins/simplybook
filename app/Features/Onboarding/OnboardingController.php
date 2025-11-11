@@ -160,8 +160,7 @@ class OnboardingController implements FeatureInterface
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         if ($storage->isEmpty('recaptchaToken')) {
-            // wp_kses_post to allow apostrophe in the message
-            $error = wp_kses_post(__('Please verify you\'re not a robot.', 'simplybook'));
+            $error = __("Please verify you're not a robot.", 'simplybook');
         }
 
         if ($storage->isEmpty('confirmation-code')) {

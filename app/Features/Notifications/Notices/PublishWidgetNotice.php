@@ -42,7 +42,7 @@ class PublishWidgetNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return __('It seems that you haven\'t published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!', 'simplybook');
+        return __("It seems that you haven't published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!", 'simplybook');
     }
 
     /**
