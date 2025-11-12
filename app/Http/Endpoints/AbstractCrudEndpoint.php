@@ -100,12 +100,13 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
-	    // translators: %s is either 'Service' or 'Service Provider'
-	    $successMessage = sprintf(
-		    __('%s successfully saved!', 'simplybook'),
-		    $this->entity->getName()
-	    );
-		return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
+        return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
     /**
@@ -165,12 +166,13 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'update');
         }
 
-	    // translators: %s is either 'Service' or 'Service Provider'
-	    $successMessage = sprintf(
-		    __('%s successfully saved!', 'simplybook'),
-		    $this->entity->getName()
-	    );
-		return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
+        return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
     /**
