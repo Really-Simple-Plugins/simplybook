@@ -193,6 +193,12 @@ class WidgetScriptBuilder
 
     /**
      * Create HTML for the widget script given via the parameter
+     *
+     * @since 3.2.3 Remove newlines from widget HTML to prevent WordPress's
+     * wpautop filter from breaking script content in FSE contexts.
+     * wpautop uses preg_split() on double line breaks to identify content
+     * blocks and wraps them in <p> tags. When newlines exist in the JavaScript,
+     * wpautop inserts <p> tags within the script, breaking JavaScript syntax.
      */
     private function getWrappedScriptHTML(string $script): string
     {
@@ -205,9 +211,10 @@ class WidgetScriptBuilder
         if ($this->hasWrapper) {
             $content .= sprintf('<div id="%s"></div>', $this->wrapperID);
         }
-
         $content .= sprintf('<script type="text/javascript">%s</script>', $script);
-        return $content;
+
+        // Remove all newlines
+        return str_replace(["\r\n", "\r", "\n"], '', $content);
     }
 
     /**
