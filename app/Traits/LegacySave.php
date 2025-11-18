@@ -214,7 +214,7 @@ trait LegacySave {
         }
 
         // todo - usage of sanitize_field is redundant when used as in the OnboardingService
-        $value = $this->sanitize_field($value, $config['type'], ($config['regex'] ?? null));
+        $value = $this->sanitize_field($value, $config['type'], ($config['regex'] ?? ''));
 
         // todo - except for the encryption fields, maybe we can create a getEncrypted method in the Storage class?
         if ($config['encrypt'] ?? false) {
