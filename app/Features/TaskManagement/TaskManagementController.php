@@ -56,6 +56,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\MaxedOutProvidersTask(),
             new Tasks\PostOnSocialMediaTask(),
             new Tasks\GatherClientInfoTask(),
+            new Tasks\BlackFridayTask(),
         ];
     }
 
