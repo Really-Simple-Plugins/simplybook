@@ -20,6 +20,7 @@ class PromotionService
         $cacheName = 'simplybook_promotion_service_is_black_friday';
         $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
 
+        // The $hasCache variable is set by reference in wp_cache_get
         if ($hasCache) {
             return $cache;
         }
