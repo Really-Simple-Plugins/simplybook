@@ -37,7 +37,11 @@ class PromotionService
             $timezone
         );
 
-        $isBlackFriday = Carbon::now()->betweenIncluded($blackFridayStart, $blackFridayEnd);
+        // Within 1 hour of the end day? Reduce cache time to 5 minutes
+        $cacheDuration = HOUR_IN_SECONDS;
+        if (Carbon::now($timezone)->diffInMinutes($blackFridayEnd->endOfDay()) <= $cacheDuration) {
+            $cacheDuration = MINUTE_IN_SECONDS * 5;
+        }
 
         $isBlackFriday = Carbon::now($timezone)->betweenIncluded($blackFridayStart, $blackFridayEnd);
 
