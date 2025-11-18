@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Features\TaskManagement\TaskManagementListener;
 
 class BlackFridayTask extends AbstractTask
 {
