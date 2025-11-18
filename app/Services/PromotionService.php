@@ -25,16 +25,23 @@ class PromotionService
             return $cache;
         }
 
+        $timezone = wp_timezone();
+
         $blackFridayStart = Carbon::parse(
-            $this->env->getString('simplybook.black_friday.start_date')
+            $this->env->getString('simplybook.black_friday.start_date'),
+            $timezone
         );
+
         $blackFridayEnd = Carbon::parse(
-            $this->env->getString('simplybook.black_friday.end_date')
+            $this->env->getString('simplybook.black_friday.end_date'),
+            $timezone
         );
 
         $isBlackFriday = Carbon::now()->betweenIncluded($blackFridayStart, $blackFridayEnd);
 
-        wp_cache_set($cacheName, $isBlackFriday, 'simplybook', HOUR_IN_SECONDS);
+        $isBlackFriday = Carbon::now($timezone)->betweenIncluded($blackFridayStart, $blackFridayEnd);
+
+        wp_cache_set($cacheName, $isBlackFriday, 'simplybook', $cacheDuration);
         return $isBlackFriday;
     }
 }
