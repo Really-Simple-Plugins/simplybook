@@ -3,18 +3,25 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Services\PromotionService;
+use SimplyBook\Services\SubscriptionDataService;
 
 class TaskManagementListener
 {
     private TaskManagementService $service;
+    private PromotionService $promotionService;
+    private SubscriptionDataService $subscriptionDataService;
 
-    public function __construct(TaskManagementService $service)
+    public function __construct(TaskManagementService $service, PromotionService $promotionService, SubscriptionDataService $subscriptionDataService)
     {
         $this->service = $service;
+        $this->promotionService = $promotionService;
+        $this->subscriptionDataService = $subscriptionDataService;
     }
 
     public function listen(): void
     {
+        add_action('init', [$this, 'handleDateDrivenTasks']);
         add_action('simplybook_event_' . Event::EMPTY_SERVICES, [$this, 'handleEmptyServices']);
         add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
@@ -119,6 +126,10 @@ class TaskManagementListener
                     Tasks\TrialExpiredTask::IDENTIFIER
                 );
             }
+        }
+
+        if (!empty($subscription)) {
+            $this->handleBlackFridayTask($subscription);
         }
 
         $this->handleSubscriptionLimits($limits);
@@ -271,5 +282,43 @@ class TaskManagementListener
         $this->service->completeTask(
             Tasks\CustomizeDesignTask::IDENTIFIER
         );
+    }
+
+    /**
+     * Method will only set the Black Friday task visible and mark it as upgrade
+     * if the current subscription is 'Trial' and the current date is between
+     * the Black Friday start and end date mentioned in the env config.
+     */
+    private function handleBlackFridayTask(string $subscriptionType): void
+    {
+        $isTrial = (strtolower($subscriptionType) === 'trial');
+
+        if ($isTrial && $this->promotionService->isBlackFriday()) {
+            $this->service->setTaskBubbleCounter(1);
+            $this->service->markTaskUpgrade(
+                Tasks\BlackFridayTask::IDENTIFIER
+            );
+            return;
+        }
+
+        $this->service->setTaskBubbleCounter(0);
+        $this->service->hideTask(
+            Tasks\BlackFridayTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Method is hooked on 'init' action to check for date driven tasks. Because
+     * these tasks do not depend solely on events but also on the current date
+     * we should check them on every page load.
+     * @internal make sure you cache your conditionals
+     */
+    public function handleDateDrivenTasks(): void
+    {
+        if ($this->promotionService->isBlackFriday()) {
+            $this->handleBlackFridayTask(
+                $this->subscriptionDataService->search('subscription_name')
+            );
+        }
     }
 }
