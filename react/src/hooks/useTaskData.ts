@@ -8,6 +8,7 @@ const useTaskData = () => {
 
     const statusPriority = {
         urgent: 0,
+        upgrade: 5,
         open: 10,
         completed: 20,
         dismissed: 30,
@@ -87,7 +88,7 @@ const useTaskData = () => {
      */
     const getRemainingTasks = () => {
         return tasks.filter((task: Task) =>
-            ["open", "urgent"].includes(task.status),
+            ["open", "upgrade", "urgent"].includes(task.status),
         );
     };
 

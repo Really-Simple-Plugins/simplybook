@@ -7,6 +7,7 @@ use SimplyBook\Interfaces\TaskInterface;
 abstract class AbstractTask implements TaskInterface
 {
     public const STATUS_OPEN = 'open';
+    public const STATUS_UPGRADE = 'upgrade';
     public const STATUS_URGENT = 'urgent';
     public const STATUS_DISMISSED = 'dismissed';
     public const STATUS_COMPLETED = 'completed';
@@ -141,6 +142,14 @@ abstract class AbstractTask implements TaskInterface
     public function urgent(): void
     {
         $this->status = self::STATUS_URGENT;
+    }
+
+    /**
+     * Set the task to 'upgrade' status
+     */
+    public function upgrade(): void
+    {
+        $this->status = self::STATUS_UPGRADE;
     }
 
     /**

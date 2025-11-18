@@ -61,6 +61,12 @@ return [
                 'app_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
             ],
         ],
+        'black_friday' => [
+            'discount_percentage' => 25,
+            'promo_code' => 'BLACKFRIDAY',
+            'start_date' => '2025-11-18 00:00:00',
+            'end_date' => '2025-11-29 23:59:59'
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',

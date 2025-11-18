@@ -66,10 +66,12 @@
     --bg-tertiary-dark: #061f32;
     --color-tertiary-hover: #e8eeff;
 
-
     /* Text colors */
     --color-sb-blue: #5A6FA5;
     --color-sb-gray: #788291;
+
+    /* Accent colors */
+    --color-accent-light-blue: #009fff;
 
     /* Button colors */
     --color-youtube: #f03;
