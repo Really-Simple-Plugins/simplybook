@@ -21,7 +21,7 @@ class TaskManagementListener
 
     public function listen(): void
     {
-        add_action('init', [$this, 'handleDateDrivenTasks']);
+        add_action('admin_init', [$this, 'handleDateDrivenTasks']);
         add_action('simplybook_event_' . Event::EMPTY_SERVICES, [$this, 'handleEmptyServices']);
         add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
@@ -308,9 +308,9 @@ class TaskManagementListener
     }
 
     /**
-     * Method is hooked on 'init' action to check for date driven tasks. Because
-     * these tasks do not depend solely on events but also on the current date
-     * we should check them on every page load.
+     * Method is hooked on 'admin_init' action to check for date driven tasks.
+     * Because these tasks do not depend solely on events but also on the
+     * current date we should check them on every page load.
      * @internal make sure you cache your conditionals
      */
     public function handleDateDrivenTasks(): void
