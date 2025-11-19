@@ -317,7 +317,7 @@ class TaskManagementListener
     {
         if ($this->promotionService->isBlackFriday()) {
             $this->handleBlackFridayTask(
-                $this->subscriptionDataService->search('subscription_name', '')
+                (string) $this->subscriptionDataService->search('subscription_name', '')
             );
         }
     }
