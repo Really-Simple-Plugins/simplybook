@@ -148,16 +148,23 @@ class ApiClient
     }
 
     /**
-     * Check if we have a company_id, which shows we have a registered company
+     * Check if an admin token exists, which indicates the company is registered,
+     * and we can make authenticated API calls.
+     *
+     * Cache duration:
+     * - When onboarding completed: 24 hours (stable state)
+     * - During onboarding: 10 minutes (more frequent checks)
+     * - When no token: 1 minute
      */
     public function company_registration_complete(): bool
     {
         $cacheName = 'company_registration_complete';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+        $cache = wp_cache_get($cacheName, 'simplybook', false, $found);
+        if ($found) {
             return $cache;
         }
 
-        //check if the callback has been completed, resulting in a company/admin token.
+        // Check if admin token exists
         if ( !$this->getToken('admin') ) {
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
 
@@ -169,11 +176,20 @@ class ApiClient
                 $this->delete_company_login();
             }
 
-            wp_cache_set($cacheName, $cacheName, 'simplybook', MINUTE_IN_SECONDS);
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
 
-        wp_cache_set($cacheName, $cacheName, 'simplybook', (MINUTE_IN_SECONDS * 10));
+	    // If the token exists, and the onboarding is completed, we know
+	    // the company registration is complete, and we can cache for a longer
+	    // time.
+	    $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
+	    $cacheTime = MINUTE_IN_SECONDS * 10;
+	    if ($isOnboardingCompleted) {
+		    $cacheTime = DAY_IN_SECONDS;
+	    }
+
+        wp_cache_set($cacheName, true, 'simplybook', $cacheTime);
         return true;
     }
 
