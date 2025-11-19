@@ -1,33 +1,25 @@
 import React from "react";
-import clsx from "clsx";
 import { TipsProps } from "../../../types/TipsProps";
 import { Link } from "@tanstack/react-router";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 
-const Tip: React.FC<TipsProps> = ({ 
-    link, 
-    title, 
-    content 
-}) => { 
+const Tip: React.FC<TipsProps> = ({
+    link,
+    content
+}) => {
     return (
-        <>
-            <Link
-                className="tip-body mb-1 " 
-                target={"_blank"}
-                to={link}
-            >
-                <div className="tip-inner flex flex-row justify-start items-center text-base mb-1">
-                    <p className="
-                        transition-all duration-300 ease-in-out m-0 text-base text-[#333333]
-                        hover:text-primary hover:underline
-                    ">
-                        <span className={"font-bold  border-primary-light mr-2"}>
-                            {title}:
-                        </span> 
-                        {content}
-                    </p>
-                </div>
-            </Link>
-        </>
+        <Link
+            className="group flex items-center gap-2 transition-colors duration-300 ease-in-out text-black hover:text-primary hover:[&>svg]:text-primary no-underline min-w-0"
+            target="_blank"
+            to={link}
+            title={content}
+        >
+            <FontAwesomeIcon icon={faCircleInfo} className="w-4 h-4 text-neutral-200 transition-colors duration-300 ease-in-out"/>
+            <span className="text-sm whitespace-nowrap overflow-hidden text-ellipsis group-hover:underline">
+                {content}
+            </span>
+        </Link>
     );
 }
 
