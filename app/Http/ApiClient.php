@@ -796,7 +796,7 @@ class ApiClient
      * the recaptcha token.
      * @throws ApiException
      */
-    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
+    public function confirm_email( string $email_code, string $recaptcha_token ): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
