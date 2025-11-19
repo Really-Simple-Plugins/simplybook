@@ -66,7 +66,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             case 'POST':
                 return $this->createItem($requestStorage);
             default:
-                return $this->sendHttpResponse([], false, esc_html__('Method not allowed', 'simplybook'), 405);
+                return $this->sendHttpResponse([], false, __('Method not allowed', 'simplybook'), 405);
         }
     }
 
@@ -89,7 +89,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
     protected function createItem(Storage $request): \WP_REST_Response
     {
         if ($request->isEmpty()) {
-            return $this->sendHttpResponse([], false, esc_html__('Could not create entity, no data provided.', 'simplybook'), 405);
+            return $this->sendHttpResponse([], false, __('Could not create entity, no data provided.', 'simplybook'), 405);
         }
 
         try {
@@ -100,7 +100,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
-        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -123,7 +128,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             case 'DELETE':
                 return $this->deleteEntity($requestStorage);
             default:
-                return $this->sendHttpResponse([], false, esc_html__('Method not allowed', 'simplybook'), 405);
+                return $this->sendHttpResponse([], false, __('Method not allowed', 'simplybook'), 405);
         }
     }
 
@@ -141,7 +146,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
-            ], false, esc_html__('Entity not found!', 'simplybook'), 404);
+            ], false, __('Entity not found!', 'simplybook'), 404);
         }
 
         return $this->sendHttpResponse($this->entity->attributes());
@@ -161,7 +166,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'update');
         }
 
-        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -178,7 +188,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
-            ], false, esc_html__('Something went wrong while deleting.', 'simplybook'), 400);
+            ], false, __('Something went wrong while deleting.', 'simplybook'), 400);
         }
 
         return $this->sendHttpResponse();
@@ -202,7 +212,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             ], 403);
         }
 
-        return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 400);
+        return $this->sendHttpResponse([], false, __('An unknown error occurred. Please try again later.', 'simplybook'), 400);
     }
 
     /**
@@ -232,7 +242,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         $exceptionData = $exception->getData();
         if (empty($exceptionData['data'])) {
             return new \WP_REST_Response([
-                'message' => esc_html__('An unknown error occurred while saving, please try again.', 'simplybook'),
+                'message' => __('An unknown error occurred while saving, please try again.', 'simplybook'),
             ], 403);
         }
 
@@ -240,7 +250,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         $translatedErrors = $this->buildTranslatedErrors($faultyFields);
 
         return new \WP_REST_Response([
-            'message' => esc_html__('An error occurred while saving, please try again.', 'simplybook'),
+            'message' => __('An error occurred while saving, please try again.', 'simplybook'),
             'errors' => $translatedErrors,
         ], 403);
     }

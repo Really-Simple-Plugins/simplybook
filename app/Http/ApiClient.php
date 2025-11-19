@@ -597,13 +597,13 @@ class ApiClient
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
-                esc_html__('You are not authorized to do this.', 'simplybook')
+                __('You are not authorized to do this.', 'simplybook')
             );
         }
 
         if (get_transient('simply_book_attempt_count') > 3) {
             throw new ApiException(
-                esc_html__('Too many attempts to register company, please try again in a minute.', 'simplybook')
+                __('Too many attempts to register company, please try again in a minute.', 'simplybook')
             );
         }
 
@@ -617,7 +617,7 @@ class ApiClient
 
         if ($sanitizedCompany->isValid() === false) {
             throw (new ApiException(
-                esc_html__('Please fill in all company data.', 'simplybook')
+                __('Please fill in all company data.', 'simplybook')
             ))->setData([
                 'invalid_fields' => $sanitizedCompany->getInvalidFields(),
             ]);
@@ -662,7 +662,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while registering your company. Please try again.', 'simplybook'))
+                __('Something went wrong while registering your company. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -674,7 +674,7 @@ class ApiClient
         );
 
         if ($companySuccessfullyRegistered) {
-            return new ApiResponseDTO(true, esc_html__('Company successfully registered.', 'simplybook'), 200, [
+            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, [
                 'recaptcha_site_key' => $response->recaptcha_site_key,
                 'recaptcha_version' => $response->recaptcha_version,
                 'company_id' => $response->company_id,
@@ -707,7 +707,7 @@ class ApiClient
             in_array('The field contains illegal words', $response->data->name)
         ) {
             throw (new ApiException(
-                esc_html__('The company name is not allowed. Please change the company name.', 'simplybook')
+                __('The company name is not allowed. Please change the company name.', 'simplybook')
             ))->setData([
                 'name' => $response->data->name,
                 'message' => $response->message,
@@ -715,7 +715,7 @@ class ApiClient
         }
 
         throw (new ApiException(
-            esc_html__('Unknown error encountered while registering your company. Please try again.', 'simplybook')
+            __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message,
             'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
@@ -786,7 +786,7 @@ class ApiClient
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
-                esc_html__('You are not authorized to do this.', 'simplybook')
+                __('You are not authorized to do this.', 'simplybook')
             );
         }
 
@@ -794,7 +794,7 @@ class ApiClient
         // the email confirm step without first completing the registration.
         if (get_option("simplybook_company_registration_start_time") === false) {
             throw new ApiException(
-                esc_html__('Something went wrong, are you sure you started the company registration?', 'simplybook')
+                __('Something went wrong, are you sure you started the company registration?', 'simplybook')
             );
         }
 
@@ -813,7 +813,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while confirming your email. Please try again.', 'simplybook'))
+                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -821,13 +821,13 @@ class ApiClient
 
         $response = json_decode(wp_remote_retrieve_body($request));
         if (isset($response->success)) {
-            return new ApiResponseDTO(true, esc_html__('Email successfully confirmed.', 'simplybook'));
+            return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
         }
 
         $codeIsValid = true;
-        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
+        $errorMessage = __('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
         if (isset($response->message) && str_contains($response->message, 'not valid')) {
-            $errorMessage = esc_html__('This confirmation code is not valid.', 'simplybook');
+            $errorMessage = __('This confirmation code is not valid.', 'simplybook');
             $codeIsValid = false;
         }
 
@@ -1217,10 +1217,10 @@ class ApiClient
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
-                esc_html__('Login failed! Please try again later.', 'simplybook')
+                __('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid response from SimplyBook.me', 'simplybook'),
+                'response_message' => __('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1273,10 +1273,10 @@ class ApiClient
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
-                esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
+                __('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.me', 'simplybook'),
+                'response_message' => __('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1301,26 +1301,26 @@ class ApiClient
         $response = (array) $response; // Ensure we have an array
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
-        $responseMessage = esc_html__('No error received from remote.', 'simplybook');
+        $responseMessage = __('No error received from remote.', 'simplybook');
         if (is_array($responseBody) && !empty($responseBody['message'])) {
             $responseMessage = $responseBody['message'];
         }
 
         switch ($responseCode) {
             case 400:
-                $message = esc_html__('Invalid login or password, please try again.', 'simplybook');
+                $message = __('Invalid login or password, please try again.', 'simplybook');
                 if ($isTwoFactorAuth) {
-                    $message = esc_html__('Incorrect 2FA authentication code, please try again.', 'simplybook');
+                    $message = __('Incorrect 2FA authentication code, please try again.', 'simplybook');
                 }
                 break;
             case 403:
-                $message = esc_html__('Too many login attempts. Verify your credentials and try again in a few minutes.', 'simplybook');
+                $message = __('Too many login attempts. Verify your credentials and try again in a few minutes.', 'simplybook');
                 break;
             case 404:
-                $message = esc_html__("Could not find a company associated with that company login.", 'simplybook');
+                $message = __("Could not find a company associated with that company login.", 'simplybook');
                 break;
             default:
-                $message = esc_html__('Authentication failed, please verify your credentials.', 'simplybook');
+                $message = __('Authentication failed, please verify your credentials.', 'simplybook');
         }
 
         $exception = new RestDataException($message);
@@ -1397,14 +1397,14 @@ class ApiClient
     private function get2FaProvidersWithLabel(array $providerKeys): array
     {
         $providerLabels = [
-            'ga'  => esc_html__('Google Authenticator', 'simplybook'),
-            'sms' => esc_html__('SMS', 'simplybook'),
+            'ga'  => __('Google Authenticator', 'simplybook'),
+            'sms' => __('SMS', 'simplybook'),
         ];
 
         $allowedProviders = [];
         foreach ($providerKeys as $provider) {
             $allowedProviders[$provider] = ($providerLabels[$provider] ??
-                esc_html__('Unknown 2FA provider', 'simplybook'));
+                __('Unknown 2FA provider', 'simplybook'));
         }
 
         return $allowedProviders;

@@ -11,7 +11,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
      */
     public function getTitle(): string
     {
-        return esc_html__('Maximum number of Providers reached', 'simplybook');
+        return __('Maximum number of Providers reached', 'simplybook');
     }
 
     /**
@@ -19,7 +19,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please upgrade your plan to configure more Service Providers, or delete existing Providers if you want to add more.', 'simplybook');
+        return __('Please upgrade your plan to configure more Service Providers, or delete existing Providers if you want to add more.', 'simplybook');
     }
 
     /**
@@ -44,7 +44,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => esc_html__('Upgrade now', 'simplybook'),
+            'text' => __('Upgrade now', 'simplybook'),
             'login_link' => '/v2/r/payment-widget',
         ];
     }

@@ -63,7 +63,7 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
             return $this->sendHttpResponse(
                 [],
                 false,
-                esc_html__('Failed to dismiss notice.', 'simplybook'),
+                __('Failed to dismiss notice.', 'simplybook'),
                 500
             );
         }
@@ -71,7 +71,7 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
         return $this->sendHttpResponse(
             ['notice_type' => $noticeType],
             true,
-            esc_html__('Notice dismissed successfully.', 'simplybook')
+            __('Notice dismissed successfully.', 'simplybook')
         );
     }
 }

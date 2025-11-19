@@ -42,7 +42,7 @@ class PublishWidgetTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Publish the booking widget on the front-end of your site.', 'simplybook');
+        return __('Publish the booking widget on the front-end of your site.', 'simplybook');
     }
 
     /**
@@ -52,7 +52,7 @@ class PublishWidgetTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Show shortcodes', 'simplybook'),
+            'text' => __('Show shortcodes', 'simplybook'),
             'link' => 'settings/general',
         ];
     }

@@ -8,7 +8,7 @@ return [
         'group_id' => 'authentication',
         'type' => 'authentication',
         'default' => get_option('simplybook_company_login'),
-        'label' => esc_html__('Currently logged in as', 'simplybook'),
+        'label' => __('Currently logged in as', 'simplybook'),
         'disabled' => true,
     ],
 ];

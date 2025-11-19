@@ -21,7 +21,7 @@ class PostOnSocialMediaTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Post your social media content and create ads', 'simplybook');
+        return __('Post your social media content and create ads', 'simplybook');
     }
 
     /**
@@ -31,7 +31,7 @@ class PostOnSocialMediaTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('More info', 'simplybook'),
+            'text' => __('More info', 'simplybook'),
             'login_link' => 'v2/metric',
         ];
     }

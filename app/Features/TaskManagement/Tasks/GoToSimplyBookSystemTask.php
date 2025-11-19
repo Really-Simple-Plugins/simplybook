@@ -16,7 +16,7 @@ class GoToSimplyBookSystemTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Discover the full functionality on SimplyBook.me', 'simplybook');
+        return __('Discover the full functionality on SimplyBook.me', 'simplybook');
     }
 
     /**
@@ -26,7 +26,7 @@ class GoToSimplyBookSystemTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('SimplyBook.me', 'simplybook'),
+            'text' => __('SimplyBook.me', 'simplybook'),
             'login_link' => '/v2/dashboard/new',
         ];
     }

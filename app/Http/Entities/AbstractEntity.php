@@ -39,12 +39,12 @@ abstract class AbstractEntity
      * @example:
      * [
      *      'attribute_x' => [
-     *          'not dynamic part of error string' => esc_html__('User friendly translation of error.', 'simplybook'),
+     *          'not dynamic part of error string' => __('User friendly translation of error.', 'simplybook'),
      *      ],
      *      // Real example from the {@see Service} class:
      *      'duration' => [
      *          // "Duration is not multiple of '60' minutes"
-     *          'is not multiple of' => esc_html__('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe.', 'simplybook'),
+     *          'is not multiple of' => __('Duration invalid. Please enter a valid number that is a multiple of your selected timeframe.', 'simplybook'),
      *       ]
      * ]
      */
@@ -281,7 +281,7 @@ abstract class AbstractEntity
 
             if ($requiredFieldIsEmpty) {
                 $errors[$attribute] = [
-                    esc_html__('Field is required.', 'simplybook'),
+                    __('Field is required.', 'simplybook'),
                 ];
             }
         }

@@ -32,7 +32,7 @@ class TrialExpiredTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('Your Trial period has expired! Please consider all premium features!', 'simplybook');
+        return __('Your Trial period has expired! Please consider all premium features!', 'simplybook');
     }
 
     /**
@@ -42,7 +42,7 @@ class TrialExpiredTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade', 'simplybook'),
+            'text' => __('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget#/',
         ];
     }
