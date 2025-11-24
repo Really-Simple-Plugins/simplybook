@@ -53,7 +53,7 @@ class SettingEndpoints implements MultiEndpointInterface
         unset($fields['nonce']);
 
         if (count($fields) === 0) {
-            return $this->sendHttpResponse(['error' => 'No data to save'], 204);
+            return $this->sendHttpResponse(['error' => 'No data to save'], false, __("No data to save", "simplybook"), 204);
         }
 
         if (isset($fields['settings_section'])) {
