@@ -60,11 +60,11 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
                 $this->app->client->getThemeList()
             );
         } catch (\Exception $e) {
-            return $this->sendHttpResponse([], false, $e->getMessage(), 404);
+            return $this->sendHttpResponse([], false, $e->getMessage(), 500);
         }
 
         if (empty($themeList['themes'])) {
-            return $this->sendHttpResponse([], false, __('No themes found', 'simplybook'), 404);
+            return $this->sendHttpResponse([], false, __('No themes found', 'simplybook'), 204);
         }
 
         return $this->sendHttpResponse($themeList['themes']);
