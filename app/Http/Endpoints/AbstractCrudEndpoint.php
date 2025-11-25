@@ -199,7 +199,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return new \WP_REST_Response([
                 'message' => $exception->getMessage(),
                 'errors' => $exception->getErrors()
-            ], 422);
+            ], 400);
         }
 
         return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 500);
