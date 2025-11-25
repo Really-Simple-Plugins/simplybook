@@ -137,7 +137,7 @@ class OnboardingController implements FeatureInterface
         if ($companyBuilder->isValid() === false) {
             return $this->service->sendHttpResponse([
                 'invalid_fields' => $companyBuilder->getInvalidFields(),
-            ], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
+            ], false, __('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
@@ -160,12 +160,11 @@ class OnboardingController implements FeatureInterface
         $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
 
         if ($storage->isEmpty('recaptchaToken')) {
-            // wp_kses_post to allow apostrophe in the message
-            $error = wp_kses_post(__('Please verify you\'re not a robot.', 'simplybook'));
+            $error = __("Please verify you're not a robot.", 'simplybook');
         }
 
         if ($storage->isEmpty('confirmation-code')) {
-            $error = esc_html__('Please enter the confirmation code.', 'simplybook');
+            $error = __('Please enter the confirmation code.', 'simplybook');
         }
 
         if (!empty($error)) {
@@ -174,14 +173,18 @@ class OnboardingController implements FeatureInterface
 
         try {
             $response = $this->app->client->confirm_email(
-                $storage->getInt('confirmation-code'),
+                $storage->getString('confirmation-code'),
                 $storage->getString('recaptchaToken')
             );
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
 
-        $this->service->setCompletedStep(3);
+        // Only mark step as completed if the API call was successful
+        if ($response->success) {
+            $this->service->setCompletedStep(3);
+        }
+
         return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
@@ -202,13 +205,13 @@ class OnboardingController implements FeatureInterface
         try {
             do_action('simplybook_save_onboarding_widget_style', $storage);
         } catch (\Exception $e) {
-            $message = esc_html__('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
+            $message = __('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
             ], false, $message, 500);
         }
 
-        $message = esc_html__('Successfully saved widget style settings', 'simplybook');
+        $message = __('Successfully saved widget style settings', 'simplybook');
         return $this->service->sendHttpResponse([], true, $message);
     }
 
@@ -293,14 +296,14 @@ class OnboardingController implements FeatureInterface
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, esc_html__('Unknown error occurred, please verify your credentials.', 'simplybook'), 500);
+            ], false, __('Unknown error occurred, please verify your credentials.', 'simplybook'), 500);
         }
 
         $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
         $this->saveLoginCompanyData($userLogin, $userPassword);
 
         return new \WP_REST_Response([
-            'message' => esc_html__('Login successful.', 'simplybook'),
+            'message' => __('Login successful.', 'simplybook'),
         ], 200);
     }
 
@@ -333,12 +336,12 @@ class OnboardingController implements FeatureInterface
         } catch (\Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, esc_html__('Unknown 2FA error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
+            ], false, __('Unknown 2FA error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
         }
 
         $this->finishLoggingInUser($response, $companyDomain, $companyLogin);
 
-        return $this->service->sendHttpResponse([], true, esc_html__('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
+        return $this->service->sendHttpResponse([], true, __('Successfully authenticated user', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
@@ -403,7 +406,7 @@ class OnboardingController implements FeatureInterface
             return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
         }
 
-        return $this->service->sendHttpResponse([], true, esc_html__('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here
+        return $this->service->sendHttpResponse([], true, __('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here
     }
 
     /**
@@ -415,11 +418,11 @@ class OnboardingController implements FeatureInterface
     public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
     {
         $code = 200;
-        $message = esc_html__('Successfully finished onboarding!', 'simplybook');
+        $message = __('Successfully finished onboarding!', 'simplybook');
 
         $success = $this->service->setOnboardingCompleted();
         if (!$success) {
-            $message = esc_html__('An error occurred while finishing the onboarding process', 'simplybook');
+            $message = __('An error occurred while finishing the onboarding process', 'simplybook');
             $code = 400;
         }
 
@@ -433,10 +436,10 @@ class OnboardingController implements FeatureInterface
     public function retryOnboarding(\WP_REST_Request $request): \WP_REST_Response
     {
         $success = $this->service->delete_all_options();
-        $message = esc_html__('Successfully removed all previous data.', 'simplybook');
+        $message = __('Successfully removed all previous data.', 'simplybook');
 
         if (!$success) {
-            $message = esc_html__('An error occurred while trying to remove previous data.', 'simplybook');
+            $message = __('An error occurred while trying to remove previous data.', 'simplybook');
         }
 
         return $this->service->sendHttpResponse([], $success, $message, ($success ? 200 : 500));

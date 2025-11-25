@@ -3,6 +3,7 @@ import { Link } from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
 import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
+import DOMPurify from "dompurify";
 
 const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className, onModalOpen }) => {
 
@@ -14,6 +15,8 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
         switch (status) {
             case 'open':
                 return 'bg-yellow-400 text-black';
+            case 'upgrade':
+                return 'bg-accent-light-blue text-white';
             case 'urgent':
                 return 'bg-red-800 text-white';
             case 'completed':
@@ -110,11 +113,13 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
             </span>
 
             <div className="flex justify-between w-full items-center">
-                <div className={clsx(
-                    task.status === 'dismissed' ? 'text-gray-400 line-through' : '',
-                    "text-[0.8125rem] w-[70%]"
-                )}>
-                    {task.text}
+                <div
+                    className={clsx(
+                        task.status === 'dismissed' ? 'text-gray-400 line-through' : '',
+                        "text-[0.8125rem] w-[80%]"
+                    )}
+                    dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(task.text)}}
+                >
                 </div>
 
                 <div className="flex items-center justify-end">

@@ -17,7 +17,7 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.2.2.1',
+        'version' => '3.2.3',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
@@ -61,55 +61,28 @@ return [
                 'app_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
             ],
         ],
+        'black_friday' => [
+            'discount_percentage' => 25,
+            'promo_code' => 'BLACKFRIDAY',
+            'start_date' => '2025-11-18',
+            'end_date' => '2025-11-29'
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
             'items' => [
                 [
-                    'title' => 'Integrations',
-                    'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar ',
+                    'content' => 'How to get started',
+                    'link' => 'https://help.simplybook.me/index.php/WordPress_integration',
+                ],
+                [
+                    'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar',
                     'link' => 'https://help.simplybook.me/index.php?title=Calendar_Sync_custom_feature',
                 ],
                 [
-                    'title' => 'Customization',
-                    'content' => 'Accept Payments Online ',
+                    'content' => 'How to accept payments with SimplyBook.me',
                     'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
                 ],
-                [
-                    'title' => 'Marketing',
-                    'content' => 'Boost Engagement with Promo Codes',
-                    'link' => 'https://help.simplybook.me/index.php?title=Coupons_and_Gift_Cards_custom_feature/en',
-                ],
-                // [
-                //     'title' => 'Integrations',
-                //     'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar – Keep your schedule updated in real time by integrating your bookings with Google and Outlook Calendar.',
-                //     'link' => 'https://help.simplybook.me/index.php?title=Calendar_Sync_custom_feature ',
-                // ],
-                // [
-                //     'title' => 'Automation',
-                //     'content' => 'Reduce No-Shows with Automated Reminders – Set up SMS and email reminders to ensure your clients never miss an appointment.',
-                //     'link' => '/settings/templates', // todo: use loginLink() method
-                // ],
-                // [
-                //     'title' => 'News & Updates',
-                //     'content' => 'SimplyBook.me  newsletter: exciting new features and upcoming enhancements.',
-                //     'link' => 'https://news.simplybook.me/ ',
-                // ],
-                // [
-                //     'title' => 'Customization',
-                //     'content' => 'Accept Payments Online – Enable secure payment gateways like Stripe or PayPal to allow clients to prepay for services.',
-                //     'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
-                // ],
-                // [
-                //     'title' => 'Client Management',
-                //     'content' => 'Create Membership & Packages – Offer exclusive memberships and service packages to increase client retention and revenue.',
-                //     'link' => 'https://help.simplybook.me/index.php?title=Packages_custom_feature/en',
-                // ],
-                // [
-                //     'title' => 'Marketing',
-                //     'content' => 'Boost Engagement with Promo Codes – Attract more clients by offering discounts and special promotions via customizable promo codes.',
-                //     'link' => 'https://help.simplybook.me/index.php?title=Coupons_and_Gift_Cards_custom_feature/en',
-                // ],
             ],
         ],
         'domains' => [

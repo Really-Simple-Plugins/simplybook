@@ -32,7 +32,6 @@ class ApiClient
     use HasAllowlistControl;
 
     protected App $app;
-    protected JsonRpcClient $jsonRpcClient;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -68,7 +67,7 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(App $app, JsonRpcClient $client)
+    public function __construct(App $app)
     {
         $this->app = $app;
         $environment = $this->app->env->get('simplybook.api', []);
@@ -77,7 +76,6 @@ class ApiClient
             throw new \LogicException('Register the environment for the application in the container');
         }
 
-        $this->jsonRpcClient = $client;
         $this->applicationKey = ($environment['app_key'] ?? '');
 
         if (empty($this->applicationKey)) {
@@ -148,16 +146,23 @@ class ApiClient
     }
 
     /**
-     * Check if we have a company_id, which shows we have a registered company
+     * Check if an admin token exists, which indicates the company is registered,
+     * and we can make authenticated API calls.
+     *
+     * Cache duration:
+     * - When onboarding completed: 24 hours (stable state)
+     * - During onboarding: 10 minutes (more frequent checks)
+     * - When no token: 1 minute
      */
     public function company_registration_complete(): bool
     {
         $cacheName = 'company_registration_complete';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
+        $cache = wp_cache_get($cacheName, 'simplybook', false, $found);
+        if ($found) {
             return $cache;
         }
 
-        //check if the callback has been completed, resulting in a company/admin token.
+        // Check if admin token exists
         if ( !$this->getToken('admin') ) {
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
 
@@ -169,11 +174,20 @@ class ApiClient
                 $this->delete_company_login();
             }
 
-            wp_cache_set($cacheName, $cacheName, 'simplybook', MINUTE_IN_SECONDS);
+            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS);
             return false;
         }
 
-        wp_cache_set($cacheName, $cacheName, 'simplybook', (MINUTE_IN_SECONDS * 10));
+	    // If the token exists, and the onboarding is completed, we know
+	    // the company registration is complete, and we can cache for a longer
+	    // time.
+	    $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
+	    $cacheTime = MINUTE_IN_SECONDS * 10;
+	    if ($isOnboardingCompleted) {
+		    $cacheTime = DAY_IN_SECONDS;
+	    }
+
+        wp_cache_set($cacheName, true, 'simplybook', $cacheTime);
         return true;
     }
 
@@ -597,13 +611,13 @@ class ApiClient
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
-                esc_html__('You are not authorized to do this.', 'simplybook')
+                __('You are not authorized to do this.', 'simplybook')
             );
         }
 
         if (get_transient('simply_book_attempt_count') > 3) {
             throw new ApiException(
-                esc_html__('Too many attempts to register company, please try again in a minute.', 'simplybook')
+                __('Too many attempts to register company, please try again in a minute.', 'simplybook')
             );
         }
 
@@ -617,7 +631,7 @@ class ApiClient
 
         if ($sanitizedCompany->isValid() === false) {
             throw (new ApiException(
-                esc_html__('Please fill in all company data.', 'simplybook')
+                __('Please fill in all company data.', 'simplybook')
             ))->setData([
                 'invalid_fields' => $sanitizedCompany->getInvalidFields(),
             ]);
@@ -662,7 +676,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while registering your company. Please try again.', 'simplybook'))
+                __('Something went wrong while registering your company. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -674,7 +688,7 @@ class ApiClient
         );
 
         if ($companySuccessfullyRegistered) {
-            return new ApiResponseDTO(true, esc_html__('Company successfully registered.', 'simplybook'), 200, [
+            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, [
                 'recaptcha_site_key' => $response->recaptcha_site_key,
                 'recaptcha_version' => $response->recaptcha_version,
                 'company_id' => $response->company_id,
@@ -707,7 +721,7 @@ class ApiClient
             in_array('The field contains illegal words', $response->data->name)
         ) {
             throw (new ApiException(
-                esc_html__('The company name is not allowed. Please change the company name.', 'simplybook')
+                __('The company name is not allowed. Please change the company name.', 'simplybook')
             ))->setData([
                 'name' => $response->data->name,
                 'message' => $response->message,
@@ -715,7 +729,7 @@ class ApiClient
         }
 
         throw (new ApiException(
-            esc_html__('Unknown error encountered while registering your company. Please try again.', 'simplybook')
+            __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message,
             'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
@@ -782,11 +796,11 @@ class ApiClient
      * the recaptcha token.
      * @throws ApiException
      */
-    public function confirm_email( int $email_code, string $recaptcha_token ): ApiResponseDTO
+    public function confirm_email( string $email_code, string $recaptcha_token ): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
-                esc_html__('You are not authorized to do this.', 'simplybook')
+                __('You are not authorized to do this.', 'simplybook')
             );
         }
 
@@ -794,7 +808,7 @@ class ApiClient
         // the email confirm step without first completing the registration.
         if (get_option("simplybook_company_registration_start_time") === false) {
             throw new ApiException(
-                esc_html__('Something went wrong, are you sure you started the company registration?', 'simplybook')
+                __('Something went wrong, are you sure you started the company registration?', 'simplybook')
             );
         }
 
@@ -813,7 +827,7 @@ class ApiClient
 
         if (is_wp_error($request)) {
             throw (new ApiException(
-                esc_html__('Something went wrong while confirming your email. Please try again.', 'simplybook'))
+                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
             )->setData([
                 'error' => $request->get_error_message(),
             ]);
@@ -821,13 +835,13 @@ class ApiClient
 
         $response = json_decode(wp_remote_retrieve_body($request));
         if (isset($response->success)) {
-            return new ApiResponseDTO(true, esc_html__('Email successfully confirmed.', 'simplybook'));
+            return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
         }
 
         $codeIsValid = true;
-        $errorMessage = esc_html__('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
+        $errorMessage = __('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
         if (isset($response->message) && str_contains($response->message, 'not valid')) {
-            $errorMessage = esc_html__('This confirmation code is not valid.', 'simplybook');
+            $errorMessage = __('This confirmation code is not valid.', 'simplybook');
             $codeIsValid = false;
         }
 
@@ -1217,10 +1231,10 @@ class ApiClient
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
-                esc_html__('Login failed! Please try again later.', 'simplybook')
+                __('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid response from SimplyBook.me', 'simplybook'),
+                'response_message' => __('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1273,10 +1287,10 @@ class ApiClient
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
             throw (new RestDataException(
-                esc_html__('Two factor authentication failed! Please try again later.', 'simplybook')
+                __('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
                 'response_code' => $responseCode,
-                'response_message' => esc_html__('Invalid 2FA response from SimplyBook.me', 'simplybook'),
+                'response_message' => __('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
         }
 
@@ -1301,26 +1315,26 @@ class ApiClient
         $response = (array) $response; // Ensure we have an array
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
-        $responseMessage = esc_html__('No error received from remote.', 'simplybook');
+        $responseMessage = __('No error received from remote.', 'simplybook');
         if (is_array($responseBody) && !empty($responseBody['message'])) {
             $responseMessage = $responseBody['message'];
         }
 
         switch ($responseCode) {
             case 400:
-                $message = esc_html__('Invalid login or password, please try again.', 'simplybook');
+                $message = __('Invalid login or password, please try again.', 'simplybook');
                 if ($isTwoFactorAuth) {
-                    $message = esc_html__('Incorrect 2FA authentication code, please try again.', 'simplybook');
+                    $message = __('Incorrect 2FA authentication code, please try again.', 'simplybook');
                 }
                 break;
             case 403:
-                $message = esc_html__('Too many login attempts. Verify your credentials and try again in a few minutes.', 'simplybook');
+                $message = __('Too many login attempts. Verify your credentials and try again in a few minutes.', 'simplybook');
                 break;
             case 404:
-                $message = esc_html__("Could not find a company associated with that company login.", 'simplybook');
+                $message = __("Could not find a company associated with that company login.", 'simplybook');
                 break;
             default:
-                $message = esc_html__('Authentication failed, please verify your credentials.', 'simplybook');
+                $message = __('Authentication failed, please verify your credentials.', 'simplybook');
         }
 
         $exception = new RestDataException($message);
@@ -1397,14 +1411,14 @@ class ApiClient
     private function get2FaProvidersWithLabel(array $providerKeys): array
     {
         $providerLabels = [
-            'ga'  => esc_html__('Google Authenticator', 'simplybook'),
-            'sms' => esc_html__('SMS', 'simplybook'),
+            'ga'  => __('Google Authenticator', 'simplybook'),
+            'sms' => __('SMS', 'simplybook'),
         ];
 
         $allowedProviders = [];
         foreach ($providerKeys as $provider) {
             $allowedProviders[$provider] = ($providerLabels[$provider] ??
-                esc_html__('Unknown 2FA provider', 'simplybook'));
+                __('Unknown 2FA provider', 'simplybook'));
         }
 
         return $allowedProviders;
@@ -1412,7 +1426,6 @@ class ApiClient
 
     /**
      * Get the list of themes available for the company
-     * @uses \SimplyBook\Http\JsonRpcClient
      * @throws \Exception
      */
     public function getThemeList(): array
@@ -1440,15 +1453,14 @@ class ApiClient
             return $cachedOption;
         }
 
-        $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public', '', false)
-        )->setHeaders([
-            'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->getToken('public'),
-        ])->getThemeList();
+        $response = $this->post('public', json_encode([
+            'jsonrpc' => '2.0',
+            'method' => 'getThemeList',
+            'id' => 1,
+        ]));
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
-        $data['themes'] = $response;
+        $data['themes'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_theme_list', $data);
         wp_cache_add('simplybook_theme_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
@@ -1457,7 +1469,6 @@ class ApiClient
 
     /**
      * Get the timeline setting options that are available for the company
-     * @uses \SimplyBook\Http\JsonRpcClient
      */
     public function getTimelineList(): array
     {
@@ -1484,19 +1495,18 @@ class ApiClient
             return $cachedOption;
         }
 
-        $response = $this->jsonRpcClient->setUrl(
-            $this->endpoint('public', '', false)
-        )->setHeaders([
-            'X-Company-Login: ' . $this->get_company_login(),
-            'X-User-Token: ' . $this->getToken('public'),
-        ])->getTimelineList();
+        $response = $this->post('public', json_encode([
+            'jsonrpc' => '2.0',
+            'method' => 'getTimelineList',
+            'id' => 1,
+        ]));
 
         $data['created_at_utc'] = Carbon::now('UTC')->toDateTimeString();
-        $data['list'] = $response;
+        $data['list'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_timeline_list', $data);
-        wp_cache_add('simplybook_timeline_list', $response, 'simplybook', (2 * DAY_IN_SECONDS));
-        return $response;
+        wp_cache_add('simplybook_timeline_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        return $data;
     }
 
 	/**
@@ -1592,8 +1602,11 @@ class ApiClient
             $requestArgs['body'] = $payload;
         }
 
+        // For JSON RPC endpoints (endpoint is exactly 'public'), use v1 API
+        $useV2 = ($endpoint !== 'public');
+
         $response = wp_safe_remote_request(
-            $this->endpoint($endpoint),
+            $this->endpoint($endpoint, '', $useV2),
             $requestArgs
         );
 

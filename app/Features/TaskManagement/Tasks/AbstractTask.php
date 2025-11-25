@@ -7,6 +7,7 @@ use SimplyBook\Interfaces\TaskInterface;
 abstract class AbstractTask implements TaskInterface
 {
     public const STATUS_OPEN = 'open';
+    public const STATUS_UPGRADE = 'upgrade';
     public const STATUS_URGENT = 'urgent';
     public const STATUS_DISMISSED = 'dismissed';
     public const STATUS_COMPLETED = 'completed';
@@ -18,6 +19,13 @@ abstract class AbstractTask implements TaskInterface
      * identifier is used to identify the task in the database and in the UI.
      */
     public const IDENTIFIER = '';
+
+    /**
+     * Option key to store the menu bubble counter for tasks. Can be used to
+     * show the number of urgent tasks in the admin menu. Currently only used
+     * if the Black Friday promotion is active.
+     */
+    public const MENU_BUBBLE_OPTION_KEY = 'simplybook_task_bubble_counter';
 
     /**
      * Override this property to define the version of the task. This version is
@@ -114,6 +122,7 @@ abstract class AbstractTask implements TaskInterface
     {
         $knownStatuses = [
             self::STATUS_OPEN,
+            self::STATUS_UPGRADE,
             self::STATUS_URGENT,
             self::STATUS_DISMISSED,
             self::STATUS_COMPLETED,
@@ -141,6 +150,14 @@ abstract class AbstractTask implements TaskInterface
     public function urgent(): void
     {
         $this->status = self::STATUS_URGENT;
+    }
+
+    /**
+     * Set the task to 'upgrade' status
+     */
+    public function upgrade(): void
+    {
+        $this->status = self::STATUS_UPGRADE;
     }
 
     /**
@@ -204,11 +221,11 @@ abstract class AbstractTask implements TaskInterface
     public function getLabel(): string
     {
         if ($this->isPremium()) {
-            return esc_html__('Premium', 'simplybook');
+            return __('Premium', 'simplybook');
         }
 
         if ($this->isSpecialFeature()) {
-            return esc_html__('Special feature', 'simplybook');
+            return __('Special feature', 'simplybook');
         }
 
         return ucfirst($this->getStatus());

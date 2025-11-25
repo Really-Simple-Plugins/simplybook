@@ -118,7 +118,7 @@ class BlockEndpoints implements MultiEndpointInterface
             //add any provider to the response
             $anyProvider = [
                 'id' => 'any',
-                'name' => esc_html__('Any provider', 'simplybook'),
+                'name' => __('Any provider', 'simplybook'),
                 'qty' => 1
             ];
             $providers = array_merge([$anyProvider], $providers);

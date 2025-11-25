@@ -20,7 +20,7 @@ class FailedAuthenticationNotice extends AbstractNotice
      */
     public function getTitle(): string
     {
-        return esc_html__('Connection lost', 'simplybook');
+        return __('Connection lost', 'simplybook');
     }
 
     /**
@@ -28,8 +28,8 @@ class FailedAuthenticationNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__(
-            'We’ve lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect.',
+        return __(
+            "We've lost connection to your SimplyBook.me account. Please log out and sign in again to reconnect.",
             'simplybook'
         );
     }

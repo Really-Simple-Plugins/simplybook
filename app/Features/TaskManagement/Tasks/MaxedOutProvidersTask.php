@@ -31,7 +31,7 @@ class MaxedOutProvidersTask extends AbstractTask
      */
     public function getText(): string
     {
-        return esc_html__('You have reached the maximum number of Service Providers for your plan', 'simplybook');
+        return __('You have reached the maximum number of Service Providers for your plan', 'simplybook');
     }
 
     /**
@@ -41,7 +41,7 @@ class MaxedOutProvidersTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => esc_html__('Upgrade', 'simplybook'),
+            'text' => __('Upgrade', 'simplybook'),
             'login_link' => 'v2/r/payment-widget',
         ];
     }

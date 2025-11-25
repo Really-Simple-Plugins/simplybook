@@ -66,7 +66,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             case 'POST':
                 return $this->createItem($requestStorage);
             default:
-                return $this->sendHttpResponse([], false, esc_html__('Method not allowed', 'simplybook'), 405);
+                return $this->sendHttpResponse([], false, __('Method not allowed', 'simplybook'), 405);
         }
     }
 
@@ -100,7 +100,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
-        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -123,7 +128,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             case 'DELETE':
                 return $this->deleteEntity($requestStorage);
             default:
-                return $this->sendHttpResponse([], false, esc_html__('Method not allowed', 'simplybook'), 405);
+                return $this->sendHttpResponse([], false, __('Method not allowed', 'simplybook'), 405);
         }
     }
 
@@ -141,7 +146,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
-            ], false, esc_html__('Entity not found!', 'simplybook'), 404);
+            ], false, __('Entity not found!', 'simplybook'), 404);
         }
 
         return $this->sendHttpResponse($this->entity->attributes());
@@ -161,7 +166,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'update');
         }
 
-        $successMessage = $this->entity->getName() . ' ' . esc_html__('successfully saved!', 'simplybook');
+        // translators: %s is either 'Service' or 'Service Provider'
+        $successMessage = sprintf(
+            __('%s successfully saved!', 'simplybook'),
+            $this->entity->getName()
+        );
+
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
     }
 
@@ -240,7 +250,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         $translatedErrors = $this->buildTranslatedErrors($faultyFields);
 
         return new \WP_REST_Response([
-            'message' => esc_html__('An error occurred while saving, please try again.', 'simplybook'),
+            'message' => __('An error occurred while saving, please try again.', 'simplybook'),
             'errors' => $translatedErrors,
         ], 500);
     }

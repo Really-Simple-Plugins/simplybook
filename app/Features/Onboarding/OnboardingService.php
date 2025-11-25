@@ -77,7 +77,7 @@ class OnboardingService
         $submittedEmailAddress = $storage->getEmail('email');
 
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
-        $message = ($success ? '' : esc_html__('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
+        $message = ($success ? '' : __('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
 
         if ($success) {
             $this->setTemporaryData([

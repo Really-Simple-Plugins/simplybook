@@ -45,7 +45,7 @@ class ServiceProvider extends AbstractEntity
      */
     public function getName(): string
     {
-        return $this->name ?: esc_html__('Service Provider', 'simplybook');
+        return $this->name ?: __('Service Provider', 'simplybook');
     }
 
     /**
@@ -71,14 +71,14 @@ class ServiceProvider extends AbstractEntity
     {
         return [
             'phone' => [
-                'invalid' => esc_html__('Phone format invalid. Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook'),
-                'not contain letters' => esc_html__('Phone format invalid. Please enter a valid phone number without using letters.', 'simplybook'),
+                'invalid' => __('Phone format invalid. Please enter a valid phone number with country code (e.g., +31 123 456 789)', 'simplybook'),
+                'not contain letters' => __('Phone format invalid. Please enter a valid phone number without using letters.', 'simplybook'),
             ],
             'email' => [
-                'not a valid hostname' => esc_html__('The email address is invalid. Please verify your input and try again.', 'simplybook'),
-                'hostname but cannot match' => esc_html__('The email address is invalid. Please verify your input and try again.', 'simplybook'),
-                'local network name' => esc_html__('The email address is invalid. Please verify your input and try again.', 'simplybook'),
-                'only once per day' => esc_html__('The email address can only be changed once per day.', 'simplybook'),
+                'not a valid hostname' => __('The email address is invalid. Please verify your input and try again.', 'simplybook'),
+                'hostname but cannot match' => __('The email address is invalid. Please verify your input and try again.', 'simplybook'),
+                'local network name' => __('The email address is invalid. Please verify your input and try again.', 'simplybook'),
+                'only once per day' => __('The email address can only be changed once per day.', 'simplybook'),
             ],
         ];
     }

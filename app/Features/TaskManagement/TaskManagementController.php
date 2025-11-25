@@ -11,14 +11,11 @@ class TaskManagementController implements FeatureInterface
     private TaskManagementService $service;
     private TaskManagementListener $listener;
 
-    public function __construct()
+    public function __construct(TaskManagementService $service, TaskManagementEndpoints $endpoints, TaskManagementListener $listener)
     {
-        $this->service = new TaskManagementService(
-            new TaskManagementRepository()
-        );
-
-        $this->endpoints = new TaskManagementEndpoints($this->service);
-        $this->listener = new TaskManagementListener($this->service);
+        $this->service = $service;
+        $this->endpoints = $endpoints;
+        $this->listener = $listener;
     }
 
     public function register(): void
@@ -59,6 +56,7 @@ class TaskManagementController implements FeatureInterface
             new Tasks\MaxedOutProvidersTask(),
             new Tasks\PostOnSocialMediaTask(),
             new Tasks\GatherClientInfoTask(),
+            new Tasks\BlackFridayTask(),
         ];
     }
 

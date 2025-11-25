@@ -11,7 +11,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getTitle(): string
     {
-        return esc_html__('No Providers configured', 'simplybook');
+        return __('No Providers configured', 'simplybook');
     }
 
     /**
@@ -19,7 +19,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return esc_html__('Please configure at least one Service Provider', 'simplybook');
+        return __('Please configure at least one Service Provider', 'simplybook');
     }
 
     /**
@@ -44,7 +44,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => esc_html__('Add Service Provider', 'simplybook'),
+            'text' => __('Add Service Provider', 'simplybook'),
             'login_link' => '/v2/management/#providers/edit/details/add',
         ];
     }
