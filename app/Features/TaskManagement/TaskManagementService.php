@@ -26,9 +26,9 @@ class TaskManagementService
      * Get all tasks
      * @return TaskInterface[]
      */
-    public function getAllTasks(): array
+    public function getAllTasks(bool $strict = false): array
     {
-        return $this->repository->getAllTasks();
+        return $this->repository->getAllTasks($strict);
     }
 
     /**
