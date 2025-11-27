@@ -54,7 +54,7 @@ const PalettesField = forwardRef(
                     />
                     ))}
                 { showPreview &&
-                        <div ref={previewRef} style={{ right: '-200px' }} className="absolute top-0"><Calendar /></div>
+                        <div ref={previewRef} style={{ insetInlineEnd: '-200px' }} className="absolute top-0"><Calendar /></div>
                 }
             </FieldWrapper>
         );

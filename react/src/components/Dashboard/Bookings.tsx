@@ -78,7 +78,7 @@ const Bookings = () => {
                                 style={{ color: "var(--color-success)" }}
                                 name="trophy"
                                 size={"1x"}
-                                className="mr-2"
+                                className="me-2"
                             />
                             <p className="text-base font-semibold m-0">{__("Most popular", "simplybook")} - {__("Last 30 days", "simplybook")}</p>
                         </span>

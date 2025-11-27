@@ -36,7 +36,7 @@ const ListItem = forwardRef(
                                     <Icon name="chevron-up" style={{color: "white"}} />
                                 </div>
                             )}
-                            <div className="font-bold ml-4">
+                            <div className="font-bold ms-4">
                                 {item.name}
                             </div>
                         </div>

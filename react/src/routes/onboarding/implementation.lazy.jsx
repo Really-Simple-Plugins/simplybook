@@ -118,7 +118,7 @@ export const Route = createLazyFileRoute(path)({
                                     <Icon
                                         name={calendarPageAvailable ? "check" : "times"}
                                         color={calendarPageAvailable ? "green" : "red"}
-                                        className="ml-2 self-center"
+                                        className="ms-2 self-center"
                                     />
                                 </div>
                                 {/* <div className="text-base text-gray-600">

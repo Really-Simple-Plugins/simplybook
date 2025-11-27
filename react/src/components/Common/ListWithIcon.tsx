@@ -21,7 +21,7 @@ const ListWithIcon: React.FC<ListWithIconProps> = ({
                     size={iconSize}
                     style={{ color: iconColor }}
                 />
-                <span className="ml-2 text-black">{children}</span>
+                <span className="ms-2 text-black">{children}</span>
             </li>
         </>
     );

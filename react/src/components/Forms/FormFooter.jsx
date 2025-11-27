@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { useParams } from "@tanstack/react-router";
 import { useCrudContext } from "../../context/CrudContext";
 import { useEffect, useState } from "react";
+import { getIsRtl } from "../../context/RtlContext";
 
 const FormFooter = ({
     onSubmit,
@@ -92,9 +93,9 @@ const FormFooter = ({
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
             <FormScrollProgressLine settingsFormHeight={settingsFormHeight}/>
-            <div className="flex flex-row justify-end gap-2 items-center p-5 mr-2">
+            <div className="flex flex-row justify-end gap-2 items-center p-5 me-2">
                 {currentState && (
-                    <p className={`text-sm flex items-center gap-2 p-0 m-0 mr-2 ${crudState.generalError && 'text-red-600'}`}>
+                    <p className={`text-sm flex items-center gap-2 p-0 m-0 me-2 ${crudState.generalError && 'text-red-600'}`}>
                         {currentState.message}
                     </p>
                 )}
@@ -141,12 +142,12 @@ const FormFooter = ({
 
             <ToastContainer
                 toastClassName={"rounded-xl"}
-                position="bottom-right"
+                position={getIsRtl() ? "bottom-left" : "bottom-right"}
                 autoClose={3000}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
-                rtl={false}
+                rtl={getIsRtl()}
                 pauseOnFocusLoss
                 pauseOnHover
             />

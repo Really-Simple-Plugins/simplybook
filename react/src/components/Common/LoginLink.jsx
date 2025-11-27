@@ -82,7 +82,7 @@ const LoginLink = ({
         >
             {children}
             {iconName.length > 0 && (
-                <Icon className={clsx(iconClass, { 'mr-2': !reverseIcon, 'ml-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
+                <Icon className={clsx(iconClass, { 'me-2': !reverseIcon, 'ms-2': reverseIcon })} name={iconName} size={iconSize} style={iconStyle} />
             )}
         </a>
     );

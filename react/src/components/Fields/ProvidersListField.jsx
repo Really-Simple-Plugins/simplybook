@@ -56,7 +56,7 @@ const ProvidersListField = () => {
         return (
             <div className="flex items-center justify-center p-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <span className="ml-2">{__('Loading service providers', 'simplybook')}...</span>
+                <span className="ms-2">{__('Loading service providers', 'simplybook')}...</span>
             </div>
         );
     }
@@ -92,7 +92,7 @@ const ProvidersListField = () => {
                                 disabled={crudState.isSaving}
                                 btnVariant="square"
                             >
-                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 mr-2 text-white font-bold"/>
+                                <FontAwesomeIcon icon={faPlus} className="w-4 h-4 me-2 text-white font-bold"/>
                                 {crudState.isCreatingNewProvider ? __('Cancel New Service Provider', 'simplybook') : __('Add Service Provider', 'simplybook')}
                             </ButtonInput>
                         </div>
