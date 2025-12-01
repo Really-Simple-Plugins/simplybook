@@ -109,7 +109,7 @@ class DashboardController implements ControllerInterface
      */
     public function renderReactApp(): void
     {
-        $this->render('admin/dashboard', [], 'html');
+        $this->render('admin/dashboard');
     }
 
     /**
@@ -267,7 +267,6 @@ class DashboardController implements ControllerInterface
                 'support' => $this->app->env->get('simplybook.support'),
                 'fallback_colors' => $this->themeColorService->getFallbackColors(),
                 'is_rtl' => is_rtl(),
-                'text_direction' => is_rtl() ? 'rtl' : 'ltr',
             ]
         );
     }

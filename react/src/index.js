@@ -70,10 +70,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Load dynamic translations before rendering
     loadDynamicTranslations();
 
-    // Set RTL direction on the container element based on WordPress settings
-    const isRtl = window.simplybook?.is_rtl ?? false;
-    container.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
-
     // Disable React Query's suspense by default
     config.defaultOptions.queries.suspense = false;
 
