@@ -266,7 +266,6 @@ class DashboardController implements ControllerInterface
                 'simplybook_countries' => $this->app->config->get('countries'),
                 'support' => $this->app->env->get('simplybook.support'),
                 'fallback_colors' => $this->themeColorService->getFallbackColors(),
-                'is_rtl' => is_rtl(),
             ]
         );
     }

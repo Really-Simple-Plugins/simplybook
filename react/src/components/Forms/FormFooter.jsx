@@ -1,5 +1,5 @@
 import FormScrollProgressLine from "./FormScrollProgressLine";
-import { __ } from "@wordpress/i18n";
+import { __, isRTL } from "@wordpress/i18n";
 import { useFormState } from "react-hook-form";
 import useSettingsData from "../../hooks/useSettingsData";
 import ButtonLink from "../Buttons/ButtonLink";
@@ -8,7 +8,6 @@ import { ToastContainer } from "react-toastify";
 import { useParams } from "@tanstack/react-router";
 import { useCrudContext } from "../../context/CrudContext";
 import { useEffect, useState } from "react";
-import { getIsRtl } from "../../context/RtlContext";
 
 const FormFooter = ({
     onSubmit,
@@ -142,12 +141,12 @@ const FormFooter = ({
 
             <ToastContainer
                 toastClassName={"rounded-xl"}
-                position={getIsRtl() ? "bottom-left" : "bottom-right"}
+                position={isRTL() ? "bottom-left" : "bottom-right"}
                 autoClose={3000}
                 hideProgressBar={true}
                 newestOnTop={false}
                 closeOnClick
-                rtl={getIsRtl()}
+                rtl={isRTL()}
                 pauseOnFocusLoss
                 pauseOnHover
             />
