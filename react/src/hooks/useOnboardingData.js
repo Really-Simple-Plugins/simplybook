@@ -1,5 +1,5 @@
 import {useEffect} from "react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";

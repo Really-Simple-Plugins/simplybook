@@ -2,7 +2,7 @@ import { forwardRef } from "react";
 import TextInput from "../Inputs/TextInput";
 import FieldWrapper from "../Forms/FieldWrapper";
 import ButtonField from "./ButtonField";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import HttpClient from "../../api/requests/HttpClient";
 import ButtonLink from "../Buttons/ButtonLink";
 
