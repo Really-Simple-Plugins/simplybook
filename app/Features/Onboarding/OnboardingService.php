@@ -142,6 +142,8 @@ class OnboardingService
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     *
+     * @since 3.2.4 All domains are now listed as login: in config/env.php.
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
