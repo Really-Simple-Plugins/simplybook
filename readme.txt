@@ -3,9 +3,9 @@ Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters,
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.2.3
+Stable tag: 3.2.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,9 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.2.3.1 =
+* Fixed: JavaScript error on the dashboard when having WordPress 6.9 installed.
+
 = 3.2.3 =
 * Fixed: The "confirm email" step can no longer be skipped, preventing users from getting stuck.
 * Fixed: Theme settings can now be fetched regardless of strict server settings.
