@@ -88,10 +88,10 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.2.3.1 =
+= 3.2.3.1 - 2025-12-03 =
 * Fixed: JavaScript error on the dashboard when having WordPress 6.9 installed.
 
-= 3.2.3 =
+= 3.2.3 - 2025-11-20 =
 * Fixed: The "confirm email" step can no longer be skipped, preventing users from getting stuck.
 * Fixed: Theme settings can now be fetched regardless of strict server settings.
 * Fixed: Translations are no longer escaped multiple times, preventing display issues.
@@ -99,21 +99,21 @@ You can skip the onboarding and login with your existing login credentials.
 * Changed: The tips-and-tricks block has a new design for better readability.
 * Changed: Code optimization to reduce load times.
 
-= 3.2.2.1 =
+= 3.2.2.1 - 2025-10-27 =
 * Fixed: Error on uninstall.
 
-= 3.2.2 =
+= 3.2.2 - 2025-10-21 =
 * Added: Admin notice for stale plugin users.
 * Changed: Plugin now uses new code architecture.
 * Removed: Deprecated constants: SIMPLYBOOK_VERSION, SIMPLYBOOK_PATH, SIMPLYBOOK_URL & SIMPLYBOOK_PLUGIN.
 
-= 3.2.1 =
+= 3.2.1 - 2025-10-13 =
 * Added: Admin notice for (soon) expired trial subscription.
 * Changed: Onboarding endpoints are now limited to admin area only.
 * Fixed: ReCaptcha now resets after invalid email code preventing persistent failure.
 * Fixed: Installing plugin during Gutenberg block insert no longer errors.
 
-= 3.2.0 =
+= 3.2.0 - 2025-08-21 =
 * Added: Widget can now be implemented using a SimplyBook.me Elementor block.
 * Added: Theme styling is used as a default style for the widget during onboarding.
 * Added: Tasks on the dashboard can now open a popup for more information.
@@ -124,7 +124,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Leave-page warning now only appears when there are unsaved changes.
 * Fixed: Added missing button spacing in the dashboard.
 
-= 3.1.1 =
+= 3.1.1 - 2025-07-17 =
 * Added: bookingsystem.nu and simplybooking.io domains now supported at login.
 * Added: Notice shown when WordPress REST API is disabled.
 * Added: Improved error messages during sign-in.
@@ -138,7 +138,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Logout now works with object caching enabled.
 * Fixed: Dashboard load issues resolved by preventing stale browser cache.
 
-= 3.1.0 =
+= 3.1.0 - 2025-06-17 =
 * Added: markwolters and rvvelthuijsen are added as contributors.
 * Added: Setting help texts are now shown in tooltips.
 * Changed: Prompts to publish the widget now responds to user actions in posts.
@@ -152,7 +152,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Demo widget notice now only appears when the loaded widget is actually a demo.
 * Fixed: Unexpectedly losing connection with SimplyBook.me is now resolved.
 
-= 3.0.0 =
+= 3.0.0 - 2025-05-20 =
 * Major refactor of the plugin by Really Simple Plugins.
 * Added: reallysimpleplugins, wimbraam and jeroenvdk are added as contributors.
 
