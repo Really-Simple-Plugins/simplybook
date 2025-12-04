@@ -11,9 +11,9 @@ trait HasUserAccess
     {
         $cacheName = 'simplybook_current_user_first_name';
         $cacheGroup = 'simplybook_has_user_access';
-        $cacheValue = wp_cache_get($cacheName, $cacheGroup);
+        $cacheValue = wp_cache_get($cacheName, $cacheGroup, false, $found);
 
-        if (!empty($cacheValue)) {
+        if ($found && !empty($cacheValue) && is_string($cacheValue)) {
             return $cacheValue;
         }
 

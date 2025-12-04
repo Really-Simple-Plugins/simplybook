@@ -79,8 +79,10 @@ class SubscriptionDataService
     public function all(bool $strict = false): array
     {
         $cacheName = 'simplybook_subscription_data_all_' . ($strict ? 'strict' : 'non-strict');
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $subscriptionData = get_option('simplybook_subscription_data', []);
