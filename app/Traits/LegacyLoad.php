@@ -207,7 +207,7 @@ trait LegacyLoad {
 
         $savedDomain = $this->get_option('domain', $validate);
         if (!empty($savedDomain)) {
-            wp_cache_set($cacheName, $savedDomain, 'simplybook');
+            wp_cache_set($cacheName, $savedDomain, 'simplybook', DAY_IN_SECONDS);
             return $savedDomain;
         }
 
@@ -216,7 +216,7 @@ trait LegacyLoad {
             throw new \LogicException('SimplyBook domain is not set in the environment.');
         }
 
-        wp_cache_set($cacheName, $environment['domain'], 'simplybook');
+        wp_cache_set($cacheName, $environment['domain'], 'simplybook', DAY_IN_SECONDS);
         return $environment['domain'];
     }
 

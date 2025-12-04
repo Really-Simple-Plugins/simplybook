@@ -32,7 +32,7 @@ trait HasUserAccess
             $firstName = ucfirst($user->display_name);
         }
 
-        wp_cache_set($cacheName, $firstName, $cacheGroup);
+        wp_cache_set($cacheName, $firstName, $cacheGroup, (5 * MINUTE_IN_SECONDS));
         return $firstName;
     }
 }

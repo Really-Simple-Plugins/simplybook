@@ -463,7 +463,7 @@ class OnboardingController implements FeatureInterface
         // Check if any widgets are currently published
         if ($this->widgetService->hasTrackedPosts()) {
             $this->widgetService->setPublishWidgetCompleted();
-            wp_cache_set($cacheName, true, 'simplybook');
+            wp_cache_set($cacheName, true, 'simplybook', DAY_IN_SECONDS);
         }
     }
 }

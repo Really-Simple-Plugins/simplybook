@@ -262,7 +262,7 @@ final class Plugin
             )
         );
 
-        wp_cache_set($cacheName, ($count > 0), 'simplybook');
+        wp_cache_set($cacheName, ($count > 0), 'simplybook', DAY_IN_SECONDS);
         return $count > 0;
     }
 }

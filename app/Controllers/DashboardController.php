@@ -235,7 +235,7 @@ class DashboardController implements ControllerInterface
             'version' => $assetFileData['version'] ?? '',
         ];
 
-        wp_cache_set($cacheName, $chunkTranslations, 'simplybook');
+        wp_cache_set($cacheName, $chunkTranslations, 'simplybook', (5 * MINUTE_IN_SECONDS));
         return $chunkTranslations;
     }
 
