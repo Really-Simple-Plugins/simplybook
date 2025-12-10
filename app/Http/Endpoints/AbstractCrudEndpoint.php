@@ -89,7 +89,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
     protected function createItem(Storage $request): \WP_REST_Response
     {
         if ($request->isEmpty()) {
-            return $this->sendHttpResponse([], false, __('Could not create entity, no data provided.', 'simplybook'), 405);
+            return $this->sendHttpResponse([], false, esc_html__('Could not create entity, no data provided.', 'simplybook'), 400);
         }
 
         try {
@@ -188,7 +188,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         } catch (\Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
-            ], false, __('Something went wrong while deleting.', 'simplybook'), 400);
+            ], false, esc_html__('Something went wrong while deleting.', 'simplybook'), 500);
         }
 
         return $this->sendHttpResponse();
@@ -209,10 +209,10 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return new \WP_REST_Response([
                 'message' => $exception->getMessage(),
                 'errors' => $exception->getErrors()
-            ], 403);
+            ], 400);
         }
 
-        return $this->sendHttpResponse([], false, __('An unknown error occurred. Please try again later.', 'simplybook'), 400);
+        return $this->sendHttpResponse([], false, esc_html__('An unknown error occurred. Please try again later.', 'simplybook'), 500);
     }
 
     /**
@@ -242,8 +242,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         $exceptionData = $exception->getData();
         if (empty($exceptionData['data'])) {
             return new \WP_REST_Response([
-                'message' => __('An unknown error occurred while saving, please try again.', 'simplybook'),
-            ], 403);
+                'message' => esc_html__('An unknown error occurred while saving, please try again.', 'simplybook'),
+            ], 500);
         }
 
         $faultyFields = $exceptionData['data'];
@@ -252,7 +252,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         return new \WP_REST_Response([
             'message' => __('An error occurred while saving, please try again.', 'simplybook'),
             'errors' => $translatedErrors,
-        ], 403);
+        ], 500);
     }
 
     /**

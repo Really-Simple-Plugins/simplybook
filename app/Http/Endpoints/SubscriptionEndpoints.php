@@ -61,7 +61,7 @@ class SubscriptionEndpoints implements MultiEndpointInterface
 
         $subscriptionData = $this->service->fetch();
         if (empty($subscriptionData)) {
-            return $this->sendHttpResponse([], false, 'No subscription data found.', 404);
+            return $this->sendHttpResponse([], false, 'No subscription data found.', 204);
         }
 
         $saved = $this->service->save($subscriptionData);

@@ -208,7 +208,7 @@ class OnboardingController implements FeatureInterface
             $message = __('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, $message, 400);
+            ], false, $message, 500);
         }
 
         $message = __('Successfully saved widget style settings', 'simplybook');
@@ -236,8 +236,8 @@ class OnboardingController implements FeatureInterface
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
-            $message = __('Calendar page title should be available if you choose to generate this page.', 'simplybook');
-            return $this->service->sendHttpResponse([], false, $message, 503);
+            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
+            return $this->service->sendHttpResponse([], false, $message, 409);
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
@@ -279,7 +279,7 @@ class OnboardingController implements FeatureInterface
         $userPassword = $storage->getString('user_password');
 
         if ($storage->isOneEmpty(['company_domain', 'company_login', 'user_login', 'user_password'])) {
-            return $this->service->sendHttpResponse([], false, __('Please fill in all fields.', 'simplybook'));
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
@@ -319,7 +319,7 @@ class OnboardingController implements FeatureInterface
         $companyDomain = $storage->getString('domain');
 
         if ($storage->isOneEmpty(['company_login', 'domain', 'auth_session_id', 'two_fa_type', 'two_fa_code'])) {
-            return $this->service->sendHttpResponse([], false, __('Please fill in all fields.', 'simplybook'));
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
@@ -442,7 +442,7 @@ class OnboardingController implements FeatureInterface
             $message = __('An error occurred while trying to remove previous data.', 'simplybook');
         }
 
-        return $this->service->sendHttpResponse([], $success, $message);
+        return $this->service->sendHttpResponse([], $success, $message, ($success ? 200 : 500));
     }
 
     /**
