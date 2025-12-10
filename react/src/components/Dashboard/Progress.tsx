@@ -96,7 +96,7 @@ const Progress = () => {
                                 key={task.id}
                                 task={task}
                                 onDismissCallback={dismissTask}
-                                className={remainingTasks.length > 7 ? "!mr-0" : !showAll ? "mr-2" : ""}
+                                className={remainingTasks.length > 7 ? "!me-0" : !showAll ? "me-2" : ""}
                                 onModalOpen={onModalOpen}
                             />
                         ))}

@@ -35,7 +35,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
 
         const buttonClassName = clsx(
             "text-tertiary hover:text-tertiary/80 underline text-[0.8125rem] text-nowrap",
-            !taskIsDismissable() && "mr-8",  // Add margin only when NOT dismissable
+            !taskIsDismissable() && "me-8",  // Add margin only when NOT dismissable
             task.action.modal && "cursor-pointer",
         );
 
@@ -86,7 +86,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
         return (
             <button
                 onClick={() => onDismissCallback(task.id)}
-                className="ml-2 text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
+                className="ms-2 text-gray-400 hover:text-gray-600 w-6 h-6 flex items-center justify-center cursor-pointer"
             >
                 ×
             </button>
@@ -98,7 +98,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
             className={clsx(
                 className,
                 "task-item-inner",
-                "h-6 flex items-center gap-4 pl-5 pr-1",
+                "h-6 flex items-center gap-4 ps-5 pe-1",
                 "hover:bg-gray-50",
                 "xl:h-auto xl:flex xl:items-center xl:justify-between xl:grid-cols-[130px_1fr_auto_2em] xl:py-1"
             )}
@@ -125,7 +125,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
                 <div className="flex items-center justify-end">
                     {renderActionButton()}
 
-                    <div className="text-right">
+                    <div className="text-end">
                         {renderDismissButton()}
                     </div>
                 </div>

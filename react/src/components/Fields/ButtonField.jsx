@@ -37,7 +37,7 @@ const ButtonField = forwardRef(({
                     onClick={button?.onClick}
                     {...props}
                 >
-                    {showLoader && <Icon color="white" name="spinner" size="1x" className="mr-2" />}
+                    {showLoader && <Icon color="white" name="spinner" size="1x" className="me-2" />}
                     {label}
                 </ButtonInput>
             </FieldWrapper>

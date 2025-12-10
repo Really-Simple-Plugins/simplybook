@@ -37,7 +37,7 @@ const FormTooltip: React.FC<FormTooltipProps> = ({
             <Icon
                 name={iconType}
                 color={iconColor}
-                className={"tooltip-icon ml-2"}
+                className={"tooltip-icon ms-2"}
                 data-tooltip-id={"field-tooltip"}
                 data-tooltip-content={message}
                 aria-hidden={"false"}

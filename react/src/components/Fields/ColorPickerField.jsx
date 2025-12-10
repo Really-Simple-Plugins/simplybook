@@ -54,7 +54,7 @@ const ColorPickerField = forwardRef(
                         <Popover.Trigger
                             className='p-1 w-full bg-transparent rounded-md border border-gray-400 min-w-[140px] text-base'
                         >
-                            <div className={disabledClass+" text-left xl:whitespace-wrap xl:text-center min-w-5 flex p-1.5 gap-3.5 items-center"}>
+                            <div className={disabledClass+" text-start xl:whitespace-wrap xl:text-center min-w-5 flex p-1.5 gap-3.5 items-center"}>
                                 <div className="rounded-full min-w-5 h-5 border border-gray-300" style={{ backgroundColor: color }}></div>
                                 {label}
                             </div>
