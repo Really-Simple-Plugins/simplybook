@@ -198,13 +198,16 @@ trait LegacyLoad {
      */
     public function get_domain(bool $validate = true): string
     {
-        if ($cache = wp_cache_get('simplybook_get_domain_legacy_load', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_get_domain_legacy_load';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_string($cacheValue)) {
+            return $cacheValue;
         }
 
         $savedDomain = $this->get_option('domain', $validate);
         if (!empty($savedDomain)) {
-            wp_cache_set('simplybook_get_domain_legacy_load', $savedDomain, 'simplybook');
+            wp_cache_set($cacheName, $savedDomain, 'simplybook', DAY_IN_SECONDS);
             return $savedDomain;
         }
 
@@ -213,7 +216,7 @@ trait LegacyLoad {
             throw new \LogicException('SimplyBook domain is not set in the environment.');
         }
 
-        wp_cache_set('simplybook_get_domain_legacy_load', $environment['domain'], 'simplybook');
+        wp_cache_set($cacheName, $environment['domain'], 'simplybook', DAY_IN_SECONDS);
         return $environment['domain'];
     }
 

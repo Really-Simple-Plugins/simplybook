@@ -20,6 +20,7 @@ const ButtonField = forwardRef(({
      context,
      className,
      button,
+     showLoader,
      ...props
 }, ref) => {
         return (
@@ -33,11 +34,10 @@ const ButtonField = forwardRef(({
                 <ButtonInput
                     btnVariant={button?.btnVariant}
                     disabled={button?.disabled}
-                    showLoader={button?.showLoader}
                     onClick={button?.onClick}
                     {...props}
                 >
-                    {props.showLoader && <Icon color="white" name="spinner" size="1x" className="me-2" />}
+                    {showLoader && <Icon color="white" name="spinner" size="1x" className="me-2" />}
                     {label}
                 </ButtonInput>
             </FieldWrapper>

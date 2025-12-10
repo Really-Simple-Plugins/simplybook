@@ -96,8 +96,10 @@ class TrialExpirationController implements ControllerInterface
     private function canRenderTrialNotice(): bool
     {
         $cacheName = 'can_render_trial_expiration_notice';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         $screen = get_current_screen();
@@ -128,17 +130,17 @@ class TrialExpirationController implements ControllerInterface
             return false;
         }
 
-        return $trialInfo['is_expired'] || $trialInfo['days_remaining'] <= 2;
+        return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
     }
 
     private function getTrialInfo(): ?array
     {
         $cacheKey = 'simplybook_trial_info';
         $cacheGroup = 'simplybook';
-        $cachedInfo = wp_cache_get($cacheKey, $cacheGroup);
+        $cachedInfo = wp_cache_get($cacheKey, $cacheGroup, false, $found);
         $cacheDuration = (5 * MINUTE_IN_SECONDS);
 
-        if ($cachedInfo !== false) {
+        if ($found && is_array($cachedInfo)) {
             return $cachedInfo;
         }
 
@@ -163,7 +165,7 @@ class TrialExpirationController implements ControllerInterface
         $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
         $trialInfo = [
-            'is_expired' => $isExpired,
+            'is_expired' => (bool) $isExpired,
             'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
             'days_since_expiration' => $isExpired ? abs((int) $expireIn) : 0,
         ];

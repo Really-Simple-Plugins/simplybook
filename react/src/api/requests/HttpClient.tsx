@@ -204,23 +204,23 @@ class HttpClient {
 
     /**
      * Method is used for validating incoming payloads from mixed JS/TS sources.
-     * It ensures we only accept non-empty plain objects (no arrays, no
+     * It ensures we only accept non-empty plain objects or arrays (no
      * Dates/Maps, etc.).
      * @param value the payload data to check
      * @return boolean
      */
-    public isValidPayload(value: unknown): value is Record<string, unknown> {
-        if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    public isValidPayload(value: unknown): value is Record<string, unknown> | Array<"unknown"> {
+        if (!value || typeof value !== 'object') {
             return false;
         }
 
         // Accept plain objects with either Object.prototype or null prototype.
         const proto = Object.getPrototypeOf(value);
-        if (proto !== Object.prototype && proto !== null) {
+        if (!(proto === Object.prototype || proto === Array.prototype) && proto !== null) {
             return false;
         }
 
-        return Object.keys(value as object).length > 0;
+        return Array.isArray(value) ? value.length > 0 : Object.keys(value as object).length > 0;
     }
 
     /**

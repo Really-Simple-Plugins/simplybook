@@ -109,8 +109,10 @@ class AdminController implements ControllerInterface
     private function shouldRenderRestApiNotice(): bool
     {
         $cacheName = 'rsp_simplybook_rest_api_inaccessible';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return (bool) $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         // Dismissed notice or completed onboarding? No notice.

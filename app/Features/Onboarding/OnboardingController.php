@@ -452,8 +452,10 @@ class OnboardingController implements FeatureInterface
      */
     public function validatePublishedWidget(): void
     {
-        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
-        if ($cache === true) {
+        $cacheName = 'simplybook_widget_published';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && ($cacheValue === true)) {
             $this->widgetService->setPublishWidgetCompleted();
             return;
         }
@@ -461,7 +463,7 @@ class OnboardingController implements FeatureInterface
         // Check if any widgets are currently published
         if ($this->widgetService->hasTrackedPosts()) {
             $this->widgetService->setPublishWidgetCompleted();
-            wp_cache_set('simplybook_widget_published', true, 'simplybook');
+            wp_cache_set($cacheName, true, 'simplybook', DAY_IN_SECONDS);
         }
     }
 }
