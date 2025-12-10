@@ -60,7 +60,8 @@ const ColorPickerField = forwardRef(
                             </div>
                         </Popover.Trigger>
                         <Popover.Portal>
-                            <Popover.Content >
+                            {/*Footer has z-index 10, we need higher z-index*/}
+                            <Popover.Content style={{ zIndex: 11 }}>
                                 <ColorPicker colorValue={color} onChangeComplete={handleColorChange} />
                             </Popover.Content>
                         </Popover.Portal>
