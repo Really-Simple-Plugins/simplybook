@@ -245,8 +245,11 @@ final class Plugin
      */
     private function isUpgradeFromLegacy(): bool
     {
-        if ($cache = wp_cache_get('simplybook_was_legacy_plugin_active', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_was_legacy_plugin_active';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         global $wpdb;
@@ -259,7 +262,7 @@ final class Plugin
             )
         );
 
-        wp_cache_set('simplybook_was_legacy_plugin_active', ($count > 0), 'simplybook');
+        wp_cache_set($cacheName, ($count > 0), 'simplybook', DAY_IN_SECONDS);
         return $count > 0;
     }
 }

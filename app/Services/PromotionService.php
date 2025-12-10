@@ -22,7 +22,7 @@ class PromotionService
 
         // The $hasCache variable is set by reference in wp_cache_get
         if ($hasCache) {
-            return $cache;
+            return (bool) $cache;
         }
 
         $timezone = wp_timezone();

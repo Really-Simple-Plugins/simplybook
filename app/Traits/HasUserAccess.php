@@ -11,9 +11,9 @@ trait HasUserAccess
     {
         $cacheName = 'simplybook_current_user_first_name';
         $cacheGroup = 'simplybook_has_user_access';
-        $cacheValue = wp_cache_get($cacheName, $cacheGroup);
+        $cacheValue = wp_cache_get($cacheName, $cacheGroup, false, $found);
 
-        if (!empty($cacheValue)) {
+        if ($found && !empty($cacheValue) && is_string($cacheValue)) {
             return $cacheValue;
         }
 
@@ -32,7 +32,7 @@ trait HasUserAccess
             $firstName = ucfirst($user->display_name);
         }
 
-        wp_cache_set($cacheName, $firstName, $cacheGroup);
+        wp_cache_set($cacheName, $firstName, $cacheGroup, (5 * MINUTE_IN_SECONDS));
         return $firstName;
     }
 }

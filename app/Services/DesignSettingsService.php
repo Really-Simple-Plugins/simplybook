@@ -69,8 +69,11 @@ class DesignSettingsService
      */
     public function getDesignOptions(): array
     {
-        if ($cache = wp_cache_get('design_settings', 'simplybook')) {
-            return $cache;
+        $cacheName = 'design_settings';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $designOptions = get_option($this->designOptionsKey, []);
@@ -88,7 +91,7 @@ class DesignSettingsService
         // Append default values from the design config, prioritize saved values
         $designOptions = array_merge($this->getDefaultDesignSettings(), $designOptions);
 
-        wp_cache_set('design_settings', $designOptions, 'simplybook', 60);
+        wp_cache_set($cacheName, $designOptions, 'simplybook', 60);
         return $designOptions;
     }
 

@@ -180,8 +180,10 @@ class DashboardController implements ControllerInterface
     private function getReactChunkTranslations(): array
     {
         $cacheName = 'simplybook-react-chunk-translations';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         // get all files from the settings/build folder
@@ -233,7 +235,7 @@ class DashboardController implements ControllerInterface
             'version' => $assetFileData['version'] ?? '',
         ];
 
-        wp_cache_set($cacheName, $chunkTranslations, 'simplybook');
+        wp_cache_set($cacheName, $chunkTranslations, 'simplybook', (5 * MINUTE_IN_SECONDS));
         return $chunkTranslations;
     }
 

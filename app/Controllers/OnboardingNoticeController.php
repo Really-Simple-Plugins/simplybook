@@ -99,8 +99,10 @@ class OnboardingNoticeController implements ControllerInterface
     private function canRenderNotice(): bool
     {
         $cacheName = 'can_render_onboarding_notice';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         // Prevent showing the notice on edit screen, as gutenberg removes the
