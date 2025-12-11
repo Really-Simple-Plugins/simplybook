@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -10,6 +9,7 @@ use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Http\Endpoints\LoginUrlEndpoint;
 use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface
 {
@@ -17,13 +17,13 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
-    private App $app;
+    private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(App $app, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
+    public function __construct(EnvironmentConfig $env, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
     {
-        $this->app = $app;
+        $this->env = $env;
         $this->subscriptionService = $subscriptionService;
         $this->noticeDismissalService = $noticeDismissalService;
     }
@@ -59,7 +59,7 @@ class TrialExpirationController implements ControllerInterface
         }
 
         $this->render('admin/trial-notice', [
-            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
         ]);
     }
@@ -74,9 +74,9 @@ class TrialExpirationController implements ControllerInterface
 
         wp_enqueue_script(
             'simplybook-admin-sso',
-            $this->app->env->getUrl('plugin.assets_url') . 'js/sso/admin-sso-links.js',
+            $this->env->getUrl('plugin.assets_url') . 'js/sso/admin-sso-links.js',
             [],
-            $this->app->env->getString('plugin.version'),
+            $this->env->getString('plugin.version'),
             false
         );
 
@@ -85,7 +85,7 @@ class TrialExpirationController implements ControllerInterface
             sprintf(
                 'const simplebookSSOConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    $this->app->env->getString('http.namespace') . '/' . $this->app->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
+                    $this->env->getString('http.namespace') . '/' . $this->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

@@ -15,10 +15,9 @@ class Storage extends Dot
 {
     /**
      * Create a new Storage instance with dot notation functionality from the
-     * parent {@see Dot} class. This internal class is extendable but the
-     * construct should not be overridable, it is therefor made final.
+     * parent {@see Dot} class.
      */
-    final public function __construct($items = [], $parse = false, $delimiter = ".")
+    public function __construct($items = [], $parse = false, $delimiter = ".")
     {
         parent::__construct($items, $parse, $delimiter);
     }

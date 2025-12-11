@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -17,13 +17,13 @@ class OnboardingController implements FeatureInterface
 {
     use HasAllowlistControl;
 
-    private App $app;
+    private ApiClient $client;
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
 
-    public function __construct(App $app, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
+    public function __construct(ApiClient $client, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
     {
-        $this->app = $app;
+        $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
     }
@@ -141,7 +141,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->register_company();
+            $response = $this->client->register_company();
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
         }
@@ -172,7 +172,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->confirm_email(
+            $response = $this->client->confirm_email(
                 $storage->getString('confirmation-code'),
                 $storage->getString('recaptchaToken')
             );
@@ -283,7 +283,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
+            $response = $this->client->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
             $exceptionData = $e->getData();
 
@@ -323,7 +323,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->processTwoFaAuthenticationRequest(
+            $response = $this->client->processTwoFaAuthenticationRequest(
                 $companyDomain,
                 $companyLogin,
                 $storage->getString('auth_session_id'),
@@ -357,7 +357,7 @@ class OnboardingController implements FeatureInterface
     {
         $responseStorage = new Storage($response);
 
-        $this->app->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
+        $this->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
             $responseStorage->getString('token'),
             $responseStorage->getString('refresh_token'),
             $parsedDomain,
@@ -397,7 +397,7 @@ class OnboardingController implements FeatureInterface
         $storage = $this->service->retrieveHttpStorage($request);
 
         try {
-            $this->app->client->requestSmsForUser(
+            $this->client->requestSmsForUser(
                 $storage->getString('domain'),
                 $storage->getString('company_login'),
                 $storage->getString('auth_session_id'),

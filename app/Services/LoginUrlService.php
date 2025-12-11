@@ -3,7 +3,7 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
 
 class LoginUrlService
@@ -12,11 +12,11 @@ class LoginUrlService
 
     public const LOGIN_URL_CREATION_DATE_OPTION = 'simplybook_login_url_creation_date';
 
-    private App $app;
+    private ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -26,7 +26,7 @@ class LoginUrlService
     public function getDashboardUrl(): string
     {
         $simplyBookDomain = $this->get_domain();
-        $simplyBookCompanyPath = $this->app->client->get_company_login();
+        $simplyBookCompanyPath = $this->client->get_company_login();
         return "https://$simplyBookCompanyPath.secure.$simplyBookDomain";
     }
 
@@ -82,7 +82,7 @@ class LoginUrlService
     protected function fetchNewAutomaticLoginUrl(): string
     {
         try {
-            $loginHashData = $this->app->client->createLoginHash();
+            $loginHashData = $this->client->createLoginHash();
         } catch (\Exception $e) {
             return $this->getDashboardUrl();
         }

@@ -2,10 +2,10 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TipsTricksEndpoint implements SingleEndpointInterface
 {
@@ -14,11 +14,11 @@ class TipsTricksEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'tips_and_tricks';
 
-    private App $app;
+    private EnvironmentConfig $env;
 
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
+        $this->env = $env;
     }
 
     /**
@@ -53,7 +53,7 @@ class TipsTricksEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $tipsAndTricks = $this->app->env->get('simplybook.tips_and_tricks');
+        $tipsAndTricks = $this->env->get('simplybook.tips_and_tricks');
         return $this->sendHttpResponse($tipsAndTricks);
     }
 }

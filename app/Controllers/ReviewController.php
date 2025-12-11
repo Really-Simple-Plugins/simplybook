@@ -3,11 +3,13 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ReviewController implements ControllerInterface
 {
@@ -19,12 +21,16 @@ class ReviewController implements ControllerInterface
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
 
-    private App $app;
+    private ApiClient $client;
+    private EnvironmentConfig $env;
+    private RequestStorage $request;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(App $app, NoticeDismissalService $noticeDismissalService)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
     {
-        $this->app = $app;
+        $this->client = $client;
+        $this->env = $env;
+        $this->request = $request;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -52,13 +58,13 @@ class ReviewController implements ControllerInterface
             // translators: %1$d is replaced by the amount of bookings, %2$ and %23$ are replaced with opening and closing a tag containing hyperlink
             __('Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s.', 'simplybook'),
             $this->getAmountOfBookings(),
-            '<a href="' . $this->app->env->getUrl('simplybook.support_url') . '"  rel="noopener noreferrer"  target="_blank">',
+            '<a href="' . $this->env->getUrl('simplybook.support_url') . '"  rel="noopener noreferrer"  target="_blank">',
             '</a>'
         );
 
         $this->render('admin/review-notice', [
-            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'reviewUrl' => $this->app->env->getUrl('simplybook.review_url'),
+            'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'reviewUrl' => $this->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
             'reviewAction' => $this->reviewAction,
             'reviewNonceName' => $this->reviewNonceName,
@@ -70,16 +76,16 @@ class ReviewController implements ControllerInterface
      */
     public function processReviewFormSubmit(): void
     {
-        if ($this->app->request->isEmpty('rsp_review_form')) {
+        if ($this->request->isEmpty('global.rsp_review_form')) {
             return;
         }
 
-        $nonce = $this->app->request->get($this->reviewNonceName);
+        $nonce = $this->request->get('global.' . $this->reviewNonceName);
         if (wp_verify_nonce($nonce, $this->reviewAction) === false) {
             return; // Invalid nonce
         }
 
-        $choice = $this->app->request->getString('rsp_review_choice');
+        $choice = $this->request->getString('global.rsp_review_choice');
         if ($choice === 'later') {
             update_option('simplybook_review_notice_dismissed_time', time(), false);
             update_option('simplybook_review_notice_choice', 'later', false);
@@ -195,7 +201,7 @@ class ReviewController implements ControllerInterface
             return $this->bookingsAmount; // Object cache
         }
 
-        $statistics = $this->app->client->get_statistics();
+        $statistics = $this->client->get_statistics();
         if (empty($statistics)) {
             $this->bookingsAmount = 0;
             return $this->bookingsAmount;

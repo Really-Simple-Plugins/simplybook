@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasLogging;
@@ -19,6 +18,7 @@ use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -31,7 +31,7 @@ class ApiClient
     use HasLogging;
     use HasAllowlistControl;
 
-    protected App $app;
+    protected EnvironmentConfig $env;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -67,10 +67,10 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
-        $environment = $this->app->env->get('simplybook.api', []);
+        $this->env = $env;
+        $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
             throw new \LogicException('Register the environment for the application in the container');
@@ -1548,7 +1548,7 @@ class ApiClient
 	 */
 	private function getRequestUserAgent(): string
 	{
-		return "SimplyBookPlugin/" . $this->app->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+		return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
 	}
 
     /**

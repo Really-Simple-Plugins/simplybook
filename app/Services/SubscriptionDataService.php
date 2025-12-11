@@ -3,7 +3,7 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storage;
 
@@ -11,11 +11,11 @@ class SubscriptionDataService
 {
     public const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
 
-    private App $app;
+    protected ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -24,7 +24,7 @@ class SubscriptionDataService
      */
     public function fetch(): array
     {
-        return $this->app->client->get_subscription_data();
+        return $this->client->get_subscription_data();
     }
 
     /**

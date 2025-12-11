@@ -2,18 +2,18 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class NoticeDismissalService
 {
     private const META_KEY = 'simplybook_dismissed_notices';
 
-    private App $app;
+    private EnvironmentConfig $env;
 
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
+        $this->env = $env;
     }
 
     /**
@@ -76,9 +76,9 @@ class NoticeDismissalService
 
         wp_enqueue_script(
             'simplybook-notice-dismiss',
-            $this->app->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
+            $this->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
             [],
-            $this->app->env->getString('plugin.version'),
+            $this->env->getString('plugin.version'),
             false
         );
 
@@ -87,7 +87,7 @@ class NoticeDismissalService
             sprintf(
                 'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    $this->app->env->getString('http.namespace') . '/' . $this->app->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                    $this->env->getString('http.namespace') . '/' . $this->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

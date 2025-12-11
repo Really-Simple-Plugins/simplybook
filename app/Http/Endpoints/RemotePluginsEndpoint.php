@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -17,11 +17,11 @@ class RemotePluginsEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'get_plugins';
 
-    private App $app;
+    private ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -57,7 +57,7 @@ class RemotePluginsEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $plugins = $this->app->client->get_plugins();
+        $plugins = $this->client->get_plugins();
         return $this->sendHttpResponse($plugins);
     }
 }

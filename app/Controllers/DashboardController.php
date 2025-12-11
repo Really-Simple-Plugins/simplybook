@@ -2,13 +2,16 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\ThemeColorService;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class DashboardController implements ControllerInterface
 {
@@ -17,12 +20,18 @@ class DashboardController implements ControllerInterface
     use HasUserAccess;
     use HasAllowlistControl;
 
-    private App $app;
+    private ApiClient $client;
+    private EnvironmentConfig $env;
+    private RequestStorage $request;
+    private GeneralConfig $config;
     private ThemeColorService $themeColorService;
 
-    public function __construct(App $app, ThemeColorService $themeColorService)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService)
     {
-        $this->app = $app;
+        $this->client = $client;
+        $this->env = $env;
+        $this->request = $request;
+        $this->config = $config;
         $this->themeColorService = $themeColorService;
     }
 
@@ -46,8 +55,8 @@ class DashboardController implements ControllerInterface
      */
     public function enqueueSimplyBookDashiconStyle(): void
     {
-        $iconCss = $this->app->env->getUrl('plugin.assets_url') . 'css/simplybook-icon.css';
-        wp_enqueue_style('simplybook-font', $iconCss, [], $this->app->env->getString('plugin.version'));
+        $iconCss = $this->env->getUrl('plugin.assets_url') . 'css/simplybook-icon.css';
+        wp_enqueue_style('simplybook-font', $iconCss, [], $this->env->getString('plugin.version'));
     }
 
     /**
@@ -64,7 +73,7 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        wp_safe_redirect($this->app->env->getUrl('plugin.dashboard_url'));
+        wp_safe_redirect($this->env->getUrl('plugin.dashboard_url'));
         exit;
     }
 
@@ -124,7 +133,7 @@ class DashboardController implements ControllerInterface
 
         wp_enqueue_style(
             'simplybook-tailwind',
-            $this->app->env->getUrl('plugin.assets_url') . '/css/tailwind.generated.css',
+            $this->env->getUrl('plugin.assets_url') . '/css/tailwind.generated.css',
             [],
             ($chunkTranslation['version'] ?? '')
         );
@@ -147,15 +156,15 @@ class DashboardController implements ControllerInterface
         // Enqueue SimplyBook Widget script for preview functionality
         wp_enqueue_script(
             'simplybookMePl_widget_scripts',
-            $this->app->env->getUrl('simplybook.widget_script_url'),
+            $this->env->getUrl('simplybook.widget_script_url'),
             [],
-            $this->app->env->getString('simplybook.widget_script_version'),
+            $this->env->getString('simplybook.widget_script_version'),
             true
         );
 
         wp_enqueue_script(
             'simplybook-main-script',
-            $this->app->env->getUrl('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
+            $this->env->getUrl('plugin.react_url') . '/build/' . ($chunkTranslation['js_file_name'] ?? ''),
             ($chunkTranslation['dependencies'] ?? ''),
             ($chunkTranslation['version'] ?? ''),
             true
@@ -187,7 +196,7 @@ class DashboardController implements ControllerInterface
         }
 
         // get all files from the settings/build folder
-        $buildDirPath = $this->app->env->getString('plugin.react_path') . '/build';
+        $buildDirPath = $this->env->getString('plugin.react_path') . '/build';
         $filenames = scandir($buildDirPath);
 
         $jsFileName = '';
@@ -211,8 +220,8 @@ class DashboardController implements ControllerInterface
             // remove extension from $filename
             $chunkHandle = str_replace('.js', '', $filename);
             // temporarily register the script, so we can get a translations object.
-            $chunkSource = $this->app->env->getUrl('plugin.react_url') . '/build/' . $filename;
-            wp_register_script($chunkHandle, $chunkSource, [], $this->app->env->getString('plugin.version'), true);
+            $chunkSource = $this->env->getUrl('plugin.react_url') . '/build/' . $filename;
+            wp_register_script($chunkHandle, $chunkSource, [], $this->env->getString('plugin.version'), true);
 
             //as there is no pro version of this plugin, no need to declare a path
             $localeData = load_script_textdomain($chunkHandle, 'simplybook');
@@ -252,11 +261,11 @@ class DashboardController implements ControllerInterface
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
-                'rest_namespace' => $this->app->env->getString('http.namespace'),
-                'rest_version' => $this->app->env->getString('http.version'),
+                'rest_namespace' => $this->env->getString('http.namespace'),
+                'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
-                'dashboard_url' => $this->app->env->getUrl('plugin.dashboard_url'),
-                'assets_url' => $this->app->env->getUrl('plugin.assets_url'),
+                'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
+                'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
                 'settings_menu' => $this->menu(),
@@ -264,9 +273,9 @@ class DashboardController implements ControllerInterface
                 'is_onboarding_completed' => $this->isOnboardingCompleted(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
-                'simplybook_domains' => $this->app->env->get('simplybook.domains'),
-                'simplybook_countries' => $this->app->config->get('countries'),
-                'support' => $this->app->env->get('simplybook.support'),
+                'simplybook_domains' => $this->env->get('simplybook.domains'),
+                'simplybook_countries' => $this->config->get('countries'),
+                'support' => $this->env->get('simplybook.support'),
                 'fallback_colors' => $this->themeColorService->getFallbackColors(),
             ]
         );
@@ -283,11 +292,11 @@ class DashboardController implements ControllerInterface
      */
     public function maybeResetRegistration(): void
     {
-        if ($this->app->request->getString('reset_registration', 'false') !== 'true') {
+        if ($this->request->getString('global.reset_registration', 'false') !== 'true') {
             return;
         }
 
-        $this->app->client->reset_registration();
+        $this->client->reset_registration();
     }
 
     /**

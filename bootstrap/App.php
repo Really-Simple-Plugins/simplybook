@@ -10,19 +10,8 @@ namespace SimplyBook\Bootstrap;
  * dependencies in a structured and reusable way. This is important because it
  * decouples classes from concrete implementations (new..) and makes the
  * codebase easier to test and maintain.
- *
- * @property-read \SimplyBook\Support\Helpers\Storage $config {@see \SimplyBook\Providers\ConfigServiceProvider::provideConfig}
- * @method static \SimplyBook\Support\Helpers\Storage config()
- * @property-read \SimplyBook\Support\Helpers\Storage $env {@see \SimplyBook\Providers\ConfigServiceProvider::provideEnv}
- * @method static \SimplyBook\Support\Helpers\Storage env()
- * @property-read \SimplyBook\Support\Helpers\Storage $request {@see \SimplyBook\Providers\RequestServiceProvider::provideRequest}
- * @method static \SimplyBook\Support\Helpers\Storage request()
- * @property-read \SimplyBook\Support\Helpers\Storage $files {@see \SimplyBook\Providers\RequestServiceProvider::provideFiles}
- * @method static \SimplyBook\Support\Helpers\Storage files()
- * @property-read \SimplyBook\Http\ApiClient $client {@see \SimplyBook\Providers\ClientServiceProvider::provideClient}
- * @method static \SimplyBook\Http\ApiClient client()
  */
-class App
+final class App
 {
     /**
      * Singleton instance holder. Ensures a single container is shared across
@@ -181,21 +170,21 @@ class App
             /** @var class-string $dependencyClass */
             $dependencyClass = $type->getName();
 
-            // Inject the current container, never a new one.
             if ($dependencyClass === self::class) {
-                $arguments[] = $this;
-                continue;
+                throw new \Exception(sprintf(
+                    'Cannot resolve App container dependency for $%s in [%s] to prevent circular dependencies.',
+                    $parameter->getName(),
+                    $class
+                ));
             }
 
             // Using get() will also resolve dependencies of dependencies
             $dependency = $this->get($dependencyClass);
 
-            // Dependencies are often for multi-use and therefor adding them
-            // to the registry is beneficial for speed
+            // Note: the registry is untouched here as that is only for deferred
+            // factories (closures). The instances prop is used in get() too.
             if ($registerDependencies === true) {
-                $this->set($dependencyClass, static function() use ($dependency) {
-                    return $dependency;
-                });
+                $this->instances[$dependencyClass] = $dependency;
             }
 
             $arguments[] = $this->get($dependencyClass);
@@ -203,39 +192,12 @@ class App
 
         $made = new $class(...$arguments);
 
+        // Note: the registry is untouched here as that is only for deferred
+        // factories (closures). The instances prop is used in get() too.
         if ($register) {
-            $this->set($class, static function() use ($made) {
-                return $made;
-            });
+            $this->instances[$class] = $made;
         }
 
         return $made;
-    }
-
-    /**
-     * Calls {@see get} immediately for unknown properties.
-     *
-     * @throws \Exception If the target is not instantiable.
-     * @throws \ReflectionException If reflection fails.
-     */
-    public function __get(string $name): object
-    {
-        return $this->get($name);
-    }
-
-    /**
-     * Helper method to be able to do static calls like so:
-     * App::config()->getString('env.plugin.name');
-     *
-     * Instead of:
-     * App::getInstance()->config->getString('env.plugin.name');
-     *
-     * @param list<mixed> $arguments
-     * @return mixed
-     * @throws \ReflectionException
-     */
-    public static function __callStatic(string $name, array $arguments = [])
-    {
-        return self::getInstance()->get($name);
     }
 }

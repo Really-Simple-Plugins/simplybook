@@ -11,7 +11,6 @@ use SimplyBook\Managers\ControllerManager;
 
 final class Plugin
 {
-    private App $app;
     private FeatureManager $featureManager;
     private ProviderManager $providerManager;
     private EndpointManager $endpointManager;
@@ -22,12 +21,12 @@ final class Plugin
      */
     public function __construct()
     {
-        $this->app = App::getInstance();
+        $app = App::getInstance();
 
-        $this->featureManager = new FeatureManager($this->app);
-        $this->providerManager = new ProviderManager($this->app);
-        $this->controllerManager = new ControllerManager($this->app);
-        $this->endpointManager = new EndpointManager($this->app);
+        $this->featureManager = $app->make(FeatureManager::class);
+        $this->providerManager = $app->make(ProviderManager::class);
+        $this->endpointManager = $app->make(EndpointManager::class);
+        $this->controllerManager = $app->make(ControllerManager::class);
     }
 
     /**
@@ -46,7 +45,6 @@ final class Plugin
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this->featureManager, 'registerFeatures']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
-        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']); // Makes sure Controllers can hook into the upgrade process
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
     }
@@ -143,9 +141,7 @@ final class Plugin
     public function registerProviders(): void
     {
         $this->providerManager->register([
-            \SimplyBook\Providers\ConfigServiceProvider::class,
-            \SimplyBook\Providers\RequestServiceProvider::class,
-            \SimplyBook\Providers\ClientServiceProvider::class,
+            \SimplyBook\Providers\SimplyBookApiProvider::class,
         ]);
     }
 
@@ -200,69 +196,5 @@ final class Plugin
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
             \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
         ]);
-    }
-
-    /**
-     * Fire an action when the plugin is upgraded from one version to another.
-     * Hooked into simplybook_controllers_loaded to make sure Controllers can
-     * hook into simplybook_plugin_version_upgrade.
-     *
-     * @internal Note the starting underscore in the option name. This is to
-     * prevent the option from being deleted when a user logs out. As if
-     * it is a private SimplyBook option.
-     *
-     * @uses do_action simplybook_plugin_version_upgrade
-     */
-    public function checkForUpgrades(): void
-    {
-        $previousSavedVersion = (string) get_option('_simplybook_current_version', '');
-        if ($previousSavedVersion === $this->app->env->getString('plugin.version')) {
-            return; // Nothing to do
-        }
-
-        // This could be one if-statement, but this makes it readable that we
-        // do not query the database if we do not need to.
-        if (empty($previousSavedVersion)) {
-            if ($this->isUpgradeFromLegacy()) {
-                $previousSavedVersion = '2.3';
-            }
-        }
-
-        // Trigger upgrade hook if we are upgrading from a previous version.
-        // Action can be used by Controllers to hook into the upgrade process
-        if (!empty($previousSavedVersion)) {
-            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, $this->app->env->getString('plugin.version'));
-        }
-
-        // Also makes sure $previousSavedVersion will only be empty one time
-        update_option('_simplybook_current_version', $this->app->env->getString('plugin.version'), false);
-    }
-
-    /**
-     * Check if the plugin is being upgraded from a legacy version.
-     * @internal Ideally this method should be removed in the future.
-     * @since 3.0.0
-     */
-    private function isUpgradeFromLegacy(): bool
-    {
-        $cacheName = 'simplybook_was_legacy_plugin_active';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found) {
-            return (bool) $cacheValue;
-        }
-
-        global $wpdb;
-
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
-        $count = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT COUNT(*) FROM {$wpdb->options} WHERE option_name LIKE %s",
-                'simplybookMePl_%'
-            )
-        );
-
-        wp_cache_set($cacheName, ($count > 0), 'simplybook', DAY_IN_SECONDS);
-        return $count > 0;
     }
 }

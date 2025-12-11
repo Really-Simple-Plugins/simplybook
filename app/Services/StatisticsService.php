@@ -3,17 +3,17 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 
 class StatisticsService
 {
     public const DATA_TIME_THRESHOLD = (5 * MINUTE_IN_SECONDS);
 
-    private App $app;
+    protected ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -22,7 +22,7 @@ class StatisticsService
      */
     public function fetch(): array
     {
-        return $this->app->client->get_statistics();
+        return $this->client->get_statistics();
     }
 
     /**

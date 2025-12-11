@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace SimplyBook\Managers;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 abstract class AbstractManager
 {
-    protected App $app;
+    protected EnvironmentConfig $env;
 
     /**
      * Overwrite this property to true when the entries that the child Manager
@@ -25,11 +26,11 @@ abstract class AbstractManager
     protected bool $useRegistryForDependencies = true;
 
     /**
-     * Bind the container
+     * Bind the env
      */
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
+        $this->env = $env;
     }
 
     /**
@@ -66,7 +67,7 @@ abstract class AbstractManager
                 throw new \LogicException("Class must be a fully qualified name. Given type: $type");
             }
 
-            $class = $this->app->make($fullyClassifiedName, $this->useRegistry, $this->useRegistryForDependencies);
+            $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->useRegistryForDependencies);
 
             if ($this->isRegistrable($class) === false) {
                 throw new \LogicException("Class is not registrable: " . $fullyClassifiedName);

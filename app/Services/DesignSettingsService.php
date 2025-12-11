@@ -5,10 +5,18 @@ namespace SimplyBook\Services;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Exceptions\FormException;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 class DesignSettingsService
 {
     use LegacySave;
+
+    protected GeneralConfig $config;
+
+    public function __construct(GeneralConfig $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * Lazy-loaded theme color service for WordPress color palette extraction.
@@ -16,14 +24,6 @@ class DesignSettingsService
      *
      */
     private ?ThemeColorService $themeColorService = null;
-
-    /**
-     * Property to cache the configuration for the design settings. Do not use
-     * this property directly, instead us the method
-     * {@see getDesignConfiguration} to be sure you get the latest
-     * configuration.
-     */
-    protected array $config = [];
 
     /**
      * The key for the design settings in the WordPress options table.
@@ -46,21 +46,6 @@ class DesignSettingsService
     protected array $blockList = [
         'withValues',
     ];
-
-    /**
-     * Get the configuration for the design settings. This is used to validate
-     * the settings.
-     * @return mixed|array
-     */
-    public function getDesignConfiguration()
-    {
-        if (empty($this->config)) {
-            $this->config = App::config()->get('fields.design');
-            return $this->config;
-        }
-
-        return $this->config;
-    }
 
     /**
      * Get the design settings from the WordPress options table.
@@ -176,7 +161,7 @@ class DesignSettingsService
     {
         $errors = [];
 
-        $designConfiguration = $this->getDesignConfiguration();
+        $designConfiguration = $this->config->get('fields.design');
 
         foreach ($settings as $key => $value) {
             if (empty($designConfiguration[$key])) {
@@ -275,15 +260,13 @@ class DesignSettingsService
     }
 
     /**
-     * Get theme color service with lazy initialization.
-     *
-     * Creates instance only when needed for efficient resource usage.
-     *
+     * Get theme color service with lazy initialization. Creates instance only
+     * when needed for efficient resource usage.
      */
     public function getThemeColorService(): ThemeColorService
     {
         if ($this->themeColorService instanceof ThemeColorService === false) {
-            $this->themeColorService = new ThemeColorService();
+            $this->themeColorService = App::getInstance()->get(ThemeColorService::class);
         }
 
         return $this->themeColorService;
@@ -299,7 +282,7 @@ class DesignSettingsService
      */
     private function getDefaultDesignSettings(string $primary = '', string $secondary = '', string $active = ''): array
     {
-        $designConfig = App::config()->get('fields.design');
+        $designConfig = $this->config->get('fields.design');
         $defaultDesignSettings = [];
 
         // Get theme colors if no specific colors are provided

@@ -2,18 +2,18 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Bootstrap\App;
 use Elementor\Widgets_Manager;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Widgets\ElementorWidget;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class BlockController implements ControllerInterface
 {
-    private App $app;
+    private EnvironmentConfig $env;
 
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
+        $this->env = $env;
     }
 
     public function register(): void
@@ -42,7 +42,7 @@ class BlockController implements ControllerInterface
             return;
         }
 
-        $blockMetaData = $this->app->env->getString('plugin.assets_path') . '/block/build/block.json';
+        $blockMetaData = $this->env->getString('plugin.assets_path') . '/block/build/block.json';
         if (file_exists($blockMetaData) === false) {
             $this->registerGutenbergBlockTypeManually();
             return;
@@ -101,10 +101,10 @@ class BlockController implements ControllerInterface
             $this->registerGutenbergBlockType();
         }
 
-        $assetsData = include($this->app->env->getString('plugin.assets_path') . '/block/build/index.asset.php');
-        $indexJs = $this->app->env->getUrl('plugin.assets_url') . 'block/build/index.js';
-        $indexCss = $this->app->env->getUrl('plugin.assets_url') . 'block/build/index.css';
-        $preview = $this->app->env->getUrl('plugin.assets_url') . '/img/preview.png';
+        $assetsData = include($this->env->getString('plugin.assets_path') . '/block/build/index.asset.php');
+        $indexJs = $this->env->getUrl('plugin.assets_url') . 'block/build/index.js';
+        $indexCss = $this->env->getUrl('plugin.assets_url') . 'block/build/index.css';
+        $preview = $this->env->getUrl('plugin.assets_url') . '/img/preview.png';
 
         wp_enqueue_script(
             'simplybook-block',
@@ -123,20 +123,20 @@ class BlockController implements ControllerInterface
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
-                'rest_namespace' => $this->app->env->getString('http.namespace'),
-                'rest_version' => $this->app->env->getString('http.version'),
+                'rest_namespace' => $this->env->getString('http.namespace'),
+                'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
-                'dashboard_url' => $this->app->env->getUrl('plugin.dashboard_url'),
-                'assets_url' => $this->app->env->getUrl('plugin.assets_url'),
+                'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
+                'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
             ]
         );
 
         // Add widget.js script in the header of the page. We need it to be
         // Loaded as soon as possible, as our widgets are dependent on it.
-        wp_enqueue_script('simplybookMePl_widget_scripts', $this->app->env->getUrl('simplybook.widget_script_url'), [], $this->app->env->getString('simplybook.widget_script_version'), false);
+        wp_enqueue_script('simplybookMePl_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
 
-        wp_register_style('simplybookMePl_widget_styles', $indexCss, [], $this->app->env->getString('plugin.version'));
+        wp_register_style('simplybookMePl_widget_styles', $indexCss, [], $this->env->getString('plugin.version'));
         wp_enqueue_style('simplybookMePl_widget_styles');
 
         wp_set_script_translations('simplybook-block', 'simplybook');

@@ -35,28 +35,27 @@ class TaskManagementController implements FeatureInterface
      * task should be updated. If a task should be removed, remove the task from
      * this list.
      *
-     * @return array<int,TaskInterface>
-     * @throws \LogicException
+     * @return array<int, class-string<TaskInterface>> Array of Task class-strings
      */
-    private function getTaskObjects(): array
+    private function getTaskClassStrings(): array
     {
         return [
-            new Tasks\FailedAuthenticationTask(),
-            new Tasks\PublishWidgetTask(),
-            new Tasks\AddMandatoryServiceTask(),
-            new Tasks\AddMandatoryProviderTask(),
-            new Tasks\GoToSimplyBookSystemTask(),
-            new Tasks\AddAllServicesTask(),
-            new Tasks\AddAllProvidersTask(),
-            new Tasks\CustomizeDesignTask(),
-            new Tasks\TrialExpiredTask(),
-            new Tasks\MaximumBookingsTask(),
-            new Tasks\InstallAppTask(),
-            new Tasks\AcceptPaymentsTask(),
-            new Tasks\MaxedOutProvidersTask(),
-            new Tasks\PostOnSocialMediaTask(),
-            new Tasks\GatherClientInfoTask(),
-            new Tasks\BlackFridayTask(),
+            Tasks\FailedAuthenticationTask::class,
+            Tasks\PublishWidgetTask::class,
+            Tasks\AddMandatoryServiceTask::class,
+            Tasks\AddMandatoryProviderTask::class,
+            Tasks\GoToSimplyBookSystemTask::class,
+            Tasks\AddAllServicesTask::class,
+            Tasks\AddAllProvidersTask::class,
+            Tasks\CustomizeDesignTask::class,
+            Tasks\TrialExpiredTask::class,
+            Tasks\MaximumBookingsTask::class,
+            Tasks\InstallAppTask::class,
+            Tasks\AcceptPaymentsTask::class,
+            Tasks\MaxedOutProvidersTask::class,
+            Tasks\PostOnSocialMediaTask::class,
+            Tasks\GatherClientInfoTask::class,
+            Tasks\BlackFridayTask::class,
         ];
     }
 
@@ -71,7 +70,7 @@ class TaskManagementController implements FeatureInterface
         }
 
         $this->service->addTasks(
-            $this->getTaskObjects()
+            $this->getTaskClassStrings()
         );
     }
 
@@ -87,7 +86,7 @@ class TaskManagementController implements FeatureInterface
         }
 
         $this->service->upgradeTasks(
-            $this->getTaskObjects()
+            $this->getTaskClassStrings()
         );
     }
 }

@@ -3,16 +3,16 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class PromotionService
 {
     private Storage $env;
 
-    public function __construct()
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->env = App::getInstance()->env;
+        $this->env = $env;
     }
 
     public function isBlackFriday(): bool
