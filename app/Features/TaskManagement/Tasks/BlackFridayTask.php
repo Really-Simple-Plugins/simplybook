@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class BlackFridayTask extends AbstractTask
