@@ -42,8 +42,8 @@ abstract class DeferredObject
      * Retrieve the cached instance or create a new one and cache it.
      *
      * Note: this method only caches a single instance. If you need to change
-     * the underlying construction inputs, call `clearDeferredInstance()` to
-     * force recreation.
+     * the underlying construction inputs, call {@see clearDeferredInstance}
+     * to force recreation.
      *
      * @throws \ReflectionException
      */
