@@ -67,6 +67,12 @@ return [
             'start_date' => '2025-11-18',
             'end_date' => '2025-11-29'
         ],
+        'christmas_promo' => [
+            'discount_percentage' => 25,
+            'promo_code' => 'CHRISTMAS25',
+            'start_date' => '2025-12-01',
+            'end_date' => '2025-12-25'
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
