@@ -3,12 +3,11 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class PromotionService
 {
-    private Storage $env;
+    private EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
     {

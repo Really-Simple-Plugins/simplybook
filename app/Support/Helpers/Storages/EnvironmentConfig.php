@@ -5,32 +5,54 @@ declare(strict_types=1);
 namespace SimplyBook\Support\Helpers\Storages;
 
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Helpers\DeferredObject;
 
 /**
  * Environment configuration helper used in DI container.
+ *
+ * @mixin Storage This class acts as a proxy to Storage. All method calls are
+ * resolved dynamically through {@see DeferredObject::__get()}
  */
-final class EnvironmentConfig extends Storage
+final class EnvironmentConfig extends DeferredObject
 {
-    public function __construct()
+    /**
+     * @inheritDoc
+     */
+    protected function deferredClassString(): string
     {
-        parent::__construct(
-            require dirname(__FILE__, 5) . '/config/env.php'
-        );
+        return Storage::class;
+    }
 
-        if ($this->isNotEmpty('simplybook.api')) {
-            $this->exposeCorrectSimplyBookEnvironment();
+    /**
+     * @inheritDoc
+     */
+    protected function deferredConstructArguments(): array
+    {
+        return [
+            'items' => $this->getStorageItems(),
+        ];
+    }
+
+    private function getStorageItems(): array
+    {
+        $items = require dirname(__FILE__, 5) . '/config/env.php';
+
+        if (isset($items['simplybook']['api'])) {
+            $items = $this->exposeCorrectSimplyBookEnvironment($items);
         }
 
-        if ($this->isNotEmpty('simplybook.domains')) {
-            $this->addStagingSimplybookDomainToDomains();
+        if (isset($items['simplybook']['domains'])) {
+            $items = $this->addStagingSimplybookDomainToDomains($items);
         }
+
+        return $items;
     }
 
     /**
      * Provides the SimplyBook API environment configuration based on the
      * value of the SIMPLYBOOK_ENV constant.
      */
-    private function exposeCorrectSimplyBookEnvironment()
+    private function exposeCorrectSimplyBookEnvironment(array $items): array
     {
         $acceptedEnvs = ['production', 'development'];
         $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
@@ -39,27 +61,31 @@ final class EnvironmentConfig extends Storage
             $env = 'production';
         }
 
-        $correctEnv = $this->get('simplybook.api.' . $env);
-        $this->set('simplybook.api', $correctEnv);
+        $correctEnv = ($items['simplybook']['api'][$env] ?? []);
+        $items['simplybook']['api'] = $correctEnv;
+        return $items;
     }
 
     /**
      * Provides the SimplyBook domains based on the current environment.
      * If in development mode, it adds the staging domain.
      */
-    public function addStagingSimplybookDomainToDomains()
+    public function addStagingSimplybookDomainToDomains(array $items): array
     {
         $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
 
-        $environmentData = $this->get('simplybook.api');
-        $domains = $this->get('simplybook.domains');
+        $environmentData = $items['simplybook']['api'];
+        $domains = $items['simplybook']['domains'];
 
         if (($env === 'development') && !empty($environmentData['domain'])) {
             $domains[] = [
                 'value' => 'default:' . $environmentData['domain'],
                 'label' => $environmentData['domain'],
             ];
-            $this->set('simplybook.domains', $domains);
+
+            $items['simplybook']['domains'] = $domains;
         }
+
+        return $items;
     }
 }
