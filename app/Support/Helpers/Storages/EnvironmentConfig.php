@@ -33,6 +33,10 @@ final class EnvironmentConfig extends DeferredObject
         ];
     }
 
+    /**
+     * Method automatically resolved the correct environment configuration
+     * for SimplyBook.me and returns the full env configuration as an array.
+     */
     private function getStorageItems(): array
     {
         $items = require dirname(__FILE__, 5) . '/config/env.php';
