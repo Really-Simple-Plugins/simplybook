@@ -126,7 +126,7 @@ class DashboardController implements ControllerInterface
      */
     public function enqueueDashboardStyles(): void
     {
-        $chunkTranslation = $this->getReactChunkTranslations();
+        $chunkTranslation = $this->getReactChunksAndTranslations();
         if (empty($chunkTranslation)) {
             return;
         }
@@ -148,7 +148,7 @@ class DashboardController implements ControllerInterface
      */
     public function enqueueReactScripts(): void
     {
-        $chunkTranslation = $this->getReactChunkTranslations();
+        $chunkTranslation = $this->getReactChunksAndTranslations();
         if (empty($chunkTranslation)) {
             return;
         }
@@ -186,9 +186,9 @@ class DashboardController implements ControllerInterface
      * simplest approach. Simplicity is king here.
      * @see https://wordpress.com/blog/2022/01/06/wordpress-plugin-i18n-webpack-and-composer/
      */
-    private function getReactChunkTranslations(): array
+    private function getReactChunksAndTranslations(): array
     {
-        $cacheName = 'simplybook-react-chunk-translations';
+        $cacheName = 'simplybook-react-chunk-and-translations';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
         if ($found && is_array($cacheValue)) {
