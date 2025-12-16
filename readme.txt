@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.2.3.1
+Stable tag: 3.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,8 +88,19 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.2.4 - 2025-12-16 =
+* Fixed: API response codes now better reflect the actual error.
+* Fixed: Color pickers no longer render behind the form footer.
+* Fixed: Optimized tasks-endpoint.
+* Fixed: Redirect to dashboard after onboarding now works reliably.
+* Fixed: An error during sign-in for specific SimplyBook.me domains is resolved.
+* Fixed: Invalid object cache value types no longer accepted to prevent errors.
+* Fixed: We now properly invalidate object cache regarding javascript files.
+* Changed: Improved RTL-styling for languages that require it.
+
 = 3.2.3.1 - 2025-12-03 =
 * Fixed: JavaScript error on the dashboard when having WordPress 6.9 installed.
+* Added: Tested up to 6.9 in readme.txt.
 
 = 3.2.3 - 2025-11-20 =
 * Fixed: The "confirm email" step can no longer be skipped, preventing users from getting stuck.

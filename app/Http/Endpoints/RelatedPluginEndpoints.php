@@ -2,23 +2,23 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\RelatedPluginService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 class RelatedPluginEndpoints implements MultiEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
 
-    private App $app;
+    private GeneralConfig $config;
     private RelatedPluginService $service;
 
-    public function __construct(App $app, RelatedPluginService $service)
+    public function __construct(GeneralConfig $config, RelatedPluginService $service)
     {
-        $this->app = $app;
+        $this->config = $config;
         $this->service = $service;
     }
 
@@ -90,7 +90,7 @@ class RelatedPluginEndpoints implements MultiEndpointInterface
      */
     public function buildRelatedPluginData(string $targetPluginSlug = ''): array
     {
-        $plugins = $this->app->config->get('related.plugins');
+        $plugins = $this->config->get('related.plugins');
 
         if (!empty($targetPluginSlug)) {
             $plugins = array_filter($plugins, function($plugin) use ($targetPluginSlug) {

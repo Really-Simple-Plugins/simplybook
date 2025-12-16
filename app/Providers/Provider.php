@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace SimplyBook\Providers;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Interfaces\ProviderInterface;
 use SimplyBook\Support\Utility\StringUtility;
+use SimplyBook\Interfaces\ProviderInterface;
 
 /**
  * Providers are classes that provide functionality to the container. Child
@@ -19,8 +21,18 @@ class Provider implements ProviderInterface
     /**
      * Register the provided services. Will be used to find and call the
      * provide{Service} methods. You can use lowercase for the service name.
+     * @var string[]
      */
     protected array $provides = [];
+
+    /**
+     * Register the provided singleton services. The key is the name of the
+     * service and is used to find and call the provide{Service}Singleton
+     * method. The value is the class string that will be used to register
+     * and retrieve the singleton in the container.
+     * @var array<string, class-string>
+     */
+    protected array $singletons = [];
 
     /**
      * Method will be called by the ProviderManager to serve the provided
@@ -34,8 +46,19 @@ class Provider implements ProviderInterface
                 continue;
             }
 
-            App::getInstance()->set($provide, function() use ($method) {
-                return $this->$method();
+            App::getInstance()->set($provide, static function() use ($method) {
+                return static::$method();
+            });
+        }
+
+        foreach ($this->singletons as $key => $classString) {
+            $method = 'provide' . StringUtility::snakeToPascalCase($key) . 'Singleton';
+            if (method_exists($this, $method) === false) {
+                continue;
+            }
+
+            App::getInstance()->set($classString, static function() use ($method) {
+                return static::$method();
             });
         }
     }

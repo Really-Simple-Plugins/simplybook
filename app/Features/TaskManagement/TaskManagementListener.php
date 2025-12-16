@@ -130,6 +130,7 @@ class TaskManagementListener
 
         if (!empty($subscription)) {
             $this->handleBlackFridayTask($subscription);
+            $this->handleChristmasPromotionTask($subscription);
         }
 
         $this->handleSubscriptionLimits($limits);
@@ -308,6 +309,30 @@ class TaskManagementListener
     }
 
     /**
+     * Method will only set the Christmas promo task visible and mark it as
+     * upgrade if the current subscription is 'Trial' and the current date
+     * is between the Christmas promo start and end date mentioned in the
+     * env config.
+     */
+    private function handleChristmasPromotionTask(string $subscriptionType): void
+    {
+        $isTrial = (strtolower($subscriptionType) === 'trial');
+
+        if ($isTrial && $this->promotionService->isChristmasPeriod()) {
+            $this->service->setTaskBubbleCounter(1);
+            $this->service->markTaskUpgrade(
+                Tasks\ChristmasPromotionTask::IDENTIFIER
+            );
+            return;
+        }
+
+        $this->service->setTaskBubbleCounter(0);
+        $this->service->hideTask(
+            Tasks\ChristmasPromotionTask::IDENTIFIER
+        );
+    }
+
+    /**
      * Method is hooked on 'admin_init' action to check for date driven tasks.
      * Because these tasks do not depend solely on events but also on the
      * current date we should check them on every page load.
@@ -317,6 +342,12 @@ class TaskManagementListener
     {
         if ($this->promotionService->isBlackFriday()) {
             $this->handleBlackFridayTask(
+                (string) $this->subscriptionDataService->search('subscription_name', '')
+            );
+        }
+
+        if ($this->promotionService->isChristmasPeriod()) {
+            $this->handleChristmasPromotionTask(
                 (string) $this->subscriptionDataService->search('subscription_name', '')
             );
         }

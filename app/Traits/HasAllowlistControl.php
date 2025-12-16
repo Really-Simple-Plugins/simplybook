@@ -3,6 +3,7 @@
 namespace SimplyBook\Traits;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 trait HasAllowlistControl
 {
@@ -45,7 +46,7 @@ trait HasAllowlistControl
      */
     public function restRequestIsAllowed(): bool
     {
-        $pluginHttpNamespace = App::env()->getString('http.namespace');
+        $pluginHttpNamespace = App::getInstance()->get(EnvironmentConfig::class)->getString('http.namespace');
         $validWpJsonRequest = (
             isset($_SERVER['REQUEST_URI'])
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

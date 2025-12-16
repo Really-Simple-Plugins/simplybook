@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
@@ -14,11 +14,11 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'theme_list';
 
-    private App $app;
+    private ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -57,14 +57,14 @@ class PublicThemeListEndpoint implements SingleEndpointInterface
         try {
             $themeList = apply_filters(
                 'simplybook_public_theme_list',
-                $this->app->client->getThemeList()
+                $this->client->getThemeList()
             );
         } catch (\Exception $e) {
-            return $this->sendHttpResponse([], false, $e->getMessage(), 404);
+            return $this->sendHttpResponse([], false, $e->getMessage(), 500);
         }
 
         if (empty($themeList['themes'])) {
-            return $this->sendHttpResponse([], false, __('No themes found', 'simplybook'), 404);
+            return $this->sendHttpResponse([], false, __('No themes found', 'simplybook'), 204);
         }
 
         return $this->sendHttpResponse($themeList['themes']);

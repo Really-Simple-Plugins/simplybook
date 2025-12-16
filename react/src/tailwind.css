@@ -105,7 +105,23 @@ WP style overwrites
 ======================================
 **/
 #wpcontent {
-    padding-left: 0 !important;
+    padding-inline-start: 0 !important;
+}
+
+/**
+======================================
+RTL Support
+======================================
+**/
+#simplybook_app[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+#simplybook_app[dir="rtl"] input,
+#simplybook_app[dir="rtl"] textarea,
+#simplybook_app[dir="rtl"] select {
+    text-align: inherit;
 }
 
 /* Tailwind adds a base 'display: block' style on all imgs.

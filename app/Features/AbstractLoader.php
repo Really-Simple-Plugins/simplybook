@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace SimplyBook\Features;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Each Feature should have a {FeatureName}Loader class that extends this
@@ -17,11 +18,13 @@ use SimplyBook\Bootstrap\App;
  */
 abstract class AbstractLoader
 {
-    protected App $app;
+    protected EnvironmentConfig $env;
+    protected RequestStorage $request;
 
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request)
     {
-        $this->app = $app;
+        $this->env = $env;
+        $this->request = $request;
     }
 
     /**
@@ -44,8 +47,8 @@ abstract class AbstractLoader
      */
     protected function userIsOnDashboard(): bool
     {
-        $pageVisitedByUser = $this->app->request->getString('page');
-        $dashboardUrl = $this->app->env->getString('plugin.dashboard_url');
+        $pageVisitedByUser = $this->request->getString('global.page');
+        $dashboardUrl = $this->env->getString('plugin.dashboard_url');
 
         $pluginPageQueryString = wp_parse_url($dashboardUrl, PHP_URL_QUERY);
         parse_str($pluginPageQueryString, $parsedQuery);
@@ -69,7 +72,7 @@ abstract class AbstractLoader
      */
     protected function requestIsRestRequest(): bool
     {
-        $pluginHttpNamespace = $this->app->env->getString('http.namespace');
+        $pluginHttpNamespace = $this->env->getString('http.namespace');
         $restUrlPrefix = trailingslashit(rest_get_url_prefix());
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

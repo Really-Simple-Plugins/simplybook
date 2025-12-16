@@ -89,7 +89,7 @@ final class EndpointManager extends AbstractManager
         $routes = $this->getPluginRestRoutes();
 
         foreach ($routes as $route => $data) {
-            $version = ($data['version'] ?? $this->app->env->getString('http.version'));
+            $version = ($data['version'] ?? $this->env->getString('http.version'));
             $callback = ($data['callback'] ?? null);
             $middleware = ($data['middleware'] ?? null);
 
@@ -109,7 +109,7 @@ final class EndpointManager extends AbstractManager
                 $arguments['args'] = $data['args'];
             }
 
-            register_rest_route($this->app->env->getString('http.namespace') . '/' . $version, $route, $arguments);
+            register_rest_route($this->env->getString('http.namespace') . '/' . $version, $route, $arguments);
         }
     }
 

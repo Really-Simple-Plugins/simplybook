@@ -3,16 +3,17 @@
 namespace SimplyBook\Traits;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 trait HasViews
 {
     /**
      * Method for returning the desired view as a string
-     * @throws \LogicException
+     * @throws \LogicException|\ReflectionException
      */
     public function view(string $path, array $variables = [], string $extension = 'php'): string
     {
-        $basePath = App::env()->getString('plugin.view_path');
+        $basePath = App::getInstance()->get(EnvironmentConfig::class)->getString('plugin.view_path');
         $filePath = realpath($basePath . $path . '.' . $extension);
 
         // Someone is doing something dirty

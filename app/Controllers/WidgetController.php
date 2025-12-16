@@ -2,24 +2,27 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 use SimplyBook\Support\Builders\WidgetScriptBuilder;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
-    private App $app;
+    private ApiClient $client;
+    private EnvironmentConfig $env;
     protected DesignSettingsService $service;
 
-    public function __construct(App $app, DesignSettingsService $service)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, DesignSettingsService $service)
     {
-        $this->app = $app;
+        $this->client = $client;
+        $this->env = $env;
         $this->service = $service;
     }
 
@@ -74,7 +77,7 @@ class WidgetController implements ControllerInterface
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
                 ->isAuthenticated(
-                    $this->app->client->isAuthenticated()
+                    $this->client->isAuthenticated()
                 )
                 ->withHTML();
 
@@ -97,6 +100,6 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', $this->app->env->getUrl('simplybook.widget_script_url'), [], $this->app->env->getString('simplybook.widget_script_version'), false);
+        wp_enqueue_script('simplybook_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
     }
 }

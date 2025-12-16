@@ -4,20 +4,14 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class BlackFridayTask extends AbstractTask
+class ChristmasPromotionTask extends AbstractTask
 {
-    public const IDENTIFIER = 'black_friday';
+    public const IDENTIFIER = 'christmas_promo';
 
     /**
      * @inheritDoc
      */
     protected bool $required = true;
-
-    /**
-     * @since 3.2.4 bumped version due to the addition of a constructor
-     * argument.
-     */
-    protected string $version = '1.0.1';
 
     /**
      * The environment configuration
@@ -26,7 +20,7 @@ class BlackFridayTask extends AbstractTask
 
     /**
      * We hide this task by default, and it is updated to "upgrade" status
-     * during Black Friday period ánd only for Trial users in the
+     * during Christmas period ánd only for Trial users in the
      * {@see TaskManagementListener}
      */
     public function __construct(EnvironmentConfig $env)
@@ -43,9 +37,9 @@ class BlackFridayTask extends AbstractTask
     {
         return sprintf(
             /* translators: 1: discount percentage, 2: promo code */
-            __('Black Friday sale! Get %1$s Off SimplyBook.me with code %2$s', 'simplybook'),
-            '<strong>' . $this->env->getString('simplybook.black_friday.discount_percentage') . '%</strong>',
-            '<code>' . $this->env->getString('simplybook.black_friday.promo_code') . '</code>'
+            __('Christmas promotion! Get %1$s Off SimplyBook.me with code %2$s', 'simplybook'),
+            '<strong>' . $this->env->getString('simplybook.christmas_promo.discount_percentage') . '%</strong>',
+            '<code>' . $this->env->getString('simplybook.christmas_promo.promo_code') . '</code>'
         );
     }
 

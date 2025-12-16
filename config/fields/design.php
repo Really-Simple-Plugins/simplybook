@@ -1,4 +1,7 @@
 <?php
+
+use SimplyBook\Bootstrap\App;
+
 defined( 'ABSPATH' ) or die( );
 
 /**
@@ -9,7 +12,7 @@ if (!function_exists('getThemeColorsForDefaults')) {
         static $themeColors = null;
 
         if ($themeColors === null) {
-            $themeColorService = new \SimplyBook\Services\ThemeColorService();
+            $themeColorService = App::getInstance()->make(\SimplyBook\Services\ThemeColorService::class);
             $themeColors = $themeColorService->getThemeColors();
         }
 

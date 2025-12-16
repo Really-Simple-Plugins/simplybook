@@ -35,7 +35,7 @@ const OurPlugins = () => {
                             <div className=" w-[75%] xl:w-auto">
                                 <Icon name={"circle"} color={plugin.color}/>
                                 <Link
-                                    className="text-black font-normal ml-2 hover:text-primary hover:underline"
+                                    className="text-black font-normal ms-2 hover:text-primary hover:underline"
                                     to={plugin.url}>
                                     {plugin.title}
                                 </Link>

@@ -5,10 +5,18 @@ namespace SimplyBook\Services;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Exceptions\FormException;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 class DesignSettingsService
 {
     use LegacySave;
+
+    protected GeneralConfig $config;
+
+    public function __construct(GeneralConfig $config)
+    {
+        $this->config = $config;
+    }
 
     /**
      * Lazy-loaded theme color service for WordPress color palette extraction.
@@ -16,14 +24,6 @@ class DesignSettingsService
      *
      */
     private ?ThemeColorService $themeColorService = null;
-
-    /**
-     * Property to cache the configuration for the design settings. Do not use
-     * this property directly, instead us the method
-     * {@see getDesignConfiguration} to be sure you get the latest
-     * configuration.
-     */
-    protected array $config = [];
 
     /**
      * The key for the design settings in the WordPress options table.
@@ -48,29 +48,17 @@ class DesignSettingsService
     ];
 
     /**
-     * Get the configuration for the design settings. This is used to validate
-     * the settings.
-     * @return mixed|array
-     */
-    public function getDesignConfiguration()
-    {
-        if (empty($this->config)) {
-            $this->config = App::config()->get('fields.design');
-            return $this->config;
-        }
-
-        return $this->config;
-    }
-
-    /**
      * Get the design settings from the WordPress options table.
      * @uses wp_cache_get
      * @uses wp_cache_set Set the cache for 60 seconds.
      */
     public function getDesignOptions(): array
     {
-        if ($cache = wp_cache_get('design_settings', 'simplybook')) {
-            return $cache;
+        $cacheName = 'design_settings';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $designOptions = get_option($this->designOptionsKey, []);
@@ -88,7 +76,7 @@ class DesignSettingsService
         // Append default values from the design config, prioritize saved values
         $designOptions = array_merge($this->getDefaultDesignSettings(), $designOptions);
 
-        wp_cache_set('design_settings', $designOptions, 'simplybook', 60);
+        wp_cache_set($cacheName, $designOptions, 'simplybook', 60);
         return $designOptions;
     }
 
@@ -173,7 +161,7 @@ class DesignSettingsService
     {
         $errors = [];
 
-        $designConfiguration = $this->getDesignConfiguration();
+        $designConfiguration = $this->config->get('fields.design');
 
         foreach ($settings as $key => $value) {
             if (empty($designConfiguration[$key])) {
@@ -272,15 +260,13 @@ class DesignSettingsService
     }
 
     /**
-     * Get theme color service with lazy initialization.
-     *
-     * Creates instance only when needed for efficient resource usage.
-     *
+     * Get theme color service with lazy initialization. Creates instance only
+     * when needed for efficient resource usage.
      */
     public function getThemeColorService(): ThemeColorService
     {
         if ($this->themeColorService instanceof ThemeColorService === false) {
-            $this->themeColorService = new ThemeColorService();
+            $this->themeColorService = App::getInstance()->get(ThemeColorService::class);
         }
 
         return $this->themeColorService;
@@ -296,7 +282,7 @@ class DesignSettingsService
      */
     private function getDefaultDesignSettings(string $primary = '', string $secondary = '', string $active = ''): array
     {
-        $designConfig = App::config()->get('fields.design');
+        $designConfig = $this->config->get('fields.design');
         $defaultDesignSettings = [];
 
         // Get theme colors if no specific colors are provided

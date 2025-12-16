@@ -1,92 +1,44 @@
 <?php
 
-namespace SimplyBook\Providers;
+declare(strict_types=1);
+
+namespace SimplyBook\Support\Helpers\Storages;
 
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Helpers\DeferredObject;
 
-class ConfigServiceProvider extends Provider
+/**
+ * General config helper used in DI container.
+ *
+ * @mixin Storage This class acts as a proxy to Storage. All method calls are
+ * resolved dynamically through {@see DeferredObject::__get()}
+ */
+final class GeneralConfig extends DeferredObject
 {
-    protected array $provides = [
-        'env',
-        'config',
+    private array $filesToSkip = [
+        'env', // EnvironmentConfig
     ];
 
     /**
-     * Provides the environment data in the container.
-     * @example $this->app->env->getString('plugin.features_path')
+     * @inheritDoc
      */
-    public function provideEnv(): Storage
+    protected function deferredClassString(): string
     {
-        $env = new Storage(
-            require dirname(__FILE__, 3) . '/config/env.php'
-        );
-
-        if ($env->isNotEmpty('simplybook.api')) {
-            $env = $this->exposeCorrectSimplyBookEnvironment($env);
-        }
-
-        if ($env->isNotEmpty('simplybook.domains')) {
-            $env = $this->addStagingSimplybookDomainToDomains($env);
-        }
-
-        return $env;
+        return Storage::class;
     }
 
     /**
-     * Provides all config files from /config in the container, EXCEPT the env
-     * file!
-     * @example All: $this->app->config->get()
-     * @example Name: $this->app->config->getString('env.plugin.name')
+     * @inheritDoc
      */
-    public function provideConfig(): Storage
+    protected function deferredConstructArguments(): array
     {
-        return $this->storageFromPath(dirname(__FILE__, 3) . '/config', ['env'], true);
+        return [
+            'items' => $this->storageFromPath(dirname(__FILE__, 5) . '/config', $this->filesToSkip, true),
+        ];
     }
 
     /**
-     * Provides the SimplyBook API environment configuration based on the
-     * value of the SIMPLYBOOK_ENV constant.
-     */
-    private function exposeCorrectSimplyBookEnvironment(Storage $config): Storage
-    {
-        $acceptedEnvs = ['production', 'development'];
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        if (!in_array($env, $acceptedEnvs)) {
-            $env = 'production';
-        }
-
-        $correctEnv = $config->get('simplybook.api.' . $env);
-        $config->set('simplybook.api', $correctEnv);
-
-        return $config;
-    }
-
-    /**
-     * Provides the SimplyBook domains based on the current environment.
-     * If in development mode, it adds the staging domain.
-     * @example $this->app->simplybook_domains
-     */
-    public function addStagingSimplybookDomainToDomains(Storage $config): Storage
-    {
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        $environmentData = $config->get('simplybook.api');
-        $domains = $config->get('simplybook.domains');
-
-        if (($env === 'development') && !empty($environmentData['domain'])) {
-            $domains[] = [
-                'value' => 'default:' . $environmentData['domain'],
-                'label' => $environmentData['domain'],
-            ];
-            $config->set('simplybook.domains', $domains);
-        }
-
-        return $config;
-    }
-
-    /**
-     * Return all config files as Storage. If path is a directory, it will
+     * Return all config files as GeneralConfig. If path is a directory, it will
      * merge all the files in the directory.
      *
      * @param bool $prefixWithFileName Can be used to prefix the keys with the
@@ -96,7 +48,7 @@ class ConfigServiceProvider extends Provider
      *
      * @throws \InvalidArgumentException
      */
-    private function storageFromPath(string $path, array $whitelist = [], bool $prefixWithFileName = false): Storage
+    private function storageFromPath(string $path, array $skip = [], bool $prefixWithFileName = false): array
     {
         if (!file_exists($path)) {
             throw new \InvalidArgumentException(
@@ -116,7 +68,7 @@ class ConfigServiceProvider extends Provider
 
             /** @var \SplFileInfo $file */
             foreach ($iterator as $file) {
-                if (!$file->isFile() || in_array($file->getBasename('.php'), $whitelist)) {
+                if (!$file->isFile() || in_array($file->getBasename('.php'), $skip)) {
                     continue;
                 }
 
@@ -167,6 +119,6 @@ class ConfigServiceProvider extends Provider
             }
         }
 
-        return new Storage($data);
+        return $data;
     }
 }

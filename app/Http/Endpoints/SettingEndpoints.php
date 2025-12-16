@@ -53,7 +53,7 @@ class SettingEndpoints implements MultiEndpointInterface
         unset($fields['nonce']);
 
         if (count($fields) === 0) {
-            return $this->sendHttpResponse(['error' => 'No data to save']);
+            return $this->sendHttpResponse(['error' => 'No data to save'], false, __("No data to save", "simplybook"), 204);
         }
 
         if (isset($fields['settings_section'])) {
@@ -111,7 +111,7 @@ class SettingEndpoints implements MultiEndpointInterface
         } catch (FormException $e) {
             return $this->sendHttpResponse([
                 'errors' => $e->getErrors(),
-            ], false, __('Error processing settings', 'simplybook'));
+            ], false, esc_html__('Error processing settings', 'simplybook'), 500);
         }
 
         $fields = $this->fields(true);

@@ -11,14 +11,11 @@ class NotificationsController implements FeatureInterface
     private NotificationsService $service;
     private NotificationListener $listener;
 
-    public function __construct()
+    public function __construct(NotificationsEndpoints $endpoints, NotificationsService $service, NotificationListener $listener)
     {
-        $this->service = new NotificationsService(
-            new NotificationsRepository()
-        );
-
-        $this->endpoints = new NotificationsEndpoints($this->service);
-        $this->listener = new NotificationListener($this->service);
+        $this->service = $service;
+        $this->endpoints = $endpoints;
+        $this->listener = $listener;
     }
 
     public function register(): void
@@ -38,18 +35,18 @@ class NotificationsController implements FeatureInterface
      * the Notice should be updated. If a Notice should be removed, remove the
      * Notice from this list.
      *
-     * @return array<int,NoticeInterface>
+     * @return array<int,class-string<NoticeInterface>> Array of Notice class-strings
      * @throws \LogicException
      */
-    private function getNoticeObjects(): array
+    private function getNoticeClassStrings(): array
     {
         return [
-            new Notices\AddMandatoryProviderNotice(),
-            new Notices\MaxedOutProvidersNotice(),
-            new Notices\AddMandatoryServiceNotice(),
-            new Notices\MaxedOutServicesNotice(),
-            new Notices\FailedAuthenticationNotice(),
-            new Notices\PublishWidgetNotice(),
+             Notices\AddMandatoryProviderNotice::class,
+             Notices\MaxedOutProvidersNotice::class,
+             Notices\AddMandatoryServiceNotice::class,
+             Notices\MaxedOutServicesNotice::class,
+             Notices\FailedAuthenticationNotice::class,
+             Notices\PublishWidgetNotice::class,
         ];
     }
 
@@ -64,7 +61,7 @@ class NotificationsController implements FeatureInterface
         }
 
         $this->service->addNotices(
-            $this->getNoticeObjects()
+            $this->getNoticeClassStrings()
         );
     }
 
@@ -80,7 +77,7 @@ class NotificationsController implements FeatureInterface
         }
 
         $this->service->upgradeNotices(
-            $this->getNoticeObjects()
+            $this->getNoticeClassStrings()
         );
     }
 }

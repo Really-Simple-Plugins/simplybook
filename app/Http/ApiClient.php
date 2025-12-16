@@ -7,7 +7,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasLogging;
@@ -19,6 +18,7 @@ use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -31,7 +31,7 @@ class ApiClient
     use HasLogging;
     use HasAllowlistControl;
 
-    protected App $app;
+    protected EnvironmentConfig $env;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -67,10 +67,10 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(App $app)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->app = $app;
-        $environment = $this->app->env->get('simplybook.api', []);
+        $this->env = $env;
+        $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
             throw new \LogicException('Register the environment for the application in the container');
@@ -157,9 +157,10 @@ class ApiClient
     public function company_registration_complete(): bool
     {
         $cacheName = 'company_registration_complete';
-        $cache = wp_cache_get($cacheName, 'simplybook', false, $found);
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
         if ($found) {
-            return $cache;
+            return (bool) $cacheValue;
         }
 
         // Check if admin token exists
@@ -881,13 +882,16 @@ class ApiClient
             return [];
         }
 
-        if ($cache = wp_cache_get('simplybook_subscription_data', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_subscription_data';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $response = $this->api_call('admin/tariff/current', [], 'GET');
 
-        wp_cache_set('simplybook_subscription_data', $response, 'simplybook', MINUTE_IN_SECONDS);
+        wp_cache_set($cacheName, $response, 'simplybook', MINUTE_IN_SECONDS);
         return $response;
     }
 
@@ -900,8 +904,11 @@ class ApiClient
             return [];
         }
 
-        if ($cache = wp_cache_get('simplybook_statistics', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_statistics';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $response = $this->api_call('admin/statistic', [], 'GET');
@@ -909,7 +916,7 @@ class ApiClient
             return [];
         }
 
-        wp_cache_set('simplybook_statistics', $response, 'simplybook', MINUTE_IN_SECONDS);
+        wp_cache_set($cacheName, $response, 'simplybook', MINUTE_IN_SECONDS);
         return $response;
     }
 
@@ -917,13 +924,17 @@ class ApiClient
      * Get list of plugins with is_active and is_turned_on information
      * @return array
      */
-    public function get_plugins(): array {
+    public function get_plugins(): array
+    {
         if ( !$this->company_registration_complete() ){
             return [];
         }
 
-        if ($cache = wp_cache_get('simplybook_special_feature_plugins', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_special_feature_plugins';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $response = $this->api_call('admin/plugins', [], 'GET');
@@ -931,7 +942,7 @@ class ApiClient
 
         Event::dispatch(Event::SPECIAL_FEATURES_LOADED, $plugins);
 
-        wp_cache_set('simplybook_special_feature_plugins', $plugins, 'simplybook', MINUTE_IN_SECONDS);
+        wp_cache_set($cacheName, $plugins, 'simplybook', MINUTE_IN_SECONDS);
         return $plugins;
     }
 
@@ -1140,8 +1151,10 @@ class ApiClient
     public function isSpecialFeatureEnabled(string $featureKey): bool
     {
         $cacheName = 'simplybook-feature-enabled-' . trim($featureKey);
-        if ($cached = wp_cache_get($cacheName, 'simplybook')) {
-            return $cached;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         $features = $this->getSpecialFeatureList();
@@ -1434,8 +1447,11 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
-        if ($cache = wp_cache_get('simplybook_theme_list', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_theme_list';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $fallback = [
@@ -1463,7 +1479,7 @@ class ApiClient
         $data['themes'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_theme_list', $data);
-        wp_cache_add('simplybook_theme_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        wp_cache_add($cacheName, $data, 'simplybook', (2 * DAY_IN_SECONDS));
         return $data;
     }
 
@@ -1476,8 +1492,11 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
-        if ($cache = wp_cache_get('simplybook_timeline_list', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_timeline_list';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $fallback = [
@@ -1486,8 +1505,10 @@ class ApiClient
         ];
 
         $cachedOption = get_option('simplybook_cached_timeline_list', $fallback);
-        $cachedOptionCreatedAt = Carbon::parse($cachedOption['created_at_utc']);
-        $cachedOptionIsValid = $cachedOptionCreatedAt->isAfter(
+        $createdAtUtc = ($cachedOption['created_at_utc'] ?? $fallback['created_at_utc']);
+
+        $cachedOptionCreatedAt = Carbon::parse($createdAtUtc);
+        $cachedOptionIsValid = is_array($cachedOption) && $cachedOptionCreatedAt->isAfter(
             Carbon::now('UTC')->subDays(2) // Cache is valid for 2 days
         );
 
@@ -1505,7 +1526,7 @@ class ApiClient
         $data['list'] = $response['result'] ?? [];
 
         update_option('simplybook_cached_timeline_list', $data);
-        wp_cache_add('simplybook_timeline_list', $data, 'simplybook', (2 * DAY_IN_SECONDS));
+        wp_cache_add($cacheName, $data, 'simplybook', (2 * DAY_IN_SECONDS));
         return $data;
     }
 
@@ -1527,7 +1548,7 @@ class ApiClient
 	 */
 	private function getRequestUserAgent(): string
 	{
-		return "SimplyBookPlugin/" . $this->app->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+		return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
 	}
 
     /**
@@ -1541,8 +1562,9 @@ class ApiClient
             throw new \Exception('Company registration is not complete.');
         }
 
-        if ($cache = $this->getRequestCache($endpoint)) {
-            return $cache;
+        $cacheValue = $this->getRequestCache($endpoint);
+        if (!empty($cacheValue) && is_array($cacheValue)) {
+            return $cacheValue;
         }
 
         $response = $this->request('GET', $endpoint);

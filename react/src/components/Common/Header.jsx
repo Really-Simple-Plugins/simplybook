@@ -48,16 +48,16 @@ const Header = () => {
             <header className="mx-auto flex max-w-screen-2xl flex-wrap xl:flex-wrap pt-4 xl:pt-0 items-center">
                 <div className="self-center">
                     <Link to="/">
-                        <Logo className=" w-40 mr-4" />
+                        <Logo className=" w-40 me-4" />
                     </Link>
                 </div>
-                <div className="header-navigation flex items-center mr-4 order-6 justify-center w-full pt-4 xl:order-0 xl:justify-normal xl:w-auto xl:p-0">
+                <div className="header-navigation flex items-center me-4 order-6 justify-center w-full pt-4 xl:order-0 xl:justify-normal xl:w-auto xl:p-0">
                     <Link
                         to="/"
                         className={linkClassName + (isRouteActive('/dashboard') ? " active" : "")}
                     >
                         {!tasksLoading && tasksOpen > 0 && (
-                            <div className="notification-bubble flex items-center justify-center absolute -right-0.5 top-2.5 text-center text-xxs w-[18px] h-[18px]  text-white rounded-full bg-red-600 p-2">
+                            <div className="notification-bubble flex items-center justify-center absolute -end-0.5 top-2.5 text-center text-xxs w-[18px] h-[18px]  text-white rounded-full bg-red-600 p-2">
                                 {tasksOpen}
                             </div>
                         )}
@@ -98,7 +98,7 @@ const Header = () => {
                     {__("Help Center", "simplybook")}
                 </ButtonLink>
                 <div className="
-                    py-6 w-full ml-auto flex items-center justify-between px-0
+                    py-6 w-full ms-auto flex items-center justify-between px-0
                     xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
                 ">
                     {!isLoading && !isExpired && subscriptionPlan && (

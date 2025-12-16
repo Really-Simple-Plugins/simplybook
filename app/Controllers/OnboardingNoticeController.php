@@ -3,11 +3,12 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class OnboardingNoticeController implements ControllerInterface
 {
@@ -17,12 +18,14 @@ class OnboardingNoticeController implements ControllerInterface
     private string $completeOnboardingAction = 'rsp_onboarding_notice_form_submit';
     private string $completeOnboardingNonceName = 'rsp_onboarding_notice_nonce';
 
-    private App $app;
+    private EnvironmentConfig $env;
+    private RequestStorage $request;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(App $app, NoticeDismissalService $noticeDismissalService)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
     {
-        $this->app = $app;
+        $this->env = $env;
+        $this->request = $request;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -49,13 +52,13 @@ class OnboardingNoticeController implements ControllerInterface
         $noticeMessage = sprintf(
             // translators: %1$s and %2$s are replaced with opening and closing a tag containing hyperlink
             __('Hi! You have activated the SimplyBook.me plugin, but not yet completed the plugin onboarding. Take a minute to %1$scomplete the onboarding%2$s to immediately start collecting bookings on your site!'),
-            '<a href="' . $this->app->env->getUrl('plugin.dashboard_url') . '">',
+            '<a href="' . $this->env->getUrl('plugin.dashboard_url') . '">',
             '</a>'
         );
 
         $this->render('admin/complete-onboarding-notice', [
-            'logoUrl' => $this->app->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
-            'onboardingUrl' => $this->app->env->getUrl('plugin.dashboard_url'),
+            'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
+            'onboardingUrl' => $this->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
             'completeOnboardingAction' => $this->completeOnboardingAction,
             'completeOnboardingNonceName' => $this->completeOnboardingNonceName,
@@ -67,16 +70,16 @@ class OnboardingNoticeController implements ControllerInterface
      */
     public function processCompleteOnboardingNoticeFormSubmit(): void
     {
-        if ($this->app->request->isEmpty('rsp_complete_onboarding_notice_form')) {
+        if ($this->request->isEmpty('global.rsp_complete_onboarding_notice_form')) {
             return;
         }
 
-        $nonce = $this->app->request->get($this->completeOnboardingNonceName);
+        $nonce = $this->request->get('global.' . $this->completeOnboardingNonceName);
         if (wp_verify_nonce($nonce, $this->completeOnboardingAction) === false) {
             return; // Invalid nonce
         }
 
-        $choice = $this->app->request->getString('rsp_onboarding_notice_choice');
+        $choice = $this->request->getString('global.rsp_onboarding_notice_choice');
         if ($choice === 'later') {
             update_option('simplybook_complete_onboarding_notice_dismissed_time', time(), false);
             update_option('simplybook_complete_onboarding_notice_choice', 'later', false);
@@ -99,8 +102,10 @@ class OnboardingNoticeController implements ControllerInterface
     private function canRenderNotice(): bool
     {
         $cacheName = 'can_render_onboarding_notice';
-        if ($cache = wp_cache_get($cacheName, 'simplybook')) {
-            return $cache;
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
         }
 
         // Prevent showing the notice on edit screen, as gutenberg removes the

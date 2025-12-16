@@ -3,6 +3,7 @@
 namespace SimplyBook\Http\Entities;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;
@@ -51,6 +52,11 @@ abstract class AbstractEntity
     abstract public function getKnownErrors(): array;
 
     /**
+     * The API client instance
+     */
+    protected ApiClient $client;
+
+    /**
      * The entity's fillable attributes
      */
     protected array $fillable = [];
@@ -85,8 +91,10 @@ abstract class AbstractEntity
      * Entity constructor. Will always provide the API client to the child
      * entity class. It is used to do API requests.
      */
-    public function __construct()
+    public function __construct(ApiClient $client)
     {
+        $this->client = $client;
+
         $this->registerConditionalProperties();
     }
 
@@ -114,7 +122,7 @@ abstract class AbstractEntity
     {
         /**
          *  @example
-         *  if (App::client()->isSpecialFeatureEnabled('paid_events')) {
+         *  if ($this->client->isSpecialFeatureEnabled('paid_events')) {
          *      $this->fillable[] = 'price';
          *      $this->required[] = 'price';
          *  }
@@ -388,7 +396,7 @@ abstract class AbstractEntity
         $primary = ($primary ?: $this->{$this->primaryKey});
 
         $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($primary);
-        $entityData = App::client()->get($endpoint);
+        $entityData = $this->client->get($endpoint);
 
         if (empty($entityData)) {
             throw new RestDataException('Entity not found');
@@ -405,7 +413,7 @@ abstract class AbstractEntity
     public function all(): array
     {
         try {
-            $response = App::client()->get($this->getEndpoint());
+            $response = $this->client->get($this->getEndpoint());
         } catch (\Throwable $e) {
             return [];
         }
@@ -424,7 +432,7 @@ abstract class AbstractEntity
         $this->validate();
 
         $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($this->{$this->primaryKey});
-        App::client()->put($endpoint, $this->json());
+        $this->client->put($endpoint, $this->json());
 
         return true;
     }
@@ -444,7 +452,7 @@ abstract class AbstractEntity
         }
 
         $endpoint = trailingslashit($this->getEndpoint()) . $primary;
-        App::client()->delete($endpoint);
+        $this->client->delete($endpoint);
 
         return true;
     }
@@ -463,7 +471,7 @@ abstract class AbstractEntity
 
         $this->validate();
 
-        $response = App::client()->post(
+        $response = $this->client->post(
             $this->getEndpoint(),
             $this->json()
         );

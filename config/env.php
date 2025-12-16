@@ -17,7 +17,7 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.2.3.1',
+        'version' => '3.2.4',
         'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
@@ -67,6 +67,12 @@ return [
             'start_date' => '2025-11-18',
             'end_date' => '2025-11-29'
         ],
+        'christmas_promo' => [
+            'discount_percentage' => 25,
+            'promo_code' => 'CHRISTMAS25',
+            'start_date' => '2025-12-01',
+            'end_date' => '2025-12-25'
+        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
@@ -91,16 +97,16 @@ return [
             ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
             ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
             ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
-            ['value' => 'login:simplybook.vip', 'label' => 'simplybook.vip'],
-            ['value' => 'login:simplybook.cc', 'label' => 'simplybook.cc'],
-            ['value' => 'login:simplybook.us', 'label' => 'simplybook.us'],
-            ['value' => 'login:simplybook.pro', 'label' => 'simplybook.pro'],
-            ['value' => 'login:enterpriseappointments.com', 'label' => 'enterpriseappointments.com'],
-            ['value' => 'login:simplybook.webnode.page', 'label' => 'simplybook.webnode.page'],
-            ['value' => 'login:servicebookings.net', 'label' => 'servicebookings.net'],
-            ['value' => 'login:booking.names.uk', 'label' => 'booking.names.uk'],
-            ['value' => 'login:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
-            ['value' => 'login:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            ['value' => 'default:simplybook.vip', 'label' => 'simplybook.vip'],
+            ['value' => 'default:simplybook.cc', 'label' => 'simplybook.cc'],
+            ['value' => 'default:simplybook.us', 'label' => 'simplybook.us'],
+            ['value' => 'default:simplybook.pro', 'label' => 'simplybook.pro'],
+            ['value' => 'default:enterpriseappointments.com', 'label' => 'enterpriseappointments.com'],
+            ['value' => 'default:simplybook.webnode.page', 'label' => 'simplybook.webnode.page'],
+            ['value' => 'default:servicebookings.net', 'label' => 'servicebookings.net'],
+            ['value' => 'default:booking.names.uk', 'label' => 'booking.names.uk'],
+            ['value' => 'default:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
+            ['value' => 'default:booking.register365.ie', 'label' => 'booking.register365.ie'],
             // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ]

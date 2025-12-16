@@ -6,11 +6,14 @@ use SimplyBook\Bootstrap\App;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class WidgetScriptBuilder
 {
     use HasViews;
     use HasAllowlistControl;
+
+    protected EnvironmentConfig $env;
 
     protected bool $withHTML = false;
     protected string $widgetType = '';
@@ -33,6 +36,14 @@ class WidgetScriptBuilder
         'provider',
         'service'
     ];
+
+    /**
+     * Bind the environment dependency without asking for it as parameter
+     */
+    public function __construct()
+    {
+        $this->env = App::getInstance()->get(EnvironmentConfig::class);
+    }
 
     /**
      * Build the widget based on the given type, settings and attributes
@@ -126,7 +137,7 @@ class WidgetScriptBuilder
      */
     private function setWidgetTemplate(string $widgetType): void
     {
-        $widgetTypeTemplate = App::env()->getString('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
+        $widgetTypeTemplate = $this->env->getString('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
         if (!file_exists($widgetTypeTemplate)) {
             throw new BuilderException('Widget template not found');
         }
@@ -244,7 +255,7 @@ class WidgetScriptBuilder
      */
     private function getDemoWidgetServerUrl(): string
     {
-        return App::env()->getUrl('simplybook.demo_widget_server_url');
+        return $this->env->getUrl('simplybook.demo_widget_server_url');
     }
 
     /**
@@ -258,7 +269,7 @@ class WidgetScriptBuilder
             $message .= ' ' . sprintf(
                 /* translators: %1$s is the opening HTML tag, %2$s is the closing HTML tag */
                 esc_html__('You can configure the plugin settings to display your customized widget %1$shere%2$s.', 'simplybook'),
-                '<a href="' . App::env()->getUrl('plugin.dashboard_url') . '">',
+                '<a href="' . $this->env->getUrl('plugin.dashboard_url') . '">',
                 '</a>'
             );
         }

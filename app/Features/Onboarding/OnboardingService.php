@@ -3,6 +3,7 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
@@ -16,11 +17,11 @@ class OnboardingService
     use LegacySave;
     use HasRestAccess;
 
-    private App $app;
+    private ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -39,7 +40,7 @@ class OnboardingService
         $this->setCompletedStep(5);
         $this->clearTemporaryData();
 
-        $this->app->client->clearFailedAuthenticationFlag();
+        $this->client->clearFailedAuthenticationFlag();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {
@@ -142,6 +143,9 @@ class OnboardingService
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     *
+     * @since 3.2.4 All domains are now listed as "default": in config/env.php,
+     * reference: {@see https://teamdotblue.atlassian.net/browse/NL14RSP2-335}
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {

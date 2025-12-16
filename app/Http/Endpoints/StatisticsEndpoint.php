@@ -62,7 +62,7 @@ class StatisticsEndpoint implements SingleEndpointInterface
 
         $subscriptionData = $this->service->fetch();
         if (empty($subscriptionData)) {
-            return $this->sendHttpResponse([], false, 'No statistics found.', 404);
+            return $this->sendHttpResponse([], false, 'No statistics found.', 204);
         }
 
         $this->service->save($subscriptionData);

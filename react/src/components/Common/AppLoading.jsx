@@ -14,13 +14,13 @@ const AppLoading = () => {
             <div className="border-transparen t border-b-4 px-5 py-6">
               Dashboard
             </div>
-            <div className="ml-2 border-b-4 border-transparent px-5 py-6">
+            <div className="ms-2 border-b-4 border-transparent px-5 py-6">
               Clients 0
             </div>
-            <div className="ml-2 border-b-4 border-transparent px-5 py-6">
+            <div className="ms-2 border-b-4 border-transparent px-5 py-6">
               Calendar 0
             </div>
-            <div className="ml-2 border-b-4 border-transparent px-5 py-6">
+            <div className="ms-2 border-b-4 border-transparent px-5 py-6">
               Settings
             </div>
           </div>

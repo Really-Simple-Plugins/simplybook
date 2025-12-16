@@ -2,16 +2,16 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 
 class FailedAuthenticationNotice extends AbstractNotice
 {
     public const IDENTIFIER = 'failed_authentication';
 
-    public function __construct()
+    public function __construct(ApiClient $client)
     {
         $this->setActive(
-            App::client()->authenticationHasFailed()
+            $client->authenticationHasFailed()
         );
     }
 

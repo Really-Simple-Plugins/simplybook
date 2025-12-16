@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -17,13 +17,13 @@ class OnboardingController implements FeatureInterface
 {
     use HasAllowlistControl;
 
-    private App $app;
+    private ApiClient $client;
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
 
-    public function __construct(App $app, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
+    public function __construct(ApiClient $client, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
     {
-        $this->app = $app;
+        $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
     }
@@ -141,7 +141,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->register_company();
+            $response = $this->client->register_company();
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
         }
@@ -172,7 +172,7 @@ class OnboardingController implements FeatureInterface
         }
 
         try {
-            $response = $this->app->client->confirm_email(
+            $response = $this->client->confirm_email(
                 $storage->getString('confirmation-code'),
                 $storage->getString('recaptchaToken')
             );
@@ -208,7 +208,7 @@ class OnboardingController implements FeatureInterface
             $message = __('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
-            ], false, $message, 400);
+            ], false, $message, 500);
         }
 
         $message = __('Successfully saved widget style settings', 'simplybook');
@@ -236,8 +236,8 @@ class OnboardingController implements FeatureInterface
 
         $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
         if (!$calendarPageIsAvailable) {
-            $message = __('Calendar page title should be available if you choose to generate this page.', 'simplybook');
-            return $this->service->sendHttpResponse([], false, $message, 503);
+            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
+            return $this->service->sendHttpResponse([], false, $message, 409);
         }
 
         $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
@@ -279,11 +279,11 @@ class OnboardingController implements FeatureInterface
         $userPassword = $storage->getString('user_password');
 
         if ($storage->isOneEmpty(['company_domain', 'company_login', 'user_login', 'user_password'])) {
-            return $this->service->sendHttpResponse([], false, __('Please fill in all fields.', 'simplybook'));
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
-            $response = $this->app->client->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
+            $response = $this->client->authenticateExistingUser($parsedDomain, $parsedLogin, $userLogin, $userPassword);
         } catch (RestDataException $e) {
             $exceptionData = $e->getData();
 
@@ -319,11 +319,11 @@ class OnboardingController implements FeatureInterface
         $companyDomain = $storage->getString('domain');
 
         if ($storage->isOneEmpty(['company_login', 'domain', 'auth_session_id', 'two_fa_type', 'two_fa_code'])) {
-            return $this->service->sendHttpResponse([], false, __('Please fill in all fields.', 'simplybook'));
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
         }
 
         try {
-            $response = $this->app->client->processTwoFaAuthenticationRequest(
+            $response = $this->client->processTwoFaAuthenticationRequest(
                 $companyDomain,
                 $companyLogin,
                 $storage->getString('auth_session_id'),
@@ -357,7 +357,7 @@ class OnboardingController implements FeatureInterface
     {
         $responseStorage = new Storage($response);
 
-        $this->app->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
+        $this->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
             $responseStorage->getString('token'),
             $responseStorage->getString('refresh_token'),
             $parsedDomain,
@@ -397,7 +397,7 @@ class OnboardingController implements FeatureInterface
         $storage = $this->service->retrieveHttpStorage($request);
 
         try {
-            $this->app->client->requestSmsForUser(
+            $this->client->requestSmsForUser(
                 $storage->getString('domain'),
                 $storage->getString('company_login'),
                 $storage->getString('auth_session_id'),
@@ -442,7 +442,7 @@ class OnboardingController implements FeatureInterface
             $message = __('An error occurred while trying to remove previous data.', 'simplybook');
         }
 
-        return $this->service->sendHttpResponse([], $success, $message);
+        return $this->service->sendHttpResponse([], $success, $message, ($success ? 200 : 500));
     }
 
     /**
@@ -452,8 +452,10 @@ class OnboardingController implements FeatureInterface
      */
     public function validatePublishedWidget(): void
     {
-        $cache = wp_cache_get('simplybook_widget_published', 'simplybook');
-        if ($cache === true) {
+        $cacheName = 'simplybook_widget_published';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && ($cacheValue === true)) {
             $this->widgetService->setPublishWidgetCompleted();
             return;
         }
@@ -461,7 +463,7 @@ class OnboardingController implements FeatureInterface
         // Check if any widgets are currently published
         if ($this->widgetService->hasTrackedPosts()) {
             $this->widgetService->setPublishWidgetCompleted();
-            wp_cache_set('simplybook_widget_published', true, 'simplybook');
+            wp_cache_set($cacheName, true, 'simplybook', DAY_IN_SECONDS);
         }
     }
 }

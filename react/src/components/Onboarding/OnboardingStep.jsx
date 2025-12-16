@@ -8,6 +8,8 @@ import FormFieldWrapper from "../Forms/FormFieldWrapper";
 import {useEffect, useState} from "react";
 import Error from "../Errors/Error";
 import HttpClient from "../../api/requests/HttpClient";
+import { useMutation } from "@tanstack/react-query";
+
 const OnboardingStep = ({
     path,
     title,
@@ -99,60 +101,62 @@ const OnboardingStep = ({
         syncFieldState(syncFieldConfig.key, syncFieldConfig.value, syncFieldConfig.setValue);
     }
 
-    const onSubmit = async (formData, buttonType = "primary") => {
-        setApiError(null);
-        setDisabled(true);
-        let updatedFormData = { ...formData };
-        //add the auto generated recaptcha token to our data
-        updatedFormData.recaptchaToken = recaptchaToken;
+    const { mutate: onSubmit, isPending } = useMutation({
+        mutationFn: async (formData, buttonType = "primary") => {
+            setApiError(null);
+            setDisabled(true);
+            let updatedFormData = { ...formData };
+            //add the auto generated recaptcha token to our data
+            updatedFormData.recaptchaToken = recaptchaToken;
 
-        if (buttonType === "primary" && primaryButton.modifyData) {
-            updatedFormData = primaryButton.modifyData(updatedFormData);
-        } else if (buttonType === "secondary" && secondaryButton.modifyData) {
-            updatedFormData = secondaryButton.modifyData(updatedFormData);
-        }
+            if (buttonType === "primary" && primaryButton.modifyData) {
+                updatedFormData = primaryButton.modifyData(updatedFormData);
+            } else if (buttonType === "secondary" && secondaryButton.modifyData) {
+                updatedFormData = secondaryButton.modifyData(updatedFormData);
+            }
 
-        if (currentStep.beforeSubmit) {
-            try {
-                const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
-                if (shouldContinue === false) {
-                    // Call onSubmitError callback if provided
+            if (currentStep.beforeSubmit) {
+                try {
+                    const shouldContinue = await currentStep.beforeSubmit(updatedFormData);
+                    if (shouldContinue === false) {
+                        // Call onSubmitError callback if provided
+                        onSubmitError?.();
+                        setDisabled(false);
+                        return; // Cancel submission only if beforeSubmit explicitly returns false
+                    }
+                } catch (error) {
+                    // Call onSubmitError callback if provided (for reCAPTCHA reset)
                     onSubmitError?.();
                     setDisabled(false);
-                    return; // Cancel submission only if beforeSubmit explicitly returns false
+                    console.error('Submission cancelled:', error);
+                    return; // Cancel submission if beforeSubmit throws an error
                 }
-            } catch (error) {
-                // Call onSubmitError callback if provided (for reCAPTCHA reset)
-                onSubmitError?.();
-                setDisabled(false);
-                console.error('Submission cancelled:', error);
-                return; // Cancel submission if beforeSubmit throws an error
             }
-        }
-        await updateData(updatedFormData);
+            await updateData(updatedFormData);
 
-        setDisabled(false);
+            setDisabled(false);
 
-        if (buttonType === "primary" && primaryButton.navigateTo) {
-            navigate({ to: primaryButton.navigateTo });
-        } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
-            navigate({ to: secondaryButton.navigateTo });
-        } else if (isLastStep(path)) {
-            navigate({ to: "/" });
-        } else {
-            let currentStep = getCurrentStep(path);
-
-            // navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
-
-            // There are 5 onboarding steps, but the in de currentStep.id is 0 based so 0 = onboarding step 1
-            // If the onboarding already is completed, skip steps 1, 2 3 and 4, and continue from step 5
-            if (currentStep.id <=3 && onboardingCompleted ) {
-                navigate({ to: getURLForStep(4) });
+            if (buttonType === "primary" && primaryButton.navigateTo) {
+                navigate({ to: primaryButton.navigateTo });
+            } else if (buttonType === "secondary" && secondaryButton.navigateTo) {
+                navigate({ to: secondaryButton.navigateTo });
+            } else if (isLastStep(path)) {
+                navigate({ to: "/" });
             } else {
-                navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
+                let currentStep = getCurrentStep(path);
+
+                // navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
+
+                // There are 5 onboarding steps, but the in de currentStep.id is 0 based so 0 = onboarding step 1
+                // If the onboarding already is completed, skip steps 1, 2 3 and 4, and continue from step 5
+                if (currentStep.id <=3 && onboardingCompleted ) {
+                    navigate({ to: getURLForStep(4) });
+                } else {
+                    navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
+                }
             }
-        }
-    };
+        },
+    })
 
     useEffect(() => {
         let companyName = getValue("company_name");
@@ -190,12 +194,12 @@ const OnboardingStep = ({
                         {customHtml}
                         <ButtonField
                             className="w-full mt-4"
-                            showLoader={isValidating}
+                            showLoader={(isValidating ||isPending)}
                             btnVariant="secondary"
                             label={primaryButton.label ?? __("Next", "simplybook")}
                             context={bottomText}
                             button={{
-                                disabled: (primaryButton.disabled ?? disabled),
+                                disabled: (primaryButton.disabled || disabled || isPending),
                                 onClick: handleSubmit((data) => onSubmit(data, "primary")),
                             }}
                         />

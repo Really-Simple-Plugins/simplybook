@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 
@@ -26,18 +27,20 @@ class TaskManagementService
      * Get all tasks
      * @return TaskInterface[]
      */
-    public function getAllTasks(): array
+    public function getAllTasks(bool $strict = false): array
     {
-        return $this->repository->getAllTasks();
+        return $this->repository->getAllTasks($strict);
     }
 
     /**
      * Add multiple tasks at once
-     * @param TaskInterface[] $tasks
+     * @param class-string<TaskInterface>[] $tasks
+     * @throws \Exception If task class cannot be instantiated
      */
     public function addTasks(array $tasks): void
     {
-        foreach ($tasks as $task) {
+        foreach ($tasks as $taskClassString) {
+            $task = App::getInstance()->make($taskClassString);
             $this->repository->addTask($task, false);
         }
         $this->repository->saveTasksToDatabase();
@@ -47,14 +50,17 @@ class TaskManagementService
      * Upgrade the tasks. Only replace existing tasks with same identifier if
      * the version is lower than the new task version. Add missing tasks and
      * remove tasks that are no longer present.
-     * @param TaskInterface[] $tasks
+     * @param class-string<TaskInterface>[] $tasks
+     * @throws \Exception If task class cannot be instantiated
      */
     public function upgradeTasks(array $tasks): void
     {
         // Remove tasks that are no longer present. Maybe that are them all?
         $deletableTasksList = $this->repository->getAllTasks();
 
-        foreach ($tasks as $task) {
+        foreach ($tasks as $taskClassString) {
+            $task = App::getInstance()->make($taskClassString);
+
             $this->repository->upgradeTask($task, false);
 
             // Current tasks is not deletable so remove it from the list

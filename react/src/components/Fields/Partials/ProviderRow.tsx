@@ -142,8 +142,8 @@ const ProviderRow: React.FC<ProviderRowProps> = ({
                             />
                             <div className={clsx(
                                 "w-8 h-[18px] bg-gray-300 peer-focus:ring-2 peer-focus:ring-blue-300 rounded-full peer",
-                                "peer-checked:bg-blue-600 peer-checked:after:translate-x-[0.8rem] peer-checked:after:border-white",
-                                "after:content-[''] after:mx-[0.2rem] flex items-center after:left-0.5 after:bg-white after:border-gray-200",
+                                "peer-checked:bg-blue-600 peer-checked:after:translate-x-[0.8rem] rtl:peer-checked:after:-translate-x-[0.8rem] peer-checked:after:border-white",
+                                "after:content-[''] after:mx-[0.2rem] flex items-center after:start-0.5 after:bg-white after:border-gray-200",
                                 "after:border after:rounded-full after:aspect-square after:h-3 after:w-3 after:transition-all",
                                 isOnlyVisibleProvider && "opacity-50 cursor-not-allowed"
                             )}></div>

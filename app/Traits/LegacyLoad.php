@@ -3,6 +3,8 @@
 namespace SimplyBook\Traits;
 
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -106,7 +108,6 @@ trait LegacyLoad {
      * Get fields array for the settings
      *
      * @param bool $load_values
-     *
      * @return array
      */
     public function fields(bool $load_values = false): array
@@ -125,7 +126,7 @@ trait LegacyLoad {
 		}
 
         $fields = [];
-        $fieldsConfig = App::config()->get('fields');
+        $fieldsConfig = App::getInstance()->get(GeneralConfig::class)->get('fields');
         $fieldsConfig = apply_filters( 'simplybook_fields', $fieldsConfig );
 
         foreach ( $fieldsConfig as $groupID => $fieldGroup ) {
@@ -159,12 +160,11 @@ trait LegacyLoad {
 
 	/**
 	 * Get menu array for the settings
-
 	 * @return array
 	 */
 	public function menu(): array
 	{
-		$menus = App::config()->get('menus');
+		$menus = App::getInstance()->get(GeneralConfig::class)->get('menus');
 		$menus = apply_filters('simplybook_menu', $menus);
 
 		foreach ( $menus as $key => $menu ) {
@@ -195,25 +195,29 @@ trait LegacyLoad {
      * field from the fields' config. Sometimes we do not want this to prevent
      * translation errors while loading the fields.
      * @throws \LogicException For developers
+     * @throws \ReflectionException
      */
     public function get_domain(bool $validate = true): string
     {
-        if ($cache = wp_cache_get('simplybook_get_domain_legacy_load', 'simplybook')) {
-            return $cache;
+        $cacheName = 'simplybook_get_domain_legacy_load';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found && is_string($cacheValue)) {
+            return $cacheValue;
         }
 
         $savedDomain = $this->get_option('domain', $validate);
         if (!empty($savedDomain)) {
-            wp_cache_set('simplybook_get_domain_legacy_load', $savedDomain, 'simplybook');
+            wp_cache_set($cacheName, $savedDomain, 'simplybook', DAY_IN_SECONDS);
             return $savedDomain;
         }
 
-        $environment = App::env()->get('simplybook.api');
+        $environment = App::getInstance()->get(EnvironmentConfig::class)->get('simplybook.api');
         if (empty($environment['domain'])) {
             throw new \LogicException('SimplyBook domain is not set in the environment.');
         }
 
-        wp_cache_set('simplybook_get_domain_legacy_load', $environment['domain'], 'simplybook');
+        wp_cache_set($cacheName, $environment['domain'], 'simplybook', DAY_IN_SECONDS);
         return $environment['domain'];
     }
 

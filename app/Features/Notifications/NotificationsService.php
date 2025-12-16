@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\Notifications;
 
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\NoticeInterface;
 
 class NotificationsService
@@ -32,11 +33,13 @@ class NotificationsService
 
     /**
      * Add multiple Notices at once
-     * @param NoticeInterface[] $notices
+     * @param class-string<NoticeInterface>[] $notices
+     * @throws \Exception If notice class cannot be instantiated
      */
     public function addNotices(array $notices): void
     {
-        foreach ($notices as $notice) {
+        foreach ($notices as $noticeClassString) {
+            $notice = App::getInstance()->make($noticeClassString);
             $this->repository->addNotice($notice, false);
         }
         $this->repository->saveNoticesToDatabase();
@@ -46,14 +49,17 @@ class NotificationsService
      * Upgrade the Notices. Only replace existing Notices with same identifier
      * if the version is lower than the new Notice version. Add missing Notices
      * and remove Notices that are no longer present.
-     * @param NoticeInterface[] $notices
+     * @param class-string<NoticeInterface>[] $notices
+     * @throws \Exception If notice class cannot be instantiated
      */
     public function upgradeNotices(array $notices): void
     {
         // Remove Notices that are no longer present. Maybe that are them all?
         $deletableNoticeList = $this->repository->getAllNotices();
 
-        foreach ($notices as $notice) {
+        foreach ($notices as $noticeClassString) {
+            $notice = App::getInstance()->make($noticeClassString);
+
             $this->repository->upgradeNotice($notice, false);
 
             // Current Notices is not deletable so remove it from the list

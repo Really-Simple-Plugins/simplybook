@@ -8,9 +8,9 @@ class ThemeColorService
 {
     private ColorUtility $colorUtility;
 
-    public function __construct()
+    public function __construct(ColorUtility $colorUtility)
     {
-        $this->colorUtility = new ColorUtility();
+        $this->colorUtility = $colorUtility;
     }
 
     /**

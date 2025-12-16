@@ -47,13 +47,13 @@ export const Route = createLazyFileRoute(path)({
                     <div className={"flex flex-wrap justify-center mt-12 mb-12"}>
                         {!showColorPickers ? (
                             <div className="flex items-center justify-center py-8">
-                                <Icon name="spinner" className="animate-spin mr-2" />
+                                <Icon name="spinner" className="animate-spin me-2" />
                                 <span>{__('Loading theme colors...', 'simplybook')}</span>
                             </div>
                         ) : (
                             <>
                                 <ColorPickerField
-                                    className="mr-4"
+                                    className="me-4"
                                     label={__('Primary', 'simplybook')}
                                     setting={{
                                         value: primaryColor,
@@ -65,7 +65,7 @@ export const Route = createLazyFileRoute(path)({
                                     }}
                                 />
                                 <ColorPickerField
-                                    className="mr-4"
+                                    className="me-4"
                                     label={__('Secondary', 'simplybook')}
                                     setting={{
                                         value: secondaryColor,

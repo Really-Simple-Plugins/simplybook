@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\FeatureInterface;
 
 /**
@@ -65,7 +66,7 @@ final class FeatureManager extends AbstractManager
 
         foreach ($features as $featureName) {
             $needsPro = strpos($featureName, self::PRO_FEATURE_HANDLE) !== false;
-            if ($needsPro && !$this->app->env->getBoolean('plugin.pro')) {
+            if ($needsPro && !$this->env->getBoolean('plugin.pro')) {
                 continue; // Pro not installed, don't register pro features
             }
 
@@ -87,7 +88,7 @@ final class FeatureManager extends AbstractManager
                 continue;
             }
 
-            $loader = $this->app->make($prefix . 'Loader', false, false);
+            $loader = App::getInstance()->make($prefix . 'Loader', false, false);
             if (!$loader->isEnabled() || !$loader->inScope()) {
                 continue;
             }
@@ -105,7 +106,7 @@ final class FeatureManager extends AbstractManager
      */
     private function getFeatures(): array
     {
-        $featuresPath = $this->app->env->getString('plugin.feature_path');
+        $featuresPath = $this->env->getString('plugin.feature_path');
         $features = [];
 
         foreach (new \DirectoryIterator($featuresPath) as $fileInfo) {
@@ -113,7 +114,7 @@ final class FeatureManager extends AbstractManager
                 continue;
             }
 
-            $proEnabled = $this->app->env->getBoolean('plugin.pro');
+            $proEnabled = $this->env->getBoolean('plugin.pro');
             $skipPro = ($proEnabled === false && $fileInfo->getFilename() === 'Pro');
             if ($skipPro) {
                 continue;
@@ -141,7 +142,7 @@ final class FeatureManager extends AbstractManager
      */
     private function getFeaturePath(string $featureName, bool $needsPro): string
     {
-        return $this->app->env->getString('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
+        return $this->env->getString('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
     }
 
     /**

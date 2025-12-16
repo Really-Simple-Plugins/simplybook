@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Http\Endpoints;
 
-use SimplyBook\Bootstrap\App;
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasRestAccess;
@@ -18,11 +18,11 @@ class DomainEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'get_domain';
 
-    private App $app;
+    private ApiClient $client;
 
-    public function __construct(App $app)
+    public function __construct(ApiClient $client)
     {
-        $this->app = $app;
+        $this->client = $client;
     }
 
     /**
@@ -58,7 +58,7 @@ class DomainEndpoint implements SingleEndpointInterface
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $domain = $this->get_domain();
-        $companyLoginPath = $this->app->client->get_company_login();
+        $companyLoginPath = $this->client->get_company_login();
 
         return $this->sendHttpResponse([
             'domain' => "https://$companyLoginPath.secure.$domain/",

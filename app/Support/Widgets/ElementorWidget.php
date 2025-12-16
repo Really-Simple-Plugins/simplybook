@@ -4,10 +4,12 @@ namespace SimplyBook\Support\Widgets;
 
 use SimplyBook\Bootstrap\App;
 use Elementor\Widget_Base;
+use SimplyBook\Http\ApiClient;
 use Elementor\Controls_Manager;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ElementorWidget extends Widget_Base
 {
@@ -20,6 +22,16 @@ class ElementorWidget extends Widget_Base
      * @var string
      */
     private const DEFAULT_VALUE = '0';
+
+    /**
+     * The API client for fetching data
+     */
+    private ApiClient $client;
+
+    /**
+     * Environment configuration
+     */
+    private EnvironmentConfig $env;
 
     /**
      * Required by Elementor for widget registration.
@@ -58,11 +70,15 @@ class ElementorWidget extends Widget_Base
     }
 
     /**
-     * Registers all widget controls (dropdowns) for the Elementor editor.
+     * Registers all widget controls (dropdowns) for the Elementor editor. Also
+     * sets some custom properties used during rendering.
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function register_controls(): void
     {
+        $this->client = App::getInstance()->get(ApiClient::class);
+        $this->env = App::getInstance()->get(EnvironmentConfig::class);
+
         $this->start_controls_section(
             'content_section',
             [
@@ -131,7 +147,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addLocationControl(): void
     {
-        if (!App::client()->isSpecialFeatureEnabled('location')) {
+        if (!$this->client->isSpecialFeatureEnabled('location')) {
             return;
         }
 
@@ -151,7 +167,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addServiceCategoryControl(): void
     {
-        if (!App::client()->isSpecialFeatureEnabled('event_category')) {
+        if (!$this->client->isSpecialFeatureEnabled('event_category')) {
             return;
         }
 
@@ -200,7 +216,7 @@ class ElementorWidget extends Widget_Base
         );
 
         // Return early if "Any Provider" feature is not enabled
-        if (App::client()->isSpecialFeatureEnabled('any_unit') === false) {
+        if ($this->client->isSpecialFeatureEnabled('any_unit') === false) {
             return $options;
         }
 
@@ -215,11 +231,11 @@ class ElementorWidget extends Widget_Base
      */
     private function getLocationsOptions(): array
     {
-        if (!$this->companyRegistrationIsCompleted() || !App::client()->isSpecialFeatureEnabled('location')) {
+        if (!$this->companyRegistrationIsCompleted() || !$this->client->isSpecialFeatureEnabled('location')) {
             return []; // we shouldn't be here
         }
 
-        $locations = App::client()->getLocations(true);
+        $locations = $this->client->getLocations(true);
         return $this->buildOptionsFromApiData(
             is_array($locations) ? $locations : [],
             esc_html__('Select a location', 'simplybook')
@@ -231,11 +247,11 @@ class ElementorWidget extends Widget_Base
      */
     private function getServiceCategoriesOptions(): array
     {
-        if (!$this->companyRegistrationIsCompleted() || !App::client()->isSpecialFeatureEnabled('event_category')) {
+        if (!$this->companyRegistrationIsCompleted() || !$this->client->isSpecialFeatureEnabled('event_category')) {
             return []; // we shouldn't be here
         }
 
-        $categories = App::client()->getCategories(true);
+        $categories = $this->client->getCategories(true);
         return $this->buildOptionsFromApiData(
             is_array($categories) ? $categories : [],
             esc_html__('Select a category', 'simplybook')
@@ -305,7 +321,7 @@ class ElementorWidget extends Widget_Base
      */
     private function addLoginRequiredControl(): void
     {
-        $dashboardUrl = App::env()->getUrl('plugin.dashboard_url');
+        $dashboardUrl = $this->env->getUrl('plugin.dashboard_url');
         $loginMessage = sprintf(
             '%s<br><br><a href="%s" target="_blank">%s</a>',
             esc_html__('Please log in to SimplyBook.me to use this widget.', 'simplybook'),
