@@ -137,7 +137,7 @@ class OnboardingService
      * Method is used to build the company domain and login based on the given
      * domain and login values. For non-default domains the domain should be
      * appended to the login for the authentication process. The domains are
-     * maintained here {@see react/src/routes/onboarding.lazy.jsx}
+     * maintained here {@see config/env.php}
      *
      * @see /NL14RSP2-49?focusedCommentId=3407285
      *
