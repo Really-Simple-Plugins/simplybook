@@ -59,7 +59,7 @@ const formLogin = ({
      */
     const submitForm = handleSubmit((data) => {
         const formData = {
-            company_domain: domain,
+            company_domain: domain === "Other" ? stripDomain(data?.other_domain) : domain,
             company_login: data?.company_login,
             user_login: data?.user_login,
             user_password: data?.user_password
