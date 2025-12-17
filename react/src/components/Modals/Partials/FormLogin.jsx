@@ -35,6 +35,7 @@ const formLogin = ({
         mode: "onChange",
         defaultValues: {
             company_domain: domain,
+            other_domain: "",
             company_login: "",
             user_login: "",
             user_password: ""
@@ -42,7 +43,7 @@ const formLogin = ({
     });
 
     // Update how we watch the fields
-    const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
+    const watchFields = watch(["company_domain", "other_domain", "company_login", "user_login", "user_password"]);
 
     // Set the button disabled state
     const isDisabled = (
@@ -115,7 +116,7 @@ const formLogin = ({
                             fieldState={fieldState}
                             label={__("Company domain", "simplybook")}
                             setting={{id: "company_domain"}}
-                            options={[...SIMPLYBOOK_DOMAINS, { label: "Other", value: "Other" }]}
+                            options={[...SIMPLYBOOK_DOMAINS, { label: __("Other", "simplybook"), value: "Other" }]}
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
@@ -125,6 +126,28 @@ const formLogin = ({
                         />
                     )}
                 />
+                {domain === "Other" && (
+                    <Controller
+                        name="other_domain"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                fieldState={fieldState}
+                                label={__("Other Domain", "simplybook")}
+                                setting={{id: "other_domain"}}
+                                type="text"
+                                placeholder={__("Other Domain", "simplybook")}
+                                onChange={(e) => {
+                                    if (errorMessage !== "") {
+                                        setErrorMessage("");
+                                    }
+                                    field.onChange(e);
+                                }}
+                            />
+                        )}
+                    />
+                )}
                 <Controller
                     name="company_login"
                     control={control}
