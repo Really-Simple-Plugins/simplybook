@@ -29,7 +29,7 @@ const formLogin = ({
         control,
         register,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: { errors, isValid, dirtyFields },
         watch
     } = useForm({
         mode: "onChange",
@@ -227,7 +227,7 @@ const formLogin = ({
                     className="mt-4 mb-4"
                     btnVariant="secondary"
                     type="submit"
-                    disabled={false}
+                    disabled={!(dirtyFields.user_password && dirtyFields.user_login && dirtyFields.company_login && (domain === "Other" ? dirtyFields.other_domain : domain))}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
