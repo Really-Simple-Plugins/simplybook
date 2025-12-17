@@ -147,6 +147,9 @@ class OnboardingService
      *
      * @since 3.2.4 All domains are now listed as "default": in config/env.php,
      * reference: {@see /NL14RSP2-335}
+     *
+     * @see /NL14RSP2-337 - This feature introduced the ability for users to
+     * enter their own domain as a string, which will not be marked as "default:"
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
