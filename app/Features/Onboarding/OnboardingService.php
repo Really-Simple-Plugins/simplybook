@@ -153,14 +153,17 @@ class OnboardingService
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
-        $companyDomainContainsLoginIdentifier = strpos($domain, 'login:') === 0;
-        $domain = substr($domain, strpos($domain, ':') + 1);
-
-        if ($companyDomainContainsLoginIdentifier) {
-            $login .= '.' . $domain;
+        if (strpos($domain, ':') === false) {
+            return [$domain, $login];
         }
 
-        return [$domain, $login];
+        [$prefix, $parsedDomain] = explode(':', $domain, 2);
+
+        if ($prefix === 'login') {
+            $login .= '.' . $parsedDomain;
+        }
+
+        return [$parsedDomain, $login];
     }
 
     /**
