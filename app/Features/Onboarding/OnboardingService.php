@@ -143,6 +143,7 @@ class OnboardingService
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     * @example Domain: simplybook.de & login: admin -> [simplybook.de, admin]
      *
      * @since 3.2.4 All domains are now listed as "default": in config/env.php,
      * reference: {@see /NL14RSP2-335}
