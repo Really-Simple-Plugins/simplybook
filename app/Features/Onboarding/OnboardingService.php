@@ -139,13 +139,13 @@ class OnboardingService
      * appended to the login for the authentication process. The domains are
      * maintained here {@see react/src/routes/onboarding.lazy.jsx}
      *
-     * @see https://teamdotblue.atlassian.net/browse/NL14RSP2-49?focusedCommentId=3407285
+     * @see /NL14RSP2-49?focusedCommentId=3407285
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
      *
      * @since 3.2.4 All domains are now listed as "default": in config/env.php,
-     * reference: {@see https://teamdotblue.atlassian.net/browse/NL14RSP2-335}
+     * reference: {@see /NL14RSP2-335}
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
