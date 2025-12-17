@@ -50,6 +50,10 @@ const formLogin = ({
         watchFields.every((field) => field && field.trim() !== "") === false
     );
 
+    const stripDomain = (domain) => {
+        return domain.replace("https://", "").replace("http://", "").replace("www.", "");
+    }
+
     /**
      * Sends the filled in form data to the api to log the user
      */
