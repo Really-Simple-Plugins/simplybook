@@ -115,7 +115,7 @@ const formLogin = ({
                             fieldState={fieldState}
                             label={__("Company domain", "simplybook")}
                             setting={{id: "company_domain"}}
-                            options={SIMPLYBOOK_DOMAINS}
+                            options={[...SIMPLYBOOK_DOMAINS, { label: "Other", value: "Other" }]}
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
