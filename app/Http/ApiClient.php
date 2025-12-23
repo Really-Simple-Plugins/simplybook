@@ -1233,7 +1233,12 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-	        throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
+            throw (new RestDataException(
+                __('Please enter a valid domain.', 'simplybook')
+            ))->setResponseCode(400)->setData([
+                'error_code' => $response->get_error_code(),
+                'error_message' => $response->get_error_message(),
+            ]);
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
