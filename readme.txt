@@ -88,13 +88,14 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.2.4 - 2025-12-16 =
+= 3.2.4 - 2025-12-17 =
 * Fixed: API response codes now better reflect the actual error.
 * Fixed: Color pickers no longer render behind the form footer.
 * Fixed: Optimized tasks-endpoint.
 * Fixed: Redirect to dashboard after onboarding now works reliably.
 * Fixed: An error during sign-in for specific SimplyBook.me domains is resolved.
 * Fixed: Invalid object cache value types no longer accepted to prevent errors.
+* Fixed: We now properly invalidate object cache regarding javascript files.
 * Changed: Improved RTL-styling for languages that require it.
 
 = 3.2.3.1 - 2025-12-03 =
