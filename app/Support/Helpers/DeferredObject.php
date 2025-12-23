@@ -70,7 +70,7 @@ abstract class DeferredObject
      * Magic method to forward method calls to the deferred instance.
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         $instance = $this->getDeferredInstance();
 
