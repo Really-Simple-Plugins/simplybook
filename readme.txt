@@ -88,7 +88,7 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.2.4 - 2025-12-16 =
+= 3.2.4 - 2025-12-17 =
 * Fixed: API response codes now better reflect the actual error.
 * Fixed: Color pickers no longer render behind the form footer.
 * Fixed: Optimized tasks-endpoint.
