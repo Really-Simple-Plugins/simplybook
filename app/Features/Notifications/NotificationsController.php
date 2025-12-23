@@ -36,7 +36,6 @@ class NotificationsController implements FeatureInterface
      * Notice from this list.
      *
      * @return array<int,class-string<NoticeInterface>> Array of Notice class-strings
-     * @throws \LogicException
      */
     private function getNoticeClassStrings(): array
     {
