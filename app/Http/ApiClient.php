@@ -1233,11 +1233,16 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw (new RestDataException(
-                __('Please enter a valid domain.', 'simplybook')
-            ))->setResponseCode(400)->setData([
+            $errorMessage = $response->get_error_message();
+            $userMessage = __('Authentication failed, please try again.', 'simplybook');
+
+            if (stripos($errorMessage, 'A valid URL was not provided') !== false) {
+                $userMessage = __('Please enter a valid domain.', 'simplybook');
+            }
+
+            throw (new RestDataException($userMessage))->setResponseCode(400)->setData([
                 'error_code' => $response->get_error_code(),
-                'error_message' => $response->get_error_message(),
+                'error_message' => $errorMessage,
             ]);
         }
 

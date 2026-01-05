@@ -17,6 +17,7 @@ export const TEXT_DOMAIN = "simplybook";
 
 // Handy constants
 export const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
+export const OTHER_DOMAIN_VALUE = "Other";
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.

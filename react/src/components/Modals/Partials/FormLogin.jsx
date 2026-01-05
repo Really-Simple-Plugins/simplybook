@@ -8,7 +8,7 @@ import ButtonInput from "../../Inputs/ButtonInput";
 // API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
-import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
+import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS, OTHER_DOMAIN_VALUE } from "../../../api/config";
 import Error from "../../Errors/Error";
 
 const formLogin = ({
@@ -120,7 +120,7 @@ const formLogin = ({
                             fieldState={fieldState}
                             label={__("Company domain", "simplybook")}
                             setting={{id: "company_domain"}}
-                            options={[...SIMPLYBOOK_DOMAINS, { label: __("Other", "simplybook"), value: "Other" }]}
+                            options={[...SIMPLYBOOK_DOMAINS, { label: __("Other", "simplybook"), value: OTHER_DOMAIN_VALUE }]}
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
@@ -130,7 +130,7 @@ const formLogin = ({
                         />
                     )}
                 />
-                {domain === "Other" && (
+                {domain === OTHER_DOMAIN_VALUE && (
                     <Controller
                         name="other_domain"
                         control={control}
