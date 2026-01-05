@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
