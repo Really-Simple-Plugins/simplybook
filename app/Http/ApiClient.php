@@ -19,6 +19,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Services\AuthenticationLayerService;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -32,6 +33,8 @@ class ApiClient
     use HasAllowlistControl;
 
     protected EnvironmentConfig $env;
+
+    protected AuthenticationLayerService $authenticationLayer;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -67,9 +70,10 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(EnvironmentConfig $env)
+    public function __construct(EnvironmentConfig $env, AuthenticationLayerService $authenticationLayer)
     {
         $this->env = $env;
+        $this->authenticationLayer = $authenticationLayer;
         $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
@@ -622,7 +626,7 @@ class ApiClient
             );
         }
 
-        //check if we have a token
+        // Ensure we have a valid public token for the AL request
         if ($this->tokenIsValid() === false) {
             $this->get_public_token();
         }
@@ -645,45 +649,44 @@ class ApiClient
             $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
         );
 
-        $request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
-            'headers' => $this->get_headers( true ),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                [
-                    'company_login' => $company_login,
-                    'email' => $sanitizedCompany->email,
-                    'name' => $sanitizedCompany->company_name,
-                    'description' => $this->get_description(),
-                    'phone' => $sanitizedCompany->phone,
-                    'city' => $sanitizedCompany->city,
-                    'address1' => $sanitizedCompany->address,
-                    'zip' => $sanitizedCompany->zip,
-                    "lat" => $coordinates['lat'],
-                    "lng" => $coordinates['lng'],
-                    "timezone" => $this->get_timezone_string(),
-                    "country_id" => $sanitizedCompany->country,
-                    "password" => $this->decryptString($sanitizedCompany->password),
-                    "retype_password" => $this->decryptString($sanitizedCompany->password),
-                    'categories' => [$sanitizedCompany->category],
-                    'lang' => $this->get_locale(),
-                    'marketing_consent' => false,
-					'journey_type' => 'skip_welcome_tour',
-                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
-                    'ref' => $this->getReferrer(),
-                ]
-            ),
-        ));
+        $requestBody = [
+            'company_login' => $company_login,
+            'email' => $sanitizedCompany->email,
+            'name' => $sanitizedCompany->company_name,
+            'description' => $this->get_description(),
+            'phone' => $sanitizedCompany->phone,
+            'city' => $sanitizedCompany->city,
+            'address1' => $sanitizedCompany->address,
+            'zip' => $sanitizedCompany->zip,
+            // Note: AL requires string, SB accepts floats/str, but doesn't hurt
+            "lat" => (string) $coordinates['lat'],
+            "lng" => (string) $coordinates['lng'],
+            "timezone" => $this->get_timezone_string(),
+            "country_id" => $sanitizedCompany->country,
+            "password" => $this->decryptString($sanitizedCompany->password),
+            "retype_password" => $this->decryptString($sanitizedCompany->password),
+            'categories' => [$sanitizedCompany->category],
+            'lang' => $this->get_locale(),
+            'marketing_consent' => false,
+            'journey_type' => 'skip_welcome_tour',
+            'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
+            'ref' => $this->getReferrer(),
+        ];
 
-        if (is_wp_error($request)) {
+        try {
+            $alResponse = $this->authenticationLayer->request(
+                'POST',
+                'simplybook/company',
+                $requestBody,
+                $this->getToken('public'),
+                $company_login
+            );
+            $response = (object) $alResponse['body'];
+        } catch (ApiException $e) {
             throw (new ApiException(
                 __('Something went wrong while registering your company. Please try again.', 'simplybook'))
-            )->setData([
-                'error' => $request->get_error_message(),
-            ]);
+            )->setData($e->getData() ?? ['error' => $e->getMessage()]);
         }
-
-        $response = json_decode(wp_remote_retrieve_body($request));
         $companySuccessfullyRegistered = (
             isset($response->recaptcha_site_key) && isset($response->success) && $response->success
         );
@@ -696,8 +699,8 @@ class ApiClient
             ]);
         }
 
-        // When unsuccessful due to token expiration, we refresh and try again
-        if (str_contains($response->message, 'Token Expired')) {
+        // When unsuccessful due to public token expiration, retry with a fresh token
+        if (isset($response->message) && str_contains($response->message, 'Token Expired')) {
             $currentAttemptCount = get_transient('simply_book_attempt_count') ?: 0;
             set_transient('simply_book_attempt_count', ($currentAttemptCount + 1), MINUTE_IN_SECONDS);
             $this->refresh_token();
@@ -732,8 +735,8 @@ class ApiClient
         throw (new ApiException(
             __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
-            'message' => $response->message,
-            'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
+            'message' => $response->message ?? '',
+            'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
         ]);
     }
 
@@ -813,28 +816,32 @@ class ApiClient
             );
         }
 
-        $request = wp_remote_post( $this->endpoint( 'simplybook/company/confirm' ), array(
-            'headers' => $this->get_headers( true ),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                [
-                    'company_login' => $this->get_company_login(),
-                    'confirmation_code' => $email_code,
-                    'recaptcha' => $recaptcha_token,
-                ]
-            ),
-        ));
-
-        if (is_wp_error($request)) {
-            throw (new ApiException(
-                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
-            )->setData([
-                'error' => $request->get_error_message(),
-            ]);
+        // Ensure we have a valid public token for the AL request
+        if ($this->tokenIsValid() === false) {
+            $this->get_public_token();
         }
 
-        $response = json_decode(wp_remote_retrieve_body($request));
+        $companyLogin = $this->get_company_login();
+        $requestBody = [
+            'company_login' => $companyLogin,
+            'confirmation_code' => $email_code,
+            'recaptcha' => $recaptcha_token,
+        ];
+
+        try {
+            $alResponse = $this->authenticationLayer->request(
+                'POST',
+                'simplybook/company/confirm',
+                $requestBody,
+                $this->getToken('public'),
+                $companyLogin
+            );
+            $response = (object) $alResponse['body'];
+        } catch (ApiException $e) {
+            throw (new ApiException(
+                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
+            )->setData($e->getData() ?? ['error' => $e->getMessage()]);
+        }
         if (isset($response->success)) {
             return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
         }
