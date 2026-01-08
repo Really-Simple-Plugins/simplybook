@@ -48,11 +48,6 @@ class ApiClient
     protected string $authenticationFailedFlagKey = 'simplybook_authentication_failed_flag';
 
     /**
-     * The key is used to fetch the public token for the current user.
-     */
-    protected string $applicationKey;
-
-    /**
      * Flag to use when the authentication failed indefinitely. This is used to
      * prevent us retrying again and again. This flag is possibly true when a
      * refresh token is outdated AND the user has changed their password.
@@ -78,12 +73,6 @@ class ApiClient
 
         if (empty($environment)) {
             throw new \LogicException('Register the environment for the application in the container');
-        }
-
-        $this->applicationKey = ($environment['app_key'] ?? '');
-
-        if (empty($this->applicationKey)) {
-            throw new \LogicException('Provide the key of the application in the environment');
         }
 
         if (get_option($this->authenticationFailedFlagKey)) {
@@ -314,26 +303,20 @@ class ApiClient
         if ( $this->tokenIsValid() ) {
             return;
         }
-        $request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
-            'headers' => $this->get_headers(),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                array(
-                    'api_key' => $this->applicationKey,
-                )),
-        ) );
 
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->token) ) {
-                delete_option('simplybook_token_error' );
-                $expiration = time() + $request->expires_in;
-                $this->updateToken( $request->token );
-                $this->updateToken( $request->refresh_token, 'public', true );
-                update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
-                $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
+        try {
+            $response = $this->authenticationLayer->requestPublicToken();
+            $body = $response['body'];
+
+            if ( isset($body['token']) ) {
+                delete_option('simplybook_token_error');
+                $this->updateToken( $body['token'] );
+                $this->updateToken( $body['refresh_token'] ?? '', 'public', true );
+                update_option('simplybook_refresh_token_expiration', time() + ($body['expires_in'] ?? 3600));
+                $this->update_option( 'domain', $body['domain'] ?? 'simplybook.it', $this->duringOnboardingFlag );
             }
+        } catch (ApiException $e) {
+            $this->log('Failed to get public token: ' . $e->getMessage());
         }
     }
 
@@ -626,7 +609,6 @@ class ApiClient
             );
         }
 
-        // Ensure we have a valid public token for the AL request
         if ($this->tokenIsValid() === false) {
             $this->get_public_token();
         }
@@ -658,7 +640,6 @@ class ApiClient
             'city' => $sanitizedCompany->city,
             'address1' => $sanitizedCompany->address,
             'zip' => $sanitizedCompany->zip,
-            // Note: AL requires string, SB accepts floats/str, but doesn't hurt
             "lat" => (string) $coordinates['lat'],
             "lng" => (string) $coordinates['lng'],
             "timezone" => $this->get_timezone_string(),
@@ -816,7 +797,6 @@ class ApiClient
             );
         }
 
-        // Ensure we have a valid public token for the AL request
         if ($this->tokenIsValid() === false) {
             $this->get_public_token();
         }
