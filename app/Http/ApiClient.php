@@ -366,7 +366,11 @@ class ApiClient
     private function refreshPublicToken(string $refresh_token): void
     {
         try {
-            $response = $this->authenticationLayer->refreshPublicToken($refresh_token);
+            $response = $this->authenticationLayer->refreshPublicToken(
+                $refresh_token,
+                $this->getToken('public'),
+                $this->get_company_login()
+            );
             $body = $response['body'];
             $responseCode = $response['code'];
 
