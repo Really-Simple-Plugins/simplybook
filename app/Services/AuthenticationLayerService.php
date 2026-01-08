@@ -115,6 +115,14 @@ class AuthenticationLayerService
     }
 
     /**
+     * Build the URL.
+     */
+    private function buildUrl(string $endpoint): string
+    {
+        return self::AL_BASE_URL . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+    }
+
+    /**
      * Make a request.
      */
     public function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
@@ -124,7 +132,7 @@ class AuthenticationLayerService
         }
 
         $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
-        $url = self::AL_BASE_URL . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+        $url = $this->buildUrl($endpoint);
 
         $rspalHeaders = $this->buildRspalHeaders();
         $headers = array_merge($rspalHeaders, [
@@ -181,7 +189,7 @@ class AuthenticationLayerService
      */
     public function requestPublicToken(): array
     {
-        $url = self::AL_BASE_URL . '/' . self::SIMPLYBOOK_API_VERSION . '/simplybook/auth/token';
+        $url = $this->buildUrl('simplybook/auth/token');
 
         $headers = array_merge($this->buildRspalHeaders(), [
             'Content-Type' => 'application/json',
@@ -193,6 +201,60 @@ class AuthenticationLayerService
             'timeout' => 15,
             'sslverify' => true,
             'body' => json_encode([]),
+        ]);
+
+        if (is_wp_error($response)) {
+            throw (new ApiException(
+                __('Failed to connect.', 'simplybook')
+            ))->setData([
+                'error' => sanitize_text_field($response->get_error_message()),
+            ]);
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+
+        if (!is_array($responseBody)) {
+            throw new ApiException(__('Invalid response.', 'simplybook'));
+        }
+
+        if (isset($responseBody['rspal-error'])) {
+            throw (new ApiException(
+                __('Error', 'simplybook')
+            ))->setData([
+                'error' => sanitize_text_field($responseBody['rspal-error']),
+            ]);
+        }
+
+        return [
+            'code' => (int) $responseCode,
+            'body' => $responseBody,
+        ];
+    }
+
+    /**
+     * Refresh a public token
+     */
+    public function refreshPublicToken(string $refreshToken): array
+    {
+        if (empty($refreshToken)) {
+            throw new ApiException(__('Invalid credentials.', 'simplybook'));
+        }
+
+        $url = $this->buildUrl('simplybook/auth/refresh-token');
+
+        $headers = array_merge($this->buildRspalHeaders(), [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]);
+
+        $response = wp_remote_post($url, [
+            'headers' => $headers,
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => json_encode([
+                'refresh_token' => $refreshToken,
+            ]),
         ]);
 
         if (is_wp_error($response)) {

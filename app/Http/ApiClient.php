@@ -329,7 +329,6 @@ class ApiClient
             return;
         }
 
-        //check if we have a token
         $refresh_token = $this->getToken($type, true);
         if (empty($refresh_token) && $type === 'admin') {
             $this->releaseRefreshLock($type);
@@ -348,66 +347,88 @@ class ApiClient
             return;
         }
 
-        $data = array(
-            'refresh_token' => $refresh_token,
-        );
-
         // Invalidate the one-time use token as we are about to use it for
         // refreshing the token. This prevents re-use.
         $this->updateToken('', $type, true);
 
-        if ( $type === 'admin' ){
-            $path = 'admin/auth/refresh-token';
-            $headers = $this->get_headers(false);
-            $data['company'] = $this->get_company_login();
+        if ($type === 'public') {
+            $this->refreshPublicToken($refresh_token);
         } else {
-            $path = 'simplybook/auth/refresh-token';
-            $headers = $this->get_headers(true);
-        }
-
-        $request = wp_remote_post($this->endpoint( $path ), array(
-            'headers' => $headers,
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                $data
-            ),
-        ) );
-
-        $response_code = wp_remote_retrieve_response_code( $request );
-
-        if (($response_code === 401) && ($type === 'public')) {
-            $this->get_public_token();
-            $this->releaseRefreshLock($type);
-            return;
-        }
-
-        // If token is 'admin' and the refresh request was "unauthorized" we
-        // need to login again.
-        if (($response_code === 401) && ($type === 'admin')) {
-            $this->automaticAuthenticationFallback($type);
-            return;
-        }
-
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-
-            if ( isset($request->token) && isset($request->refresh_token) ) {
-                delete_option('simplybook_token_error' );
-                $this->updateToken( $request->token, $type );
-                $this->updateToken( $request->refresh_token, $type, true );
-                $expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
-                $expires = $request->expires_in ?? 3600;
-                update_option($expires_option, time() + $expires);
-                Event::dispatch(Event::AUTH_SUCCEEDED);
-            } else {
-                $this->log("Error during token refresh");
-            }
-        } else {
-            $this->log("Error during token refresh: ".$request->get_error_message());
+            $this->refreshAdminToken($refresh_token);
         }
 
         $this->releaseRefreshLock($type);
+    }
+
+    /**
+     * Refresh public token
+     */
+    private function refreshPublicToken(string $refresh_token): void
+    {
+        try {
+            $response = $this->authenticationLayer->refreshPublicToken($refresh_token);
+            $body = $response['body'];
+            $responseCode = $response['code'];
+
+            if ($responseCode === 401) {
+                $this->get_public_token();
+                return;
+            }
+
+            if (isset($body['token']) && isset($body['refresh_token'])) {
+                delete_option('simplybook_token_error');
+                $this->updateToken($body['token'], 'public');
+                $this->updateToken($body['refresh_token'], 'public', true);
+                update_option('simplybook_refresh_token_expiration', time() + ($body['expires_in'] ?? 3600));
+                Event::dispatch(Event::AUTH_SUCCEEDED);
+            } else {
+                $this->log("Error during public token refresh");
+            }
+        } catch (ApiException $e) {
+            $this->log("Error during public token refresh: " . $e->getMessage());
+            $this->get_public_token();
+        }
+    }
+
+    /**
+     * Refresh admin token directly with SimplyBook
+     */
+    private function refreshAdminToken(string $refresh_token): void
+    {
+        $data = [
+            'refresh_token' => $refresh_token,
+            'company' => $this->get_company_login(),
+        ];
+
+        $request = wp_remote_post($this->endpoint('admin/auth/refresh-token'), [
+            'headers' => $this->get_headers(false),
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => json_encode($data),
+        ]);
+
+        $response_code = wp_remote_retrieve_response_code($request);
+
+        if ($response_code === 401) {
+            $this->automaticAuthenticationFallback('admin');
+            return;
+        }
+
+        if (!is_wp_error($request)) {
+            $request = json_decode(wp_remote_retrieve_body($request));
+
+            if (isset($request->token) && isset($request->refresh_token)) {
+                delete_option('simplybook_token_error');
+                $this->updateToken($request->token, 'admin');
+                $this->updateToken($request->refresh_token, 'admin', true);
+                update_option('simplybook_refresh_company_token_expiration', time() + ($request->expires_in ?? 3600));
+                Event::dispatch(Event::AUTH_SUCCEEDED);
+            } else {
+                $this->log("Error during admin token refresh");
+            }
+        } else {
+            $this->log("Error during admin token refresh: " . $request->get_error_message());
+        }
     }
 
     /**
