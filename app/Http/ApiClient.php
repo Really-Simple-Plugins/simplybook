@@ -306,17 +306,19 @@ class ApiClient
 
         try {
             $response = $this->authenticationLayer->requestPublicToken();
-            $body = $response['body'];
-
-            if ( isset($body['token']) ) {
-                delete_option('simplybook_token_error');
-                $this->updateToken( $body['token'] );
-                $this->updateToken( $body['refresh_token'] ?? '', 'public', true );
-                update_option('simplybook_refresh_token_expiration', time() + ($body['expires_in'] ?? 3600));
-                $this->update_option( 'domain', $body['domain'] ?? 'simplybook.it', $this->duringOnboardingFlag );
-            }
         } catch (ApiException $e) {
             $this->log('Failed to get public token: ' . $e->getMessage());
+            return;
+        }
+
+        $body = $response['body'] ?? [];
+
+        if ( isset($body['token']) ) {
+            delete_option('simplybook_token_error');
+            $this->updateToken( $body['token'] );
+            $this->updateToken( $body['refresh_token'] ?? '', 'public', true );
+            update_option('simplybook_refresh_token_expiration', time() + ($body['expires_in'] ?? 3600));
+            $this->update_option( 'domain', $body['domain'] ?? 'simplybook.it', $this->duringOnboardingFlag );
         }
     }
 
