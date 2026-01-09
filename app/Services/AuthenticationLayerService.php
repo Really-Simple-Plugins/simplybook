@@ -24,119 +24,17 @@ class AuthenticationLayerService
     }
 
     /**
-     * Get the AL base URL based on the environment.
+     * Get the base URL based on the {@see SIMPLYBOOK_ENV} constant.
      */
     private function getBaseUrl(): string
     {
         $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        return $env === 'development'
-            ? self::AL_BASE_URL_DEVELOPMENT
-            : self::AL_BASE_URL_PRODUCTION;
-    }
-
-    /**
-     * Get the Installation ID
-     */
-    public function getInstallationId(): string
-    {
-        $installationId = get_option(self::INSTALLATION_ID_OPTION, '');
-
-        if (!empty($installationId)) {
-            return $installationId;
-        }
-
-        return $this->createInstallationId();
-    }
-
-    /**
-     * Create a new installation
-     */
-    public function createInstallationId(): string
-    {
-        $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode([]),
-        ]);
-
-        if (is_wp_error($response)) {
-            $this->log('Failed to create installation ID: ' . sanitize_text_field($response->get_error_message()));
-            throw new ApiException(
-                __('Failed to create installation ID.', 'simplybook')
-            );
-        }
-
-        $responseCode = wp_remote_retrieve_response_code($response);
-        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
-
-        if ($responseCode !== 200 && $responseCode !== 201) {
-            $this->log('Failed to create installation ID. Response code: ' . $responseCode);
-            throw new ApiException(
-                __('Failed to create installation ID.', 'simplybook')
-            );
-        }
-
-        $installationId = isset($responseBody['uuid']) ? sanitize_text_field($responseBody['uuid']) : '';
-
-        if (empty($installationId)) {
-            $this->log('Installation ID not found in response.');
-            throw new ApiException(
-                __('Invalid response.', 'simplybook')
-            );
-        }
-
-        update_option(self::INSTALLATION_ID_OPTION, $installationId, false);
-
-        return $installationId;
-    }
-
-    /**
-     * Build the headers
-     */
-    public function buildRspalHeaders(): array
-    {
-        $headers = [
-            'RSPAL-PluginName' => self::PLUGIN_NAME,
-            'RSPAL-PluginVersion' => $this->env->getString('plugin.version'),
-            'RSPAL-PluginPath' => $this->getPluginRelativePath(),
-            'RSPAL-Origin' => trailingslashit(site_url()),
-            'RSPAL-InstallationId' => $this->getInstallationId(),
-        ];
-
-        $headers['RSPAL-Signature'] = hash_hmac(
-            'sha256',
-            json_encode($headers),
-            $headers['RSPAL-InstallationId']
-        );
-
-        return $headers;
-    }
-
-    /**
-     * Get the plugin path relative to the WordPress root directory.
-     */
-    private function getPluginRelativePath(): string
-    {
-        $pluginFullPath = wp_normalize_path(realpath($this->env->getString('plugin.path')));
-        $wpRoot = wp_normalize_path(realpath(ABSPATH));
-
-        return str_replace($wpRoot, '', $pluginFullPath);
-    }
-
-    /**
-     * Build the URL.
-     */
-    private function buildUrl(string $endpoint): string
-    {
-        return $this->getBaseUrl() . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+        return $env === 'development' ? self::AL_BASE_URL_DEVELOPMENT : self::AL_BASE_URL_PRODUCTION;
     }
 
     /**
      * Make a request.
+     * @throws ApiException
      */
     public function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
     {
@@ -199,6 +97,7 @@ class AuthenticationLayerService
 
     /**
      * Request a public token
+     * @throws ApiException
      */
     public function requestPublicToken(): array
     {
@@ -247,6 +146,7 @@ class AuthenticationLayerService
 
     /**
      * Refresh a public token
+     * @throws ApiException
      */
     public function refreshPublicToken(string $refreshToken, string $token, string $companyLogin): array
     {
@@ -257,5 +157,101 @@ class AuthenticationLayerService
         return $this->request('POST', 'simplybook/auth/refresh-token', [
             'refresh_token' => $refreshToken,
         ], $token, $companyLogin);
+    }
+
+    /**
+     * Get or create the Installation ID
+     */
+    private function getInstallationId(): string
+    {
+        $installationId = get_option(self::INSTALLATION_ID_OPTION, '');
+
+        if (!empty($installationId)) {
+            return $installationId;
+        }
+
+        try {
+            $installationId = $this->createInstallationId();
+        } catch (ApiException $e) {
+            $this->log('Failed to create installation ID: ' . sanitize_text_field($e->getMessage()));
+        }
+
+        return $installationId;
+    }
+
+    /**
+     * Request the creation of a new installation ID
+     * @throws ApiException
+     */
+    private function createInstallationId(): string
+    {
+        $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
+            'headers' => [
+                'Content-Type' => 'application/json',
+            ],
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => json_encode([]),
+        ]);
+
+        if (is_wp_error($response)) {
+            throw new ApiException($response->get_error_message());
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+
+        if ($responseCode !== 200 && $responseCode !== 201) {
+            throw new ApiException('Invalid response code: ' . $responseCode);
+        }
+
+        $installationId = isset($responseBody['uuid']) ? sanitize_text_field($responseBody['uuid']) : '';
+        if (empty($installationId)) {
+            throw new ApiException('Installation ID not found in response.');
+        }
+
+        update_option(self::INSTALLATION_ID_OPTION, $installationId, false);
+        return $installationId;
+    }
+
+    /**
+     * Build the URL.
+     */
+    private function buildUrl(string $endpoint): string
+    {
+        return $this->getBaseUrl() . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+    }
+
+    /**
+     * Build the headers
+     */
+    private function buildRspalHeaders(): array
+    {
+        $headers = [
+            'RSPAL-PluginName' => self::PLUGIN_NAME,
+            'RSPAL-PluginVersion' => $this->env->getString('plugin.version'),
+            'RSPAL-PluginPath' => $this->getPluginRelativePath(),
+            'RSPAL-Origin' => trailingslashit(site_url()),
+            'RSPAL-InstallationId' => $this->getInstallationId(),
+        ];
+
+        $headers['RSPAL-Signature'] = hash_hmac(
+            'sha256',
+            json_encode($headers),
+            $headers['RSPAL-InstallationId']
+        );
+
+        return $headers;
+    }
+
+    /**
+     * Get the plugin path relative to the WordPress root directory.
+     */
+    private function getPluginRelativePath(): string
+    {
+        $pluginFullPath = wp_normalize_path(realpath($this->env->getString('plugin.path')));
+        $wpRoot = wp_normalize_path(realpath(ABSPATH));
+
+        return str_replace($wpRoot, '', $pluginFullPath);
     }
 }
