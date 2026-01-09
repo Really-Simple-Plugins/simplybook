@@ -10,7 +10,8 @@ class AuthenticationLayerService
 {
     use HasLogging;
 
-    private const AL_BASE_URL = 'https://simplybook.auth.really-simple-plugins.com';
+    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.auth.really-simple-security.com';
+    private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
     private const PLUGIN_NAME = 'SimplyBook';
@@ -20,6 +21,18 @@ class AuthenticationLayerService
     public function __construct(EnvironmentConfig $env)
     {
         $this->env = $env;
+    }
+
+    /**
+     * Get the AL base URL based on the environment.
+     */
+    private function getBaseUrl(): string
+    {
+        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
+
+        return $env === 'development'
+            ? self::AL_BASE_URL_DEVELOPMENT
+            : self::AL_BASE_URL_PRODUCTION;
     }
 
     /**
@@ -41,7 +54,7 @@ class AuthenticationLayerService
      */
     public function createInstallationId(): string
     {
-        $response = wp_remote_post(self::AL_BASE_URL . '/installation/create', [
+        $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
             'headers' => [
                 'Content-Type' => 'application/json',
             ],
@@ -115,6 +128,14 @@ class AuthenticationLayerService
     }
 
     /**
+     * Build the URL.
+     */
+    private function buildUrl(string $endpoint): string
+    {
+        return $this->getBaseUrl() . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+    }
+
+    /**
      * Make a request.
      */
     public function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
@@ -124,7 +145,7 @@ class AuthenticationLayerService
         }
 
         $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
-        $url = self::AL_BASE_URL . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+        $url = $this->buildUrl($endpoint);
 
         $rspalHeaders = $this->buildRspalHeaders();
         $headers = array_merge($rspalHeaders, [
@@ -181,7 +202,7 @@ class AuthenticationLayerService
      */
     public function requestPublicToken(): array
     {
-        $url = self::AL_BASE_URL . '/' . self::SIMPLYBOOK_API_VERSION . '/simplybook/auth/token';
+        $url = $this->buildUrl('simplybook/auth/token');
 
         $headers = array_merge($this->buildRspalHeaders(), [
             'Content-Type' => 'application/json',
@@ -222,5 +243,19 @@ class AuthenticationLayerService
             'code' => (int) $responseCode,
             'body' => $responseBody,
         ];
+    }
+
+    /**
+     * Refresh a public token
+     */
+    public function refreshPublicToken(string $refreshToken, string $token, string $companyLogin): array
+    {
+        if (empty($refreshToken)) {
+            throw new ApiException(__('Invalid credentials.', 'simplybook'));
+        }
+
+        return $this->request('POST', 'simplybook/auth/refresh-token', [
+            'refresh_token' => $refreshToken,
+        ], $token, $companyLogin);
     }
 }
