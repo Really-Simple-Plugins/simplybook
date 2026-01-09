@@ -693,7 +693,7 @@ class ApiClient
         } catch (ApiException $e) {
             throw (new ApiException(
                 __('Something went wrong while registering your company. Please try again.', 'simplybook'))
-            )->setData($e->getData() ?? ['error' => $e->getMessage()]);
+            )->setData($e->getData() ?: ['error' => $e->getMessage()]);
         }
         $companySuccessfullyRegistered = (
             isset($response->recaptcha_site_key) && isset($response->success) && $response->success
@@ -847,7 +847,7 @@ class ApiClient
         } catch (ApiException $e) {
             throw (new ApiException(
                 __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
-            )->setData($e->getData() ?? ['error' => $e->getMessage()]);
+            )->setData($e->getData() ?: ['error' => $e->getMessage()]);
         }
         if (isset($response->success)) {
             return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
