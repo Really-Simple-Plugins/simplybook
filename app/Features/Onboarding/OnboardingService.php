@@ -75,6 +75,7 @@ class OnboardingService
         $storage = $this->retrieveHttpStorage($request, $ajaxData);
 
         $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
+        $marketingConsent = $storage->getBoolean('marketing-consent');
         $submittedEmailAddress = $storage->getEmail('email');
 
         $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
@@ -84,6 +85,7 @@ class OnboardingService
             $this->setTemporaryData([
                 'email' => $submittedEmailAddress,
                 'terms' => $adminAgreesToTerms,
+                'marketing_consent' => $marketingConsent,
             ]);
         }
 

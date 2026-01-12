@@ -15,6 +15,7 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+    public bool $marketing_consent = false;
     public string $password = ''; // Should be encrypted
 
     private array $asArray = [];
@@ -100,6 +101,12 @@ class CompanyBuilder
         return $this;
     }
 
+    public function setMarketingConsent(bool $marketing_consent): CompanyBuilder
+    {
+        $this->marketing_consent = $marketing_consent;
+        return $this;
+    }
+
     public function setPassword(string $password): CompanyBuilder
     {
         $this->password = sanitize_text_field($password);
@@ -135,6 +142,7 @@ class CompanyBuilder
             'country' => $this->country,
             'zip' => $this->zip,
             'terms' => $this->terms,
+            'marketing_consent' => $this->marketing_consent,
             'password' => $this->password, // Should be encrypted
         ];
 
@@ -157,16 +165,17 @@ class CompanyBuilder
      */
     public function isValid(): bool
     {
-        return count($this->toArray()) == count(array_filter($this->toArray()));
+        return count($this->getInvalidFields()) === 0;
     }
 
     /**
      * Method to get the invalid fields. It will return an array of keys that
-     * are empty.Only use this during onboarding, that is where we ask for all the
-     *  data. This method is not needed for login.
+     * are empty. Only use this during onboarding, that is where we ask for all the
+     * data. This method is not needed for login.
+     * Note: Boolean fields (terms, marketing_consent) are always considered valid.
      */
     public function getInvalidFields(): array
     {
-        return array_keys(array_filter($this->toArray(), fn($value) => empty($value)));
+        return array_keys(array_filter($this->toArray(), fn($value) => !is_bool($value) && empty($value)));
     }
 }

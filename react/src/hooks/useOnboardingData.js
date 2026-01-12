@@ -90,6 +90,7 @@ const useOnboardingData = () => {
                     type: "text",
                     label: __("Email address", "simplybook"),
                     required: true,
+                    default: simplybook?.user_email || "",
                     validation: {
                         regex: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$",
                         message: __("Please enter a valid email address", "simplybook"),
@@ -99,9 +100,20 @@ const useOnboardingData = () => {
                     required: true,
                     id: "terms-and-conditions",
                     type: "checkbox",
+                    default: true,
                     label: sprintf(
                         __("I agree to the %sterms and conditions%s", "simplybook"),
                         '<a href="https://simplybook.me/terms-and-conditions" target="_blank">',
+                        "</a>"
+                    ),
+                },
+                {
+                    id: "marketing-consent",
+                    type: "checkbox",
+                    default: true,
+                    label: sprintf(
+                        __("I wish to receive communications about news and/or promotions from SimplyBook.me. %sLearn more%s", "simplybook"),
+                        '<a href="https://simplybook.me/en/policy#direct-marketing" target="_blank">',
                         "</a>"
                     ),
                 },
@@ -285,11 +297,11 @@ const useOnboardingData = () => {
         },
     ];
 
-    // Create initial data object
+    // Create initial data object with defaults
     const initialData = {};
     steps.forEach((step) => {
         step.fields.forEach((field) => {
-            initialData[field.id] = "";
+            initialData[field.id] = field.default !== undefined ? field.default : "";
         });
     });
 

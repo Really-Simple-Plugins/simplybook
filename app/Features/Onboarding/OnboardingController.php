@@ -121,10 +121,12 @@ class OnboardingController implements FeatureInterface
         $tempDataStorage = $this->service->getTemporaryDataStorage();
         $tempEmail = $tempDataStorage->getString('email', get_option('admin_email'));
         $tempTerms = $tempDataStorage->getBoolean('terms', true);
+        $tempMarketingConsent = $tempDataStorage->getBoolean('marketing_consent', false);
 
         $companyBuilder->setEmail($tempEmail);
         $companyBuilder->setUserLogin($tempEmail);
         $companyBuilder->setTerms($tempTerms);
+        $companyBuilder->setMarketingConsent($tempMarketingConsent);
 
         $companyBuilder->setPassword(
             $this->service->encryptString(
