@@ -6,7 +6,7 @@ use SimplyBook\Traits\HasLogging;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class AuthenticationLayerService
+class CreateAccountService
 {
     use HasLogging;
 
@@ -36,7 +36,7 @@ class AuthenticationLayerService
      * Make a request.
      * @throws ApiException
      */
-    public function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
+    private function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
     {
         if (empty($token) || empty($companyLogin)) {
             throw new ApiException(__('Invalid credentials.', 'simplybook'));
@@ -45,7 +45,7 @@ class AuthenticationLayerService
         $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
         $url = $this->buildUrl($endpoint);
 
-        $rspalHeaders = $this->buildRspalHeaders();
+        $rspalHeaders = $this->getRspalHeaders();
         $headers = array_merge($rspalHeaders, [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
@@ -103,7 +103,7 @@ class AuthenticationLayerService
     {
         $url = $this->buildUrl('simplybook/auth/token');
 
-        $headers = array_merge($this->buildRspalHeaders(), [
+        $headers = array_merge($this->getRspalHeaders(), [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
         ]);
@@ -145,17 +145,69 @@ class AuthenticationLayerService
     }
 
     /**
-     * Refresh a public token
+     * Register a new company.
      * @throws ApiException
      */
-    public function refreshPublicToken(string $refreshToken, string $token, string $companyLogin): array
-    {
-        if (empty($refreshToken)) {
-            throw new ApiException(__('Invalid credentials.', 'simplybook'));
-        }
+    public function registerCompany(
+        string $companyLogin,
+        string $email,
+        string $companyName,
+        string $description,
+        string $phone,
+        string $city,
+        string $address,
+        string $zip,
+        float $lat,
+        float $lng,
+        string $timezone,
+        string $countryId,
+        string $password,
+        string $category,
+        string $locale,
+        string $callbackUrl,
+        string $referrer,
+        string $token
+    ): array {
+        $requestBody = [
+            'company_login' => $companyLogin,
+            'email' => $email,
+            'name' => $companyName,
+            'description' => $description,
+            'phone' => $phone,
+            'city' => $city,
+            'address1' => $address,
+            'zip' => $zip,
+            'lat' => (string) $lat,
+            'lng' => (string) $lng,
+            'timezone' => $timezone,
+            'country_id' => $countryId,
+            'password' => $password,
+            'retype_password' => $password,
+            'categories' => [$category],
+            'lang' => $locale,
+            'marketing_consent' => false,
+            'journey_type' => 'skip_welcome_tour',
+            'callback_url' => $callbackUrl,
+            'ref' => $referrer,
+        ];
 
-        return $this->request('POST', 'simplybook/auth/refresh-token', [
-            'refresh_token' => $refreshToken,
+        return $this->request('POST', 'simplybook/company', $requestBody, $token, $companyLogin);
+    }
+
+    /**
+     * Confirm company registration with email code.
+     * @throws ApiException
+     */
+    public function confirmEmail(
+        string $companyLogin,
+        string $confirmationCode,
+        string $recaptchaToken,
+        string $token
+    ): array {
+        return $this->request('POST', 'simplybook/company/confirm', [
+            'company_login' => $companyLogin,
+            'confirmation_code' => $confirmationCode,
+            'recaptcha' => $recaptchaToken,
         ], $token, $companyLogin);
     }
 
@@ -225,7 +277,7 @@ class AuthenticationLayerService
     /**
      * Build the headers
      */
-    private function buildRspalHeaders(): array
+    private function getRspalHeaders(): array
     {
         $headers = [
             'RSPAL-PluginName' => self::PLUGIN_NAME,

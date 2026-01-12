@@ -19,7 +19,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
-use SimplyBook\Services\AuthenticationLayerService;
+use SimplyBook\Services\CreateAccountService;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -34,7 +34,7 @@ class ApiClient
 
     protected EnvironmentConfig $env;
 
-    protected AuthenticationLayerService $authenticationLayer;
+    protected CreateAccountService $createAccountService;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -65,10 +65,10 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(EnvironmentConfig $env, AuthenticationLayerService $authenticationLayer)
+    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService)
     {
         $this->env = $env;
-        $this->authenticationLayer = $authenticationLayer;
+        $this->createAccountService = $createAccountService;
         $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
@@ -305,7 +305,7 @@ class ApiClient
         }
 
         try {
-            $response = $this->authenticationLayer->requestPublicToken();
+            $response = $this->createAccountService->requestPublicToken();
         } catch (ApiException $e) {
             $this->log('Failed to get public token: ' . $e->getMessage());
             return;
@@ -354,46 +354,12 @@ class ApiClient
         $this->updateToken('', $type, true);
 
         if ($type === 'public') {
-            $this->refreshPublicToken($refresh_token);
+            $this->get_public_token();
         } else {
             $this->refreshAdminToken($refresh_token);
         }
 
         $this->releaseRefreshLock($type);
-    }
-
-    /**
-     * Refresh public token
-     */
-    private function refreshPublicToken(string $refresh_token): void
-    {
-        try {
-            $response = $this->authenticationLayer->refreshPublicToken(
-                $refresh_token,
-                $this->getToken('public'),
-                $this->get_company_login()
-            );
-            $body = $response['body'];
-            $responseCode = $response['code'];
-
-            if ($responseCode === 401) {
-                $this->get_public_token();
-                return;
-            }
-
-            if (isset($body['token']) && isset($body['refresh_token'])) {
-                delete_option('simplybook_token_error');
-                $this->updateToken($body['token'], 'public');
-                $this->updateToken($body['refresh_token'], 'public', true);
-                update_option('simplybook_refresh_token_expiration', time() + ($body['expires_in'] ?? 3600));
-                Event::dispatch(Event::AUTH_SUCCEEDED);
-            } else {
-                $this->log("Error during public token refresh");
-            }
-        } catch (ApiException $e) {
-            $this->log("Error during public token refresh: " . $e->getMessage());
-            $this->get_public_token();
-        }
     }
 
     /**
@@ -651,50 +617,34 @@ class ApiClient
             ]);
         }
 
-        $callback_url = $this->generate_callback_url();
         $company_login = $this->get_company_login();
+        $callback_url = get_rest_url(get_current_blog_id(), "simplybook/v1/company_registration/" . $this->generate_callback_url());
 
         $coordinates = $this->get_coordinates(
             $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
         );
 
-        $requestBody = [
-            'company_login' => $company_login,
-            'email' => $sanitizedCompany->email,
-            'name' => $sanitizedCompany->company_name,
-            'description' => $this->get_description(),
-            'phone' => $sanitizedCompany->phone,
-            'city' => $sanitizedCompany->city,
-            'address1' => $sanitizedCompany->address,
-            'zip' => $sanitizedCompany->zip,
-            "lat" => (string) $coordinates['lat'],
-            "lng" => (string) $coordinates['lng'],
-            "timezone" => $this->get_timezone_string(),
-            "country_id" => $sanitizedCompany->country,
-            "password" => $this->decryptString($sanitizedCompany->password),
-            "retype_password" => $this->decryptString($sanitizedCompany->password),
-            'categories' => [$sanitizedCompany->category],
-            'lang' => $this->get_locale(),
-            'marketing_consent' => false,
-            'journey_type' => 'skip_welcome_tour',
-            'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
-            'ref' => $this->getReferrer(),
-        ];
-
-        try {
-            $alResponse = $this->authenticationLayer->request(
-                'POST',
-                'simplybook/company',
-                $requestBody,
-                $this->getToken('public'),
-                $company_login
-            );
-            $response = (object) $alResponse['body'];
-        } catch (ApiException $e) {
-            throw (new ApiException(
-                __('Something went wrong while registering your company. Please try again.', 'simplybook'))
-            )->setData($e->getData() ?: ['error' => $e->getMessage()]);
-        }
+        $alResponse = $this->createAccountService->registerCompany(
+            $company_login,
+            $sanitizedCompany->email,
+            $sanitizedCompany->company_name,
+            $this->get_description(),
+            $sanitizedCompany->phone,
+            $sanitizedCompany->city,
+            $sanitizedCompany->address,
+            $sanitizedCompany->zip,
+            (float) $coordinates['lat'],
+            (float) $coordinates['lng'],
+            $this->get_timezone_string(),
+            $sanitizedCompany->country,
+            $this->decryptString($sanitizedCompany->password),
+            $sanitizedCompany->category,
+            $this->get_locale(),
+            $callback_url,
+            $this->getReferrer(),
+            $this->getToken('public')
+        );
+        $response = (object) $alResponse['body'];
         $companySuccessfullyRegistered = (
             isset($response->recaptcha_site_key) && isset($response->success) && $response->success
         );
@@ -829,26 +779,14 @@ class ApiClient
         }
 
         $companyLogin = $this->get_company_login();
-        $requestBody = [
-            'company_login' => $companyLogin,
-            'confirmation_code' => $email_code,
-            'recaptcha' => $recaptcha_token,
-        ];
 
-        try {
-            $alResponse = $this->authenticationLayer->request(
-                'POST',
-                'simplybook/company/confirm',
-                $requestBody,
-                $this->getToken('public'),
-                $companyLogin
-            );
-            $response = (object) $alResponse['body'];
-        } catch (ApiException $e) {
-            throw (new ApiException(
-                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
-            )->setData($e->getData() ?: ['error' => $e->getMessage()]);
-        }
+        $alResponse = $this->createAccountService->confirmEmail(
+            $companyLogin,
+            $email_code,
+            $recaptcha_token,
+            $this->getToken('public')
+        );
+        $response = (object) $alResponse['body'];
         if (isset($response->success)) {
             return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
         }
