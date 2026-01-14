@@ -620,41 +620,20 @@ class ApiClient
         $company_login = $this->get_company_login();
         $callback_url = get_rest_url(get_current_blog_id(), "simplybook/v1/company_registration/" . $this->generate_callback_url());
 
-        $coordinates = $this->get_coordinates(
-            $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
-        );
-
         $alResponse = $this->createAccountService->registerCompany(
             $company_login,
             $sanitizedCompany->email,
-            $sanitizedCompany->company_name,
-            $this->get_description(),
-            $sanitizedCompany->phone,
-            $sanitizedCompany->city,
-            $sanitizedCompany->address,
-            $sanitizedCompany->zip,
-            (float) $coordinates['lat'],
-            (float) $coordinates['lng'],
-            $this->get_timezone_string(),
-            $sanitizedCompany->country,
             $this->decryptString($sanitizedCompany->password),
-            $sanitizedCompany->category,
-            $this->get_locale(),
             $callback_url,
-            $this->getReferrer(),
+            false, // @todo, marketing consent handled in NLRSP2-291
             $this->getToken('public')
         );
-        $response = (object) $alResponse['body'];
-        $companySuccessfullyRegistered = (
-            isset($response->recaptcha_site_key) && isset($response->success) && $response->success
-        );
 
-        if ($companySuccessfullyRegistered) {
-            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, [
-                'recaptcha_site_key' => $response->recaptcha_site_key,
-                'recaptcha_version' => $response->recaptcha_version,
-                'company_id' => $response->company_id,
-            ]);
+        $response = (object) $alResponse['body'];
+
+        // Response returns success
+        if (isset($response->success) && $response->success) {
+            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, []);
         }
 
         // When unsuccessful due to public token expiration, retry with a fresh token
@@ -678,129 +657,11 @@ class ApiClient
             return $this->register_company();
         }
 
-        // Company name contains illegal words, user should be notified.
-        if (isset($response->data->name) &&
-            in_array('The field contains illegal words', $response->data->name)
-        ) {
-            throw (new ApiException(
-                __('The company name is not allowed. Please change the company name.', 'simplybook')
-            ))->setData([
-                'name' => $response->data->name,
-                'message' => $response->message,
-            ]);
-        }
-
         throw (new ApiException(
             __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message ?? '',
             'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
-        ]);
-    }
-
-    /**
-     * Get the description for the company, with fallbacks.
-     * @return string
-     */
-    private function get_description() : string {
-        $description = get_bloginfo('description');
-        if ( empty( $description) ) {
-            $description = get_bloginfo('name');
-        }
-
-        if ( empty( $description) ) {
-            $description = get_site_url();
-        }
-
-        return $description;
-    }
-
-    /**
-     * Get lat and long coordinates for an address from openstreetmap.
-     *
-     * @param string $address
-     * @param string $zip
-     * @param string $city
-     * @param string $country
-     *
-     * @return array
-     */
-    private function get_coordinates( string $address, string $zip, string $city, string $country ): array {
-        $address = urlencode("$address, $zip $city, $country");
-        $url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json";
-
-        $response = wp_remote_get($url);
-        if ( is_wp_error( $response ) ) {
-            $this->log("Error during address lookup: ".$response->get_error_message());
-            return [
-                'lat' => 0,
-                'lng' => 0,
-            ];
-        }
-        $data = wp_remote_retrieve_body($response);
-        $data = json_decode($data, true);
-        if (!empty($data)) {
-            $lat = $data[0]['lat'];
-            $lng = $data[0]['lon'];
-            return [
-                'lat' => $lat,
-                'lng' => $lng,
-            ];
-        }
-        return [
-            'lat' => 0,
-            'lng' => 0,
-        ];
-    }
-
-    /**
-     * Confirm email for the company registration based on the email code and
-     * the recaptcha token.
-     * @throws ApiException
-     */
-    public function confirm_email( string $email_code, string $recaptcha_token ): ApiResponseDTO
-    {
-        if ($this->adminAccessAllowed() === false) {
-            throw new ApiException(
-                __('You are not authorized to do this.', 'simplybook')
-            );
-        }
-
-        // If the company registration is not started someone tries to submit
-        // the email confirm step without first completing the registration.
-        if (get_option("simplybook_company_registration_start_time") === false) {
-            throw new ApiException(
-                __('Something went wrong, are you sure you started the company registration?', 'simplybook')
-            );
-        }
-
-        if ($this->tokenIsValid() === false) {
-            $this->get_public_token();
-        }
-
-        $companyLogin = $this->get_company_login();
-
-        $alResponse = $this->createAccountService->confirmEmail(
-            $companyLogin,
-            $email_code,
-            $recaptcha_token,
-            $this->getToken('public')
-        );
-        $response = (object) $alResponse['body'];
-        if (isset($response->success)) {
-            return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
-        }
-
-        $codeIsValid = true;
-        $errorMessage = __('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
-        if (isset($response->message) && str_contains($response->message, 'not valid')) {
-            $errorMessage = __('This confirmation code is not valid.', 'simplybook');
-            $codeIsValid = false;
-        }
-
-        throw (new ApiException($errorMessage))->setData([
-            'message' => $response->message,
-            'valid' => $codeIsValid,
         ]);
     }
 
@@ -1185,12 +1046,12 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-	        throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
+            throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-	        $this->throwSpecificLoginErrorResponse($responseCode, $response);
+            $this->throwSpecificLoginErrorResponse($responseCode, $response);
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);

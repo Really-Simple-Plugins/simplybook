@@ -151,22 +151,25 @@ class CompanyBuilder
     }
 
     /**
-     * Method to check if the object is valid. It will check if any value is
-     * empty. Only use this during onboarding, that is where we ask for all the
-     * data. This method is not needed for login.
+     * Validation - only email and password are required for simplified registration.
      */
     public function isValid(): bool
     {
-        return count($this->toArray()) == count(array_filter($this->toArray()));
+        return !empty($this->email) && !empty($this->password);
     }
 
     /**
-     * Method to get the invalid fields. It will return an array of keys that
-     * are empty.Only use this during onboarding, that is where we ask for all the
-     *  data. This method is not needed for login.
+     * Get invalid fields - only checks email and password.
      */
     public function getInvalidFields(): array
     {
-        return array_keys(array_filter($this->toArray(), fn($value) => empty($value)));
+        $invalid = [];
+        if (empty($this->email)) {
+            $invalid[] = 'email';
+        }
+        if (empty($this->password)) {
+            $invalid[] = 'password';
+        }
+        return $invalid;
     }
 }

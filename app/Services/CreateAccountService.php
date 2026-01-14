@@ -24,6 +24,40 @@ class CreateAccountService
     }
 
     /**
+     * Request a public token
+     * @throws ApiException
+     */
+    public function requestPublicToken(): array
+    {
+        return $this->request('POST', 'simplybook/auth/token');
+    }
+
+    /**
+     * Register a new company.
+     * @throws ApiException
+     */
+    public function registerCompany(
+        string $companyLogin,
+        string $email,
+        string $password,
+        string $callbackUrl,
+        bool $marketingConsent,
+        string $token
+    ): array {
+        $requestBody = [
+            'company_login' => $companyLogin,
+            'email' => $email,
+            'callback_url' => $callbackUrl,
+            'password' => $password,
+            'retype_password' => $password,
+            'journey_type' => 'wp_plugin',
+            'marketing_consent' => $marketingConsent,
+        ];
+
+        return $this->request('POST', 'simplybook/company', $requestBody, $token, $companyLogin);
+    }
+
+    /**
      * Get the base URL based on the {@see SIMPLYBOOK_ENV} constant.
      */
     private function getBaseUrl(): string
@@ -36,22 +70,20 @@ class CreateAccountService
      * Make a request.
      * @throws ApiException
      */
-    private function request(string $method, string $endpoint, array $body, string $token, string $companyLogin): array
+    private function request(string $method, string $endpoint, array $body = [], string $token = '', string $companyLogin = ''): array
     {
-        if (empty($token) || empty($companyLogin)) {
-            throw new ApiException(__('Invalid credentials.', 'simplybook'));
-        }
-
-        $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
         $url = $this->buildUrl($endpoint);
 
-        $rspalHeaders = $this->getRspalHeaders();
-        $headers = array_merge($rspalHeaders, [
+        $headers = array_merge($this->getRspalHeaders(), [
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-            'X-Token' => $token,
-            'X-Company-Login' => $companyLogin,
         ]);
+
+        // Add auth headers if credentials are provided
+        if (!empty($token) && !empty($companyLogin)) {
+            $headers['X-Token'] = $token;
+            $headers['X-Company-Login'] = $companyLogin;
+        }
 
         $args = [
             'method' => $method,
@@ -60,60 +92,10 @@ class CreateAccountService
             'sslverify' => true,
         ];
 
-        if (!empty($body)) {
-            $args['body'] = json_encode($body);
-        }
+        // Always send JSON body for POST requests (API expects at least "{}")
+        $args['body'] = json_encode($body);
 
-        $response = wp_remote_request($url, $args);
-
-        if (is_wp_error($response)) {
-            throw (new ApiException(
-                __('Failed to connect.', 'simplybook')
-            ))->setData([
-                'error' => sanitize_text_field($response->get_error_message()),
-            ]);
-        }
-
-        $responseCode = wp_remote_retrieve_response_code($response);
-        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
-
-        if (!is_array($responseBody)) {
-            throw new ApiException(__('Invalid response.', 'simplybook'));
-        }
-
-        if (isset($responseBody['rspal-error'])) {
-            throw (new ApiException(
-                __('Error', 'simplybook')
-            ))->setData([
-                'error' => sanitize_text_field($responseBody['rspal-error']),
-            ]);
-        }
-
-        return [
-            'code' => (int) $responseCode,
-            'body' => $responseBody,
-        ];
-    }
-
-    /**
-     * Request a public token
-     * @throws ApiException
-     */
-    public function requestPublicToken(): array
-    {
-        $url = $this->buildUrl('simplybook/auth/token');
-
-        $headers = array_merge($this->getRspalHeaders(), [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ]);
-
-        $response = wp_remote_post($url, [
-            'headers' => $headers,
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode([]),
-        ]);
+        $response = wp_safe_remote_request($url, $args);
 
         if (is_wp_error($response)) {
             throw (new ApiException(
@@ -142,73 +124,6 @@ class CreateAccountService
             'code' => (int) $responseCode,
             'body' => $responseBody,
         ];
-    }
-
-    /**
-     * Register a new company.
-     * @throws ApiException
-     */
-    public function registerCompany(
-        string $companyLogin,
-        string $email,
-        string $companyName,
-        string $description,
-        string $phone,
-        string $city,
-        string $address,
-        string $zip,
-        float $lat,
-        float $lng,
-        string $timezone,
-        string $countryId,
-        string $password,
-        string $category,
-        string $locale,
-        string $callbackUrl,
-        string $referrer,
-        string $token
-    ): array {
-        $requestBody = [
-            'company_login' => $companyLogin,
-            'email' => $email,
-            'name' => $companyName,
-            'description' => $description,
-            'phone' => $phone,
-            'city' => $city,
-            'address1' => $address,
-            'zip' => $zip,
-            'lat' => (string) $lat,
-            'lng' => (string) $lng,
-            'timezone' => $timezone,
-            'country_id' => $countryId,
-            'password' => $password,
-            'retype_password' => $password,
-            'categories' => [$category],
-            'lang' => $locale,
-            'marketing_consent' => false,
-            'journey_type' => 'skip_welcome_tour',
-            'callback_url' => $callbackUrl,
-            'ref' => $referrer,
-        ];
-
-        return $this->request('POST', 'simplybook/company', $requestBody, $token, $companyLogin);
-    }
-
-    /**
-     * Confirm company registration with email code.
-     * @throws ApiException
-     */
-    public function confirmEmail(
-        string $companyLogin,
-        string $confirmationCode,
-        string $recaptchaToken,
-        string $token
-    ): array {
-        return $this->request('POST', 'simplybook/company/confirm', [
-            'company_login' => $companyLogin,
-            'confirmation_code' => $confirmationCode,
-            'recaptcha' => $recaptchaToken,
-        ], $token, $companyLogin);
     }
 
     /**
@@ -271,6 +186,7 @@ class CreateAccountService
      */
     private function buildUrl(string $endpoint): string
     {
+        $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
         return $this->getBaseUrl() . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
     }
 

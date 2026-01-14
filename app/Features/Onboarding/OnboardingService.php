@@ -50,20 +50,12 @@ class OnboardingService
     }
 
     /**
-     * This method should be called after a successful company registration.
-     * In that case the data given should be based on the data returned in the
-     * ApiResponseDTO from the successful {@see ApiClient::register_company()}
+     * This method should be called after a successful company registration request.
+     * Note: completed_step is set in CompanyRegistrationEndpoint after callback authentication succeeds.
      */
     public function finishCompanyRegistration(array $data): void
     {
-        $responseDataStorage = new Storage($data);
-
         update_option("simplybook_company_registration_start_time", time(), false);
-        update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
-        update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
-        $this->update_option('company_id', $responseDataStorage->getInt('company_id'), true);
-
-        $this->setCompletedStep(2);
     }
 
     /**
@@ -102,16 +94,6 @@ class OnboardingService
         }
 
         update_option('simplybook_company_data', $options);
-    }
-
-    /**
-     * Get the recaptcha site key from the general options
-     */
-    public function getRecaptchaSitekey(): \WP_REST_Response
-    {
-        return $this->sendHttpResponse([
-            'site_key' => get_option('simplybook_recaptcha_site_key'),
-        ]);
     }
 
     /**
@@ -185,5 +167,19 @@ class OnboardingService
     public function clearTemporaryData(): void
     {
         delete_option('simplybook_temporary_onboarding_data');
+    }
+
+    /**
+     * Authenticate a user after company registration using stored credentials.
+     * @throws \Exception
+     */
+    public function authenticateAfterRegistration(string $domain, string $companyLogin, string $email, string $encryptedPassword): array
+    {
+        return $this->client->authenticateExistingUser(
+            $domain,
+            $companyLogin,
+            $email,
+            $this->decryptString($encryptedPassword)
+        );
     }
 }

@@ -53,16 +53,6 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'registerCompanyAtSimplyBook'],
         ];
 
-        $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'GET',
-            'callback' => [$this->service, 'getRecaptchaSitekey'],
-        ];
-
-        $routes['onboarding/confirm_email'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'confirmEmailWithSimplyBook'],
-        ];
-
         $routes['onboarding/save_widget_style'] = [
             'methods' => 'POST',
             'callback' => [$this, 'saveColorsToDesignSettings'],
@@ -147,44 +137,6 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->service->finishCompanyRegistration($response->data);
-        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
-    }
-
-    /**
-     * Confirm the email address with SimplyBook.me while providing the
-     * confirmation code and the recaptcha token
-     */
-    public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $error = '';
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        if ($storage->isEmpty('recaptchaToken')) {
-            $error = __("Please verify you're not a robot.", 'simplybook');
-        }
-
-        if ($storage->isEmpty('confirmation-code')) {
-            $error = __('Please enter the confirmation code.', 'simplybook');
-        }
-
-        if (!empty($error)) {
-            return $this->service->sendHttpResponse([], false, $error, 400);
-        }
-
-        try {
-            $response = $this->client->confirm_email(
-                $storage->getString('confirmation-code'),
-                $storage->getString('recaptchaToken')
-            );
-        } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
-        }
-
-        // Only mark step as completed if the API call was successful
-        if ($response->success) {
-            $this->service->setCompletedStep(3);
-        }
-
         return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 

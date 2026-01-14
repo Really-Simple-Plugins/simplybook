@@ -7,6 +7,8 @@ use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\CallbackUrlService;
+use SimplyBook\Features\Onboarding\OnboardingService;
+use SimplyBook\Support\Builders\CompanyBuilder;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
 class CompanyRegistrationEndpoint implements SingleEndpointInterface
@@ -19,10 +21,14 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     public const ROUTE = 'company_registration';
 
     protected CallbackUrlService $callbackUrlService;
+    protected OnboardingService $onboardingService;
 
-    public function __construct(CallbackUrlService $callbackUrlService)
-    {
+    public function __construct(
+        CallbackUrlService $callbackUrlService,
+        OnboardingService $onboardingService
+    ) {
         $this->callbackUrlService = $callbackUrlService;
+        $this->onboardingService = $onboardingService;
     }
 
     /**
@@ -56,17 +62,9 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
     }
 
     /**
-     * This callback runs via the POST request to the company registration API.
-     * The response is used to update:
-     * - the company token
-     * - the company refresh token
-     * - the company domain
-     * - the company ID
-     *
-     * This method will also:
-     * - update the company token expiration time
-     * - cleanup the callback URL
-     * - validate the tasks
+     * This callback runs via the POST request from SimplyBook.me after company registration.
+     * With the simplified flow, the callback only contains success status and company_id.
+     * We then authenticate using the stored credentials to get the tokens.
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -78,27 +76,65 @@ class CompanyRegistrationEndpoint implements SingleEndpointInterface
                 $errorMessage = $storage->getString('error.message');
                 $this->log($storage->getString('error.message'));
             }
+            // Set failure state for frontend polling
+            update_option('simplybook_registration_failed', true, false);
             return new \WP_REST_Response([
                 'error' => $errorMessage,
             ], 400);
         }
 
-        $this->updateToken($storage->getString('token'), 'admin');
-        $this->updateToken($storage->getString('refresh_token'), 'admin', true);
+        // Get stored company data for authentication
+        $companyData = get_option('simplybook_company_data', []);
+        $companyBuilder = (new CompanyBuilder())->buildFromArray($companyData);
+        $companyLogin = get_option('simplybook_company_login');
+        $domain = $this->get_domain();
+
+        // Validate required data exists
+        if (empty($companyData) || empty($companyLogin) || empty($companyBuilder->email)) {
+            $this->log('Missing company data for post-registration authentication');
+            update_option('simplybook_registration_failed', true, false);
+            return new \WP_REST_Response([
+                'error' => 'Company data not found. Please restart registration.',
+            ], 400);
+        }
+
+        try {
+            $authResponse = $this->onboardingService->authenticateAfterRegistration(
+                $domain,
+                $companyLogin,
+                $companyBuilder->email,
+                $companyBuilder->password
+            );
+        } catch (\Exception $e) {
+            $this->log('Authentication after registration failed: ' . $e->getMessage());
+            // Set failure state for frontend polling
+            update_option('simplybook_registration_failed', true, false);
+            return new \WP_REST_Response([
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+
+        // Store tokens from auth response
+        $this->updateToken($authResponse['token'], 'admin');
+        $this->updateToken($authResponse['refresh_token'], 'admin', true);
 
         update_option('simplybook_refresh_company_token_expiration', time() + 3600);
-
-        $this->update_option('domain', $storage->getString('domain'), true);
+        $this->update_option('domain', $authResponse['domain'], true);
         $this->update_option('company_id', $storage->getInt('company_id'), true);
 
-        // todo - find better way of doing the below. Maybe a custom action where controller can hook into?
+        // Clear any previous failure state
+        delete_option('simplybook_registration_failed');
+
+        // Mark step 1 as completed only after successful authentication
+        $this->onboardingService->setCompletedStep(1);
+
         $this->callbackUrlService->cleanupCallbackUrl();
 
         /**
          * Action: simplybook_after_company_registered
          * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
          */
-        do_action('simplybook_after_company_registered', $storage->getString('domain'), $storage->getInt('company_id'));
+        do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
 
         return new \WP_REST_Response([
             'message' => 'Successfully registered company for current WordPress website.',

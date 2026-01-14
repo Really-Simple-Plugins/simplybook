@@ -24,10 +24,9 @@ const OnboardingForms = ({
     data,
     defaultData,
     isLastStep,
-    recaptchaToken,
     apiError,
     setApiError,
-      onboardingCompleted
+    onboardingCompleted
   } = useOnboardingData();
   
   const navigate = useNavigate();
@@ -48,12 +47,7 @@ const OnboardingForms = ({
   const currentStep = getCurrentStep(path);
   const [disabled, setDisabled] = useState(false);
 
-  // Update confirmation code in onboarding data. Otherwise the recaptcha code clears the confirmation code
   const formData = watch();
-  
-  useEffect(() => {
-    updateData({'confirmation-code': formData['confirmation-code']});
-  }, [formData['confirmation-code']]);
   
 
   //onload of this component, check completed step simplybook.completed_step and navigate to the next step if it's above 0
@@ -69,8 +63,6 @@ const OnboardingForms = ({
     setApiError(null);
     setDisabled(true);
     let updatedFormData = { ...formData };
-    //add the auto generated recaptcha token to our data
-    updatedFormData.recaptchaToken = recaptchaToken;
 
     if (buttonType === "primary" && primaryButton.modifyData) {
       updatedFormData = primaryButton.modifyData(updatedFormData);
@@ -104,9 +96,9 @@ const OnboardingForms = ({
     } else {
       let currentStep = getCurrentStep(path);
 
-      //if onboarding already completed, skip steps 1, 2 3 and 4, and continue from step 5
-      if (currentStep.id <=4 && onboardingCompleted ) {
-        navigate({ to: getURLForStep(5) });
+      // If onboarding already completed, skip step 1 and continue from step 2
+      if (currentStep.id <= 1 && onboardingCompleted) {
+        navigate({ to: getURLForStep(2) });
       } else {
         navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
       }
