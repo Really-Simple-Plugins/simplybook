@@ -472,7 +472,7 @@ class ApiClient
             $response = $this->authenticateExistingUser(
                 $domain,
                 $this->get_company_login(),
-                $sanitizedCompany->user_login,
+                $sanitizedCompany->userLogin,
                 $this->decryptString($sanitizedCompany->password)
             );
         } catch (\Exception $e) {
