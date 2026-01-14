@@ -667,7 +667,7 @@ class ApiClient
                     "retype_password" => $this->decryptString($sanitizedCompany->password),
                     'categories' => [$sanitizedCompany->category],
                     'lang' => $this->get_locale(),
-                    'marketing_consent' => $sanitizedCompany->marketing_consent,
+                    'marketing_consent' => $sanitizedCompany->marketingConsent,
 					'journey_type' => 'skip_welcome_tour',
                     'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
                     'ref' => $this->getReferrer(),
