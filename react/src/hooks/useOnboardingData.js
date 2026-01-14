@@ -112,7 +112,7 @@ const useOnboardingData = () => {
                     type: "checkbox",
                     default: true,
                     label: sprintf(
-                        __("I wish to receive communications about news and/or promotions from SimplyBook.me. %sLearn more%s", "simplybook"),
+                        __("I wish to receive communications about news and/or promotions from %sSimplyBook.me%s. Learn more", "simplybook"),
                         '<a href="https://simplybook.me/en/policy#direct-marketing" target="_blank">',
                         "</a>"
                     ),
@@ -301,7 +301,7 @@ const useOnboardingData = () => {
     const initialData = {};
     steps.forEach((step) => {
         step.fields.forEach((field) => {
-            initialData[field.id] = field.default !== undefined ? field.default : "";
+            initialData[field.id] = (field.default !== undefined ? field.default : "");
         });
     });
 
