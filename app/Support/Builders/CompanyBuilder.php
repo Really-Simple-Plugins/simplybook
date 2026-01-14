@@ -151,7 +151,6 @@ class CompanyBuilder
 
     /**
      * Converts a property name to a method name. It will remove underscores
-     *
      */
     private function methodFromPropertyName(string $property): string
     {
