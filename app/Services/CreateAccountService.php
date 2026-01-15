@@ -14,7 +14,10 @@ class CreateAccountService
     private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
-    private const PLUGIN_NAME = 'SimplyBook';
+
+    // API Endpoints
+    private const ENDPOINT_AUTH_TOKEN = 'simplybook/auth/token';
+    private const ENDPOINT_COMPANY = 'simplybook/company';
 
     protected EnvironmentConfig $env;
 
@@ -29,7 +32,7 @@ class CreateAccountService
      */
     public function requestPublicToken(): array
     {
-        return $this->request('POST', 'simplybook/auth/token');
+        return $this->request('POST', self::ENDPOINT_AUTH_TOKEN);
     }
 
     /**
@@ -41,20 +44,24 @@ class CreateAccountService
         string $email,
         string $password,
         string $callbackUrl,
-        bool $marketingConsent,
-        string $token
+        bool $marketingConsent
     ): array {
+        // Sanitize inputs
+        $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
+        $sanitizedEmail = sanitize_email($email);
+        $sanitizedCallbackUrl = esc_url_raw($callbackUrl);
+
         $requestBody = [
-            'company_login' => $companyLogin,
-            'email' => $email,
-            'callback_url' => $callbackUrl,
+            'company_login' => $sanitizedCompanyLogin,
+            'email' => $sanitizedEmail,
+            'callback_url' => $sanitizedCallbackUrl,
             'password' => $password,
             'retype_password' => $password,
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
 
-        return $this->request('POST', 'simplybook/company', $requestBody, $token, $companyLogin);
+        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin);
     }
 
     /**
@@ -70,7 +77,7 @@ class CreateAccountService
      * Make a request.
      * @throws ApiException
      */
-    private function request(string $method, string $endpoint, array $body = [], string $token = '', string $companyLogin = ''): array
+    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = ''): array
     {
         $url = $this->buildUrl($endpoint);
 
@@ -80,8 +87,7 @@ class CreateAccountService
         ]);
 
         // Add auth headers if credentials are provided
-        if (!empty($token) && !empty($companyLogin)) {
-            $headers['X-Token'] = $token;
+        if (!empty($companyLogin)) {
             $headers['X-Company-Login'] = $companyLogin;
         }
 
@@ -196,7 +202,7 @@ class CreateAccountService
     private function getRspalHeaders(): array
     {
         $headers = [
-            'RSPAL-PluginName' => self::PLUGIN_NAME,
+            'RSPAL-PluginName' => $this->env->getString('plugin.name'),
             'RSPAL-PluginVersion' => $this->env->getString('plugin.version'),
             'RSPAL-PluginPath' => $this->getPluginRelativePath(),
             'RSPAL-Origin' => trailingslashit(site_url()),

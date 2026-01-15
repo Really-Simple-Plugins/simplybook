@@ -20,6 +20,7 @@ use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 use SimplyBook\Services\CreateAccountService;
+use SimplyBook\Services\CallbackUrlService;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -35,6 +36,8 @@ class ApiClient
     protected EnvironmentConfig $env;
 
     protected CreateAccountService $createAccountService;
+
+    protected CallbackUrlService $callbackUrlService;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -65,10 +68,11 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService)
+    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService, CallbackUrlService $callbackUrlService)
     {
         $this->env = $env;
         $this->createAccountService = $createAccountService;
+        $this->callbackUrlService = $callbackUrlService;
         $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
@@ -172,14 +176,14 @@ class ApiClient
             return false;
         }
 
-	    // If the token exists, and the onboarding is completed, we know
-	    // the company registration is complete, and we can cache for a longer
-	    // time.
-	    $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
-	    $cacheTime = MINUTE_IN_SECONDS * 10;
-	    if ($isOnboardingCompleted) {
-		    $cacheTime = DAY_IN_SECONDS;
-	    }
+        // If the token exists, and the onboarding is completed, we know
+        // the company registration is complete, and we can cache for a longer
+        // time.
+        $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
+        $cacheTime = MINUTE_IN_SECONDS * 10;
+        if ($isOnboardingCompleted) {
+            $cacheTime = DAY_IN_SECONDS;
+        }
 
         wp_cache_set($cacheName, true, 'simplybook', $cacheTime);
         return true;
@@ -284,9 +288,7 @@ class ApiClient
                         $this->refresh_token('admin');
                         break;
                 }
-                $token = $this->getToken($token_type);
             }
-            $headers['X-Token'] = $token;
             $headers['X-Company-Login' ] = $this->get_company_login();
         }
 
@@ -503,23 +505,6 @@ class ApiClient
     }
 
     /**
-     * Generate callback URL for registration, with an expiration
-     *
-     * @return string
-     */
-    protected function generate_callback_url(): string {
-        if ( !$this->adminAccessAllowed() ) {
-            return '';
-        }
-
-        //create temporary callback url, with a lifetime of 5 minutes. This is just for the registration process.
-        $random_string = wp_generate_password( 32, false );
-        update_option('simplybook_callback_url', $random_string, false );
-        update_option('simplybook_callback_url_expires', time() + 10 * MINUTE_IN_SECONDS, false );
-        return $random_string;
-    }
-
-    /**
      * Get company login and generate one if it does not exist
      * @return string
      */
@@ -618,7 +603,7 @@ class ApiClient
         }
 
         $company_login = $this->get_company_login();
-        $callback_url = get_rest_url(get_current_blog_id(), "simplybook/v1/company_registration/" . $this->generate_callback_url());
+        $callback_url = $this->callbackUrlService->getFullCallbackUrl();
 
         $alResponse = $this->createAccountService->registerCompany(
             $company_login,
@@ -626,8 +611,9 @@ class ApiClient
             $this->decryptString($sanitizedCompany->password),
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
-            $this->getToken('public')
         );
+
+        $this->log('AL response: ' . wp_json_encode($alResponse));
 
         $response = (object) $alResponse['body'];
 
@@ -1026,7 +1012,7 @@ class ApiClient
      * Authenticate an existing user with the API by company login, user login
      * and password. If successful, the token is stored in the options.
      *
-     * @todo: response data is handling is not DRY (see CompanyRegistrationEndpoint)
+     * @todo: response data handling is not DRY (see RegistrationCallbackEndpoint)
      * @throws \Exception|RestDataException
      */
     public function authenticateExistingUser(string $companyDomain, string $companyLogin, string $userLogin, string $userPassword): array
@@ -1107,7 +1093,7 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-			$this->throwSpecificLoginErrorResponse($responseCode, $response, true);
+            $this->throwSpecificLoginErrorResponse($responseCode, $response, true);
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
@@ -1123,8 +1109,8 @@ class ApiClient
         return $responseBody;
     }
 
-	/**
-	 * Handles api related login errors based on the response code and if it is
+    /**
+     * Handles api related login errors based on the response code and if it is
      * a 2FA call. When there is no specific case throw a RestDataException with
      * a more generic message.
      *
@@ -1133,10 +1119,10 @@ class ApiClient
      * 403 = Too many attempts
      * 404 = SB generated a 404 page with the given company login
      * Else generic failed attempt message
-	 *
-	 * @throws RestDataException
-	 */
-	public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false): void
+     *
+     * @throws RestDataException
+     */
+    public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false): void
     {
         $response = (array) $response; // Ensure we have an array
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
@@ -1174,7 +1160,7 @@ class ApiClient
         $exception->setResponseCode($isTwoFactorAuth ? 200 : 500);
 
         throw $exception;
-	}
+    }
 
     /**
      * Request to send an SMS code to the user for two-factor authentication.
@@ -1343,26 +1329,26 @@ class ApiClient
         return $data;
     }
 
-	/**
-	 *
-	 * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
-	 * configured using Extendify. Otherwise, use default 'wp'.
-	 */
-	private function getReferrer(): string
-	{
-		return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
-	}
+    /**
+     *
+     * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+     * configured using Extendify. Otherwise, use default 'wp'.
+     */
+    private function getReferrer(): string
+    {
+        return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+    }
 
-	/**
-	 * Get the user agent for the API requests.
-	 *
-	 * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
-	 * EXTENDIFY_PARTNER_ID; +https://example.com)
-	 */
-	private function getRequestUserAgent(): string
-	{
-		return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
-	}
+    /**
+     * Get the user agent for the API requests.
+     *
+     * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
+     * EXTENDIFY_PARTNER_ID; +https://example.com)
+     */
+    private function getRequestUserAgent(): string
+    {
+        return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+    }
 
     /**
      * Helper method to easily do a GET request to a specific endpoint on the

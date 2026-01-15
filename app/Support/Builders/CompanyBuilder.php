@@ -21,6 +21,12 @@ class CompanyBuilder
     private int $defaultCategory = 8; // Default category is 8: "Other category"
 
     /**
+     * Fields required for simplified registration flow.
+     * Only email and password are needed for new account creation.
+     */
+    private array $requiredFields = ['email', 'password'];
+
+    /**
      * Method can be used to build a CompanyBuilder object from an array of
      * key-value pairs. Only known properties will be set. Make sure the key
      * matches the property name.
@@ -151,24 +157,23 @@ class CompanyBuilder
     }
 
     /**
-     * Validation - only email and password are required for simplified registration.
+     * Validation - checks all required fields are filled.
      */
     public function isValid(): bool
     {
-        return !empty($this->email) && !empty($this->password);
+        return empty($this->getInvalidFields());
     }
 
     /**
-     * Get invalid fields - only checks email and password.
+     * Get fields that are required but empty.
      */
     public function getInvalidFields(): array
     {
         $invalid = [];
-        if (empty($this->email)) {
-            $invalid[] = 'email';
-        }
-        if (empty($this->password)) {
-            $invalid[] = 'password';
+        foreach ($this->requiredFields as $field) {
+            if (empty($this->{$field})) {
+                $invalid[] = $field;
+            }
         }
         return $invalid;
     }

@@ -58,7 +58,7 @@ final class Plugin
     public function registerEnvironment(): void
     {
         if (!defined('SIMPLYBOOK_ENV')) {
-            define('SIMPLYBOOK_ENV', 'production');
+            define('SIMPLYBOOK_ENV', 'development');
         }
     }
 
@@ -184,7 +184,6 @@ final class Plugin
             \SimplyBook\Http\Endpoints\WidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\DomainEndpoint::class,
             \SimplyBook\Http\Endpoints\RemotePluginsEndpoint::class,
-            \SimplyBook\Http\Endpoints\CompanyRegistrationEndpoint::class,
             \SimplyBook\Http\Endpoints\WaitForRegistrationEndpoint::class,
             \SimplyBook\Http\Endpoints\RelatedPluginEndpoints::class,
             \SimplyBook\Http\Endpoints\BlockEndpoints::class,

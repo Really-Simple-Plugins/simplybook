@@ -39,27 +39,10 @@ const useOnboardingData = () => {
             ],
             beforeSubmit: async (data) => {
                 try {
-                    // Register email and trigger company registration
-                    await httpClient.setRoute('onboarding/register_email').setPayload(data).post();
-                    await httpClient.setRoute('onboarding/company_registration').setPayload(data).post();
-
-                    // Poll for callback completion (max 30 seconds)
-                    for (let i = 0; i < 15; i++) {
-                        const response = await httpClient.setRoute('check_registration_callback_status').setPayload({_poll: true}).post();
-                        if (response?.data?.status === 'completed') {
-                            setApiError('');
-                            return true;
-                        }
-                        if (response?.data?.status === 'failed') {
-                            setApiError(response.data.message || __("Registration failed. Please try again.", "simplybook"));
-                            return false;
-                        }
-                        await new Promise(r => setTimeout(r, 2000)); // Wait 2 seconds between polls
-                    }
-
-                    // Timeout - registration didn't complete in time
-                    setApiError(__("Registration is taking longer than expected. Please refresh and try again.", "simplybook"));
-                    return false;
+                    // Create account (validates, stores data, triggers SimplyBook registration)
+                    await httpClient.setRoute('onboarding/create_account').setPayload(data).post();
+                    setApiError('');
+                    return true;
                 } catch (error) {
                     setApiError(error.message || __("An error occurred while registering.", "simplybook"));
                     return false;
@@ -78,7 +61,7 @@ const useOnboardingData = () => {
                     }).post();
 
                     // Complete the onboarding
-                    await httpClient.setRoute('onboarding/finish_onboarding').setPayload({}).post();
+                    await httpClient.setRoute('onboarding/finish_onboarding').setPayload({ finish: true }).post();
                 } catch (error) {
                     setApiError(error.message || __("An error occurred while saving the styles.", "simplybook"));
                     return false;

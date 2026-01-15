@@ -51,34 +51,11 @@ class OnboardingService
 
     /**
      * This method should be called after a successful company registration request.
-     * Note: completed_step is set in CompanyRegistrationEndpoint after callback authentication succeeds.
+     * Note: completed_step is set in RegistrationCallbackEndpoint after callback authentication succeeds.
      */
-    public function finishCompanyRegistration(array $data): void
+    public function finishCompanyRegistration(): void
     {
         update_option("simplybook_company_registration_start_time", time(), false);
-    }
-
-    /**
-     * Store given email address when the user agrees to the terms
-     */
-    public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData);
-
-        $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
-        $submittedEmailAddress = $storage->getEmail('email');
-
-        $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
-        $message = ($success ? '' : __('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
-
-        if ($success) {
-            $this->setTemporaryData([
-                'email' => $submittedEmailAddress,
-                'terms' => $adminAgreesToTerms,
-            ]);
-        }
-
-        return $this->sendHttpResponse([], $success, $message, ($success ? 200 : 400));
     }
 
     /**
@@ -167,19 +144,5 @@ class OnboardingService
     public function clearTemporaryData(): void
     {
         delete_option('simplybook_temporary_onboarding_data');
-    }
-
-    /**
-     * Authenticate a user after company registration using stored credentials.
-     * @throws \Exception
-     */
-    public function authenticateAfterRegistration(string $domain, string $companyLogin, string $email, string $encryptedPassword): array
-    {
-        return $this->client->authenticateExistingUser(
-            $domain,
-            $companyLogin,
-            $email,
-            $this->decryptString($encryptedPassword)
-        );
     }
 }
