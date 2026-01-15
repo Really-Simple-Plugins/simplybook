@@ -14,6 +14,7 @@ use SimplyBook\Support\Builders\PageBuilder;
 use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Services\WidgetTrackingService;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
@@ -26,17 +27,20 @@ class OnboardingController implements FeatureInterface
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
     private CallbackUrlService $callbackUrlService;
+    private ExtendifyDataService $extendifyDataService;
 
     public function __construct(
         ApiClient $client,
         OnboardingService $service,
         WidgetTrackingService $widgetTrackingService,
-        CallbackUrlService $callbackUrlService
+        CallbackUrlService $callbackUrlService,
+        ExtendifyDataService $extendifyDataService
     ) {
         $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
         $this->callbackUrlService = $callbackUrlService;
+        $this->extendifyDataService = $extendifyDataService;
     }
 
     public function register(): void
@@ -123,6 +127,19 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
+        // Pre-fill category and services from Extendify data if available
+        if ($this->extendifyDataService->hasData()) {
+            $category = $this->extendifyDataService->getCategory();
+            if ($category !== null) {
+                $storage->set('category', $category);
+            }
+
+            $services = $this->extendifyDataService->getServices();
+            if (!empty($services)) {
+                $storage->set('services', $services);
+            }
+        }
+
         // Validate email and terms
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
@@ -143,6 +160,15 @@ class OnboardingController implements FeatureInterface
         $companyBuilder->setPassword(
             $this->service->encryptString(wp_generate_password(24, false))
         );
+
+        // Set category and services from Extendify data (if prefilled above)
+        if ($storage->getInt('category') > 0) {
+            $companyBuilder->setCategory($storage->getInt('category'));
+        }
+        $services = $storage->get('services', []);
+        if (!empty($services) && is_array($services)) {
+            $companyBuilder->setServices($services);
+        }
 
         $this->service->storeCompanyData($companyBuilder);
 

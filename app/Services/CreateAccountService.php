@@ -44,7 +44,9 @@ class CreateAccountService
         string $email,
         string $password,
         string $callbackUrl,
-        bool $marketingConsent
+        bool $marketingConsent,
+        ?int $category = null,
+        ?array $services = null
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -60,6 +62,16 @@ class CreateAccountService
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
+
+        // Add category if provided
+        if ($category !== null && $category > 0) {
+            $requestBody['category'] = $category;
+        }
+
+        // Add services if provided
+        if ($services !== null && !empty($services)) {
+            $requestBody['services'] = $services;
+        }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin);
     }

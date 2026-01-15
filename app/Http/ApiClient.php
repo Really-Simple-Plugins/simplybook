@@ -611,6 +611,8 @@ class ApiClient
             $this->decryptString($sanitizedCompany->password),
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
+            $sanitizedCompany->category > 0 ? $sanitizedCompany->category : null,
+            !empty($sanitizedCompany->services) ? $sanitizedCompany->services : null
         );
 
         $this->log('AL response: ' . wp_json_encode($alResponse));
