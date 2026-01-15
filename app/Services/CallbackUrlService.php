@@ -14,6 +14,20 @@ class CallbackUrlService
     private const CALLBACK_ROUTE = 'onboarding/registration_callback';
 
     /**
+     * Get the callback route with token appended.
+     * Used for both registering the REST route and generating the full URL.
+     */
+    public function getCallbackRouteWithToken(): string
+    {
+        $callbackToken = $this->getCallbackUrl();
+        if (empty($callbackToken)) {
+            return '';
+        }
+
+        return self::CALLBACK_ROUTE . '/' . $callbackToken;
+    }
+
+    /**
      * Get the full callback URL for registration.
      * Creates a new callback URL if one doesn't exist or has expired.
      * Works similar to ApiClient::get_company_login().
