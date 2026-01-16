@@ -7,6 +7,8 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Builders\CompanyBuilder;
+use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Support\Utility\StringUtility;
 
 class OnboardingService
 {
