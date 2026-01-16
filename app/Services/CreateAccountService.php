@@ -37,12 +37,14 @@ class CreateAccountService
         bool $marketingConsent
     ): array {
         // Sanitize inputs
+        $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
+
         $requestBody = [
-            'company_login' => sanitize_text_field($companyLogin),
+            'company_login' => $sanitizedCompanyLogin,
             'email' => sanitize_email($email),
             'callback_url' => esc_url_raw($callbackUrl),
-            'password' => sanitize_text_field($password), // wel sanitizen
-            'retype_password' => sanitize_text_field($password), // wel sanitizen
+            'password' => sanitize_text_field($password),
+            'retype_password' => sanitize_text_field($password),
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
