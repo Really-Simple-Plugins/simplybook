@@ -9,6 +9,7 @@ use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\ThemeColorService;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Features\Onboarding\OnboardingService;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -25,14 +26,16 @@ class DashboardController implements ControllerInterface
     private RequestStorage $request;
     private GeneralConfig $config;
     private ThemeColorService $themeColorService;
+    private OnboardingService $onboardingService;
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService, OnboardingService $onboardingService)
     {
         $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
         $this->themeColorService = $themeColorService;
+        $this->onboardingService = $onboardingService;
     }
 
     public function register(): void
@@ -271,6 +274,7 @@ class DashboardController implements ControllerInterface
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
                 'is_onboarding_completed' => $this->isOnboardingCompleted(),
+                'booking_page_url' => $this->onboardingService->getBookingPageUrl(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => $this->env->get('simplybook.domains'),

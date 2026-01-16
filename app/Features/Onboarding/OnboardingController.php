@@ -192,6 +192,8 @@ class OnboardingController implements FeatureInterface
      * Collect saved widget style settings, format them as design settings and
      * pass them to the DesignSettingsController by calling the
      * simplybook_save_onboarding_widget_style action.
+     *
+     * Also generates the booking page automatically after saving colors.
      */
     public function saveColorsToDesignSettings(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -211,8 +213,17 @@ class OnboardingController implements FeatureInterface
             ], false, $message, 500);
         }
 
+        // Generate the booking page automatically
+        $pageResult = $this->service->generateBookingPage();
+        if ($pageResult['success'] && $pageResult['page_id'] > 0) {
+            $this->widgetService->setPublishWidgetCompleted();
+        }
+
         $message = __('Successfully saved widget style settings', 'simplybook');
-        return $this->service->sendHttpResponse([], true, $message);
+        return $this->service->sendHttpResponse([
+            'booking_page_id' => $pageResult['page_id'],
+            'booking_page_url' => $pageResult['page_url'],
+        ], true, $message);
     }
 
     /**
