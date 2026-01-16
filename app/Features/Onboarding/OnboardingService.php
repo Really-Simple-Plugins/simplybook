@@ -6,6 +6,7 @@ use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
+use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingService
 {
