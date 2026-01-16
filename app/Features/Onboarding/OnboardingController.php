@@ -3,6 +3,8 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -10,22 +12,31 @@ use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\PageBuilder;
 use SimplyBook\Support\Utility\StringUtility;
+use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Services\WidgetTrackingService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
 {
     use HasAllowlistControl;
+    use HasEncryption;
+    use HasLogging;
 
     private ApiClient $client;
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
+    private CallbackUrlService $callbackUrlService;
 
-    public function __construct(ApiClient $client, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
-    {
+    public function __construct(
+        ApiClient $client,
+        OnboardingService $service,
+        WidgetTrackingService $widgetTrackingService,
+        CallbackUrlService $callbackUrlService
+    ) {
         $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
+        $this->callbackUrlService = $callbackUrlService;
     }
 
     public function register(): void
@@ -43,24 +54,9 @@ class OnboardingController implements FeatureInterface
      */
     public function addRoutes(array $routes): array
     {
-        $routes['onboarding/register_email'] = [
+        $routes['onboarding/create_account'] = [
             'methods' => 'POST',
-            'callback' => [$this->service, 'storeEmailAddress'],
-        ];
-
-        $routes['onboarding/company_registration'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'registerCompanyAtSimplyBook'],
-        ];
-
-        $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'GET',
-            'callback' => [$this->service, 'getRecaptchaSitekey'],
-        ];
-
-        $routes['onboarding/confirm_email'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'confirmEmailWithSimplyBook'],
+            'callback' => [$this, 'createAccount'],
         ];
 
         $routes['onboarding/save_widget_style'] = [
@@ -103,89 +99,61 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'retryOnboarding'],
         ];
 
+        // Registration callback route - public endpoint called by SimplyBook.me
+        // Only registered when a valid callback URL exists
+        $callbackRoute = $this->callbackUrlService->getCallbackRouteWithToken();
+        if (!empty($callbackRoute)) {
+            $routes[$callbackRoute] = [
+                'methods' => 'POST',
+                'callback' => [$this, 'handleRegistrationCallback'],
+                'permission_callback' => '__return_true',
+            ];
+        }
+
         return $routes;
     }
 
     /**
-     * Store company data in the options and register the company at
-     * SimplyBook.me
+     * Create a new SimplyBook account. This endpoint handles:
+     * 1. Validating email and terms acceptance
+     * 2. Storing company data
+     * 3. Triggering company registration at SimplyBook.me
      */
-    public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    public function createAccount(\WP_REST_Request $request): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
+        $storage = $this->service->retrieveHttpStorage($request);
 
-        $companyBuilder = (new CompanyBuilder())->buildFromArray(
-            $storage->all()
-        );
+        // Validate email and terms
+        $email = $storage->getEmail('email');
+        $termsAccepted = $storage->getBoolean('terms-and-conditions');
 
-        $tempDataStorage = $this->service->getTemporaryDataStorage();
-        $tempEmail = $tempDataStorage->getString('email', get_option('admin_email'));
-        $tempTerms = $tempDataStorage->getBoolean('terms', true);
-        $tempMarketingConsent = $tempDataStorage->getBoolean('marketing_consent', false);
+        if (!is_email($email)) {
+            return $this->service->sendHttpResponse([], false, __('Please enter a valid email address.', 'simplybook'), 400);
+        }
 
-        $companyBuilder->setEmail($tempEmail);
-        $companyBuilder->setUserLogin($tempEmail);
-        $companyBuilder->setTerms($tempTerms);
-        $companyBuilder->setMarketingConsent($tempMarketingConsent);
+        if (!$termsAccepted) {
+            return $this->service->sendHttpResponse([], false, __('Please accept the terms and conditions.', 'simplybook'), 400);
+        }
 
+        // Build and store company data
+        $companyBuilder = new CompanyBuilder();
+        $companyBuilder->setEmail($email);
+        $companyBuilder->setUserLogin($email);
+        $companyBuilder->setTerms($termsAccepted);
         $companyBuilder->setPassword(
-            $this->service->encryptString(
-                wp_generate_password(24, false)
-            )
+            $this->service->encryptString(wp_generate_password(24, false))
         );
 
         $this->service->storeCompanyData($companyBuilder);
 
-        if ($companyBuilder->isValid() === false) {
-            return $this->service->sendHttpResponse([
-                'invalid_fields' => $companyBuilder->getInvalidFields(),
-            ], false, __('Please fill in all fields.', 'simplybook'), 400);
-        }
-
+        // Trigger registration at SimplyBook
         try {
             $response = $this->client->register_company();
-        } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
-        }
-
-        $this->service->finishCompanyRegistration($response->data);
-        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
-    }
-
-    /**
-     * Confirm the email address with SimplyBook.me while providing the
-     * confirmation code and the recaptcha token
-     */
-    public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $error = '';
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        if ($storage->isEmpty('recaptchaToken')) {
-            $error = __("Please verify you're not a robot.", 'simplybook');
-        }
-
-        if ($storage->isEmpty('confirmation-code')) {
-            $error = __('Please enter the confirmation code.', 'simplybook');
-        }
-
-        if (!empty($error)) {
-            return $this->service->sendHttpResponse([], false, $error, 400);
-        }
-
-        try {
-            $response = $this->client->confirm_email(
-                $storage->getString('confirmation-code'),
-                $storage->getString('recaptchaToken')
-            );
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
 
-        // Only mark step as completed if the API call was successful
-        if ($response->success) {
-            $this->service->setCompletedStep(3);
-        }
+        $this->service->finishCompanyRegistration();
 
         return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
@@ -445,6 +413,88 @@ class OnboardingController implements FeatureInterface
         }
 
         return $this->service->sendHttpResponse([], $success, $message, ($success ? 200 : 500));
+    }
+
+    /**
+     * Handles the callback from SimplyBook.me after company registration.
+     * The callback contains success status and company_id.
+     * We authenticate using the stored credentials and save the tokens.
+     */
+    public function handleRegistrationCallback(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->service->retrieveHttpStorage($request);
+
+        // Handle registration failure from SimplyBook
+        if ($storage->getBoolean('success') === false) {
+            return $this->handleCallbackFailure($storage->getString('error.message'));
+        }
+
+        // Get stored company data for authentication
+        $companyData = get_option('simplybook_company_data', []);
+        $companyBuilder = (new CompanyBuilder())->buildFromArray($companyData);
+        $companyLogin = get_option('simplybook_company_login');
+        $domain = $this->client->get_domain();
+
+        // Validate required data exists
+        if (empty($companyData) || empty($companyLogin) || empty($companyBuilder->email)) {
+            $this->log('Missing company data for post-registration authentication');
+            return $this->handleCallbackFailure('Company data not found. Please restart registration.');
+        }
+
+        // Authenticate using stored credentials
+        try {
+            $authResponse = $this->client->authenticateExistingUser(
+                $domain,
+                $companyLogin,
+                $companyBuilder->email,
+                $this->decryptString($companyBuilder->password)
+            );
+        } catch (\Exception $e) {
+            $this->log('Authentication after registration failed: ' . $e->getMessage());
+            return $this->handleCallbackFailure($e->getMessage());
+        }
+
+        // Save authentication data using the centralized method
+        $this->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
+            $authResponse['token'],
+            $authResponse['refresh_token'],
+            $authResponse['domain'],
+            $companyLogin,
+            $storage->getInt('company_id')
+        );
+
+        // Clear any previous failure state and mark step 1 as completed
+        delete_option('simplybook_registration_failed');
+        $this->service->setCompletedStep(1);
+
+        $this->callbackUrlService->cleanupCallbackUrl();
+
+        /**
+         * Action: simplybook_after_company_registered
+         * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
+         */
+        do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
+
+        return new \WP_REST_Response([
+            'message' => 'Successfully registered company.',
+        ]);
+    }
+
+    /**
+     * Handle registration callback failure by logging and setting the failure flag.
+     */
+    private function handleCallbackFailure(string $errorMessage = ''): \WP_REST_Response
+    {
+        if (empty($errorMessage)) {
+            $errorMessage = 'An error occurred during the registration process';
+        }
+
+        $this->log('Registration callback failed: ' . $errorMessage);
+        update_option('simplybook_registration_failed', true, false);
+
+        return new \WP_REST_Response([
+            'error' => $errorMessage,
+        ], 400);
     }
 
     /**

@@ -19,6 +19,8 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Builders\CompanyBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Services\CreateAccountService;
+use SimplyBook\Services\CallbackUrlService;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)
@@ -33,6 +35,10 @@ class ApiClient
 
     protected EnvironmentConfig $env;
 
+    protected CreateAccountService $createAccountService;
+
+    protected CallbackUrlService $callbackUrlService;
+
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
      * middle of the onboarding process.
@@ -43,11 +49,6 @@ class ApiClient
      * Key for the {@see authenticationFailedFlag} property.
      */
     protected string $authenticationFailedFlagKey = 'simplybook_authentication_failed_flag';
-
-    /**
-     * The key is used to fetch the public token for the current user.
-     */
-    protected string $applicationKey;
 
     /**
      * Flag to use when the authentication failed indefinitely. This is used to
@@ -67,19 +68,15 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(EnvironmentConfig $env)
+    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService, CallbackUrlService $callbackUrlService)
     {
         $this->env = $env;
+        $this->createAccountService = $createAccountService;
+        $this->callbackUrlService = $callbackUrlService;
         $environment = $this->env->get('simplybook.api', []);
 
         if (empty($environment)) {
             throw new \LogicException('Register the environment for the application in the container');
-        }
-
-        $this->applicationKey = ($environment['app_key'] ?? '');
-
-        if (empty($this->applicationKey)) {
-            throw new \LogicException('Provide the key of the application in the environment');
         }
 
         if (get_option($this->authenticationFailedFlagKey)) {
@@ -87,17 +84,9 @@ class ApiClient
             return;
         }
 
-        //if we have a token, check if it needs to be refreshed
-        if ( !$this->getToken('public') ) {
-            $this->get_public_token();
-        } else {
-            if ( !$this->tokenIsValid('public') ) {
-                $this->refresh_token();
-            }
-
-            if ( !empty($this->getToken('admin') ) && !$this->tokenIsValid('admin') ) {
-                $this->refresh_token('admin');
-            }
+        // Refresh admin token if needed
+        if (!empty($this->getToken('admin')) && !$this->tokenIsValid('admin')) {
+            $this->refresh_token('admin');
         }
     }
 
@@ -179,14 +168,14 @@ class ApiClient
             return false;
         }
 
-	    // If the token exists, and the onboarding is completed, we know
-	    // the company registration is complete, and we can cache for a longer
-	    // time.
-	    $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
-	    $cacheTime = MINUTE_IN_SECONDS * 10;
-	    if ($isOnboardingCompleted) {
-		    $cacheTime = DAY_IN_SECONDS;
-	    }
+        // If the token exists, and the onboarding is completed, we know
+        // the company registration is complete, and we can cache for a longer
+        // time.
+        $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
+        $cacheTime = MINUTE_IN_SECONDS * 10;
+        if ($isOnboardingCompleted) {
+            $cacheTime = DAY_IN_SECONDS;
+        }
 
         wp_cache_set($cacheName, true, 'simplybook', $cacheTime);
         return true;
@@ -282,145 +271,88 @@ class ApiClient
 
         if ( $include_token ) {
             $token = $this->getToken($token_type);
-            if ( empty($token) ) {
-                switch ($token_type) {
-                    case 'public':
-                        $this->get_public_token();
-                        break;
-                    case 'admin':
-                        $this->refresh_token('admin');
-                        break;
-                }
-                $token = $this->getToken($token_type);
+            if ( empty($token) && $token_type === 'admin' ) {
+                $this->refresh_token('admin');
             }
-            $headers['X-Token'] = $token;
             $headers['X-Company-Login' ] = $this->get_company_login();
         }
 
         return $headers;
     }
 
-
     /**
-     * Get public token
-     *
-     * @return void
+     * Refresh the admin token
      */
-    public function get_public_token(): void {
-        if ( $this->tokenIsValid() ) {
+    public function refresh_token(string $type = 'admin'): void
+    {
+        if ($type !== 'admin') {
             return;
         }
-        $request = wp_remote_post( $this->endpoint( 'simplybook/auth/token' ), array(
-            'headers' => $this->get_headers(),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                array(
-                    'api_key' => $this->applicationKey,
-                )),
-        ) );
 
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-            if ( isset($request->token) ) {
-                delete_option('simplybook_token_error' );
-                $expiration = time() + $request->expires_in;
-                $this->updateToken( $request->token );
-                $this->updateToken( $request->refresh_token, 'public', true );
-                update_option('simplybook_refresh_token_expiration', time() + $request->expires_in);
-                $this->update_option( 'domain', $request->domain, $this->duringOnboardingFlag );
-            }
-        }
-    }
-
-    /**
-     * Refresh the token
-     */
-    public function refresh_token(string $type = 'public'): void
-    {
         if ($this->isRefreshLocked($type)) {
             return;
         }
 
-        //check if we have a token
         $refresh_token = $this->getToken($type, true);
-        if (empty($refresh_token) && $type === 'admin') {
+        if (empty($refresh_token)) {
             $this->releaseRefreshLock($type);
             $this->automaticAuthenticationFallback($type);
             return;
         }
 
-        if (empty($refresh_token) && $type === 'public') {
-            $this->get_public_token();
+        if ($this->tokenIsValid($type)) {
             $this->releaseRefreshLock($type);
             return;
         }
-
-        if ( $this->tokenIsValid($type) ) {
-            $this->releaseRefreshLock($type);
-            return;
-        }
-
-        $data = array(
-            'refresh_token' => $refresh_token,
-        );
 
         // Invalidate the one-time use token as we are about to use it for
         // refreshing the token. This prevents re-use.
         $this->updateToken('', $type, true);
 
-        if ( $type === 'admin' ){
-            $path = 'admin/auth/refresh-token';
-            $headers = $this->get_headers(false);
-            $data['company'] = $this->get_company_login();
-        } else {
-            $path = 'simplybook/auth/refresh-token';
-            $headers = $this->get_headers(true);
-        }
-
-        $request = wp_remote_post($this->endpoint( $path ), array(
-            'headers' => $headers,
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                $data
-            ),
-        ) );
-
-        $response_code = wp_remote_retrieve_response_code( $request );
-
-        if (($response_code === 401) && ($type === 'public')) {
-            $this->get_public_token();
-            $this->releaseRefreshLock($type);
-            return;
-        }
-
-        // If token is 'admin' and the refresh request was "unauthorized" we
-        // need to login again.
-        if (($response_code === 401) && ($type === 'admin')) {
-            $this->automaticAuthenticationFallback($type);
-            return;
-        }
-
-        if ( ! is_wp_error( $request ) ) {
-            $request = json_decode( wp_remote_retrieve_body( $request ) );
-
-            if ( isset($request->token) && isset($request->refresh_token) ) {
-                delete_option('simplybook_token_error' );
-                $this->updateToken( $request->token, $type );
-                $this->updateToken( $request->refresh_token, $type, true );
-                $expires_option = $type === 'public' ? 'simplybook_refresh_token_expiration' : 'simplybook_refresh_company_token_expiration';
-                $expires = $request->expires_in ?? 3600;
-                update_option($expires_option, time() + $expires);
-                Event::dispatch(Event::AUTH_SUCCEEDED);
-            } else {
-                $this->log("Error during token refresh");
-            }
-        } else {
-            $this->log("Error during token refresh: ".$request->get_error_message());
-        }
+        $this->refreshAdminToken($refresh_token);
 
         $this->releaseRefreshLock($type);
+    }
+
+    /**
+     * Refresh admin token directly with SimplyBook
+     */
+    private function refreshAdminToken(string $refresh_token): void
+    {
+        $data = [
+            'refresh_token' => $refresh_token,
+            'company' => $this->get_company_login(),
+        ];
+
+        $request = wp_remote_post($this->endpoint('admin/auth/refresh-token'), [
+            'headers' => $this->get_headers(false),
+            'timeout' => 15,
+            'sslverify' => true,
+            'body' => json_encode($data),
+        ]);
+
+        $response_code = wp_remote_retrieve_response_code($request);
+
+        if ($response_code === 401) {
+            $this->automaticAuthenticationFallback('admin');
+            return;
+        }
+
+        if (!is_wp_error($request)) {
+            $request = json_decode(wp_remote_retrieve_body($request));
+
+            if (isset($request->token) && isset($request->refresh_token)) {
+                delete_option('simplybook_token_error');
+                $this->updateToken($request->token, 'admin');
+                $this->updateToken($request->refresh_token, 'admin', true);
+                update_option('simplybook_refresh_company_token_expiration', time() + ($request->expires_in ?? 3600));
+                Event::dispatch(Event::AUTH_SUCCEEDED);
+            } else {
+                $this->log("Error during admin token refresh");
+            }
+        } else {
+            $this->log("Error during admin token refresh: " . $request->get_error_message());
+        }
     }
 
     /**
@@ -523,23 +455,6 @@ class ApiClient
     }
 
     /**
-     * Generate callback URL for registration, with an expiration
-     *
-     * @return string
-     */
-    protected function generate_callback_url(): string {
-        if ( !$this->adminAccessAllowed() ) {
-            return '';
-        }
-
-        //create temporary callback url, with a lifetime of 5 minutes. This is just for the registration process.
-        $random_string = wp_generate_password( 32, false );
-        update_option('simplybook_callback_url', $random_string, false );
-        update_option('simplybook_callback_url_expires', time() + 10 * MINUTE_IN_SECONDS, false );
-        return $random_string;
-    }
-
-    /**
      * Get company login and generate one if it does not exist
      * @return string
      */
@@ -622,11 +537,6 @@ class ApiClient
             );
         }
 
-        //check if we have a token
-        if ($this->tokenIsValid() === false) {
-            $this->get_public_token();
-        }
-
         $companyData = $this->get_company();
         $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
 
@@ -638,70 +548,22 @@ class ApiClient
             ]);
         }
 
-        $callback_url = $this->generate_callback_url();
         $company_login = $this->get_company_login();
+        $callback_url = $this->callbackUrlService->getFullCallbackUrl();
 
-        $coordinates = $this->get_coordinates(
-            $sanitizedCompany->address, $sanitizedCompany->zip, $sanitizedCompany->city, $sanitizedCompany->country
+        $alResponse = $this->createAccountService->registerCompany(
+            $company_login,
+            $sanitizedCompany->email,
+            $this->decryptString($sanitizedCompany->password),
+            $callback_url,
+            false, // @todo, marketing consent handled in NLRSP2-291
         );
 
-        $request = wp_remote_post( $this->endpoint( 'simplybook/company' ), array(
-            'headers' => $this->get_headers( true ),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                [
-                    'company_login' => $company_login,
-                    'email' => $sanitizedCompany->email,
-                    'name' => $sanitizedCompany->company_name,
-                    'description' => $this->get_description(),
-                    'phone' => $sanitizedCompany->phone,
-                    'city' => $sanitizedCompany->city,
-                    'address1' => $sanitizedCompany->address,
-                    'zip' => $sanitizedCompany->zip,
-                    "lat" => $coordinates['lat'],
-                    "lng" => $coordinates['lng'],
-                    "timezone" => $this->get_timezone_string(),
-                    "country_id" => $sanitizedCompany->country,
-                    "password" => $this->decryptString($sanitizedCompany->password),
-                    "retype_password" => $this->decryptString($sanitizedCompany->password),
-                    'categories' => [$sanitizedCompany->category],
-                    'lang' => $this->get_locale(),
-                    'marketing_consent' => $sanitizedCompany->marketingConsent,
-					'journey_type' => 'skip_welcome_tour',
-                    'callback_url' => get_rest_url(get_current_blog_id(),"simplybook/v1/company_registration/$callback_url"),
-                    'ref' => $this->getReferrer(),
-                ]
-            ),
-        ));
+        $response = (object) $alResponse['body'];
 
-        if (is_wp_error($request)) {
-            throw (new ApiException(
-                __('Something went wrong while registering your company. Please try again.', 'simplybook'))
-            )->setData([
-                'error' => $request->get_error_message(),
-            ]);
-        }
-
-        $response = json_decode(wp_remote_retrieve_body($request));
-        $companySuccessfullyRegistered = (
-            isset($response->recaptcha_site_key) && isset($response->success) && $response->success
-        );
-
-        if ($companySuccessfullyRegistered) {
-            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, [
-                'recaptcha_site_key' => $response->recaptcha_site_key,
-                'recaptcha_version' => $response->recaptcha_version,
-                'company_id' => $response->company_id,
-            ]);
-        }
-
-        // When unsuccessful due to token expiration, we refresh and try again
-        if (str_contains($response->message, 'Token Expired')) {
-            $currentAttemptCount = get_transient('simply_book_attempt_count') ?: 0;
-            set_transient('simply_book_attempt_count', ($currentAttemptCount + 1), MINUTE_IN_SECONDS);
-            $this->refresh_token();
-            return $this->register_company();
+        // Response returns success
+        if (isset($response->success) && $response->success) {
+            return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, []);
         }
 
         // We generate a company_login dynamically, but because SimplyBook has
@@ -717,138 +579,11 @@ class ApiClient
             return $this->register_company();
         }
 
-        // Company name contains illegal words, user should be notified.
-        if (isset($response->data->name) &&
-            in_array('The field contains illegal words', $response->data->name)
-        ) {
-            throw (new ApiException(
-                __('The company name is not allowed. Please change the company name.', 'simplybook')
-            ))->setData([
-                'name' => $response->data->name,
-                'message' => $response->message,
-            ]);
-        }
-
         throw (new ApiException(
             __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
-            'message' => $response->message,
-            'data' => is_object($response->data) ? get_object_vars($response->data) : $response->data,
-        ]);
-    }
-
-    /**
-     * Get the description for the company, with fallbacks.
-     * @return string
-     */
-    private function get_description() : string {
-        $description = get_bloginfo('description');
-        if ( empty( $description) ) {
-            $description = get_bloginfo('name');
-        }
-
-        if ( empty( $description) ) {
-            $description = get_site_url();
-        }
-
-        return $description;
-    }
-
-    /**
-     * Get lat and long coordinates for an address from openstreetmap.
-     *
-     * @param string $address
-     * @param string $zip
-     * @param string $city
-     * @param string $country
-     *
-     * @return array
-     */
-    private function get_coordinates( string $address, string $zip, string $city, string $country ): array {
-        $address = urlencode("$address, $zip $city, $country");
-        $url = "https://nominatim.openstreetmap.org/search?q={$address}&format=json";
-
-        $response = wp_remote_get($url);
-        if ( is_wp_error( $response ) ) {
-            $this->log("Error during address lookup: ".$response->get_error_message());
-            return [
-                'lat' => 0,
-                'lng' => 0,
-            ];
-        }
-        $data = wp_remote_retrieve_body($response);
-        $data = json_decode($data, true);
-        if (!empty($data)) {
-            $lat = $data[0]['lat'];
-            $lng = $data[0]['lon'];
-            return [
-                'lat' => $lat,
-                'lng' => $lng,
-            ];
-        }
-        return [
-            'lat' => 0,
-            'lng' => 0,
-        ];
-    }
-
-    /**
-     * Confirm email for the company registration based on the email code and
-     * the recaptcha token.
-     * @throws ApiException
-     */
-    public function confirm_email( string $email_code, string $recaptcha_token ): ApiResponseDTO
-    {
-        if ($this->adminAccessAllowed() === false) {
-            throw new ApiException(
-                __('You are not authorized to do this.', 'simplybook')
-            );
-        }
-
-        // If the company registration is not started someone tries to submit
-        // the email confirm step without first completing the registration.
-        if (get_option("simplybook_company_registration_start_time") === false) {
-            throw new ApiException(
-                __('Something went wrong, are you sure you started the company registration?', 'simplybook')
-            );
-        }
-
-        $request = wp_remote_post( $this->endpoint( 'simplybook/company/confirm' ), array(
-            'headers' => $this->get_headers( true ),
-            'timeout' => 15,
-            'sslverify' => true,
-            'body' => json_encode(
-                [
-                    'company_login' => $this->get_company_login(),
-                    'confirmation_code' => $email_code,
-                    'recaptcha' => $recaptcha_token,
-                ]
-            ),
-        ));
-
-        if (is_wp_error($request)) {
-            throw (new ApiException(
-                __('Something went wrong while confirming your email. Please try again.', 'simplybook'))
-            )->setData([
-                'error' => $request->get_error_message(),
-            ]);
-        }
-
-        $response = json_decode(wp_remote_retrieve_body($request));
-        if (isset($response->success)) {
-            return new ApiResponseDTO(true, __('Email successfully confirmed.', 'simplybook'));
-        }
-
-        $codeIsValid = true;
-        $errorMessage = __('Unknown error encountered while confirming your email. Please try again.', 'simplybook');
-        if (isset($response->message) && str_contains($response->message, 'not valid')) {
-            $errorMessage = __('This confirmation code is not valid.', 'simplybook');
-            $codeIsValid = false;
-        }
-
-        throw (new ApiException($errorMessage))->setData([
-            'message' => $response->message,
-            'valid' => $codeIsValid,
+            'message' => $response->message ?? '',
+            'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
         ]);
     }
 
@@ -1213,7 +948,7 @@ class ApiClient
      * Authenticate an existing user with the API by company login, user login
      * and password. If successful, the token is stored in the options.
      *
-     * @todo: response data is handling is not DRY (see CompanyRegistrationEndpoint)
+     * @todo: response data handling is not DRY (see RegistrationCallbackEndpoint)
      * @throws \Exception|RestDataException
      */
     public function authenticateExistingUser(string $companyDomain, string $companyLogin, string $userLogin, string $userPassword): array
@@ -1233,16 +968,16 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-	        throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
+            throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-	        $this->throwSpecificLoginErrorResponse($responseCode, $response);
+            $this->throwSpecificLoginErrorResponse($responseCode, $response);
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
-        if (!is_array($responseBody) || !isset($responseBody['token'])) {
+        if (!is_array($responseBody) || !isset($responseBody['token'], $responseBody['refresh_token'], $responseBody['domain'])) {
             throw (new RestDataException(
                 __('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
@@ -1294,7 +1029,7 @@ class ApiClient
 
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-			$this->throwSpecificLoginErrorResponse($responseCode, $response, true);
+            $this->throwSpecificLoginErrorResponse($responseCode, $response, true);
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
@@ -1310,8 +1045,8 @@ class ApiClient
         return $responseBody;
     }
 
-	/**
-	 * Handles api related login errors based on the response code and if it is
+    /**
+     * Handles api related login errors based on the response code and if it is
      * a 2FA call. When there is no specific case throw a RestDataException with
      * a more generic message.
      *
@@ -1320,10 +1055,10 @@ class ApiClient
      * 403 = Too many attempts
      * 404 = SB generated a 404 page with the given company login
      * Else generic failed attempt message
-	 *
-	 * @throws RestDataException
-	 */
-	public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false): void
+     *
+     * @throws RestDataException
+     */
+    public function throwSpecificLoginErrorResponse(int $responseCode, ?array $response = [], bool $isTwoFactorAuth = false): void
     {
         $response = (array) $response; // Ensure we have an array
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
@@ -1361,7 +1096,7 @@ class ApiClient
         $exception->setResponseCode($isTwoFactorAuth ? 200 : 500);
 
         throw $exception;
-	}
+    }
 
     /**
      * Request to send an SMS code to the user for two-factor authentication.
@@ -1530,26 +1265,26 @@ class ApiClient
         return $data;
     }
 
-	/**
-	 *
-	 * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
-	 * configured using Extendify. Otherwise, use default 'wp'.
-	 */
-	private function getReferrer(): string
-	{
-		return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
-	}
+    /**
+     *
+     * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+     * configured using Extendify. Otherwise, use default 'wp'.
+     */
+    private function getReferrer(): string
+    {
+        return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+    }
 
-	/**
-	 * Get the user agent for the API requests.
-	 *
-	 * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
-	 * EXTENDIFY_PARTNER_ID; +https://example.com)
-	 */
-	private function getRequestUserAgent(): string
-	{
-		return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
-	}
+    /**
+     * Get the user agent for the API requests.
+     *
+     * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
+     * EXTENDIFY_PARTNER_ID; +https://example.com)
+     */
+    private function getRequestUserAgent(): string
+    {
+        return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+    }
 
     /**
      * Helper method to easily do a GET request to a specific endpoint on the

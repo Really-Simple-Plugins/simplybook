@@ -54,11 +54,9 @@ return [
         'api' => [
             'production' => [
                 'domain' => 'simplybook.it',
-                'app_key' => 'GWLAm1KkDD962jGUc26t7RamSaY3navt8uKcCNwlLrEqY6aRwOoGNGmW1H0YyLvW',
             ],
             'development' => [
                 'domain' => 'wp.simplybook.ovh',
-                'app_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
             ],
         ],
         'black_friday' => [

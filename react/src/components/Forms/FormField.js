@@ -7,7 +7,6 @@ import ErrorBoundary from "../Common/ErrorBoundary";
 import {memo, useEffect} from "react";
 import { __ } from "@wordpress/i18n";
 import ColorPickerField from "../Fields/ColorPickerField";
-import ImplementationField from "../Fields/ImplementationField";
 import ListField from "../Fields/ListField";
 import useSettingsData from "../../hooks/useSettingsData";
 import PalettesField from "../Fields/PalettesField";
@@ -26,7 +25,6 @@ const fieldComponents = {
     checkbox: CheckboxField,
     select: SelectField,
     colorpicker: ColorPickerField,
-    implementation: ImplementationField,
     list: ListField,
     palettes: PalettesField,
     authentication: AuthenticationField,
