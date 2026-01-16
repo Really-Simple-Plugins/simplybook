@@ -71,7 +71,7 @@ abstract class DeferredObject
      * @return mixed
      * @throws \ReflectionException
      */
-    public function __call(string $name, array $arguments): mixed
+    public function __call(string $name, array $arguments)
     {
         $instance = $this->getDeferredInstance();
 
