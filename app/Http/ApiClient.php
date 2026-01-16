@@ -948,7 +948,7 @@ class ApiClient
      * Authenticate an existing user with the API by company login, user login
      * and password. If successful, the token is stored in the options.
      *
-     * @todo: response data handling is not DRY (see RegistrationCallbackEndpoint)
+     * @return array Includes at least keys: 'token', 'refresh_token' & 'domain'
      * @throws \Exception|RestDataException
      */
     public function authenticateExistingUser(string $companyDomain, string $companyLogin, string $userLogin, string $userPassword): array

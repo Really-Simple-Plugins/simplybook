@@ -38,17 +38,17 @@ class CallbackUrlService
             return '';
         }
 
-        $callbackToken = $this->getCallbackUrl();
-
-        // Create new callback URL if needed
-        if (empty($callbackToken)) {
-            $callbackToken = $this->generateCallbackUrl();
+        // Ensure a callback token exists
+        if (empty($this->getCallbackUrl())) {
+            $this->generateCallbackUrl();
         }
 
-        return get_rest_url(
-            get_current_blog_id(),
-            'simplybook/v1/' . self::CALLBACK_ROUTE . '/' . $callbackToken
-        );
+        $route = $this->getCallbackRouteWithToken();
+        if (empty($route)) {
+            return '';
+        }
+
+        return get_rest_url(get_current_blog_id(), 'simplybook/v1/' . $route);
     }
 
     /**
