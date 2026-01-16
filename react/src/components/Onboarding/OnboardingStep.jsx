@@ -31,7 +31,6 @@ const OnboardingStep = ({
         data,
         defaultData,
         isLastStep,
-        recaptchaToken,
         apiError,
         setApiError,
         onboardingCompleted,
@@ -73,9 +72,7 @@ const OnboardingStep = ({
     }, [isValid]);
 
     /**
-     * Synchronize the field state with the initial value, this is used to
-     * retain the confirmation code after the state is updated when the
-     * recaptcha check is completed in confirm-email.lazy.jsx
+     * Synchronize the field state with the initial value.
      *
      * @internal To prevent us resetting the field value when the user empties
      * the field, we check if the field has been touched. If it has been
@@ -106,8 +103,6 @@ const OnboardingStep = ({
             setApiError(null);
             setDisabled(true);
             let updatedFormData = { ...formData };
-            //add the auto generated recaptcha token to our data
-            updatedFormData.recaptchaToken = recaptchaToken;
 
             if (buttonType === "primary" && primaryButton.modifyData) {
                 updatedFormData = primaryButton.modifyData(updatedFormData);
@@ -125,11 +120,10 @@ const OnboardingStep = ({
                         return; // Cancel submission only if beforeSubmit explicitly returns false
                     }
                 } catch (error) {
-                    // Call onSubmitError callback if provided (for reCAPTCHA reset)
                     onSubmitError?.();
                     setDisabled(false);
                     console.error('Submission cancelled:', error);
-                    return; // Cancel submission if beforeSubmit throws an error
+                    return;
                 }
             }
             await updateData(updatedFormData);
@@ -145,12 +139,10 @@ const OnboardingStep = ({
             } else {
                 let currentStep = getCurrentStep(path);
 
-                // navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
-
-                // There are 5 onboarding steps, but the in de currentStep.id is 0 based so 0 = onboarding step 1
-                // If the onboarding already is completed, skip steps 1, 2 3 and 4, and continue from step 5
-                if (currentStep.id <=3 && onboardingCompleted ) {
-                    navigate({ to: getURLForStep(4) });
+                // There are 2 onboarding steps (1=create-account, 2=style-widget)
+                // If the onboarding already is completed, skip step 1 and continue from step 2
+                if (currentStep.id <= 1 && onboardingCompleted) {
+                    navigate({ to: getURLForStep(2) });
                 } else {
                     navigate({ to: getURLForStep(getCurrentStepId(path) + 1) });
                 }

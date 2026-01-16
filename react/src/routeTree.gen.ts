@@ -23,17 +23,8 @@ const SettingsSettingsIdLazyImport = createFileRoute('/settings/$settingsId')()
 const OnboardingStyleWidgetLazyImport = createFileRoute(
   '/onboarding/style-widget',
 )()
-const OnboardingInformationCheckLazyImport = createFileRoute(
-  '/onboarding/information-check',
-)()
-const OnboardingImplementationLazyImport = createFileRoute(
-  '/onboarding/implementation',
-)()
 const OnboardingCreateYourAccountLazyImport = createFileRoute(
   '/onboarding/create-your-account',
-)()
-const OnboardingConfirmEmailLazyImport = createFileRoute(
-  '/onboarding/confirm-email',
 )()
 
 // Create/Update Routes
@@ -72,24 +63,6 @@ const OnboardingStyleWidgetLazyRoute = OnboardingStyleWidgetLazyImport.update({
   import('./routes/onboarding/style-widget.lazy').then((d) => d.Route),
 )
 
-const OnboardingInformationCheckLazyRoute =
-  OnboardingInformationCheckLazyImport.update({
-    id: '/information-check',
-    path: '/information-check',
-    getParentRoute: () => OnboardingLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/onboarding/information-check.lazy').then((d) => d.Route),
-  )
-
-const OnboardingImplementationLazyRoute =
-  OnboardingImplementationLazyImport.update({
-    id: '/implementation',
-    path: '/implementation',
-    getParentRoute: () => OnboardingLazyRoute,
-  } as any).lazy(() =>
-    import('./routes/onboarding/implementation.lazy').then((d) => d.Route),
-  )
-
 const OnboardingCreateYourAccountLazyRoute =
   OnboardingCreateYourAccountLazyImport.update({
     id: '/create-your-account',
@@ -98,16 +71,6 @@ const OnboardingCreateYourAccountLazyRoute =
   } as any).lazy(() =>
     import('./routes/onboarding/create-your-account.lazy').then((d) => d.Route),
   )
-
-const OnboardingConfirmEmailLazyRoute = OnboardingConfirmEmailLazyImport.update(
-  {
-    id: '/confirm-email',
-    path: '/confirm-email',
-    getParentRoute: () => OnboardingLazyRoute,
-  } as any,
-).lazy(() =>
-  import('./routes/onboarding/confirm-email.lazy').then((d) => d.Route),
-)
 
 // Populate the FileRoutesByPath interface
 
@@ -134,32 +97,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsLazyImport
       parentRoute: typeof rootRoute
     }
-    '/onboarding/confirm-email': {
-      id: '/onboarding/confirm-email'
-      path: '/confirm-email'
-      fullPath: '/onboarding/confirm-email'
-      preLoaderRoute: typeof OnboardingConfirmEmailLazyImport
-      parentRoute: typeof OnboardingLazyImport
-    }
     '/onboarding/create-your-account': {
       id: '/onboarding/create-your-account'
       path: '/create-your-account'
       fullPath: '/onboarding/create-your-account'
       preLoaderRoute: typeof OnboardingCreateYourAccountLazyImport
-      parentRoute: typeof OnboardingLazyImport
-    }
-    '/onboarding/implementation': {
-      id: '/onboarding/implementation'
-      path: '/implementation'
-      fullPath: '/onboarding/implementation'
-      preLoaderRoute: typeof OnboardingImplementationLazyImport
-      parentRoute: typeof OnboardingLazyImport
-    }
-    '/onboarding/information-check': {
-      id: '/onboarding/information-check'
-      path: '/information-check'
-      fullPath: '/onboarding/information-check'
-      preLoaderRoute: typeof OnboardingInformationCheckLazyImport
       parentRoute: typeof OnboardingLazyImport
     }
     '/onboarding/style-widget': {
@@ -182,18 +124,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface OnboardingLazyRouteChildren {
-  OnboardingConfirmEmailLazyRoute: typeof OnboardingConfirmEmailLazyRoute
   OnboardingCreateYourAccountLazyRoute: typeof OnboardingCreateYourAccountLazyRoute
-  OnboardingImplementationLazyRoute: typeof OnboardingImplementationLazyRoute
-  OnboardingInformationCheckLazyRoute: typeof OnboardingInformationCheckLazyRoute
   OnboardingStyleWidgetLazyRoute: typeof OnboardingStyleWidgetLazyRoute
 }
 
 const OnboardingLazyRouteChildren: OnboardingLazyRouteChildren = {
-  OnboardingConfirmEmailLazyRoute: OnboardingConfirmEmailLazyRoute,
   OnboardingCreateYourAccountLazyRoute: OnboardingCreateYourAccountLazyRoute,
-  OnboardingImplementationLazyRoute: OnboardingImplementationLazyRoute,
-  OnboardingInformationCheckLazyRoute: OnboardingInformationCheckLazyRoute,
   OnboardingStyleWidgetLazyRoute: OnboardingStyleWidgetLazyRoute,
 }
 
@@ -217,10 +153,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
   '/settings': typeof SettingsLazyRouteWithChildren
-  '/onboarding/confirm-email': typeof OnboardingConfirmEmailLazyRoute
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
-  '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
-  '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
@@ -229,10 +162,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
   '/settings': typeof SettingsLazyRouteWithChildren
-  '/onboarding/confirm-email': typeof OnboardingConfirmEmailLazyRoute
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
-  '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
-  '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
@@ -242,10 +172,7 @@ export interface FileRoutesById {
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
   '/settings': typeof SettingsLazyRouteWithChildren
-  '/onboarding/confirm-email': typeof OnboardingConfirmEmailLazyRoute
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
-  '/onboarding/implementation': typeof OnboardingImplementationLazyRoute
-  '/onboarding/information-check': typeof OnboardingInformationCheckLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
   '/settings/$settingsId': typeof SettingsSettingsIdLazyRoute
 }
@@ -256,10 +183,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/settings'
-    | '/onboarding/confirm-email'
     | '/onboarding/create-your-account'
-    | '/onboarding/implementation'
-    | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/settings/$settingsId'
   fileRoutesByTo: FileRoutesByTo
@@ -267,10 +191,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/settings'
-    | '/onboarding/confirm-email'
     | '/onboarding/create-your-account'
-    | '/onboarding/implementation'
-    | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/settings/$settingsId'
   id:
@@ -278,10 +199,7 @@ export interface FileRouteTypes {
     | '/'
     | '/onboarding'
     | '/settings'
-    | '/onboarding/confirm-email'
     | '/onboarding/create-your-account'
-    | '/onboarding/implementation'
-    | '/onboarding/information-check'
     | '/onboarding/style-widget'
     | '/settings/$settingsId'
   fileRoutesById: FileRoutesById
@@ -320,10 +238,7 @@ export const routeTree = rootRoute
     "/onboarding": {
       "filePath": "onboarding.lazy.jsx",
       "children": [
-        "/onboarding/confirm-email",
         "/onboarding/create-your-account",
-        "/onboarding/implementation",
-        "/onboarding/information-check",
         "/onboarding/style-widget"
       ]
     },
@@ -333,20 +248,8 @@ export const routeTree = rootRoute
         "/settings/$settingsId"
       ]
     },
-    "/onboarding/confirm-email": {
-      "filePath": "onboarding/confirm-email.lazy.jsx",
-      "parent": "/onboarding"
-    },
     "/onboarding/create-your-account": {
       "filePath": "onboarding/create-your-account.lazy.jsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/implementation": {
-      "filePath": "onboarding/implementation.lazy.jsx",
-      "parent": "/onboarding"
-    },
-    "/onboarding/information-check": {
-      "filePath": "onboarding/information-check.lazy.jsx",
       "parent": "/onboarding"
     },
     "/onboarding/style-widget": {

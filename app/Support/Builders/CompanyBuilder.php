@@ -21,6 +21,12 @@ class CompanyBuilder
     private int $defaultCategory = 8; // Default category is 8: "Other category"
 
     /**
+     * Fields required for simplified registration flow.
+     * Only email and password are needed for new account creation.
+     */
+    private array $requiredFields = ['email', 'password'];
+
+    /**
      * Method can be used to build a CompanyBuilder object from an array of
      * key-value pairs. Only known properties will be set. Make sure the key
      * matches the property name.
@@ -151,22 +157,24 @@ class CompanyBuilder
     }
 
     /**
-     * Method to check if the object is valid. It will check if any value is
-     * empty. Only use this during onboarding, that is where we ask for all the
-     * data. This method is not needed for login.
+     * Validation - checks all required fields are filled.
      */
     public function isValid(): bool
     {
-        return count($this->toArray()) == count(array_filter($this->toArray()));
+        return empty($this->getInvalidFields());
     }
 
     /**
-     * Method to get the invalid fields. It will return an array of keys that
-     * are empty.Only use this during onboarding, that is where we ask for all the
-     *  data. This method is not needed for login.
+     * Get fields that are required but empty.
      */
     public function getInvalidFields(): array
     {
-        return array_keys(array_filter($this->toArray(), fn($value) => empty($value)));
+        $invalid = [];
+        foreach ($this->requiredFields as $field) {
+            if (empty($this->{$field})) {
+                $invalid[] = $field;
+            }
+        }
+        return $invalid;
     }
 }
