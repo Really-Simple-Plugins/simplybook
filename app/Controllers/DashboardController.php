@@ -272,6 +272,7 @@ class DashboardController implements ControllerInterface
                 'settings_fields' => $this->fields(true),
                 'is_onboarding_completed' => $this->isOnboardingCompleted(),
                 'first_name' => $this->getCurrentUserFirstName(),
+                'user_email' => $this->getCurrentUserEmail(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => $this->env->get('simplybook.domains'),
                 'simplybook_countries' => $this->config->get('countries'),
