@@ -23,15 +23,16 @@ class CompanyBuilder
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
-     * key-value pairs. Only known properties will be set. Make sure the key
-     * matches the property name.
+     * key-value pairs. Only known properties will be set. Supports both
+     * snake_case and camelCase keys.
      */
     public function buildFromArray(array $properties = []): CompanyBuilder
     {
         foreach ($properties as $key => $value) {
+            $propertyName = $this->keyToPropertyName($key);
             $method = $this->methodFromPropertyName($key);
 
-            if ((property_exists($this, $key) === false) || (method_exists($this, $method) === false)) {
+            if ((property_exists($this, $propertyName) === false) || (method_exists($this, $method) === false)) {
                 continue;
             }
 
@@ -147,6 +148,14 @@ class CompanyBuilder
         ];
 
         return $this->asArray;
+    }
+
+    /**
+     * Converts a key (snake_case or camelCase) to camelCase property name.
+     */
+    private function keyToPropertyName(string $key): string
+    {
+        return lcfirst(str_replace('_', '', ucwords($key, '_')));
     }
 
     /**
