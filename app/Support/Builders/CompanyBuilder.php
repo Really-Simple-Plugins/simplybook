@@ -5,7 +5,7 @@ namespace SimplyBook\Support\Builders;
 class CompanyBuilder
 {
     public string $email = '';
-    public string $user_login = '';
+    public string $userLogin = '';
     public int $category = 0;
     public string $company_name = '';
     public string $phone = '';
@@ -15,6 +15,7 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+    public bool $marketingConsent = false;
     public string $password = ''; // Should be encrypted
 
     private array $asArray = [];
@@ -28,15 +29,16 @@ class CompanyBuilder
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
-     * key-value pairs. Only known properties will be set. Make sure the key
-     * matches the property name.
+     * key-value pairs. Only known properties will be set. Supports both
+     * snake_case and camelCase keys.
      */
     public function buildFromArray(array $properties = []): CompanyBuilder
     {
         foreach ($properties as $key => $value) {
+            $propertyName = $this->keyToPropertyName($key);
             $method = $this->methodFromPropertyName($key);
 
-            if ((property_exists($this, $key) === false) || (method_exists($this, $method) === false)) {
+            if ((property_exists($this, $propertyName) === false) || (method_exists($this, $method) === false)) {
                 continue;
             }
 
@@ -106,6 +108,12 @@ class CompanyBuilder
         return $this;
     }
 
+    public function setMarketingConsent(bool $marketingConsent): CompanyBuilder
+    {
+        $this->marketingConsent = $marketingConsent;
+        return $this;
+    }
+
     public function setPassword(string $password): CompanyBuilder
     {
         $this->password = sanitize_text_field($password);
@@ -117,9 +125,9 @@ class CompanyBuilder
      * this in the SimplyBook system, so for existing accounts this value
      * can be different.
      */
-    public function setUserLogin(string $user_login): CompanyBuilder
+    public function setUserLogin(string $userLogin): CompanyBuilder
     {
-        $this->user_login = sanitize_text_field($user_login);
+        $this->userLogin = sanitize_text_field($userLogin);
         return $this;
     }
 
@@ -131,7 +139,7 @@ class CompanyBuilder
 
         $this->asArray = [
             'email' => $this->email,
-            'user_login' => $this->user_login,
+            'userLogin' => $this->userLogin,
             'category' => $this->category,
             'company_name' => $this->company_name,
             'phone' => $this->phone,
@@ -141,6 +149,7 @@ class CompanyBuilder
             'country' => $this->country,
             'zip' => $this->zip,
             'terms' => $this->terms,
+            'marketingConsent' => $this->marketingConsent,
             'password' => $this->password, // Should be encrypted
         ];
 
@@ -148,8 +157,15 @@ class CompanyBuilder
     }
 
     /**
+     * Converts a key (snake_case or camelCase) to camelCase property name.
+     */
+    private function keyToPropertyName(string $key): string
+    {
+        return lcfirst(str_replace('_', '', ucwords($key, '_')));
+    }
+
+    /**
      * Converts a property name to a method name. It will remove underscores
-     *
      */
     private function methodFromPropertyName(string $property): string
     {

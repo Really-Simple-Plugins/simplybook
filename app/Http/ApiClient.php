@@ -404,7 +404,7 @@ class ApiClient
             $response = $this->authenticateExistingUser(
                 $domain,
                 $this->get_company_login(),
-                $sanitizedCompany->user_login,
+                $sanitizedCompany->userLogin,
                 $this->decryptString($sanitizedCompany->password)
             );
         } catch (\Exception $e) {
@@ -558,8 +558,6 @@ class ApiClient
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
         );
-
-        $this->log('AL response: ' . wp_json_encode($alResponse));
 
         $response = (object) $alResponse['body'];
 
