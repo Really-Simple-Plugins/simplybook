@@ -30,7 +30,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
         const [valueState, setValueState] = useState((value == true ? 1 : 0));
 
         const checkBoxClasses = clsx(
-            "input-type-checkbox w-10 h-6 bg-gray-200  peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600",
+            "input-type-checkbox relative shrink-0 w-10 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600",
             "peer-checked:after:translate-x-[1.125rem] rtl:peer-checked:after:-translate-x-[1.125rem] peer-checked:after:border-white after:content-[''] after:absolute after:top-1 after:start-0.5 after:bg-white after:border-gray-200 after:border",
             "after:rounded-full after:aspect-square after:h-4 after:w-4 after:transition-all"
         );

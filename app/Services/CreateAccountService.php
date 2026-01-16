@@ -16,7 +16,6 @@ class CreateAccountService
     private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
 
     // API Endpoints
-    private const ENDPOINT_AUTH_TOKEN = 'simplybook/auth/token';
     private const ENDPOINT_COMPANY = 'simplybook/company';
 
     protected EnvironmentConfig $env;
@@ -24,15 +23,6 @@ class CreateAccountService
     public function __construct(EnvironmentConfig $env)
     {
         $this->env = $env;
-    }
-
-    /**
-     * Request a public token
-     * @throws ApiException
-     */
-    public function requestPublicToken(): array
-    {
-        return $this->request('POST', self::ENDPOINT_AUTH_TOKEN);
     }
 
     /**
@@ -50,15 +40,13 @@ class CreateAccountService
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
-        $sanitizedEmail = sanitize_email($email);
-        $sanitizedCallbackUrl = esc_url_raw($callbackUrl);
 
         $requestBody = [
             'company_login' => $sanitizedCompanyLogin,
-            'email' => $sanitizedEmail,
-            'callback_url' => $sanitizedCallbackUrl,
-            'password' => $password,
-            'retype_password' => $password,
+            'email' => sanitize_email($email),
+            'callback_url' => esc_url_raw($callbackUrl),
+            'password' => sanitize_text_field($password),
+            'retype_password' => sanitize_text_field($password),
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];

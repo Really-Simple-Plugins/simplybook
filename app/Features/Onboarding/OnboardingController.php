@@ -105,9 +105,9 @@ class OnboardingController implements FeatureInterface
 
         // Registration callback route - public endpoint called by SimplyBook.me
         // Only registered when a valid callback URL exists
-        $callbackToken = $this->callbackUrlService->getCallbackUrl();
-        if (!empty($callbackToken)) {
-            $routes['onboarding/registration_callback/' . $callbackToken] = [
+        $callbackRoute = $this->callbackUrlService->getCallbackRouteWithToken();
+        if (!empty($callbackRoute)) {
+            $routes[$callbackRoute] = [
                 'methods' => 'POST',
                 'callback' => [$this, 'handleRegistrationCallback'],
                 'permission_callback' => '__return_true',
