@@ -10,6 +10,7 @@ use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Support\Builders\PageBuilder;
 use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Support\Builders\CompanyBuilder;
+use SimplyBook\Features\TaskManagement\Tasks\BookingWidgetLiveTask;
 
 class OnboardingService
 {
@@ -189,6 +190,7 @@ class OnboardingService
         }
 
         $this->setBookingPageId($pageId);
+        $this->setBookingWidgetLiveTaskFlag();
 
         return [
             'success' => true,
@@ -226,5 +228,14 @@ class OnboardingService
 
         $permalink = get_permalink($pageId);
         return $permalink !== false ? $permalink : '';
+    }
+
+    /**
+     * Set the flag to show the "Booking widget is live" task.
+     * This flag is consumed once by the task constructor.
+     */
+    public function setBookingWidgetLiveTaskFlag(): void
+    {
+        update_option(BookingWidgetLiveTask::SHOW_FLAG, true, false);
     }
 }

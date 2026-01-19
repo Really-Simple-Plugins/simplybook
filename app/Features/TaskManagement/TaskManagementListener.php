@@ -263,6 +263,10 @@ class TaskManagementListener
         $this->service->completeTask(
             Tasks\PublishWidgetTask::IDENTIFIER
         );
+
+        $this->service->completeTask(
+            Tasks\BookingWidgetLiveTask::IDENTIFIER
+        );
     }
 
     /**
