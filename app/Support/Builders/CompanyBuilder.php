@@ -12,7 +12,6 @@ class CompanyBuilder
     public string $city = '';
     public string $address = '';
     public string $service = '';
-    public array $services = [];
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
@@ -91,12 +90,6 @@ class CompanyBuilder
         return $this;
     }
 
-    public function setServices(array $services): CompanyBuilder
-    {
-        $this->services = array_map('sanitize_text_field', $services);
-        return $this;
-    }
-
     public function setCountry(string $country): CompanyBuilder
     {
         $this->country = sanitize_text_field($country);
@@ -153,7 +146,6 @@ class CompanyBuilder
             'city' => $this->city,
             'address' => $this->address,
             'service' => $this->service,
-            'services' => $this->services,
             'country' => $this->country,
             'zip' => $this->zip,
             'terms' => $this->terms,

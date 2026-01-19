@@ -127,7 +127,8 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
-        // Pre-fill category and services from Extendify data if available
+        // Pre-fill category and first service from Extendify data if available
+        // Additional services are created by ServicesController after registration
         if ($this->extendifyDataService->hasData()) {
             $category = $this->extendifyDataService->getCategory();
             if ($category !== null) {
@@ -136,7 +137,7 @@ class OnboardingController implements FeatureInterface
 
             $services = $this->extendifyDataService->getServices();
             if (!empty($services)) {
-                $storage->set('services', $services);
+                $storage->set('service', $services[0]);
             }
         }
 
@@ -161,13 +162,13 @@ class OnboardingController implements FeatureInterface
             $this->service->encryptString(wp_generate_password(24, false))
         );
 
-        // Set category and services from Extendify data (if prefilled above)
+        // Set category and first service from Extendify data (if prefilled above)
         if ($storage->getInt('category') > 0) {
             $companyBuilder->setCategory($storage->getInt('category'));
         }
-        $services = $storage->get('services', []);
-        if (!empty($services) && is_array($services)) {
-            $companyBuilder->setServices($services);
+        $service = $storage->getString('service');
+        if (!empty($service)) {
+            $companyBuilder->setService($service);
         }
 
         $this->service->storeCompanyData($companyBuilder);

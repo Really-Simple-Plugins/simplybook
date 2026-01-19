@@ -35,8 +35,7 @@ class CreateAccountService
         string $password,
         string $callbackUrl,
         bool $marketingConsent,
-        ?int $category = null,
-        ?array $services = null
+        ?int $category = null
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -54,11 +53,6 @@ class CreateAccountService
         // Add category if provided
         if ($category !== null && $category > 0) {
             $requestBody['category'] = $category;
-        }
-
-        // Add services if provided
-        if ($services !== null && !empty($services)) {
-            $requestBody['services'] = $services;
         }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin);
