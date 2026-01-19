@@ -127,20 +127,6 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
-        // Pre-fill category and first service from Extendify data if available
-        // Additional services are created by ServicesController after registration
-        if ($this->extendifyDataService->hasData()) {
-            $category = $this->extendifyDataService->getCategory();
-            if ($category !== null) {
-                $storage->set('category', $category);
-            }
-
-            $services = $this->extendifyDataService->getServices();
-            if (!empty($services)) {
-                $storage->set('service', $services[0]);
-            }
-        }
-
         // Validate email and terms
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
@@ -162,13 +148,18 @@ class OnboardingController implements FeatureInterface
             $this->service->encryptString(wp_generate_password(24, false))
         );
 
-        // Set category and first service from Extendify data (if prefilled above)
-        if ($storage->getInt('category') > 0) {
-            $companyBuilder->setCategory($storage->getInt('category'));
-        }
-        $service = $storage->getString('service');
-        if (!empty($service)) {
-            $companyBuilder->setService($service);
+        // Set category and first service from Extendify data if available
+        // Additional services are created by ServicesController after registration
+        if ($this->extendifyDataService->hasData()) {
+            $category = $this->extendifyDataService->getCategory();
+            if ($category !== null) {
+                $companyBuilder->setCategory($category);
+            }
+
+            $services = $this->extendifyDataService->getServices();
+            if (!empty($services)) {
+                $companyBuilder->setService($services[0]);
+            }
         }
 
         $this->service->storeCompanyData($companyBuilder);
