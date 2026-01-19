@@ -42,6 +42,7 @@ class TaskManagementController implements FeatureInterface
         return [
             Tasks\FailedAuthenticationTask::class,
             Tasks\PublishWidgetTask::class,
+            Tasks\BookingWidgetLiveTask::class,
             Tasks\AddMandatoryServiceTask::class,
             Tasks\AddMandatoryProviderTask::class,
             Tasks\GoToSimplyBookSystemTask::class,
@@ -57,7 +58,6 @@ class TaskManagementController implements FeatureInterface
             Tasks\GatherClientInfoTask::class,
             Tasks\BlackFridayTask::class,
             Tasks\ChristmasPromotionTask::class,
-            Tasks\BookingWidgetLiveTask::class,
         ];
     }
 

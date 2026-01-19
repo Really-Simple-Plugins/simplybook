@@ -7,10 +7,8 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Helpers\Storage;
-use SimplyBook\Support\Builders\PageBuilder;
 use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Support\Builders\CompanyBuilder;
-use SimplyBook\Features\TaskManagement\Tasks\BookingWidgetLiveTask;
 
 class OnboardingService
 {
@@ -146,96 +144,5 @@ class OnboardingService
     public function clearTemporaryData(): void
     {
         delete_option('simplybook_temporary_onboarding_data');
-    }
-
-    /**
-     * Generate the booking page with the SimplyBook widget shortcode.
-     * Uses a translatable slug so Dutch users get "kalender" instead of "calendar".
-     * WordPress automatically handles slug uniqueness by appending -2, -3, etc.
-     *
-     * @return array{success: bool, page_id: int, page_url: string, message: string}
-     */
-    public function generateBookingPage(): array
-    {
-        $existingPageId = $this->getBookingPageId();
-        if ($existingPageId > 0) {
-            return [
-                'success' => true,
-                'page_id' => $existingPageId,
-                'page_url' => get_permalink($existingPageId) ?: '',
-                'message' => __('Booking page already exists.', 'simplybook'),
-            ];
-        }
-
-        $slug = __('calendar', 'simplybook');
-        $title = sprintf(
-            /* translators: %1$s is the brand name "SimplyBook.me" (do not translate) */
-            __('%1$s Booking page', 'simplybook'),
-            'SimplyBook.me'
-        );
-
-        $pageId = (new PageBuilder())
-            ->setTitle($title)
-            ->setSlug($slug)
-            ->setContent('[simplybook_widget]')
-            ->insert();
-
-        if ($pageId === -1) {
-            return [
-                'success' => false,
-                'page_id' => -1,
-                'page_url' => '',
-                'message' => __('Failed to create booking page.', 'simplybook'),
-            ];
-        }
-
-        $this->setBookingPageId($pageId);
-        $this->setBookingWidgetLiveTaskFlag();
-
-        return [
-            'success' => true,
-            'page_id' => $pageId,
-            'page_url' => get_permalink($pageId) ?: '',
-            'message' => __('Booking page created successfully.', 'simplybook'),
-        ];
-    }
-
-    /**
-     * Store the generated booking page ID in options.
-     */
-    public function setBookingPageId(int $pageId): void
-    {
-        update_option('simplybook_booking_page_id', $pageId, false);
-    }
-
-    /**
-     * Retrieve the stored booking page ID.
-     */
-    public function getBookingPageId(): int
-    {
-        return (int) get_option('simplybook_booking_page_id', 0);
-    }
-
-    /**
-     * Get the booking page URL if it exists.
-     */
-    public function getBookingPageUrl(): string
-    {
-        $pageId = $this->getBookingPageId();
-        if ($pageId <= 0) {
-            return '';
-        }
-
-        $permalink = get_permalink($pageId);
-        return $permalink !== false ? $permalink : '';
-    }
-
-    /**
-     * Set the flag to show the "Booking widget is live" task.
-     * This flag is consumed once by the task constructor.
-     */
-    public function setBookingWidgetLiveTaskFlag(): void
-    {
-        update_option(BookingWidgetLiveTask::SHOW_FLAG, true, false);
     }
 }

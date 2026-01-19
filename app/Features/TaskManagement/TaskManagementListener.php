@@ -12,8 +12,11 @@ class TaskManagementListener
     private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
 
-    public function __construct(TaskManagementService $service, PromotionService $promotionService, SubscriptionDataService $subscriptionDataService)
-    {
+    public function __construct(
+        TaskManagementService $service,
+        PromotionService $promotionService,
+        SubscriptionDataService $subscriptionDataService
+    ) {
         $this->service = $service;
         $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
@@ -32,6 +35,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_event_' . Event::CALENDAR_PUBLISHED, [$this, 'handleCalendarPublished']);
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
+        add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -263,10 +267,6 @@ class TaskManagementListener
         $this->service->completeTask(
             Tasks\PublishWidgetTask::IDENTIFIER
         );
-
-        $this->service->completeTask(
-            Tasks\BookingWidgetLiveTask::IDENTIFIER
-        );
     }
 
     /**
@@ -276,6 +276,16 @@ class TaskManagementListener
     {
         $this->service->flagTaskUrgent(
             Tasks\PublishWidgetTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Handle the booking page visited event to update task status.
+     */
+    public function handleBookingPageVisited(): void
+    {
+        $this->service->completeTask(
+            Tasks\BookingWidgetLiveTask::IDENTIFIER
         );
     }
 

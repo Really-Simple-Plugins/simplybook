@@ -7,6 +7,7 @@ use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Services\BookingPageService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
@@ -26,17 +27,20 @@ class OnboardingController implements FeatureInterface
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
     private CallbackUrlService $callbackUrlService;
+    private BookingPageService $bookingPageService;
 
     public function __construct(
         ApiClient $client,
         OnboardingService $service,
         WidgetTrackingService $widgetTrackingService,
-        CallbackUrlService $callbackUrlService
+        CallbackUrlService $callbackUrlService,
+        BookingPageService $bookingPageService
     ) {
         $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
         $this->callbackUrlService = $callbackUrlService;
+        $this->bookingPageService = $bookingPageService;
     }
 
     public function register(): void
@@ -162,8 +166,6 @@ class OnboardingController implements FeatureInterface
      * Collect saved widget style settings, format them as design settings and
      * pass them to the DesignSettingsController by calling the
      * simplybook_save_onboarding_widget_style action.
-     *
-     * Also generates the booking page automatically after saving colors.
      */
     public function saveColorsToDesignSettings(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -183,8 +185,8 @@ class OnboardingController implements FeatureInterface
             ], false, $message, 500);
         }
 
-        // Generate the booking page automatically
-        $pageResult = $this->service->generateBookingPage();
+        $pageResult = $this->bookingPageService->generateBookingPage();
+
         if ($pageResult['success'] && $pageResult['page_id'] > 0) {
             $this->widgetService->setPublishWidgetCompleted();
         }

@@ -8,8 +8,8 @@ use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\ThemeColorService;
+use SimplyBook\Services\BookingPageService;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Features\Onboarding\OnboardingService;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -26,16 +26,16 @@ class DashboardController implements ControllerInterface
     private RequestStorage $request;
     private GeneralConfig $config;
     private ThemeColorService $themeColorService;
-    private OnboardingService $onboardingService;
+    private BookingPageService $bookingPageService;
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService, OnboardingService $onboardingService)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService, BookingPageService $bookingPageService)
     {
         $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
         $this->themeColorService = $themeColorService;
-        $this->onboardingService = $onboardingService;
+        $this->bookingPageService = $bookingPageService;
     }
 
     public function register(): void
@@ -274,7 +274,7 @@ class DashboardController implements ControllerInterface
                 'settings_menu' => $this->menu(),
                 'settings_fields' => $this->fields(true),
                 'is_onboarding_completed' => $this->isOnboardingCompleted(),
-                'booking_page_url' => $this->onboardingService->getBookingPageUrl(),
+                'booking_page_url' => $this->bookingPageService->getBookingPageUrl(),
                 'first_name' => $this->getCurrentUserFirstName(),
                 'user_email' => $this->getCurrentUserEmail(),
                 'completed_step' => get_option('simplybook_completed_step', 0),
