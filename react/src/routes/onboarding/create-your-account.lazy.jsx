@@ -1,11 +1,16 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { __, sprintf } from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import { useEffect } from "react";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
-import { RECAPTCHA_SITE_KEY } from "../../hooks/useOnboardingData";
+import {
+    RECAPTCHA_SITE_KEY,
+    RECAPTCHA_SCRIPT_URL,
+    GOOGLE_PRIVACY_POLICY_URL,
+    GOOGLE_TERMS_URL
+} from "../../api/config";
 
 const path = "/onboarding/create-your-account";
 
@@ -18,18 +23,17 @@ export const Route = createLazyFileRoute(path)({
  */
 function RecaptchaDisclosure() {
     return (
-        <p
-            className="text-xs text-gray-400 mt-4 text-center"
-            dangerouslySetInnerHTML={{
-                __html: sprintf(
-                    __("This site is protected by reCAPTCHA and the Google %sPrivacy Policy%s and %sTerms of Service%s apply.", "simplybook"),
-                    '<a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="underline">',
-                    '</a>',
-                    '<a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" class="underline">',
-                    '</a>'
-                )
-            }}
-        />
+        <p className="text-xs text-gray-400 mt-4 text-center">
+            {__("This site is protected by reCAPTCHA and the Google ", "simplybook")}
+            <a href={GOOGLE_PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer" className="underline">
+                {__("Privacy Policy", "simplybook")}
+            </a>
+            {__(" and ", "simplybook")}
+            <a href={GOOGLE_TERMS_URL} target="_blank" rel="noopener noreferrer" className="underline">
+                {__("Terms of Service", "simplybook")}
+            </a>
+            {__(" apply.", "simplybook")}
+        </p>
     );
 }
 
@@ -41,7 +45,7 @@ function CreateLoginAccount() {
         }
 
         const script = document.createElement('script');
-        script.src = `https://www.google.com/recaptcha/enterprise.js?render=${RECAPTCHA_SITE_KEY}`;
+        script.src = `${RECAPTCHA_SCRIPT_URL}?render=${RECAPTCHA_SITE_KEY}`;
         script.async = true;
         script.id = 'recaptcha-script';
         document.head.appendChild(script);

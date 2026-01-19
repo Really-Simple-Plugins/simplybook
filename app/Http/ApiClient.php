@@ -523,7 +523,7 @@ class ApiClient
      * @internal method can be recursive a maximum of 3 times in one minute
      * @throws ApiException
      */
-    public function register_company(string $captchaToken = ''): ApiResponseDTO
+    public function register_company(string $email, string $encryptedPassword, string $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
@@ -537,15 +537,8 @@ class ApiClient
             );
         }
 
-        $companyData = $this->get_company();
-        $sanitizedCompany = (new CompanyBuilder())->buildFromArray($companyData);
-
-        if ($sanitizedCompany->isValid() === false) {
-            throw (new ApiException(
-                __('Please fill in all company data.', 'simplybook')
-            ))->setData([
-                'invalid_fields' => $sanitizedCompany->getInvalidFields(),
-            ]);
+        if (empty($email) || !is_email($email)) {
+            throw new ApiException(__('Please provide a valid email address.', 'simplybook'));
         }
 
         $company_login = $this->get_company_login();
@@ -553,27 +546,14 @@ class ApiClient
 
         $alResponse = $this->createAccountService->registerCompany(
             $company_login,
-            $sanitizedCompany->email,
-            $this->decryptString($sanitizedCompany->password),
+            $email,
+            $this->decryptString($encryptedPassword),
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
             $captchaToken
         );
 
         $response = (object) $alResponse['body'];
-
-        // Handle captcha required response
-        if (isset($response->captcha_required) && $response->captcha_required) {
-            return new ApiResponseDTO(
-                false,
-                __('Captcha verification required.', 'simplybook'),
-                200,
-                [
-                    'captcha_required' => true,
-                    'site_key' => $response->site_key ?? '',
-                ]
-            );
-        }
 
         // Response returns success
         if (isset($response->success) && $response->success) {
@@ -590,7 +570,7 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            return $this->register_company($captchaToken);
+            return $this->register_company($email, $encryptedPassword, $captchaToken);
         }
 
         throw (new ApiException(

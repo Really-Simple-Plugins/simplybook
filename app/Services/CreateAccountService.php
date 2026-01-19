@@ -27,6 +27,8 @@ class CreateAccountService
 
     /**
      * Register a new company.
+     *
+     * @param string $captchaToken reCAPTCHA Enterprise token (not score).
      * @throws ApiException
      */
     public function registerCompany(
@@ -128,7 +130,7 @@ class CreateAccountService
         }
 
         if (isset($responseBody['rspal-error'])) {
-            return $this->handleRspalError($responseBody['rspal-error'], $responseCode);
+            $this->handleRspalError($responseBody['rspal-error'], $responseCode);
         }
 
         return [
@@ -138,25 +140,13 @@ class CreateAccountService
     }
 
     /**
-     * Handle rspal-error responses, including captcha required.
+     * Handle rspal-error responses.
      *
      * @param array|string $rspalError The error data from the rspal-error response.
      * @throws ApiException
      */
-    private function handleRspalError($rspalError, int $responseCode): array
+    private function handleRspalError($rspalError, int $responseCode): void
     {
-        // Handle captcha required response - return it as data, not error
-        if (is_array($rspalError) && !empty($rspalError['captcha_required'])) {
-            return [
-                'code' => $responseCode,
-                'body' => [
-                    'captcha_required' => true,
-                    'site_key' => sanitize_text_field($rspalError['site_key'] ?? ''),
-                ],
-            ];
-        }
-
-        // Handle other errors
         $errorMessage = is_array($rspalError)
             ? wp_json_encode($rspalError)
             : sanitize_text_field($rspalError);

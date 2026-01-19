@@ -121,18 +121,27 @@ class OnboardingController implements FeatureInterface
      */
     public function createAccount(\WP_REST_Request $request): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request);
+        try {
+            $storage = $this->service->retrieveHttpStorage($request);
 
-        $validationError = $this->validateAccountRequest($storage);
-        if ($validationError !== null) {
-            return $validationError;
+            $validationError = $this->validateAccountRequest($storage);
+            if ($validationError !== null) {
+                return $validationError;
+            }
+
+            $email = $storage->getEmail('email');
+            $encryptedPassword = $this->encryptString(wp_generate_password(24, false));
+            $captchaToken = $storage->getString('captcha_token');
+
+            // Store company data for callback authentication
+            $this->storeCompanyData($email, $encryptedPassword, $storage->getBoolean('terms-and-conditions'));
+
+            // Register directly with the data
+            return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
+        } catch (\Exception $e) {
+            $this->log('Account creation failed: ' . $e->getMessage());
+            return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
         }
-
-        $this->storeCompanyData($storage->getEmail('email'), $storage->getBoolean('terms-and-conditions'));
-
-        $captchaToken = $storage->getString('captcha_token');
-
-        return $this->executeRegistration($captchaToken);
     }
 
     /**
@@ -155,17 +164,15 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
-     * Build and store company data for registration.
+     * Store company data for callback authentication.
      */
-    private function storeCompanyData(string $email, bool $termsAccepted): void
+    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted): void
     {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setEmail($email);
         $companyBuilder->setUserLogin($email);
         $companyBuilder->setTerms($termsAccepted);
-        $companyBuilder->setPassword(
-            $this->service->encryptString(wp_generate_password(24, false))
-        );
+        $companyBuilder->setPassword($encryptedPassword);
 
         $this->service->storeCompanyData($companyBuilder);
     }
@@ -173,16 +180,12 @@ class OnboardingController implements FeatureInterface
     /**
      * Execute the registration request and handle the response.
      */
-    private function executeRegistration(string $captchaToken): \WP_REST_Response
+    private function executeRegistration(string $email, string $encryptedPassword, string $captchaToken): \WP_REST_Response
     {
         try {
-            $response = $this->client->register_company($captchaToken);
+            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
-        }
-
-        if (!$response->success && !empty($response->data['captcha_required'])) {
-            return $this->service->sendHttpResponse($response->data, false, $response->message, 200);
         }
 
         $this->service->finishCompanyRegistration();

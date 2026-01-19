@@ -3,9 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
 import HttpClient from "../api/requests/HttpClient";
+import { RECAPTCHA_SITE_KEY } from "../api/config";
 
-// reCAPTCHA Enterprise site key
-export const RECAPTCHA_SITE_KEY = '6LdwRC4sAAAAAJGtYjXnPGzaj4ejkp_zr3sMLnjl';
+export { RECAPTCHA_SITE_KEY };
 
 /**
  * Execute reCAPTCHA and get token
