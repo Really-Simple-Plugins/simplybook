@@ -10,7 +10,7 @@ class CreateAccountService
 {
     use HasLogging;
 
-    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.auth.really-simple-security.com';
+    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.rsp-auth.com';
     private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
@@ -34,7 +34,8 @@ class CreateAccountService
         string $email,
         string $password,
         string $callbackUrl,
-        bool $marketingConsent
+        bool $marketingConsent,
+        string $captchaToken = ''
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -49,7 +50,7 @@ class CreateAccountService
             'marketing_consent' => $marketingConsent,
         ];
 
-        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin);
+        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
     }
 
     /**
@@ -65,29 +66,18 @@ class CreateAccountService
      * Make a request.
      * @throws ApiException
      */
-    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = ''): array
+    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = '', string $captchaToken = ''): array
     {
         $url = $this->buildUrl($endpoint);
-
-        $headers = array_merge($this->getRspalHeaders(), [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ]);
-
-        // Add auth headers if credentials are provided
-        if (!empty($companyLogin)) {
-            $headers['X-Company-Login'] = $companyLogin;
-        }
+        $headers = $this->buildRequestHeaders($companyLogin, $captchaToken);
 
         $args = [
             'method' => $method,
             'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
+            'body' => wp_json_encode($body),
         ];
-
-        // Always send JSON body for POST requests (API expects at least "{}")
-        $args['body'] = json_encode($body);
 
         $response = wp_safe_remote_request($url, $args);
 
@@ -99,25 +89,81 @@ class CreateAccountService
             ]);
         }
 
+        return $this->parseResponse($response);
+    }
+
+    /**
+     * Build request headers including optional company login and captcha token.
+     */
+    private function buildRequestHeaders(string $companyLogin = '', string $captchaToken = ''): array
+    {
+        $headers = array_merge($this->getRspalHeaders(), [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]);
+
+        if (!empty($companyLogin)) {
+            $headers['X-Company-Login'] = sanitize_text_field($companyLogin);
+        }
+
+        if (!empty($captchaToken)) {
+            $headers['RSPAL-RecaptchaV3Token'] = sanitize_text_field($captchaToken);
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Parse the response and handle errors.
+     * @throws ApiException
+     */
+    private function parseResponse($response): array
+    {
         $responseCode = wp_remote_retrieve_response_code($response);
-        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+        $responseBodyRaw = wp_remote_retrieve_body($response);
+        $responseBody = json_decode($responseBodyRaw, true);
 
         if (!is_array($responseBody)) {
             throw new ApiException(__('Invalid response.', 'simplybook'));
         }
 
         if (isset($responseBody['rspal-error'])) {
-            throw (new ApiException(
-                __('Error', 'simplybook')
-            ))->setData([
-                'error' => sanitize_text_field($responseBody['rspal-error']),
-            ]);
+            return $this->handleRspalError($responseBody['rspal-error'], $responseCode);
         }
 
         return [
             'code' => (int) $responseCode,
             'body' => $responseBody,
         ];
+    }
+
+    /**
+     * Handle rspal-error responses, including captcha required.
+     * @throws ApiException
+     */
+    private function handleRspalError($rspalError, int $responseCode): array
+    {
+        // Handle captcha required response - return it as data, not error
+        if (is_array($rspalError) && !empty($rspalError['captcha_required'])) {
+            return [
+                'code' => $responseCode,
+                'body' => [
+                    'captcha_required' => true,
+                    'site_key' => sanitize_text_field($rspalError['site_key'] ?? ''),
+                ],
+            ];
+        }
+
+        // Handle other errors
+        $errorMessage = is_array($rspalError)
+            ? wp_json_encode($rspalError)
+            : sanitize_text_field($rspalError);
+
+        throw (new ApiException(
+            $errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')
+        ))->setData([
+            'error' => $errorMessage,
+        ]);
     }
 
     /**

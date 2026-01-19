@@ -523,7 +523,7 @@ class ApiClient
      * @internal method can be recursive a maximum of 3 times in one minute
      * @throws ApiException
      */
-    public function register_company(): ApiResponseDTO
+    public function register_company(string $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
@@ -557,9 +557,23 @@ class ApiClient
             $this->decryptString($sanitizedCompany->password),
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
+            $captchaToken
         );
 
         $response = (object) $alResponse['body'];
+
+        // Handle captcha required response
+        if (isset($response->captcha_required) && $response->captcha_required) {
+            return new ApiResponseDTO(
+                false,
+                __('Captcha verification required.', 'simplybook'),
+                200,
+                [
+                    'captcha_required' => true,
+                    'site_key' => $response->site_key ?? '',
+                ]
+            );
+        }
 
         // Response returns success
         if (isset($response->success) && $response->success) {
@@ -576,7 +590,7 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            return $this->register_company();
+            return $this->register_company($captchaToken);
         }
 
         throw (new ApiException(

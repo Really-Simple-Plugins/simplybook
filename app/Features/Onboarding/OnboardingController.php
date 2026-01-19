@@ -123,7 +123,23 @@ class OnboardingController implements FeatureInterface
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
-        // Validate email and terms
+        $validationError = $this->validateAccountRequest($storage);
+        if ($validationError !== null) {
+            return $validationError;
+        }
+
+        $this->storeCompanyData($storage->getEmail('email'), $storage->getBoolean('terms-and-conditions'));
+
+        $captchaToken = $storage->getString('captcha_token');
+
+        return $this->executeRegistration($captchaToken);
+    }
+
+    /**
+     * Validate email and terms acceptance from the request.
+     */
+    private function validateAccountRequest($storage): ?\WP_REST_Response
+    {
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
 
@@ -135,7 +151,14 @@ class OnboardingController implements FeatureInterface
             return $this->service->sendHttpResponse([], false, __('Please accept the terms and conditions.', 'simplybook'), 400);
         }
 
-        // Build and store company data
+        return null;
+    }
+
+    /**
+     * Build and store company data for registration.
+     */
+    private function storeCompanyData(string $email, bool $termsAccepted): void
+    {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setEmail($email);
         $companyBuilder->setUserLogin($email);
@@ -145,12 +168,21 @@ class OnboardingController implements FeatureInterface
         );
 
         $this->service->storeCompanyData($companyBuilder);
+    }
 
-        // Trigger registration at SimplyBook
+    /**
+     * Execute the registration request and handle the response.
+     */
+    private function executeRegistration(string $captchaToken): \WP_REST_Response
+    {
         try {
-            $response = $this->client->register_company();
+            $response = $this->client->register_company($captchaToken);
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
+        }
+
+        if (!$response->success && !empty($response->data['captcha_required'])) {
+            return $this->service->sendHttpResponse($response->data, false, $response->message, 200);
         }
 
         $this->service->finishCompanyRegistration();
