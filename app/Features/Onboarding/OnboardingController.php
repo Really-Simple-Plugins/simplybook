@@ -138,7 +138,7 @@ class OnboardingController implements FeatureInterface
     /**
      * Validate email and terms acceptance from the request.
      */
-    private function validateAccountRequest($storage): ?\WP_REST_Response
+    private function validateAccountRequest(Storage $storage): ?\WP_REST_Response
     {
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');

@@ -117,7 +117,7 @@ class CreateAccountService
      * Parse the response and handle errors.
      * @throws ApiException
      */
-    private function parseResponse($response): array
+    private function parseResponse(array $response): array
     {
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseBodyRaw = wp_remote_retrieve_body($response);
@@ -139,6 +139,8 @@ class CreateAccountService
 
     /**
      * Handle rspal-error responses, including captcha required.
+     *
+     * @param array|string $rspalError The error data from the rspal-error response.
      * @throws ApiException
      */
     private function handleRspalError($rspalError, int $responseCode): array
