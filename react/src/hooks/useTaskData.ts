@@ -20,6 +20,7 @@ const useTaskData = () => {
 
     const getTasksRoute = 'get_tasks';
     const dismissTaskRoute = 'dismiss_task';
+    const snoozeTaskRoute = 'snooze_task';
     const client = new HttpClient();
 
     /**
@@ -83,6 +84,23 @@ const useTaskData = () => {
     });
 
     /**
+     * Handles the mutation for snoozing a task (temporarily hiding it).
+     */
+    const { mutate: snoozeTask } = useMutation({
+        mutationFn: async ( taskId:string ): Promise<TaskData> => {
+            return client.setRoute(snoozeTaskRoute).setPayload({
+                'taskId': taskId,
+            }).post();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+        },
+        onError: (error: Error) => {
+            console.error('Error snoozing task: ', error.message);
+        },
+    });
+
+    /**
      * Returns the tasks that are not completed or dismissed.
      * @returns {Task[]}
      */
@@ -111,6 +129,7 @@ const useTaskData = () => {
         hasError: (error !== null),
         message: (response?.message ?? error?.message),
         dismissTask,
+        snoozeTask,
         getRemainingTasks,
         getCompletionPercentage,
     };

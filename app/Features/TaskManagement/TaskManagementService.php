@@ -163,4 +163,18 @@ class TaskManagementService
     {
         update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
     }
+
+    /**
+     * Snooze a task by hiding it for a specified duration.
+     * This stores a timestamp and hides the task.
+     */
+    public function snoozeTask(string $taskId): void
+    {
+        // Handle task-specific snooze logic
+        if ($taskId === Tasks\AddCompanyInfoTask::IDENTIFIER) {
+            Tasks\AddCompanyInfoTask::snooze();
+        }
+
+        $this->hideTask($taskId);
+    }
 }

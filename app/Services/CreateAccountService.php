@@ -10,7 +10,7 @@ class CreateAccountService
 {
     use HasLogging;
 
-    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.auth.really-simple-security.com';
+    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.rsp-auth.com';
     private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
@@ -105,6 +105,11 @@ class CreateAccountService
         if (!is_array($responseBody)) {
             throw new ApiException(__('Invalid response.', 'simplybook'));
         }
+
+        // Temporary logging to debug registration
+        error_log('SimplyBook CreateAccountService - URL: ' . $url);
+        error_log('SimplyBook CreateAccountService - Response Code: ' . $responseCode);
+        error_log('SimplyBook CreateAccountService - Response Body: ' . print_r($responseBody, true));
 
         if (isset($responseBody['rspal-error'])) {
             throw (new ApiException(

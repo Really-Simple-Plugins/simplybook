@@ -5,7 +5,7 @@ import { TaskProps } from "../../types/TaskProps";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
 
-const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className, onModalOpen }) => {
+const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeCallback, className, onModalOpen }) => {
 
     const getStatusStyles = (status: string, premium: boolean, special_feature: boolean): string => {
         if (premium || special_feature) {
@@ -52,10 +52,17 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, className
         }
 
         if (task.action.text && task.action.login_link) {
+            const handleLoginLinkClick = () => {
+                if (task.action?.snooze_on_click) {
+                    onSnoozeCallback(task.id);
+                }
+            };
+
             return (
                 <LoginLink
                     page={task.action.login_link}
                     className={buttonClassName}
+                    onClick={handleLoginLinkClick}
                 >
                     {task.action.text}
                 </LoginLink>

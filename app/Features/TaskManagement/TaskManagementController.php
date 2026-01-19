@@ -57,6 +57,7 @@ class TaskManagementController implements FeatureInterface
             Tasks\GatherClientInfoTask::class,
             Tasks\BlackFridayTask::class,
             Tasks\ChristmasPromotionTask::class,
+            Tasks\AddCompanyInfoTask::class,
         ];
     }
 

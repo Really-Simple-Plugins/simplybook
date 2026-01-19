@@ -14,6 +14,7 @@ export interface Task {
         target?: string;
         modal?: {
             id: string;
-        }
+        };
+        snooze_on_click?: boolean;
     };
 }

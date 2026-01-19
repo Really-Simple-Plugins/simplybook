@@ -579,6 +579,10 @@ class ApiClient
             return $this->register_company();
         }
 
+        // Temporary logging to debug registration errors
+        error_log('SimplyBook Registration Error - Full Response: ' . print_r($alResponse, true));
+        error_log('SimplyBook Registration Error - Response Object: ' . print_r($response, true));
+
         throw (new ApiException(
             __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([

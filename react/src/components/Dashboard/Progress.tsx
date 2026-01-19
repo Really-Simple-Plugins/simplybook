@@ -13,7 +13,7 @@ const Progress = () => {
     const [showAll, setShowAll] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [taskModalId, setTaskModalId] = useState("");
-    const {tasks, isLoading, hasError, dismissTask, getRemainingTasks, getCompletionPercentage} = useTaskData();
+    const {tasks, isLoading, hasError, dismissTask, snoozeTask, getRemainingTasks, getCompletionPercentage} = useTaskData();
 
     const displayedTasks = showAll ? tasks : getRemainingTasks();
     const completionPercentage = getCompletionPercentage();
@@ -96,6 +96,7 @@ const Progress = () => {
                                 key={task.id}
                                 task={task}
                                 onDismissCallback={dismissTask}
+                                onSnoozeCallback={snoozeTask}
                                 className={remainingTasks.length > 7 ? "!me-0" : !showAll ? "me-2" : ""}
                                 onModalOpen={onModalOpen}
                             />
