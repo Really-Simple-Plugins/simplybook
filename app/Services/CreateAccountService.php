@@ -106,16 +106,12 @@ class CreateAccountService
             throw new ApiException(__('Invalid response.', 'simplybook'));
         }
 
-        // Temporary logging to debug registration
-        error_log('SimplyBook CreateAccountService - URL: ' . $url);
-        error_log('SimplyBook CreateAccountService - Response Code: ' . $responseCode);
-        error_log('SimplyBook CreateAccountService - Response Body: ' . print_r($responseBody, true));
-
         if (isset($responseBody['rspal-error'])) {
+            $rspalError = sanitize_text_field($responseBody['rspal-error']);
             throw (new ApiException(
-                __('Error', 'simplybook')
+                $rspalError ?: __('Error', 'simplybook')
             ))->setData([
-                'error' => sanitize_text_field($responseBody['rspal-error']),
+                'error' => $rspalError,
             ]);
         }
 
