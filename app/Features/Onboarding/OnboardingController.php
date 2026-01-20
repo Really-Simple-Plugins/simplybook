@@ -14,6 +14,7 @@ use SimplyBook\Support\Builders\PageBuilder;
 use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Services\WidgetTrackingService;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
@@ -26,17 +27,20 @@ class OnboardingController implements FeatureInterface
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
     private CallbackUrlService $callbackUrlService;
+    private ExtendifyDataService $extendifyDataService;
 
     public function __construct(
         ApiClient $client,
         OnboardingService $service,
         WidgetTrackingService $widgetTrackingService,
-        CallbackUrlService $callbackUrlService
+        CallbackUrlService $callbackUrlService,
+        ExtendifyDataService $extendifyDataService
     ) {
         $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
         $this->callbackUrlService = $callbackUrlService;
+        $this->extendifyDataService = $extendifyDataService;
     }
 
     public function register(): void
@@ -143,6 +147,20 @@ class OnboardingController implements FeatureInterface
         $companyBuilder->setPassword(
             $this->service->encryptString(wp_generate_password(24, false))
         );
+
+        // Set category and first service from Extendify data if available
+        // Additional services are created by ServicesController after registration
+        if ($this->extendifyDataService->hasData()) {
+            $category = $this->extendifyDataService->getCategory();
+            if ($category !== null) {
+                $companyBuilder->setCategory($category);
+            }
+
+            $services = $this->extendifyDataService->getServices();
+            if (!empty($services)) {
+                $companyBuilder->setService($services[0]);
+            }
+        }
 
         $this->service->storeCompanyData($companyBuilder);
 

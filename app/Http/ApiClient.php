@@ -557,6 +557,7 @@ class ApiClient
             $this->decryptString($sanitizedCompany->password),
             $callback_url,
             false, // @todo, marketing consent handled in NLRSP2-291
+            $sanitizedCompany->category > 0 ? $sanitizedCompany->category : null
         );
 
         $response = (object) $alResponse['body'];
