@@ -98,8 +98,8 @@ class BookingPageService
     }
 
     /**
-     * Get the booking page URL with the visit tracking parameter.
-     * Used by the BookingWidgetLiveTask to track when users visit the page.
+     * Get the booking page URL with the visit tracking parameter. Used by the
+     * BookingWidgetLiveTask to track when users visit the page.
      */
     public function getBookingPageUrlWithTracking(): string
     {
@@ -116,13 +116,23 @@ class BookingPageService
      */
     public function hasBookingPage(): bool
     {
+        $cacheKey = 'simplybook_has_booking_page';
+        $cachedResult = wp_cache_get($cacheKey, 'simplybook', false, $found);
+        if ($found) {
+            return $cachedResult;
+        }
+
         $pageId = $this->getBookingPageId();
         if ($pageId <= 0) {
+            wp_cache_set($cacheKey, false, 'simplybook');
             return false;
         }
 
         $post = get_post($pageId);
-        return $post instanceof \WP_Post && $post->post_status === 'publish';
+        $hasBookingPage = ($post instanceof \WP_Post && $post->post_status === 'publish');
+
+        wp_cache_set($cacheKey, $hasBookingPage, 'simplybook');
+        return $hasBookingPage;
     }
 
     /**

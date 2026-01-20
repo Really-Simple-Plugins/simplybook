@@ -27,9 +27,9 @@ class BookingPageController implements ControllerInterface
     }
 
     /**
-     * Handle booking page visits with the tracking parameter.
-     * When a user visits the booking page via the task button (which includes
-     * the tracking parameter), we mark the page as visited and dispatch an event.
+     * Handle booking page visits with the tracking parameter. When a user
+     * visits the booking page via the task button (which includes the tracking
+     * parameter), we mark the page as visited and dispatch an event.
      */
     public function handleBookingPageVisit(): void
     {

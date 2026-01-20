@@ -13,7 +13,7 @@ class BookingWidgetLiveTask extends AbstractTask
     public const IDENTIFIER = 'booking_widget_live';
 
     /**
-     * Task is dismissable.
+     * Task is dismissible.
      */
     protected bool $required = false;
 
@@ -22,29 +22,28 @@ class BookingWidgetLiveTask extends AbstractTask
     public function __construct(BookingPageService $bookingPageService)
     {
         $this->bookingPageService = $bookingPageService;
-
-        $this->determineInitialStatus();
+        $this->setStatus(
+            $this->getInitialStatus()
+        );
     }
 
     /**
-     * Determine the initial status of the task based on booking page state.
+     * Return the initial status of the task based on booking page state.
      */
-    private function determineInitialStatus(): void
+    private function getInitialStatus(): string
     {
         // If no booking page exists, hide the task
-        if (!$this->bookingPageService->hasBookingPage()) {
-            $this->setStatus(self::STATUS_HIDDEN);
-            return;
+        if ($this->bookingPageService->hasBookingPage() === false) {
+            return self::STATUS_HIDDEN;
         }
 
         // If user has already visited the page, mark as completed
         if ($this->bookingPageService->hasBeenVisited()) {
-            $this->setStatus(self::STATUS_COMPLETED);
-            return;
+            return self::STATUS_COMPLETED;
         }
 
         // Otherwise, task is open
-        $this->setStatus(self::STATUS_OPEN);
+        return self::STATUS_OPEN;
     }
 
     /**
@@ -60,16 +59,15 @@ class BookingWidgetLiveTask extends AbstractTask
      */
     public function getAction(): array
     {
-        $url = $this->bookingPageService->getBookingPageUrlWithTracking();
-
-        if (empty($url)) {
+        // If this is the case the task isn't shown anyway.
+        if ($this->bookingPageService->hasBookingPage() === false) {
             return [];
         }
 
         return [
             'type' => 'button',
             'text' => __('View booking page', 'simplybook'),
-            'link' => $url,
+            'link' => $this->bookingPageService->getBookingPageUrlWithTracking(),
             'external' => true,
         ];
     }
