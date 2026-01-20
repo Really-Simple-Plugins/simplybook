@@ -57,7 +57,7 @@ class BookingPageService
             ];
         }
 
-        $this->setBookingPageId($pageId);
+        $this->storeBookingPageId($pageId);
 
         return [
             'success' => true,
@@ -70,7 +70,7 @@ class BookingPageService
     /**
      * Store the generated booking page ID in options.
      */
-    public function setBookingPageId(int $pageId): void
+    public function storeBookingPageId(int $pageId): void
     {
         update_option(self::BOOKING_PAGE_OPTION, $pageId, false);
     }
