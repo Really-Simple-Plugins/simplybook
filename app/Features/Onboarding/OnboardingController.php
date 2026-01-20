@@ -125,9 +125,34 @@ class OnboardingController implements FeatureInterface
      */
     public function createAccount(\WP_REST_Request $request): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request);
+        try {
+            $storage = $this->service->retrieveHttpStorage($request);
 
-        // Validate email and terms
+            $validationError = $this->validateAccountRequest($storage);
+            if ($validationError !== null) {
+                return $validationError;
+            }
+
+            $email = $storage->getEmail('email');
+            $encryptedPassword = $this->encryptString(wp_generate_password(24, false));
+            $captchaToken = $storage->getString('captcha_token');
+
+            // Store company data for callback authentication
+            $this->storeCompanyData($email, $encryptedPassword, $storage->getBoolean('terms-and-conditions'));
+
+            // Register directly with the data
+            return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
+        } catch (\Exception $e) {
+            $this->log('Account creation failed: ' . $e->getMessage());
+            return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
+        }
+    }
+
+    /**
+     * Validate email and terms acceptance from the request.
+     */
+    private function validateAccountRequest(Storage $storage): ?\WP_REST_Response
+    {
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
 
@@ -139,14 +164,19 @@ class OnboardingController implements FeatureInterface
             return $this->service->sendHttpResponse([], false, __('Please accept the terms and conditions.', 'simplybook'), 400);
         }
 
-        // Build and store company data
+        return null;
+    }
+
+    /**
+     * Store company data for callback authentication.
+     */
+    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted): void
+    {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setEmail($email);
         $companyBuilder->setUserLogin($email);
         $companyBuilder->setTerms($termsAccepted);
-        $companyBuilder->setPassword(
-            $this->service->encryptString(wp_generate_password(24, false))
-        );
+        $companyBuilder->setPassword($encryptedPassword);
 
         // Set category and first service from Extendify data if available
         // Additional services are created by ServicesController after registration
@@ -163,10 +193,15 @@ class OnboardingController implements FeatureInterface
         }
 
         $this->service->storeCompanyData($companyBuilder);
+    }
 
-        // Trigger registration at SimplyBook
+    /**
+     * Execute the registration request and handle the response.
+     */
+    private function executeRegistration(string $email, string $encryptedPassword, string $captchaToken): \WP_REST_Response
+    {
         try {
-            $response = $this->client->register_company();
+            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }

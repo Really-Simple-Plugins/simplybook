@@ -43,6 +43,12 @@ return [
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
         'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
+        'recaptcha' => [
+            'site_key' => '6LdwRC4sAAAAAJGtYjXnPGzaj4ejkp_zr3sMLnjl',
+            'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
+            'google_privacy_policy_url' => 'https://policies.google.com/privacy',
+            'google_terms_url' => 'https://policies.google.com/terms',
+        ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
         'support' => [

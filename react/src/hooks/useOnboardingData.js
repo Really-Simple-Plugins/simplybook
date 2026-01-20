@@ -3,6 +3,30 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
 import HttpClient from "../api/requests/HttpClient";
+import { RECAPTCHA_SITE_KEY } from "../api/config";
+
+export { RECAPTCHA_SITE_KEY };
+
+/**
+ * Execute reCAPTCHA and get token
+ */
+const executeCaptcha = (siteKey) => {
+    return new Promise((resolve, reject) => {
+        if (!window.grecaptcha?.enterprise) {
+            reject(new Error('reCAPTCHA not loaded'));
+            return;
+        }
+
+        window.grecaptcha.enterprise.ready(async () => {
+            try {
+                const token = await window.grecaptcha.enterprise.execute(siteKey, { action: 'create_company' });
+                resolve(token);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    });
+};
 
 const useOnboardingData = () => {
     const [apiError, setApiError] = useState("");
@@ -10,6 +34,42 @@ const useOnboardingData = () => {
     const { settings } = useSettingsData();
 
     const httpClient = new HttpClient();
+
+    /**
+     * Get captcha token if captcha is loaded, otherwise return empty string.
+     * Returns false if captcha execution fails.
+     */
+    const getCaptchaToken = async () => {
+        if (!window.grecaptcha?.enterprise) {
+            return '';
+        }
+
+        try {
+            const token = await executeCaptcha(RECAPTCHA_SITE_KEY);
+            return token;
+        } catch (captchaError) {
+            setApiError(__("Captcha verification failed. Please try again.", "simplybook"));
+            return false;
+        }
+    };
+
+    /**
+     * Submit the account registration request.
+     */
+    const submitAccountRegistration = async (data, captchaToken) => {
+        try {
+            await httpClient.setRoute('onboarding/create_account').setPayload({
+                ...data,
+                captcha_token: captchaToken,
+            }).post();
+
+            setApiError('');
+            return true;
+        } catch (error) {
+            setApiError(error.message || __("An error occurred while registering.", "simplybook"));
+            return false;
+        }
+    };
 
     const steps = [
         {
@@ -50,15 +110,12 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                try {
-                    // Create account (validates, stores data, triggers SimplyBook registration)
-                    await httpClient.setRoute('onboarding/create_account').setPayload(data).post();
-                    setApiError('');
-                    return true;
-                } catch (error) {
-                    setApiError(error.message || __("An error occurred while registering.", "simplybook"));
+                const captchaToken = await getCaptchaToken();
+                if (captchaToken === false) {
                     return false;
                 }
+
+                return await submitAccountRegistration(data, captchaToken);
             },
         },
         {

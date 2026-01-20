@@ -18,6 +18,12 @@ export const TEXT_DOMAIN = "simplybook";
 // Handy constants
 export const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
 
+// reCAPTCHA configuration
+export const RECAPTCHA_SITE_KEY = simplybook.recaptcha?.site_key || '';
+export const RECAPTCHA_SCRIPT_URL = simplybook.recaptcha?.script_url || '';
+export const GOOGLE_PRIVACY_POLICY_URL = simplybook.recaptcha?.google_privacy_policy_url || '';
+export const GOOGLE_TERMS_URL = simplybook.recaptcha?.google_terms_url || '';
+
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.
  * If the site is loaded over HTTPS, enforces HTTPS for the URL to prevent mixed content issues.
