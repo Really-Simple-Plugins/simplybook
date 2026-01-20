@@ -396,8 +396,10 @@ class TaskManagementListener
             return;
         }
 
+        $task = $this->service->getTask(Tasks\AddCompanyInfoTask::IDENTIFIER);
+
         // If snoozed (clicked within 24 hours), keep it hidden
-        if (Tasks\AddCompanyInfoTask::isSnoozed()) {
+        if ($task !== null && $task->isSnoozed()) {
             $this->service->hideTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );

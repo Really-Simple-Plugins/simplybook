@@ -60,6 +60,18 @@ abstract class AbstractTask implements TaskInterface
     protected bool $specialFeature;
 
     /**
+     * Override this property to make the task snoozable. When snoozable,
+     * the task can be temporarily hidden for a specified duration.
+     */
+    protected bool $snoozable = false;
+
+    /**
+     * Override this property to customize the snooze duration in seconds.
+     * Defaults to 24 hours (DAY_IN_SECONDS).
+     */
+    protected int $snoozeDuration = DAY_IN_SECONDS;
+
+    /**
      * By default, a task is active on construct. This is because the $status
      * property is not set. The {@see getStatus()} method will therefore return
      * the default status 'open'. If you want to set a different default status
@@ -211,6 +223,68 @@ abstract class AbstractTask implements TaskInterface
     public function isSpecialFeature(): bool
     {
         return $this->specialFeature ?? false;
+    }
+
+    /**
+     * Reads if the task is snoozable
+     */
+    public function isSnoozable(): bool
+    {
+        return $this->snoozable;
+    }
+
+    /**
+     * Get the snooze duration in seconds
+     */
+    public function getSnoozeDuration(): int
+    {
+        return $this->snoozeDuration;
+    }
+
+    /**
+     * Check if the task is currently snoozed
+     */
+    public function isSnoozed(): bool
+    {
+        if (!$this->isSnoozable()) {
+            return false;
+        }
+
+        $snoozedAt = (int) get_option($this->getSnoozeOptionKey(), 0);
+
+        if ($snoozedAt === 0) {
+            return false;
+        }
+
+        return (time() - $snoozedAt) < $this->getSnoozeDuration();
+    }
+
+    /**
+     * Snooze the task by storing the current timestamp
+     */
+    public function snooze(): void
+    {
+        if (!$this->isSnoozable()) {
+            return;
+        }
+
+        update_option($this->getSnoozeOptionKey(), time(), false);
+    }
+
+    /**
+     * Clear the snooze state for this task
+     */
+    public function clearSnooze(): void
+    {
+        delete_option($this->getSnoozeOptionKey());
+    }
+
+    /**
+     * Get the option key used to store the snooze timestamp
+     */
+    protected function getSnoozeOptionKey(): string
+    {
+        return 'simplybook_task_' . $this->getId() . '_snoozed_at';
     }
 
     /**

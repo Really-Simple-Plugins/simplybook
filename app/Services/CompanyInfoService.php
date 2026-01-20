@@ -5,19 +5,15 @@ namespace SimplyBook\Services;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Support\Helpers\Event;
 
+/**
+ * Service to check if company info (name and address) is present.
+ */
 class CompanyInfoService
 {
-    /**
-     * Cache duration for company info check (24 hours).
-     */
-    public const CACHE_DURATION = DAY_IN_SECONDS;
+    private const CACHE_DURATION = DAY_IN_SECONDS;
+    private const CACHE_OPTION = 'simplybook_company_info_check_cache';
 
-    /**
-     * Option key to store the cached company info check result.
-     */
-    public const CACHE_OPTION = 'simplybook_company_info_check_cache';
-
-    protected ApiClient $client;
+    private ApiClient $client;
 
     public function __construct(ApiClient $client)
     {
@@ -25,80 +21,58 @@ class CompanyInfoService
     }
 
     /**
-     * Fetch company info from the SimplyBook API.
-     */
-    public function fetch(): array
-    {
-        if ($this->client->company_registration_complete() === false) {
-            return [];
-        }
-
-        $cacheName = 'simplybook_company_info';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found && is_array($cacheValue)) {
-            return $cacheValue;
-        }
-
-        $response = $this->client->api_call('admin/company', [], 'GET');
-
-        // Temporary logging to verify API response structure
-        error_log('SimplyBook CompanyInfo API Response: ' . print_r($response, true));
-
-        wp_cache_set($cacheName, $response, 'simplybook', MINUTE_IN_SECONDS);
-        return $response;
-    }
-
-    /**
-     * Check if company info is present (has required fields filled).
+     * Check if company info is present (has name and address filled).
      * Caches the result for 24 hours.
-     *
-     * @return bool True if company info is present, false otherwise
      */
     public function hasCompanyInfo(): bool
     {
-        // Check cached result first
-        $cached = $this->getCachedCheckResult();
+        $cached = $this->getCachedResult();
         if ($cached !== null) {
             return $cached;
         }
 
-        // Fetch and check company info
-        $companyInfo = $this->fetch();
-        $hasInfo = $this->validateCompanyInfo($companyInfo);
+        $hasInfo = $this->checkCompanyInfoViaApi();
 
-        // Cache the result
-        $this->cacheCheckResult($hasInfo);
+        $this->cacheResult($hasInfo);
 
-        // Dispatch event for listeners
         Event::dispatch(Event::COMPANY_INFO_CHECKED, ['has_company_info' => $hasInfo]);
 
         return $hasInfo;
     }
 
     /**
-     * Validate if the company info contains the required fields.
-     * Company info is considered present if it has name and address.
+     * Clear the cached result.
      */
-    private function validateCompanyInfo(array $companyInfo): bool
+    public function clearCache(): void
     {
-        if (empty($companyInfo)) {
+        delete_option(self::CACHE_OPTION);
+    }
+
+    /**
+     * Fetch company info from API and check if name and address are present.
+     */
+    private function checkCompanyInfoViaApi(): bool
+    {
+        if ($this->client->company_registration_complete() === false) {
             return false;
         }
 
-        // Check for essential company info fields
-        $name = $companyInfo['name'] ?? '';
-        $address = $companyInfo['address1'] ?? '';
+        $response = $this->client->api_call('admin/company', [], 'GET');
+
+        if (empty($response)) {
+            return false;
+        }
+
+        $name = $response['name'] ?? '';
+        $address = $response['address1'] ?? '';
 
         return !empty($name) && !empty($address);
     }
 
     /**
-     * Get the cached check result.
-     *
-     * @return bool|null True/false if cached, null if cache expired or not set
+     * Get cached result if still valid.
      */
-    private function getCachedCheckResult(): ?bool
+    private function getCachedResult(): ?bool
     {
         $cached = get_option(self::CACHE_OPTION, []);
 
@@ -115,21 +89,13 @@ class CompanyInfoService
     }
 
     /**
-     * Cache the check result for 24 hours.
+     * Cache the result.
      */
-    private function cacheCheckResult(bool $hasCompanyInfo): void
+    private function cacheResult(bool $hasCompanyInfo): void
     {
         update_option(self::CACHE_OPTION, [
             'checked_at' => time(),
             'has_company_info' => $hasCompanyInfo,
         ], false);
-    }
-
-    /**
-     * Clear the cached check result.
-     */
-    public function clearCache(): void
-    {
-        delete_option(self::CACHE_OPTION);
     }
 }

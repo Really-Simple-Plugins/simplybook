@@ -24,6 +24,14 @@ class TaskManagementService
     }
 
     /**
+     * Get a single task by its ID
+     */
+    public function getTask(string $taskId): ?TaskInterface
+    {
+        return $this->repository->getTask($taskId);
+    }
+
+    /**
      * Get all tasks
      * @return TaskInterface[]
      */
@@ -166,15 +174,17 @@ class TaskManagementService
 
     /**
      * Snooze a task by hiding it for a specified duration.
-     * This stores a timestamp and hides the task.
+     * This stores a timestamp and hides the task. Only works for snoozable tasks.
      */
     public function snoozeTask(string $taskId): void
     {
-        // Handle task-specific snooze logic
-        if ($taskId === Tasks\AddCompanyInfoTask::IDENTIFIER) {
-            Tasks\AddCompanyInfoTask::snooze();
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null || !$task->isSnoozable()) {
+            return;
         }
 
+        $task->snooze();
         $this->hideTask($taskId);
     }
 }

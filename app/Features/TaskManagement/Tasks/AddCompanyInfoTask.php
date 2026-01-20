@@ -7,24 +7,19 @@ class AddCompanyInfoTask extends AbstractTask
     public const IDENTIFIER = 'add_company_info';
 
     /**
-     * Option key to store the timestamp when the task was snoozed (link clicked).
-     */
-    public const SNOOZED_AT_OPTION = 'simplybook_add_company_info_task_snoozed_at';
-
-    /**
      * Option key to store whether company info check was completed.
      */
     public const COMPLETED_FLAG = 'simplybook_add_company_info_task_completed';
 
     /**
-     * Snooze duration in seconds (24 hours).
-     */
-    public const SNOOZE_DURATION = DAY_IN_SECONDS;
-
-    /**
      * Not required as the user can dismiss it.
      */
     protected bool $required = false;
+
+    /**
+     * This task is snoozable - user can temporarily hide it.
+     */
+    protected bool $snoozable = true;
 
     public function __construct()
     {
@@ -60,34 +55,11 @@ class AddCompanyInfoTask extends AbstractTask
     }
 
     /**
-     * Check if the task is currently snoozed (link was clicked within the last 24 hours).
-     */
-    public static function isSnoozed(): bool
-    {
-        $snoozedAt = (int) get_option(self::SNOOZED_AT_OPTION, 0);
-
-        if ($snoozedAt === 0) {
-            return false;
-        }
-
-        return (time() - $snoozedAt) < self::SNOOZE_DURATION;
-    }
-
-    /**
-     * Set the task as snoozed (stores current timestamp).
-     */
-    public static function snooze(): void
-    {
-        update_option(self::SNOOZED_AT_OPTION, time(), false);
-    }
-
-    /**
      * Mark the task as completed indefinitely.
      */
     public static function markCompleted(): void
     {
         update_option(self::COMPLETED_FLAG, true, false);
-        delete_option(self::SNOOZED_AT_OPTION);
     }
 
     /**
