@@ -7,7 +7,6 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Helpers\Storage;
-use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingService
@@ -71,24 +70,6 @@ class OnboardingService
         }
 
         update_option('simplybook_company_data', $options);
-    }
-
-    /**
-     * Checks if the given page title is available based on the given url and
-     * existing pages.
-     */
-    public function isPageTitleAvailableForURL(string $url): bool
-    {
-        $title = StringUtility::convertUrlToTitle($url);
-
-        $posts = get_posts([
-            'post_type' => 'page',
-            'title' => sanitize_text_field($title),
-            'post_status' => 'publish',
-            'fields' => 'ids',
-        ]);
-
-        return empty($posts);
     }
 
     /**

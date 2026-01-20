@@ -54,11 +54,19 @@ const useOnboardingData = () => {
                     // Create account (validates, stores data, triggers SimplyBook registration)
                     await httpClient.setRoute('onboarding/create_account').setPayload(data).post();
                     setApiError('');
-                    return true;
                 } catch (error) {
                     setApiError(error.message || __("An error occurred while registering.", "simplybook"));
                     return false;
                 }
+
+                // Generate the booking page
+                try {
+                    await httpClient.setRoute('onboarding/generate_pages').post();
+                } catch (error) {
+                    // Silently continue
+                }
+
+                return true;
             },
         },
         {

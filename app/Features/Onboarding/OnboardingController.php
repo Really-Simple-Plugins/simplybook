@@ -11,8 +11,6 @@ use SimplyBook\Services\BookingPageService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
-use SimplyBook\Support\Builders\PageBuilder;
-use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Services\WidgetTrackingService;
 use SimplyBook\Support\Builders\CompanyBuilder;
@@ -66,11 +64,6 @@ class OnboardingController implements FeatureInterface
         $routes['onboarding/save_widget_style'] = [
             'methods' => 'POST',
             'callback' => [$this, 'saveColorsToDesignSettings'],
-        ];
-
-        $routes['onboarding/is_page_title_available'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'checkIfPageTitleIsAvailable'],
         ];
 
         $routes['onboarding/generate_pages'] = [
@@ -185,62 +178,29 @@ class OnboardingController implements FeatureInterface
             ], false, $message, 500);
         }
 
+        $message = __('Successfully saved widget style settings', 'simplybook');
+        return $this->service->sendHttpResponse([], true, $message);
+    }
+
+    /**
+     * Generate the booking page with the SimplyBook widget shortcode.
+     * Uses a translatable slug and title. WordPress handles slug uniqueness.
+     *
+     * If page creation fails, this is NOT a blocker for onboarding.
+     * The client should show PublishWidgetTask instead of BookingWidgetLiveTask.
+     */
+    public function generateDefaultPages(): \WP_REST_Response
+    {
         $pageResult = $this->bookingPageService->generateBookingPage();
 
         if ($pageResult['success'] && $pageResult['page_id'] > 0) {
             $this->widgetService->setPublishWidgetCompleted();
         }
 
-        $message = __('Successfully saved widget style settings', 'simplybook');
         return $this->service->sendHttpResponse([
-            'booking_page_id' => $pageResult['page_id'],
-            'booking_page_url' => $pageResult['page_url'],
-        ], true, $message);
-    }
-
-    /**
-     * Check if the given page title is available based on the given url and
-     * existing pages.
-     */
-    public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-        $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
-
-        return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
-    }
-
-    /**
-     * Generate default shortcode pages
-     */
-    public function generateDefaultPages(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
-        if (!$calendarPageIsAvailable) {
-            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
-            return $this->service->sendHttpResponse([], false, $message, 409);
-        }
-
-        $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
-
-        $calendarPageID = (new PageBuilder())->setTitle($calendarPageName)
-            ->setContent('[simplybook_widget]')
-            ->insert();
-
-        $pageCreatedSuccessfully = ($calendarPageID !== -1);
-
-        // These flags are deleted after its one time use in the Task and Notice
-        if ($pageCreatedSuccessfully) {
-            $this->widgetService->setPublishWidgetCompleted();
-        }
-
-        $this->service->setOnboardingCompleted();
-
-        return $this->service->sendHttpResponse([
-            'calendar_page_id' => $calendarPageID,
-        ], $pageCreatedSuccessfully, '', ($pageCreatedSuccessfully ? 200 : 400));
+            'page_id' => $pageResult['page_id'],
+            'page_url' => $pageResult['page_url'],
+        ], $pageResult['success'], $pageResult['message'], ($pageResult['success'] ? 200 : 400));
     }
 
     /**
