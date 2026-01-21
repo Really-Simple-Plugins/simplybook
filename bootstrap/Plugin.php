@@ -166,6 +166,7 @@ final class Plugin
             \SimplyBook\Controllers\TrialExpirationController::class,
             \SimplyBook\Controllers\WidgetTrackingController::class,
             \SimplyBook\Controllers\OnboardingNoticeController::class,
+            \SimplyBook\Controllers\BookingPageController::class,
         ]);
     }
 

@@ -116,6 +116,24 @@ const useOnboardingData = () => {
                 }
 
                 return await submitAccountRegistration(data, captchaToken);
+                try {
+                    // Create account (validates, stores data, triggers SimplyBook registration)
+                    await httpClient.setRoute('onboarding/create_account').setPayload(data).post();
+                    setApiError('');
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while registering.", "simplybook"));
+                    return false;
+                }
+
+                try {
+                    // Generate the booking page on success
+                    await httpClient.setRoute('onboarding/generate_pages').post();
+                } catch (error) {
+                    // Silently continue if page generation fails, user can
+                    // create the page manually later.
+                }
+
+                return true;
             },
         },
         {
