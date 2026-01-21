@@ -59,11 +59,12 @@ const useOnboardingData = () => {
                     return false;
                 }
 
-                // Generate the booking page
                 try {
+                    // Generate the booking page on success
                     await httpClient.setRoute('onboarding/generate_pages').post();
                 } catch (error) {
-                    // Silently continue
+                    // Silently continue if page generation fails, user can
+                    // create the page manually later.
                 }
 
                 return true;
