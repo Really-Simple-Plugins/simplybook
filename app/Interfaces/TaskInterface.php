@@ -71,5 +71,4 @@ interface TaskInterface
      * Snooze the task by storing the current timestamp
      */
     public function snooze(): void;
-
 }
