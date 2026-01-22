@@ -26,6 +26,7 @@ class Event
     public const CALENDAR_UNPUBLISHED = 'calendar_unpublished';
     public const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
     public const COMPANY_INFO_CHECKED = 'company_info_checked';
+    public const BOOKING_PAGE_VISITED = 'booking_page_visited';
 
     /**
      * Execute a WordPress event based on our constants.

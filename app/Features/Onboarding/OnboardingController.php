@@ -7,13 +7,13 @@ use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Services\BookingPageService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
-use SimplyBook\Support\Builders\PageBuilder;
-use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Services\WidgetTrackingService;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
@@ -26,17 +26,23 @@ class OnboardingController implements FeatureInterface
     private OnboardingService $service;
     private WidgetTrackingService $widgetService;
     private CallbackUrlService $callbackUrlService;
+    private ExtendifyDataService $extendifyDataService;
+    private BookingPageService $bookingPageService;
 
     public function __construct(
         ApiClient $client,
         OnboardingService $service,
         WidgetTrackingService $widgetTrackingService,
-        CallbackUrlService $callbackUrlService
+        CallbackUrlService $callbackUrlService,
+        ExtendifyDataService $extendifyDataService,
+        BookingPageService $bookingPageService
     ) {
         $this->client = $client;
         $this->service = $service;
         $this->widgetService = $widgetTrackingService;
         $this->callbackUrlService = $callbackUrlService;
+        $this->extendifyDataService = $extendifyDataService;
+        $this->bookingPageService = $bookingPageService;
     }
 
     public function register(): void
@@ -62,11 +68,6 @@ class OnboardingController implements FeatureInterface
         $routes['onboarding/save_widget_style'] = [
             'methods' => 'POST',
             'callback' => [$this, 'saveColorsToDesignSettings'],
-        ];
-
-        $routes['onboarding/is_page_title_available'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'checkIfPageTitleIsAvailable'],
         ];
 
         $routes['onboarding/generate_pages'] = [
@@ -121,9 +122,34 @@ class OnboardingController implements FeatureInterface
      */
     public function createAccount(\WP_REST_Request $request): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request);
+        try {
+            $storage = $this->service->retrieveHttpStorage($request);
 
-        // Validate email and terms
+            $validationError = $this->validateAccountRequest($storage);
+            if ($validationError !== null) {
+                return $validationError;
+            }
+
+            $email = $storage->getEmail('email');
+            $encryptedPassword = $this->encryptString(wp_generate_password(24, false));
+            $captchaToken = $storage->getString('captcha_token');
+
+            // Store company data for callback authentication
+            $this->storeCompanyData($email, $encryptedPassword, $storage->getBoolean('terms-and-conditions'));
+
+            // Register directly with the data
+            return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
+        } catch (\Exception $e) {
+            $this->log('Account creation failed: ' . $e->getMessage());
+            return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
+        }
+    }
+
+    /**
+     * Validate email and terms acceptance from the request.
+     */
+    private function validateAccountRequest(Storage $storage): ?\WP_REST_Response
+    {
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
 
@@ -135,20 +161,44 @@ class OnboardingController implements FeatureInterface
             return $this->service->sendHttpResponse([], false, __('Please accept the terms and conditions.', 'simplybook'), 400);
         }
 
-        // Build and store company data
+        return null;
+    }
+
+    /**
+     * Store company data for callback authentication.
+     */
+    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted): void
+    {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setEmail($email);
         $companyBuilder->setUserLogin($email);
         $companyBuilder->setTerms($termsAccepted);
-        $companyBuilder->setPassword(
-            $this->service->encryptString(wp_generate_password(24, false))
-        );
+        $companyBuilder->setPassword($encryptedPassword);
+
+        // Set category and first service from Extendify data if available
+        // Additional services are created by ServicesController after registration
+        if ($this->extendifyDataService->hasData()) {
+            $category = $this->extendifyDataService->getCategory();
+            if ($category !== null) {
+                $companyBuilder->setCategory($category);
+            }
+
+            $services = $this->extendifyDataService->getServices();
+            if (!empty($services)) {
+                $companyBuilder->setService($services[0]);
+            }
+        }
 
         $this->service->storeCompanyData($companyBuilder);
+    }
 
-        // Trigger registration at SimplyBook
+    /**
+     * Execute the registration request and handle the response.
+     */
+    private function executeRegistration(string $email, string $encryptedPassword, string $captchaToken): \WP_REST_Response
+    {
         try {
-            $response = $this->client->register_company();
+            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
         } catch (ApiException $e) {
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         }
@@ -186,48 +236,24 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
-     * Check if the given page title is available based on the given url and
-     * existing pages.
+     * Generate the booking page with the SimplyBook widget shortcode.
+     * Uses a translatable slug and title. WordPress handles slug uniqueness.
+     *
+     * If page creation fails, this is NOT a blocker for onboarding.
+     * The client should show PublishWidgetTask instead of BookingWidgetLiveTask.
      */
-    public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    public function generateDefaultPages(): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-        $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
+        $pageResult = $this->bookingPageService->generateBookingPage();
 
-        return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
-    }
-
-    /**
-     * Generate default shortcode pages
-     */
-    public function generateDefaultPages(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
-        if (!$calendarPageIsAvailable) {
-            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
-            return $this->service->sendHttpResponse([], false, $message, 409);
-        }
-
-        $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
-
-        $calendarPageID = (new PageBuilder())->setTitle($calendarPageName)
-            ->setContent('[simplybook_widget]')
-            ->insert();
-
-        $pageCreatedSuccessfully = ($calendarPageID !== -1);
-
-        // These flags are deleted after its one time use in the Task and Notice
-        if ($pageCreatedSuccessfully) {
+        if ($pageResult['success'] && $pageResult['page_id'] > 0) {
             $this->widgetService->setPublishWidgetCompleted();
         }
 
-        $this->service->setOnboardingCompleted();
-
         return $this->service->sendHttpResponse([
-            'calendar_page_id' => $calendarPageID,
-        ], $pageCreatedSuccessfully, '', ($pageCreatedSuccessfully ? 200 : 400));
+            'page_id' => $pageResult['page_id'],
+            'page_url' => $pageResult['page_url'],
+        ], $pageResult['success'], $pageResult['message'], ($pageResult['success'] ? 200 : 400));
     }
 
     /**

@@ -27,6 +27,8 @@ class CreateAccountService
 
     /**
      * Register a new company.
+     *
+     * @param string $captchaToken reCAPTCHA Enterprise token (not score).
      * @throws ApiException
      */
     public function registerCompany(
@@ -34,7 +36,9 @@ class CreateAccountService
         string $email,
         string $password,
         string $callbackUrl,
-        bool $marketingConsent
+        bool $marketingConsent,
+        ?int $category = null,
+        string $captchaToken = ''
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -48,8 +52,8 @@ class CreateAccountService
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
-
-        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin);
+        
+        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
     }
 
     /**
@@ -65,29 +69,18 @@ class CreateAccountService
      * Make a request.
      * @throws ApiException
      */
-    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = ''): array
+    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = '', string $captchaToken = ''): array
     {
         $url = $this->buildUrl($endpoint);
-
-        $headers = array_merge($this->getRspalHeaders(), [
-            'Content-Type' => 'application/json',
-            'Accept' => 'application/json',
-        ]);
-
-        // Add auth headers if credentials are provided
-        if (!empty($companyLogin)) {
-            $headers['X-Company-Login'] = $companyLogin;
-        }
+        $headers = $this->buildRequestHeaders($companyLogin, $captchaToken);
 
         $args = [
             'method' => $method,
             'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
+            'body' => wp_json_encode($body),
         ];
-
-        // Always send JSON body for POST requests (API expects at least "{}")
-        $args['body'] = json_encode($body);
 
         $response = wp_safe_remote_request($url, $args);
 
@@ -99,26 +92,71 @@ class CreateAccountService
             ]);
         }
 
+        return $this->parseResponse($response);
+    }
+
+    /**
+     * Build request headers including optional company login and captcha token.
+     */
+    private function buildRequestHeaders(string $companyLogin = '', string $captchaToken = ''): array
+    {
+        $headers = array_merge($this->getRspalHeaders(), [
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ]);
+
+        if (!empty($companyLogin)) {
+            $headers['X-Company-Login'] = sanitize_text_field($companyLogin);
+        }
+
+        if (!empty($captchaToken)) {
+            $headers['RSPAL-RecaptchaV3Token'] = sanitize_text_field($captchaToken);
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Parse the response and handle errors.
+     * @throws ApiException
+     */
+    private function parseResponse(array $response): array
+    {
         $responseCode = wp_remote_retrieve_response_code($response);
-        $responseBody = json_decode(wp_remote_retrieve_body($response), true);
+        $responseBodyRaw = wp_remote_retrieve_body($response);
+        $responseBody = json_decode($responseBodyRaw, true);
 
         if (!is_array($responseBody)) {
             throw new ApiException(__('Invalid response.', 'simplybook'));
         }
 
         if (isset($responseBody['rspal-error'])) {
-            $rspalError = sanitize_text_field($responseBody['rspal-error']);
-            throw (new ApiException(
-                $rspalError ?: __('Error', 'simplybook')
-            ))->setData([
-                'error' => $rspalError,
-            ]);
+            $this->handleRspalError($responseBody['rspal-error'], $responseCode);
         }
 
         return [
             'code' => (int) $responseCode,
             'body' => $responseBody,
         ];
+    }
+
+    /**
+     * Handle rspal-error responses.
+     *
+     * @param array|string $rspalError The error data from the rspal-error response.
+     * @throws ApiException
+     */
+    private function handleRspalError($rspalError, int $responseCode): void
+    {
+        $errorMessage = is_array($rspalError)
+            ? wp_json_encode($rspalError)
+            : sanitize_text_field($rspalError);
+
+        throw (new ApiException(
+            $errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')
+        ))->setData([
+            'error' => $errorMessage,
+        ]);
     }
 
     /**
