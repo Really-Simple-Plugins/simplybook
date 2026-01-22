@@ -29,6 +29,9 @@ const LoginLink = ({
     const loginTo = (e, page ) => {
         e.preventDefault();
 
+        // Call the passed onClick handler first (e.g., for snooze callback)
+        onClick(e);
+
         // Start fetch when the link is clicked
         fetchLinkData().then((response) => {
             let link = response?.data.simplybook_external_login_url;

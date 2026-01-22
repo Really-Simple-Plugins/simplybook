@@ -53,7 +53,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
 
         if (task.action.text && task.action.login_link) {
             const handleLoginLinkClick = () => {
-                if (task.action?.snooze_on_click) {
+                if (task.snoozable) {
                     onSnoozeCallback(task.id);
                 }
             };

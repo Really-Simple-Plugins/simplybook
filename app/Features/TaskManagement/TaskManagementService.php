@@ -173,8 +173,8 @@ class TaskManagementService
     }
 
     /**
-     * Snooze a task by hiding it for a specified duration.
-     * This stores a timestamp and hides the task. Only works for snoozable tasks.
+     * Snooze a task for a specified duration. Only works for snoozable tasks.
+     * The task's getStatus() will return 'hidden' while snoozed.
      */
     public function snoozeTask(string $taskId): void
     {
@@ -185,6 +185,6 @@ class TaskManagementService
         }
 
         $task->snooze();
-        $this->hideTask($taskId);
+        $this->repository->addTask($task);
     }
 }

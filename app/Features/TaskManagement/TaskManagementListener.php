@@ -371,7 +371,6 @@ class TaskManagementListener
         $hasCompanyInfo = ($arguments['has_company_info'] ?? false);
 
         if ($hasCompanyInfo) {
-            Tasks\AddCompanyInfoTask::markCompleted();
             $this->service->completeTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );
@@ -384,25 +383,26 @@ class TaskManagementListener
      *
      * Logic:
      * - If task is already completed, do nothing
-     * - If task is snoozed (clicked within 24 hours), keep it hidden
+     * - If task is snoozed (clicked within 24 hours), getStatus() returns hidden
      * - Otherwise, check if company info is present via API
      * - If present, complete the task
      * - If not present, show the task
      */
     private function handleCompanyInfoTask(): void
     {
-        // Skip if already completed
-        if (Tasks\AddCompanyInfoTask::isCompleted()) {
+        $task = $this->service->getTask(Tasks\AddCompanyInfoTask::IDENTIFIER);
+
+        if ($task === null) {
             return;
         }
 
-        $task = $this->service->getTask(Tasks\AddCompanyInfoTask::IDENTIFIER);
+        // Skip if already completed
+        if ($task->getStatus() === Tasks\AbstractTask::STATUS_COMPLETED) {
+            return;
+        }
 
-        // If snoozed (clicked within 24 hours), keep it hidden
-        if ($task !== null && $task->isSnoozed()) {
-            $this->service->hideTask(
-                Tasks\AddCompanyInfoTask::IDENTIFIER
-            );
+        // If snoozed, skip the API check below - getStatus() already returns hidden
+        if ($task->isSnoozed()) {
             return;
         }
 
@@ -411,7 +411,6 @@ class TaskManagementListener
         $hasCompanyInfo = $this->companyInfoService->hasCompanyInfo();
 
         if ($hasCompanyInfo) {
-            Tasks\AddCompanyInfoTask::markCompleted();
             $this->service->completeTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );
