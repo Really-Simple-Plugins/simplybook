@@ -383,10 +383,9 @@ class TaskManagementListener
      *
      * Logic:
      * - If task is already completed, do nothing
-     * - If task is snoozed (clicked within 24 hours), getStatus() returns hidden
-     * - Otherwise, check if company info is present via API
+     * - Check if company info is present via API
      * - If present, complete the task
-     * - If not present, show the task
+     * - If not present and not snoozed, show the task
      */
     private function handleCompanyInfoTask(): void
     {
@@ -401,11 +400,6 @@ class TaskManagementListener
             return;
         }
 
-        // If snoozed, skip the API check below - getStatus() already returns hidden
-        if ($task->isSnoozed()) {
-            return;
-        }
-
         // Check company info via API (this will dispatch COMPANY_INFO_CHECKED event)
         // The result is cached for 24 hours
         $hasCompanyInfo = $this->companyInfoService->hasCompanyInfo();
@@ -414,7 +408,8 @@ class TaskManagementListener
             $this->service->completeTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );
-        } else {
+        } elseif (!$task->isSnoozed()) {
+            // Only show task if not snoozed
             $this->service->openTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );
