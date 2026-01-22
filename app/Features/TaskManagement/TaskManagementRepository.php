@@ -132,6 +132,11 @@ class TaskManagementRepository
             Event::dispatch(Event::PUBLISH_WIDGET_TASK_DISMISSED);
         }
 
+        // Clear snooze when task reaches a final state
+        if (in_array($status, [AbstractTask::STATUS_COMPLETED, AbstractTask::STATUS_DISMISSED], true)) {
+            $task->clearSnooze();
+        }
+
         $task->setStatus($status);
         $this->addTask($task);
     }

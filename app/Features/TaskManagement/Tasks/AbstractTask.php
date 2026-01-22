@@ -114,19 +114,12 @@ abstract class AbstractTask implements TaskInterface
      */
     public function getStatus(): string
     {
-        $status = $this->status ?? self::STATUS_OPEN;
-
-        // Final statuses take precedence
-        if (in_array($status, [self::STATUS_COMPLETED, self::STATUS_DISMISSED], true)) {
-            return $status;
-        }
-
         // Snooze temporarily overrides the status
         if ($this->isSnoozable() && $this->isSnoozed()) {
             return self::STATUS_HIDDEN;
         }
 
-        return $status;
+        return $this->status ?? self::STATUS_OPEN;
     }
 
     /**
