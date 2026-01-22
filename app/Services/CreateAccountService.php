@@ -37,7 +37,6 @@ class CreateAccountService
         string $password,
         string $callbackUrl,
         bool $marketingConsent,
-        ?int $category = null,
         string $captchaToken = ''
     ): array {
         // Sanitize inputs
