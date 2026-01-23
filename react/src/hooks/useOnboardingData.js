@@ -116,24 +116,6 @@ const useOnboardingData = () => {
                 }
 
                 return await submitAccountRegistration(data, captchaToken);
-                try {
-                    // Create account (validates, stores data, triggers SimplyBook registration)
-                    await httpClient.setRoute('onboarding/create_account').setPayload(data).post();
-                    setApiError('');
-                } catch (error) {
-                    setApiError(error.message || __("An error occurred while registering.", "simplybook"));
-                    return false;
-                }
-
-                try {
-                    // Generate the booking page on success
-                    await httpClient.setRoute('onboarding/generate_pages').post();
-                } catch (error) {
-                    // Silently continue if page generation fails, user can
-                    // create the page manually later.
-                }
-
-                return true;
             },
         },
         {
@@ -146,11 +128,24 @@ const useOnboardingData = () => {
                         secondary_color: data.secondary_color,
                         active_color: data.active_color,
                     }).post();
+                } catch (error) {
+                    setApiError(error.message || __("An error occurred while saving the styles.", "simplybook"));
+                    return false;
+                }
 
+                try {
+                    // Generate the booking page
+                    await httpClient.setRoute('onboarding/generate_pages').setPayload({ generate: true }).post();
+                } catch (error) {
+                    // Silently continue if page generation fails, user can
+                    // create the page manually later via the task.
+                }
+
+                try {
                     // Complete the onboarding
                     await httpClient.setRoute('onboarding/finish_onboarding').setPayload({ finish: true }).post();
                 } catch (error) {
-                    setApiError(error.message || __("An error occurred while saving the styles.", "simplybook"));
+                    setApiError(error.message || __("An error occurred while finishing the onboarding.", "simplybook"));
                     return false;
                 }
 
