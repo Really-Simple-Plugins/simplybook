@@ -184,10 +184,17 @@ class CreateAccountService
      */
     private function createInstallationId(): string
     {
+        $headers = array_merge([
+            'Content-Type' => 'application/json',
+            'Accept' => 'application/json',
+        ], $this->getRspalHeadersBase(), [
+            // Placeholders for InstallationId and Signature are required for now
+            'RSPAL-InstallationId' => 'placeholder',
+            'RSPAL-Signature' => 'placeholder',
+        ]);
+
         $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
-            'headers' => [
-                'Content-Type' => 'application/json',
-            ],
+            'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
             'body' => json_encode([]),
@@ -223,17 +230,26 @@ class CreateAccountService
     }
 
     /**
-     * Build the headers
+     * Build the base RSPAL headers without InstallationId and Signature.
+     * Used by both getRspalHeaders() and createInstallationId().
      */
-    private function getRspalHeaders(): array
+    private function getRspalHeadersBase(): array
     {
-        $headers = [
+        return [
             'RSPAL-PluginName' => $this->env->getString('plugin.name'),
             'RSPAL-PluginVersion' => $this->env->getString('plugin.version'),
             'RSPAL-PluginPath' => $this->getPluginRelativePath(),
             'RSPAL-Origin' => trailingslashit(site_url()),
-            'RSPAL-InstallationId' => $this->getInstallationId(),
         ];
+    }
+
+    /**
+     * Build the full RSPAL headers including InstallationId and Signature.
+     */
+    private function getRspalHeaders(): array
+    {
+        $headers = $this->getRspalHeadersBase();
+        $headers['RSPAL-InstallationId'] = $this->getInstallationId();
 
         $headers['RSPAL-Signature'] = hash_hmac(
             'sha256',
