@@ -543,13 +543,14 @@ class ApiClient
 
         $company_login = $this->get_company_login();
         $callback_url = $this->callbackUrlService->getFullCallbackUrl();
+        $marketingConsent = (bool) $this->get_company('marketingConsent');
 
         $alResponse = $this->createAccountService->registerCompany(
             $company_login,
             $email,
             $this->decryptString($encryptedPassword),
             $callback_url,
-            false, // @todo, marketing consent handled in NLRSP2-291
+            $marketingConsent,
             $captchaToken
         );
 

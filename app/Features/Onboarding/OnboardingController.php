@@ -135,7 +135,12 @@ class OnboardingController implements FeatureInterface
             $captchaToken = $storage->getString('captcha_token');
 
             // Store company data for callback authentication
-            $this->storeCompanyData($email, $encryptedPassword, $storage->getBoolean('terms-and-conditions'));
+            $this->storeCompanyData(
+                $email,
+                $encryptedPassword,
+                $storage->getBoolean('terms-and-conditions'),
+                $storage->getBoolean('marketing-consent')
+            );
 
             // Register directly with the data
             return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
@@ -167,12 +172,13 @@ class OnboardingController implements FeatureInterface
     /**
      * Store company data for callback authentication.
      */
-    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted): void
+    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted, bool $marketingConsent): void
     {
         $companyBuilder = new CompanyBuilder();
         $companyBuilder->setEmail($email);
         $companyBuilder->setUserLogin($email);
         $companyBuilder->setTerms($termsAccepted);
+        $companyBuilder->setMarketingConsent($marketingConsent);
         $companyBuilder->setPassword($encryptedPassword);
 
         // Set category and first service from Extendify data if available
