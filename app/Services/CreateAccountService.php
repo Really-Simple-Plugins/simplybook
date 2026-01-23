@@ -51,7 +51,7 @@ class CreateAccountService
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
-        
+
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
     }
 
