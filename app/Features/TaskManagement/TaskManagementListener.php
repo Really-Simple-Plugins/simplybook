@@ -18,7 +18,7 @@ class TaskManagementListener
         TaskManagementService $service,
         PromotionService $promotionService,
         SubscriptionDataService $subscriptionDataService,
-        CompanyInfoService $companyInfoService,
+        CompanyInfoService $companyInfoService
     ) {
         $this->service = $service;
         $this->promotionService = $promotionService;
