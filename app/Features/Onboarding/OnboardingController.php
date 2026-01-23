@@ -144,6 +144,9 @@ class OnboardingController implements FeatureInterface
 
             // Register directly with the data
             return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
+        } catch (ApiException $e) {
+            $this->log('Account creation failed (API): ' . $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
         } catch (\Exception $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
@@ -203,12 +206,7 @@ class OnboardingController implements FeatureInterface
      */
     private function executeRegistration(string $email, string $encryptedPassword, string $captchaToken): \WP_REST_Response
     {
-        try {
-            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
-        } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
-        }
-
+        $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
         $this->service->finishCompanyRegistration();
 
         return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
@@ -505,7 +503,12 @@ class OnboardingController implements FeatureInterface
          * Action: simplybook_after_company_registered
          * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
          */
-        do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
+        try {
+            do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
+        } catch (\Exception $e) {
+            // Log but don't fail - service naming is secondary to registration success
+            $this->log('Post-registration action failed: ' . $e->getMessage());
+        }
 
         return new \WP_REST_Response([
             'message' => 'Successfully registered company.',

@@ -160,6 +160,7 @@ class CreateAccountService
 
     /**
      * Get or create the Installation ID
+     * @throws ApiException
      */
     private function getInstallationId(): string
     {
@@ -169,13 +170,7 @@ class CreateAccountService
             return $installationId;
         }
 
-        try {
-            $installationId = $this->createInstallationId();
-        } catch (ApiException $e) {
-            $this->log('Failed to create installation ID: ' . sanitize_text_field($e->getMessage()));
-        }
-
-        return $installationId;
+        return $this->createInstallationId();
     }
 
     /**

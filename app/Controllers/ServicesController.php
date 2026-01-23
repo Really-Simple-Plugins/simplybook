@@ -107,14 +107,10 @@ class ServicesController implements ControllerInterface
      */
     private function updateExistingService(array $serviceData, string $serviceName): bool
     {
-        try {
-            $this->service->fill($serviceData);
-            $this->service->name = $serviceName;
-            $this->service->update();
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        $this->service->fill($serviceData);
+        $this->service->name = $serviceName;
+        $this->service->update();
+        return true;
     }
 
     /**
@@ -122,15 +118,11 @@ class ServicesController implements ControllerInterface
      */
     private function createNewService(string $serviceName): bool
     {
-        try {
-            $this->service->reset();
-            $this->service->name = $serviceName;
-            $this->service->duration = 60; // Default: 1 hour
-            $this->service->is_visible = true;
-            $this->service->create();
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
+        $this->service->reset();
+        $this->service->name = $serviceName;
+        $this->service->duration = 60; // Default: 1 hour
+        $this->service->is_visible = true;
+        $this->service->create();
+        return true;
     }
 }
