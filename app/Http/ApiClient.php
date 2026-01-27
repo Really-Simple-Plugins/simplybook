@@ -541,20 +541,20 @@ class ApiClient
             throw new ApiException(__('Please provide a valid email address.', 'simplybook'));
         }
 
-        $company_login = $this->get_company_login();
-        $callback_url = $this->callbackUrlService->getFullCallbackUrl();
+        $companyLogin = $this->get_company_login();
+        $callbackUrl = $this->callbackUrlService->getFullCallbackUrl();
         $marketingConsent = (bool) $this->get_company('marketingConsent');
 
-        $alResponse = $this->createAccountService->registerCompany(
-            $company_login,
+        $rawResponse = $this->createAccountService->registerCompany(
+            $companyLogin,
             $email,
             $this->decryptString($encryptedPassword),
-            $callback_url,
+            $callbackUrl,
             $marketingConsent,
             $captchaToken
         );
 
-        $response = (object) $alResponse['body'];
+        $response = (object) $rawResponse['body'];
 
         // Response returns success
         if (isset($response->success) && $response->success) {
