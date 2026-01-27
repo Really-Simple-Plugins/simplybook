@@ -73,6 +73,15 @@ class OnboardingService
     }
 
     /**
+     * Retrieve company data from the options and build a CompanyBuilder object
+     */
+    public function getCompanyData(): CompanyBuilder
+    {
+        $companyData = get_option('simplybook_company_data', []);
+        return (new CompanyBuilder())->buildFromArray($companyData);
+    }
+
+    /**
      * Method is used to build the company domain and login based on the given
      * domain and login values. For non-default domains the domain should be
      * appended to the login for the authentication process. The domains are

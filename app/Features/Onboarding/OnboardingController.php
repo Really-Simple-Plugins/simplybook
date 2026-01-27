@@ -451,24 +451,23 @@ class OnboardingController implements FeatureInterface
         }
 
         // Get stored company data for authentication
-        $companyData = get_option('simplybook_company_data', []);
-        $companyBuilder = (new CompanyBuilder())->buildFromArray($companyData);
-        $companyLogin = get_option('simplybook_company_login');
-        $domain = $this->client->get_domain();
+        $company = $this->service->getCompanyData();
+        $companyLogin = $this->client->get_company_login(false);
+        $companyDomain = $this->client->get_domain();
 
         // Validate required data exists
-        if (empty($companyData) || empty($companyLogin) || empty($companyBuilder->email)) {
+        if (empty($companyLogin) || ($company->isValid() === false)) {
             $this->log('Missing company data for post-registration authentication');
-            return $this->handleCallbackFailure('Company data not found. Please restart registration.');
+            return $this->handleCallbackFailure(__('Company data not found. Please restart registration.', 'simplybook'));
         }
 
         // Authenticate using stored credentials
         try {
             $authResponse = $this->client->authenticateExistingUser(
-                $domain,
+                $companyDomain,
                 $companyLogin,
-                $companyBuilder->email,
-                $this->decryptString($companyBuilder->password)
+                $company->email,
+                $this->decryptString($company->password)
             );
         } catch (\Exception $e) {
             $this->log('Authentication after registration failed: ' . $e->getMessage());
@@ -512,7 +511,7 @@ class OnboardingController implements FeatureInterface
     private function handleCallbackFailure(string $errorMessage = ''): \WP_REST_Response
     {
         if (empty($errorMessage)) {
-            $errorMessage = 'An error occurred during the registration process';
+            $errorMessage = __('An error occurred during the registration process', 'simplybook');
         }
 
         $this->log('Registration callback failed: ' . $errorMessage);
