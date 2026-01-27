@@ -33,41 +33,18 @@ class ServicesController implements ControllerInterface
     }
 
     /**
-     * After the company is registered, we need to set the initial service name(s).
-     * If Extendify provided multiple services, we create them all as separate services.
-     * Otherwise, we update the default service with the name from onboarding.
+     * After the company is registered, we need to set the name for the initial
+     * service(s). We create a Service for all the services saved in the
+     * database. For the default Service we only have to update the name.
      */
     public function setInitialServiceName(): bool
     {
-        // Check for Extendify services first
         $extendifyServices = $this->extendifyDataService->getServices();
-        if (!empty($extendifyServices)) {
-            return $this->createMultipleServices($extendifyServices);
-        }
-
-        // Fallback to original logic for single service from onboarding
-        return $this->updateDefaultService();
-    }
-
-    /**
-     * Update the default service with the name from onboarding.
-     * This is the original logic for non-Extendify users.
-     */
-    private function updateDefaultService(): bool
-    {
-        $serviceName = $this->get_company('service');
-        if (empty($serviceName)) {
+        if (empty($extendifyServices)) {
             return false;
         }
 
-        $currentServices = $this->service->all();
-
-        // Must have exactly one service to update
-        if (count($currentServices) !== 1 || empty($currentServices[0]) || !is_array($currentServices[0])) {
-            return false;
-        }
-
-        return $this->updateExistingService($currentServices[0], sanitize_text_field($serviceName));
+        return $this->createMultipleServices($extendifyServices);
     }
 
     /**
