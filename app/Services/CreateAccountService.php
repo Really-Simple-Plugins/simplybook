@@ -44,10 +44,8 @@ class CreateAccountService
 
         $requestBody = [
             'company_login' => $sanitizedCompanyLogin,
-            'name' => 'Voorbeeld Naam',
             'email' => sanitize_email($email),
-//            'callback_url' => esc_url_raw($callbackUrl),
-            'callback_url' => 'https://webhook.site/3a740e5a-b816-4bea-bb54-ecdad6006834',
+            'callback_url' => esc_url_raw($callbackUrl),
             'password' => sanitize_text_field($password),
             'retype_password' => sanitize_text_field($password),
             'journey_type' => 'wp_plugin',
