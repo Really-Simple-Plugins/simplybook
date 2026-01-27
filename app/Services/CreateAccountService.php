@@ -13,7 +13,7 @@ class CreateAccountService
     private const AL_BASE_URL_PRODUCTION = 'https://simplybook.rsp-auth.com';
     private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
     private const SIMPLYBOOK_API_VERSION = 'v2';
-    private const INSTALLATION_ID_OPTION = 'simplybook_al_installation_id';
+    private const INSTALLATION_ID_OPTION = '_simplybook_installation_id';
 
     // API Endpoints
     private const ENDPOINT_COMPANY = 'simplybook/company';
@@ -45,7 +45,8 @@ class CreateAccountService
         $requestBody = [
             'company_login' => $sanitizedCompanyLogin,
             'email' => sanitize_email($email),
-            'callback_url' => esc_url_raw($callbackUrl),
+//            'callback_url' => esc_url_raw($callbackUrl),
+            'callback_url' => 'https://webhook.site/3a740e5a-b816-4bea-bb54-ecdad6006834',
             'password' => sanitize_text_field($password),
             'retype_password' => sanitize_text_field($password),
             'journey_type' => 'wp_plugin',
@@ -182,11 +183,7 @@ class CreateAccountService
         $headers = array_merge([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ], $this->getRspalHeadersBase(), [
-            // Placeholders for InstallationId and Signature are required for now
-            'RSPAL-InstallationId' => 'placeholder',
-            'RSPAL-Signature' => 'placeholder',
-        ]);
+        ], $this->getRspalHeadersBase());
 
         $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
             'headers' => $headers,
