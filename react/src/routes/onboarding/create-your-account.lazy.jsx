@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { useEffect } from "react";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import LeftColumn from "../../components/Grid/LeftColumn";
@@ -23,17 +23,13 @@ export const Route = createLazyFileRoute(path)({
  */
 function RecaptchaDisclosure() {
     return (
-        <p className="text-xs text-gray-400 mt-4 text-center">
-            {__("This site is protected by reCAPTCHA and the Google ", "simplybook")}
-            <a href={GOOGLE_PRIVACY_POLICY_URL} target="_blank" rel="noopener noreferrer" className="underline">
-                {__("Privacy Policy", "simplybook")}
-            </a>
-            {__(" and ", "simplybook")}
-            <a href={GOOGLE_TERMS_URL} target="_blank" rel="noopener noreferrer" className="underline">
-                {__("Terms of Service", "simplybook")}
-            </a>
-            {__(" apply.", "simplybook")}
-        </p>
+        <p className="text-xs text-gray-400 mt-4 text-center" dangerouslySetInnerHTML={{
+            __html: sprintf(
+                __("This page is protected by reCAPTCHA and the Google %s and %s apply.", "simplybook"),
+                `<a href="${GOOGLE_PRIVACY_POLICY_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Privacy Policy", "simplybook")}</a>`,
+                `<a href="${GOOGLE_TERMS_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Terms of Service", "simplybook")}</a>`
+            )
+        }} />
     );
 }
 
