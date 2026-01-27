@@ -474,12 +474,7 @@ class OnboardingController implements FeatureInterface
          * Action: simplybook_after_company_registered
          * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
          */
-        try {
-            do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
-        } catch (\Exception $e) {
-            // Log but don't fail - service naming is secondary to registration success
-            $this->log('Post-registration action failed: ' . $e->getMessage());
-        }
+        do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
 
         return new \WP_REST_Response([
             'message' => __('Successfully registered company.', 'simplybook'),

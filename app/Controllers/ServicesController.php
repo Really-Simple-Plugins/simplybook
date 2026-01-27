@@ -80,26 +80,38 @@ class ServicesController implements ControllerInterface
     }
 
     /**
-     * Update an existing service with a new name.
+     * Update an existing service with a new name. Silently fails so the
+     * onboarding process can continue even if service update fails.
      */
     private function updateExistingService(array $serviceData, string $serviceName): bool
     {
-        $this->service->fill($serviceData);
-        $this->service->name = $serviceName;
-        $this->service->update();
+        try {
+            $this->service->fill($serviceData);
+            $this->service->name = $serviceName;
+            $this->service->update();
+        } catch (\Exception $e) {
+            return false;
+        }
+
         return true;
     }
 
     /**
-     * Create a new service with default settings.
+     * Create a new service with default settings. Silently fails so the
+     * onboarding process can continue even if service creation fails.
      */
     private function createNewService(string $serviceName): bool
     {
-        $this->service->reset();
-        $this->service->name = $serviceName;
-        $this->service->duration = 60; // Default: 1 hour
-        $this->service->is_visible = true;
-        $this->service->create();
+        try {
+            $this->service->reset();
+            $this->service->name = $serviceName;
+            $this->service->duration = 60; // Default: 1 hour
+            $this->service->is_visible = true;
+            $this->service->create();
+        } catch (\Exception $e) {
+            return false;
+        }
+
         return true;
     }
 }
