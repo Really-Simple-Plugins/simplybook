@@ -124,17 +124,13 @@ class OnboardingController implements FeatureInterface
     {
         try {
             $storage = $this->service->retrieveHttpStorage($request);
-
-            $validationError = $this->validateAccountRequest($storage);
-            if ($validationError !== null) {
-                return $validationError;
-            }
+            $this->validateAccountRequestOrFail($storage);
 
             $email = $storage->getEmail('email');
             $encryptedPassword = $this->encryptString(wp_generate_password(24, false));
             $captchaToken = $storage->getString('captcha_token');
 
-            // Store company data for callback authentication
+            // Store company data use in handleRegistrationCallback
             $this->storeCompanyData(
                 $email,
                 $encryptedPassword,
@@ -142,8 +138,7 @@ class OnboardingController implements FeatureInterface
                 $storage->getBoolean('marketing-consent')
             );
 
-            // Register directly with the data
-            return $this->executeRegistration($email, $encryptedPassword, $captchaToken);
+            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
@@ -151,65 +146,61 @@ class OnboardingController implements FeatureInterface
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
         }
+
+        $this->service->finishCompanyRegistration();
+        return $this->service->sendHttpResponse([], $response->success, $response->message, $response->code);
     }
 
     /**
-     * Validate email and terms acceptance from the request.
+     * Validate email and terms acceptance from the "create account"-request.
+     * @throws ApiException if validation fails
      */
-    private function validateAccountRequest(Storage $storage): ?\WP_REST_Response
+    private function validateAccountRequestOrFail(Storage $storage): void
     {
         $email = $storage->getEmail('email');
         $termsAccepted = $storage->getBoolean('terms-and-conditions');
 
         if (!is_email($email)) {
-            return $this->service->sendHttpResponse([], false, __('Please enter a valid email address.', 'simplybook'), 400);
+            throw new ApiException(__('Please enter a valid email address.', 'simplybook'), 400);
         }
 
         if (!$termsAccepted) {
-            return $this->service->sendHttpResponse([], false, __('Please accept the terms and conditions.', 'simplybook'), 400);
+            throw new ApiException(__('Please accept the terms and conditions.', 'simplybook'), 400);
         }
-
-        return null;
     }
 
     /**
-     * Store company data for callback authentication.
+     * Store company data used in {@see handleRegistrationCallback}. This method
+     * also injects the category and the first service from Extendify data if
+     * available. The {@see ServicesController} creates additional services
+     * after registration.
+     * @uses CompanyBuilder
      */
     private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted, bool $marketingConsent): void
     {
-        $companyBuilder = new CompanyBuilder();
-        $companyBuilder->setEmail($email);
-        $companyBuilder->setUserLogin($email);
-        $companyBuilder->setTerms($termsAccepted);
-        $companyBuilder->setMarketingConsent($marketingConsent);
-        $companyBuilder->setPassword($encryptedPassword);
+        $companyBuilder = (new CompanyBuilder())->setEmail($email)
+            ->setUserLogin($email)
+            ->setTerms($termsAccepted)
+            ->setMarketingConsent($marketingConsent)
+            ->setPassword($encryptedPassword);
 
-        // Set category and first service from Extendify data if available
-        // Additional services are created by ServicesController after registration
-        if ($this->extendifyDataService->hasData()) {
-            $category = $this->extendifyDataService->getCategory();
-            if ($category !== null) {
-                $companyBuilder->setCategory($category);
-            }
+        // No data to inject
+        if (!$this->extendifyDataService->hasData()) {
+            $this->service->storeCompanyData($companyBuilder);
+            return;
+        }
 
-            $services = $this->extendifyDataService->getServices();
-            if (!empty($services)) {
-                $companyBuilder->setService($services[0]);
-            }
+        $category = $this->extendifyDataService->getCategory();
+        if ($category !== null) {
+            $companyBuilder->setCategory($category);
+        }
+
+        $services = $this->extendifyDataService->getServices();
+        if (!empty($services)) {
+            $companyBuilder->setService($services[0]);
         }
 
         $this->service->storeCompanyData($companyBuilder);
-    }
-
-    /**
-     * Execute the registration request and handle the response.
-     */
-    private function executeRegistration(string $email, string $encryptedPassword, string $captchaToken): \WP_REST_Response
-    {
-        $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
-        $this->service->finishCompanyRegistration();
-
-        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
     }
 
     /**
