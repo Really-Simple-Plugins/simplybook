@@ -6,10 +6,10 @@ import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
 import {
-    RECAPTCHA_SITE_KEY,
-    RECAPTCHA_SCRIPT_URL,
-    GOOGLE_PRIVACY_POLICY_URL,
-    GOOGLE_TERMS_URL
+    SIMPLYBOOK_RECAPTCHA_SITE_KEY,
+    SIMPLYBOOK_RECAPTCHA_SCRIPT_URL,
+    SIMPLYBOOK_GOOGLE_PRIVACY_POLICY_URL,
+    SIMPLYBOOK_GOOGLE_TERMS_URL
 } from "../../api/config";
 
 const path = "/onboarding/create-your-account";
@@ -26,8 +26,8 @@ function RecaptchaDisclosure() {
         <p className="text-xs text-gray-400 mt-4 text-center" dangerouslySetInnerHTML={{
             __html: sprintf(
                 __("This page is protected by reCAPTCHA and the Google %s and %s apply.", "simplybook"),
-                `<a href="${GOOGLE_PRIVACY_POLICY_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Privacy Policy", "simplybook")}</a>`,
-                `<a href="${GOOGLE_TERMS_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Terms of Service", "simplybook")}</a>`
+                `<a href="${SIMPLYBOOK_GOOGLE_PRIVACY_POLICY_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Privacy Policy", "simplybook")}</a>`,
+                `<a href="${SIMPLYBOOK_GOOGLE_TERMS_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Terms of Service", "simplybook")}</a>`
             )
         }} />
     );
@@ -41,7 +41,7 @@ function CreateLoginAccount() {
         }
 
         const script = document.createElement('script');
-        script.src = `${RECAPTCHA_SCRIPT_URL}?render=${RECAPTCHA_SITE_KEY}`;
+        script.src = `${SIMPLYBOOK_RECAPTCHA_SCRIPT_URL}?render=${SIMPLYBOOK_RECAPTCHA_SITE_KEY}`;
         script.async = true;
         script.id = 'recaptcha-script';
         document.head.appendChild(script);

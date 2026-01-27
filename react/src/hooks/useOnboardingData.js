@@ -3,9 +3,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
 import { useState } from "react";
 import HttpClient from "../api/requests/HttpClient";
-import { RECAPTCHA_SITE_KEY } from "../api/config";
+import { SIMPLYBOOK_RECAPTCHA_SITE_KEY } from "../api/config";
 
-export { RECAPTCHA_SITE_KEY };
+export { SIMPLYBOOK_RECAPTCHA_SITE_KEY };
 
 /**
  * Execute reCAPTCHA and get token
@@ -45,7 +45,7 @@ const useOnboardingData = () => {
         }
 
         try {
-            const token = await executeCaptcha(RECAPTCHA_SITE_KEY);
+            const token = await executeCaptcha(SIMPLYBOOK_RECAPTCHA_SITE_KEY);
             return token;
         } catch (captchaError) {
             setApiError(__("Captcha verification failed. Please try again.", "simplybook"));

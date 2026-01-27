@@ -1,4 +1,4 @@
-import { AJAX_URL } from "../config";
+import { SIMPLYBOOK_AJAX_URL } from "../config";
 
 /**
  * Function to make an AJAX request to the server.
@@ -10,8 +10,8 @@ import { AJAX_URL } from "../config";
 const ajaxRequest = async (path, method, requestData = {}) => {
   const url =
     "GET" === method
-      ? AJAX_URL + `&rest_action=${path.replace("?", "&")}`
-      : AJAX_URL;
+      ? SIMPLYBOOK_AJAX_URL + `&rest_action=${path.replace("?", "&")}`
+      : SIMPLYBOOK_AJAX_URL;
 
   console.log(
     "AJAX: Requesting data from " + url + " using " + method + " method",

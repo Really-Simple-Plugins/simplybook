@@ -1,4 +1,4 @@
-import { X_WP_NONCE, NONCE, SB_API_URL } from '../config';
+import { SIMPLYBOOK_X_WP_NONCE, SIMPLYBOOK_NONCE, SIMPLYBOOK_API_URL } from '../config';
 import { __ } from "@wordpress/i18n";
 import { DataError } from "../helpers/DataError";
 
@@ -8,17 +8,17 @@ import { DataError } from "../helpers/DataError";
 class HttpClient {
     private route: string | null = null;
     private getMethodHeaders: Record<string, string> = {
-        'X-WP-NONCE': X_WP_NONCE,
+        'X-WP-NONCE': SIMPLYBOOK_X_WP_NONCE,
     };
 
     private postMethodHeaders: Record<string, string> = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
-        'X-WP-NONCE': X_WP_NONCE,
+        'X-WP-NONCE': SIMPLYBOOK_X_WP_NONCE,
     };
 
     private payload: Record<string, any> = {
-        'nonce': NONCE,
+        'nonce': SIMPLYBOOK_NONCE,
     };
 
     /**
@@ -27,7 +27,7 @@ class HttpClient {
      */
     constructor(route?: string) {
         if (route) {
-            this.route = SB_API_URL + route;
+            this.route = SIMPLYBOOK_API_URL + route;
         }
     }
 
@@ -73,7 +73,7 @@ class HttpClient {
             headers: this.postMethodHeaders,
             body: JSON.stringify({
                 ...this.payload,
-                nonce: NONCE,
+                nonce: SIMPLYBOOK_NONCE,
             }),
         });
 
@@ -132,7 +132,7 @@ class HttpClient {
         }
 
         const payload = {
-            nonce: NONCE,
+            nonce: SIMPLYBOOK_NONCE,
         };
 
         const response = await fetch(this.route, {
@@ -154,7 +154,7 @@ class HttpClient {
      * @returns The HttpClient instance.
      */
     public setRoute(route: string) {
-        this.route = SB_API_URL + route;
+        this.route = SIMPLYBOOK_API_URL + route;
         return this;
     }
 
@@ -229,7 +229,7 @@ class HttpClient {
      */
     private resetPayload() {
         this.payload = {
-            'nonce': NONCE,
+            'nonce': SIMPLYBOOK_NONCE,
         };
     }
 
