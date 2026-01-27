@@ -564,7 +564,8 @@ class ApiClient
         // We generate a company_login dynamically, but because SimplyBook has
         // very strict checks this company_login might be invalid. In this case
         // we delete the company_login and try again.
-        if (isset($response->data->company_login) &&
+        if (
+            isset($response->data->company_login) &&
             (
                 in_array('The field contains illegal words', $response->data->company_login)
                 || in_array('login_reserved', $response->data->company_login)
