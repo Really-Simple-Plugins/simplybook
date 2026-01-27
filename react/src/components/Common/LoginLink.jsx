@@ -42,7 +42,9 @@ const LoginLink = ({
 
             let finalUrl = `${link}/${page}/`;
             if (link.includes("by-hash")) {
-                finalUrl = `${link}?back_url=/${page}/`;
+                const url = new URL(link);
+                url.searchParams.append('back_url', `/${page}/`);
+                finalUrl = url.toString();
             }
 
             window.open(finalUrl, "_blank");

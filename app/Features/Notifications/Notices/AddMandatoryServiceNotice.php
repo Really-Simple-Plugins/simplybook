@@ -45,7 +45,7 @@ class AddMandatoryServiceNotice extends AbstractNotice
     {
         return [
             'text' => __('Add Service', 'simplybook'),
-            'login_link' => '/v2/management/#services/edit/details/add',
+            'login_link' => '/v2/management?hash=services/edit/details/add',
         ];
     }
 }

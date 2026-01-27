@@ -146,7 +146,7 @@ class BlockController implements ControllerInterface
      * Convert Gutenberg block to shortcode output. Filters empty values.
      *
      * @since 3.1.1 No longer filter out 'any', as this is a valid value for the
-     * feature: "Any Employee selector" (/v2/management/#plugins/any_unit/)
+     * feature: "Any Employee selector" (/v2/management?hash=plugins/any_unit/)
      *
      * @since 3.2.3 Added do_shortcode for FSE compatibility. FSE requires
      * an explicit do_shortcode() call to render shortcode content.

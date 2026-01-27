@@ -215,7 +215,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                         iconClass="fa-regular"
                         reverseIcon={true}
                         btnVariant="square-ghost-small"
-                        loginLink={`/v2/management/#providers/edit/details/${providerId}`}
+                        loginLink={`/v2/management?hash=providers/edit/details/${providerId}`}
                     >
                         {__("Edit All Properties", "simplybook")}
                     </ButtonLink>

@@ -11,7 +11,7 @@ import ButtonLink from "../Buttons/ButtonLink";
 const DataList = [
     {
         title: __("Service Providers", "simplybook"),
-        link: "/v2/management/#providers",
+        link: "/v2/management?hash=providers",
         id: "provider_limit", // Data from useSubscriptionData is found on ID
     },
     {
@@ -26,7 +26,7 @@ const DataList = [
     },
     {
         title: __("SMS Gateway", "simplybook"),
-        link: "v2/management/#plugins/sms",
+        link: "v2/management?hash=plugins/sms",
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
@@ -34,7 +34,7 @@ const DataList = [
     },
     {
         title: __("Membership", "simplybook"),
-        link: "v2/management/#plugins/membership",
+        link: "v2/management?hash=plugins/membership",
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
@@ -42,7 +42,7 @@ const DataList = [
     },
     {
         title: __("Paid Events", "simplybook"),
-        link: "v2/management/#plugins/paid_events",
+        link: "v2/management?hash=plugins/paid_events",
         buttonText: __("Upgrade", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,

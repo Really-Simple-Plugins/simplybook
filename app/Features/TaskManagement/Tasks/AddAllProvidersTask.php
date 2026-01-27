@@ -31,7 +31,7 @@ class AddAllProvidersTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('Add Providers', 'simplybook'),
-            'login_link' => '/v2/management/#providers',
+            'login_link' => '/v2/management?hash=providers',
         ];
     }
 }

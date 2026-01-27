@@ -32,7 +32,7 @@ class GatherClientInfoTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('More info', 'simplybook'),
-            'login_link' => 'v2/management/#additional-fields',
+            'login_link' => 'v2/management?hash=additional-fields',
         ];
     }
 }
