@@ -43,7 +43,7 @@ class VisitYourBookingPageTask extends AbstractTask
         }
 
         // Otherwise, task is open
-        return self::STATUS_OPEN;
+        return self::STATUS_URGENT;
     }
 
     /**
@@ -51,7 +51,7 @@ class VisitYourBookingPageTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('View your live booking widget on your website.', 'simplybook');
+        return __('Your Booking widget is live!', 'simplybook');
     }
 
     /**
@@ -66,8 +66,8 @@ class VisitYourBookingPageTask extends AbstractTask
 
         return [
             'type' => 'button',
-            'text' => __('View booking page', 'simplybook'),
-            'link' => $this->bookingPageService->getBookingPageUrlWithTracking(),
+            'text' => __('Have a look', 'simplybook'),
+            'link' => $this->bookingPageService->getBookingPageUriWithTracking(),
             'external' => true,
         ];
     }
