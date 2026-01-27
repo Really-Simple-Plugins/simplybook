@@ -501,7 +501,7 @@ class OnboardingController implements FeatureInterface
         }
 
         return new \WP_REST_Response([
-            'message' => 'Successfully registered company.',
+            'message' => __('Successfully registered company.', 'simplybook'),
         ]);
     }
 
