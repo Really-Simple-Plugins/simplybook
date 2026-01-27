@@ -35,7 +35,7 @@ class OnboardingService
      */
     public function setOnboardingCompleted(): bool
     {
-        $this->setCompletedStep(5);
+        $this->setCompletedStep(2);
         $this->clearTemporaryData();
 
         $this->client->clearFailedAuthenticationFlag();
