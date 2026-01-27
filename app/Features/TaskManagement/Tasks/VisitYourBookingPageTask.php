@@ -8,9 +8,9 @@ use SimplyBook\Services\BookingPageService;
  * Task to encourage users to view their live booking widget.
  * Completes when the user visits the booking page with the tracking parameter.
  */
-class BookingWidgetLiveTask extends AbstractTask
+class VisitYourBookingPageTask extends AbstractTask
 {
-    public const IDENTIFIER = 'booking_widget_live';
+    public const IDENTIFIER = 'visit_your_page_on_frontend';
 
     /**
      * Task is dismissible.

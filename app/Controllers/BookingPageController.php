@@ -23,6 +23,10 @@ class BookingPageController implements ControllerInterface
 
     public function register(): void
     {
+        if ($this->bookingPageService->hasBeenVisited()) {
+            return; // No need to track if already visited
+        }
+
         add_action('template_redirect', [$this, 'handleBookingPageVisit']);
     }
 
@@ -33,11 +37,11 @@ class BookingPageController implements ControllerInterface
      */
     public function handleBookingPageVisit(): void
     {
-        if (!$this->bookingPageService->hasVisitTrackingParameter()) {
+        if (!$this->bookingPageService->uriHasVisitTrackingParameter()) {
             return;
         }
 
-        if (!$this->bookingPageService->isOnBookingPage()) {
+        if (!$this->bookingPageService->userIsOnBookingPage()) {
             return;
         }
 

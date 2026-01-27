@@ -21,7 +21,12 @@ class BookingPageService
      * Uses a translatable slug so Dutch users get "kalender" instead of "calendar".
      * WordPress automatically handles slug uniqueness by appending -2, -3, etc.
      *
-     * @return array{success: bool, page_id: int, page_url: string, message: string}
+     * @return array{
+     *      success: bool,
+     *      page_id: int,
+     *      page_url: string,
+     *      message: string,
+     *  }
      */
     public function generateBookingPage(): array
     {
@@ -101,7 +106,7 @@ class BookingPageService
      * Get the booking page URL with the visit tracking parameter. Used by the
      * BookingWidgetLiveTask to track when users visit the page.
      */
-    public function getBookingPageUrlWithTracking(): string
+    public function getBookingPageUriWithTracking(): string
     {
         $url = $this->getBookingPageUrl();
         if (empty($url)) {
@@ -138,7 +143,7 @@ class BookingPageService
     /**
      * Check if the current request contains the visit tracking parameter.
      */
-    public function hasVisitTrackingParameter(): bool
+    public function uriHasVisitTrackingParameter(): bool
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only tracking parameter
         return isset($_GET[self::VISIT_TRACKING_PARAM]);
@@ -147,7 +152,7 @@ class BookingPageService
     /**
      * Check if the user is currently on the booking page.
      */
-    public function isOnBookingPage(): bool
+    public function userIsOnBookingPage(): bool
     {
         $bookingPageId = $this->getBookingPageId();
 
@@ -155,11 +160,12 @@ class BookingPageService
     }
 
     /**
-     * Mark the booking page as visited.
+     * Mark the booking page as visited. Autoload the option because it's
+     * checked frequently.
      */
     public function markAsVisited(): void
     {
-        update_option(self::VISITED_FLAG, true, false);
+        update_option(self::VISITED_FLAG, true, true);
     }
 
     /**

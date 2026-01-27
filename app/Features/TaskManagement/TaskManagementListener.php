@@ -290,7 +290,7 @@ class TaskManagementListener
     public function handleBookingPageVisited(): void
     {
         $this->service->completeTask(
-            Tasks\BookingWidgetLiveTask::IDENTIFIER
+            Tasks\VisitYourBookingPageTask::IDENTIFIER
         );
     }
 
