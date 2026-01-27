@@ -274,6 +274,7 @@ class ApiClient
             if ( empty($token) && $token_type === 'admin' ) {
                 $this->refresh_token('admin');
             }
+            $headers['X-Token'] = $token;
             $headers['X-Company-Login' ] = $this->get_company_login();
         }
 
