@@ -712,15 +712,12 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
-        //with common API (common token): you are able to call /simplybook/* endpoints. ( https://vetalkordyak.github.io/sb-company-api-explorer/main/ )
-        //with company API (company token): you are able to call company API endpoints. ( https://simplybook.me/en/api/developer-api/tab/rest_api )
-        $apiStatus = get_option( 'simplybook_api_status' );
-        //get part of $path after last /
-        $path_type = substr( $path, strrpos( $path, '/' ) + 1 );
+        $apiStatus = (array) get_option('simplybook_api_status', []);
+        $apiIsValid = (isset($apiStatus['status'], $apiStatus['time']) && $apiStatus['status'] !== 'error' && $apiStatus['time'] > (time() - HOUR_IN_SECONDS));
+        $persistentCache = ($apiIsValid ? (array) get_option('simplybook_persistent_cache', []) : []);
 
-        if ( $apiStatus && $apiStatus['status'] === 'error' && $apiStatus['time'] > time() - HOUR_IN_SECONDS ) {
-            $cache = get_option( 'simplybook_persistent_cache' );
-            //return $cache[ $type ] ?? [];
+        if (isset($persistentCache[$path])) {
+            return $persistentCache[$path];
         }
 
         //for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
@@ -773,10 +770,10 @@ class ApiClient
                 'status' => 'success',
                 'time' => time(),
             ]);
-            delete_option("simplybook_{$path_type}_error" );
+            delete_option("simplybook_{$path}_error" );
             //update the persistent cache
             $cache = get_option('simplybook_persistent_cache', []);
-            $cache[ $path_type ] = $response;
+            $cache[$path] = $response;
             update_option('simplybook_persistent_cache', $cache, false);
             return $response;
         }
@@ -794,7 +791,7 @@ class ApiClient
             return $this->api_call( $path, $data, $type, $attempt + 1 );
         }
 
-        $this->log("Error during $path_type retrieval: ".$message);
+        $this->log("Error during $path retrieval: ".$message);
 
         /* phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r */
         $msg = "response code: " . $response_code . ", response body: ".print_r($response_body,true);
