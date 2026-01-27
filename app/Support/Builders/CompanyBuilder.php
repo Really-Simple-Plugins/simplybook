@@ -6,7 +6,7 @@ class CompanyBuilder
 {
     public string $email = '';
     public string $userLogin = '';
-    public int $category = 0;
+    public int $category = 8; // Default category is 8: "Other category"
     public string $company_name = '';
     public string $phone = '';
     public string $city = '';
@@ -17,9 +17,6 @@ class CompanyBuilder
     public bool $terms = false;
     public bool $marketingConsent = false;
     public string $password = ''; // Should be encrypted
-
-    private array $asArray = [];
-    private int $defaultCategory = 8; // Default category is 8: "Other category"
 
     /**
      * Fields required for simplified registration flow.
@@ -56,7 +53,10 @@ class CompanyBuilder
 
     public function setCategory(int $category): CompanyBuilder
     {
-        $this->category = ($category < 1 ? $this->defaultCategory : $category);
+        if ($category >= 1) {
+            $this->category = $category;
+        }
+
         return $this;
     }
 
@@ -133,11 +133,7 @@ class CompanyBuilder
 
     public function toArray(): array
     {
-        if (!empty($this->asArray)) {
-            return $this->asArray;
-        }
-
-        $this->asArray = [
+        return [
             'email' => $this->email,
             'userLogin' => $this->userLogin,
             'category' => $this->category,
@@ -152,8 +148,6 @@ class CompanyBuilder
             'marketingConsent' => $this->marketingConsent,
             'password' => $this->password, // Should be encrypted
         ];
-
-        return $this->asArray;
     }
 
     /**

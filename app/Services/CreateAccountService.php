@@ -35,9 +35,10 @@ class CreateAccountService
         string $companyLogin,
         string $email,
         string $password,
-        string $callbackUrl,
         bool $marketingConsent,
-        string $captchaToken = ''
+        string $callbackUrl,
+        string $captchaToken = '',
+        ?int $category = null
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -51,6 +52,10 @@ class CreateAccountService
             'journey_type' => 'wp_plugin',
             'marketing_consent' => $marketingConsent,
         ];
+
+        if (is_int($category) && $category > 0) {
+            $requestBody['category'] = $category;
+        }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
     }

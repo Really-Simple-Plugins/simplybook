@@ -124,21 +124,15 @@ class OnboardingController implements FeatureInterface
     {
         try {
             $storage = $this->service->retrieveHttpStorage($request);
-            $this->validateAccountRequestOrFail($storage);
-
-            $email = $storage->getEmail('email');
-            $encryptedPassword = $this->encryptString(wp_generate_password(24, false));
             $captchaToken = $storage->getString('captcha_token');
 
-            // Store company data use in handleRegistrationCallback
-            $this->storeCompanyData(
-                $email,
-                $encryptedPassword,
+            $company = $this->getNewCompanyObject(
+                $storage->getEmail('email'),
                 $storage->getBoolean('terms-and-conditions'),
                 $storage->getBoolean('marketing-consent')
             );
 
-            $response = $this->client->register_company($email, $encryptedPassword, $captchaToken);
+            $response = $this->client->register_company($company, $captchaToken);
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
@@ -152,55 +146,39 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
-     * Validate email and terms acceptance from the "create account"-request.
-     * @throws ApiException if validation fails
+     * This method builds a NEW {@see CompanyBuilder} object used for
+     * registration. Under the hood it also stores the company data
+     * in the options which can be used in {@see handleRegistrationCallback}.
+     *
+     * Method is compatible with extra data saved from Extendify integration.
+     *
+     * @throws ApiException if invalid email or terms not accepted
      */
-    private function validateAccountRequestOrFail(Storage $storage): void
+    private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
-        $email = $storage->getEmail('email');
-        $termsAccepted = $storage->getBoolean('terms-and-conditions');
-
         if (!is_email($email)) {
             throw new ApiException(__('Please enter a valid email address.', 'simplybook'), 400);
         }
 
-        if (!$termsAccepted) {
+        if ($termsAccepted !== true) {
             throw new ApiException(__('Please accept the terms and conditions.', 'simplybook'), 400);
         }
-    }
 
-    /**
-     * Store company data used in {@see handleRegistrationCallback}. This method
-     * also injects the category and the first service from Extendify data if
-     * available. The {@see ServicesController} creates additional services
-     * after registration.
-     * @uses CompanyBuilder
-     */
-    private function storeCompanyData(string $email, string $encryptedPassword, bool $termsAccepted, bool $marketingConsent): void
-    {
-        $companyBuilder = (new CompanyBuilder())->setEmail($email)
+        $encryptedPassword = $this->service->encryptString(wp_generate_password(24, false));
+
+        $company = (new CompanyBuilder())->setEmail($email)
             ->setUserLogin($email)
-            ->setTerms($termsAccepted)
+            ->setTerms(true)
             ->setMarketingConsent($marketingConsent)
             ->setPassword($encryptedPassword);
 
-        // No data to inject
-        if (!$this->extendifyDataService->hasData()) {
-            $this->service->storeCompanyData($companyBuilder);
-            return;
-        }
-
         $category = $this->extendifyDataService->getCategory();
         if ($category !== null) {
-            $companyBuilder->setCategory($category);
+            $company->setCategory($category);
         }
 
-        $services = $this->extendifyDataService->getServices();
-        if (!empty($services)) {
-            $companyBuilder->setService($services[0]);
-        }
-
-        $this->service->storeCompanyData($companyBuilder);
+        $this->service->storeCompanyData($company);
+        return $company;
     }
 
     /**

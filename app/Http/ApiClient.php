@@ -524,7 +524,7 @@ class ApiClient
      * @internal method can be recursive a maximum of 3 times in one minute
      * @throws ApiException
      */
-    public function register_company(string $email, string $encryptedPassword, string $captchaToken = ''): ApiResponseDTO
+    public function register_company(CompanyBuilder $company, $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw new ApiException(
@@ -538,21 +538,23 @@ class ApiClient
             );
         }
 
-        if (empty($email) || !is_email($email)) {
-            throw new ApiException(__('Please provide a valid email address.', 'simplybook'));
+        if ($company->isValid() === false) {
+            throw new ApiException(
+                __('Please fill in all required fields to create an account.', 'simplybook')
+            );
         }
 
         $companyLogin = $this->get_company_login();
         $callbackUrl = $this->callbackUrlService->getFullCallbackUrl();
-        $marketingConsent = (bool) $this->get_company('marketingConsent');
 
         $rawResponse = $this->createAccountService->registerCompany(
             $companyLogin,
-            $email,
-            $this->decryptString($encryptedPassword),
+            $company->email,
+            $this->decryptString($company->password),
+            $company->marketingConsent,
             $callbackUrl,
-            $marketingConsent,
-            $captchaToken
+            $captchaToken,
+            $company->category,
         );
 
         $response = (object) $rawResponse['body'];
@@ -573,7 +575,7 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            return $this->register_company($email, $encryptedPassword, $captchaToken);
+            return $this->register_company($company, $captchaToken);
         }
 
         throw (new ApiException(
