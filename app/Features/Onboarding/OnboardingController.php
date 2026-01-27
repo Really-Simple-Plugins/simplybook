@@ -461,8 +461,8 @@ class OnboardingController implements FeatureInterface
             return $this->handleCallbackFailure(__('Company data not found. Please restart registration.', 'simplybook'));
         }
 
-        // Authenticate using stored credentials
         try {
+            // Authenticate using stored credentials
             $authResponse = $this->client->authenticateExistingUser(
                 $companyDomain,
                 $companyLogin,
