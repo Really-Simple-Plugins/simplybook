@@ -463,9 +463,12 @@ class OnboardingController implements FeatureInterface
 
         // Clear any previous failure state and mark step 1 as completed
         delete_option('simplybook_registration_failed');
-        $this->service->setCompletedStep(1);
-
         $this->callbackUrlService->cleanupCallbackUrl();
+
+        // Because this callback is sent after registration, we set step 1 as
+        // completed. On the frontend step 2 was already rendered, this is
+        // the step we wait for this callback to complete.
+        $this->service->setCompletedStep(1);
 
         /**
          * Action: simplybook_after_company_registered
