@@ -1,14 +1,14 @@
-import { __, sprintf } from "@wordpress/i18n";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {__, sprintf} from "@wordpress/i18n";
+import {useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import useSettingsData from "./useSettingsData";
-import { useState } from "react";
+import {useState} from "react";
 import HttpClient from "../api/requests/HttpClient";
-import { SIMPLYBOOK_RECAPTCHA_SITE_KEY } from "../api/config";
-
-export { SIMPLYBOOK_RECAPTCHA_SITE_KEY };
+import {SIMPLYBOOK_RECAPTCHA_SITE_KEY} from "../api/config";
 
 /**
- * Execute reCAPTCHA and get token
+ * This function returns a promise that resolves with the reCAPTCHA token
+ * for the given site key. Function can be used to execute reCAPTCHA v3
+ * on a button click or form submission.
  */
 const executeCaptcha = (siteKey) => {
     return new Promise((resolve, reject) => {
@@ -36,8 +36,9 @@ const useOnboardingData = () => {
     const httpClient = new HttpClient();
 
     /**
-     * Get captcha token if captcha is loaded, otherwise return empty string.
-     * Returns false if captcha execution fails.
+     * Function should be executed when the submit button is clicked on the
+     * account creation step. This function executes the captcha and returns
+     * the token or an empty string if captcha is not loaded.
      */
     const getCaptchaToken = async () => {
         if (!window.grecaptcha?.enterprise) {
@@ -45,8 +46,7 @@ const useOnboardingData = () => {
         }
 
         try {
-            const token = await executeCaptcha(SIMPLYBOOK_RECAPTCHA_SITE_KEY);
-            return token;
+            return await executeCaptcha(SIMPLYBOOK_RECAPTCHA_SITE_KEY);
         } catch (captchaError) {
             setApiError(__("Captcha verification failed. Please try again.", "simplybook"));
             return false;
@@ -62,13 +62,13 @@ const useOnboardingData = () => {
                 ...data,
                 captcha_token: captchaToken,
             }).post();
-
-            setApiError('');
-            return true;
         } catch (error) {
             setApiError(error.message || __("An error occurred while registering.", "simplybook"));
             return false;
         }
+
+        setApiError('');
+        return true;
     };
 
     const steps = [
@@ -179,7 +179,6 @@ const useOnboardingData = () => {
             ...initialData,
             ...prefilledData,
             onboardingCompleted: simplybook.is_onboarding_completed, // Include onboardingCompleted
-            // calendarPageNameAvailable: calendarPageNameAvailable,
         },
         staleTime: 1000 * 60 * 5, // 5 minutes
     });
