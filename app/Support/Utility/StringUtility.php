@@ -31,4 +31,18 @@ class StringUtility
     {
         return str_replace('_', '', ucwords($string, '_'));
     }
+
+    /**
+     * Convert a string to snake_case. Capital letters are replaced with
+     * underscores followed by the lowercase letter. Hyphens and spaces are also
+     * replaced with underscores. Multiple underscores are reduced to a single
+     * underscore. Leading and trailing underscores are trimmed.
+     */
+    public static function toSnakeCase(string $string): string
+    {
+        $string = preg_replace('/[ -]+/', '_', $string);
+        $string = preg_replace('/([a-z])([A-Z])/', '$1_$2', $string);
+        $string = preg_replace('/_+/', '_', $string);
+        return trim(strtolower($string), '_');
+    }
 }
