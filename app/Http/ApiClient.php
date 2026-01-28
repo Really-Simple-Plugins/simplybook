@@ -1262,6 +1262,29 @@ class ApiClient
     }
 
     /**
+     * Get the company info without caching. Caching should be done by the
+     * consumer of this method, in this case {@see CompanyInfoService}.
+     */
+    public function getCompanyInfo(): array
+    {
+        if ($this->company_registration_complete() === false) {
+            return [];
+        }
+
+        if ($this->authenticationFailedFlag) {
+            return []; // Prevent us even trying.
+        }
+
+        try {
+            $response = $this->request('GET', 'admin/company_info');
+        } catch (\Exception $e) {
+            return [];
+        }
+
+        return $response;
+    }
+
+    /**
      *
      * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
      * configured using Extendify. Otherwise, use default 'wp'.
