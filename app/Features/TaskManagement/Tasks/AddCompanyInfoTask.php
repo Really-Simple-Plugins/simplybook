@@ -12,7 +12,9 @@ class AddCompanyInfoTask extends AbstractTask
     protected bool $required = false;
 
     /**
-     * This task is snoozable - user can temporarily hide it.
+     * When a user clicks on the "Add company info" button, the task is
+     * snoozed for one day {@see $snoozeDuration} and "completed" when
+     * we detect the company info has been added.
      */
     protected bool $snoozable = true;
 
