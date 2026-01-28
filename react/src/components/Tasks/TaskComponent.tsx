@@ -45,6 +45,11 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
                     to={task.action.link}
                     target={task.action?.target ?? '_self'}
                     className={buttonClassName}
+                    onClick={() => {
+                        if (task.snoozable) {
+                            onSnoozeCallback(task.id);
+                        }
+                    }}
                 >
                     {task.action.text}
                 </Link>
@@ -52,17 +57,15 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
         }
 
         if (task.action.text && task.action.login_link) {
-            const handleLoginLinkClick = () => {
-                if (task.snoozable) {
-                    onSnoozeCallback(task.id);
-                }
-            };
-
             return (
                 <LoginLink
                     page={task.action.login_link}
                     className={buttonClassName}
-                    onClick={handleLoginLinkClick}
+                    onClick={() => {
+                        if (task.snoozable) {
+                            onSnoozeCallback(task.id);
+                        }
+                    }}
                 >
                     {task.action.text}
                 </LoginLink>
