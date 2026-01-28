@@ -187,4 +187,18 @@ class TaskManagementService
         $task->snooze();
         $this->repository->addTask($task);
     }
+
+    /**
+     * Check if a task is completed
+     */
+    public function isTaskCompleted(string $taskId): bool
+    {
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null) {
+            return false;
+        }
+
+        return $task->getStatus() === AbstractTask::STATUS_COMPLETED;
+    }
 }
