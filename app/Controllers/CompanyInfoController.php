@@ -17,9 +17,6 @@ class CompanyInfoController implements ControllerInterface
 
     public function register(): void
     {
-        if (isset($_GET['admin']) && $_GET['admin'] === 'rsp') {
-            add_action('init', [$this, 'handleCompanyInfoTask']);
-        }
         add_action('simplybook_daily', [$this, 'handleCompanyInfoTask']);
     }
 
