@@ -715,14 +715,6 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
-        $apiStatus = (array) get_option('simplybook_api_status', []);
-        $apiIsValid = (isset($apiStatus['status'], $apiStatus['time']) && $apiStatus['status'] !== 'error' && $apiStatus['time'] > (time() - HOUR_IN_SECONDS));
-        $persistentCache = ($apiIsValid ? (array) get_option('simplybook_persistent_cache', []) : []);
-
-        if (isset($persistentCache[$path])) {
-            return $persistentCache[$path];
-        }
-
         //for all requests to /admin/ endpoints, use the company token. Otherwise use the common token.
         $token_type = str_contains( $path, 'admin' ) ? 'admin' : 'public';
 
@@ -773,11 +765,6 @@ class ApiClient
                 'status' => 'success',
                 'time' => time(),
             ]);
-            delete_option("simplybook_{$path}_error" );
-            //update the persistent cache
-            $cache = get_option('simplybook_persistent_cache', []);
-            $cache[$path] = $response;
-            update_option('simplybook_persistent_cache', $cache, false);
             return $response;
         }
 
