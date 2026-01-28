@@ -8,24 +8,29 @@ class ScheduleController implements ControllerInterface
 {
     public function register(): void
     {
-        add_filter('cron_schedules', [$this, 'registerSimplyBookSchedules']);
-        add_action('plugins_loaded', [$this, 'startSimplyBookSchedules']);
+        add_action('init', [$this, 'startSimplyBookSchedules']);
+        add_action('simplybook_deactivation', [$this, 'unscheduleSimplyBookTasks']);
     }
 
-    public function registerSimplyBookSchedules(array $schedules): array
-    {
-        $schedules['simplybook_daily'] = [
-            'interval' => DAY_IN_SECONDS,
-            'display' => __('Once every day', 'simplybook'),
-        ];
-
-        return $schedules;
-    }
-
+    /**
+     * Hook into the default WordPress 'daily' schedule with the
+     * 'simplybook_daily' action. Can be used to run daily tasks.
+     */
     public function startSimplyBookSchedules(): void
     {
         if (wp_next_scheduled('simplybook_daily') === false) {
-            wp_schedule_event(time(), 'simplybook_daily', 'simplybook_daily');
+            wp_schedule_event(time(), 'daily', 'simplybook_daily');
+        }
+    }
+
+    /**
+     * Unschedule SimplyBook tasks on plugin deactivation.
+     */
+    public function unscheduleSimplyBookTasks(): void
+    {
+        $timestamp = wp_next_scheduled('simplybook_daily');
+        if ($timestamp !== false) {
+            wp_unschedule_event($timestamp, 'simplybook_daily');
         }
     }
 }
