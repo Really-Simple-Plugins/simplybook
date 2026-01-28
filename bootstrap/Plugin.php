@@ -119,7 +119,7 @@ final class Plugin
      */
     public function deactivation(): void
     {
-        // Silence is golden
+        do_action('simplybook_deactivation');
     }
 
     /**
@@ -167,6 +167,7 @@ final class Plugin
             \SimplyBook\Controllers\WidgetTrackingController::class,
             \SimplyBook\Controllers\OnboardingNoticeController::class,
             \SimplyBook\Controllers\BookingPageController::class,
+            \SimplyBook\Controllers\CompanyInfoController::class,
         ]);
     }
 
