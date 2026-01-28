@@ -12,18 +12,15 @@ class TaskManagementListener
     private TaskManagementService $service;
     private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
-    private CompanyInfoService $companyInfoService;
 
     public function __construct(
         TaskManagementService $service,
         PromotionService $promotionService,
         SubscriptionDataService $subscriptionDataService,
-        CompanyInfoService $companyInfoService
     ) {
         $this->service = $service;
         $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
-        $this->companyInfoService = $companyInfoService;
     }
 
     public function listen(): void
@@ -39,7 +36,7 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_event_' . Event::CALENDAR_PUBLISHED, [$this, 'handleCalendarPublished']);
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
-        add_action('simplybook_event_' . Event::COMPANY_INFO_CHECKED, [$this, 'handleCompanyInfoChecked']);
+        add_action('simplybook_event_' . Event::COMPANY_INFO_LOADED, [$this, 'handleCompanyInfoLoaded']);
         add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
@@ -370,60 +367,30 @@ class TaskManagementListener
                 (string) $this->subscriptionDataService->search('subscription_name', '')
             );
         }
-
-        $this->handleCompanyInfoTask();
     }
 
     /**
-     * Handle the company info check event to update task status.
+     * Handle the {@see AddCompanyInfoTask} task based on the loaded company
+     * info. Only handle it if the task is not yet completed.
      */
-    public function handleCompanyInfoChecked(array $arguments): void
+    public function handleCompanyInfoLoaded(array $eventArguments): void
     {
-        $hasCompanyInfo = ($arguments['has_company_info'] ?? false);
-
-        if ($hasCompanyInfo) {
-            $this->service->completeTask(
-                Tasks\AddCompanyInfoTask::IDENTIFIER
-            );
-        }
-    }
-
-    /**
-     * Handle the company info task. This is a date-driven task that checks
-     * if the company info is present.
-     *
-     * Logic:
-     * - If task is already completed, do nothing
-     * - Check if company info is present via API
-     * - If present, complete the task
-     * - If not present and not snoozed, show the task
-     */
-    private function handleCompanyInfoTask(): void
-    {
-        $task = $this->service->getTask(Tasks\AddCompanyInfoTask::IDENTIFIER);
-
-        if ($task === null) {
+        $taskId = Tasks\AddCompanyInfoTask::IDENTIFIER;
+        if ($this->service->isTaskCompleted($taskId)) {
             return;
         }
 
-        // Skip if already completed
-        if ($task->getStatus() === Tasks\AbstractTask::STATUS_COMPLETED) {
-            return;
-        }
+        $hasRequiredCompanyInfo = ($eventArguments['has_required_info'] ?? false);
 
-        // Check company info via API (this will dispatch COMPANY_INFO_CHECKED event)
-        // The result is cached for 24 hours
-        $hasCompanyInfo = $this->companyInfoService->hasCompanyInfo();
-
-        if ($hasCompanyInfo) {
+        if ($hasRequiredCompanyInfo) {
             $this->service->completeTask(
                 Tasks\AddCompanyInfoTask::IDENTIFIER
             );
-        } elseif (!$task->isSnoozed()) {
-            // Only show task if not snoozed
-            $this->service->openTask(
-                Tasks\AddCompanyInfoTask::IDENTIFIER
-            );
+            return;
         }
+
+        $this->service->openTask(
+            Tasks\AddCompanyInfoTask::IDENTIFIER
+        );
     }
 }
