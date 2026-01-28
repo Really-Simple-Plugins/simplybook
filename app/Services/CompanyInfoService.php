@@ -2,100 +2,62 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Support\Helpers\Event;
 
-/**
- * Service to check if company info (name and address) is present.
- */
-class CompanyInfoService
+class CompanyInfoService extends AbstractFetchDataService
 {
-    private const CACHE_DURATION = DAY_IN_SECONDS;
-    private const CACHE_OPTION = 'simplybook_company_info_check_cache';
+    /**
+     * @inheritDoc
+     */
+    protected string $identifier = 'company_info';
 
-    private ApiClient $client;
+    /**
+     * Fields required for company info to be considered complete.
+     */
+    private array $requiredCompanyInfo = [
+        'name',
+        'address',
+    ];
 
-    public function __construct(ApiClient $client)
+    /**
+     * Check if the provided company info has all required fields filled. This
+     * does NOT fetch or restore any data, it only checks the provided data
+     * to the {@see $requiredCompanyInfo} fields.
+     */
+    public function hasRequiredInfo(array $companyInfo): bool
     {
-        $this->client = $client;
+        foreach ($this->requiredCompanyInfo as $field) {
+            if (empty($companyInfo[$field])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
-     * Check if company info is present (has name and address filled).
-     * Caches the result for 24 hours.
+     * Fetch the company info from the SimplyBook API
+     * @return array The company info
      */
-    public function hasCompanyInfo(): bool
+    public function fetch(): array
     {
-        $cached = $this->getCachedResult();
-        if ($cached !== null) {
-            return $cached;
-        }
-
-        $hasInfo = $this->checkCompanyInfoViaApi();
-
-        $this->cacheResult($hasInfo);
-
-        Event::dispatch(Event::COMPANY_INFO_CHECKED, ['has_company_info' => $hasInfo]);
-
-        return $hasInfo;
+        return $this->client->getCompanyInfo();
     }
 
     /**
-     * Clear the cached result.
+     * Company info data is considered fresh for 1 day when not overridden by a
+     * new fetch or restore operation.
      */
-    public function clearCache(): void
+    protected function getDataTimeThreshold(): int
     {
-        delete_option(self::CACHE_OPTION);
+        return DAY_IN_SECONDS;
     }
 
     /**
-     * Fetch company info from API and check if name and address are present.
+     * Trigger {@see Event::COMPANY_INFO_LOADED} when company info is loaded.
      */
-    private function checkCompanyInfoViaApi(): bool
+    protected function dispatchDataLoaded(array $data): void
     {
-        if ($this->client->company_registration_complete() === false) {
-            return false;
-        }
-
-        $response = $this->client->api_call('admin/company', [], 'GET');
-
-        if (empty($response)) {
-            return false;
-        }
-
-        $name = $response['name'] ?? '';
-        $address = $response['address1'] ?? '';
-
-        return !empty($name) && !empty($address);
-    }
-
-    /**
-     * Get cached result if still valid.
-     */
-    private function getCachedResult(): ?bool
-    {
-        $cached = get_option(self::CACHE_OPTION, []);
-
-        if (empty($cached) || !isset($cached['checked_at'])) {
-            return null;
-        }
-
-        $checkedAt = (int) $cached['checked_at'];
-        if ((time() - $checkedAt) >= self::CACHE_DURATION) {
-            return null; // Cache expired
-        }
-
-        return (bool) ($cached['has_company_info'] ?? false);
-    }
-
-    /**
-     * Cache the result.
-     */
-    private function cacheResult(bool $hasCompanyInfo): void
-    {
-        update_option(self::CACHE_OPTION, [
-            'checked_at' => time(),
-            'has_company_info' => $hasCompanyInfo,
-        ], false);
+        Event::dispatch(Event::COMPANY_INFO_LOADED, $data);
     }
 }
