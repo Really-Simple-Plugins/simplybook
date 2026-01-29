@@ -68,7 +68,7 @@ class VisitYourBookingPageTask extends AbstractTask
             'type' => 'button',
             'text' => __('Have a look', 'simplybook'),
             'link' => $this->bookingPageService->getBookingPageUriWithTracking(),
-            'external' => true,
+            'target' => '_blank',
         ];
     }
 }
