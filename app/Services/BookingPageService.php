@@ -12,9 +12,9 @@ use SimplyBook\Support\Builders\PageBuilder;
  */
 class BookingPageService
 {
-    public const BOOKING_PAGE_OPTION = 'simplybook_booking_page_id';
-    public const VISIT_TRACKING_PARAM = 'simplybook_verify';
-    public const VISITED_FLAG = 'simplybook_booking_page_visited';
+    public const BOOKING_PAGE_OPTION = 'simplybook_generated_booking_page_id';
+    public const VISIT_TRACKING_PARAM = 'simplybook-admin-visit';
+    public const VISITED_FLAG = 'simplybook_generated_booking_page_visited';
 
     /**
      * Generate the booking page with the SimplyBook widget shortcode.
