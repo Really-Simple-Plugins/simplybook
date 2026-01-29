@@ -43,7 +43,7 @@ class VisitYourBookingPageTask extends AbstractTask
         }
 
         // Otherwise, task is open
-        return self::STATUS_URGENT;
+        return self::STATUS_OPEN;
     }
 
     /**
