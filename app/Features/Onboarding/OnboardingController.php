@@ -219,10 +219,6 @@ class OnboardingController implements FeatureInterface
     {
         $pageResult = $this->bookingPageService->generateBookingPage();
 
-        if ($pageResult['success'] && $pageResult['page_id'] > 0) {
-            $this->widgetService->setPublishWidgetCompleted();
-        }
-
         return $this->service->sendHttpResponse([
             'page_id' => $pageResult['page_id'],
             'page_url' => $pageResult['page_url'],
@@ -334,7 +330,6 @@ class OnboardingController implements FeatureInterface
             $responseStorage->getInt('company_id'),
         );
 
-        $this->validatePublishedWidget();
         $this->service->setOnboardingCompleted();
 
         return true;
@@ -496,27 +491,5 @@ class OnboardingController implements FeatureInterface
         return new \WP_REST_Response([
             'error' => $errorMessage,
         ], 400);
-    }
-
-    /**
-     * Method is used to set a notification/task flag to true when it determines
-     * that there is a published post with the SimplyBook.me widget shortcode
-     * or the Gutenberg block.
-     */
-    public function validatePublishedWidget(): void
-    {
-        $cacheName = 'simplybook_widget_published';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found && ($cacheValue === true)) {
-            $this->widgetService->setPublishWidgetCompleted();
-            return;
-        }
-
-        // Check if any widgets are currently published
-        if ($this->widgetService->hasTrackedPosts()) {
-            $this->widgetService->setPublishWidgetCompleted();
-            wp_cache_set($cacheName, true, 'simplybook', DAY_IN_SECONDS);
-        }
     }
 }
