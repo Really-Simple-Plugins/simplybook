@@ -16,7 +16,7 @@ class TaskManagementListener
     public function __construct(
         TaskManagementService $service,
         PromotionService $promotionService,
-        SubscriptionDataService $subscriptionDataService,
+        SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
         $this->promotionService = $promotionService;
@@ -383,14 +383,10 @@ class TaskManagementListener
         $hasRequiredCompanyInfo = ($eventArguments['has_required_info'] ?? false);
 
         if ($hasRequiredCompanyInfo) {
-            $this->service->completeTask(
-                Tasks\AddCompanyInfoTask::IDENTIFIER
-            );
+            $this->service->completeTask($taskId);
             return;
         }
 
-        $this->service->openTask(
-            Tasks\AddCompanyInfoTask::IDENTIFIER
-        );
+        $this->service->openTask($taskId);
     }
 }
