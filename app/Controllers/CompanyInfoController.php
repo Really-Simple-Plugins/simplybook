@@ -37,6 +37,10 @@ class CompanyInfoController implements ControllerInterface
             $hasRequiredInfo = $this->service->hasRequiredInfo($currentCompanyInfo);
         }
 
+        if (empty($currentCompanyInfo)) {
+            return; // No data loaded
+        }
+
         Event::dispatch(Event::COMPANY_INFO_LOADED, [
             'company_info' => $currentCompanyInfo,
             'has_required_info' => $hasRequiredInfo,

@@ -16,7 +16,7 @@ class CompanyInfoService extends AbstractFetchDataService
      */
     private array $requiredCompanyInfo = [
         'name',
-        'address',
+        'address1',
     ];
 
     /**
@@ -31,7 +31,6 @@ class CompanyInfoService extends AbstractFetchDataService
                 return false;
             }
         }
-
         return true;
     }
 
