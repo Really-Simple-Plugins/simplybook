@@ -164,30 +164,29 @@ class CreateAccountService
     }
 
     /**
-     * Get or create the Installation ID
-     * @throws ApiException
+     * Get the Installation ID
      */
-    private function getInstallationId(): string
+    public function getInstallationId(): string
     {
-        $installationId = get_option(self::INSTALLATION_ID_OPTION, '');
-
-        if (!empty($installationId)) {
-            return $installationId;
-        }
-
-        return $this->createInstallationId();
+        return get_option(self::INSTALLATION_ID_OPTION, '');
     }
 
     /**
      * Request the creation of a new installation ID
+     * @param bool $override Whether to override existing ID or not
      * @throws ApiException
      */
-    private function createInstallationId(): string
+    public function createInstallationId(bool $override = true): void
     {
+        $existingId = $this->getInstallationId();
+        if (!empty($existingId) && !$override) {
+            return;
+        }
+
         $headers = array_merge([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
-        ], $this->getRspalHeadersBase());
+        ], $this->getRspalHeaders());
 
         $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
             'headers' => $headers,
@@ -197,23 +196,22 @@ class CreateAccountService
         ]);
 
         if (is_wp_error($response)) {
-            throw new ApiException($response->get_error_message());
+            throw new ApiException('Could not create Installation ID. WP Error: ' . $response->get_error_message());
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($responseCode !== 200 && $responseCode !== 201) {
-            throw new ApiException('Invalid response code: ' . $responseCode);
+            throw new ApiException('Could not create Installation ID. Invalid response code: ' . $responseCode);
         }
 
         $installationId = isset($responseBody['uuid']) ? sanitize_text_field($responseBody['uuid']) : '';
         if (empty($installationId)) {
-            throw new ApiException('Installation ID not found in response.');
+            throw new ApiException('Could not create Installation ID. Installation ID not found in response.');
         }
 
         update_option(self::INSTALLATION_ID_OPTION, $installationId, false);
-        return $installationId;
     }
 
     /**
@@ -226,34 +224,31 @@ class CreateAccountService
     }
 
     /**
-     * Build the base RSPAL headers without InstallationId and Signature.
-     * Used by both getRspalHeaders() and createInstallationId().
+     * Build the RSPAL headers.
      */
-    private function getRspalHeadersBase(): array
+    private function getRspalHeaders(): array
     {
-        return [
+        $installationId = $this->getInstallationId();
+
+        $headers = [
             'RSPAL-PluginName' => $this->env->getString('plugin.name'),
             'RSPAL-PluginVersion' => $this->env->getString('plugin.version'),
             'RSPAL-PluginPath' => $this->getPluginRelativePath(),
             'RSPAL-Origin' => trailingslashit(site_url()),
+            'RSPAL-InstallationId' => $installationId,
         ];
+
+        $headers['RSPAL-Signature'] = $this->getInstallationSignature($headers, $installationId);
+
+        return $headers;
     }
 
     /**
-     * Build the full RSPAL headers including InstallationId and Signature.
+     * Generate the installation signature.
      */
-    private function getRspalHeaders(): array
+    private function getInstallationSignature(array $format, string $id): string
     {
-        $headers = $this->getRspalHeadersBase();
-        $headers['RSPAL-InstallationId'] = $this->getInstallationId();
-
-        $headers['RSPAL-Signature'] = hash_hmac(
-            'sha256',
-            json_encode($headers),
-            $headers['RSPAL-InstallationId']
-        );
-
-        return $headers;
+        return hash_hmac('sha256', json_encode($format), $id);
     }
 
     /**

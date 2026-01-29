@@ -544,6 +544,18 @@ class ApiClient
             );
         }
 
+        try {
+            $this->createAccountService->createInstallationId(false);
+        } catch (\Exception $e) {
+            throw (new ApiException(
+                // User-friendly message during company creation flow
+                __('Account creation failed, could not verify installation.', 'simplybook')
+            ))->setData([
+                // Remember specific createInstallationId exception message
+                'message' => $e->getMessage(),
+            ]);
+        }
+
         $companyLogin = $this->get_company_login();
         $callbackUrl = $this->callbackUrlService->getFullCallbackUrl();
 
@@ -1254,16 +1266,12 @@ class ApiClient
      */
     public function getCompanyInfo(): array
     {
-        if ($this->company_registration_complete() === false) {
-            return [];
-        }
-
         if ($this->authenticationFailedFlag) {
             return []; // Prevent us even trying.
         }
 
         try {
-            $response = $this->request('GET', 'admin/company_info');
+            $response = $this->get('admin/company/info');
         } catch (\Exception $e) {
             return [];
         }
