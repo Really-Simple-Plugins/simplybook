@@ -160,6 +160,31 @@ class BookingPageService
     }
 
     /**
+     * Determine if the current visit can be tracked as an admin booking page
+     * visit.
+     */
+    public function visitCanBeTracked(): bool
+    {
+        if (!is_user_logged_in()) {
+            return false; // abort for non-logged-in users
+        }
+
+        if ($this->hasBeenVisited()) {
+            return false; // already visited
+        }
+
+        if (!$this->uriHasVisitTrackingParameter()) {
+            return false; // no tracking parameter
+        }
+
+        if (!$this->userIsOnBookingPage()) {
+            return false; // not on booking page
+        }
+
+        return true;
+    }
+
+    /**
      * Mark the booking page as visited. Autoload the option because it's
      * checked frequently.
      */
