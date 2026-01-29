@@ -164,11 +164,11 @@ class CreateAccountService
     }
 
     /**
-     * Get the Installation ID
+     * Get the Installation ID or 'unknown' if not set.
      */
     public function getInstallationId(): string
     {
-        return get_option(self::INSTALLATION_ID_OPTION, '');
+        return get_option(self::INSTALLATION_ID_OPTION, 'unknown');
     }
 
     /**
