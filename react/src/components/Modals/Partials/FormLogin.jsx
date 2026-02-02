@@ -71,7 +71,7 @@ const formLogin = ({
      */
     const logUserIn = async (formData) => {
         try {
-            let path = SIMPLYBOOK_API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
+            let path = SIMPLYBOOK_API_BASE_PATH + "onboarding/auth" + glue() + "token=" + Math.random().toString(36).substring(2, 7);
             let data = { ...formData, nonce: SIMPLYBOOK_NONCE };
 
             let request = await apiFetch({
