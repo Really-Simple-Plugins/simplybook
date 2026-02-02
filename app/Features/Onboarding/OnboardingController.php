@@ -135,7 +135,7 @@ class OnboardingController implements FeatureInterface
             $response = $this->client->register_company($company, $captchaToken);
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
         } catch (\Exception $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
@@ -157,11 +157,11 @@ class OnboardingController implements FeatureInterface
     private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
         if (!is_email($email)) {
-            throw new ApiException(__('Please enter a valid email address.', 'simplybook'), 400);
+            throw (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
         }
 
         if ($termsAccepted !== true) {
-            throw new ApiException(__('Please accept the terms and conditions.', 'simplybook'), 400);
+            throw (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
         }
 
         $encryptedPassword = $this->service->encryptString(wp_generate_password(24, false));
@@ -244,7 +244,7 @@ class OnboardingController implements FeatureInterface
         $userPassword = $storage->getString('user_password');
 
         if ($storage->isOneEmpty(['company_domain', 'company_login', 'user_login', 'user_password'])) {
-            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 422);
         }
 
         try {
@@ -284,7 +284,7 @@ class OnboardingController implements FeatureInterface
         $companyDomain = $storage->getString('domain');
 
         if ($storage->isOneEmpty(['company_login', 'domain', 'auth_session_id', 'two_fa_type', 'two_fa_code'])) {
-            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 422);
         }
 
         try {

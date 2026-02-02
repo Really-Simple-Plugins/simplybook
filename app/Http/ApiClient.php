@@ -528,21 +528,21 @@ class ApiClient
     public function register_company(CompanyBuilder $company, $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
-            throw new ApiException(
+            throw (new ApiException(
                 __('You are not authorized to do this.', 'simplybook')
-            );
+            ))->setResponseCode(403);
         }
 
         if (get_transient('simply_book_attempt_count') > 3) {
-            throw new ApiException(
+            throw (new ApiException(
                 __('Too many attempts to register company, please try again in a minute.', 'simplybook')
-            );
+            ))->setResponseCode(429);
         }
 
         if ($company->isValid() === false) {
-            throw new ApiException(
+            throw (new ApiException(
                 __('Please fill in all required fields to create an account.', 'simplybook')
-            );
+            ))->setResponseCode(422);
         }
 
         try {
@@ -554,7 +554,7 @@ class ApiClient
             ))->setData([
                 // Remember specific createInstallationId exception message
                 'message' => $e->getMessage(),
-            ]);
+            ])->setResponseCode(500);
         }
 
         $companyLogin = $this->get_company_login();
@@ -596,7 +596,7 @@ class ApiClient
         ))->setData([
             'message' => $response->message ?? '',
             'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
-        ]);
+        ])->setResponseCode(500);
     }
 
     /**
