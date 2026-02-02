@@ -222,7 +222,7 @@ class OnboardingController implements FeatureInterface
         return $this->service->sendHttpResponse([
             'page_id' => $pageResult['page_id'],
             'page_url' => $pageResult['page_url'],
-        ], $pageResult['success'], $pageResult['message'], ($pageResult['success'] ? 200 : 400));
+        ], $pageResult['success'], $pageResult['message'], ($pageResult['success'] ? 200 : 500));
     }
 
     /**
