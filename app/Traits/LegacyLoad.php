@@ -194,8 +194,9 @@ trait LegacyLoad {
      * @param bool $validate Is used on {@see get_option} to parse the domain
      * field from the fields' config. Sometimes we do not want this to prevent
      * translation errors while loading the fields.
-     * @throws \LogicException For developers - don't try-catch
-     * @throws \ReflectionException For developers - don't try-catch
+     * @throws \LogicException|\ReflectionException For developers - purely
+     * indicated that the plugin setup is incorrect. No need to catch this in
+     * normal usage.
      */
     public function get_domain(bool $validate = true): string
     {
