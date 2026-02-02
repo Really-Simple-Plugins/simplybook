@@ -10,8 +10,8 @@ class CreateAccountService
 {
     use HasLogging;
 
-    private const AL_BASE_URL_PRODUCTION = 'https://simplybook.rsp-auth.com';
-    private const AL_BASE_URL_DEVELOPMENT = 'https://simplybook.auth.really-simple-sandbox.com';
+    private const RSPAL_BASE_URL = 'https://simplybook.rsp-auth.com';
+
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = '_simplybook_installation_id';
 
@@ -61,12 +61,12 @@ class CreateAccountService
     }
 
     /**
-     * Get the base URL based on the {@see SIMPLYBOOK_ENV} constant.
+     * Get the base URL for the RSPAL API.
      */
     private function getBaseUrl(): string
     {
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-        return $env === 'development' ? self::AL_BASE_URL_DEVELOPMENT : self::AL_BASE_URL_PRODUCTION;
+        // Allow overriding the base URL with wp-config constant
+        return defined('RSPAL_BASE_URL') ? RSPAL_BASE_URL : self::RSPAL_BASE_URL;
     }
 
     /**
