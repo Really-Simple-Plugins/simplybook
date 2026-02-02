@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Support\Builders;
 
+use SimplyBook\Support\Utility\StringUtility;
+
 class CompanyBuilder
 {
     public string $email = '';
@@ -32,8 +34,8 @@ class CompanyBuilder
     public function buildFromArray(array $properties = []): CompanyBuilder
     {
         foreach ($properties as $key => $value) {
-            $propertyName = $this->keyToPropertyName($key);
-            $method = $this->methodFromPropertyName($key);
+            $propertyName = StringUtility::toCamelCase($key);
+            $method = 'set' . StringUtility::toPascalCase($key);
 
             if ((property_exists($this, $propertyName) === false) || (method_exists($this, $method) === false)) {
                 continue;
@@ -148,22 +150,6 @@ class CompanyBuilder
             'marketingConsent' => $this->marketingConsent,
             'password' => $this->password, // Should be encrypted
         ];
-    }
-
-    /**
-     * Converts a key (snake_case or camelCase) to camelCase property name.
-     */
-    private function keyToPropertyName(string $key): string
-    {
-        return lcfirst(str_replace('_', '', ucwords($key, '_')));
-    }
-
-    /**
-     * Converts a property name to a method name. It will remove underscores
-     */
-    private function methodFromPropertyName(string $property): string
-    {
-        return 'set' . str_replace('_', '', ucwords($property, '_'));
     }
 
     /**
