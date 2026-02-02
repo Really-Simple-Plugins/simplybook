@@ -74,11 +74,6 @@ class ApiClient
         $this->env = $env;
         $this->createAccountService = $createAccountService;
         $this->callbackUrlService = $callbackUrlService;
-        $environment = $this->env->get('simplybook.api', []);
-
-        if (empty($environment)) {
-            throw new \LogicException('Register the environment for the application in the container');
-        }
 
         if (get_option($this->authenticationFailedFlagKey)) {
             $this->handleFailedAuthentication();

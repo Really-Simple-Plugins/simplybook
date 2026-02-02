@@ -213,13 +213,13 @@ trait LegacyLoad {
             return $savedDomain;
         }
 
-        $environment = App::getInstance()->get(EnvironmentConfig::class)->get('simplybook.api');
-        if (empty($environment['domain'])) {
+        $domain = App::getInstance()->get(EnvironmentConfig::class)->getString('simplybook.base_api_domain');
+        if (empty($domain)) {
             throw new \LogicException('SimplyBook domain is not set in the environment.');
         }
 
-        wp_cache_set($cacheName, $environment['domain'], 'simplybook', DAY_IN_SECONDS);
-        return $environment['domain'];
+        wp_cache_set($cacheName, $domain, 'simplybook', DAY_IN_SECONDS);
+        return $domain;
     }
 
 }

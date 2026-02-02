@@ -10,8 +10,6 @@ class CreateAccountService
 {
     use HasLogging;
 
-    private const RSPAL_BASE_URL = 'https://simplybook.rsp-auth.com';
-
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = '_simplybook_installation_id';
 
@@ -58,15 +56,6 @@ class CreateAccountService
         }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
-    }
-
-    /**
-     * Get the base URL for the RSPAL API.
-     */
-    private function getBaseUrl(): string
-    {
-        // Allow overriding the base URL with wp-config constant
-        return defined('RSPAL_BASE_URL') ? RSPAL_BASE_URL : self::RSPAL_BASE_URL;
     }
 
     /**
@@ -188,7 +177,7 @@ class CreateAccountService
             'Accept' => 'application/json',
         ], $this->getRspalHeaders());
 
-        $response = wp_remote_post($this->getBaseUrl() . '/installation/create', [
+        $response = wp_remote_post($this->env->getUrl('simplybook.rsp_auth_url') . '/installation/create', [
             'headers' => $headers,
             'timeout' => 15,
             'sslverify' => true,
@@ -220,7 +209,7 @@ class CreateAccountService
     private function buildUrl(string $endpoint): string
     {
         $endpoint = preg_replace('/[^a-zA-Z0-9\/_-]/', '', $endpoint);
-        return $this->getBaseUrl() . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
+        return $this->env->getUrl('simplybook.rsp_auth_url') . '/' . self::SIMPLYBOOK_API_VERSION . '/' . ltrim($endpoint, '/');
     }
 
     /**

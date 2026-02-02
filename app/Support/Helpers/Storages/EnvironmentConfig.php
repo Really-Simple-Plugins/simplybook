@@ -41,55 +41,39 @@ final class EnvironmentConfig extends DeferredObject
     {
         $items = require dirname(__FILE__, 5) . '/config/env.php';
 
-        if (isset($items['simplybook']['api'])) {
-            $items = $this->exposeCorrectSimplyBookEnvironment($items);
-        }
-
-        if (isset($items['simplybook']['domains'])) {
-            $items = $this->addStagingSimplybookDomainToDomains($items);
+        if (
+            isset($items['simplybook']['domains'])
+            && is_array($items['simplybook']['domains'])
+            && !empty($items['simplybook']['base_api_domain'])
+        ) {
+            $baseApiDomain = $items['simplybook']['base_api_domain'];
+            $domains = $items['simplybook']['domains'];
+            $items['simplybook']['domains'] = $this->insertSimplyBookApiDomain($baseApiDomain, $domains);
         }
 
         return $items;
     }
 
     /**
-     * Provides the SimplyBook API environment configuration based on the
-     * value of the SIMPLYBOOK_ENV constant.
+     * Insert the base API domain into the list of available domains if not
+     * already present. Useful during development while using a custom
+     * staging domain.
      */
-    private function exposeCorrectSimplyBookEnvironment(array $items): array
+    public function insertSimplyBookApiDomain(string $baseApiDomain, array $domains): array
     {
-        $acceptedEnvs = ['production', 'development'];
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        if (!in_array($env, $acceptedEnvs)) {
-            $env = 'production';
+        // Find the domain by label
+        $labels = array_column($domains, 'label');
+        if (in_array($baseApiDomain, $labels, true)) {
+            return $domains;
         }
 
-        $correctEnv = ($items['simplybook']['api'][$env] ?? []);
-        $items['simplybook']['api'] = $correctEnv;
-        return $items;
-    }
+        // Add domain if not found
+        $sanitized = sanitize_text_field($baseApiDomain);
+        $domains[] = [
+            'value' => 'default:' . $sanitized,
+            'label' => $sanitized,
+        ];
 
-    /**
-     * Provides the SimplyBook domains based on the current environment.
-     * If in development mode, it adds the staging domain.
-     */
-    public function addStagingSimplybookDomainToDomains(array $items): array
-    {
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        $environmentData = $items['simplybook']['api'];
-        $domains = $items['simplybook']['domains'];
-
-        if (($env === 'development') && !empty($environmentData['domain'])) {
-            $domains[] = [
-                'value' => 'default:' . $environmentData['domain'],
-                'label' => $environmentData['domain'],
-            ];
-
-            $items['simplybook']['domains'] = $domains;
-        }
-
-        return $items;
+        return $domains;
     }
 }
