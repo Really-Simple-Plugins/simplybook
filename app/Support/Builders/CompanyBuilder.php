@@ -4,7 +4,7 @@ namespace SimplyBook\Support\Builders;
 
 use SimplyBook\Support\Utility\StringUtility;
 
-class CompanyBuilder
+final class CompanyBuilder
 {
     public string $email = '';
     public string $userLogin = '';
@@ -31,7 +31,7 @@ class CompanyBuilder
      * key-value pairs. Only known properties will be set. Supports both
      * snake_case and camelCase keys.
      */
-    public function buildFromArray(array $properties = []): CompanyBuilder
+    public function buildFromArray(array $properties = []): self
     {
         foreach ($properties as $key => $value) {
             $propertyName = StringUtility::toCamelCase($key);
@@ -47,13 +47,13 @@ class CompanyBuilder
         return $this;
     }
 
-    public function setEmail(string $email): CompanyBuilder
+    public function setEmail(string $email): self
     {
         $this->email = sanitize_email($email);
         return $this;
     }
 
-    public function setCategory(int $category): CompanyBuilder
+    public function setCategory(int $category): self
     {
         if ($category >= 1) {
             $this->category = $category;
@@ -62,61 +62,61 @@ class CompanyBuilder
         return $this;
     }
 
-    public function setCompanyName(string $company_name): CompanyBuilder
+    public function setCompanyName(string $company_name): self
     {
         $this->company_name = sanitize_text_field($company_name);
         return $this;
     }
 
-    public function setPhone(string $phone): CompanyBuilder
+    public function setPhone(string $phone): self
     {
         $this->phone = preg_replace('/[^0-9]/', '', $phone);
         return $this;
     }
 
-    public function setCity(string $city): CompanyBuilder
+    public function setCity(string $city): self
     {
         $this->city = sanitize_text_field($city);
         return $this;
     }
 
-    public function setAddress(string $address): CompanyBuilder
+    public function setAddress(string $address): self
     {
         $this->address = sanitize_text_field($address);
         return $this;
     }
 
-    public function setService(string $service): CompanyBuilder
+    public function setService(string $service): self
     {
         $this->service = sanitize_text_field($service);
         return $this;
     }
 
-    public function setCountry(string $country): CompanyBuilder
+    public function setCountry(string $country): self
     {
         $this->country = sanitize_text_field($country);
         return $this;
     }
 
-    public function setZip(string $zip): CompanyBuilder
+    public function setZip(string $zip): self
     {
         $this->zip = strtolower(str_replace(' ', '', trim(sanitize_text_field($zip))));
         return $this;
     }
 
-    public function setTerms(bool $terms): CompanyBuilder
+    public function setTerms(bool $terms): self
     {
         $this->terms = $terms;
         return $this;
     }
 
-    public function setMarketingConsent(bool $marketingConsent): CompanyBuilder
+    public function setMarketingConsent(bool $marketingConsent): self
     {
         $this->marketingConsent = $marketingConsent;
         return $this;
     }
 
-    public function setPassword(string $password): CompanyBuilder
+    public function setPassword(string $password): self
     {
         $this->password = sanitize_text_field($password);
         return $this;
@@ -127,7 +127,7 @@ class CompanyBuilder
      * this in the SimplyBook system, so for existing accounts this value
      * can be different.
      */
-    public function setUserLogin(string $userLogin): CompanyBuilder
+    public function setUserLogin(string $userLogin): self
     {
         $this->userLogin = sanitize_text_field($userLogin);
         return $this;
