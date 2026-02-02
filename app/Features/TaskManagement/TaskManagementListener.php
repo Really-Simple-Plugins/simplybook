@@ -4,8 +4,7 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Services\PromotionService;
-use SimplyBook\Services\CompanyInfoService;
-use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 
 class TaskManagementListener
 {

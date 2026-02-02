@@ -1,10 +1,10 @@
 <?php
 
-namespace SimplyBook\Services;
+namespace SimplyBook\Services\Entities;
 
 use SimplyBook\Support\Helpers\Event;
 
-class CompanyInfoService extends AbstractFetchDataService
+class CompanyInfoService extends AbstractEntityService
 {
     /**
      * @inheritDoc

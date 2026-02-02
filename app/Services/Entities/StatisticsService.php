@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyBook\Services;
+namespace SimplyBook\Services\Entities;
 
-class StatisticsService extends AbstractFetchDataService
+class StatisticsService extends AbstractEntityService
 {
     /**
      * @inheritDoc

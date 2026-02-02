@@ -4,8 +4,8 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Services\SubscriptionDataService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 
 class SubscriptionEndpoints implements MultiEndpointInterface
 {

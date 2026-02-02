@@ -3,8 +3,8 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Support\Helpers\Event;
-use SimplyBook\Services\CompanyInfoService;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\Entities\CompanyInfoService;
 
 class CompanyInfoController implements ControllerInterface
 {

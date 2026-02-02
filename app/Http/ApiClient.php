@@ -16,11 +16,12 @@ use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Exceptions\RestDataException;
-use SimplyBook\Support\Builders\CompanyBuilder;
-use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
-use SimplyBook\Services\CreateAccountService;
 use SimplyBook\Services\CallbackUrlService;
+use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Services\CreateAccountService;
+use SimplyBook\Support\Builders\CompanyBuilder;
+use SimplyBook\Services\Entities\CompanyInfoService;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * @todo Refactor this to a proper Client (jira: NL14RSP2-6)

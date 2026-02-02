@@ -1,13 +1,23 @@
 <?php
 
-namespace SimplyBook\Services;
+namespace SimplyBook\Services\Entities;
 
 use Carbon\Carbon;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Support\Utility\StringUtility;
 
-abstract class AbstractFetchDataService
+/**
+ * Base class for services that fetch, cache, and persist entity data from
+ * the SimplyBook API. Child classes must implement the {@see fetch()} method
+ * to define how data is retrieved from the API.
+ *
+ * Namespace collision with Http\Entities is on purpose to indicate similarities
+ * between entity data services and API endpoint services. When the remote API
+ * supports CRUD actions for the child-classes of this abstract class then
+ * these classes (and their logic) should be moved to Http\Entities.
+ */
+abstract class AbstractEntityService
 {
     /**
      * Prefix for cache identifier. Used for option names and wp_cache keys,
