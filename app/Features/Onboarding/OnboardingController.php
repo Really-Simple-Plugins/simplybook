@@ -420,7 +420,7 @@ class OnboardingController implements FeatureInterface
 
         // Handle registration failure from SimplyBook
         if ($storage->getBoolean('success') === false) {
-            return $this->handleCallbackFailure($storage->getString('error.message'));
+            return $this->handleCallbackFailure($storage->getString('error.message'), 406);
         }
 
         // Get stored company data for authentication
@@ -431,7 +431,7 @@ class OnboardingController implements FeatureInterface
         // Validate required data exists
         if (empty($companyLogin) || ($company->isValid() === false)) {
             $this->log('Missing company data for post-registration authentication');
-            return $this->handleCallbackFailure(__('Company data not found. Please restart registration.', 'simplybook'));
+            return $this->handleCallbackFailure(__('Company data not found. Please restart registration.', 'simplybook'), 400);
         }
 
         try {
@@ -444,7 +444,7 @@ class OnboardingController implements FeatureInterface
             );
         } catch (\Exception $e) {
             $this->log('Authentication after registration failed: ' . $e->getMessage());
-            return $this->handleCallbackFailure($e->getMessage());
+            return $this->handleCallbackFailure($e->getMessage(), 401);
         }
 
         // Save authentication data using the centralized method
@@ -479,7 +479,7 @@ class OnboardingController implements FeatureInterface
     /**
      * Handle registration callback failure by logging and setting the failure flag.
      */
-    private function handleCallbackFailure(string $errorMessage = ''): \WP_REST_Response
+    private function handleCallbackFailure(string $errorMessage = '', int $code = 500): \WP_REST_Response
     {
         if (empty($errorMessage)) {
             $errorMessage = __('An error occurred during the registration process', 'simplybook');
@@ -490,6 +490,6 @@ class OnboardingController implements FeatureInterface
 
         return new \WP_REST_Response([
             'error' => $errorMessage,
-        ], 400);
+        ], $code);
     }
 }
