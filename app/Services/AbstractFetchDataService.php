@@ -65,16 +65,16 @@ abstract class AbstractFetchDataService
 
     /**
      * Method is used for storing a normalized version of the data and adding
-     * a timestamp that allows strict expiration checks.
-     *
-     * Child implementations stay compatible by ensuring {@see processData()}
-     * always returns an array and never removes "updated_at_utc".
+     * a timestamp that allows strict expiration checks. Child classes can
+     * implement {@see processData()} to mutate the data before it is persisted.
+     * Afterward "updated_at_utc" is always added or updated, which is used for
+     * expiration checks in {@see self::all()}.
      */
     final public function save(array $data): array
     {
-        $data['updated_at_utc'] = Carbon::now('UTC')->toDateTimeString();
-
         $data = $this->processData($data);
+
+        $data['updated_at_utc'] = Carbon::now('UTC')->toDateTimeString();
 
         $this->persistData($data);
         $this->dispatchDataLoaded($data);
@@ -103,11 +103,13 @@ abstract class AbstractFetchDataService
      * Method is used for retrieving data from persistent storage while always
      * using wp_cache to prevent repeated option reads within a request.
      *
-     * When $strict is true, the timestamp is used to verify the data is still fresh.
+     * When $hasExpiration is true, the timestamp is used to verify the data is
+     * still fresh based on {@see getDataTimeThreshold()}. When the data is
+     * stale, an empty array is returned.
      */
-    final public function all(bool $strict = false): array
+    final public function all(bool $hasExpiration = false): array
     {
-        $cacheName = $this->getWpCacheName($strict);
+        $cacheName = $this->getWpCacheName($hasExpiration);
         $cacheValue = wp_cache_get($cacheName, $this->getWpCacheGroup(), false, $found);
 
         if ($found && is_array($cacheValue)) {
@@ -119,7 +121,7 @@ abstract class AbstractFetchDataService
             return [];
         }
 
-        if ($strict === true) {
+        if ($hasExpiration === true) {
             $updatedAt = Carbon::parse($data['updated_at_utc']);
             if ($updatedAt->diffInSeconds(Carbon::now('UTC')) > $this->getDataTimeThreshold()) {
                 return [];
@@ -178,12 +180,12 @@ abstract class AbstractFetchDataService
     }
 
     /**
-     * Returns the wp_cache key name based on the identifier and strictness.
-     * Not overridable by child classes.
+     * Returns the wp_cache key name based on the identifier and expiration
+     * requirement. Not overridable by child classes.
      */
-    private function getWpCacheName(bool $strict): string
+    private function getWpCacheName(bool $hasExpiration): string
     {
-        return $this->getCacheName() . '_' . ($strict ? 'strict' : 'non-strict');
+        return $this->getCacheName() . '_' . ($hasExpiration ? 'with-expiration' : 'no-expiration');
     }
 
     /**
