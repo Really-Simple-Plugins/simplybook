@@ -40,8 +40,8 @@ return [
         'namespace' => 'simplybook',
     ],
     'simplybook' => [
-        'rsp_auth_url' => 'https://simplybook.rsp-auth.com',
-        'base_api_domain' => 'simplybook.it',
+        'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
+        'base_api_domain' => 'simplybook.it', // Do NOT commit changes
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
         'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',

@@ -41,6 +41,10 @@ final class EnvironmentConfig extends DeferredObject
     {
         $items = require dirname(__FILE__, 5) . '/config/env.php';
 
+        if (defined('RSP_AUTH_URL') || defined('RSP_BASE_API_DOMAIN')) {
+            $items = $this->overrideEnvironmentConfigItems($items);
+        }
+
         if (
             isset($items['simplybook']['domains'])
             && is_array($items['simplybook']['domains'])
@@ -55,11 +59,34 @@ final class EnvironmentConfig extends DeferredObject
     }
 
     /**
+     * Developers can override rsp_auth_url with constant RSP_AUTH_URL and
+     * base_api_domain with constant RSP_BASE_API_DOMAIN. Set the constants
+     * preferably in wp-config.php.
+     *
+     * Overrides values for:
+     *
+     *      $this->env->getUrl('simplybook.rsp_auth_url')
+     *      $this->env->getString('simplybook.base_api_domain')
+     */
+    private function overrideEnvironmentConfigItems(array $items): array
+    {
+        if (defined('RSP_AUTH_URL') && !empty(RSP_AUTH_URL)) {
+            $items['simplybook']['rsp_auth_url'] = RSP_AUTH_URL;
+        }
+
+        if (defined('RSP_BASE_API_DOMAIN') && !empty(RSP_BASE_API_DOMAIN)) {
+            $items['simplybook']['base_api_domain'] = RSP_BASE_API_DOMAIN;
+        }
+
+        return $items;
+    }
+
+    /**
      * Insert the base API domain into the list of available domains if not
      * already present. Useful during development while using a custom
      * staging domain.
      */
-    public function insertSimplyBookApiDomain(string $baseApiDomain, array $domains): array
+    private function insertSimplyBookApiDomain(string $baseApiDomain, array $domains): array
     {
         // Find the domain by label
         $labels = array_column($domains, 'label');
