@@ -12,7 +12,6 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Services\CallbackUrlService;
-use SimplyBook\Services\WidgetTrackingService;
 use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
@@ -24,7 +23,6 @@ class OnboardingController implements FeatureInterface
 
     private ApiClient $client;
     private OnboardingService $service;
-    private WidgetTrackingService $widgetService;
     private CallbackUrlService $callbackUrlService;
     private ExtendifyDataService $extendifyDataService;
     private BookingPageService $bookingPageService;
@@ -32,14 +30,12 @@ class OnboardingController implements FeatureInterface
     public function __construct(
         ApiClient $client,
         OnboardingService $service,
-        WidgetTrackingService $widgetTrackingService,
         CallbackUrlService $callbackUrlService,
         ExtendifyDataService $extendifyDataService,
         BookingPageService $bookingPageService
     ) {
         $this->client = $client;
         $this->service = $service;
-        $this->widgetService = $widgetTrackingService;
         $this->callbackUrlService = $callbackUrlService;
         $this->extendifyDataService = $extendifyDataService;
         $this->bookingPageService = $bookingPageService;
