@@ -1,11 +1,11 @@
 === SimplyBook.me - Booking and reservations calendar ===
-Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen
+Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters, rvvelthuijsen, kelvinkuiper
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 6.9
 Requires PHP: 7.4
-Stable tag: 3.2.4
+Stable tag: 3.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,14 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.3.0 - 2026-02-10 =
+* Fixed: Message “form contains errors” briefly flashed in settings.
+* Fixed: Direct SimplyBook.me links now work with plain permalinks.
+* Fixed: REST API validation is now more reliable.
+* Fixed: Issue preventing some users from creating Services or Service Providers.
+* Added: Login now supports custom SimplyBook.me domains.
+* Changed: Onboarding flow is shortened.
+
 = 3.2.4 - 2025-12-17 =
 * Fixed: API response codes now better reflect the actual error.
 * Fixed: Color pickers no longer render behind the form footer.
