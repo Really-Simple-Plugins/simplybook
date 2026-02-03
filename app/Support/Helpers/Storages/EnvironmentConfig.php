@@ -70,17 +70,18 @@ final class EnvironmentConfig extends DeferredObject
      */
     private function overrideEnvironmentConfigItems(array $items): array
     {
-        $rspAuthUrlDefined = defined('RSP_AUTH_URL') && !empty(RSP_AUTH_URL);
-        $baseApiDomainDefined = defined('RSP_SB_BASE_API_DOMAIN') && !empty(RSP_SB_BASE_API_DOMAIN);
+        $definedRspAuthUrl = (defined('RSP_AUTH_URL') ? constant('RSP_AUTH_URL') : null);
+        $definedBaseApiDomain = (defined('RSP_SB_BASE_API_DOMAIN') ? constant('RSP_SB_BASE_API_DOMAIN') : null);
+
         $authKeyExists = isset($items['simplybook']['rsp_auth_url']);
         $domainKeyExists = isset($items['simplybook']['base_api_domain']);
 
-        if ($authKeyExists && $rspAuthUrlDefined) {
-            $items['simplybook']['rsp_auth_url'] = RSP_AUTH_URL;
+        if ($authKeyExists && !empty($definedRspAuthUrl)) {
+            $items['simplybook']['rsp_auth_url'] = $definedRspAuthUrl;
         }
 
-        if ($domainKeyExists && $baseApiDomainDefined) {
-            $items['simplybook']['base_api_domain'] = RSP_SB_BASE_API_DOMAIN;
+        if ($domainKeyExists && !empty($definedBaseApiDomain)) {
+            $items['simplybook']['base_api_domain'] = $definedBaseApiDomain;
         }
 
         return $items;

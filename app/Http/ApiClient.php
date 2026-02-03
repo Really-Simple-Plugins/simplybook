@@ -1276,13 +1276,12 @@ class ApiClient
     }
 
     /**
-     *
-     * \EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
+     * EXTENDIFY_PARTNER_ID will contain the required value if WordPress is
      * configured using Extendify. Otherwise, use default 'wp'.
      */
     private function getReferrer(): string
     {
-        return (defined('EXTENDIFY_PARTNER_ID') ? \EXTENDIFY_PARTNER_ID : 'wp');
+        return (defined('EXTENDIFY_PARTNER_ID') ? constant('EXTENDIFY_PARTNER_ID') : 'wp');
     }
 
     /**

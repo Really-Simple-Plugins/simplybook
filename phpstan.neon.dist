@@ -7,10 +7,6 @@ parameters:
     excludePaths:
         # Elementor code is out of context in CI
         - app/Support/Widgets/ElementorWidget.php
-    dynamicConstantNames:
-        EXTENDIFY_PARTNER_ID: string|null
-        RSP_SB_BASE_API_DOMAIN: string|null
-        RSP_AUTH_URL: string|null
     reportUnmatchedIgnoredErrors: false
     ignoreErrors:
         # Ignore errors for add_action and add_filter callbacks that have a return type declared
