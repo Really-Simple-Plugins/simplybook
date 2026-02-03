@@ -85,9 +85,12 @@ const FormFooter = ({
         { condition: cancelAllowed, message: __("You have unsaved changes", "simplybook") },
     ];
 
-    const currentState = !crudState.itemType
-        ? settingsStates.find(state => state.condition)
-        : crudStates.find(state => state.condition);
+    // Use params directly to determine page type (synchronous) rather than
+    // crudState.itemType (async) to avoid brief flash of wrong state on refresh
+    const isCrudPage = params?.settingsId === 'providers' || params?.settingsId === 'services';
+    const currentState = isCrudPage
+        ? crudStates.find(state => state.condition)
+        : settingsStates.find(state => state.condition);
 
     return (
         <div className="sticky bottom-0 start-0 z-10 rounded-b-md bg-gray-50 shadow-md">
@@ -100,7 +103,7 @@ const FormFooter = ({
                 )}
 
                 {/* Settings context buttons */}
-                {!crudState.itemType && (
+                {!isCrudPage && (
                     <>
                         <PreviewButtonInput
                             btnVariant={'tertiary-small'}
@@ -119,7 +122,7 @@ const FormFooter = ({
                 )}
 
                 {/* CRUD context buttons */}
-                {crudState.itemType && (
+                {isCrudPage && (
                     <>
                         <ButtonLink
                             btnVariant={'tertiary-small'}
