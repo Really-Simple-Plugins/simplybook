@@ -99,6 +99,9 @@ abstract class AbstractEntityService
      * A colon can be used instead of a dot to avoid conflicts in route params.
      *
      * @example /wp-json/simplybook/v1/subscription_data/limits:booking-website
+     *
+     * @param mixed $default Default value when the key is not found.
+     * @return mixed
      */
     final public function search(string $key, $default = null)
     {
