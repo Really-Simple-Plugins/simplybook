@@ -520,7 +520,7 @@ class ApiClient
      * @internal method can be recursive a maximum of 3 times in one minute
      * @throws ApiException
      */
-    public function register_company(CompanyBuilder $company, $captchaToken = ''): ApiResponseDTO
+    public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
             throw (new ApiException(
