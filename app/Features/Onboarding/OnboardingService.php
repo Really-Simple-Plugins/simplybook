@@ -85,26 +85,33 @@ class OnboardingService
      * Method is used to build the company domain and login based on the given
      * domain and login values. For non-default domains the domain should be
      * appended to the login for the authentication process. The domains are
-     * maintained here {@see react/src/routes/onboarding.lazy.jsx}
+     * maintained here {@see config/env.php}
      *
-     * @see https://teamdotblue.atlassian.net/browse/NL14RSP2-49?focusedCommentId=3407285
+     * @see /NL14RSP2-49?focusedCommentId=3407285
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     * @example Domain: simplybook.de & login: admin -> [simplybook.de, admin]
      *
      * @since 3.2.4 All domains are now listed as "default": in config/env.php,
-     * reference: {@see https://teamdotblue.atlassian.net/browse/NL14RSP2-335}
+     * reference: {@see /NL14RSP2-335}
+     *
+     * @see /NL14RSP2-337 - This feature introduced the ability for users to
+     * enter their own domain as a string, which will not be marked as "default:"
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
-        $companyDomainContainsLoginIdentifier = strpos($domain, 'login:') === 0;
-        $domain = substr($domain, strpos($domain, ':') + 1);
-
-        if ($companyDomainContainsLoginIdentifier) {
-            $login .= '.' . $domain;
+        if (strpos($domain, ':') === false) {
+            return [$domain, $login];
         }
 
-        return [$domain, $login];
+        [$prefix, $parsedDomain] = explode(':', $domain, 2);
+
+        if ($prefix === 'login') {
+            $login .= '.' . $parsedDomain;
+        }
+
+        return [$parsedDomain, $login];
     }
 
     /**

@@ -14,6 +14,7 @@ export const SIMPLYBOOK_AJAX_URL = getSiteUrl("ajax_url");
 
 // Handy constants
 export const SIMPLYBOOK_DOMAINS = simplybook.simplybook_domains;
+export const SIMPLYBOOK_OTHER_DOMAIN_VALUE = "Other";
 
 // reCAPTCHA configuration
 export const SIMPLYBOOK_RECAPTCHA_SITE_KEY = simplybook.recaptcha?.site_key || '';

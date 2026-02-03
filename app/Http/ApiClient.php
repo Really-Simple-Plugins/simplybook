@@ -959,7 +959,17 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_code() . ": ". $response->get_error_message());
+            $errorMessage = $response->get_error_message();
+            $userMessage = __('Authentication failed, please try again.', 'simplybook');
+
+            if (stripos($errorMessage, 'A valid URL was not provided') !== false) {
+                $userMessage = __('Please enter a valid domain.', 'simplybook');
+            }
+
+            throw (new RestDataException($userMessage))->setResponseCode(400)->setData([
+                'error_code' => $response->get_error_code(),
+                'error_message' => $errorMessage,
+            ]);
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);

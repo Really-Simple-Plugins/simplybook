@@ -8,7 +8,7 @@ import ButtonInput from "../../Inputs/ButtonInput";
 // API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
-import { SIMPLYBOOK_API_BASE_PATH, SIMPLYBOOK_NONCE, SIMPLYBOOK_DOMAINS } from "../../../api/config";
+import { SIMPLYBOOK_API_BASE_PATH, SIMPLYBOOK_NONCE, SIMPLYBOOK_DOMAINS, SIMPLYBOOK_OTHER_DOMAIN_VALUE } from "../../../api/config";
 import Error from "../../Errors/Error";
 
 const formLogin = ({
@@ -29,12 +29,13 @@ const formLogin = ({
         control,
         register,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: { errors, isValid, dirtyFields },
         watch
     } = useForm({
         mode: "onChange",
         defaultValues: {
             company_domain: domain,
+            other_domain: "",
             company_login: "",
             user_login: "",
             user_password: ""
@@ -42,19 +43,23 @@ const formLogin = ({
     });
 
     // Update how we watch the fields
-    const watchFields = watch(["company_domain", "company_login", "user_login", "user_password"]);
+    const watchFields = watch(["company_domain", "other_domain", "company_login", "user_login", "user_password"]);
 
     // Set the button disabled state
     const isDisabled = (
         watchFields.every((field) => field && field.trim() !== "") === false
     );
 
+    const stripDomain = (domain) => {
+        return domain.replace("https://", "").replace("http://", "").replace("www.", "");
+    }
+
     /**
      * Sends the filled in form data to the api to log the user
      */
     const submitForm = handleSubmit((data) => {
         const formData = {
-            company_domain: domain,
+            company_domain: domain === "Other" ? stripDomain(data?.other_domain) : domain,
             company_login: data?.company_login,
             user_login: data?.user_login,
             user_password: data?.user_password
@@ -115,7 +120,7 @@ const formLogin = ({
                             fieldState={fieldState}
                             label={__("Company domain", "simplybook")}
                             setting={{id: "company_domain"}}
-                            options={SIMPLYBOOK_DOMAINS}
+                            options={[...SIMPLYBOOK_DOMAINS, { label: __("Other", "simplybook"), value: SIMPLYBOOK_OTHER_DOMAIN_VALUE }]}
                             value={field.value} // Bind the value to the field value
                             onChange={(e) => {
                                 const selectedValue = e.target.value; // Get the selected value
@@ -125,6 +130,28 @@ const formLogin = ({
                         />
                     )}
                 />
+                {domain === SIMPLYBOOK_OTHER_DOMAIN_VALUE && (
+                    <Controller
+                        name="other_domain"
+                        control={control}
+                        render={({ field, fieldState }) => (
+                            <TextField
+                                {...field}
+                                fieldState={fieldState}
+                                label={__("Other Domain", "simplybook")}
+                                setting={{id: "other_domain"}}
+                                type="text"
+                                placeholder={__("Other Domain", "simplybook")}
+                                onChange={(e) => {
+                                    if (errorMessage !== "") {
+                                        setErrorMessage("");
+                                    }
+                                    field.onChange(e);
+                                }}
+                            />
+                        )}
+                    />
+                )}
                 <Controller
                     name="company_login"
                     control={control}
@@ -200,7 +227,7 @@ const formLogin = ({
                     className="mt-4 mb-4"
                     btnVariant="secondary"
                     type="submit"
-                    disabled={false}
+                    disabled={!(dirtyFields.user_password && dirtyFields.user_login && dirtyFields.company_login && (domain === "Other" ? dirtyFields.other_domain : domain))}
                 >
                     {__("Submit", "simplybook")}
                 </ButtonInput>
