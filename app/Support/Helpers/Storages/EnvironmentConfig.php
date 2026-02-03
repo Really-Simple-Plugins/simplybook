@@ -41,7 +41,7 @@ final class EnvironmentConfig extends DeferredObject
     {
         $items = require dirname(__FILE__, 5) . '/config/env.php';
 
-        if (defined('RSP_AUTH_URL') || defined('RSP_BASE_API_DOMAIN')) {
+        if (defined('RSP_AUTH_URL') || defined('RSP_SB_BASE_API_DOMAIN')) {
             $items = $this->overrideEnvironmentConfigItems($items);
         }
 
@@ -60,7 +60,7 @@ final class EnvironmentConfig extends DeferredObject
 
     /**
      * Developers can override rsp_auth_url with constant RSP_AUTH_URL and
-     * base_api_domain with constant RSP_BASE_API_DOMAIN. Set the constants
+     * base_api_domain with constant RSP_SB_BASE_API_DOMAIN. Set the constants
      * preferably in wp-config.php.
      *
      * Overrides values for:
@@ -71,7 +71,7 @@ final class EnvironmentConfig extends DeferredObject
     private function overrideEnvironmentConfigItems(array $items): array
     {
         $rspAuthUrlDefined = defined('RSP_AUTH_URL') && !empty(RSP_AUTH_URL);
-        $baseApiDomainDefined = defined('RSP_BASE_API_DOMAIN') && !empty(RSP_BASE_API_DOMAIN);
+        $baseApiDomainDefined = defined('RSP_SB_BASE_API_DOMAIN') && !empty(RSP_SB_BASE_API_DOMAIN);
         $authKeyExists = isset($items['simplybook']['rsp_auth_url']);
         $domainKeyExists = isset($items['simplybook']['base_api_domain']);
 
@@ -80,7 +80,7 @@ final class EnvironmentConfig extends DeferredObject
         }
 
         if ($domainKeyExists && $baseApiDomainDefined) {
-            $items['simplybook']['base_api_domain'] = RSP_BASE_API_DOMAIN;
+            $items['simplybook']['base_api_domain'] = RSP_SB_BASE_API_DOMAIN;
         }
 
         return $items;
