@@ -8,7 +8,7 @@ import ButtonInput from "../../Inputs/ButtonInput";
 // API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
 import glue from "../../../api/helpers/glue";
-import { API_BASE_PATH, NONCE, SIMPLYBOOK_DOMAINS, OTHER_DOMAIN_VALUE } from "../../../api/config";
+import { SIMPLYBOOK_API_BASE_PATH, SIMPLYBOOK_NONCE, SIMPLYBOOK_DOMAINS, OTHER_DOMAIN_VALUE } from "../../../api/config";
 import Error from "../../Errors/Error";
 
 const formLogin = ({
@@ -76,8 +76,8 @@ const formLogin = ({
      */
     const logUserIn = async (formData) => {
         try {
-            let path = API_BASE_PATH + "onboarding/auth" + glue() + "&token=" + Math.random().toString(36).substring(2, 7);
-            let data = { ...formData, nonce: NONCE };
+            let path = SIMPLYBOOK_API_BASE_PATH + "onboarding/auth" + glue() + "token=" + Math.random().toString(36).substring(2, 7);
+            let data = { ...formData, nonce: SIMPLYBOOK_NONCE };
 
             let request = await apiFetch({
                 path,

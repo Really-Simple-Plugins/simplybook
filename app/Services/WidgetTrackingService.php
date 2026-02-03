@@ -233,16 +233,6 @@ class WidgetTrackingService
     }
 
     /**
-     * Use this method to set the "publish widget" notice and task as completed.
-     * These flags are deleted after its one time use in the Task and Notice.
-     */
-    public function setPublishWidgetCompleted(bool $completed = true): void
-    {
-        update_option('simplybook_calendar_published_notification_completed', $completed);
-        update_option('simplybook_calendar_published_task_completed', $completed);
-    }
-
-    /**
      * Check if a post has been set.
      */
     public function hasPost(): bool

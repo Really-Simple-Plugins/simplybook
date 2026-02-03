@@ -52,7 +52,7 @@ class LoginUrlService
 
         $path = ltrim($path, '/');
         if (strpos($loginUrl, 'by-hash') !== false) {
-            return $loginUrl . '?back_url=/' . $path . '/';
+            return add_query_arg('back_url', '/' . $path . '/', $loginUrl);
         }
 
         return $loginUrl . '/' . $path . '/';

@@ -24,6 +24,14 @@ class TaskManagementService
     }
 
     /**
+     * Get a single task by its ID
+     */
+    public function getTask(string $taskId): ?TaskInterface
+    {
+        return $this->repository->getTask($taskId);
+    }
+
+    /**
      * Get all tasks
      * @return TaskInterface[]
      */
@@ -162,5 +170,35 @@ class TaskManagementService
     public function setTaskBubbleCounter(int $count): void
     {
         update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
+    }
+
+    /**
+     * Snooze a task for a specified duration. Only works for snoozable tasks.
+     * The task's getStatus() will return 'hidden' while snoozed.
+     */
+    public function snoozeTask(string $taskId): void
+    {
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null || !$task->isSnoozable()) {
+            return;
+        }
+
+        $task->snooze();
+        $this->repository->addTask($task);
+    }
+
+    /**
+     * Check if a task is completed
+     */
+    public function isTaskCompleted(string $taskId): bool
+    {
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null) {
+            return false;
+        }
+
+        return $task->getStatus() === AbstractTask::STATUS_COMPLETED;
     }
 }

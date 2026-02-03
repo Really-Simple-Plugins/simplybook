@@ -34,8 +34,6 @@ final class Plugin
      */
     public function boot(): void
     {
-        $this->registerEnvironment();
-
         $pluginBaseFile = (plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php');
         register_activation_hook($pluginBaseFile, [$this, 'activation']);
         register_deactivation_hook($pluginBaseFile, [$this, 'deactivation']);
@@ -47,19 +45,6 @@ final class Plugin
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
-    }
-
-    /**
-     * Register the plugin environment. The value of the environment will
-     * determine which domain and app_key are used for the API calls. The
-     * default value is production and can be [production|development].
-     * See {@see config/environment.php} for the actual values.
-     */
-    public function registerEnvironment(): void
-    {
-        if (!defined('SIMPLYBOOK_ENV')) {
-            define('SIMPLYBOOK_ENV', 'development');
-        }
     }
 
     /**
@@ -119,7 +104,7 @@ final class Plugin
      */
     public function deactivation(): void
     {
-        // Silence is golden
+        do_action('simplybook_deactivation');
     }
 
     /**
@@ -166,6 +151,8 @@ final class Plugin
             \SimplyBook\Controllers\TrialExpirationController::class,
             \SimplyBook\Controllers\WidgetTrackingController::class,
             \SimplyBook\Controllers\OnboardingNoticeController::class,
+            \SimplyBook\Controllers\BookingPageController::class,
+            \SimplyBook\Controllers\CompanyInfoController::class,
         ]);
     }
 
@@ -184,7 +171,6 @@ final class Plugin
             \SimplyBook\Http\Endpoints\WidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\DomainEndpoint::class,
             \SimplyBook\Http\Endpoints\RemotePluginsEndpoint::class,
-            \SimplyBook\Http\Endpoints\CompanyRegistrationEndpoint::class,
             \SimplyBook\Http\Endpoints\WaitForRegistrationEndpoint::class,
             \SimplyBook\Http\Endpoints\RelatedPluginEndpoints::class,
             \SimplyBook\Http\Endpoints\BlockEndpoints::class,

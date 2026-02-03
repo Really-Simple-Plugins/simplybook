@@ -2,28 +2,22 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
+use SimplyBook\Services\WidgetTrackingService;
+
 class PublishWidgetNotice extends AbstractNotice
 {
     public const IDENTIFIER = 'publish_widget_on_frontend';
 
-    /**
-     * This option is used to track if the user has already created the widget
-     * on the front-end. Flag is one time use and is only used during the
-     * initial setup of the Notification feature. Flag is set to true in
-     * {@see OnboardingService::setPublishWidgetCompleted}
-     *
-     * @internal cannot be used in the {@see OnboardingController} because
-     *  the feature is not loaded during onboarding.
-     */
-    public const COMPLETED_FLAG = 'simplybook_calendar_published_notification_completed';
+    private WidgetTrackingService $service;
 
-    public function __construct()
+    public function __construct(WidgetTrackingService $service)
     {
+        $this->service = $service;
+
         $active = true;
 
-        if (get_option(self::COMPLETED_FLAG)) {
+        if ($this->service->hasTrackedPosts()) {
             $active = false;
-            delete_option(self::COMPLETED_FLAG);
         }
 
         $this->setActive($active);

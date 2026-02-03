@@ -4,8 +4,8 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Services\StatisticsService;
 use SimplyBook\Interfaces\SingleEndpointInterface;
+use SimplyBook\Services\Entities\StatisticsService;
 
 class StatisticsEndpoint implements SingleEndpointInterface
 {

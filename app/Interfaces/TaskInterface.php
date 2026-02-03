@@ -56,4 +56,24 @@ interface TaskInterface
      * Reads if the task is required
      */
     public function isRequired(): bool;
+
+    /**
+     * Reads if the task is snoozable
+     */
+    public function isSnoozable(): bool;
+
+    /**
+     * Check if the task is currently snoozed
+     */
+    public function isSnoozed(): bool;
+
+    /**
+     * Snooze the task by storing the current timestamp
+     */
+    public function snooze(): void;
+
+    /**
+     * Clear the snooze state for this task
+     */
+    public function clearSnooze(): void;
 }

@@ -40,25 +40,23 @@ return [
         'namespace' => 'simplybook',
     ],
     'simplybook' => [
+        'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
+        'base_api_domain' => 'simplybook.it', // Do NOT commit changes
         'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
         'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
         'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
+        'recaptcha' => [
+            'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
+            'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
+            'google_privacy_policy_url' => 'https://policies.google.com/privacy',
+            'google_terms_url' => 'https://policies.google.com/terms',
+        ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
         'support' => [
             'enabled' => true,
             'widget' => [
                 'url' => 'https://simply.ladesk.com/scripts/track.js',
-            ],
-        ],
-        'api' => [
-            'production' => [
-                'domain' => 'simplybook.it',
-                'app_key' => 'GWLAm1KkDD962jGUc26t7RamSaY3navt8uKcCNwlLrEqY6aRwOoGNGmW1H0YyLvW',
-            ],
-            'development' => [
-                'domain' => 'wp.simplybook.ovh',
-                'app_key' => 'U0FAJxPqxrh95xAL6mqL06aqv8itrt85QniuWJ9wLRU9bcUJp7FxHCPr62Da3KP9L35Mmdp0djZZw9DDQNv1DHlUNu5w3VH6I5CB',
             ],
         ],
         'black_friday' => [

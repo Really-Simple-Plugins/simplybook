@@ -4,6 +4,7 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Http\Entities\Service;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Interfaces\ControllerInterface;
 
 class ServicesController implements ControllerInterface
@@ -15,9 +16,15 @@ class ServicesController implements ControllerInterface
      */
     protected Service $service;
 
-    public function __construct(Service $service)
+    /**
+     * The Extendify data service for accessing Extendify integration data.
+     */
+    protected ExtendifyDataService $extendifyDataService;
+
+    public function __construct(Service $service, ExtendifyDataService $extendifyDataService)
     {
         $this->service = $service;
+        $this->extendifyDataService = $extendifyDataService;
     }
 
     public function register(): void
@@ -26,34 +33,83 @@ class ServicesController implements ControllerInterface
     }
 
     /**
-     * After the company is registered, we need to set the initial service name
-     * to the name of the service that was set during the onboarding process.
-     * We do that by collecting the current services and checking if there is
-     * only one service. If there is, we update the name of that service to
-     * the name that was set during the onboarding process. Some fields
-     * are mandatory, and we keep that in mind here too.
+     * After the company is registered, we need to set the name for the initial
+     * service(s). We create a Service for all the services saved in the
+     * database. For the default Service we only have to update the name.
      */
     public function setInitialServiceName(): bool
     {
-        $initialServiceName = $this->get_company('service');
-        if (empty($initialServiceName)) {
-            return false; // abort if no service name is set
-        }
-
-        $currentServices = $this->service->all();
-
-        // There are NO services or more than 1. Both wouldn't give us the
-        // option to set the initial service name.
-        if ((count($currentServices) !== 1) || empty($currentServices[0]) || !is_array($currentServices[0])) {
+        $extendifyServices = $this->extendifyDataService->getServices();
+        if (empty($extendifyServices)) {
             return false;
         }
 
+        return $this->createMultipleServices($extendifyServices);
+    }
+
+    /**
+     * Create multiple services from an array of service names.
+     * Updates the first existing service and creates additional ones as needed.
+     */
+    private function createMultipleServices(array $serviceNames): bool
+    {
+        if (empty($serviceNames)) {
+            return false;
+        }
+
+        $currentServices = $this->service->all();
+        $hasDefaultService = (count($currentServices) === 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
+        $allSuccessful = true;
+
+        foreach ($serviceNames as $index => $serviceName) {
+            $serviceName = sanitize_text_field($serviceName);
+            if (empty($serviceName)) {
+                continue;
+            }
+
+            // First service: update existing default if available
+            if ($index === 0 && $hasDefaultService) {
+                $allSuccessful = $this->updateExistingService($currentServices[0], $serviceName) && $allSuccessful;
+            } else {
+                // Create new service
+                $allSuccessful = $this->createNewService($serviceName) && $allSuccessful;
+            }
+        }
+
+        return $allSuccessful;
+    }
+
+    /**
+     * Update an existing service with a new name. Silently fails so the
+     * onboarding process can continue even if service update fails.
+     */
+    private function updateExistingService(array $serviceData, string $serviceName): bool
+    {
         try {
-            $this->service->fill($currentServices[0]);
-            $this->service->name = sanitize_text_field($initialServiceName);
+            $this->service->fill($serviceData);
+            $this->service->name = $serviceName;
             $this->service->update();
         } catch (\Exception $e) {
-            return false; // abort updating invalid service
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Create a new service with default settings. Silently fails so the
+     * onboarding process can continue even if service creation fails.
+     */
+    private function createNewService(string $serviceName): bool
+    {
+        try {
+            $this->service->reset();
+            $this->service->name = $serviceName;
+            $this->service->duration = 60; // Default: 1 hour
+            $this->service->is_visible = true;
+            $this->service->create();
+        } catch (\Exception $e) {
+            return false;
         }
 
         return true;

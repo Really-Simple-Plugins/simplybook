@@ -35,4 +35,13 @@ trait HasUserAccess
         wp_cache_set($cacheName, $firstName, $cacheGroup, (5 * MINUTE_IN_SECONDS));
         return $firstName;
     }
+
+    /**
+     * Return the email of the current user
+     */
+    protected function getCurrentUserEmail(): string
+    {
+        $user = wp_get_current_user();
+        return sanitize_email($user->user_email ?? '');
+    }
 }

@@ -32,7 +32,7 @@ class AcceptPaymentsTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('More info', 'simplybook'),
-            'login_link' => 'v2/management/#plugins/paid_events',
+            'login_link' => 'v2/management?hash=plugins/paid_events',
         ];
     }
 }

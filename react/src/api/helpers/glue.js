@@ -1,7 +1,7 @@
 // src/api/helpers/glue.js
-import { SITE_URL } from "../config";
+import { SIMPLYBOOK_SITE_URL } from "../config";
 
-const usesPlainPermalinks = () => SITE_URL.includes("?");
+const usesPlainPermalinks = () => SIMPLYBOOK_SITE_URL.includes("?");
 const glue = () => (usesPlainPermalinks() ? "&" : "?");
 
 export default glue;

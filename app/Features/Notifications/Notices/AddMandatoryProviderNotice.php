@@ -45,7 +45,7 @@ class AddMandatoryProviderNotice extends AbstractNotice
     {
         return [
             'text' => __('Add Service Provider', 'simplybook'),
-            'login_link' => '/v2/management/#providers/edit/details/add',
+            'login_link' => '/v2/management?hash=providers/edit/details/add',
         ];
     }
 }
