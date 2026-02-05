@@ -36,7 +36,8 @@ class CreateAccountService
         bool $marketingConsent,
         string $callbackUrl,
         string $captchaToken = '',
-        ?int $category = null
+        ?int $category = null,
+        string $userAgent = ''
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -55,17 +56,21 @@ class CreateAccountService
             $requestBody['category'] = $category;
         }
 
-        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken);
+        return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken, $userAgent);
     }
 
     /**
      * Make a request.
      * @throws ApiException
      */
-    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = '', string $captchaToken = ''): array
+    private function request(string $method, string $endpoint, array $body = [], string $companyLogin = '', string $captchaToken = '', string $userAgent = ''): array
     {
         $url = $this->buildUrl($endpoint);
         $headers = $this->buildRequestHeaders($companyLogin, $captchaToken);
+
+        if (!empty($userAgent)) {
+            $headers['User-Agent'] = sanitize_text_field($userAgent);
+        }
 
         $args = [
             'method' => $method,
@@ -165,7 +170,7 @@ class CreateAccountService
      * @param bool $override Whether to override existing ID or not
      * @throws ApiException
      */
-    public function createInstallationId(bool $override = true): void
+    public function createInstallationId(string $userAgent, bool $override = true): void
     {
         $existingId = $this->getInstallationId();
         if (!empty($existingId) && !$override) {
@@ -175,6 +180,7 @@ class CreateAccountService
         $headers = array_merge([
             'Content-Type' => 'application/json',
             'Accept' => 'application/json',
+            'User-Agent' => $userAgent,
         ], $this->getRspalHeaders());
 
         $response = wp_remote_post($this->env->getUrl('simplybook.rsp_auth_url') . '/installation/create', [

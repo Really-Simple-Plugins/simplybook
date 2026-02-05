@@ -540,8 +540,10 @@ class ApiClient
             ))->setResponseCode(422);
         }
 
+        $userAgent = $this->getRequestUserAgent();
+
         try {
-            $this->createAccountService->createInstallationId(false);
+            $this->createAccountService->createInstallationId($userAgent, false);
         } catch (\Exception $e) {
             throw (new ApiException(
                 // User-friendly message during company creation flow
@@ -563,6 +565,7 @@ class ApiClient
             $callbackUrl,
             $captchaToken,
             $company->category,
+            $userAgent,
         );
 
         $response = (object) $rawResponse['body'];
@@ -1297,12 +1300,12 @@ class ApiClient
     /**
      * Get the user agent for the API requests.
      *
-     * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; ref:
-     * EXTENDIFY_PARTNER_ID; +https://example.com)
+     * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; PHP/7.4.33; ref: wp; +https://example.com)
+     * @example format SimplyBookPlugin/3.2.1 (WordPress/6.5.3; PHP/7.4.33; ref: EXTENDIFY_PARTNER_ID; +https://example.com)
      */
     private function getRequestUserAgent(): string
     {
-        return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
+        return "SimplyBookPlugin/" . $this->env->getString('plugin.version') . " (WordPress/" . get_bloginfo('version') . "; PHP/" . phpversion() . "; ref: " . $this->getReferrer() . "; +" . site_url() . ")";
     }
 
     /**
