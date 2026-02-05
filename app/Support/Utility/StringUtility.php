@@ -31,4 +31,37 @@ class StringUtility
     {
         return str_replace('_', '', ucwords($string, '_'));
     }
+
+    /**
+     * Convert a string to snake_case. Capital letters are replaced with
+     * underscores followed by the lowercase letter. Hyphens and spaces are also
+     * replaced with underscores. Multiple underscores are reduced to a single
+     * underscore. Leading and trailing underscores are trimmed.
+     */
+    public static function toSnakeCase(string $string): string
+    {
+        $string = preg_replace('/[ -]+/', '_', $string);
+        $string = preg_replace('/([a-z])([A-Z])/', '$1_$2', $string);
+        $string = preg_replace('/_+/', '_', $string);
+        return trim(strtolower($string), '_');
+    }
+
+    /**
+     * Convert either snake_case, camelCase or PascalCase to camelCase
+     */
+    public static function toCamelCase(string $string): string
+    {
+        $string = self::toPascalCase($string);
+        return lcfirst($string);
+    }
+
+    /**
+     * Convert either snake_case, camelCase or PascalCase to PascalCase
+     */
+    public static function toPascalCase(string $string): string
+    {
+        $string = str_replace('_', ' ', $string);
+        $string = ucwords($string);
+        return str_replace(' ', '', $string);
+    }
 }

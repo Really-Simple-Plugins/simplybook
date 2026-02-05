@@ -25,6 +25,7 @@ class TaskManagementController implements FeatureInterface
 
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
+        add_action('simplybook_plugin_version_upgrade', [$this, 'migrateTaskOptions'], 10, 2);
     }
 
     /**
@@ -42,6 +43,7 @@ class TaskManagementController implements FeatureInterface
         return [
             Tasks\FailedAuthenticationTask::class,
             Tasks\PublishWidgetTask::class,
+            Tasks\VisitYourBookingPageTask::class,
             Tasks\AddMandatoryServiceTask::class,
             Tasks\AddMandatoryProviderTask::class,
             Tasks\GoToSimplyBookSystemTask::class,
@@ -57,6 +59,7 @@ class TaskManagementController implements FeatureInterface
             Tasks\GatherClientInfoTask::class,
             Tasks\BlackFridayTask::class,
             Tasks\ChristmasPromotionTask::class,
+            Tasks\AddCompanyInfoTask::class,
         ];
     }
 
@@ -89,5 +92,20 @@ class TaskManagementController implements FeatureInterface
         $this->service->upgradeTasks(
             $this->getTaskClassStrings()
         );
+    }
+
+    /**
+     * Migrate options used by tasks
+     *
+     * @since 3.3.0
+     *      - Removed legacy {@see PublishWidgetNotice} completed flag
+     *      - Removed legacy {@see PublishWidgetTask} completed flag
+     */
+    public function migrateTaskOptions(string $previousVersion, string $newVersion): void
+    {
+        if ($previousVersion && version_compare($previousVersion, '3.3.0', '<')) {
+            delete_option('simplybook_calendar_published_notification_completed');
+            delete_option('simplybook_calendar_published_task_completed');
+        }
     }
 }

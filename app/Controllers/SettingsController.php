@@ -26,6 +26,7 @@ class SettingsController implements ControllerInterface
 
     /**
      * Handle plugin upgrades
+     * @since 3.3.0 Removed persistent cache option used in {@see ApiClient}
      */
     public function handlePluginUpgrade(string $previousVersion, string $newVersion): void
     {
@@ -33,6 +34,11 @@ class SettingsController implements ControllerInterface
         // existing options
         if ($previousVersion && version_compare($previousVersion, '3.0', '<')) {
             $this->upgrade_legacy_options();
+        }
+
+        // Remove persistent cache option which is no longer used
+        if ($previousVersion && version_compare($previousVersion, '3.3.0', '<')) {
+            delete_option('simplybook_persistent_cache');
         }
     }
 

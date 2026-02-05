@@ -3,29 +3,42 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Traits\HasLogging;
+use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
+use SimplyBook\Services\BookingPageService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
 use SimplyBook\Exceptions\RestDataException;
-use SimplyBook\Support\Builders\PageBuilder;
-use SimplyBook\Support\Utility\StringUtility;
-use SimplyBook\Services\WidgetTrackingService;
+use SimplyBook\Services\CallbackUrlService;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingController implements FeatureInterface
 {
     use HasAllowlistControl;
+    use HasEncryption;
+    use HasLogging;
 
     private ApiClient $client;
     private OnboardingService $service;
-    private WidgetTrackingService $widgetService;
+    private CallbackUrlService $callbackUrlService;
+    private ExtendifyDataService $extendifyDataService;
+    private BookingPageService $bookingPageService;
 
-    public function __construct(ApiClient $client, OnboardingService $service, WidgetTrackingService $widgetTrackingService)
-    {
+    public function __construct(
+        ApiClient $client,
+        OnboardingService $service,
+        CallbackUrlService $callbackUrlService,
+        ExtendifyDataService $extendifyDataService,
+        BookingPageService $bookingPageService
+    ) {
         $this->client = $client;
         $this->service = $service;
-        $this->widgetService = $widgetTrackingService;
+        $this->callbackUrlService = $callbackUrlService;
+        $this->extendifyDataService = $extendifyDataService;
+        $this->bookingPageService = $bookingPageService;
     }
 
     public function register(): void
@@ -43,34 +56,14 @@ class OnboardingController implements FeatureInterface
      */
     public function addRoutes(array $routes): array
     {
-        $routes['onboarding/register_email'] = [
+        $routes['onboarding/create_account'] = [
             'methods' => 'POST',
-            'callback' => [$this->service, 'storeEmailAddress'],
-        ];
-
-        $routes['onboarding/company_registration'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'registerCompanyAtSimplyBook'],
-        ];
-
-        $routes['onboarding/get_recaptcha_sitekey'] = [
-            'methods' => 'GET',
-            'callback' => [$this->service, 'getRecaptchaSitekey'],
-        ];
-
-        $routes['onboarding/confirm_email'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'confirmEmailWithSimplyBook'],
+            'callback' => [$this, 'createAccount'],
         ];
 
         $routes['onboarding/save_widget_style'] = [
             'methods' => 'POST',
             'callback' => [$this, 'saveColorsToDesignSettings'],
-        ];
-
-        $routes['onboarding/is_page_title_available'] = [
-            'methods' => 'POST',
-            'callback' => [$this, 'checkIfPageTitleIsAvailable'],
         ];
 
         $routes['onboarding/generate_pages'] = [
@@ -103,89 +96,85 @@ class OnboardingController implements FeatureInterface
             'callback' => [$this, 'retryOnboarding'],
         ];
 
+        // Registration callback route - public endpoint called by SimplyBook.me
+        // Only registered when a valid callback URL exists
+        $callbackRoute = $this->callbackUrlService->getCallbackRouteWithToken();
+        if (!empty($callbackRoute)) {
+            $routes[$callbackRoute] = [
+                'methods' => 'POST',
+                'callback' => [$this, 'handleRegistrationCallback'],
+                'permission_callback' => '__return_true',
+            ];
+        }
+
         return $routes;
     }
 
     /**
-     * Store company data in the options and register the company at
-     * SimplyBook.me
+     * Create a new SimplyBook account. This endpoint handles:
+     * 1. Validating email and terms acceptance
+     * 2. Storing company data
+     * 3. Triggering company registration at SimplyBook.me
      */
-    public function registerCompanyAtSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    public function createAccount(\WP_REST_Request $request): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        $companyBuilder = (new CompanyBuilder())->buildFromArray(
-            $storage->all()
-        );
-
-        $tempDataStorage = $this->service->getTemporaryDataStorage();
-        $tempEmail = $tempDataStorage->getString('email', get_option('admin_email'));
-        $tempTerms = $tempDataStorage->getBoolean('terms', true);
-
-        $companyBuilder->setEmail($tempEmail);
-        $companyBuilder->setUserLogin($tempEmail);
-        $companyBuilder->setTerms($tempTerms);
-
-        $companyBuilder->setPassword(
-            $this->service->encryptString(
-                wp_generate_password(24, false)
-            )
-        );
-
-        $this->service->storeCompanyData($companyBuilder);
-
-        if ($companyBuilder->isValid() === false) {
-            return $this->service->sendHttpResponse([
-                'invalid_fields' => $companyBuilder->getInvalidFields(),
-            ], false, __('Please fill in all fields.', 'simplybook'), 400);
-        }
-
         try {
-            $response = $this->client->register_company();
+            $storage = $this->service->retrieveHttpStorage($request);
+            $captchaToken = $storage->getString('captcha_token');
+
+            $company = $this->getNewCompanyObject(
+                $storage->getEmail('email'),
+                $storage->getBoolean('terms-and-conditions'),
+                $storage->getBoolean('marketing-consent')
+            );
+
+            $response = $this->client->register_company($company, $captchaToken);
         } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+            $this->log('Account creation failed (API): ' . $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
+        } catch (\Exception $e) {
+            $this->log('Account creation failed: ' . $e->getMessage());
+            return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
         }
 
-        $this->service->finishCompanyRegistration($response->data);
-        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
+        $this->service->finishCompanyRegistration();
+        return $this->service->sendHttpResponse([], $response->success, $response->message, $response->code);
     }
 
     /**
-     * Confirm the email address with SimplyBook.me while providing the
-     * confirmation code and the recaptcha token
+     * This method builds a NEW {@see CompanyBuilder} object used for
+     * registration. Under the hood it also stores the company data
+     * in the options which can be used in {@see handleRegistrationCallback}.
+     *
+     * Method is compatible with extra data saved from Extendify integration.
+     *
+     * @throws ApiException if invalid email or terms not accepted
      */
-    public function confirmEmailWithSimplyBook(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
-        $error = '';
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        if ($storage->isEmpty('recaptchaToken')) {
-            $error = __("Please verify you're not a robot.", 'simplybook');
+        if (!is_email($email)) {
+            throw (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
         }
 
-        if ($storage->isEmpty('confirmation-code')) {
-            $error = __('Please enter the confirmation code.', 'simplybook');
+        if ($termsAccepted !== true) {
+            throw (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
         }
 
-        if (!empty($error)) {
-            return $this->service->sendHttpResponse([], false, $error, 400);
+        $encryptedPassword = $this->service->encryptString(wp_generate_password(24, false));
+
+        $company = (new CompanyBuilder())->setEmail($email)
+            ->setUserLogin($email)
+            ->setTerms(true)
+            ->setMarketingConsent($marketingConsent)
+            ->setPassword($encryptedPassword);
+
+        $category = $this->extendifyDataService->getCategory();
+        if ($category !== null) {
+            $company->setCategory($category);
         }
 
-        try {
-            $response = $this->client->confirm_email(
-                $storage->getString('confirmation-code'),
-                $storage->getString('recaptchaToken')
-            );
-        } catch (ApiException $e) {
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), 400);
-        }
-
-        // Only mark step as completed if the API call was successful
-        if ($response->success) {
-            $this->service->setCompletedStep(3);
-        }
-
-        return $this->service->sendHttpResponse([], $response->success, $response->message, ($response->success ? 200 : 400));
+        $this->service->storeCompanyData($company);
+        return $company;
     }
 
     /**
@@ -216,48 +205,20 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
-     * Check if the given page title is available based on the given url and
-     * existing pages.
+     * Generate the booking page with the SimplyBook widget shortcode.
+     * Uses a translatable slug and title. WordPress handles slug uniqueness.
+     *
+     * If page creation fails, this is NOT a blocker for onboarding.
+     * The client should show PublishWidgetTask instead of BookingWidgetLiveTask.
      */
-    public function checkIfPageTitleIsAvailable(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
+    public function generateDefaultPages(): \WP_REST_Response
     {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-        $pageTitleIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('url'));
-
-        return $this->service->sendHttpResponse([], $pageTitleIsAvailable);
-    }
-
-    /**
-     * Generate default shortcode pages
-     */
-    public function generateDefaultPages(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->service->retrieveHttpStorage($request, $ajaxData);
-
-        $calendarPageIsAvailable = $this->service->isPageTitleAvailableForURL($storage->getString('calendarPageUrl'));
-        if (!$calendarPageIsAvailable) {
-            $message = esc_html__('Calendar page title should be available if you choose to generate this page.', 'simplybook');
-            return $this->service->sendHttpResponse([], false, $message, 409);
-        }
-
-        $calendarPageName = StringUtility::convertUrlToTitle($storage->getUrl('calendarPageUrl'));
-
-        $calendarPageID = (new PageBuilder())->setTitle($calendarPageName)
-            ->setContent('[simplybook_widget]')
-            ->insert();
-
-        $pageCreatedSuccessfully = ($calendarPageID !== -1);
-
-        // These flags are deleted after its one time use in the Task and Notice
-        if ($pageCreatedSuccessfully) {
-            $this->widgetService->setPublishWidgetCompleted();
-        }
-
-        $this->service->setOnboardingCompleted();
+        $pageResult = $this->bookingPageService->generateBookingPage();
 
         return $this->service->sendHttpResponse([
-            'calendar_page_id' => $calendarPageID,
-        ], $pageCreatedSuccessfully, '', ($pageCreatedSuccessfully ? 200 : 400));
+            'page_id' => $pageResult['page_id'],
+            'page_url' => $pageResult['page_url'],
+        ], $pageResult['success'], $pageResult['message'], ($pageResult['success'] ? 200 : 500));
     }
 
     /**
@@ -279,7 +240,7 @@ class OnboardingController implements FeatureInterface
         $userPassword = $storage->getString('user_password');
 
         if ($storage->isOneEmpty(['company_domain', 'company_login', 'user_login', 'user_password'])) {
-            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 422);
         }
 
         try {
@@ -319,7 +280,7 @@ class OnboardingController implements FeatureInterface
         $companyDomain = $storage->getString('domain');
 
         if ($storage->isOneEmpty(['company_login', 'domain', 'auth_session_id', 'two_fa_type', 'two_fa_code'])) {
-            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 400);
+            return $this->service->sendHttpResponse([], false, esc_html__('Please fill in all fields.', 'simplybook'), 422);
         }
 
         try {
@@ -365,7 +326,6 @@ class OnboardingController implements FeatureInterface
             $responseStorage->getInt('company_id'),
         );
 
-        $this->validatePublishedWidget();
         $this->service->setOnboardingCompleted();
 
         return true;
@@ -446,24 +406,86 @@ class OnboardingController implements FeatureInterface
     }
 
     /**
-     * Method is used to set a notification/task flag to true when it determines
-     * that there is a published post with the SimplyBook.me widget shortcode
-     * or the Gutenberg block.
+     * Handles the callback from SimplyBook.me after company registration.
+     * The callback contains success status and company_id.
+     * We authenticate using the stored credentials and save the tokens.
      */
-    public function validatePublishedWidget(): void
+    public function handleRegistrationCallback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $cacheName = 'simplybook_widget_published';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+        $storage = $this->service->retrieveHttpStorage($request);
 
-        if ($found && ($cacheValue === true)) {
-            $this->widgetService->setPublishWidgetCompleted();
-            return;
+        // Handle registration failure from SimplyBook
+        if ($storage->getBoolean('success') === false) {
+            return $this->handleCallbackFailure($storage->getString('error.message'), 406);
         }
 
-        // Check if any widgets are currently published
-        if ($this->widgetService->hasTrackedPosts()) {
-            $this->widgetService->setPublishWidgetCompleted();
-            wp_cache_set($cacheName, true, 'simplybook', DAY_IN_SECONDS);
+        // Get stored company data for authentication
+        $company = $this->service->getCompanyData();
+        $companyLogin = $this->client->get_company_login(false);
+        $companyDomain = $this->client->get_domain();
+
+        // Validate required data exists
+        if (empty($companyLogin) || ($company->isValid() === false)) {
+            $this->log('Missing company data for post-registration authentication');
+            return $this->handleCallbackFailure(__('Company data not found. Please restart registration.', 'simplybook'), 400);
         }
+
+        try {
+            // Authenticate using stored credentials
+            $authResponse = $this->client->authenticateExistingUser(
+                $companyDomain,
+                $companyLogin,
+                $company->email,
+                $this->decryptString($company->password)
+            );
+        } catch (\Exception $e) {
+            $this->log('Authentication after registration failed: ' . $e->getMessage());
+            return $this->handleCallbackFailure($e->getMessage(), 401);
+        }
+
+        // Save authentication data using the centralized method
+        $this->client->setDuringOnboardingFlag(true)->saveAuthenticationData(
+            $authResponse['token'],
+            $authResponse['refresh_token'],
+            $authResponse['domain'],
+            $companyLogin,
+            $storage->getInt('company_id')
+        );
+
+        // Clear any previous failure state and mark step 1 as completed
+        delete_option('simplybook_registration_failed');
+        $this->callbackUrlService->cleanupCallbackUrl();
+
+        // Because this callback is sent after registration, we set step 1 as
+        // completed. On the frontend step 2 was already rendered, this is
+        // the step we wait for this callback to complete.
+        $this->service->setCompletedStep(1);
+
+        /**
+         * Action: simplybook_after_company_registered
+         * @hooked SimplyBook\Controllers\ServicesController::setInitialServiceName
+         */
+        do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
+
+        return new \WP_REST_Response([
+            'message' => __('Successfully registered company.', 'simplybook'),
+        ]);
+    }
+
+    /**
+     * Handle registration callback failure by logging and setting the failure flag.
+     */
+    private function handleCallbackFailure(string $errorMessage = '', int $code = 500): \WP_REST_Response
+    {
+        if (empty($errorMessage)) {
+            $errorMessage = __('An error occurred during the registration process', 'simplybook');
+        }
+
+        $this->log('Registration callback failed: ' . $errorMessage);
+        update_option('simplybook_registration_failed', true, false);
+
+        return new \WP_REST_Response([
+            'error' => $errorMessage,
+        ], $code);
     }
 }

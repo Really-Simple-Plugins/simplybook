@@ -31,7 +31,7 @@ class AddAllServicesTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('Add Services', 'simplybook'),
-            'login_link' => '/v2/management/#services',
+            'login_link' => '/v2/management?hash=services',
         ];
     }
 }

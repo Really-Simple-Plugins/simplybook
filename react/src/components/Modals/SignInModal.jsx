@@ -16,7 +16,7 @@ const SignInModal = ({onClose}) => {
 
     return (
         <div className="signin-modal-bg fixed z-999 inset-0 flex items-center justify-center bg-black/50 border-2 border-gray-200 ">
-            <div className="signin-modal mt-8 w-3/8 bg-white p-4 px-4 rounded border-3 border-gray-200">
+            <div className="signin-modal mt-8 w-3/8 bg-white p-4 px-4 rounded border-3 border-gray-200 max-h-[90vh] overflow-y-scroll">
                 {!require2fa ? (
                     <>
                         <div className="flex flex-col items-center mb-8">

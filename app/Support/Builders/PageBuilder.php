@@ -5,6 +5,7 @@ namespace SimplyBook\Support\Builders;
 class PageBuilder
 {
     private string $title = '';
+    private string $slug = '';
     private string $content = '';
     private string $status = 'publish';
     private string $type = 'page';
@@ -19,6 +20,17 @@ class PageBuilder
     public function setTitle(string $title): PageBuilder
     {
         $this->title = sanitize_text_field($title);
+        return $this;
+    }
+
+    /**
+     * Set the slug (post_name) of the page. If not provided, WordPress will
+     * auto-generate one from the title. WordPress automatically handles
+     * uniqueness by appending -2, -3, etc. if the slug is already taken.
+     */
+    public function setSlug(string $slug): PageBuilder
+    {
+        $this->slug = sanitize_title($slug);
         return $this;
     }
 
@@ -63,6 +75,10 @@ class PageBuilder
             'post_type' => $this->type,
         ];
 
+        if (!empty($this->slug)) {
+            $page['post_name'] = $this->slug;
+        }
+
         /** @var int|\WP_Error $insertedPageId */
         $insertedPageId = wp_insert_post($page);
         if (is_wp_error($insertedPageId)) {
@@ -87,6 +103,10 @@ class PageBuilder
             'post_status' => $this->status,
             'post_type' => $this->type,
         ];
+
+        if (!empty($this->slug)) {
+            $page['post_name'] = $this->slug;
+        }
 
         /** @var int|\WP_Error $updatedPostId */
         $updatedPostId = wp_update_post($page);

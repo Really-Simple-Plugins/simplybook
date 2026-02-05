@@ -8,7 +8,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Http\Endpoints\LoginUrlEndpoint;
-use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface

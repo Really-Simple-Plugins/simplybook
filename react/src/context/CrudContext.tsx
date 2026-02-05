@@ -216,7 +216,7 @@ export const CrudContextProvider = ({ children }: { children: React.ReactNode })
 
         for (let unsavedItem of unsavedItems) {
             if (!unsavedItem.name) {
-                errorCallback(new DataError('No name provided', { name: __('Name is a required field.', 'simplybook') }), '', unsavedItem.id);
+                errorCallback(new DataError('No name provided', { name: [__('Name is a required field.', 'simplybook')] }), '', unsavedItem.id);
             }
 
             if (!unsavedItem.id) {

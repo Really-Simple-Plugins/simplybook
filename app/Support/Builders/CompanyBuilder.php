@@ -2,11 +2,13 @@
 
 namespace SimplyBook\Support\Builders;
 
-class CompanyBuilder
+use SimplyBook\Support\Utility\StringUtility;
+
+final class CompanyBuilder
 {
     public string $email = '';
-    public string $user_login = '';
-    public int $category = 0;
+    public string $userLogin = '';
+    public int $category = 8; // Default category is 8: "Other category"
     public string $company_name = '';
     public string $phone = '';
     public string $city = '';
@@ -15,22 +17,27 @@ class CompanyBuilder
     public string $country = '';
     public string $zip = '';
     public bool $terms = false;
+    public bool $marketingConsent = false;
     public string $password = ''; // Should be encrypted
 
-    private array $asArray = [];
-    private int $defaultCategory = 8; // Default category is 8: "Other category"
+    /**
+     * Fields required for simplified registration flow.
+     * Only email and password are needed for new account creation.
+     */
+    private array $requiredFields = ['email', 'password'];
 
     /**
      * Method can be used to build a CompanyBuilder object from an array of
-     * key-value pairs. Only known properties will be set. Make sure the key
-     * matches the property name.
+     * key-value pairs. Only known properties will be set. Supports both
+     * snake_case and camelCase keys.
      */
-    public function buildFromArray(array $properties = []): CompanyBuilder
+    public function buildFromArray(array $properties = []): self
     {
         foreach ($properties as $key => $value) {
-            $method = $this->methodFromPropertyName($key);
+            $propertyName = StringUtility::toCamelCase($key);
+            $method = 'set' . StringUtility::toPascalCase($key);
 
-            if ((property_exists($this, $key) === false) || (method_exists($this, $method) === false)) {
+            if ((property_exists($this, $propertyName) === false) || (method_exists($this, $method) === false)) {
                 continue;
             }
 
@@ -40,67 +47,76 @@ class CompanyBuilder
         return $this;
     }
 
-    public function setEmail(string $email): CompanyBuilder
+    public function setEmail(string $email): self
     {
         $this->email = sanitize_email($email);
         return $this;
     }
 
-    public function setCategory(int $category): CompanyBuilder
+    public function setCategory(int $category): self
     {
-        $this->category = ($category < 1 ? $this->defaultCategory : $category);
+        if ($category >= 1) {
+            $this->category = $category;
+        }
+
         return $this;
     }
 
-    public function setCompanyName(string $company_name): CompanyBuilder
+    public function setCompanyName(string $company_name): self
     {
         $this->company_name = sanitize_text_field($company_name);
         return $this;
     }
 
-    public function setPhone(string $phone): CompanyBuilder
+    public function setPhone(string $phone): self
     {
         $this->phone = preg_replace('/[^0-9]/', '', $phone);
         return $this;
     }
 
-    public function setCity(string $city): CompanyBuilder
+    public function setCity(string $city): self
     {
         $this->city = sanitize_text_field($city);
         return $this;
     }
 
-    public function setAddress(string $address): CompanyBuilder
+    public function setAddress(string $address): self
     {
         $this->address = sanitize_text_field($address);
         return $this;
     }
 
-    public function setService(string $service): CompanyBuilder
+    public function setService(string $service): self
     {
         $this->service = sanitize_text_field($service);
         return $this;
     }
 
-    public function setCountry(string $country): CompanyBuilder
+    public function setCountry(string $country): self
     {
         $this->country = sanitize_text_field($country);
         return $this;
     }
 
-    public function setZip(string $zip): CompanyBuilder
+    public function setZip(string $zip): self
     {
         $this->zip = strtolower(str_replace(' ', '', trim(sanitize_text_field($zip))));
         return $this;
     }
 
-    public function setTerms(bool $terms): CompanyBuilder
+    public function setTerms(bool $terms): self
     {
         $this->terms = $terms;
         return $this;
     }
 
-    public function setPassword(string $password): CompanyBuilder
+    public function setMarketingConsent(bool $marketingConsent): self
+    {
+        $this->marketingConsent = $marketingConsent;
+        return $this;
+    }
+
+    public function setPassword(string $password): self
     {
         $this->password = sanitize_text_field($password);
         return $this;
@@ -111,21 +127,17 @@ class CompanyBuilder
      * this in the SimplyBook system, so for existing accounts this value
      * can be different.
      */
-    public function setUserLogin(string $user_login): CompanyBuilder
+    public function setUserLogin(string $userLogin): self
     {
-        $this->user_login = sanitize_text_field($user_login);
+        $this->userLogin = sanitize_text_field($userLogin);
         return $this;
     }
 
     public function toArray(): array
     {
-        if (!empty($this->asArray)) {
-            return $this->asArray;
-        }
-
-        $this->asArray = [
+        return [
             'email' => $this->email,
-            'user_login' => $this->user_login,
+            'userLogin' => $this->userLogin,
             'category' => $this->category,
             'company_name' => $this->company_name,
             'phone' => $this->phone,
@@ -135,38 +147,30 @@ class CompanyBuilder
             'country' => $this->country,
             'zip' => $this->zip,
             'terms' => $this->terms,
+            'marketingConsent' => $this->marketingConsent,
             'password' => $this->password, // Should be encrypted
         ];
-
-        return $this->asArray;
     }
 
     /**
-     * Converts a property name to a method name. It will remove underscores
-     *
-     */
-    private function methodFromPropertyName(string $property): string
-    {
-        return 'set' . str_replace('_', '', ucwords($property, '_'));
-    }
-
-    /**
-     * Method to check if the object is valid. It will check if any value is
-     * empty. Only use this during onboarding, that is where we ask for all the
-     * data. This method is not needed for login.
+     * Validation - checks all required fields are filled.
      */
     public function isValid(): bool
     {
-        return count($this->toArray()) == count(array_filter($this->toArray()));
+        return empty($this->getInvalidFields());
     }
 
     /**
-     * Method to get the invalid fields. It will return an array of keys that
-     * are empty.Only use this during onboarding, that is where we ask for all the
-     *  data. This method is not needed for login.
+     * Get fields that are required but empty.
      */
     public function getInvalidFields(): array
     {
-        return array_keys(array_filter($this->toArray(), fn($value) => empty($value)));
+        $invalid = [];
+        foreach ($this->requiredFields as $field) {
+            if (empty($this->{$field})) {
+                $invalid[] = $field;
+            }
+        }
+        return $invalid;
     }
 }

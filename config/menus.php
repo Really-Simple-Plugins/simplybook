@@ -74,7 +74,7 @@ return [
     'schedule' => [
         'id' => 'schedule',
         'title' => __('Schedule', 'simplybook'),
-        'url' => 'v2/management/#company-worktime/week',
+        'url' => 'v2/management?hash=company-worktime/week',
     ],
     'bookings' => [
         'id' => 'bookings',

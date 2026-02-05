@@ -37,6 +37,7 @@ class WaitForRegistrationEndpoint implements SingleEndpointInterface
         return [
             'methods' => \WP_REST_Server::CREATABLE,
             'callback' => [$this, 'callback'],
+            'permission_callback' => [$this, 'adminAccessAllowed'],
         ];
     }
 
@@ -45,7 +46,17 @@ class WaitForRegistrationEndpoint implements SingleEndpointInterface
      */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $completed  = (get_option('simplybook_refresh_company_token_expiration') > 0);
+        // Check for failure state first
+        $failed = get_option('simplybook_registration_failed', false);
+        if ($failed) {
+            delete_option('simplybook_registration_failed');
+            return $this->sendHttpResponse([
+                'status' => 'failed',
+                'message' => __('Registration failed. Please try again.', 'simplybook'),
+            ]);
+        }
+
+        $completed = (get_option('simplybook_refresh_company_token_expiration') > 0);
         return $this->sendHttpResponse([
             'status' => ($completed ? 'completed' : 'pending'),
         ]);

@@ -150,7 +150,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
                         iconClass="fa-regular"
                         reverseIcon={true}
                         btnVariant="square-ghost-small"
-                        loginLink={`/v2/management/#services/edit/details/${serviceId}`}
+                        loginLink={`/v2/management?hash=services/edit/details/${serviceId}`}
                     >
                         {__("Edit All Properties", "simplybook")}
                     </ButtonLink>

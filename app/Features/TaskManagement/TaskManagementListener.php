@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Services\PromotionService;
-use SimplyBook\Services\SubscriptionDataService;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 
 class TaskManagementListener
 {
@@ -12,8 +12,11 @@ class TaskManagementListener
     private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
 
-    public function __construct(TaskManagementService $service, PromotionService $promotionService, SubscriptionDataService $subscriptionDataService)
-    {
+    public function __construct(
+        TaskManagementService $service,
+        PromotionService $promotionService,
+        SubscriptionDataService $subscriptionDataService
+    ) {
         $this->service = $service;
         $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
@@ -32,6 +35,8 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::AUTH_FAILED, [$this, 'handleFailedAuthentication']);
         add_action('simplybook_event_' . Event::CALENDAR_PUBLISHED, [$this, 'handleCalendarPublished']);
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
+        add_action('simplybook_event_' . Event::COMPANY_INFO_LOADED, [$this, 'handleCompanyInfoLoaded']);
+        add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -276,6 +281,16 @@ class TaskManagementListener
     }
 
     /**
+     * Handle the booking page visited event to update task status.
+     */
+    public function handleBookingPageVisited(): void
+    {
+        $this->service->completeTask(
+            Tasks\VisitYourBookingPageTask::IDENTIFIER
+        );
+    }
+
+    /**
      * Handle the after save options event to update task status.
      */
     public function handleDesignSettingsSaved(): void
@@ -351,5 +366,26 @@ class TaskManagementListener
                 (string) $this->subscriptionDataService->search('subscription_name', '')
             );
         }
+    }
+
+    /**
+     * Handle the {@see AddCompanyInfoTask} task based on the loaded company
+     * info. Only handle it if the task is not yet completed.
+     */
+    public function handleCompanyInfoLoaded(array $eventArguments): void
+    {
+        $taskId = Tasks\AddCompanyInfoTask::IDENTIFIER;
+        if ($this->service->isTaskCompleted($taskId)) {
+            return;
+        }
+
+        $hasRequiredCompanyInfo = ($eventArguments['has_required_info'] ?? false);
+
+        if ($hasRequiredCompanyInfo) {
+            $this->service->completeTask($taskId);
+            return;
+        }
+
+        $this->service->openTask($taskId);
     }
 }

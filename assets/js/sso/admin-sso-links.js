@@ -43,7 +43,10 @@
         }
 
         // Fetch and redirect
-        fetch(simplebookSSOConfig.restUrl + '?path=' + encodeURIComponent(path), {
+        // Use URL API to properly append query params (handles both pretty and plain permalinks)
+        var fetchUrl = new URL(simplebookSSOConfig.restUrl);
+        fetchUrl.searchParams.append('path', path);
+        fetch(fetchUrl.toString(), {
             method: 'GET',
             headers: {
                 'X-WP-Nonce': simplebookSSOConfig.nonce

@@ -60,6 +60,24 @@ abstract class AbstractTask implements TaskInterface
     protected bool $specialFeature;
 
     /**
+     * Override this property to make the task snoozable. When snoozable,
+     * the task can be temporarily hidden for a specified duration.
+     */
+    protected bool $snoozable = false;
+
+    /**
+     * Override this property to customize the snooze duration in seconds.
+     * Defaults to 24 hours (DAY_IN_SECONDS).
+     */
+    protected int $snoozeDuration = DAY_IN_SECONDS;
+
+    /**
+     * Timestamp when the task was snoozed. Stored as task property and
+     * serialized with the task.
+     */
+    protected ?int $snoozedAt = null;
+
+    /**
      * By default, a task is active on construct. This is because the $status
      * property is not set. The {@see getStatus()} method will therefore return
      * the default status 'open'. If you want to set a different default status
@@ -96,6 +114,11 @@ abstract class AbstractTask implements TaskInterface
      */
     public function getStatus(): string
     {
+        // Snooze temporarily overrides the status
+        if ($this->isSnoozable() && $this->isSnoozed()) {
+            return self::STATUS_HIDDEN;
+        }
+
         return $this->status ?? self::STATUS_OPEN;
     }
 
@@ -214,6 +237,54 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * Reads if the task is snoozable
+     */
+    public function isSnoozable(): bool
+    {
+        return $this->snoozable;
+    }
+
+    /**
+     * Get the snooze duration in seconds
+     */
+    public function getSnoozeDuration(): int
+    {
+        return $this->snoozeDuration;
+    }
+
+    /**
+     * Check if the task is currently snoozed
+     */
+    public function isSnoozed(): bool
+    {
+        if (!$this->isSnoozable() || $this->snoozedAt === null) {
+            return false;
+        }
+
+        return (time() - $this->snoozedAt) < $this->getSnoozeDuration();
+    }
+
+    /**
+     * Snooze the task by storing the current timestamp
+     */
+    public function snooze(): void
+    {
+        if (!$this->isSnoozable()) {
+            return;
+        }
+
+        $this->snoozedAt = time();
+    }
+
+    /**
+     * Clear the snooze state for this task
+     */
+    public function clearSnooze(): void
+    {
+        $this->snoozedAt = null;
+    }
+
+    /**
      * Build the label for the task. This is used to display the task in the
      * tasks dashboard component. The label is used to indicate if the task
      * is premium or a special feature. If not, the label reflects the status.
@@ -245,6 +316,7 @@ abstract class AbstractTask implements TaskInterface
             'special_feature' => $this->isSpecialFeature(),
             'type' => $this->isRequired() ? 'required' : 'optional',
             'action' => $this->getAction(),
+            'snoozable' => $this->isSnoozable(),
         ];
     }
 }

@@ -7,6 +7,7 @@ export interface Task {
     premium: boolean;
     special_feature: boolean;
     priority: number;
+    snoozable: boolean;
     action?: {
         text: string;
         link?: string;
@@ -14,6 +15,6 @@ export interface Task {
         target?: string;
         modal?: {
             id: string;
-        }
+        };
     };
 }

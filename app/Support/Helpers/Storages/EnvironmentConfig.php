@@ -41,55 +41,72 @@ final class EnvironmentConfig extends DeferredObject
     {
         $items = require dirname(__FILE__, 5) . '/config/env.php';
 
-        if (isset($items['simplybook']['api'])) {
-            $items = $this->exposeCorrectSimplyBookEnvironment($items);
+        if (defined('RSP_AUTH_URL') || defined('RSP_SB_BASE_API_DOMAIN')) {
+            $items = $this->overrideEnvironmentConfigItems($items);
         }
 
-        if (isset($items['simplybook']['domains'])) {
-            $items = $this->addStagingSimplybookDomainToDomains($items);
+        if (
+            isset($items['simplybook']['domains'])
+            && is_array($items['simplybook']['domains'])
+            && !empty($items['simplybook']['base_api_domain'])
+        ) {
+            $baseApiDomain = $items['simplybook']['base_api_domain'];
+            $domains = $items['simplybook']['domains'];
+            $items['simplybook']['domains'] = $this->insertSimplyBookApiDomain($baseApiDomain, $domains);
         }
 
         return $items;
     }
 
     /**
-     * Provides the SimplyBook API environment configuration based on the
-     * value of the SIMPLYBOOK_ENV constant.
+     * Developers can override rsp_auth_url with constant RSP_AUTH_URL and
+     * base_api_domain with constant RSP_SB_BASE_API_DOMAIN. Set the constants
+     * preferably in wp-config.php.
+     *
+     * Overrides values for:
+     *
+     *      $this->env->getUrl('simplybook.rsp_auth_url')
+     *      $this->env->getString('simplybook.base_api_domain')
      */
-    private function exposeCorrectSimplyBookEnvironment(array $items): array
+    private function overrideEnvironmentConfigItems(array $items): array
     {
-        $acceptedEnvs = ['production', 'development'];
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
+        $definedRspAuthUrl = (defined('RSP_AUTH_URL') ? constant('RSP_AUTH_URL') : null);
+        $definedBaseApiDomain = (defined('RSP_SB_BASE_API_DOMAIN') ? constant('RSP_SB_BASE_API_DOMAIN') : null);
 
-        if (!in_array($env, $acceptedEnvs)) {
-            $env = 'production';
+        $authKeyExists = isset($items['simplybook']['rsp_auth_url']);
+        $domainKeyExists = isset($items['simplybook']['base_api_domain']);
+
+        if ($authKeyExists && !empty($definedRspAuthUrl)) {
+            $items['simplybook']['rsp_auth_url'] = $definedRspAuthUrl;
         }
 
-        $correctEnv = ($items['simplybook']['api'][$env] ?? []);
-        $items['simplybook']['api'] = $correctEnv;
+        if ($domainKeyExists && !empty($definedBaseApiDomain)) {
+            $items['simplybook']['base_api_domain'] = $definedBaseApiDomain;
+        }
+
         return $items;
     }
 
     /**
-     * Provides the SimplyBook domains based on the current environment.
-     * If in development mode, it adds the staging domain.
+     * Insert the base API domain into the list of available domains if not
+     * already present. Useful during development while using a custom
+     * staging domain.
      */
-    public function addStagingSimplybookDomainToDomains(array $items): array
+    private function insertSimplyBookApiDomain(string $baseApiDomain, array $domains): array
     {
-        $env = defined('SIMPLYBOOK_ENV') ? SIMPLYBOOK_ENV : 'production';
-
-        $environmentData = $items['simplybook']['api'];
-        $domains = $items['simplybook']['domains'];
-
-        if (($env === 'development') && !empty($environmentData['domain'])) {
-            $domains[] = [
-                'value' => 'default:' . $environmentData['domain'],
-                'label' => $environmentData['domain'],
-            ];
-
-            $items['simplybook']['domains'] = $domains;
+        // Find the domain by label
+        $labels = array_column($domains, 'label');
+        if (in_array($baseApiDomain, $labels, true)) {
+            return $domains;
         }
 
-        return $items;
+        // Add domain if not found
+        $sanitized = sanitize_text_field($baseApiDomain);
+        $domains[] = [
+            'value' => 'default:' . $sanitized,
+            'label' => $sanitized,
+        ];
+
+        return $domains;
     }
 }

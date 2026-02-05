@@ -147,7 +147,7 @@ class AdminController implements ControllerInterface
     {
         $response = wp_remote_get(rest_url(), ['sslverify' => false]);
 
-        return is_wp_error($response) ||
+        return ! is_wp_error($response) ||
             wp_remote_retrieve_response_code($response) === 200;
     }
 
