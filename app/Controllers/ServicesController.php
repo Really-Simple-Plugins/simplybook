@@ -40,11 +40,11 @@ class ServicesController implements ControllerInterface
     public function setInitialServiceName(): bool
     {
         $extendifyServices = $this->extendifyDataService->getServices();
-        if (empty($extendifyServices)) {
-            return false;
+        if (!empty($extendifyServices)) {
+            return $this->createMultipleServices($extendifyServices);
         }
 
-        return $this->createMultipleServices($extendifyServices);
+        return $this->createExampleService();
     }
 
     /**
@@ -58,7 +58,7 @@ class ServicesController implements ControllerInterface
         }
 
         $currentServices = $this->service->all();
-        $hasDefaultService = (count($currentServices) === 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
+        $hasDefaultService = (count($currentServices) >= 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
         $allSuccessful = true;
 
         foreach ($serviceNames as $index => $serviceName) {
@@ -66,6 +66,10 @@ class ServicesController implements ControllerInterface
             if (empty($serviceName)) {
                 continue;
             }
+
+            // Ensure the service model is clean for each iteration to avoid
+            // leftover state (id, filled attributes) affecting create/update.
+            $this->service->reset();
 
             // First service: update existing default if available
             if ($index === 0 && $hasDefaultService) {
@@ -77,6 +81,24 @@ class ServicesController implements ControllerInterface
         }
 
         return $allSuccessful;
+    }
+
+    /**
+     * When there is no Extendify data we set the name of the initial Service,
+     * after creating a new account, to "Example Service".
+     */
+    private function createExampleService(): bool
+    {
+        $currentServices = $this->service->all();
+
+        // There are NO services or more than 1. Both wouldn't give us the
+        // option to set the initial service name.
+        if ((count($currentServices) !== 1) || empty($currentServices[0]) || !is_array($currentServices[0])) {
+            return false;
+        }
+
+        $initialServiceName = __('Example Service', 'simplybook');
+        return $this->updateExistingService($currentServices[0], $initialServiceName);
     }
 
     /**

@@ -147,6 +147,7 @@ final class Plugin
             \SimplyBook\Controllers\BlockController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,
             \SimplyBook\Controllers\ServicesController::class,
+            \SimplyBook\Controllers\ServiceProvidersController::class,
             \SimplyBook\Controllers\ReviewController::class,
             \SimplyBook\Controllers\TrialExpirationController::class,
             \SimplyBook\Controllers\WidgetTrackingController::class,
