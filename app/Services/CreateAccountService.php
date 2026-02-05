@@ -12,6 +12,7 @@ class CreateAccountService
 
     private const SIMPLYBOOK_API_VERSION = 'v2';
     private const INSTALLATION_ID_OPTION = '_simplybook_installation_id';
+    private const EMPTY_INSTALLATION_ID = 'unknown';
 
     // API Endpoints
     private const ENDPOINT_COMPANY = 'simplybook/company';
@@ -162,7 +163,7 @@ class CreateAccountService
      */
     public function getInstallationId(): string
     {
-        return get_option(self::INSTALLATION_ID_OPTION, 'unknown');
+        return get_option(self::INSTALLATION_ID_OPTION, self::EMPTY_INSTALLATION_ID);
     }
 
     /**
@@ -173,7 +174,7 @@ class CreateAccountService
     public function createInstallationId(string $userAgent, bool $override = true): void
     {
         $existingId = $this->getInstallationId();
-        if (!empty($existingId) && !$override) {
+        if (($existingId !== self::EMPTY_INSTALLATION_ID) && !$override) {
             return;
         }
 
