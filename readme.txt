@@ -93,6 +93,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Direct SimplyBook.me links now work with plain permalinks.
 * Fixed: REST API validation is now more reliable.
 * Fixed: Issue preventing some users from creating Services or Service Providers.
+* Fixed: Rendering issue when no name was provided for a Service (Provider).
 * Added: Login now supports custom SimplyBook.me domains.
 * Changed: Onboarding flow is shortened.
 
