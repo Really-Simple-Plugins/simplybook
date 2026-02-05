@@ -41,6 +41,11 @@ class TaskManagementEndpoints
             'callback' => [$this, 'dismissTaskCallback'],
         ];
 
+        $routes['snooze_task'] = [
+            'methods' => \WP_REST_Server::CREATABLE,
+            'callback' => [$this, 'snoozeTaskCallback'],
+        ];
+
         return $routes;
     }
 
@@ -67,6 +72,19 @@ class TaskManagementEndpoints
 
         $sanitizedTaskId = $storage->getTitle('taskId');
         $this->service->dismissTask($sanitizedTaskId);
+
+        return $this->sendHttpResponse();
+    }
+
+    /**
+     * Snooze a task by taskId (temporarily hides it).
+     */
+    public function snoozeTaskCallback(\WP_REST_Request $request): \WP_REST_Response
+    {
+        $storage = $this->retrieveHttpStorage($request);
+
+        $sanitizedTaskId = $storage->getTitle('taskId');
+        $this->service->snoozeTask($sanitizedTaskId);
 
         return $this->sendHttpResponse();
     }

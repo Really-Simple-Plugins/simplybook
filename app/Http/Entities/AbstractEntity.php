@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Http\Entities;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
@@ -276,11 +275,14 @@ abstract class AbstractEntity
     {
         $errors = [];
 
+        // Store locally so we can modify it without affecting the Entity
+        $required = $this->required;
+
         if ($this->exists()) {
-            $this->required[] = $this->primaryKey;
+            $required[] = $this->primaryKey;
         }
 
-        foreach ($this->required as $attribute) {
+        foreach ($required as $attribute) {
             // No empty() check to prevent falsy matches
             $requiredFieldIsEmpty = (
                 !isset($this->attributes[$attribute])

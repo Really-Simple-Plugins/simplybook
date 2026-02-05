@@ -191,7 +191,7 @@ class ElementorWidget extends Widget_Base
             return []; // we shouldn't be here
         }
 
-        $serviceEntity = new Service();
+        $serviceEntity = App::getInstance()->get(Service::class);
 
         return $this->buildOptionsFromApiData(
             $serviceEntity->all(),
@@ -208,7 +208,7 @@ class ElementorWidget extends Widget_Base
             return []; // we shouldn't be here
         }
 
-        $providerEntity = new ServiceProvider();
+        $providerEntity = App::getInstance()->get(ServiceProvider::class);
 
         $options = $this->buildOptionsFromApiData(
             $providerEntity->all(),

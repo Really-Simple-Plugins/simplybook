@@ -70,7 +70,7 @@ trait HasAllowlistControl
         $callbackUrl = get_option('simplybook_callback_url', '');
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $requestUriContainsCallbackUrl = strpos($_SERVER['REQUEST_URI'], 'company_registration/' . $callbackUrl) !== false;
+        $requestUriContainsCallbackUrl = strpos($_SERVER['REQUEST_URI'], 'onboarding/registration_callback/' . $callbackUrl) !== false;
 
         if ($expires > time() && !empty($callbackUrl) && $requestUriContainsCallbackUrl) {
             return true;

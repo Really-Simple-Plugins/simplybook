@@ -1,7 +1,7 @@
 import fetchRequest from "./fetchRequest";
 import glue from "../helpers/glue";
 import errorHandler from "../helpers/errorHandler";
-import { API_BASE_PATH, NONCE } from "../config";
+import { SIMPLYBOOK_API_BASE_PATH, SIMPLYBOOK_NONCE } from "../config";
 
 /**
  * Request function to make API calls. First try to make a request using the API Fetch function, if that fails, try AJAX.
@@ -16,12 +16,12 @@ const request = async (path, method = "POST", data = {}) => {
 
 
   args.path =
-    API_BASE_PATH +
+    SIMPLYBOOK_API_BASE_PATH +
     args.path +
     glue() +
     "&token=" +
     Math.random().toString(36).substring(2, 7);
-  args.data = { ...data, nonce: NONCE };
+  args.data = { ...data, nonce: SIMPLYBOOK_NONCE };
   if ( method === 'GET') {
     console.log("the request method is not adjusted for GET requests yet. ");
   }

@@ -2,13 +2,11 @@
 
 namespace SimplyBook\Features\Onboarding;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Helpers\Storage;
-use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 class OnboardingService
@@ -37,7 +35,7 @@ class OnboardingService
      */
     public function setOnboardingCompleted(): bool
     {
-        $this->setCompletedStep(5);
+        $this->setCompletedStep(2);
         $this->clearTemporaryData();
 
         $this->client->clearFailedAuthenticationFlag();
@@ -51,43 +49,12 @@ class OnboardingService
     }
 
     /**
-     * This method should be called after a successful company registration.
-     * In that case the data given should be based on the data returned in the
-     * ApiResponseDTO from the successful {@see ApiClient::register_company()}
+     * This method should be called after a successful company registration request.
+     * Note: completed_step is set in RegistrationCallbackEndpoint after callback authentication succeeds.
      */
-    public function finishCompanyRegistration(array $data): void
+    public function finishCompanyRegistration(): void
     {
-        $responseDataStorage = new Storage($data);
-
         update_option("simplybook_company_registration_start_time", time(), false);
-        update_option('simplybook_recaptcha_site_key', $responseDataStorage->getString('recaptcha_site_key'));
-        update_option('simplybook_recaptcha_version', $responseDataStorage->getString('recaptcha_version'));
-        $this->update_option('company_id', $responseDataStorage->getInt('company_id'), true);
-
-        $this->setCompletedStep(2);
-    }
-
-    /**
-     * Store given email address when the user agrees to the terms
-     */
-    public function storeEmailAddress(\WP_REST_Request $request, array $ajaxData = []): \WP_REST_Response
-    {
-        $storage = $this->retrieveHttpStorage($request, $ajaxData);
-
-        $adminAgreesToTerms = $storage->getBoolean('terms-and-conditions');
-        $submittedEmailAddress = $storage->getEmail('email');
-
-        $success = (is_email($submittedEmailAddress) && $adminAgreesToTerms);
-        $message = ($success ? '' : __('Please enter a valid email address and accept the terms and conditions', 'simplybook'));
-
-        if ($success) {
-            $this->setTemporaryData([
-                'email' => $submittedEmailAddress,
-                'terms' => $adminAgreesToTerms,
-            ]);
-        }
-
-        return $this->sendHttpResponse([], $success, $message, ($success ? 200 : 400));
     }
 
     /**
@@ -106,57 +73,45 @@ class OnboardingService
     }
 
     /**
-     * Get the recaptcha site key from the general options
+     * Retrieve company data from the options and build a CompanyBuilder object
      */
-    public function getRecaptchaSitekey(): \WP_REST_Response
+    public function getCompanyData(): CompanyBuilder
     {
-        return $this->sendHttpResponse([
-            'site_key' => get_option('simplybook_recaptcha_site_key'),
-        ]);
-    }
-
-    /**
-     * Checks if the given page title is available based on the given url and
-     * existing pages.
-     */
-    public function isPageTitleAvailableForURL(string $url): bool
-    {
-        $title = StringUtility::convertUrlToTitle($url);
-
-        $posts = get_posts([
-            'post_type' => 'page',
-            'title' => sanitize_text_field($title),
-            'post_status' => 'publish',
-            'fields' => 'ids',
-        ]);
-
-        return empty($posts);
+        $companyData = get_option('simplybook_company_data', []);
+        return (new CompanyBuilder())->buildFromArray($companyData);
     }
 
     /**
      * Method is used to build the company domain and login based on the given
      * domain and login values. For non-default domains the domain should be
      * appended to the login for the authentication process. The domains are
-     * maintained here {@see react/src/routes/onboarding.lazy.jsx}
+     * maintained here {@see config/env.php}
      *
-     * @see https://teamdotblue.atlassian.net/browse/NL14RSP2-49?focusedCommentId=3407285
+     * @see /NL14RSP2-49?focusedCommentId=3407285
      *
      * @example Domain: login:simplybook.vip & Login: admin -> [simplybook.vip, admin.simplybook.vip]
      * @example Domain: default:simplybook.it & login: admin -> [simplybook.it, admin]
+     * @example Domain: simplybook.de & login: admin -> [simplybook.de, admin]
      *
      * @since 3.2.4 All domains are now listed as "default": in config/env.php,
-     * reference: {@see https://teamdotblue.atlassian.net/browse/NL14RSP2-335}
+     * reference: {@see /NL14RSP2-335}
+     *
+     * @see /NL14RSP2-337 - This feature introduced the ability for users to
+     * enter their own domain as a string, which will not be marked as "default:"
      */
     public function parseCompanyDomainAndLogin(string $domain, string $login): array
     {
-        $companyDomainContainsLoginIdentifier = strpos($domain, 'login:') === 0;
-        $domain = substr($domain, strpos($domain, ':') + 1);
-
-        if ($companyDomainContainsLoginIdentifier) {
-            $login .= '.' . $domain;
+        if (strpos($domain, ':') === false) {
+            return [$domain, $login];
         }
 
-        return [$domain, $login];
+        [$prefix, $parsedDomain] = explode(':', $domain, 2);
+
+        if ($prefix === 'login') {
+            $login .= '.' . $parsedDomain;
+        }
+
+        return [$parsedDomain, $login];
     }
 
     /**
