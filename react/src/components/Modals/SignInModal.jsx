@@ -36,21 +36,14 @@ const SignInModal = ({onClose}) => {
                         />
                     </>
                 ) : (
-                    <>
-                        <div className="flex flex-col items-center mb-8">
-                            <Logo className="mx-4 w-65 py-2 my-4" />
-                            <h2 className="my-4">{__("2FA authentication", "simplybook")}</h2>
-                            <small>{__("Please use your 2FA provider to sign in.", "simplybook")}</small>
-                        </div>
-                        <FormTwoFa
-                            authSessionId={authSessionId}
-                            companyLogin={companyLogin}
-                            userLogin={userLogin}
-                            domain={domain}
-                            twoFaProviders={twoFaProviders}
-                            onClose={onClose}
-                        />
-                    </>
+                    <FormTwoFa
+                        authSessionId={authSessionId}
+                        companyLogin={companyLogin}
+                        userLogin={userLogin}
+                        domain={domain}
+                        twoFaProviders={twoFaProviders}
+                        onClose={onClose}
+                    />
                 )}
             </div>
         </div>

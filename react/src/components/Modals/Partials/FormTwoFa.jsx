@@ -5,6 +5,7 @@ import TextField from "../../Fields/TextField";
 import ButtonInput from "../../Inputs/ButtonInput";
 import request from "../../../api/requests/request";
 import SelectField from "../../Fields/SelectField";
+import { ReactComponent as Logo } from "../../../../../assets/img/logo.svg";
 
 // API IMPORTS
 import Error from "../../Errors/Error";
@@ -83,8 +84,31 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
         }
     };
 
+    const twoFaTitle = (selectedProvider) => {
+        switch (selectedProvider) {
+            case "email":
+                return __("Email verification", "simplybook");
+            default:
+                return __("2FA authentication", "simplybook");
+        }
+    }
+
+    const twoFaSubtitle = (selectedProvider) => {
+        switch (selectedProvider) {
+            case "email":
+                return __("Fill in the code sent in the email", "simplybook");
+            default:
+                return __("Please use your 2FA provider to sign in.", "simplybook");
+        }
+    }
+
     return (
         <>
+            <div className="flex flex-col items-center mb-8">
+                <Logo className="mx-4 w-65 py-2 my-4" />
+                <h2 className="my-4">{twoFaTitle(selectedProvider)}</h2>
+                <small>{twoFaSubtitle(selectedProvider)}</small>
+            </div>
             <form className="flex flex-col" onSubmit={handle2faSubmit}>
                 {Object.keys(twoFaProviders).length > 1 ? (
                     <Controller
@@ -97,7 +121,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                                 fieldState={fieldState}
                                 label={__("Select 2FA provider", "simplybook")}
                                 setting="two_fa_type"
-                                options={selectedProvider}
+                                options={twoFaProviders}
                                 value={selectedProvider}
                                 onChange={(e) => {
                                     setSelectedProvider(e.target.value);
@@ -119,7 +143,7 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
                                 {...field}
                                 fieldState={fieldState}
                                 className="mb-4"
-                                label={__("Enter 2FA authentication code", "simplybook")}
+                                label={__("Enter authentication code", "simplybook")}
                                 setting="two_fa_code"
                                 type="text"
                                 placeholder={__("Enter code", "simplybook")}
