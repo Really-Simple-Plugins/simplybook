@@ -84,30 +84,16 @@ const FormTwoFa = ({authSessionId, companyLogin, userLogin, domain, twoFaProvide
         }
     };
 
-    const twoFaTitle = (selectedProvider) => {
-        switch (selectedProvider) {
-            case "email":
-                return __("Email verification", "simplybook");
-            default:
-                return __("2FA authentication", "simplybook");
-        }
-    }
-
-    const twoFaSubtitle = (selectedProvider) => {
-        switch (selectedProvider) {
-            case "email":
-                return __("Fill in the code sent in the email", "simplybook");
-            default:
-                return __("Please use your 2FA provider to sign in.", "simplybook");
-        }
-    }
+    const isEmailProvider = (selectedProvider === "email");
+    const twoFaTitle = isEmailProvider ? __("Email verification", "simplybook") : __("2FA authentication", "simplybook");
+    const twoFaSubtitle = isEmailProvider ? __("Fill in the code sent in the email", "simplybook") : __("Please use your 2FA provider to sign in.", "simplybook");
 
     return (
         <>
             <div className="flex flex-col items-center mb-8">
                 <Logo className="mx-4 w-65 py-2 my-4" />
-                <h2 className="my-4">{twoFaTitle(selectedProvider)}</h2>
-                <small>{twoFaSubtitle(selectedProvider)}</small>
+                <h2 className="my-4">{twoFaTitle}</h2>
+                <small>{twoFaSubtitle}</small>
             </div>
             <form className="flex flex-col" onSubmit={handle2faSubmit}>
                 {Object.keys(twoFaProviders).length > 1 ? (
