@@ -95,7 +95,9 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Issue preventing some users from creating Services or Service Providers.
 * Fixed: Rendering issue when no name was provided for a Service (Provider).
 * Added: Login now supports custom SimplyBook.me domains.
+* Added: E-mail 2FA is now supported during log-in.
 * Changed: Onboarding flow is shortened.
+* Changed: Renamed button "Edit all properties" to "Advanced settings" for better clarity.
 
 = 3.2.4 - 2025-12-17 =
 * Fixed: API response codes now better reflect the actual error.
