@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { ReactComponent as Logo } from "../../../../assets/img/logo.svg";
 import {__} from "@wordpress/i18n";
 
 import FormTwoFa from "./Partials/FormTwoFa";
