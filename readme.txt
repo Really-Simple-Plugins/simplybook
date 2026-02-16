@@ -88,14 +88,16 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.3.0 - 2026-02-10 =
+= 3.3.0 - 2026-02-16 =
 * Fixed: Message “form contains errors” briefly flashed in settings.
 * Fixed: Direct SimplyBook.me links now work with plain permalinks.
 * Fixed: REST API validation is now more reliable.
 * Fixed: Issue preventing some users from creating Services or Service Providers.
 * Fixed: Rendering issue when no name was provided for a Service (Provider).
 * Added: Login now supports custom SimplyBook.me domains.
+* Added: E-mail 2FA is now supported during log-in.
 * Changed: Onboarding flow is shortened.
+* Changed: Renamed button "Edit all properties" to "Advanced settings" for better clarity.
 
 = 3.2.4 - 2025-12-17 =
 * Fixed: API response codes now better reflect the actual error.
