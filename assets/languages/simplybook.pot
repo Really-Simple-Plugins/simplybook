@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-02-05T13:38:57+00:00\n"
+"POT-Creation-Date: 2026-02-03T12:35:32+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: simplybook\n"
@@ -41,7 +41,7 @@ msgstr ""
 
 #: app/Controllers/AdminController.php:51
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 #: react/src/components/Settings/SettingsMenu.jsx:16
 #: react/src/components/Settings/SettingsMenu.jsx:29
 msgid "Settings"
@@ -73,14 +73,6 @@ msgstr ""
 msgid "Hi, SimplyBook.me has helped you reach %1$d bookings in the last 30 days. If you have a moment, please consider leaving a review on WordPress.org to spread the word. We greatly appreciate it! If you have any questions or feedback, leave us a %2$smessage%3$s."
 msgstr ""
 
-#: app/Controllers/ServiceProvidersController.php:45
-msgid "Example Service Provider"
-msgstr ""
-
-#: app/Controllers/ServicesController.php:100
-msgid "Example Service"
-msgstr ""
-
 #: app/Controllers/TrialExpirationController.php:51
 msgid "Your free SimplyBook.me trial period has expired. Discover which plans best suit your site to continue gathering bookings!"
 msgstr ""
@@ -101,10 +93,10 @@ msgid "Please configure at least one Service Provider"
 msgstr ""
 
 #: app/Features/Notifications/Notices/AddMandatoryProviderNotice.php:47
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:96
 msgid "Add Service Provider"
 msgstr ""
@@ -120,10 +112,10 @@ msgstr ""
 
 #: app/Features/Notifications/Notices/AddMandatoryServiceNotice.php:47
 #: app/Features/TaskManagement/Tasks/AddMandatoryServiceTask.php:39
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ServicesListField.jsx:81
 msgid "Add Service"
 msgstr ""
@@ -338,10 +330,10 @@ msgstr ""
 #: app/Features/TaskManagement/Tasks/MaximumBookingsTask.php:45
 #: app/Features/TaskManagement/Tasks/TrialExpiredTask.php:45
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ListItem.js:64
 msgid "Upgrade"
 msgstr ""
@@ -386,77 +378,77 @@ msgstr ""
 msgid "Please fill in all required fields to create an account."
 msgstr ""
 
-#: app/Http/ApiClient.php:550
+#: app/Http/ApiClient.php:548
 msgid "Account creation failed, could not verify installation."
 msgstr ""
 
-#: app/Http/ApiClient.php:575
+#: app/Http/ApiClient.php:572
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/Http/ApiClient.php:593
+#: app/Http/ApiClient.php:590
 msgid "Unknown error encountered while registering your company. Please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:966
+#: app/Http/ApiClient.php:963
 msgid "Authentication failed, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:969
+#: app/Http/ApiClient.php:966
 msgid "Please enter a valid domain."
 msgstr ""
 
-#: app/Http/ApiClient.php:986
+#: app/Http/ApiClient.php:983
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/Http/ApiClient.php:989
+#: app/Http/ApiClient.php:986
 msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
-#: app/Http/ApiClient.php:1042
+#: app/Http/ApiClient.php:1039
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/Http/ApiClient.php:1045
+#: app/Http/ApiClient.php:1042
 msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
-#: app/Http/ApiClient.php:1070
+#: app/Http/ApiClient.php:1067
 msgid "No error received from remote."
 msgstr ""
 
-#: app/Http/ApiClient.php:1077
+#: app/Http/ApiClient.php:1074
 msgid "Invalid login or password, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1079
+#: app/Http/ApiClient.php:1076
 msgid "Incorrect 2FA authentication code, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1083
+#: app/Http/ApiClient.php:1080
 msgid "Too many login attempts. Verify your credentials and try again in a few minutes."
 msgstr ""
 
-#: app/Http/ApiClient.php:1086
+#: app/Http/ApiClient.php:1083
 msgid "Could not find a company associated with that company login."
 msgstr ""
 
-#: app/Http/ApiClient.php:1089
+#: app/Http/ApiClient.php:1086
 msgid "Authentication failed, please verify your credentials."
 msgstr ""
 
-#: app/Http/ApiClient.php:1166
+#: app/Http/ApiClient.php:1163
 #: react/build/843.98b3fc3b65c03b94273f.js:1
 #: react/src/components/Modals/SignInModal.jsx:15
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/Http/ApiClient.php:1167
+#: app/Http/ApiClient.php:1164
 msgid "SMS"
 msgstr ""
 
-#: app/Http/ApiClient.php:1173
+#: app/Http/ApiClient.php:1170
 msgid "Unknown 2FA provider"
 msgstr ""
 
@@ -537,7 +529,7 @@ msgstr ""
 msgid "Registration failed. Please try again."
 msgstr ""
 
-#: app/Http/Entities/AbstractEntity.php:294
+#: app/Http/Entities/AbstractEntity.php:291
 msgid "Field is required."
 msgstr ""
 
@@ -605,15 +597,15 @@ msgstr ""
 msgid "Booking page created successfully."
 msgstr ""
 
-#: app/Services/CreateAccountService.php:88
+#: app/Services/CreateAccountService.php:82
 msgid "Failed to connect."
 msgstr ""
 
-#: app/Services/CreateAccountService.php:129
+#: app/Services/CreateAccountService.php:123
 msgid "Invalid response."
 msgstr ""
 
-#: app/Services/CreateAccountService.php:155
+#: app/Services/CreateAccountService.php:149
 msgid "Account registration failed. Please try again."
 msgstr ""
 
@@ -1846,7 +1838,7 @@ msgid "Theme settings"
 msgstr ""
 
 #: config/menus.php:71
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Notifications"
 msgstr ""
 
@@ -1971,8 +1963,8 @@ msgstr ""
 
 #: assets/block/build/index.js:1
 #: assets/block/src/setting.modal.js:75
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:119
 #: react/src/components/Forms/FormFooter.jsx:139
 #: assets/block/build/index.js:295
@@ -1997,8 +1989,8 @@ msgstr ""
 
 #: assets/block/build/index.js:1
 #: assets/block/src/edit.js:81
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: assets/block/build/index.js:59
 msgid "Preview"
 msgstr ""
@@ -2040,55 +2032,55 @@ msgid "WidgetPreview"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Route is not set"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Route is not set. Use setRoute() before calling put()"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Route is not set. Use setRoute() before calling delete()"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Payload must be a non-empty object."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:60
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:81
 msgid "An unknown error occurred. Please try again."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
 #: react/src/components/Modals/Partials/FormLogin.jsx:239
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:170
@@ -2096,118 +2088,118 @@ msgid "Close"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Live Help"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "days left"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Dashboard"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Clients"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Calendar"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "Help Center"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "is expired."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:51
 msgid "Captcha verification failed. Please try again."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:82
 msgid "Email address"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:87
 msgid "Please enter a valid email address"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:96
 #, js-format
 msgid "I agree to the %sterms and conditions%s"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:106
 #, js-format
 msgid "I wish to receive communications about news and/or promotions from %sSimplyBook.me%s"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:66
 msgid "An error occurred while registering."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:132
 msgid "An error occurred while saving the styles."
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/hooks/useOnboardingData.js:148
 msgid "An error occurred while finishing the onboarding."
 msgstr ""
@@ -2284,10 +2276,10 @@ msgid "Today"
 msgstr ""
 
 #: react/build/79.d57287103e8c0b3ede39.js:1
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ListItem.js:27
 msgid "Loading"
 msgstr ""
@@ -2364,302 +2356,302 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Are you sure you want to delete this Service Provider?"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Are you sure you want to delete this Service?"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Error creating Service Provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Error updating Service Provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Error creating Service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Error updating Service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "An error occurred trying to save your changes"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Name is a required field."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Common/CalendarLoading.jsx:62
 msgid "Please wait while your registration is being processed. This usually takes about 30 seconds."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Common/CalendarLoading.jsx:65
 msgid "This is taking a bit longer than expected. Please wait while we retry a few times."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Common/CalendarLoading.jsx:69
 msgid "We're sorry, but it seems there is a problem with your registration. Please try again later."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Common/CalendarLoading.jsx:71
 msgid "Please complete the onboarding first to register your account."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Select an option"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ListItem.js:51
 msgid "Edit"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "live"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "preview"
 msgstr ""
 
 #. Translators: %1$s and %2$s are placeholders for line breaks and bullet points
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/AuthenticationField.jsx:32
 #, js-format
 msgid "Are you sure you want to logout?%1$sAll settings will be lost.%2$sYou need to reset your booking page(s) manually."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/AuthenticationField.jsx:76
 #: react/src/components/Fields/AuthenticationField.jsx:79
 msgid "Log out"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ThemeField.jsx:67
 msgid "Error fetching theme settings. Please try again later."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Please enter a valid email address (e.g., example@domain.com)"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Please enter a valid phone number with country code (e.g., +31 123 456 789)"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Please enter a valid number between 1 and 99"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Service provider name"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "E-mail"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Phone"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "How many clients can be served at the same time?"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Edit All Properties"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Cannot delete the only visible service provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Delete Service Provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Cannot hide the only visible service provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Visible"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Hidden"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Collapse"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Expand"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Please enter a valid number that is a multiple of your selected timeframe"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Service name"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Service duration (minutes)"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Cannot delete the only visible service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Delete Service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 msgid "Cannot hide the last visible service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:35
 #: react/src/components/Fields/ServicesListField.jsx:22
 #: react/src/routes/settings/$settingsId.lazy.jsx:100
@@ -2669,212 +2661,212 @@ msgid ""
 "Your changes will be lost."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:59
 msgid "Loading service providers"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:69
 msgid "No service providers found."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:69
 msgid "Click \"Add Service Provider\" to create your first service provider."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:96
 msgid "Cancel New Service Provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ProvidersListField.jsx:107
 msgid "Add New Service Provider"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ServicesListField.jsx:46
 msgid "Loading services"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ServicesListField.jsx:56
 msgid "No services found. Click \"Add Service\" to create your first service."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ServicesListField.jsx:81
 msgid "Cancel New Service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Fields/ServicesListField.jsx:89
 msgid "Add New Service"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Forms/FormField.js:56
 msgid "This field is required"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/809.468b08d31494e382d212.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Forms/FormField.js:63
 msgid "Invalid format"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 #: react/src/components/Settings/SettingsMenu.jsx:18
 msgid "Loading menu..."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 #: react/src/components/Settings/SettingsMenu.jsx:19
 msgid "Error loading menu"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 #: react/src/components/Settings/SettingsMenu.jsx:20
 msgid "No menu items available"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
 msgid "You currently have no notifications."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:75
 #: react/src/components/Forms/FormFooter.jsx:84
 #: react/src/components/Forms/FormFooter.jsx:118
 msgid "Saving..."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:76
 msgid "Validating..."
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:77
 msgid "Form contains errors"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:78
 #: react/src/components/Forms/FormFooter.jsx:85
 msgid "You have unsaved changes"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/components/Forms/FormFooter.jsx:132
 msgid "Cancel"
 msgstr ""
 
-#: react/build/107.8d91aa21bbbd5db507d3.js:1
-#: react/build/809.d6875e8bf6b2efaea12b.js:1
+#: react/build/107.ad104b187263eec837b2.js:1
+#: react/build/809.468b08d31494e382d212.js:1
 #: react/src/routes/settings/$settingsId.lazy.jsx:121
 msgid "Settings saved successfully"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Forms/OnboardingForms.jsx:17
 #: react/src/components/Onboarding/OnboardingStep.jsx:19
 #: react/src/components/Onboarding/OnboardingStep.jsx:191
 msgid "Next"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/build/843.98b3fc3b65c03b94273f.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Modals/Partials/FormLogin.jsx:222
 #: react/src/components/Modals/Partials/FormTwoFa.jsx:151
 #: react/src/components/Onboarding/OnboardingStep.jsx:212
 msgid "Something went wrong"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Onboarding/OnboardingStep.jsx:171
 msgid "An error occurred while restarting the onboarding."
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/components/Onboarding/OnboardingStep.jsx:216
 msgid "Or restart the onboarding"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:41
 msgid "Select your company colors"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:44
 msgid "Next Step: Finish"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:57
 msgid "Primary"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:69
 msgid "Secondary"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:80
 msgid "Active"
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:51
 msgid "Loading theme colors..."
 msgstr ""
 
-#: react/build/167.a103d9eefa0c4cc6a8b8.js:1
+#: react/build/167.3ff2638f0abd8d4de5bb.js:1
 #: react/src/routes/onboarding/style-widget.lazy.jsx:97
 msgid "Next step"
 msgstr ""
@@ -2976,101 +2968,101 @@ msgstr ""
 msgid "Already got an account?"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:28
 #, js-format
 msgid "This page is protected by reCAPTCHA and the Google %s and %s apply."
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:29
 msgid "Privacy Policy"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:30
 msgid "Terms of Service"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:75
 msgid "Create your free account"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:78
 msgid "100% free. No credit card needed."
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:98
 msgid "How to get started with SimplyBook.me"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:104
 msgid "SimplyBook.me fits seamlessly into your business"
 msgstr ""
 
-#: react/build/969.578c0bfee353d32bee24.js:1
+#: react/build/969.c76242715f18918b2007.js:1
 #: react/src/routes/onboarding/create-your-account.lazy.jsx:107
 msgid "It’s easy to keep your appointments in sync with the apps and plugins you need."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:44
 msgid "Uh-oh! We stumbled upon an error."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:59
 msgid "Copied"
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:60
 msgid "Copy Error"
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:64
 msgid "We're sorry for the trouble. Please take a moment to report this issue on the WordPress forums so we can work on fixing it. Here’s how you can report the issue:"
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:72
 #, js-format
 msgid "Copy the error details by clicking the %s button above."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:84
 msgid "Navigate to the Support Forum."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:88
 msgid "If you haven’t already, log in to your WordPress.org account or create a new account."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:95
 #, js-format
 msgid "Once logged in, click on %s under the SimplyBook.me forum."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:104
 #, js-format
 msgid "Title: Mention %s along with a brief hint of the error."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:112
 msgid "Description: Paste the copied error details and explain what you were doing when the error occurred."
 msgstr ""
 
-#: react/build/index.90bd4e6ffe0e9f788a46.js:1
+#: react/build/index.878d44bbf01177a94ad0.js:1
 #: react/src/components/Common/ErrorBoundary.jsx:119
 #, js-format
 msgid "Click %s to post your topic. Our team will look into the issue and provide assistance."
