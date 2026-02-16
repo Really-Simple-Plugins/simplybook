@@ -4,6 +4,7 @@ import { useForm, Controller, set } from "react-hook-form";
 import TextField from "../../Fields/TextField";
 import SelectField from "../../Fields/SelectField";
 import ButtonInput from "../../Inputs/ButtonInput";
+import { ReactComponent as Logo } from "../../../../../assets/img/logo.svg";
 
 // API IMPORTS
 import apiFetch from "@wordpress/api-fetch";
@@ -109,6 +110,11 @@ const formLogin = ({
 
     return (
         <>
+            <div className="flex flex-col items-center mb-8">
+                <Logo className="mx-4 w-65 py-2 my-4" />
+                <h2 className="my-4">{__("Sign In", "simplybook")}</h2>
+                <small>{__("Please enter your SimplyBook.me credentials to sign in.", "simplybook")}</small>
+            </div>
             <form className="flex flex-col relative" onSubmit={submitForm}>
                 <Controller
                     name="company_domain"

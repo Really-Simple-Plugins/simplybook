@@ -140,7 +140,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
                     </div>
                 ) : null}
             </div>
-            {/* Edit All Properties Button */}
+            {/* Advanced settings Button */}
             {serviceId && serviceId !== "new" && (
                 <div className="mt-4 max-w-fit">
                     <ButtonLink
@@ -152,7 +152,7 @@ const ServiceForm: React.FC<ServiceFormProps> = ({ serviceId, service }) => {
                         btnVariant="square-ghost-small"
                         loginLink={`/v2/management?hash=services/edit/details/${serviceId}`}
                     >
-                        {__("Edit All Properties", "simplybook")}
+                        {__("Advanced settings", "simplybook")}
                     </ButtonLink>
                 </div>
             )}
