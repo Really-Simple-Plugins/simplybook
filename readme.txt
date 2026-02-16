@@ -88,7 +88,7 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.3.0 - 2026-02-10 =
+= 3.3.0 - 2026-02-16 =
 * Fixed: Message “form contains errors” briefly flashed in settings.
 * Fixed: Direct SimplyBook.me links now work with plain permalinks.
 * Fixed: REST API validation is now more reliable.
