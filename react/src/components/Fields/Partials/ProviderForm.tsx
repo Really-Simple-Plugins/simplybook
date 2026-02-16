@@ -205,7 +205,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                     </div>
                 ) : null}
             </div>
-            {/* Edit All Properties Button */}
+            {/* Advanced settings Button */}
             {providerId && providerId !== "new" && (
                 <div className="mt-4 max-w-fit">
                     <ButtonLink
@@ -217,7 +217,7 @@ const ProviderForm: React.FC<ProviderFormProps> = ({ providerId, provider }) => 
                         btnVariant="square-ghost-small"
                         loginLink={`/v2/management?hash=providers/edit/details/${providerId}`}
                     >
-                        {__("Edit All Properties", "simplybook")}
+                        {__("Advanced settings", "simplybook")}
                     </ButtonLink>
                 </div>
             )}
