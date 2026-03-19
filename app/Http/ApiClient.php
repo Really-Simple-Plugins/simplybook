@@ -517,7 +517,6 @@ class ApiClient
 
     /**
      * Registers a company with the API
-     * @internal method can be recursive a maximum of 3 times in one minute
      * @throws ApiException
      */
     public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
@@ -528,11 +527,13 @@ class ApiClient
             ))->setResponseCode(403);
         }
 
-        if (get_transient('simply_book_attempt_count') > 3) {
+        $attemptCount = (int) get_transient('simply_book_attempt_count');
+        if ($attemptCount > 3) {
             throw (new ApiException(
                 __('Too many attempts to register company, please try again in a minute.', 'simplybook')
             ))->setResponseCode(429);
         }
+        set_transient('simply_book_attempt_count', $attemptCount + 1, 60);
 
         if ($company->isValid() === false) {
             throw (new ApiException(
@@ -577,7 +578,8 @@ class ApiClient
 
         // We generate a company_login dynamically, but because SimplyBook has
         // very strict checks this company_login might be invalid. In this case
-        // we delete the company_login and try again.
+        // we delete the company_login and throw a retryable error so the client
+        // can generate a fresh reCAPTCHA token and try again.
         if (
             isset($response->data->company_login) &&
             (
@@ -586,7 +588,12 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            return $this->register_company($company, $captchaToken);
+            throw (new ApiException(
+                __('Company login was not available, retrying.', 'simplybook')
+            ))->setData([
+                'retry' => true,
+                'reason' => 'login_reserved',
+            ])->setResponseCode(409);
         }
 
         throw (new ApiException(
