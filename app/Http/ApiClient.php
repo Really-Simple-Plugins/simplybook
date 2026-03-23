@@ -516,7 +516,16 @@ class ApiClient
     }
 
     /**
-     * Registers a company with the API
+     * Registers a company with the API.
+     *
+     * Validates the company data first, then enforces a rate limit (max 4
+     * attempts per 60 seconds). On success the rate-limit counter is cleared.
+     *
+     * When the generated company_login is reserved or contains illegal words,
+     * a 409 with `{ retry: true }` is thrown so the client can generate a
+     * fresh reCAPTCHA token and retry. Each client retry counts as a separate
+     * server call against the rate limit.
+     *
      * @throws ApiException
      */
     public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
@@ -533,10 +542,6 @@ class ApiClient
             ))->setResponseCode(422);
         }
 
-        // Rate-limit registration attempts. Note: the client retries up to 4
-        // times (with fresh captcha tokens) on retryable 409 errors, and each
-        // retry counts as a separate server call. So a single user submission
-        // can consume up to 4 attempts from this budget.
         $attemptCount = (int) get_transient('simply_book_attempt_count');
         if ($attemptCount > 3) {
             throw (new ApiException(
@@ -575,16 +580,11 @@ class ApiClient
 
         $response = (object) $rawResponse['body'];
 
-        // Response returns success
         if (isset($response->success) && $response->success) {
             delete_transient('simply_book_attempt_count');
             return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, []);
         }
 
-        // We generate a company_login dynamically, but because SimplyBook has
-        // very strict checks this company_login might be invalid. In this case
-        // we delete the company_login and throw a retryable error so the client
-        // can generate a fresh reCAPTCHA token and try again.
         if (
             isset($response->data->company_login) &&
             (
