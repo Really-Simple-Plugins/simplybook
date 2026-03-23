@@ -527,6 +527,16 @@ class ApiClient
             ))->setResponseCode(403);
         }
 
+        if ($company->isValid() === false) {
+            throw (new ApiException(
+                __('Please fill in all required fields to create an account.', 'simplybook')
+            ))->setResponseCode(422);
+        }
+
+        // Rate-limit registration attempts. Note: the client retries up to 4
+        // times (with fresh captcha tokens) on retryable 409 errors, and each
+        // retry counts as a separate server call. So a single user submission
+        // can consume up to 4 attempts from this budget.
         $attemptCount = (int) get_transient('simply_book_attempt_count');
         if ($attemptCount > 3) {
             throw (new ApiException(
@@ -534,12 +544,6 @@ class ApiClient
             ))->setResponseCode(429);
         }
         set_transient('simply_book_attempt_count', $attemptCount + 1, 60);
-
-        if ($company->isValid() === false) {
-            throw (new ApiException(
-                __('Please fill in all required fields to create an account.', 'simplybook')
-            ))->setResponseCode(422);
-        }
 
         $userAgent = $this->getRequestUserAgent();
 
@@ -573,6 +577,7 @@ class ApiClient
 
         // Response returns success
         if (isset($response->success) && $response->success) {
+            delete_transient('simply_book_attempt_count');
             return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, []);
         }
 

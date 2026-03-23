@@ -115,8 +115,11 @@ const useOnboardingData = () => {
                         setApiError('');
                         return true;
                     } catch (error) {
-                        // If the error is retryable and we haven't exhausted retries, try again
+                        // If the error is retryable and we haven't exhausted retries,
+                        // wait briefly to avoid rapid-fire captcha requests that
+                        // could lower our reCAPTCHA score, then try again.
                         if (error?.data?.retry === true && attempt < maxRetries) {
+                            await new Promise(resolve => setTimeout(resolve, 500));
                             continue;
                         }
 
