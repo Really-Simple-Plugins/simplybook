@@ -18,6 +18,9 @@ use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ */
 class OnboardingController implements FeatureInterface
 {
     use HasAllowlistControl;

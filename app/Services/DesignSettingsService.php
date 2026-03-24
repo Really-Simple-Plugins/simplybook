@@ -7,6 +7,11 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
+ */
 class DesignSettingsService
 {
     use LegacySave;

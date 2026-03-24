@@ -5,6 +5,9 @@ namespace SimplyBook\Features\TaskManagement;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Interfaces\FeatureInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ */
 class TaskManagementController implements FeatureInterface
 {
     private TaskManagementEndpoints $endpoints;

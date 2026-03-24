@@ -21,6 +21,25 @@ class TrialExpirationController implements ControllerInterface
     private SubscriptionDataService $subscriptionService;
     private NoticeDismissalService $noticeDismissalService;
 
+    /**
+     * Exact screen base identifiers on which the trial notice should not
+     * be displayed. A "base" is the unique slug WordPress assigns to every
+     * admin screen (e.g. "post", "edit", "upload").
+     */
+    private array $excludedScreenBases = [
+        'post',
+    ];
+
+    /**
+     * Substring patterns matched against the screen base. If any pattern
+     * is found anywhere inside the base string the screen is excluded.
+     * Use this for broad matches where multiple screens share a common
+     * keyword (e.g. "simplybook" matches every plugin-specific screen).
+     */
+    private array $excludedScreenPatterns = [
+        'simplybook',
+    ];
+
     public function __construct(EnvironmentConfig $env, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
     {
         $this->env = $env;
@@ -103,35 +122,65 @@ class TrialExpirationController implements ControllerInterface
             return (bool) $cacheValue;
         }
 
-        $screen = get_current_screen();
-        if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+        $isEligible = $this->isEligibleForTrialNotice();
+        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
+        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+
+        return $isEligible;
+    }
+
+    /**
+     * Check all sequential eligibility conditions for the trial notice.
+     */
+    private function isEligibleForTrialNotice(): bool
+    {
+        if ($this->isCurrentScreenExcluded()) {
             return false;
         }
 
         if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         // User who did not complete the onboarding shouldn't see this notice
         if (get_option('simplybook_onboarding_completed', false) === false) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         $trialInfo = $this->getTrialInfo();
         if ($trialInfo === null) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         if ($trialInfo['is_expired'] && $trialInfo['days_since_expiration'] > 30) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
+    }
+
+    /**
+     * Check if the screen the user is currently visiting should be excluded
+     * from showing the trial notice.
+     */
+    private function isCurrentScreenExcluded(): bool
+    {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return false;
+        }
+
+        if (in_array($screen->base, $this->excludedScreenBases, true)) {
+            return true;
+        }
+
+        foreach ($this->excludedScreenPatterns as $pattern) {
+            if (str_contains($screen->base, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getTrialInfo(): ?array

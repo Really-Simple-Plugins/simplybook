@@ -8,6 +8,10 @@ use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ */
 abstract class AbstractEntity
 {
     /**

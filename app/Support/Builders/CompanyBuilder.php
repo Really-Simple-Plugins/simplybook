@@ -4,6 +4,11 @@ namespace SimplyBook\Support\Builders;
 
 use SimplyBook\Support\Utility\StringUtility;
 
+/**
+ * @SuppressWarnings("PHPMD.CamelCasePropertyName")
+ * @SuppressWarnings("PHPMD.CamelCaseParameterName")
+ * @SuppressWarnings("PHPMD.CamelCaseVariableName")
+ */
 final class CompanyBuilder
 {
     public string $email = '';
