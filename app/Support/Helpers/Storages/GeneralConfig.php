@@ -66,8 +66,7 @@ final class GeneralConfig extends DeferredObject
 
     /**
      * Method is used for collecting a single config file into the full config
-     * structure. Invalid files and empty config payloads are ignored so the loop
-     * can stay small and focused.
+     * structure.
      */
     private function appendFileData(SplFileInfo $file, array $data, string $configDirectoryPath): array
     {

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimplyBook\Support\Helpers;
 
+use ReflectionClass;
+use ReflectionException;
+
 /**
  * Deferred object helper class to delay the instantiation of a class until
  * one of its methods is called. See for example {@see GeneralConfig}.
@@ -47,7 +50,7 @@ abstract class DeferredObject
      * the underlying construction inputs, call {@see clearDeferredInstance}
      * to force recreation.
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     private function getDeferredInstance(): object
     {
@@ -58,7 +61,7 @@ abstract class DeferredObject
         $classString = $this->deferredClassString();
         $constructArgs = $this->deferredConstructArguments();
 
-        $reflectionClass = new \ReflectionClass($classString);
+        $reflectionClass = new ReflectionClass($classString);
         $instance = $reflectionClass->newInstanceArgs($constructArgs);
 
         $this->deferredInstance = $instance;
@@ -69,7 +72,7 @@ abstract class DeferredObject
     /**
      * Magic method to forward method calls to the deferred instance.
      * @return mixed
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function __call(string $name, array $arguments)
     {
@@ -80,7 +83,7 @@ abstract class DeferredObject
             return $instance->$name(...$arguments);
         }
 
-        $reflectionClass = new \ReflectionClass($instance);
+        $reflectionClass = new ReflectionClass($instance);
 
         $method = $reflectionClass->getMethod($name);
         return $method->invokeArgs($instance, $arguments);

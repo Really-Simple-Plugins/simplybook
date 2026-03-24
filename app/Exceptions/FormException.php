@@ -28,7 +28,7 @@ class FormException extends Exception
     public function setErrors(array $errors): FormException
     {
         foreach ($errors as $fields) {
-            foreach ($fields as $key => $errorData) {
+            foreach (array_keys($fields) as $key) {
                 if (!empty($this->acceptedErrorKeys) && !in_array($key, $this->acceptedErrorKeys)) {
                     throw new Exception('The key ' . esc_html($key) . ' is not accepted in the data array.');
                 }

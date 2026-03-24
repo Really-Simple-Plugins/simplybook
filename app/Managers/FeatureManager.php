@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
+use DirectoryIterator;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\FeatureInterface;
 
@@ -109,7 +110,7 @@ final class FeatureManager extends AbstractManager
         $featuresPath = $this->env->getString('plugin.feature_path');
         $features = [];
 
-        foreach (new \DirectoryIterator($featuresPath) as $fileInfo) {
+        foreach (new DirectoryIterator($featuresPath) as $fileInfo) {
             if ($fileInfo->isDot() || !$fileInfo->isDir()) {
                 continue;
             }
@@ -121,7 +122,7 @@ final class FeatureManager extends AbstractManager
             }
 
             if ($fileInfo->getFilename() === 'Pro') {
-                foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
+                foreach (new DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
                     if ($proInfo->isDot() || !$proInfo->isDir()) {
                         continue;
                     }

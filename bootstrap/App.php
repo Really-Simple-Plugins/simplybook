@@ -4,6 +4,12 @@ declare(strict_types=1);
 
 namespace SimplyBook\Bootstrap;
 
+use Closure;
+use Exception;
+use ReflectionClass;
+use ReflectionException;
+use ReflectionNamedType;
+
 /**
  * Container class that provides dependency injection capabilities to manage
  * object creation and resolution. Class is used for retrieving and injecting
@@ -22,7 +28,7 @@ final class App
     /**
      * Registry of service factories indexed by identifier. Allows registering
      * lazy factory closures for services.
-     * @var array<string, \Closure> $registry
+     * @var array<string, Closure> $registry
      */
     private array $registry = [];
 
@@ -59,7 +65,7 @@ final class App
      * provided Closure will be called with no arguments when the service is
      * resolved.
      */
-    public function set(string $name, \Closure $value): void
+    public function set(string $name, Closure $value): void
     {
         $this->registry[$name] ??= $value;
     }
@@ -71,8 +77,8 @@ final class App
      *
      * @param class-string $class
      * @return mixed
-     * @throws \Exception If the target is not instantiable or cannot resolve a dependency.
-     * @throws \ReflectionException If reflection fails.
+     * @throws Exception If the target is not instantiable or cannot resolve a dependency.
+     * @throws ReflectionException If reflection fails.
      */
     public function get(string $class)
     {
@@ -106,8 +112,8 @@ final class App
      * @param bool $registerDependencies Made dependency classes are registered
      * in the container on true. Useful for optimization on multi-used classes.
      *
-     * @throws \Exception If the target is not instantiable or a dependency cannot be resolved.
-     * @throws \ReflectionException If reflection fails.
+     * @throws Exception If the target is not instantiable or a dependency cannot be resolved.
+     * @throws ReflectionException If reflection fails.
      *
      * @SuppressWarnings("PHPMD.CyclomaticComplexity") The method is complex due to the nature of constructor autowiring and error handling. Refactoring this method to reduce complexity would not make it more readable or maintainable.
      * @SuppressWarnings("PHPMD.NPathComplexity") The method has multiple paths due to the nature of constructor autowiring and error handling. Refactoring this method to reduce complexity would not make it more readable or maintainable.
@@ -115,10 +121,10 @@ final class App
      */
     public function make(string $class, bool $register = true, bool $registerDependencies = true): object
     {
-        $reflector = new \ReflectionClass($class);
+        $reflector = new ReflectionClass($class);
 
         if ($reflector->isInstantiable() === false) {
-            throw new \Exception("Target [{$class}] is not instantiable.");
+            throw new Exception("Target [{$class}] is not instantiable.");
         }
 
         $constructor = $reflector->getConstructor();
@@ -140,7 +146,7 @@ final class App
                     continue;
                 }
 
-                throw new \Exception(sprintf(
+                throw new Exception(sprintf(
                     'Cannot resolve untyped parameter $%s for [%s] without a default value.',
                     $parameter->getName(),
                     $class
@@ -148,8 +154,8 @@ final class App
             }
 
             // For PHP 7.4 only ReflectionNamedType exists (no unions).
-            if ($type instanceof \ReflectionNamedType === false) {
-                throw new \Exception(sprintf(
+            if ($type instanceof ReflectionNamedType === false) {
+                throw new Exception(sprintf(
                     'Unsupported parameter type for $%s in [%s].',
                     $parameter->getName(),
                     $class
@@ -163,7 +169,7 @@ final class App
                     continue;
                 }
 
-                throw new \Exception(sprintf(
+                throw new Exception(sprintf(
                     'Cannot autowire builtin parameter $%s (%s) for [%s]. Provide a default or register a factory.',
                     $parameter->getName(),
                     $type->getName(),
@@ -175,7 +181,7 @@ final class App
             $dependencyClass = $type->getName();
 
             if ($dependencyClass === self::class) {
-                throw new \Exception(sprintf(
+                throw new Exception(sprintf(
                     'Cannot resolve App container dependency for $%s in [%s] to prevent circular dependencies.',
                     $parameter->getName(),
                     $class

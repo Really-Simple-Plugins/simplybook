@@ -2,6 +2,9 @@
 
 namespace SimplyBook\Managers;
 
+use WP_Error;
+use WP_REST_Request;
+use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
@@ -82,7 +85,7 @@ final class EndpointManager extends AbstractManager
      * instantiated before this manager is called and the controller should
      * hook into the simplybook_rest_routes filter to add its own routes.
      * @uses apply_filters simplybook_rest_routes
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function registerWordPressRestRoutes(): void
     {
@@ -94,7 +97,7 @@ final class EndpointManager extends AbstractManager
             $middleware = ($data['middleware'] ?? null);
 
             if (!is_callable($callback)) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     sprintf('The callback for the route "%s" is not callable.', $route)
                 );
             }
@@ -170,9 +173,9 @@ final class EndpointManager extends AbstractManager
     /**
      * The default permission callback, will check if the nonce is valid and if
      * the user has the required permissions to do a request.
-     * @return bool|\WP_Error
+     * @return bool|WP_Error
      */
-    public function defaultPermissionCallback(\WP_REST_Request $request)
+    public function defaultPermissionCallback(WP_REST_Request $request)
     {
         $method = $request->get_method();
         $nonce = $request->get_param('nonce');
@@ -180,7 +183,7 @@ final class EndpointManager extends AbstractManager
         // For methods that modify data, verify the nonce
         $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
         if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
-            return new \WP_Error(
+            return new WP_Error(
                 'rest_forbidden',
                 __('Forbidden.', 'simplybook'),
                 ['status' => 403]

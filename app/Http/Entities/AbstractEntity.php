@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Http\Entities;
 
+use InvalidArgumentException;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Exceptions\RestDataException;
@@ -73,7 +74,7 @@ abstract class AbstractEntity
     /**
      * The entity's changed attributes
      */
-    protected array $attribute_changes = [];
+    protected array $dirtyAttributes = [];
 
     /**
      * Register the initialized state of this entity for dirty attributes
@@ -137,14 +138,14 @@ abstract class AbstractEntity
     }
 
     /**
-     * Fill the entity from an array. Use `$first_initialize` to determine if
+     * Fill the entity from an array. Use `$firstInitialization` to determine if
      * this is the first time the entity is being initialized. If it is, the
      * `reset()` method will be called to clear any previous attributes
      * and changes to make sure the entity is in a clean state.
      */
-    public function fill(array $attributes, bool $first_initialize = true): void
+    public function fill(array $attributes, bool $firstInitialization = true): void
     {
-        if ($first_initialize) {
+        if ($firstInitialization) {
             $this->reset();
             $this->enableFirstInitialize();
         }
@@ -155,7 +156,7 @@ abstract class AbstractEntity
             }
         }
 
-        if ($first_initialize) {
+        if ($firstInitialization) {
             $this->disableFirstInitialize();
         }
     }
@@ -216,19 +217,19 @@ abstract class AbstractEntity
             return;
         }
 
-        if (! isset($this->attribute_changes[$key])) {
+        if (! isset($this->dirtyAttributes[$key])) {
             $from = null;
 
             if (isset($this->attributes[$key])) {
                 $from = $this->attributes[$key];
             }
 
-            $this->attribute_changes[$key] = [
+            $this->dirtyAttributes[$key] = [
                 'from' => $from,
                 'to' => $value,
             ];
         } else {
-            $this->attribute_changes[$key]['to'] = $value;
+            $this->dirtyAttributes[$key]['to'] = $value;
         }
 
         $this->attributes[$key] = $value;
@@ -308,7 +309,7 @@ abstract class AbstractEntity
      */
     public function isDirty(): bool
     {
-        return !empty($this->attribute_changes);
+        return !empty($this->dirtyAttributes);
     }
 
     /**
@@ -316,7 +317,7 @@ abstract class AbstractEntity
      */
     public function getDirty(): array
     {
-        return array_keys($this->attribute_changes);
+        return array_keys($this->dirtyAttributes);
     }
 
     /**
@@ -324,7 +325,7 @@ abstract class AbstractEntity
      */
     public function getDirtyValues(): array
     {
-        return $this->attribute_changes;
+        return $this->dirtyAttributes;
     }
 
     /**
@@ -332,7 +333,7 @@ abstract class AbstractEntity
      */
     public function clearDirty(): void
     {
-        $this->attribute_changes = [];
+        $this->dirtyAttributes = [];
     }
 
     /**
@@ -341,7 +342,7 @@ abstract class AbstractEntity
      */
     public function isAttributeDirty(string $attributeName): bool
     {
-        if (array_key_exists($attributeName, $this->attribute_changes)) {
+        if (array_key_exists($attributeName, $this->dirtyAttributes)) {
             return true;
         }
 
@@ -355,7 +356,7 @@ abstract class AbstractEntity
     public function reset(): void
     {
         $this->attributes = [];
-        $this->attribute_changes = [];
+        $this->dirtyAttributes = [];
         $this->initializing = false;
     }
 
@@ -443,14 +444,14 @@ abstract class AbstractEntity
      * Delete the entity from the SimplyBook API. Either delete the current
      * instance or a specific entity by ID. Exceptions should be handled
      * by the caller for specific error handling.
-     * @throws \InvalidArgumentException|RestDataException
+     * @throws InvalidArgumentException|RestDataException
      * @internal Override this method if you want to customize the logic.
      */
     public function delete(string $primary = ''): bool
     {
         $primary = ($primary ?: $this->{$this->primaryKey});
         if (empty($primary)) {
-            throw new \InvalidArgumentException('Entity primary is required for deletion');
+            throw new InvalidArgumentException('Entity primary is required for deletion');
         }
 
         $endpoint = trailingslashit($this->getEndpoint()) . $primary;
@@ -462,7 +463,7 @@ abstract class AbstractEntity
     /**
      * Create a new entity in the SimplyBook API. Use the attributes to
      * build the entity before validating and sending the request.
-     * @throws \InvalidArgumentException|RestDataException
+     * @throws InvalidArgumentException|RestDataException|FormException
      * @internal Override this method if you want to customize the logic.
      */
     public function create(array $attributes = []): AbstractEntity

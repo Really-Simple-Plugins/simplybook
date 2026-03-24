@@ -2,6 +2,9 @@
 
 namespace SimplyBook\Features\Onboarding;
 
+use Exception;
+use WP_REST_Request;
+use WP_REST_Response;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasEncryption;
@@ -116,7 +119,7 @@ class OnboardingController implements FeatureInterface
      * 2. Storing company data
      * 3. Triggering company registration at SimplyBook.me
      */
-    public function createAccount(\WP_REST_Request $request): \WP_REST_Response
+    public function createAccount(WP_REST_Request $request): WP_REST_Response
     {
         try {
             $storage = $this->service->retrieveHttpStorage($request);
@@ -132,7 +135,7 @@ class OnboardingController implements FeatureInterface
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
         }
@@ -182,7 +185,7 @@ class OnboardingController implements FeatureInterface
      * pass them to the DesignSettingsController by calling the
      * simplybook_save_onboarding_widget_style action.
      */
-    public function saveColorsToDesignSettings(\WP_REST_Request $request): \WP_REST_Response
+    public function saveColorsToDesignSettings(WP_REST_Request $request): WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
@@ -193,7 +196,7 @@ class OnboardingController implements FeatureInterface
          */
         try {
             do_action('simplybook_save_onboarding_widget_style', $storage);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $message = __('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -211,7 +214,7 @@ class OnboardingController implements FeatureInterface
      * If page creation fails, this is NOT a blocker for onboarding.
      * The client should show PublishWidgetTask instead of BookingWidgetLiveTask.
      */
-    public function generateDefaultPages(): \WP_REST_Response
+    public function generateDefaultPages(): WP_REST_Response
     {
         $pageResult = $this->bookingPageService->generateBookingPage();
 
@@ -227,7 +230,7 @@ class OnboardingController implements FeatureInterface
      * company login in the options. We also store the current time as the
      * company registration start time.
      */
-    public function loginExistingUser(\WP_REST_Request $request): \WP_REST_Response
+    public function loginExistingUser(WP_REST_Request $request): WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
@@ -254,7 +257,7 @@ class OnboardingController implements FeatureInterface
             }
 
             return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
             ], false, __('Unknown error occurred, please verify your credentials.', 'simplybook'), 500);
@@ -263,7 +266,7 @@ class OnboardingController implements FeatureInterface
         $this->finishLoggingInUser($response, $parsedDomain, $parsedLogin);
         $this->saveLoginCompanyData($userLogin, $userPassword);
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'message' => __('Login successful.', 'simplybook'),
         ], 200);
     }
@@ -273,7 +276,7 @@ class OnboardingController implements FeatureInterface
      * authenticates the user with the given company login, domain, session id
      * and two-factor authentication code.
      */
-    public function loginExistingUserTwoFa(\WP_REST_Request $request): \WP_REST_Response
+    public function loginExistingUserTwoFa(WP_REST_Request $request): WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request);
         $companyLogin = $storage->getString('company_login');
@@ -294,7 +297,7 @@ class OnboardingController implements FeatureInterface
         } catch (RestDataException $e) {
             // Default code 200 because React side still used request() here
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
             ], false, __('Unknown 2FA error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
@@ -352,7 +355,7 @@ class OnboardingController implements FeatureInterface
     /**
      * Method is used to send an SMS to the user for two-factor authentication.
      */
-    public function sendSmsToUser(\WP_REST_Request $request): \WP_REST_Response
+    public function sendSmsToUser(WP_REST_Request $request): WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
@@ -362,7 +365,7 @@ class OnboardingController implements FeatureInterface
                 $storage->getString('company_login'),
                 $storage->getString('auth_session_id'),
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
         }
 
@@ -373,9 +376,9 @@ class OnboardingController implements FeatureInterface
      * Method is used to finish the onboarding process. It is called when the
      * user has completed the onboarding process and wants to finish it.
      *
-     * @param \WP_REST_Request $request Contains enitre onboarding data
+     * @param WP_REST_Request $request Contains enitre onboarding data
      */
-    public function finishOnboarding(\WP_REST_Request $request): \WP_REST_Response
+    public function finishOnboarding(WP_REST_Request $request): WP_REST_Response
     {
         $code = 200;
         $message = __('Successfully finished onboarding!', 'simplybook');
@@ -393,7 +396,7 @@ class OnboardingController implements FeatureInterface
      * Method is used to retry the onboarding process. It is called when the
      * user has completed the onboarding process and wants to retry it.
      */
-    public function retryOnboarding(\WP_REST_Request $request): \WP_REST_Response
+    public function retryOnboarding(WP_REST_Request $request): WP_REST_Response
     {
         $success = $this->service->delete_all_options();
         $message = __('Successfully removed all previous data.', 'simplybook');
@@ -410,7 +413,7 @@ class OnboardingController implements FeatureInterface
      * The callback contains success status and company_id.
      * We authenticate using the stored credentials and save the tokens.
      */
-    public function handleRegistrationCallback(\WP_REST_Request $request): \WP_REST_Response
+    public function handleRegistrationCallback(WP_REST_Request $request): WP_REST_Response
     {
         $storage = $this->service->retrieveHttpStorage($request);
 
@@ -438,7 +441,7 @@ class OnboardingController implements FeatureInterface
                 $company->email,
                 $this->decryptString($company->password)
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->log('Authentication after registration failed: ' . $e->getMessage());
             return $this->handleCallbackFailure($e->getMessage(), 401);
         }
@@ -467,7 +470,7 @@ class OnboardingController implements FeatureInterface
          */
         do_action('simplybook_after_company_registered', $authResponse['domain'], $storage->getInt('company_id'));
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'message' => __('Successfully registered company.', 'simplybook'),
         ]);
     }
@@ -475,7 +478,7 @@ class OnboardingController implements FeatureInterface
     /**
      * Handle registration callback failure by logging and setting the failure flag.
      */
-    private function handleCallbackFailure(string $errorMessage = '', int $code = 500): \WP_REST_Response
+    private function handleCallbackFailure(string $errorMessage = '', int $code = 500): WP_REST_Response
     {
         if (empty($errorMessage)) {
             $errorMessage = __('An error occurred during the registration process', 'simplybook');
@@ -484,7 +487,7 @@ class OnboardingController implements FeatureInterface
         $this->log('Registration callback failed: ' . $errorMessage);
         update_option('simplybook_registration_failed', true, false);
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'error' => $errorMessage,
         ], $code);
     }

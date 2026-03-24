@@ -90,7 +90,7 @@ class TaskManagementService
      */
     private function removeDeletableTasksAfterUpgrade(array $deletableTasksList, bool $save = true): void
     {
-        foreach ($deletableTasksList as $taskId => $deletedTask) {
+        foreach (array_keys($deletableTasksList) as $taskId) {
             $this->repository->removeTaskById($taskId, $save);
         }
 

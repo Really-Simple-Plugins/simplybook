@@ -82,7 +82,7 @@ class NotificationsService
      */
     private function removeDeletableNoticesAfterUpgrade(array $deletableNoticesList, bool $save = true): void
     {
-        foreach ($deletableNoticesList as $noticeId => $deletedNotice) {
+        foreach (array_keys($deletableNoticesList) as $noticeId) {
             $this->repository->removeNoticeById($noticeId, $save);
         }
 

@@ -53,14 +53,14 @@ trait HasAllowlistControl
             && (strpos($_SERVER['REQUEST_URI'], $pluginHttpNamespace) !== false)
         );
 
-        $validPlainPermalinksRequest = (
+        $isPlainPermalinksRequest = (
             // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             isset($_GET['rest_route'])
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
             && (strpos($_GET['rest_route'], $pluginHttpNamespace) !== false)
         );
 
-        if ($validWpJsonRequest === false && $validPlainPermalinksRequest === false) {
+        if ($validWpJsonRequest === false && $isPlainPermalinksRequest === false) {
             return false;
         }
 
@@ -70,9 +70,9 @@ trait HasAllowlistControl
         $callbackUrl = get_option('simplybook_callback_url', '');
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $requestUriContainsCallbackUrl = strpos($_SERVER['REQUEST_URI'], 'onboarding/registration_callback/' . $callbackUrl) !== false;
+        $isCallbackRequest = strpos($_SERVER['REQUEST_URI'], 'onboarding/registration_callback/' . $callbackUrl) !== false;
 
-        if ($expires > time() && !empty($callbackUrl) && $requestUriContainsCallbackUrl) {
+        if ($expires > time() && !empty($callbackUrl) && $isCallbackRequest) {
             return true;
         }
 
