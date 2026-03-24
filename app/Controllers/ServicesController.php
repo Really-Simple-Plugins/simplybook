@@ -49,9 +49,9 @@ class ServicesController implements ControllerInterface
     }
 
     /**
-     * Get the first existing service from the remote, or null if none exists.
+     * Get the first service from the remote, or null if none exists.
      */
-    private function getFirstExistingService(): ?array
+    private function getFirstService(): ?array
     {
         $currentServices = $this->service->all();
         $hasDefaultService = (count($currentServices) >= 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
@@ -59,13 +59,17 @@ class ServicesController implements ControllerInterface
         return $hasDefaultService ? $currentServices[0] : null;
     }
 
+    /**
+     * Create multiple services from an array of service names.
+     * Updates the first existing service and creates additional ones as needed.
+     */
     private function createMultipleServices(array $serviceNames): void
     {
         if (empty($serviceNames)) {
             return;
         }
 
-        $serviceToUpdate = $this->getFirstExistingService();
+        $serviceToUpdate = $this->getFirstService();
 
         foreach ($serviceNames as $index => $serviceName) {
             $serviceName = sanitize_text_field($serviceName);
