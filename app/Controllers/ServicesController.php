@@ -37,29 +37,30 @@ class ServicesController implements ControllerInterface
      * service(s). We create a Service for all the services saved in the
      * database. For the default Service we only have to update the name.
      */
-    public function setInitialServiceName(): bool
+    public function setInitialServiceName(): void
     {
         $extendifyServices = $this->extendifyDataService->getServices();
         if (!empty($extendifyServices)) {
-            return $this->createMultipleServices($extendifyServices);
+            $this->createMultipleServices($extendifyServices);
+            return;
         }
 
-        return $this->createExampleService();
+        $this->createExampleService();
     }
 
     /**
      * Create multiple services from an array of service names.
      * Updates the first existing service and creates additional ones as needed.
      */
-    private function createMultipleServices(array $serviceNames): bool
+    private function createMultipleServices(array $serviceNames): void
     {
         if (empty($serviceNames)) {
-            return false;
+            return;
         }
 
         $currentServices = $this->service->all();
         $hasDefaultService = (count($currentServices) >= 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
-        $allSuccessful = true;
+        $serviceToUpdate = ($hasDefaultService) ? $currentServices[0] : null;
 
         foreach ($serviceNames as $index => $serviceName) {
             $serviceName = sanitize_text_field($serviceName);
@@ -67,20 +68,29 @@ class ServicesController implements ControllerInterface
                 continue;
             }
 
-            // Ensure the service model is clean for each iteration to avoid
-            // leftover state (id, filled attributes) affecting create/update.
-            $this->service->reset();
-
-            // First service: update existing default if available
-            if ($index === 0 && $hasDefaultService) {
-                $allSuccessful = $this->updateExistingService($currentServices[0], $serviceName) && $allSuccessful;
-            } else {
-                // Create new service
-                $allSuccessful = $this->createNewService($serviceName) && $allSuccessful;
+            // Only update the first service
+            if ($index !== 0) {
+                $serviceToUpdate = null;
             }
+
+            $this->processServiceName($serviceName, $serviceToUpdate);
+        }
+    }
+
+    /**
+     * Method to process a service name and either create or update a service
+     * on the remote. Before processing, we always make sure to clean up the
+     * service model to avoid leftover state.
+     */
+    private function processServiceName($serviceName, $serviceToUpdate): bool
+    {
+        $this->service->reset();
+
+        if (!empty($serviceToUpdate)) {
+            return $this->updateExistingService($serviceToUpdate, $serviceName);
         }
 
-        return $allSuccessful;
+        return $this->createNewService($serviceName);
     }
 
     /**
