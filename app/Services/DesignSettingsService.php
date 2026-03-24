@@ -9,6 +9,8 @@ use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 /**
  * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity")
  */
 class DesignSettingsService
 {
@@ -172,9 +174,69 @@ class DesignSettingsService
                 continue; // No config so no validating. We manage the config so this is safe enough.
             }
 
-            $error = $this->validateField($key, $value, $designConfiguration[$key]);
-            if ($error !== null) {
-                $errors[] = $error;
+            $config = $designConfiguration[$key];
+
+            // No type so no validating. We manage the config so this is safe enough.
+            if (empty($config['type'])) {
+                continue;
+            }
+
+            // No validation callback so no validating. We manage the config so this is safe enough.
+            if (!empty($config['validate']) && !is_callable($config['validate'])) {
+                continue;
+            }
+
+            $invalid = false;
+            $errorMessage = __('Invalid value for setting', 'simplybook') . ': ' . ($config['label'] ?? $config['id']);
+
+            // Saved value does not match regex
+            if (!empty($config['regex']) && (preg_match($config['regex'], $value) !== 1)) {
+                $invalid = true;
+            }
+
+            // Saved value is not one of our options
+            if (($config['type'] === 'select') && !isset($config['options'][$value])) {
+                $invalid = true;
+            }
+
+            // No hex color received from colorpicker
+            if (($config['type'] === 'colorpicker') && empty(sanitize_hex_color($value))) {
+                $invalid = true;
+            }
+
+            // If email is not empty, but not a valid email
+            if (($config['type'] === 'email') && !empty($value) && !is_email($value)) {
+                $invalid = true;
+            }
+
+            // If url is not empty, but not a valid url
+            if (($config['type'] === 'url') && !empty($value) && !filter_var($value, FILTER_VALIDATE_URL)) {
+                $invalid = true;
+            }
+
+            // If number is not empty, but not a valid number
+            if (($config['type'] === 'number') && !empty($value) && !is_numeric($value)) {
+                $invalid = true;
+            }
+
+            // If text is not empty, but not a valid string
+            if (($config['type'] === 'text') && (empty(sanitize_text_field($value)) || !is_string($value))) {
+                $invalid = true;
+            }
+
+            // Validate via the callable function
+            if (!empty($config['validate']) && is_callable($config['validate'])) {
+                $result = call_user_func($config['validate'], $value);
+                if ($result !== true) {
+                    $invalid = true;
+                }
+            }
+
+            if ($invalid) {
+                $errors[] = [
+                    'key' => $key,
+                    'message' => $errorMessage,
+                ];
             }
         }
 
@@ -183,81 +245,6 @@ class DesignSettingsService
         }
 
         return true;
-    }
-
-    /**
-     * Validate a single field against its configuration. Returns an error
-     * array or null when the value is valid.
-     *
-     * @param mixed $value
-     */
-    private function validateField(string $key, $value, array $config): ?array
-    {
-        // No type so no validating. We manage the config so this is safe enough.
-        if (empty($config['type'])) {
-            return null;
-        }
-
-        // No validation callback so no validating. We manage the config so this is safe enough.
-        if (!empty($config['validate']) && !is_callable($config['validate'])) {
-            return null;
-        }
-
-        $isInvalid = $this->isFieldValueInvalid($value, $config);
-
-        if ($isInvalid) {
-            $errorMessage = __('Invalid value for setting', 'simplybook') . ': ' . ($config['label'] ?? $config['id']);
-            return ['key' => $key, 'message' => $errorMessage];
-        }
-
-        return null;
-    }
-
-    /**
-     * Check if a field value is invalid based on regex, type, and callable
-     * validation rules.
-     *
-     * @param mixed $value
-     */
-    private function isFieldValueInvalid($value, array $config): bool
-    {
-        // Saved value does not match regex
-        if (!empty($config['regex']) && (preg_match($config['regex'], $value) !== 1)) {
-            return true;
-        }
-
-        $typeValidators = $this->getTypeValidators();
-        if (isset($typeValidators[$config['type']])) {
-            $isValid = $typeValidators[$config['type']]($value, $config);
-            if (!$isValid) {
-                return true;
-            }
-        }
-
-        // Validate via the callable function
-        if (!empty($config['validate']) && is_callable($config['validate'])) {
-            $result = call_user_func($config['validate'], $value);
-            if ($result !== true) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Map of type => validator callable for design setting field types.
-     */
-    private function getTypeValidators(): array
-    {
-        return [
-            'select' => fn($value, $config) => isset($config['options'][$value]),
-            'colorpicker' => fn($value, $config) => !empty(sanitize_hex_color($value)),
-            'email' => fn($value, $config) => empty($value) || is_email($value),
-            'url' => fn($value, $config) => empty($value) || filter_var($value, FILTER_VALIDATE_URL),
-            'number' => fn($value, $config) => empty($value) || is_numeric($value),
-            'text' => fn($value, $config) => !empty(sanitize_text_field($value)) && is_string($value),
-        ];
     }
 
     /**
@@ -319,69 +306,40 @@ class DesignSettingsService
 
             // This could be the theme_settings config for example
             if (isset($config['sub_settings'])) {
-                $defaultDesignSettings[$settingID] = $this->processSubSettings(
-                    $config['sub_settings'],
-                    $primary,
-                    $secondary,
-                    $active,
-                    ($defaultDesignSettings[$settingID] ?? [])
-                );
+                foreach ($config['sub_settings'] as $subSetting) {
+                    if (empty($subSetting['id'])) {
+                        continue;
+                    }
+
+                    $subSettingID = $subSetting['id'];
+
+                    // First set the default value from the config
+                    if (isset($subSetting['default'])) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $subSetting['default'];
+                    }
+
+                    // Override sub setting value when marked as primary and
+                    // primary color is set
+                    if (isset($subSetting['is_primary']) && $subSetting['is_primary'] && !empty($primary)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $primary;
+                    }
+
+                    // Override sub setting value when marked as secondary and
+                    // secondary color is set
+                    if (isset($subSetting['is_secondary']) && $subSetting['is_secondary'] && !empty($secondary)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $secondary;
+                    }
+
+                    // Override sub setting value when marked as active and
+                    // active color is set
+                    if (isset($subSetting['is_active']) && $subSetting['is_active'] && !empty($active)) {
+                        $defaultDesignSettings[$settingID][$subSettingID] = $active;
+                    }
+                }
             }
         }
 
         return $defaultDesignSettings;
-    }
-
-    /**
-     * Process sub_settings for a design config entry, applying defaults and
-     * color overrides.
-     *
-     * @param mixed $existingValues
-     */
-    private function processSubSettings(array $subSettings, string $primary, string $secondary, string $active, $existingValues = []): array
-    {
-        $result = is_array($existingValues) ? $existingValues : [];
-
-        foreach ($subSettings as $subSetting) {
-            if (empty($subSetting['id'])) {
-                continue;
-            }
-
-            $subSettingID = $subSetting['id'];
-
-            // First set the default value from the config
-            if (isset($subSetting['default'])) {
-                $result[$subSettingID] = $subSetting['default'];
-            }
-
-            $colorOverride = $this->getColorOverride($subSetting, $primary, $secondary, $active);
-            if ($colorOverride !== null) {
-                $result[$subSettingID] = $colorOverride;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * Check if a sub setting should be overridden with a color value.
-     * Returns the color string or null when no override applies.
-     */
-    private function getColorOverride(array $subSetting, string $primary, string $secondary, string $active): ?string
-    {
-        $colorMap = [
-            'is_primary' => $primary,
-            'is_secondary' => $secondary,
-            'is_active' => $active,
-        ];
-
-        foreach ($colorMap as $flag => $color) {
-            if (!empty($color) && !empty($subSetting[$flag])) {
-                return $color;
-            }
-        }
-
-        return null;
     }
 
     /**
