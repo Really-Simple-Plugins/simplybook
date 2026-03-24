@@ -108,8 +108,8 @@ final class FeatureManager extends AbstractManager
     private function getFeatures(): array
     {
         $featuresPath = $this->env->getString('plugin.feature_path');
-        $features = [];
         $proEnabled = $this->env->getBoolean('plugin.pro');
+        $features = [];
 
         foreach (new DirectoryIterator($featuresPath) as $fileInfo) {
             if ($fileInfo->isDot() || !$fileInfo->isDir()) {
@@ -121,7 +121,8 @@ final class FeatureManager extends AbstractManager
                     continue;
                 }
 
-                $features = array_merge($features, $this->getProFeatures($fileInfo->getPathname()));
+                $proFeatures = $this->getProFeatures();
+                $features = array_merge($features, $proFeatures);
                 continue;
             }
 
@@ -134,8 +135,9 @@ final class FeatureManager extends AbstractManager
     /**
      * Scan the Pro features directory and return prefixed feature names.
      */
-    private function getProFeatures(string $proPath): array
+    private function getProFeatures(): array
     {
+        $proPath = $this->env->getString('plugin.feature_path') . 'Pro';
         $proFeatures = [];
 
         foreach (new DirectoryIterator($proPath) as $proInfo) {
