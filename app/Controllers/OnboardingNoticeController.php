@@ -109,44 +109,49 @@ class OnboardingNoticeController implements ControllerInterface
             return (bool) $cacheValue;
         }
 
+        $isEligible = $this->isEligibleForNotice();
+        $cacheDuration = $isEligible ? MINUTE_IN_SECONDS : MINUTE_IN_SECONDS * 10;
+        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+
+        return $isEligible;
+    }
+
+    /**
+     * Check all sequential eligibility conditions for the onboarding notice.
+     */
+    private function isEligibleForNotice(): bool
+    {
         // Prevent showing the notice on edit screen, as gutenberg removes the
         // class which makes it editable. Also hide if user is on plugin page.
         $screen = get_current_screen();
         if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         // Check if user dismissed via form button
         $previousChoice = get_option('simplybook_complete_onboarding_notice_choice');
         if ($previousChoice === 'never') {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         if ($this->pluginInstallationTimeSuitableForNotice() === false) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         if ($this->noticeDismissedTimeHasPassed() === false) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         // Check if user dismissed via X button
         if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         // Abort if the onboarding was completed prior
         if (get_option('simplybook_onboarding_completed', false) !== false) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
-        wp_cache_set($cacheName, true, 'simplybook', MINUTE_IN_SECONDS);
         return true;
     }
 
