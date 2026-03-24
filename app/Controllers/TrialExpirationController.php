@@ -22,14 +22,19 @@ class TrialExpirationController implements ControllerInterface
     private NoticeDismissalService $noticeDismissalService;
 
     /**
-     * Screen bases on which the trial notice should not be displayed.
+     * Exact screen base identifiers on which the trial notice should not
+     * be displayed. A "base" is the unique slug WordPress assigns to every
+     * admin screen (e.g. "post", "edit", "upload").
      */
     private array $excludedScreenBases = [
         'post',
     ];
 
     /**
-     * Substrings matched against the screen base; any match excludes the screen.
+     * Substring patterns matched against the screen base. If any pattern
+     * is found anywhere inside the base string the screen is excluded.
+     * Use this for broad matches where multiple screens share a common
+     * keyword (e.g. "simplybook" matches every plugin-specific screen).
      */
     private array $excludedScreenPatterns = [
         'simplybook',
