@@ -21,6 +21,20 @@ class TrialExpirationController implements ControllerInterface
     private SubscriptionDataService $subscriptionService;
     private NoticeDismissalService $noticeDismissalService;
 
+    /**
+     * Screen bases on which the trial notice should not be displayed.
+     */
+    private array $excludedScreenBases = [
+        'post',
+    ];
+
+    /**
+     * Substrings matched against the screen base; any match excludes the screen.
+     */
+    private array $excludedScreenPatterns = [
+        'simplybook',
+    ];
+
     public function __construct(EnvironmentConfig $env, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
     {
         $this->env = $env;
@@ -141,13 +155,6 @@ class TrialExpirationController implements ControllerInterface
     }
 
     /**
-     * Screens on which the trial notice should not be displayed.
-     */
-    private array $excludedScreenBases = [
-        'post',
-    ];
-
-    /**
      * Check if the screen the user is currently visiting should be excluded
      * from showing the trial notice.
      */
@@ -162,7 +169,13 @@ class TrialExpirationController implements ControllerInterface
             return true;
         }
 
-        return str_contains($screen->base, 'simplybook');
+        foreach ($this->excludedScreenPatterns as $pattern) {
+            if (str_contains($screen->base, $pattern)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function getTrialInfo(): ?array
