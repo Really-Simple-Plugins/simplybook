@@ -101,6 +101,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function canRenderNotice(): bool
     {
+        $found = false;
         $cacheName = 'can_render_onboarding_notice';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

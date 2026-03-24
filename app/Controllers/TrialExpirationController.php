@@ -95,6 +95,7 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
+        $found = false;
         $cacheName = 'can_render_trial_expiration_notice';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -135,6 +136,7 @@ class TrialExpirationController implements ControllerInterface
 
     private function getTrialInfo(): ?array
     {
+        $found = false;
         $cacheKey = 'simplybook_trial_info';
         $cacheGroup = 'simplybook';
         $cachedInfo = wp_cache_get($cacheKey, $cacheGroup, false, $found);

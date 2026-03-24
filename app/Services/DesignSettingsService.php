@@ -54,6 +54,7 @@ class DesignSettingsService
      */
     public function getDesignOptions(): array
     {
+        $found = false;
         $cacheName = 'design_settings';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

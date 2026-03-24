@@ -122,6 +122,7 @@ abstract class AbstractEntityService
      */
     final public function all(bool $hasExpiration = false): array
     {
+        $found = false;
         $cacheName = $this->getWpCacheName($hasExpiration);
         $cacheValue = wp_cache_get($cacheName, $this->getWpCacheGroup(), false, $found);
 
