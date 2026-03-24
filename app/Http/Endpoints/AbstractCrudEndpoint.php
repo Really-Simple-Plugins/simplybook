@@ -315,7 +315,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            $translated = $this->translateError($error, $knownAttributeErrors, $seen);
+            $translated = $this->translateError($error, $knownAttributeErrors);
 
             if ($translated === null) {
                 // No known needle matched — keep the untranslated error
@@ -323,11 +323,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            if ($translated === '') {
+            if (isset($seen[$translated])) {
                 // Duplicate translation — skip this error entirely
                 continue;
             }
 
+            $seen[$translated] = true;
             $translations[$key] = $translated;
         }
 
@@ -336,14 +337,9 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
     /**
      * Match a single error string against known needles and return its
-     * translation, an empty string when the translation was already seen,
-     * or null when no needle matches.
-     *
-     * @param array<string, bool> $seen Tracks already-used translations to
-     *                                  deduplicate. Updated when a new
-     *                                  translation is found.
+     * translation, or null when no needle matches.
      */
-    private function translateError(string $error, array $knownAttributeErrors, array &$seen): ?string
+    private function translateError(string $error, array $knownAttributeErrors): ?string
     {
         foreach ($knownAttributeErrors as $needle => $translation) {
             if (empty($needle)) {
@@ -354,11 +350,6 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            if (isset($seen[$translation])) {
-                return '';
-            }
-
-            $seen[$translation] = true;
             return $translation;
         }
 
