@@ -109,25 +109,19 @@ final class FeatureManager extends AbstractManager
     {
         $featuresPath = $this->env->getString('plugin.feature_path');
         $features = [];
+        $proEnabled = $this->env->getBoolean('plugin.pro');
 
         foreach (new DirectoryIterator($featuresPath) as $fileInfo) {
             if ($fileInfo->isDot() || !$fileInfo->isDir()) {
                 continue;
             }
 
-            $proEnabled = $this->env->getBoolean('plugin.pro');
-            $skipPro = ($proEnabled === false && $fileInfo->getFilename() === 'Pro');
-            if ($skipPro) {
-                continue;
-            }
-
             if ($fileInfo->getFilename() === 'Pro') {
-                foreach (new DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
-                    if ($proInfo->isDot() || !$proInfo->isDir()) {
-                        continue;
-                    }
-                    $features[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
+                if ($proEnabled === false) {
+                    continue;
                 }
+
+                $features = array_merge($features, $this->getProFeatures($fileInfo->getPathname()));
                 continue;
             }
 
@@ -135,6 +129,23 @@ final class FeatureManager extends AbstractManager
         }
 
         return $features;
+    }
+
+    /**
+     * Scan the Pro features directory and return prefixed feature names.
+     */
+    private function getProFeatures(string $proPath): array
+    {
+        $proFeatures = [];
+
+        foreach (new DirectoryIterator($proPath) as $proInfo) {
+            if ($proInfo->isDot() || !$proInfo->isDir()) {
+                continue;
+            }
+            $proFeatures[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
+        }
+
+        return $proFeatures;
     }
 
     /**
