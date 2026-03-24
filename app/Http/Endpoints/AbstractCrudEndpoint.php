@@ -315,16 +315,20 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            // First add untranslated error so we won't lose it.
-            $translations[$key] = $error;
-
             $translated = $this->translateError($error, $knownAttributeErrors, $seen);
-            if ($translated === '') {
-                // Duplicate translation — remove the untranslated error
-                unset($translations[$key]);
-            } elseif ($translated !== null) {
-                $translations[$key] = $translated;
+
+            if ($translated === null) {
+                // No known needle matched — keep the untranslated error
+                $translations[$key] = $error;
+                continue;
             }
+
+            if ($translated === '') {
+                // Duplicate translation — skip this error entirely
+                continue;
+            }
+
+            $translations[$key] = $translated;
         }
 
         return $translations;
@@ -332,7 +336,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
     /**
      * Match a single error string against known needles and return its
-     * translation, or null when no needle matches.
+     * translation, an empty string when the translation was already seen,
+     * or null when no needle matches.
+     *
+     * @param array<string, bool> $seen Tracks already-used translations to
+     *                                  deduplicate. Updated when a new
+     *                                  translation is found.
      */
     private function translateError(string $error, array $knownAttributeErrors, array &$seen): ?string
     {
@@ -341,14 +350,16 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            if (stripos($error, (string) $needle) !== false) {
-                if (isset($seen[$translation])) {
-                    return '';
-                }
-
-                $seen[$translation] = true;
-                return $translation;
+            if (stripos($error, (string) $needle) === false) {
+                continue;
             }
+
+            if (isset($seen[$translation])) {
+                return '';
+            }
+
+            $seen[$translation] = true;
+            return $translation;
         }
 
         return null;
