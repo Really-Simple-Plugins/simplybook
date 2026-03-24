@@ -291,36 +291,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            $knownAttributeErrors = $knownErrors[$attribute];
-            $translations = [];
-            $seen = [];
-
-            foreach ($errors as $key => $error) {
-                if (!is_string($error) || $error === '') {
-                    continue;
-                }
-
-                // First add untranslated error so we won't lose it.
-                $translations[$key] = $error;
-
-                foreach ($knownAttributeErrors as $needle => $translation) {
-                    if (empty($needle)) {
-                        continue;
-                    }
-
-                    if (stripos($error, (string) $needle) !== false) {
-                        if (!isset($seen[$translation])) {
-                            // Override untranslated error
-                            $translations[$key] = $translation;
-                            $seen[$translation] = true;
-                        } else {
-                            // Remove untranslated error if already seen
-                            unset($translations[$key]);
-                        }
-                        break;
-                    }
-                }
-            }
+            $translations = $this->translateAttributeErrors($errors, $knownErrors[$attribute]);
 
             if ($translations !== []) {
                 $translatedByAttribute[$attribute] = $translations;
@@ -328,5 +299,58 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         }
 
         return $translatedByAttribute;
+    }
+
+    /**
+     * Translate a list of error strings for a single attribute using its
+     * known error mappings.
+     */
+    private function translateAttributeErrors(array $errors, array $knownAttributeErrors): array
+    {
+        $translations = [];
+        $seen = [];
+
+        foreach ($errors as $key => $error) {
+            if (!is_string($error) || $error === '') {
+                continue;
+            }
+
+            // First add untranslated error so we won't lose it.
+            $translations[$key] = $error;
+
+            $translated = $this->translateError($error, $knownAttributeErrors, $seen);
+            if ($translated === '') {
+                // Duplicate translation — remove the untranslated error
+                unset($translations[$key]);
+            } elseif ($translated !== null) {
+                $translations[$key] = $translated;
+            }
+        }
+
+        return $translations;
+    }
+
+    /**
+     * Match a single error string against known needles and return its
+     * translation, or null when no needle matches.
+     */
+    private function translateError(string $error, array $knownAttributeErrors, array &$seen): ?string
+    {
+        foreach ($knownAttributeErrors as $needle => $translation) {
+            if (empty($needle)) {
+                continue;
+            }
+
+            if (stripos($error, (string) $needle) !== false) {
+                if (isset($seen[$translation])) {
+                    return '';
+                }
+
+                $seen[$translation] = true;
+                return $translation;
+            }
+        }
+
+        return null;
     }
 }
