@@ -319,40 +319,69 @@ class DesignSettingsService
 
             // This could be the theme_settings config for example
             if (isset($config['sub_settings'])) {
-                foreach ($config['sub_settings'] as $subSetting) {
-                    if (empty($subSetting['id'])) {
-                        continue;
-                    }
-
-                    $subSettingID = $subSetting['id'];
-
-                    // First set the default value from the config
-                    if (isset($subSetting['default'])) {
-                        $defaultDesignSettings[$settingID][$subSettingID] = $subSetting['default'];
-                    }
-
-                    // Override sub setting value when marked as primary and
-                    // primary color is set
-                    if (isset($subSetting['is_primary']) && $subSetting['is_primary'] && !empty($primary)) {
-                        $defaultDesignSettings[$settingID][$subSettingID] = $primary;
-                    }
-
-                    // Override sub setting value when marked as secondary and
-                    // secondary color is set
-                    if (isset($subSetting['is_secondary']) && $subSetting['is_secondary'] && !empty($secondary)) {
-                        $defaultDesignSettings[$settingID][$subSettingID] = $secondary;
-                    }
-
-                    // Override sub setting value when marked as active and
-                    // active color is set
-                    if (isset($subSetting['is_active']) && $subSetting['is_active'] && !empty($active)) {
-                        $defaultDesignSettings[$settingID][$subSettingID] = $active;
-                    }
-                }
+                $defaultDesignSettings[$settingID] = $this->processSubSettings(
+                    $config['sub_settings'],
+                    $primary,
+                    $secondary,
+                    $active,
+                    ($defaultDesignSettings[$settingID] ?? [])
+                );
             }
         }
 
         return $defaultDesignSettings;
+    }
+
+    /**
+     * Process sub_settings for a design config entry, applying defaults and
+     * color overrides.
+     *
+     * @param mixed $existingValues
+     */
+    private function processSubSettings(array $subSettings, string $primary, string $secondary, string $active, $existingValues = []): array
+    {
+        $result = is_array($existingValues) ? $existingValues : [];
+
+        foreach ($subSettings as $subSetting) {
+            if (empty($subSetting['id'])) {
+                continue;
+            }
+
+            $subSettingID = $subSetting['id'];
+
+            // First set the default value from the config
+            if (isset($subSetting['default'])) {
+                $result[$subSettingID] = $subSetting['default'];
+            }
+
+            $colorOverride = $this->getColorOverride($subSetting, $primary, $secondary, $active);
+            if ($colorOverride !== null) {
+                $result[$subSettingID] = $colorOverride;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Check if a sub setting should be overridden with a color value.
+     * Returns the color string or null when no override applies.
+     */
+    private function getColorOverride(array $subSetting, string $primary, string $secondary, string $active): ?string
+    {
+        $colorMap = [
+            'is_primary' => $primary,
+            'is_secondary' => $secondary,
+            'is_active' => $active,
+        ];
+
+        foreach ($colorMap as $flag => $color) {
+            if (!empty($color) && !empty($subSetting[$flag])) {
+                return $color;
+            }
+        }
+
+        return null;
     }
 
     /**
