@@ -104,7 +104,7 @@ class TrialExpirationController implements ControllerInterface
         }
 
         $isEligible = $this->isEligibleForTrialNotice();
-        $cacheDuration = $isEligible ? MINUTE_IN_SECONDS : MINUTE_IN_SECONDS * 10;
+        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
         wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
 
         return $isEligible;
@@ -115,7 +115,7 @@ class TrialExpirationController implements ControllerInterface
      */
     private function isEligibleForTrialNotice(): bool
     {
-        if ($this->isExcludedScreen()) {
+        if ($this->isCurrentScreenExcluded()) {
             return false;
         }
 
@@ -141,13 +141,28 @@ class TrialExpirationController implements ControllerInterface
     }
 
     /**
-     * Check if the current screen should be excluded from showing notices.
+     * Screens on which the trial notice should not be displayed.
      */
-    private function isExcludedScreen(): bool
+    private array $excludedScreenBases = [
+        'post',
+    ];
+
+    /**
+     * Check if the screen the user is currently visiting should be excluded
+     * from showing the trial notice.
+     */
+    private function isCurrentScreenExcluded(): bool
     {
         $screen = get_current_screen();
+        if (!$screen) {
+            return false;
+        }
 
-        return $screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')));
+        if (in_array($screen->base, $this->excludedScreenBases, true)) {
+            return true;
+        }
+
+        return str_contains($screen->base, 'simplybook');
     }
 
     private function getTrialInfo(): ?array
