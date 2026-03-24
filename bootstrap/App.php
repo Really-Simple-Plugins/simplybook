@@ -108,6 +108,10 @@ final class App
      *
      * @throws \Exception If the target is not instantiable or a dependency cannot be resolved.
      * @throws \ReflectionException If reflection fails.
+     *
+     * @SuppressWarnings("PHPMD.CyclomaticComplexity") The method is complex due to the nature of constructor autowiring and error handling. Refactoring this method to reduce complexity would not make it more readable or maintainable.
+     * @SuppressWarnings("PHPMD.NPathComplexity") The method has multiple paths due to the nature of constructor autowiring and error handling. Refactoring this method to reduce complexity would not make it more readable or maintainable.
+     * @SuppressWarnings("PHPMD.BooleanArgumentFlag") The boolean flags are necessary to control the behavior of the method and improve performance in certain cases. Refactoring this method to remove boolean flags would not make it more readable or maintainable.
      */
     public function make(string $class, bool $register = true, bool $registerDependencies = true): object
     {
