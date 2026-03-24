@@ -218,19 +218,13 @@ abstract class AbstractEntity
         }
 
         if (! isset($this->dirtyAttributes[$key])) {
-            $from = null;
-
-            if (isset($this->attributes[$key])) {
-                $from = $this->attributes[$key];
-            }
-
             $this->dirtyAttributes[$key] = [
-                'from' => $from,
-                'to' => $value,
+                'from' => $this->attributes[$key] ?? null,
+                'to' => null,
             ];
-        } else {
-            $this->dirtyAttributes[$key]['to'] = $value;
         }
+
+        $this->dirtyAttributes[$key]['to'] = $value;
 
         $this->attributes[$key] = $value;
     }
