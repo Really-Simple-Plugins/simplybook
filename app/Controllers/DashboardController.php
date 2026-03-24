@@ -6,8 +6,8 @@ use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\ThemeColorService;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
@@ -66,6 +66,8 @@ class DashboardController implements ControllerInterface
      *
      * @param string $pageSource The page where the activation was triggered,
      * usually 'plugins.php' but can be other pages as well.
+     *
+     * @SuppressWarnings("PHPMD.ExitExpression") Is needed after wp_safe_redirect
      */
     public function maybeRedirectToDashboard(string $pageSource = ''): void
     {
@@ -188,6 +190,7 @@ class DashboardController implements ControllerInterface
      */
     private function getReactChunksAndTranslations(): array
     {
+        $found = false;
         $cacheName = 'simplybook-react-chunk-and-translations';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
