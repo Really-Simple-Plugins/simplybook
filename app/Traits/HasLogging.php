@@ -12,15 +12,17 @@ trait HasLogging
      */
     public function log($message): void
     {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            $prepend = 'SimplyBook.me: ';
-            if (is_array($message) || is_object($message)) {
-                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log, WordPress.PHP.DevelopmentFunctions.error_log_print_r
-                error_log($prepend . print_r($message, true));
-            } else {
-                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
-                error_log($prepend . $message);
-            }
+        if ((defined('WP_DEBUG') && WP_DEBUG) === false) {
+            return;
         }
+
+        $prepend = 'SimplyBook.me: ';
+
+        if (is_array($message) || is_object($message)) {
+            $message = print_r($message, true);
+        }
+
+        // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+        error_log($prepend . $message);
     }
 }
