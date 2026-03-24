@@ -7,11 +7,11 @@ use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Support\Helpers\Storage;
-use SimplyBook\Services\BookingPageService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\FeatureInterface;
-use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Services\BookingPageService;
 use SimplyBook\Services\CallbackUrlService;
+use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 

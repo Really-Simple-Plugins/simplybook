@@ -28,7 +28,7 @@ trait HasRestAccess
 
     /**
      * Retrieve the parameters from the request and store them as Storage.
-     * @uses \SimplyBook\Helpers\Storage
+     * @uses Storage
      * @uses HasRestAccess::retrieveHttpParameters
      */
     public function retrieveHttpStorage(\WP_REST_Request $request, array $ajaxData = [], string $param = ''): Storage
