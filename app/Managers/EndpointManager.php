@@ -151,10 +151,10 @@ final class EndpointManager extends AbstractManager
         return function ($request) use ($callback, $middleware) {
             if (is_callable($middleware)) {
                 $middleware($request);
-            } else {
-                $this->defaultMiddlewareCallback();
+                return $callback($request);
             }
 
+            $this->defaultMiddlewareCallback();
             return $callback($request);
         };
     }
