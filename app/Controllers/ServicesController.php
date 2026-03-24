@@ -49,18 +49,23 @@ class ServicesController implements ControllerInterface
     }
 
     /**
-     * Create multiple services from an array of service names.
-     * Updates the first existing service and creates additional ones as needed.
+     * Get the first existing service from the remote, or null if none exists.
      */
+    private function getFirstExistingService(): ?array
+    {
+        $currentServices = $this->service->all();
+        $hasDefaultService = (count($currentServices) >= 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
+
+        return $hasDefaultService ? $currentServices[0] : null;
+    }
+
     private function createMultipleServices(array $serviceNames): void
     {
         if (empty($serviceNames)) {
             return;
         }
 
-        $currentServices = $this->service->all();
-        $hasDefaultService = (count($currentServices) >= 1 && !empty($currentServices[0]) && is_array($currentServices[0]));
-        $serviceToUpdate = ($hasDefaultService) ? $currentServices[0] : null;
+        $serviceToUpdate = $this->getFirstExistingService();
 
         foreach ($serviceNames as $index => $serviceName) {
             $serviceName = sanitize_text_field($serviceName);
@@ -82,7 +87,7 @@ class ServicesController implements ControllerInterface
      * on the remote. Before processing, we always make sure to clean up the
      * service model to avoid leftover state.
      */
-    private function processServiceName($serviceName, $serviceToUpdate): bool
+    private function processServiceName(string $serviceName, ?array $serviceToUpdate): bool
     {
         $this->service->reset();
 
