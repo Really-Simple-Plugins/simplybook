@@ -144,12 +144,12 @@ class ReviewController implements ControllerInterface
      */
     private function companyRegisteredTimeSuitableForReview(): bool
     {
-        $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time');
-        if (empty($companyRegistrationStartTime)) {
+        $companyRegistrationTime = get_option('simplybook_company_registration_start_time');
+        if (empty($companyRegistrationTime)) {
             return false;
         }
 
-        return $this->timestampIsThirtyDaysAgo($companyRegistrationStartTime);
+        return $this->timestampIsThirtyDaysAgo($companyRegistrationTime);
     }
 
     /**
