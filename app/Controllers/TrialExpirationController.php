@@ -103,35 +103,51 @@ class TrialExpirationController implements ControllerInterface
             return (bool) $cacheValue;
         }
 
-        $screen = get_current_screen();
-        if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
+        $isEligible = $this->isEligibleForTrialNotice();
+        $cacheDuration = $isEligible ? MINUTE_IN_SECONDS : MINUTE_IN_SECONDS * 10;
+        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+
+        return $isEligible;
+    }
+
+    /**
+     * Check all sequential eligibility conditions for the trial notice.
+     */
+    private function isEligibleForTrialNotice(): bool
+    {
+        if ($this->isExcludedScreen()) {
             return false;
         }
 
         if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         // User who did not complete the onboarding shouldn't see this notice
         if (get_option('simplybook_onboarding_completed', false) === false) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         $trialInfo = $this->getTrialInfo();
         if ($trialInfo === null) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         if ($trialInfo['is_expired'] && $trialInfo['days_since_expiration'] > 30) {
-            wp_cache_set($cacheName, false, 'simplybook', MINUTE_IN_SECONDS * 10);
             return false;
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
+    }
+
+    /**
+     * Check if the current screen should be excluded from showing notices.
+     */
+    private function isExcludedScreen(): bool
+    {
+        $screen = get_current_screen();
+
+        return $screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')));
     }
 
     private function getTrialInfo(): ?array
