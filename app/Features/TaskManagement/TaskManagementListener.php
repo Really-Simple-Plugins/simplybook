@@ -6,6 +6,11 @@ use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Services\PromotionService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ */
 class TaskManagementListener
 {
     private TaskManagementService $service;
