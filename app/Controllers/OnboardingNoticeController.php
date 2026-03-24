@@ -110,7 +110,7 @@ class OnboardingNoticeController implements ControllerInterface
         }
 
         $isEligible = $this->isEligibleForNotice();
-        $cacheDuration = $isEligible ? MINUTE_IN_SECONDS : MINUTE_IN_SECONDS * 10;
+        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
         wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
 
         return $isEligible;
@@ -118,6 +118,7 @@ class OnboardingNoticeController implements ControllerInterface
 
     /**
      * Check all sequential eligibility conditions for the onboarding notice.
+     * This method does not cache the result; caching is handled by canRenderNotice().
      */
     private function isEligibleForNotice(): bool
     {
