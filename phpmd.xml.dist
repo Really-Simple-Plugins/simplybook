@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<ruleset name="Really Simple Plugins - PHP Mess Detector configuration">
+    <description>
+        Custom PHPMD ruleset for Really Simple Plugins.
+    </description>
+
+    <!-- Import entire codesize and design rulesets -->
+    <rule ref="rulesets/codesize.xml"/>
+    <rule ref="rulesets/design.xml"/>
+
+    <!-- Excluded unusedcode ruleset because it is already covered by PHPStan. -->
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter"
+                 description="An unused parameter can be used to show possibilities while scaling."/>
+    </rule>
+
+    <!-- Excluded controversial ruleset because its either covered by PHPCS or not applicable in WordPress context -->
+    <rule ref="rulesets/controversial.xml">
+        <exclude name="Superglobals"
+                 description="We do not want to force encapsulation of superglobals in WordPress context."/>
+    </rule>
+
+    <!-- Import entire clean code ruleset and exclude specifc rules-->
+    <rule ref="rulesets/cleancode.xml">
+        <!-- <exclude name="UndefinedVariable" description="Already covered by PHPStan."/>-->
+        <!-- <exclude name="MissingImport" description="Annoying in WordPress context with global functions"/>-->
+        <exclude name="StaticAccess" description="Static strategy is widely adopted in 2026"/>
+        <exclude name="BooleanArgumentFlag" description="SRP sign check is too intrusive - SRP check stays manual"/>
+    </rule>
+
+    <!-- Import entire naming ruleset and modify rules -->
+    <rule ref="rulesets/naming.xml">
+        <exclude name="LongVariable" description="LongVariable rule is imported and customized below."/>
+        <exclude name="ShortVariable" description="ShortVariable rule is imported and customized below."/>
+    </rule>
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <properties>
+            <property name="maximum" value="25"/>
+            <property name="subtract-suffixes"
+                      description="Do not count these suffixes, example: LastCheckedDateOptionName"
+                      value="OptionName,NonceName"/>
+        </properties>
+    </rule>
+    <rule ref="rulesets/naming.xml/ShortVariable">
+        <properties>
+            <property name="minimum" value="2"
+                      description="Default is 3 but thats too many for variables like $id and $iv, which we allow"/>
+        </properties>
+    </rule>
+
+    <!-- Ignore legacy code -->
+    <exclude-pattern>app/Traits/LegacyLoad.php</exclude-pattern>
+    <exclude-pattern>app/Traits/LegacySave.php</exclude-pattern>
+    <exclude-pattern>app/Http/ApiClient.php</exclude-pattern>
+
+</ruleset>
