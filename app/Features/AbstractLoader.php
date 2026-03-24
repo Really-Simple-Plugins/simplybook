@@ -15,6 +15,9 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  * @internal Without loading all the feature classes, composer will prevent
  * requiring the files entirely. Even tho the Feature namespace falls
  * withing the psr-4 scope.
+ *
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
+ * for loading features and as such needs to interact with multiple classes.
  */
 abstract class AbstractLoader
 {

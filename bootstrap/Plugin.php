@@ -9,6 +9,12 @@ use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ControllerManager;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
+ * for booting the plugin and as such needs to interact with multiple classes.
+ * Refactoring this class to reduce coupling would not make it more
+ * readable or maintainable.
+ */
 final class Plugin
 {
     private FeatureManager $featureManager;
