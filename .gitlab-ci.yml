@@ -68,7 +68,7 @@ phpcs:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPCS" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=diff_context \
+        -filter-mode=nofilter \
         -level=warning \
         -fail-level=any \
         < phpcs-checkstyle.xml >/dev/null
@@ -125,7 +125,7 @@ phpstan:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPStan" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=diff_context \
+        -filter-mode=nofilter \
         -level=warning \
         -fail-level=any \
         < phpstan-checkstyle.xml >/dev/null
