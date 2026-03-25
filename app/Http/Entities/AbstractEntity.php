@@ -9,6 +9,7 @@ use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Utility\StringUtility;
 
 /**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  * @SuppressWarnings("PHPMD.ExcessiveClassComplexity") This abstract class is
  * the blueprint for all Entities. By adding complexity here we can reduce
  * complexity in the actual Entity classes. This is by design.
