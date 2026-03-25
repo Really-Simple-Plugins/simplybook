@@ -8,13 +8,13 @@
     <rule ref="rulesets/codesize.xml"/>
     <rule ref="rulesets/design.xml"/>
 
-    <!-- Excluded unusedcode ruleset because it is already covered by PHPStan. -->
+    <!-- Import entire unusedcode ruleset and exclude specifc rules-->
     <rule ref="rulesets/unusedcode.xml">
         <exclude name="UnusedFormalParameter"
                  description="An unused parameter can be used to show possibilities while scaling."/>
     </rule>
 
-    <!-- Excluded controversial ruleset because its either covered by PHPCS or not applicable in WordPress context -->
+    <!-- Import entire controversial ruleset and exclude specifc rules-->
     <rule ref="rulesets/controversial.xml">
         <exclude name="Superglobals"
                  description="We do not want to force encapsulation of superglobals in WordPress context."/>
@@ -22,8 +22,6 @@
 
     <!-- Import entire clean code ruleset and exclude specifc rules-->
     <rule ref="rulesets/cleancode.xml">
-        <!-- <exclude name="UndefinedVariable" description="Already covered by PHPStan."/>-->
-        <!-- <exclude name="MissingImport" description="Annoying in WordPress context with global functions"/>-->
         <exclude name="StaticAccess" description="Static strategy is widely adopted in 2026"/>
         <exclude name="BooleanArgumentFlag" description="SRP sign check is too intrusive - SRP check stays manual"/>
     </rule>

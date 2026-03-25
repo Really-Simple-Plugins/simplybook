@@ -10,7 +10,8 @@ use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 /**
  * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
  * @SuppressWarnings("PHPMD.CyclomaticComplexity")
- * @SuppressWarnings("PHPMD.NPathComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity") Reducing complexity for this class
+ * should be done with caution but should still be done in a later stage.
  */
 class DesignSettingsService
 {
