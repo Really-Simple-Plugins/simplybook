@@ -9,7 +9,10 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 /**
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
  * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
- * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
+ * for catching and processing all events related to tasks. This adds quite a
+ * lot of complexity, and we could consider to move responsibility for event
+ * handling to somewhere else to reduce complexity.
  */
 class TaskManagementListener
 {

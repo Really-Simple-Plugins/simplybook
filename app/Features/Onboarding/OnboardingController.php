@@ -19,7 +19,9 @@ use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Support\Builders\CompanyBuilder;
 
 /**
- * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods") We bundle all routes for th
+ * onboarding here, resulting in too manu public methods. We could refactor
+ * by splitting the routes into separate classes, but it is fine for now.
  */
 class OnboardingController implements FeatureInterface
 {

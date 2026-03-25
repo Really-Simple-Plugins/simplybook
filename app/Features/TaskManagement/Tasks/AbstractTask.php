@@ -5,8 +5,8 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 use SimplyBook\Interfaces\TaskInterface;
 
 /**
- * @SuppressWarnings("PHPMD.TooManyChildren")
- * @SuppressWarnings("PHPMD.NumberOfChildren")
+ * @SuppressWarnings("PHPMD.NumberOfChildren") This class is the base for all
+ * tasks and as such will have many child classes by design.
  */
 abstract class AbstractTask implements TaskInterface
 {

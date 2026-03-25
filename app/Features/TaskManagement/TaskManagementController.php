@@ -6,7 +6,8 @@ use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Interfaces\FeatureInterface;
 
 /**
- * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class registers all
+ * Task classes and because of that is coupled with these classes by design.
  */
 class TaskManagementController implements FeatureInterface
 {
