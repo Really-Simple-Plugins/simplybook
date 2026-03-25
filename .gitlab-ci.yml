@@ -179,7 +179,7 @@ phpmd:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPMD" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=diff_context \
+        -filter-mode=nofilter \
         -level=warning \
         -fail-level=any \
         < phpmd-checkstyle.xml >/dev/null
