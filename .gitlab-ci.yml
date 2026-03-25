@@ -154,7 +154,7 @@ phpmd:reviewdog:
       set +e
 
       # Create checkstyle report with PHPMD for reviewdog
-      vendor/bin/phpmd app checkstyle phpmd.xml.dist \
+      vendor/bin/phpmd app,bootstrap,simplybook.php checkstyle phpmd.xml.dist \
       --report-file phpmd-checkstyle.xml
 
       # Remember the PHPMD result
