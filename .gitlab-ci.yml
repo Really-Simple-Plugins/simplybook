@@ -1,6 +1,7 @@
 stages:
   - lint
   - quality
+  - mess-detection
 
 # Setup PHP + Composer template
 .setup_php:
@@ -134,6 +135,60 @@ phpstan:reviewdog:
     when: on_failure
     paths:
       - phpstan-checkstyle.xml
+    expire_in: 1 week
+  variables:
+    REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
+    REVIEWDOG_GITLAB_API_TOKEN: "$MR_REVIEW_GITLAB_API_TOKEN"
+
+phpmd:reviewdog:
+  stage: mess-detection
+  extends: .setup_php
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+    - when: never
+  script:
+    - |
+      echo "PHPMD: Starting.."
+
+      # Run PHPMD but don't abort the shell on non-zero
+      set +e
+
+      # Create checkstyle report with PHPMD for reviewdog
+      vendor/bin/phpmd app checkstyle phpmd.xml.dist \
+      --report-file phpmd-checkstyle.xml
+
+      # Remember the PHPMD result
+      PHPMD_EXIT=$?
+      set -e
+
+      # Exit silently if all clean
+      if [ "$PHPMD_EXIT" -eq 0 ]; then
+        echo "PHPMD: clean!"
+        exit 0
+      fi
+
+      echo "PHPMD: issues found -> generating checkstyle report and posting with reviewdog."
+
+      # Install reviewdog
+      curl -sSfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b /usr/local/bin >/dev/null
+
+      # Add line to the message in the checkstyle report (no column for PHPMD)
+      sed -i 's|\(<error [^>]*line="\)\([0-9]\+\)\("[^>]*message="\)\([^"]*\)"|\1\2\3\4 (line:\2)"|g' phpmd-checkstyle.xml || true
+
+      # Post inline MR comments; fail the job on any findings
+      reviewdog -f=checkstyle \
+        -name="PHPMD" \
+        -reporter=gitlab-mr-discussion \
+        -filter-mode=diff_context \
+        -level=warning \
+        -fail-level=any \
+        < phpmd-checkstyle.xml >/dev/null
+
+      exit "$PHPMD_EXIT"
+  artifacts:
+    when: on_failure
+    paths:
+      - phpmd-checkstyle.xml
     expire_in: 1 week
   variables:
     REVIEWDOG_GITLAB_API_SERVER: "$CI_SERVER_URL/api/v4"
