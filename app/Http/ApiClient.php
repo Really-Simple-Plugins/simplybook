@@ -490,6 +490,14 @@ class ApiClient
      */
     public function isAuthenticated(): bool
     {
+        $found = false;
+        $cacheName = 'is_authenticated_session';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
+        }
+
         //check if we have a token
         if (!$this->tokenIsValid('admin')) {
             $this->refresh_token('admin');
@@ -497,14 +505,17 @@ class ApiClient
 
         // Check if the flag is set
         if ($this->authenticationFailedFlag) {
+            wp_cache_set($cacheName, false, 'simplybook');
             return false;
         }
 
         //check if we have a company
         if (!$this->company_registration_complete()) {
+            wp_cache_set($cacheName, false, 'simplybook');
             return false;
         }
 
+        wp_cache_set($cacheName, true, 'simplybook');
         return true;
     }
 
