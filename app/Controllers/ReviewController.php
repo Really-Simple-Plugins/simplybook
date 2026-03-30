@@ -21,7 +21,6 @@ class ReviewController implements ControllerInterface
     private string $reviewNonceName = 'rsp_review_nonce';
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
-    private ?bool $authenticatedCompanySession = null;
 
     private ApiClient $client;
     private PluginFirstUseTimeService $pluginFirstUseTimeService;
@@ -111,11 +110,7 @@ class ReviewController implements ControllerInterface
      */
     private function canRenderReviewNotice(): bool
     {
-        if ($this->authenticatedCompanySession === null) {
-            $this->authenticatedCompanySession = $this->client->isAuthenticated();
-        }
-
-        if ($this->authenticatedCompanySession === false) {
+        if ($this->client->isAuthenticated() === false) {
             return false;
         }
 
