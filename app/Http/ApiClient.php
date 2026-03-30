@@ -16,7 +16,6 @@ use SimplyBook\Http\DTO\ApiResponseDTO;
 use SimplyBook\Exceptions\ApiException;
 use SimplyBook\Traits\HasTokenManagement;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Services\PluginFirstUseTimeService;
 use SimplyBook\Services\CallbackUrlService;
 use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Services\CreateAccountService;
@@ -40,7 +39,6 @@ class ApiClient
     protected CreateAccountService $createAccountService;
 
     protected CallbackUrlService $callbackUrlService;
-    protected PluginFirstUseTimeService $pluginFirstUseTimeService;
 
     /**
      * Flag to use during onboarding. Will help us recognize if we are in the
@@ -71,13 +69,11 @@ class ApiClient
      *
      * @throws \LogicException For developers.
      */
-    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService, CallbackUrlService $callbackUrlService, PluginFirstUseTimeService $pluginFirstUseTimeService)
+    public function __construct(EnvironmentConfig $env, CreateAccountService $createAccountService, CallbackUrlService $callbackUrlService)
     {
         $this->env = $env;
         $this->createAccountService = $createAccountService;
         $this->callbackUrlService = $callbackUrlService;
-        $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
-        $this->pluginFirstUseTimeService->migratePluginFirstUseTimeIfMissing();
 
         if (get_option($this->authenticationFailedFlagKey)) {
             $this->handleFailedAuthentication();
