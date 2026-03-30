@@ -50,7 +50,9 @@ class SettingsController implements ControllerInterface
         }
 
         // Migrate legacy registration start time to private plugin first-use option
-        $this->pluginFirstUseTimeService->migratePluginFirstUseTimeIfMissing();
+        if ($previousVersion && version_compare($previousVersion, '3.3.1', '<')) {
+            $this->pluginFirstUseTimeService->migratePluginFirstUseTimeIfMissing();
+        }
     }
 
     /**
