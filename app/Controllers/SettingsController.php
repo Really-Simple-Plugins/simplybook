@@ -4,11 +4,19 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\PluginFirstUseTimeService;
 
 class SettingsController implements ControllerInterface
 {
     // todo
     use LegacySave;
+
+    private PluginFirstUseTimeService $pluginFirstUseTimeService;
+
+    public function __construct(PluginFirstUseTimeService $pluginFirstUseTimeService)
+    {
+        $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
+    }
 
     public function register(): void
     {
@@ -40,6 +48,9 @@ class SettingsController implements ControllerInterface
         if ($previousVersion && version_compare($previousVersion, '3.3.0', '<')) {
             delete_option('simplybook_persistent_cache');
         }
+
+        // Migrate legacy registration start time to private plugin first-use option
+        $this->pluginFirstUseTimeService->migratePluginFirstUseTimeIfMissing();
     }
 
     /**
