@@ -3,9 +3,9 @@ Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters,
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
-Tested up to: 6.9
+Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,13 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.3.1 - 2026-05-12 =
+* Changed: Tested up to version to WordPress 7.0.
+* Changed: PHP Mess Detector is now used in development, improving code style.
+* Fixed: Admin notices can now trigger reliably after x-period has passed.
+* Fixed: Background retries now correctly allow up to 3 attempts, improving onboarding.
+* Fixed: Endpoint classes are now conditionally loaded in a reliable way.
+
 = 3.3.0 - 2026-02-16 =
 * Fixed: Message “form contains errors” briefly flashed in settings.
 * Fixed: Direct SimplyBook.me links now work with plain permalinks.
