@@ -4,6 +4,7 @@ namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Services\PluginFirstUseTimeService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -22,13 +23,15 @@ class ReviewController implements ControllerInterface
     private int $bookingsAmount; // Used as object cache
 
     private ApiClient $client;
+    private PluginFirstUseTimeService $pluginFirstUseTimeService;
     private EnvironmentConfig $env;
     private RequestStorage $request;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
+    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService, EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
     {
         $this->client = $client;
+        $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
         $this->env = $env;
         $this->request = $request;
         $this->noticeDismissalService = $noticeDismissalService;
@@ -98,14 +101,19 @@ class ReviewController implements ControllerInterface
 
     /**
      * Check if the review notice can be rendered. True when:
+     * - The user still has an authenticated SimplyBook session
      * - The user has not dismissed the notice
-     * - The company registration time is suitable for review
+     * - The plugin first-use time is suitable for review
      * - The review notice dismissed time has passed
      * - The amount of bookings is greater than the threshold
      * - The user is not on an edit screen
      */
     private function canRenderReviewNotice(): bool
     {
+        if ($this->client->isAuthenticated() === false) {
+            return false;
+        }
+
         // Check if user dismissed via X button
         if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'review')) {
             return false;
@@ -117,7 +125,7 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        if ($this->companyRegisteredTimeSuitableForReview() === false) {
+        if ($this->pluginFirstUseTimeSuitableForReview() === false) {
             return false;
         }
 
@@ -140,16 +148,16 @@ class ReviewController implements ControllerInterface
     }
 
     /**
-     * Check if the company registration time is more than 30 days ago.
+     * Check if the plugin first-use time is more than 30 days ago.
      */
-    private function companyRegisteredTimeSuitableForReview(): bool
+    private function pluginFirstUseTimeSuitableForReview(): bool
     {
-        $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time');
-        if (empty($companyRegistrationStartTime)) {
+        $pluginFirstUseTime = $this->pluginFirstUseTimeService->getPluginFirstUseTime();
+        if (empty($pluginFirstUseTime)) {
             return false;
         }
 
-        return $this->timestampIsThirtyDaysAgo($companyRegistrationStartTime);
+        return $this->timestampIsThirtyDaysAgo($pluginFirstUseTime);
     }
 
     /**
