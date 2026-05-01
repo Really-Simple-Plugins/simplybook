@@ -34,6 +34,20 @@ class ApiClient
     use HasLogging;
     use HasAllowlistControl;
 
+    /**
+     * Option name used to store the amount of registration attempts.
+     * @var string
+     */
+    const REGISTER_ATTEMPT_COUNT_OPTION_NAME = 'simplybook_register_attempt_count';
+
+    /**
+     * Option name used to store the start time of the first registration
+     * attempt. The method {@see getRegisterAttemptsCount} resets this option
+     * after 1 minute.
+     * @var string
+     */
+    const REGISTER_START_TIME_OPTION_NAME = 'simplybook_register_attempt_start_time';
+
     protected EnvironmentConfig $env;
 
     protected CreateAccountService $createAccountService;
@@ -516,8 +530,16 @@ class ApiClient
     }
 
     /**
-     * Registers a company with the API
-     * @internal method can be recursive a maximum of 3 times in one minute
+     * Registers a company with the API.
+     *
+     * Validates the company data first, then enforces a rate limit (max 4
+     * attempts per 60 seconds). On success the rate-limit counter is cleared.
+     *
+     * When the generated company_login is reserved or contains illegal words,
+     * a 409 with `{ retry: true }` is thrown so the client can generate a
+     * fresh reCAPTCHA token and retry. Each client retry counts as a separate
+     * server call against the rate limit.
+     *
      * @throws ApiException
      */
     public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
@@ -528,17 +550,21 @@ class ApiClient
             ))->setResponseCode(403);
         }
 
-        if (get_transient('simply_book_attempt_count') > 3) {
-            throw (new ApiException(
-                __('Too many attempts to register company, please try again in a minute.', 'simplybook')
-            ))->setResponseCode(429);
-        }
-
         if ($company->isValid() === false) {
             throw (new ApiException(
                 __('Please fill in all required fields to create an account.', 'simplybook')
             ))->setResponseCode(422);
         }
+
+        $attemptCount = $this->getRegisterAttemptsCount();
+        if ($attemptCount > 3) {
+            throw (new ApiException(
+                __('Too many attempts to register company, please try again in a minute.', 'simplybook')
+            ))->setResponseCode(429);
+        }
+
+        $updatedAttemptCount = ($attemptCount + 1);
+        $this->setRegisterAttemptCount($updatedAttemptCount);
 
         $userAgent = $this->getRequestUserAgent();
 
@@ -570,14 +596,11 @@ class ApiClient
 
         $response = (object) $rawResponse['body'];
 
-        // Response returns success
         if (isset($response->success) && $response->success) {
+            $this->deleteRegisterAttemptCountOption();
             return new ApiResponseDTO(true, __('Company successfully registered.', 'simplybook'), 200, []);
         }
 
-        // We generate a company_login dynamically, but because SimplyBook has
-        // very strict checks this company_login might be invalid. In this case
-        // we delete the company_login and try again.
         if (
             isset($response->data->company_login) &&
             (
@@ -586,7 +609,12 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            return $this->register_company($company, $captchaToken);
+            throw (new ApiException(
+                __('Company login was not available, retrying.', 'simplybook')
+            ))->setData([
+                'retry' => true,
+                'reason' => 'login_reserved',
+            ])->setResponseCode(409);
         }
 
         throw (new ApiException(
@@ -595,6 +623,60 @@ class ApiClient
             'message' => $response->message ?? '',
             'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
         ])->setResponseCode(500);
+    }
+
+    /**
+     * Determine the amount of registration attempts within the last minute. If
+     * the last attempt was more than a minute ago, the counter is reset.
+     *
+     * @uses REGISTER_START_TIME_OPTION_NAME
+     * @uses REGISTER_ATTEMPT_COUNT_OPTION_NAME
+     *
+     * @internal Regarding responsibilities, we could add this method to the
+     * {@see CreateAccountService} but I've chosen to keep the method here
+     * because the {@see register_company} method is still in this class.
+     */
+    private function getRegisterAttemptsCount(): int
+    {
+        $now = time();
+
+        $attemptStartTime = get_option(self::REGISTER_START_TIME_OPTION_NAME, $now);
+        $attemptCount = (int) get_option(self::REGISTER_ATTEMPT_COUNT_OPTION_NAME, 0);
+        $firstAttempt = ($attemptCount === 0);
+
+        $attemptWasOneMinuteAgo = ($attemptStartTime <= ($now - MINUTE_IN_SECONDS));
+        if ($firstAttempt || $attemptWasOneMinuteAgo) {
+            $attemptCount = 0;
+            update_option(self::REGISTER_START_TIME_OPTION_NAME, $now, false);
+        }
+
+        return $attemptCount;
+    }
+
+    /**
+     * Set the amount of registration attempts. Method does no validation, it
+     * just updates the {@see REGISTER_ATTEMPT_COUNT_OPTION_NAME} option.
+     *
+     * @internal Regarding responsibilities, we could add this method to the
+     * {@see CreateAccountService} but I've chosen to keep the method here
+     * because the {@see register_company} method is still in this class.
+     */
+    private function setRegisterAttemptCount(int $attemptCount): void
+    {
+        update_option(self::REGISTER_ATTEMPT_COUNT_OPTION_NAME, $attemptCount, false);
+    }
+
+    /**
+     * Remove the amount of registration attempts. Method does no validation, it
+     * just deletes the {@see REGISTER_ATTEMPT_COUNT_OPTION_NAME} option.
+     *
+     * @internal Regarding responsibilities, we could add this method to the
+     * {@see CreateAccountService} but I've chosen to keep the method here
+     * because the {@see register_company} method is still in this class.
+     */
+    private function deleteRegisterAttemptCountOption(): void
+    {
+        delete_option(self::REGISTER_ATTEMPT_COUNT_OPTION_NAME);
     }
 
     /**

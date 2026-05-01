@@ -57,18 +57,10 @@ const useOnboardingData = () => {
      * Submit the account registration request.
      */
     const submitAccountRegistration = async (data, captchaToken) => {
-        try {
-            await httpClient.setRoute('onboarding/create_account').setPayload({
-                ...data,
-                captcha_token: captchaToken,
-            }).post();
-        } catch (error) {
-            setApiError(error.message || __("An error occurred while registering.", "simplybook"));
-            return false;
-        }
-
-        setApiError('');
-        return true;
+        await httpClient.setRoute('onboarding/create_account').setPayload({
+            ...data,
+            captcha_token: captchaToken,
+        }).post();
     };
 
     const steps = [
@@ -110,12 +102,34 @@ const useOnboardingData = () => {
                 },
             ],
             beforeSubmit: async (data) => {
-                const captchaToken = await getCaptchaToken();
-                if (captchaToken === false) {
-                    return false;
+                const maxRetries = 3;
+
+                for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                    const captchaToken = await getCaptchaToken();
+                    if (captchaToken === false) {
+                        return false;
+                    }
+
+                    try {
+                        await submitAccountRegistration(data, captchaToken);
+                        setApiError('');
+                        return true;
+                    } catch (error) {
+                        // If the error is retryable and we haven't exhausted retries,
+                        // wait briefly to avoid rapid-fire captcha requests that
+                        // could lower our reCAPTCHA score, then try again.
+                        if (error?.data?.retry === true && attempt < maxRetries) {
+                            await new Promise(resolve => setTimeout(resolve, 500));
+                            continue;
+                        }
+
+                        // Non-retryable error or max retries exceeded
+                        setApiError(error.message || __("An error occurred while registering.", "simplybook"));
+                        return false;
+                    }
                 }
 
-                return await submitAccountRegistration(data, captchaToken);
+                return false;
             },
         },
         {
