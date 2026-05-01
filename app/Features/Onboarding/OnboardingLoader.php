@@ -21,6 +21,10 @@ class OnboardingLoader extends AbstractLoader
      */
     public function inScope(): bool
     {
-        return (is_admin() && $this->userIsOnDashboard()) || $this->requestIsRestRequest();
+        $extendifySiteIdExists = get_option('extendify_site_id', false) !== false;
+
+        return (is_admin() && $this->userIsOnDashboard())
+            || (is_admin() && $extendifySiteIdExists)
+            || $this->requestIsRestRequest();
     }
 }
