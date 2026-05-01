@@ -7,6 +7,12 @@ use SimplyBook\Traits\LegacySave;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity")
+ * @SuppressWarnings("PHPMD.CyclomaticComplexity")
+ * @SuppressWarnings("PHPMD.NPathComplexity") Reducing complexity for this class
+ * should be done with caution but should still be done in a later stage.
+ */
 class DesignSettingsService
 {
     use LegacySave;
@@ -54,6 +60,7 @@ class DesignSettingsService
      */
     public function getDesignOptions(): array
     {
+        $found = false;
         $cacheName = 'design_settings';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

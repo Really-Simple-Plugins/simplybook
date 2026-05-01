@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace SimplyBook\Support\Helpers\Storages;
 
+use SplFileInfo;
+use FilesystemIterator;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Support\Helpers\DeferredObject;
 
@@ -33,92 +37,97 @@ final class GeneralConfig extends DeferredObject
     protected function deferredConstructArguments(): array
     {
         return [
-            'items' => $this->storageFromPath(dirname(__FILE__, 5) . '/config', $this->filesToSkip, true),
+            'items' => $this->loadAllConfigFiles(),
         ];
     }
 
     /**
-     * Return all config files as GeneralConfig. If path is a directory, it will
-     * merge all the files in the directory.
-     *
-     * @param bool $prefixWithFileName Can be used to prefix the keys with the
-     * filename when loading a directory. Can be useful to bundle the config
-     * data of a file under the filename which makes it easier to retrieve a
-     * single fields config.
-     *
-     * @throws \InvalidArgumentException
+     * Return all config files as items for the GeneralConfig.
      */
-    private function storageFromPath(string $path, array $skip = [], bool $prefixWithFileName = false): array
+    private function loadAllConfigFiles(): array
     {
-        if (!file_exists($path)) {
-            throw new \InvalidArgumentException(
-                'Unloadable configuration file ' . esc_html($path) . ' provided.'
-            );
-        }
+        $configDirectoryPath = rtrim((string) realpath(
+            dirname(__FILE__, 5) . '/config'
+        ), DIRECTORY_SEPARATOR);
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($configDirectoryPath, FilesystemIterator::SKIP_DOTS)
+        );
 
         $data = [];
 
-        if (is_dir($path)) {
-            $root = rtrim((string) realpath($path), DIRECTORY_SEPARATOR);
-
-            // Also loads files in nested dirs.
-            $iterator = new \RecursiveIteratorIterator(
-                new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS)
-            );
-
-            /** @var \SplFileInfo $file */
-            foreach ($iterator as $file) {
-                if (!$file->isFile() || in_array($file->getBasename('.php'), $skip)) {
-                    continue;
-                }
-
-                $pathname = $file->getPathname();
-                $extension = strtolower((string) pathinfo($pathname, PATHINFO_EXTENSION));
-
-                if ($extension !== 'php') {
-                    continue;
-                }
-
-                $fileData = require $pathname;
-                if (!is_array($fileData)) {
-                    continue;
-                }
-
-                $fileName = (string) pathinfo($pathname, PATHINFO_FILENAME);
-                $fileDirPath = $file->getPath();
-
-                // Compute the directory relative to the root and take the last
-                // segment as the prefix.
-                $relativeDir = ltrim(substr($fileDirPath, strlen($root)), DIRECTORY_SEPARATOR);
-                $dirKey = ($relativeDir !== '' ? basename($relativeDir) : null);
-
-                if ($prefixWithFileName) {
-                    if ($dirKey !== null) {
-                        // Group by immediate subdirectory, then filename. Deep
-                        // merge so multiple files in the same subdir accumulate
-                        $data[$dirKey] = array_replace_recursive(
-                            $data[$dirKey] ?? [],
-                            [$fileName => $fileData]
-                        );
-                    } else {
-                        // Top-level files keyed by filename.
-                        $data = array_replace_recursive($data, [
-                            $fileName => $fileData
-                        ]);
-                    }
-                } else {
-                    // No prefixing: merge raw file data (deep) to avoid losing
-                    // previously merged keys.
-                    $data = array_replace_recursive($data, $fileData);
-                }
-            }
-        } else {
-            $loaded = require $path;
-            if (is_array($loaded)) {
-                $data = $loaded;
-            }
+        /** @var SplFileInfo $file */
+        foreach ($iterator as $file) {
+            $data = $this->appendFileData($file, $data, $configDirectoryPath);
         }
 
         return $data;
+    }
+
+    /**
+     * Method is used for collecting a single config file into the full config
+     * structure.
+     */
+    private function appendFileData(SplFileInfo $file, array $data, string $configDirectoryPath): array
+    {
+        if (!$file->isFile() || in_array($file->getBasename('.php'), $this->filesToSkip, true)) {
+            return $data;
+        }
+
+        [$subdirectoryName, $fileName, $fileData] = $this->getFileInfo($file, $configDirectoryPath);
+        if ($fileData === []) {
+            return $data;
+        }
+
+        if ($subdirectoryName === null) {
+            return array_replace_recursive($data, [
+                $fileName => $fileData,
+            ]);
+        }
+
+        $data[$subdirectoryName] = array_replace_recursive(
+            $data[$subdirectoryName] ?? [],
+            [$fileName => $fileData]
+        );
+
+        return $data;
+    }
+
+    /**
+     * Return information about the given file. It will return an array
+     * containing the name of the subdirectory the file is in, the name
+     * of the file and the data that the config file contains.
+     *
+     * @return array [subdirectoryName, fileNameFromPath, fileData]
+     */
+    private function getFileInfo(SplFileInfo $file, string $configDirectoryPath): array
+    {
+        $pathname = $file->getPathname();
+        $fileNameFromPath = (string) pathinfo($pathname, PATHINFO_FILENAME);
+
+        $rawSubdirectory = ltrim(substr($file->getPath(), strlen($configDirectoryPath)), DIRECTORY_SEPARATOR);
+        $subdirectoryName = ($rawSubdirectory !== '' ? basename($rawSubdirectory) : null);
+
+        return [
+            $subdirectoryName,
+            $fileNameFromPath,
+            $this->getConfigFileData($pathname),
+        ];
+    }
+
+    /**
+     * Require the config file and return its contents as an array. Works only
+     * for PHP files.
+     */
+    private function getConfigFileData(string $pathname): array
+    {
+        $extension = strtolower((string) pathinfo($pathname, PATHINFO_EXTENSION));
+
+        if ($extension !== 'php') {
+            return [];
+        }
+
+        $fileData = require $pathname;
+        return (is_array($fileData) ? $fileData : []);
     }
 }

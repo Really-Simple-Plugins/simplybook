@@ -7,8 +7,15 @@ namespace SimplyBook\Bootstrap;
 use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
+use SimplyBook\Support\Helpers\Uninstall;
 use SimplyBook\Managers\ControllerManager;
 
+/**
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
+ * for booting the plugin and as such needs to interact with multiple classes.
+ * Refactoring this class to reduce coupling would not make it more
+ * readable or maintainable.
+ */
 final class Plugin
 {
     private FeatureManager $featureManager;
@@ -112,7 +119,7 @@ final class Plugin
      */
     public static function uninstall(): void
     {
-        $uninstallInstance = new \SimplyBook\Support\Helpers\Uninstall();
+        $uninstallInstance = new Uninstall();
         $uninstallInstance->handlePluginUninstall();
     }
 

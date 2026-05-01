@@ -21,6 +21,7 @@
     },
     "require-dev": {
         "phpcompatibility/php-compatibility": "^9.3",
+        "phpmd/phpmd": "^2.15",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
         "slevomat/coding-standard": "^8.14",
@@ -30,7 +31,7 @@
     "autoload": {
         "psr-4": {
             "SimplyBook\\": "app",
-            "SimplyBook\\Bootrstap\\": "bootstrap"
+            "SimplyBook\\Bootstrap\\": "bootstrap"
         },
         "files": [
             "helpers.php"
@@ -55,6 +56,8 @@
         "lint:summary:report": "vendor/bin/phpcs --report=summary --report-file=phpcs-report.txt",
         "quality": "vendor/bin/phpstan analyse --memory-limit=2048M",
         "quality:report": "vendor/bin/phpstan analyse --memory-limit=2048M > phpstan-report.txt",
-        "quality:diagnose": "vendor/bin/phpstan diagnose --memory-limit=2048M"
+        "quality:diagnose": "vendor/bin/phpstan diagnose --memory-limit=2048M",
+        "mess": "vendor/bin/phpmd app,bootstrap,simplybook.php ansi phpmd.xml.dist",
+        "mess:report": "vendor/bin/phpmd app,bootstrap,simplybook.php checkstyle phpmd.xml.dist --reportfile phpmd-checkstyle.xml"
     }
 }

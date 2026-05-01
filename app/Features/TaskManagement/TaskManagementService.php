@@ -6,6 +6,9 @@ use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 
+/**
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ */
 class TaskManagementService
 {
     private TaskManagementRepository $repository;
@@ -90,7 +93,7 @@ class TaskManagementService
      */
     private function removeDeletableTasksAfterUpgrade(array $deletableTasksList, bool $save = true): void
     {
-        foreach ($deletableTasksList as $taskId => $deletedTask) {
+        foreach (array_keys($deletableTasksList) as $taskId) {
             $this->repository->removeTaskById($taskId, $save);
         }
 

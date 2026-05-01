@@ -2,12 +2,16 @@
 
 namespace SimplyBook\Http\Endpoints;
 
+use Throwable;
+use WP_REST_Server;
+use WP_REST_Request;
+use WP_REST_Response;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Helpers\Storage;
-use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Http\Entities\AbstractEntity;
-use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Exceptions\FormException;
+use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Exceptions\RestDataException;
+use SimplyBook\Http\Entities\AbstractEntity;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
 abstract class AbstractCrudEndpoint implements MultiEndpointInterface
@@ -42,11 +46,11 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
         return [
             $route => [
-                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE,
+                'methods' => WP_REST_Server::READABLE . ',' . WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'handleCollectionRequest'],
             ],
             $route . '/(?P<id>[0-9]+)' => [
-                'methods' => \WP_REST_Server::READABLE . ',' . \WP_REST_Server::CREATABLE . ',' . \WP_REST_Server::EDITABLE . ',' . \WP_REST_Server::DELETABLE,
+                'methods' => WP_REST_Server::READABLE . ',' . WP_REST_Server::CREATABLE . ',' . WP_REST_Server::EDITABLE . ',' . WP_REST_Server::DELETABLE,
                 'callback' => [$this, 'handleSingleRequest'],
             ],
         ];
@@ -56,7 +60,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * Handle entity collection requests.
      * @internal Override this method to process the collection request.
      */
-    public function handleCollectionRequest(\WP_REST_Request $request): \WP_REST_Response
+    public function handleCollectionRequest(WP_REST_Request $request): WP_REST_Response
     {
         $requestStorage = new Storage($request->get_params());
 
@@ -74,7 +78,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * Return all entities as a WP_REST_Response.
      * @internal Override this method if you want to customize the response.
      */
-    protected function getAllEntities(): \WP_REST_Response
+    protected function getAllEntities(): WP_REST_Response
     {
         return $this->sendHttpResponse(
             $this->entity->all()
@@ -86,7 +90,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * validation errors or exceptions thrown during the creation process.
      * @internal Override this method if you want to customize the logic.
      */
-    protected function createItem(Storage $request): \WP_REST_Response
+    protected function createItem(Storage $request): WP_REST_Response
     {
         if ($request->isEmpty()) {
             return $this->sendHttpResponse([], false, esc_html__('Could not create entity, no data provided.', 'simplybook'), 400);
@@ -96,7 +100,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             $this->entity->create(
                 $request->all()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->processRequestThrowable($e, 'create');
         }
 
@@ -114,7 +118,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * @internal Override this method to handle GET, PUT, PATCH, POST, DELETE
      * requests for a single entity.
      */
-    public function handleSingleRequest(\WP_REST_Request $request): \WP_REST_Response
+    public function handleSingleRequest(WP_REST_Request $request): WP_REST_Response
     {
         $requestStorage = new Storage($request->get_params());
 
@@ -137,13 +141,13 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * validation errors or exceptions thrown during the retrieval process.
      * @internal Override this method if you want to customize the logic.
      */
-    protected function findEntity(Storage $request): \WP_REST_Response
+    protected function findEntity(Storage $request): WP_REST_Response
     {
         try {
             $this->entity = $this->entity->find(
                 $request->getString('id')
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
             ], false, __('Entity not found!', 'simplybook'), 404);
@@ -157,12 +161,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * validation errors or exceptions thrown during the update process.
      * @internal Override this method if you want to customize the logic.
      */
-    protected function updateEntity(Storage $request): \WP_REST_Response
+    protected function updateEntity(Storage $request): WP_REST_Response
     {
         try {
             $this->entity->fill($request->all());
             $this->entity->update();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->processRequestThrowable($e, 'update');
         }
 
@@ -180,12 +184,12 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * validation errors or exceptions thrown during the deletion process.
      * @internal Override this method if you want to customize the logic.
      */
-    protected function deleteEntity(Storage $request): \WP_REST_Response
+    protected function deleteEntity(Storage $request): WP_REST_Response
     {
         try {
             $this->entity->setPrimaryValue($request->getString('id'));
             $this->entity->delete();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             return $this->sendHttpResponse([
                 'error' => $e->getMessage()
             ], false, esc_html__('Something went wrong while deleting.', 'simplybook'), 500);
@@ -199,14 +203,14 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * Child classes could overwrite this method to specifically handle
      * the throwable.
      */
-    protected function processRequestThrowable(\Throwable $exception, string $action = ''): \WP_REST_Response
+    protected function processRequestThrowable(Throwable $exception, string $action = ''): WP_REST_Response
     {
         if ($exception instanceof RestDataException) {
             return $this->processRestDataException($exception, $action);
         }
 
         if ($exception instanceof FormException) {
-            return new \WP_REST_Response([
+            return new WP_REST_Response([
                 'message' => $exception->getMessage(),
                 'errors' => $exception->getErrors()
             ], 400);
@@ -219,7 +223,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * Default behavior for processing {@see RestDataException}. Child classes
      * should overwrite for specific handling.
      */
-    protected function processRestDataException(RestDataException $exception, string $action): \WP_REST_Response
+    protected function processRestDataException(RestDataException $exception, string $action): WP_REST_Response
     {
         switch ($action) {
             case 'update':
@@ -237,11 +241,11 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
      * consistent with the entity validation method:
      * {@see \SimplyBook\Http\Entities\AbstractEntity::validate}
      */
-    protected function processAttributesException(RestDataException $exception): \WP_REST_Response
+    protected function processAttributesException(RestDataException $exception): WP_REST_Response
     {
         $exceptionData = $exception->getData();
         if (empty($exceptionData['data'])) {
-            return new \WP_REST_Response([
+            return new WP_REST_Response([
                 'message' => esc_html__('An unknown error occurred while saving, please try again.', 'simplybook'),
             ], 500);
         }
@@ -249,7 +253,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         $faultyFields = $exceptionData['data'];
         $translatedErrors = $this->buildTranslatedErrors($faultyFields);
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'message' => __('An error occurred while saving, please try again.', 'simplybook'),
             'errors' => $translatedErrors,
         ], 500);
@@ -287,36 +291,7 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
                 continue;
             }
 
-            $knownAttributeErrors = $knownErrors[$attribute];
-            $translations = [];
-            $seen = [];
-
-            foreach ($errors as $key => $error) {
-                if (!is_string($error) || $error === '') {
-                    continue;
-                }
-
-                // First add untranslated error so we won't lose it.
-                $translations[$key] = $error;
-
-                foreach ($knownAttributeErrors as $needle => $translation) {
-                    if (empty($needle)) {
-                        continue;
-                    }
-
-                    if (stripos($error, (string) $needle) !== false) {
-                        if (!isset($seen[$translation])) {
-                            // Override untranslated error
-                            $translations[$key] = $translation;
-                            $seen[$translation] = true;
-                        } else {
-                            // Remove untranslated error if already seen
-                            unset($translations[$key]);
-                        }
-                        break;
-                    }
-                }
-            }
+            $translations = $this->translateAttributeErrors($errors, $knownErrors[$attribute]);
 
             if ($translations !== []) {
                 $translatedByAttribute[$attribute] = $translations;
@@ -324,5 +299,60 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         }
 
         return $translatedByAttribute;
+    }
+
+    /**
+     * Translate a list of error strings for a single attribute using its
+     * known error mappings.
+     */
+    private function translateAttributeErrors(array $errors, array $knownAttributeErrors): array
+    {
+        $translations = [];
+        $seen = [];
+
+        foreach ($errors as $key => $error) {
+            if (!is_string($error) || $error === '') {
+                continue;
+            }
+
+            $translated = $this->translateError($error, $knownAttributeErrors);
+
+            if ($translated === null) {
+                // No known needle matched — keep the untranslated error
+                $translations[$key] = $error;
+                continue;
+            }
+
+            if (isset($seen[$translated])) {
+                // Duplicate translation — skip this error entirely
+                continue;
+            }
+
+            $seen[$translated] = true;
+            $translations[$key] = $translated;
+        }
+
+        return $translations;
+    }
+
+    /**
+     * Match a single error string against known needles and return its
+     * translation, or null when no needle matches.
+     */
+    private function translateError(string $error, array $knownAttributeErrors): ?string
+    {
+        foreach ($knownAttributeErrors as $needle => $translation) {
+            if (empty($needle)) {
+                continue;
+            }
+
+            if (stripos($error, (string) $needle) === false) {
+                continue;
+            }
+
+            return $translation;
+        }
+
+        return null;
     }
 }

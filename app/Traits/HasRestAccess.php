@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Traits;
 
+use WP_REST_Request;
+use WP_REST_Response;
 use SimplyBook\Support\Helpers\Storage;
 
 trait HasRestAccess
@@ -16,7 +18,7 @@ trait HasRestAccess
      * request. The key 'data' is often used as the main key. In that case set
      * $param to 'data' to retrieve the parameters from that level.
      */
-    public function retrieveHttpParameters(\WP_REST_Request $request, array $ajaxData = [], string $param = ''): array
+    public function retrieveHttpParameters(WP_REST_Request $request, array $ajaxData = [], string $param = ''): array
     {
         if (!empty($param)) {
             return $ajaxData[$param] ?? $request->get_param($param);
@@ -28,10 +30,10 @@ trait HasRestAccess
 
     /**
      * Retrieve the parameters from the request and store them as Storage.
-     * @uses \SimplyBook\Helpers\Storage
+     * @uses Storage
      * @uses HasRestAccess::retrieveHttpParameters
      */
-    public function retrieveHttpStorage(\WP_REST_Request $request, array $ajaxData = [], string $param = ''): Storage
+    public function retrieveHttpStorage(WP_REST_Request $request, array $ajaxData = [], string $param = ''): Storage
     {
         return new Storage(
             $this->retrieveHttpParameters($request, $ajaxData, $param)
@@ -45,15 +47,15 @@ trait HasRestAccess
      * @param bool $status If this action has completed successfully
      * @param string $message Message to return
      * @param int $code HTTP status code
-     * @return \WP_REST_Response
+     * @return WP_REST_Response
      */
-    public function sendHttpResponse(array $data = [], bool $status = true, string $message = '', int $code = 200): \WP_REST_Response
+    public function sendHttpResponse(array $data = [], bool $status = true, string $message = '', int $code = 200): WP_REST_Response
     {
         if (ob_get_length()) {
             ob_clean();
         }
 
-        return new \WP_REST_Response([
+        return new WP_REST_Response([
             'message' => $message,
             'status' => $status ? 'success' : 'error',
             'data' => $data,

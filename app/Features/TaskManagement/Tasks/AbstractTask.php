@@ -4,6 +4,10 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Interfaces\TaskInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.NumberOfChildren") This class is the base for all
+ * tasks and as such will have many child classes by design.
+ */
 abstract class AbstractTask implements TaskInterface
 {
     public const STATUS_OPEN = 'open';

@@ -155,6 +155,7 @@ class ApiClient
      */
     public function company_registration_complete(): bool
     {
+        $found = false;
         $cacheName = 'company_registration_complete';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -720,6 +721,7 @@ class ApiClient
             return [];
         }
 
+        $found = false;
         $cacheName = 'simplybook_subscription_data';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -742,6 +744,7 @@ class ApiClient
             return [];
         }
 
+        $found = false;
         $cacheName = 'simplybook_statistics';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -768,6 +771,7 @@ class ApiClient
             return [];
         }
 
+        $found = false;
         $cacheName = 'simplybook_special_feature_plugins';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -972,6 +976,7 @@ class ApiClient
      */
     public function isSpecialFeatureEnabled(string $featureKey): bool
     {
+        $found = false;
         $cacheName = 'simplybook-feature-enabled-' . trim($featureKey);
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -1279,6 +1284,7 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
+        $found = false;
         $cacheName = 'simplybook_theme_list';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -1324,6 +1330,7 @@ class ApiClient
             return []; // Prevent us even trying.
         }
 
+        $found = false;
         $cacheName = 'simplybook_timeline_list';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

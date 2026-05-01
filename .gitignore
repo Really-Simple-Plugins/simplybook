@@ -85,6 +85,8 @@ phpcs-report.txt
 phpcs-checkstyle.xml
 phpstan-report.txt
 phpstan-checkstyle.xml
+phpmd-report.txt
+phpmd-checkstyle.xml
 
 # Ignore PHPCS and PHPStan local configs
 phpcs.xml

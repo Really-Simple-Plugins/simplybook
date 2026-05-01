@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Support\Helpers;
 
+use InvalidArgumentException;
+
 /**
  * Event class to handle SimplyBook events. Useful for dispatching events and
  * catching them in different parts of the application based on the constants.
@@ -50,12 +52,12 @@ class Event
 
     /**
      * Validate a given event name based on our constants.
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private static function validate(string $event): void
     {
         if (!defined('self::' . strtoupper($event))) {
-            throw new \InvalidArgumentException(sprintf('Invalid event name: %s', esc_html($event)));
+            throw new InvalidArgumentException(sprintf('Invalid event name: %s', esc_html($event)));
         }
     }
 }

@@ -2,8 +2,8 @@
 
 namespace SimplyBook\Support\Widgets;
 
-use SimplyBook\Bootstrap\App;
 use Elementor\Widget_Base;
+use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
 use Elementor\Controls_Manager;
 use SimplyBook\Traits\HasApiAccess;
@@ -35,6 +35,7 @@ class ElementorWidget extends Widget_Base
 
     /**
      * Required by Elementor for widget registration.
+     * @SuppressWarnings("PHPMD.CamelCaseMethodName") Elementor requires this
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_name(): string
@@ -44,6 +45,7 @@ class ElementorWidget extends Widget_Base
 
     /**
      * Shows in the Elementor widget panel.
+     * @SuppressWarnings("PHPMD.CamelCaseMethodName") Elementor requires this
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_title(): string
@@ -53,6 +55,7 @@ class ElementorWidget extends Widget_Base
 
     /**
      * Uses Elementor's icon library (eicon-*).
+     * @SuppressWarnings("PHPMD.CamelCaseMethodName") Elementor requires this
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_icon(): string
@@ -62,6 +65,7 @@ class ElementorWidget extends Widget_Base
 
     /**
      * Helps users find this widget when searching.
+     * @SuppressWarnings("PHPMD.CamelCaseMethodName") Elementor requires this
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_keywords(): array
@@ -72,6 +76,7 @@ class ElementorWidget extends Widget_Base
     /**
      * Registers all widget controls (dropdowns) for the Elementor editor. Also
      * sets some custom properties used during rendering.
+     * @SuppressWarnings("PHPMD.CamelCaseMethodName") Elementor requires this
      */
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     protected function register_controls(): void
@@ -89,12 +94,14 @@ class ElementorWidget extends Widget_Base
 
         if (!$this->companyRegistrationIsCompleted()) {
             $this->addLoginRequiredControl();
-        } else {
-            $this->addServiceControl();
-            $this->addProviderControl();
-            $this->addLocationControl();
-            $this->addServiceCategoryControl();
+            $this->end_controls_section();
+            return;
         }
+
+        $this->addServiceControl();
+        $this->addProviderControl();
+        $this->addLocationControl();
+        $this->addServiceCategoryControl();
 
         $this->end_controls_section();
     }

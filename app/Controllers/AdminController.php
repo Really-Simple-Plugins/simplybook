@@ -48,8 +48,8 @@ class AdminController implements ControllerInterface
             return $links;
         }
 
-        $settings_link = '<a href="' . $this->env->getUrl('plugin.dashboard_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
-        array_unshift($links, $settings_link);
+        $settingsLink = '<a href="' . $this->env->getUrl('plugin.dashboard_url') . '">' . esc_html__('Settings', 'simplybook') . '</a>';
+        array_unshift($links, $settingsLink);
 
         //support
         $support = '<a rel="noopener noreferrer" target="_blank" href="' . esc_attr($this->env->getUrl('simplybook.support_url')) . '">' . esc_html__('Support', 'simplybook') . '</a>';
@@ -112,6 +112,7 @@ class AdminController implements ControllerInterface
      */
     private function shouldRenderRestApiNotice(): bool
     {
+        $found = false;
         $cacheName = 'rsp_simplybook_rest_api_inaccessible';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
