@@ -83,7 +83,7 @@ const useOnboardingData = () => {
                     required: true,
                     id: "terms-and-conditions",
                     type: "checkbox",
-                    default: true,
+                    default: false,
                     label: sprintf(
                         __("I agree to the %sterms and conditions%s", "simplybook"),
                         '<a href="https://simplybook.me/terms-and-conditions" target="_blank">',
