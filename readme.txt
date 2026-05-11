@@ -94,6 +94,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Fixed: Admin notices can now trigger reliably after x-period has passed.
 * Fixed: Background retries now correctly allow up to 3 attempts, improving onboarding.
 * Fixed: Endpoint classes are now conditionally loaded in a reliable way.
+* Fixed: Styled Gutenberg block dropdowns in proper dimensions.
 
 = 3.3.0 - 2026-02-16 =
 * Fixed: Message “form contains errors” briefly flashed in settings.
