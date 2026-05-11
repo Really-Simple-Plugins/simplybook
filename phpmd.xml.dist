@@ -33,10 +33,10 @@
     </rule>
     <rule ref="rulesets/naming.xml/LongVariable">
         <properties>
-            <property name="maximum" value="32"/>
+            <property name="maximum" value="25"/>
             <property name="subtract-suffixes"
                       description="Do not count these suffixes, example: LastCheckedDateOptionName"
-                      value="OptionName,NonceName"/>
+                      value="OptionName,NonceName,StartTime,EndTime,Time"/>
         </properties>
     </rule>
     <rule ref="rulesets/naming.xml/ShortVariable">
