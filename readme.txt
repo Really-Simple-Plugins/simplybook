@@ -88,7 +88,7 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.3.1 - 2026-05-12 =
+= 3.3.1 - 2026-05-19 =
 * Changed: Tested up to version to WordPress 7.0.
 * Changed: PHP Mess Detector is now used in development, improving code style.
 * Fixed: Admin notices can now trigger reliably after x-period has passed.
