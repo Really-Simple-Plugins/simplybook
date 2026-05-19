@@ -9,6 +9,7 @@ trait HasUserAccess
      */
     protected function getCurrentUserFirstName(): string
     {
+        $found = false;
         $cacheName = 'simplybook_current_user_first_name';
         $cacheGroup = 'simplybook_has_user_access';
         $cacheValue = wp_cache_get($cacheName, $cacheGroup, false, $found);

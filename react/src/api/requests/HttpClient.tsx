@@ -241,6 +241,7 @@ class HttpClient {
     private handleError(errorData: any) {
         let error = __('An unknown error occurred. Please try again.', 'simplybook');
         let fields;
+        let data;
 
         if (errorData?.code === 'internal_server_error') {
             throw new Error(error);
@@ -262,7 +263,11 @@ class HttpClient {
             fields = errorData.errors;
         }
 
-        throw new DataError(error, fields);
+        if (errorData?.data) {
+            data = errorData.data;
+        }
+
+        throw new DataError(error, fields, data);
     }
 }
 

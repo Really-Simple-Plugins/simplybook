@@ -16,6 +16,7 @@ class PromotionService
 
     public function isBlackFriday(): bool
     {
+        $hasCache = false;
         $cacheName = 'simplybook_promotion_service_is_black_friday';
         $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
 
@@ -50,6 +51,7 @@ class PromotionService
 
     public function isChristmasPeriod(): bool
     {
+        $hasCache = false;
         $cacheName = 'simplybook_promotion_service_is_christmas_period';
         $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
 

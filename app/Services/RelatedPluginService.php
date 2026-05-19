@@ -2,13 +2,16 @@
 
 namespace SimplyBook\Services;
 
+use Exception;
+use Plugin_Upgrader;
+use WP_Ajax_Upgrader_Skin;
 use SimplyBook\Support\Helpers\Storage;
 
 class RelatedPluginService
 {
     /**
      * Should be a Storage object based on one entry in the related config
-     * {@see \SimplyBook\Bootstrap\App::related}
+     * {@see App::related}
      */
     protected Storage $pluginConfig;
 
@@ -22,7 +25,7 @@ class RelatedPluginService
 
     /**
      * Use this method as the default way to set the plugin config. For an
-     * example see {@see \SimplyBook\Http\Endpoints\RelatedPluginEndpoints}
+     * example see {@see RelatedPluginEndpoints}
      */
     public function setPluginConfig(array $pluginConfig): void
     {
@@ -110,7 +113,7 @@ class RelatedPluginService
 
         try {
             $pluginInfo = $this->getCurrentPluginInfo();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 
@@ -121,8 +124,8 @@ class RelatedPluginService
         include_once ABSPATH . 'wp-admin/includes/plugin-install.php';
         require_once ABSPATH . 'wp-admin/includes/plugin.php';
 
-        $skin = new \WP_Ajax_Upgrader_Skin();
-        $upgrader = new \Plugin_Upgrader($skin);
+        $skin = new WP_Ajax_Upgrader_Skin();
+        $upgrader = new Plugin_Upgrader($skin);
         $result = $upgrader->install($downloadLink);
 
         if (is_wp_error($result)) {
@@ -222,7 +225,7 @@ class RelatedPluginService
      * Method returns the plugin info for the current plugin. Because we pass
      * the action 'plugin_information' to the plugins_api function, an object is
      * returned if the plugin is found, otherwise a WP_Error.
-     * @throws \Exception If the plugin info could not be retrieved
+     * @throws Exception If the plugin info could not be retrieved
      */
     protected function getCurrentPluginInfo(): object
     {
@@ -242,7 +245,7 @@ class RelatedPluginService
         ]);
 
         if (is_wp_error($pluginInfo)) {
-            throw new \Exception('Unable to get plugin info');
+            throw new Exception('Unable to get plugin info');
         }
 
         set_transient($transientName, $pluginInfo, WEEK_IN_SECONDS);

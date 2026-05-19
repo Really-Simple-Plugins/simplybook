@@ -9,7 +9,7 @@ final class CompanyBuilder
     public string $email = '';
     public string $userLogin = '';
     public int $category = 8; // Default category is 8: "Other category"
-    public string $company_name = '';
+    public string $companyName = '';
     public string $phone = '';
     public string $city = '';
     public string $address = '';
@@ -62,9 +62,9 @@ final class CompanyBuilder
         return $this;
     }
 
-    public function setCompanyName(string $company_name): self
+    public function setCompanyName(string $companyName): self
     {
-        $this->company_name = sanitize_text_field($company_name);
+        $this->companyName = sanitize_text_field($companyName);
         return $this;
     }
 
@@ -139,7 +139,7 @@ final class CompanyBuilder
             'email' => $this->email,
             'userLogin' => $this->userLogin,
             'category' => $this->category,
-            'company_name' => $this->company_name,
+            'companyName' => $this->companyName,
             'phone' => $this->phone,
             'city' => $this->city,
             'address' => $this->address,

@@ -200,6 +200,7 @@ trait LegacyLoad {
      */
     public function get_domain(bool $validate = true): string
     {
+        $found = false;
         $cacheName = 'simplybook_get_domain_legacy_load';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

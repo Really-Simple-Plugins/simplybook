@@ -67,6 +67,7 @@ class UpgradeController implements ControllerInterface
      */
     private function isUpgradeFromLegacy(): bool
     {
+        $found = false;
         $cacheName = 'simplybook_was_legacy_plugin_active';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 

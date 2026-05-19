@@ -16,8 +16,8 @@ class StringUtility
     public static function convertUrlToTitle(string $url): string
     {
         // Strip off the page url from the page name
-        $site_url = trailingslashit(get_site_url());
-        $title = str_replace($site_url, '', $url);
+        $siteUrl = trailingslashit(get_site_url());
+        $title = str_replace($siteUrl, '', $url);
         $title = str_replace('-', ' ', $title);
 
         // Enforce first letter uppercase

@@ -2,6 +2,9 @@
 
 namespace SimplyBook\Services;
 
+use WP_Post;
+use RuntimeException;
+use InvalidArgumentException;
 use SimplyBook\Support\Helpers\Event;
 
 /**
@@ -17,12 +20,12 @@ class WidgetTrackingService
     public const GUTENBERG_BLOCK_IDENTIFIER = 'simplybook/widget';
 
     private int $postId;
-    private ?\WP_Post $post = null;
+    private ?WP_Post $post = null;
 
     /**
      * Set the current post for processing.
      */
-    public function setPost(int $postId, ?\WP_Post $post = null): void
+    public function setPost(int $postId, ?WP_Post $post = null): void
     {
         $this->post = $post ?? get_post($postId);
         $this->postId = $postId;
@@ -34,7 +37,7 @@ class WidgetTrackingService
     public function postContainsWidget(): bool
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -50,7 +53,7 @@ class WidgetTrackingService
     public function widgetWasRemoved(): bool
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -66,7 +69,7 @@ class WidgetTrackingService
     public function trackPost(): void
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -96,7 +99,7 @@ class WidgetTrackingService
         $id = $postId ?? $this->postId;
 
         if (empty($id)) {
-            throw new \InvalidArgumentException('Missing mandatory post ID');
+            throw new InvalidArgumentException('Missing mandatory post ID');
         }
 
         $allTrackedPosts = $this->getTrackedPosts();
@@ -129,12 +132,12 @@ class WidgetTrackingService
 
     /**
      * Check if the current post is currently being tracked.
-     * @throws \InvalidArgumentException If no post has been set
+     * @throws InvalidArgumentException If no post has been set
      */
     private function postIsCurrentlyTracked(): bool
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -169,7 +172,7 @@ class WidgetTrackingService
     private function postHasGutenbergBlock(): bool
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -183,7 +186,7 @@ class WidgetTrackingService
     private function postHasElementorWidget(): bool
     {
         if ($this->hasPost() === false) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 sprintf('%s: No post set, post could not be fetched.', __METHOD__)
             );
         }
@@ -237,6 +240,6 @@ class WidgetTrackingService
      */
     public function hasPost(): bool
     {
-        return !empty($this->postId) && ($this->post instanceof \WP_Post);
+        return !empty($this->postId) && ($this->post instanceof WP_Post);
     }
 }

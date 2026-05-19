@@ -6,8 +6,8 @@ use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Services\ThemeColorService;
+use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
@@ -66,6 +66,8 @@ class DashboardController implements ControllerInterface
      *
      * @param string $pageSource The page where the activation was triggered,
      * usually 'plugins.php' but can be other pages as well.
+     *
+     * @SuppressWarnings("PHPMD.ExitExpression") Is needed after wp_safe_redirect
      */
     public function maybeRedirectToDashboard(string $pageSource = ''): void
     {
@@ -188,6 +190,7 @@ class DashboardController implements ControllerInterface
      */
     private function getReactChunksAndTranslations(): array
     {
+        $found = false;
         $cacheName = 'simplybook-react-chunk-and-translations';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
@@ -205,31 +208,7 @@ class DashboardController implements ControllerInterface
 
         // filter the filenames to get the JavaScript and asset filenames
         foreach ($filenames as $filename) {
-            if (strpos($filename, 'index.') === 0) {
-                if (substr($filename, - 3) === '.js') {
-                    $jsFileName = $filename;
-                } elseif (substr($filename, - 10) === '.asset.php') {
-                    $assetFilename = $filename;
-                }
-            }
-
-            if (strpos($filename, '.js') === false) {
-                continue;
-            }
-
-            // remove extension from $filename
-            $chunkHandle = str_replace('.js', '', $filename);
-            // temporarily register the script, so we can get a translations object.
-            $chunkSource = $this->env->getUrl('plugin.react_url') . '/build/' . $filename;
-            wp_register_script($chunkHandle, $chunkSource, [], $this->env->getString('plugin.version'), true);
-
-            //as there is no pro version of this plugin, no need to declare a path
-            $localeData = load_script_textdomain($chunkHandle, 'simplybook');
-            if (!empty($localeData)) {
-                $jsonTranslations[] = $localeData;
-            }
-
-            wp_deregister_script($chunkHandle);
+            $this->processChunkFile($filename, $jsFileName, $assetFilename, $jsonTranslations);
         }
 
         if (empty($jsFileName)) {
@@ -246,6 +225,39 @@ class DashboardController implements ControllerInterface
 
         wp_cache_set($cacheName, $chunkTranslations, 'simplybook', (5 * MINUTE_IN_SECONDS));
         return $chunkTranslations;
+    }
+
+    /**
+     * Process a single chunk file from the build directory. Identifies JS/asset
+     * filenames and registers/deregisters scripts to collect translations.
+     */
+    private function processChunkFile(string $filename, string &$jsFileName, string &$assetFilename, array &$jsonTranslations): void
+    {
+        if (strpos($filename, 'index.') === 0) {
+            if (substr($filename, -3) === '.js') {
+                $jsFileName = $filename;
+            } elseif (substr($filename, -10) === '.asset.php') {
+                $assetFilename = $filename;
+            }
+        }
+
+        if (strpos($filename, '.js') === false) {
+            return;
+        }
+
+        // remove extension from $filename
+        $chunkHandle = str_replace('.js', '', $filename);
+        // temporarily register the script, so we can get a translations object.
+        $chunkSource = $this->env->getUrl('plugin.react_url') . '/build/' . $filename;
+        wp_register_script($chunkHandle, $chunkSource, [], $this->env->getString('plugin.version'), true);
+
+        //as there is no pro version of this plugin, no need to declare a path
+        $localeData = load_script_textdomain($chunkHandle, 'simplybook');
+        if (!empty($localeData)) {
+            $jsonTranslations[] = $localeData;
+        }
+
+        wp_deregister_script($chunkHandle);
     }
 
     /**

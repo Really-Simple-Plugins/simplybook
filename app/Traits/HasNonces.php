@@ -14,6 +14,6 @@ trait HasNonces
             return false;
         }
 
-        return wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), 'simplybook_nonce');
+        return wp_verify_nonce(sanitize_text_field(wp_unslash($nonce)), $action);
     }
 }

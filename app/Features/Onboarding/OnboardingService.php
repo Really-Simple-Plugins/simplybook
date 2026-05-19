@@ -3,6 +3,7 @@
 namespace SimplyBook\Features\Onboarding;
 
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Services\PluginFirstUseTimeService;
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasEncryption;
 use SimplyBook\Traits\HasRestAccess;
@@ -16,10 +17,12 @@ class OnboardingService
     use HasRestAccess;
 
     private ApiClient $client;
+    private PluginFirstUseTimeService $pluginFirstUseTimeService;
 
-    public function __construct(ApiClient $client)
+    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService)
     {
         $this->client = $client;
+        $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
     }
 
     /**
@@ -39,6 +42,7 @@ class OnboardingService
         $this->clearTemporaryData();
 
         $this->client->clearFailedAuthenticationFlag();
+        $this->pluginFirstUseTimeService->saveCurrentPluginFirstUseTimeIfMissing();
 
         $completedPreviously = get_option('simplybook_onboarding_completed', false);
         if ($completedPreviously) {

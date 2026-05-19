@@ -2,7 +2,9 @@
 
 namespace SimplyBook\Exceptions;
 
-class SettingsException extends \Exception
+use Exception;
+
+class SettingsException extends Exception
 {
     /**
      * The setting errors
@@ -21,14 +23,14 @@ class SettingsException extends \Exception
      * Set the data for the exception. Multiple address fields can contain an
      * error so each entry in the array should contain the key and the type of
      * the error.
-     * @throws \Exception Should be uncaught to know we're doing it wrong
+     * @throws Exception Should be uncaught to know we're doing it wrong
      */
     public function setErrors(array $settingErrors): SettingsException
     {
         foreach ($settingErrors as $fields) {
-            foreach ($fields as $key => $errorData) {
+            foreach (array_keys($fields) as $key) {
                 if (!empty($this->acceptedErrorKeys) && !in_array($key, $this->acceptedErrorKeys)) {
-                    throw new \Exception('The key ' . esc_html($key) . ' is not accepted in the data array.');
+                    throw new Exception('The key ' . esc_html($key) . ' is not accepted in the data array.');
                 }
             }
         }

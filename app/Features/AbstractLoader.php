@@ -15,6 +15,9 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  * @internal Without loading all the feature classes, composer will prevent
  * requiring the files entirely. Even tho the Feature namespace falls
  * withing the psr-4 scope.
+ *
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
+ * for loading features and as such needs to interact with multiple classes.
  */
 abstract class AbstractLoader
 {
@@ -74,15 +77,19 @@ abstract class AbstractLoader
     {
         $pluginHttpNamespace = $this->env->getString('http.namespace');
         $restUrlPrefix = trailingslashit(rest_get_url_prefix());
+        $pluginRestPrefix = $restUrlPrefix . $pluginHttpNamespace . '/';
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         $currentRequestUri = ($_SERVER['REQUEST_URI'] ?? '');
+        $isWpJsonRequest = (
+            strpos($currentRequestUri, $pluginRestPrefix) !== false
+        );
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
         $isPlainPermalink = (
             isset($_GET['rest_route'])
             && (strpos($_GET['rest_route'], $pluginHttpNamespace) !== false)
         );
 
-        return (strpos($currentRequestUri, $restUrlPrefix) !== false) || $isPlainPermalink;
+        return $isWpJsonRequest || $isPlainPermalink;
     }
 }

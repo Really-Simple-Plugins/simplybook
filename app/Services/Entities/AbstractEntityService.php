@@ -3,6 +3,7 @@
 namespace SimplyBook\Services\Entities;
 
 use Carbon\Carbon;
+use RuntimeException;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Support\Utility\StringUtility;
@@ -49,7 +50,7 @@ abstract class AbstractEntityService
         $this->client = $client;
 
         if (empty($this->identifier)) {
-            throw new \RuntimeException('Service identifier must be defined.');
+            throw new RuntimeException('Service identifier must be defined.');
         }
 
         $this->identifier = StringUtility::toSnakeCase($this->identifier);
@@ -122,6 +123,7 @@ abstract class AbstractEntityService
      */
     final public function all(bool $hasExpiration = false): array
     {
+        $found = false;
         $cacheName = $this->getWpCacheName($hasExpiration);
         $cacheValue = wp_cache_get($cacheName, $this->getWpCacheGroup(), false, $found);
 

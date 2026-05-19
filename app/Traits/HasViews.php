@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Traits;
 
+use LogicException;
+use ReflectionException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -9,7 +11,7 @@ trait HasViews
 {
     /**
      * Method for returning the desired view as a string
-     * @throws \LogicException|\ReflectionException
+     * @throws LogicException|ReflectionException
      */
     public function view(string $path, array $variables = [], string $extension = 'php'): string
     {
@@ -18,7 +20,7 @@ trait HasViews
 
         // Someone is doing something dirty
         if (!$filePath || strpos($filePath, $basePath) !== 0) {
-            throw new \LogicException('Given path is not valid: ' . esc_html($filePath));
+            throw new LogicException('Given path is not valid: ' . esc_html($filePath));
         }
 
         if (!file_exists($filePath) || !is_readable($filePath)) {
