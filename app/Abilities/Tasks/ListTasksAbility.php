@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SimplyBook\Abilities\ListTasks;
+namespace SimplyBook\Abilities\Tasks;
 
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Abilities\AbstractAbility;

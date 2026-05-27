@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SimplyBook\Abilities\Example;
+namespace SimplyBook\Abilities\Pro\Example;
 
 use SimplyBook\Abilities\AbstractAbility;
 

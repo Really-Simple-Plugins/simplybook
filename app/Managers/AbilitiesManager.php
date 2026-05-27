@@ -21,7 +21,7 @@ use SimplyBook\Interfaces\AbilityInterface;
  * - app/Abilities/Example/ExampleAbility.php
  * - app/Abilities/Pro/AdvancedExample/AdvancedExampleAbility.php
  */
-final class AbilitiesManager extends AbstractDynamicManager
+final class AbilitiesManager extends AbstractDynamicManagerAlt
 {
     use HasAllowlistControl;
 
@@ -34,7 +34,7 @@ final class AbilitiesManager extends AbstractDynamicManager
     /**
      * @inheritDoc
      */
-    protected function getDynamicLookupPath(): string
+    protected function path(): string
     {
         return $this->env->getString('plugin.abilities_path');
     }
@@ -42,17 +42,17 @@ final class AbilitiesManager extends AbstractDynamicManager
     /**
      * @inheritDoc
      */
-    protected function getFullQualifiedRootClass(string $namespacedPrefix): string
+    protected function namespace(): string
     {
-        return $namespacedPrefix . 'Ability';
+        return 'SimplyBook\Abilities\\';
     }
 
     /**
      * @inheritDoc
      */
-    protected function getDynamicNamespace(): string
+    protected function suffix(): string
     {
-        return 'SimplyBook\Abilities\\';
+        return 'Ability';
     }
 
     /**

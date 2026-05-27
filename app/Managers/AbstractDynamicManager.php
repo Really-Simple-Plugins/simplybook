@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
+use DirectoryIterator;
+
 /**
  * The AbstractDynamicManager provides a base for managers that need to
  * dynamically find and register classes (features, abilities, etc) from
@@ -140,7 +142,7 @@ abstract class AbstractDynamicManager extends AbstractManager
         $dynamicFileNames = [];
 
         $dynamicPath = $this->getDynamicLookupPath();
-        foreach (new \DirectoryIterator($dynamicPath) as $fileInfo) {
+        foreach (new DirectoryIterator($dynamicPath) as $fileInfo) {
             if ($fileInfo->isDot() || !$fileInfo->isDir()) {
                 continue;
             }
@@ -152,7 +154,7 @@ abstract class AbstractDynamicManager extends AbstractManager
             }
 
             if ($fileInfo->getFilename() === 'Pro') {
-                foreach (new \DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
+                foreach (new DirectoryIterator($fileInfo->getPathname()) as $proInfo) {
                     if ($proInfo->isDot() || !$proInfo->isDir()) {
                         continue;
                     }
