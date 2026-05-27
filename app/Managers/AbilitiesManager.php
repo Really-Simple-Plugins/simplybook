@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
+use LogicException;
+use WP_Abilities_Registry;
+use WP_Ability_Categories_Registry;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\AbilityInterface;
 
@@ -56,12 +59,12 @@ final class AbilitiesManager extends AbstractDynamicManager
      * Ensure that the AbilitiesManager is initialized during the "init" action
      * to enable it to hook into the WP Abilities API via {@see afterRegister}
      * correctly.
-     * @throws \LogicException if not called during the "init" action
+     * @throws LogicException if not called during the "init" action
      */
     protected function beforeFindAndRegister(): void
     {
         if (current_filter() !== 'init') {
-            throw new \LogicException('The AbilitiesManager must be initialized during the "init" action.');
+            throw new LogicException('The AbilitiesManager must be initialized during the "init" action.');
         }
     }
 
@@ -98,13 +101,13 @@ final class AbilitiesManager extends AbstractDynamicManager
      * plugin abilities
      * @internal Should be called from wp_abilities_api_categories_init action
      */
-    public function registerAbilitiesCategory(): void
+    public function registerAbilitiesCategory(WP_Ability_Categories_Registry $registry): void
     {
-        wp_register_ability_category( // @phpstan-ignore-line function.notFound
+        $registry->register(
             $this->config->getString('abilities.category', 'simplybook'),
             [
-                'label' => __('SimplyBook plugin abilities', 'simplybook'),
-                'description' => __('Abilities related to the SimplyBook plugin.', 'simplybook'),
+                'label' => __('SimplyBook.me plugin abilities', 'simplybook'),
+                'description' => __('Abilities related to the SimplyBook.me plugin.', 'simplybook'),
             ]
         );
     }
@@ -114,12 +117,12 @@ final class AbilitiesManager extends AbstractDynamicManager
      * using the registered abilities from the {@see registerClass} method.
      * @internal Should be called from wp_abilities_api_init action
      */
-    public function registerAbilities(): void
+    public function registerAbilities(WP_Abilities_Registry $registry): void
     {
         foreach ($this->abilities as $name => $arguments) {
             $arguments['category'] ??= $this->config->getString('abilities.category', 'simplybook');
             $prefixedAbilityName = ($this->config->getString('abilities.namespace', 'simplybook') . '/' . $name);
-            wp_register_ability($prefixedAbilityName, $arguments); // @phpstan-ignore-line function.notFound
+            $registry->register($prefixedAbilityName, $arguments);
         }
     }
 }
