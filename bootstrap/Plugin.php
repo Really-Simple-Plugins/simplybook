@@ -8,6 +8,7 @@ use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Support\Helpers\Uninstall;
+use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Managers\ControllerManager;
 
 /**
@@ -22,6 +23,7 @@ final class Plugin
     private ProviderManager $providerManager;
     private EndpointManager $endpointManager;
     private ControllerManager $controllerManager;
+    private AbilitiesManager $abilitiesManager;
 
     /**
      * Plugin constructor
@@ -34,6 +36,7 @@ final class Plugin
         $this->providerManager = $app->make(ProviderManager::class);
         $this->endpointManager = $app->make(EndpointManager::class);
         $this->controllerManager = $app->make(ControllerManager::class);
+        $this->abilitiesManager = $app->make(AbilitiesManager::class);
     }
 
     /**
@@ -48,8 +51,9 @@ final class Plugin
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
-        add_action('simplybook_providers_loaded', [$this->featureManager, 'registerFeatures']); // Makes sure features exist when Controllers need them
+        add_action('simplybook_providers_loaded', [$this->featureManager, 'findAndRegister']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
+        add_action('init', [$this->abilitiesManager, 'findAndRegister']); // Loaded on init so Features and Controllers can register Abilities and translations can be used
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
     }

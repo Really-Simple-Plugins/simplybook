@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
-use LogicException;
-use ReflectionException;
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 abstract class AbstractManager
 {
     protected EnvironmentConfig $env;
+    protected GeneralConfig $config;
 
     /**
      * Overwrite this property to true when the entries that the child Manager
@@ -22,17 +22,18 @@ abstract class AbstractManager
 
     /**
      * Overwrite this property to true when the dependencies of the entries that
-     * the child Manager registers should be added to the container registry.
+     * the  child Manager registers should be added to the container registry.
      * For details see: {@see App::make}
      */
-    protected bool $registerDependencies = true;
+    protected bool $useRegistryForDependencies = true;
 
     /**
-     * Bind the env
+     * Inject config storage classes
      */
-    public function __construct(EnvironmentConfig $env)
+    final public function __construct(EnvironmentConfig $env, GeneralConfig $config)
     {
         $this->env = $env;
+        $this->config = $config;
     }
 
     /**
@@ -58,21 +59,21 @@ abstract class AbstractManager
      * to the child managers. Class are autowired, but not registered via
      * {@see App::make}
      *
-     * @throws LogicException When a developer is doing it wrong.
-     * @throws ReflectionException When the controller cannot be loaded.
+     * @throws \LogicException When a developer is doing it wrong.
+     * @throws \ReflectionException When the class cannot be loaded.
      */
     public function register(array $classes): void
     {
         foreach ($classes as $fullyClassifiedName) {
             if (is_string($fullyClassifiedName) === false) {
                 $type = gettype($fullyClassifiedName);
-                throw new LogicException("Class must be a fully qualified name. Given type: $type");
+                throw new \LogicException("Class must be a fully qualified name. Given type: $type");
             }
 
-            $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->registerDependencies);
+            $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->useRegistryForDependencies);
 
             if ($this->isRegistrable($class) === false) {
-                throw new LogicException("Class is not registrable: " . $fullyClassifiedName);
+                throw new \LogicException("Class is not registrable: " . $fullyClassifiedName);
             }
 
             $this->registerClass($class);

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
-use DirectoryIterator;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\FeatureInterface;
 
@@ -16,9 +15,50 @@ use SimplyBook\Interfaces\FeatureInterface;
  * needed. We prevent loading feature files by utilizing the
  * {@see AbstractLoader} class at {@see FeatureManager:92}
  */
-final class FeatureManager extends AbstractManager
+final class FeatureManager extends AbstractDynamicManager
 {
-    private const PRO_FEATURE_HANDLE = 'Pro:';
+    /**
+     * @inheritDoc
+     */
+    protected function getDynamicLookupPath(): string
+    {
+        return $this->env->getString('plugin.features_path');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getFullQualifiedRootClass(string $namespacedPrefix): string
+    {
+        return $namespacedPrefix . 'Controller';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getDynamicNamespace(): string
+    {
+        return 'SimplyBook\Features\\';
+    }
+
+    /**
+     * Override default check from parent to ensure the {Feature}Loader class
+     * exists and accepts the current context.
+     */
+    protected function isFullDirectoryRegistrable(string $fqRootClass, string $namespacedPrefix): bool
+    {
+        $loaderClassString = $namespacedPrefix . 'Loader';
+        if (class_exists($loaderClassString) === false) {
+            return false;
+        }
+
+        $loader = App::getInstance()->make($loaderClassString, false, false);
+        if (!$loader->isEnabled() || !$loader->inScope()) {
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * @inheritDoc
@@ -42,128 +82,5 @@ final class FeatureManager extends AbstractManager
     public function afterRegister(): void
     {
         do_action('simplybook_features_loaded');
-    }
-
-    /**
-     * Register and load all features from the src/features directory. This
-     * method automatically loads all classes from the features directory and
-     * injects the dependency classes into the Controller class if they exist.
-     * @uses do_action rss_core_features_loaded
-     */
-    public function registerFeatures(): void
-    {
-        $featureClasses = $this->getFeatureClasses();
-        $this->register($featureClasses);
-    }
-
-    /**
-     * Dynamically build and then return an array of feature classes that are
-     * saved in the features path of the plugin.
-     */
-    public function getFeatureClasses(): array
-    {
-        $features = $this->getFeatures();
-        $featureClasses = [];
-
-        foreach ($features as $featureName) {
-            $needsPro = strpos($featureName, self::PRO_FEATURE_HANDLE) !== false;
-            if ($needsPro && !$this->env->getBoolean('plugin.pro')) {
-                continue; // Pro not installed, don't register pro features
-            }
-
-            if ($needsPro) {
-                $featureName = substr($featureName, strlen(self::PRO_FEATURE_HANDLE));
-            }
-
-            // Check if the feature directory exists
-            $featuresPath = $this->getFeaturePath($featureName, $needsPro);
-            if (!is_dir($featuresPath)) {
-                continue;
-            }
-
-            // Get the feature namespace
-            $prefix = $this->getFeatureNamespace($featureName, $needsPro) . $featureName;
-
-            // Get the {FeatureName}Loader class for the feature
-            if (class_exists($prefix . 'Loader') === false) {
-                continue;
-            }
-
-            $loader = App::getInstance()->make($prefix . 'Loader', false, false);
-            if (!$loader->isEnabled() || !$loader->inScope()) {
-                continue;
-            }
-
-            // The controller is the backbone of a feature
-            $featureClasses[] = $prefix . 'Controller';
-        };
-
-        return $featureClasses;
-    }
-
-    /**
-     * Get all feature directory names. Includes "Pro" features prefixed
-     * with {@see PRO_FEATURE_HANDLE}.
-     */
-    private function getFeatures(): array
-    {
-        $featuresPath = $this->env->getString('plugin.feature_path');
-        $proEnabled = $this->env->getBoolean('plugin.pro');
-        $features = [];
-
-        foreach (new DirectoryIterator($featuresPath) as $fileInfo) {
-            if ($fileInfo->isDot() || !$fileInfo->isDir()) {
-                continue;
-            }
-
-            if ($fileInfo->getFilename() === 'Pro') {
-                if ($proEnabled === false) {
-                    continue;
-                }
-
-                $proFeatures = $this->getProFeatures();
-                $features = array_merge($features, $proFeatures);
-                continue;
-            }
-
-            $features[] = $fileInfo->getFilename();
-        }
-
-        return $features;
-    }
-
-    /**
-     * Scan the Pro features directory and return prefixed feature names.
-     */
-    private function getProFeatures(): array
-    {
-        $proPath = $this->env->getString('plugin.feature_path') . 'Pro';
-        $proFeatures = [];
-
-        foreach (new DirectoryIterator($proPath) as $proInfo) {
-            if ($proInfo->isDot() || !$proInfo->isDir()) {
-                continue;
-            }
-            $proFeatures[] = self::PRO_FEATURE_HANDLE . $proInfo->getFilename();
-        }
-
-        return $proFeatures;
-    }
-
-    /**
-     * Get the feature path based on the feature name and if it needs the Pro
-     * version.
-     */
-    private function getFeaturePath(string $featureName, bool $needsPro): string
-    {
-        return $this->env->getString('plugin.feature_path') . ($needsPro ? 'Pro/' : '') . $featureName . '/';
-    }
-
-    /**
-     * Get the feature namespace.
-     */
-    private function getFeatureNamespace(string $featureName, bool $needsPro = false): string
-    {
-        return 'SimplyBook\Features\\' . ($needsPro ? 'Pro\\' : '') . $featureName . '\\';
     }
 }
