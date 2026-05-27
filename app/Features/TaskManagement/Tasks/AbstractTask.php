@@ -147,7 +147,21 @@ abstract class AbstractTask implements TaskInterface
      */
     public function setStatus(string $status): void
     {
-        $knownStatuses = [
+        $knownStatuses = self::allowedStatuses();
+        if (!in_array($status, $knownStatuses)) {
+            return; // Not allowed
+        }
+
+        $this->status = $status;
+    }
+
+    /**
+     * Return the list of allowed statuses for this task
+     * @return string[]
+     */
+    public static function allowedStatuses(): array
+    {
+        return [
             self::STATUS_OPEN,
             self::STATUS_UPGRADE,
             self::STATUS_URGENT,
@@ -156,11 +170,6 @@ abstract class AbstractTask implements TaskInterface
             self::STATUS_PREMIUM,
             self::STATUS_HIDDEN,
         ];
-        if (!in_array($status, $knownStatuses)) {
-            return; // Not allowed
-        }
-
-        $this->status = $status;
     }
 
     /**

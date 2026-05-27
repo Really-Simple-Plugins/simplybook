@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities;
 
+use WP_Error;
+use RuntimeException;
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\AbilityInterface;
 use SimplyBook\Exceptions\AbilityFailedException;
@@ -71,13 +74,13 @@ abstract class AbstractAbility implements AbilityInterface
     final public function getName(): string
     {
         if (!defined('static::NAME')) {
-            throw new \RuntimeException('Ability NAME constant not defined in class: ' . static::class);
+            throw new RuntimeException('Ability NAME constant not defined in class: ' . static::class);
         }
 
         $name = static::NAME;
 
         if (preg_match('/^[a-z\-]+$/', $name) !== 1) {
-            throw new \RuntimeException('Ability NAME constant must contain only lowercase letters and hyphens: ' . static::class);
+            throw new RuntimeException('Ability NAME constant must contain only lowercase letters and hyphens: ' . static::class);
         }
 
         return $name;
@@ -117,13 +120,13 @@ abstract class AbstractAbility implements AbilityInterface
      *        // via: CustomAbility::instance()->execute($arguments);
      *     }
      *
-     * @throws \RuntimeException If the ability is already registered.
-     * @throws \InvalidArgumentException If provided callback is not callable.
+     * @throws RuntimeException If the ability is already registered.
+     * @throws InvalidArgumentException If provided callback is not callable.
      */
     public function setExecuteCallback(callable $callback): void
     {
         if ($this->abilityAlreadyRegistered()) {
-            throw new \RuntimeException('Cannot set execute callback after ability is registered: ' . static::class);
+            throw new RuntimeException('Cannot set execute callback after ability is registered: ' . static::class);
         }
 
         $this->executeCallback = $callback;
@@ -132,7 +135,7 @@ abstract class AbstractAbility implements AbilityInterface
     /**
      * Prefer instance-set callback; fall back to a static default provided by
      * the subclass.
-     * @throws \RuntimeException If no execute callback is available.
+     * @throws RuntimeException If no execute callback is available.
      */
     private function getExecuteCallback(): callable
     {
@@ -145,7 +148,7 @@ abstract class AbstractAbility implements AbilityInterface
             return $default;
         }
 
-        throw new \RuntimeException('Execute callback not set for ability: ' . static::class);
+        throw new RuntimeException('Execute callback not set for ability: ' . static::class);
     }
 
     /**
@@ -182,13 +185,13 @@ abstract class AbstractAbility implements AbilityInterface
      *        // CustomAbility via: CustomAbility::instance()->execute($arguments);
      *     }
      *
-     * @throws \RuntimeException If the ability is already registered.
-     * @throws \InvalidArgumentException If provided callback is not callable.
+     * @throws RuntimeException If the ability is already registered.
+     * @throws InvalidArgumentException If provided callback is not callable.
      */
     public function setPermissionCallback(callable $callback): void
     {
         if ($this->abilityAlreadyRegistered()) {
-            throw new \RuntimeException('Cannot set permission callback after ability is registered: ' . static::class);
+            throw new RuntimeException('Cannot set permission callback after ability is registered: ' . static::class);
         }
 
         $this->permissionCallback = $callback;
@@ -196,7 +199,7 @@ abstract class AbstractAbility implements AbilityInterface
 
     /**
      * Prefer instance-set permission callback; fall back to a static default.
-     * @throws \RuntimeException If no permission callback is available.
+     * @throws RuntimeException If no permission callback is available.
      */
     private function getPermissionCallback(): callable
     {
@@ -209,7 +212,7 @@ abstract class AbstractAbility implements AbilityInterface
             return $default;
         }
 
-        throw new \RuntimeException('Permission callback not set for ability: ' . static::class);
+        throw new RuntimeException('Permission callback not set for ability: ' . static::class);
     }
 
     /**
@@ -269,7 +272,7 @@ abstract class AbstractAbility implements AbilityInterface
      * @param mixed|null $arguments Arguments to pass to the execute callback.
      * Should follow the input schema defined by {@see static::getInputSchema()}.
      *
-     * @return mixed|\WP_Error The result of the ability execution, `null` if the
+     * @return mixed|WP_Error The result of the ability execution, `null` if the
      * ability is not registered, `false` if the WP Abilities API is not
      * available.
      *
