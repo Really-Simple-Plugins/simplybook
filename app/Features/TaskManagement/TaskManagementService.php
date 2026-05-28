@@ -40,25 +40,42 @@ class TaskManagementService
      * status. Returns a zero-indexed list so the result is JSON-array friendly.
      *
      * @return array<int, array<string, mixed>>
-     * @throws InvalidArgumentException If the status filter is invalid
+     * @throws InvalidArgumentException Through {@see filterTasksByStatus()}
      */
     public function getTasks(?string $statusFilter = null, bool $strict = false): array
     {
-        $tasks = array_map(static function (TaskInterface $task): array {
-            return $task->toArray();
-        }, $this->repository->getAllTasks($strict));
+        $tasks = $this->repository->getAllTasks($strict);
 
         if ($statusFilter !== null) {
-            if (!in_array($statusFilter, AbstractTask::allowedStatuses(), true)) {
-                throw new InvalidArgumentException('Invalid status filter: ' . $statusFilter);
-            }
-
-            $tasks = array_filter($tasks, static function (array $task) use ($statusFilter): bool {
-                return ($task['status'] ?? null) === $statusFilter;
-            });
+            $tasks = $this->filterTasksByStatus($tasks, $statusFilter);
         }
 
+        // Convert each task to an array (array_map).
+        $tasks = array_map(static function (TaskInterface $task): array {
+            return $task->toArray();
+        }, $tasks);
+
+        // Reindex to a zero-based list (array_values) -> JSON-array friendly.
         return array_values($tasks);
+    }
+
+    /**
+     * Filter the given tasks by status. Keys are preserved; the caller is
+     * responsible for reindexing when needed.
+     *
+     * @param TaskInterface[] $tasks
+     * @return TaskInterface[]
+     * @throws InvalidArgumentException If the status is not allowed
+     */
+    private function filterTasksByStatus(array $tasks, string $status): array
+    {
+        if (!in_array($status, AbstractTask::allowedStatuses(), true)) {
+            throw new InvalidArgumentException('Invalid status filter: ' . $status);
+        }
+
+        return array_filter($tasks, static function (TaskInterface $task) use ($status): bool {
+            return $task->getStatus() === $status;
+        });
     }
 
     /**
