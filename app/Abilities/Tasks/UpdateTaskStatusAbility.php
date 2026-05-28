@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Tasks;
 
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -86,54 +87,51 @@ class UpdateTaskStatusAbility extends AbstractAbility
      */
     protected function defaultExecuteCallback(): ?callable
     {
-        return static function ($input = null) {
-            if (!class_exists(TaskManagementService::class)) {
+        $service = null;
+        if (class_exists(TaskManagementService::class)) {
+            $service = App::getInstance()->get(TaskManagementService::class);
+        }
+
+        return static function ($input = null) use ($service) {
+            if ($service === null) {
                 return __('Tasks are not available yet.', 'simplybook');
             }
 
-            $taskId = is_array($input) ? ($input['id'] ?? null) : null;
-            $status = is_array($input) ? ($input['status'] ?? null) : null;
+            $taskId = is_array($input) ? (string) ($input['id'] ?? '') : null;
+            $status = is_array($input) ? (string) ($input['status'] ?? '') : null;
 
-            if (!is_string($taskId) || $taskId === '') {
-                return __('A valid task ID is required.', 'simplybook');
+            if (empty($taskId)) {
+                return sprintf(
+                    /* translators: %1$s: The required argument. */
+                    __('Required argument "%1$s" not found.', 'simplybook'),
+                    "id",
+                );
             }
 
-            $service = App::getInstance()->get(TaskManagementService::class);
+            if (empty($status)) {
+                return sprintf(
+                    /* translators: %1$s: The required argument. */
+                    __('Required argument "%1$s" not found.', 'simplybook'),
+                    "status",
+                );
+            }
 
-            $task = $service->getTask($taskId);
-            if ($task === null) {
+            $task = $service->getTaskFromId($taskId);
+            if (empty($task)) {
                 return __('Task not found.', 'simplybook');
             }
 
-            switch ($status) {
-                case AbstractTask::STATUS_OPEN:
-                    $service->openTask($taskId);
-                    break;
-                case AbstractTask::STATUS_URGENT:
-                    $service->flagTaskUrgent($taskId);
-                    break;
-                case AbstractTask::STATUS_UPGRADE:
-                    $service->markTaskUpgrade($taskId);
-                    break;
-                case AbstractTask::STATUS_DISMISSED:
-                    $service->dismissTask($taskId);
-                    break;
-                case AbstractTask::STATUS_COMPLETED:
-                    $service->completeTask($taskId);
-                    break;
-                case AbstractTask::STATUS_HIDDEN:
-                    $service->hideTask($taskId);
-                    break;
-                default:
-                    return __('Status is not supported for updates.', 'simplybook');
+            try {
+                $task = $service->updateStatusFromId($taskId, $status);
+            } catch (InvalidArgumentException $e) {
+                return sprintf(
+                    /* translators: %1$s: Status */
+                    __('Could not use status "%1$s" to update th task.', 'simplybook'),
+                    $status
+                );
             }
 
-            $updatedTask = $service->getTask($taskId);
-            if ($updatedTask === null) {
-                return __('Task could not be retrieved after update.', 'simplybook');
-            }
-
-            return $updatedTask->toArray();
+            return $task->toArray();
         };
     }
 

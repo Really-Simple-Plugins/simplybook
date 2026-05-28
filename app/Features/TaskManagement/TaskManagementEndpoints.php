@@ -54,12 +54,8 @@ class TaskManagementEndpoints
      */
     public function getTasksCallback(\WP_REST_Request $request): \WP_REST_Response
     {
-        $allTasksAsArray = array_map(function ($task) {
-            return $task->toArray();
-        }, $this->service->getAllTasks(true));
-
         return $this->sendHttpResponse(
-            array_values($allTasksAsArray) // Keys should be removed
+            $this->service->getTasks(null, true)
         );
     }
 

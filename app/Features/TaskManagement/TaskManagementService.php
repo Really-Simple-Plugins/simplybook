@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -35,12 +36,29 @@ class TaskManagementService
     }
 
     /**
-     * Get all tasks
-     * @return TaskInterface[]
+     * Get all tasks as plain associative arrays, optionally filtered by
+     * status. Returns a zero-indexed list so the result is JSON-array friendly.
+     *
+     * @return array<int, array<string, mixed>>
+     * @throws InvalidArgumentException If the status filter is invalid
      */
-    public function getAllTasks(bool $strict = false): array
+    public function getTasks(?string $statusFilter = null, bool $strict = false): array
     {
-        return $this->repository->getAllTasks($strict);
+        $tasks = array_map(static function (TaskInterface $task): array {
+            return $task->toArray();
+        }, $this->repository->getAllTasks($strict));
+
+        if ($statusFilter !== null) {
+            if (!in_array($statusFilter, AbstractTask::allowedStatuses(), true)) {
+                throw new InvalidArgumentException('Invalid status filter: ' . $statusFilter);
+            }
+
+            $tasks = array_filter($tasks, static function (array $task) use ($statusFilter): bool {
+                return ($task['status'] ?? null) === $statusFilter;
+            });
+        }
+
+        return array_values($tasks);
     }
 
     /**
@@ -189,6 +207,23 @@ class TaskManagementService
 
         $task->snooze();
         $this->repository->addTask($task);
+    }
+
+    /**
+     * Update the status of a task identified by its ID. Returns the updated
+     * task on success, or null when the status is not allowed or the task
+     * could not be found.
+     * @throws InvalidArgumentException If the status is not allowed
+     */
+    public function updateStatusFromId(string $taskId, string $status): ?TaskInterface
+    {
+        if (!in_array($status, AbstractTask::allowedStatuses(), true)) {
+            throw new InvalidArgumentException('Invalid status: ' . $status);
+        }
+
+        $this->repository->updateTaskStatus($taskId, $status);
+
+        return $this->repository->getTask($taskId);
     }
 
     /**

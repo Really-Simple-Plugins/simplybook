@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Tasks;
 
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -84,29 +85,27 @@ class ListTasksAbility extends AbstractAbility
      */
     protected function defaultExecuteCallback(): ?callable
     {
-        return static function ($input = null) {
-            if (!class_exists(TaskManagementService::class)) {
+        $service = null;
+        if (class_exists(TaskManagementService::class)) {
+            $service = App::getInstance()->get(TaskManagementService::class);
+        }
+
+        return static function ($input = null) use ($service) {
+            if ($service === null) {
                 return __('Tasks are not available yet.', 'simplybook');
             }
 
             $statusFilter = is_array($input) ? ($input['status'] ?? null) : null;
-            if ($statusFilter !== null && !in_array($statusFilter, AbstractTask::allowedStatuses(), true)) {
-                $statusFilter = null;
+
+            try {
+                return $service->getTasks($statusFilter);
+            } catch (InvalidArgumentException $e) {
+                return sprintf(
+                    /* translators: %1$s: Status */
+                    __('Could not filter tasks on given status: %1$s', 'simplybook'),
+                    $statusFilter
+                );
             }
-
-            $service = App::getInstance()->get(TaskManagementService::class);
-
-            $tasks = array_map(static function ($task) {
-                return $task->toArray();
-            }, $service->getAllTasks());
-
-            if ($statusFilter !== null) {
-                $tasks = array_filter($tasks, static function (array $task) use ($statusFilter): bool {
-                    return ($task['status'] ?? null) === $statusFilter;
-                });
-            }
-
-            return array_values($tasks);
         };
     }
 
