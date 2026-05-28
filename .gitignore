@@ -91,3 +91,6 @@ phpmd-checkstyle.xml
 # Ignore PHPCS and PHPStan local configs
 phpcs.xml
 phpstan.neon
+
+#Artifacts
+/.windsurf/
