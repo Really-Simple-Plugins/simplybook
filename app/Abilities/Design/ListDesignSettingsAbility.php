@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Design;
 
+use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Services\DesignSettingsService;
 
@@ -12,7 +13,7 @@ class ListDesignSettingsAbility extends AbstractAbility
     public const NAME = 'list-design-settings';
 
     private DesignSettingsService $designSettingsService;
-    
+
     public function __construct(DesignSettingsService $designSettingsService)
     {
         $this->designSettingsService = $designSettingsService;
@@ -44,7 +45,7 @@ class ListDesignSettingsAbility extends AbstractAbility
             'properties' => [
                 'key' => [
                     'type' => 'string',
-                    'description' => __('Optional. The design setting key to return. Omit to return all design settings.', 'simplybook'),
+                    'description' => __('Optional. The design setting key to return. Omit to return all design settings. Use dot notation to get nested values.', 'simplybook'),
                 ],
             ],
         ];
@@ -56,17 +57,8 @@ class ListDesignSettingsAbility extends AbstractAbility
     public function getOutputSchema(): ?array
     {
         return [
-            'oneOf' => [
-                [
-                    'type' => 'object',
-                    'description' => __('Map of design setting keys to their saved values. Contains a single entry when an input key is provided.', 'simplybook'),
-                    'additionalProperties' => true,
-                ],
-                [
-                    'type' => 'string',
-                    'description' => __('Human-readable message returned when the design settings could not be found or the requested key does not exist.', 'simplybook'),
-                ],
-            ],
+            'type' => ['object', 'array', 'string', 'boolean', 'number', 'null'],
+            'description' => __('The full design settings map, a nested section, a scalar value resolved by dot-notation, or a human-readable message when the settings or requested key could not be found.', 'simplybook'),
         ];
     }
 
@@ -76,27 +68,27 @@ class ListDesignSettingsAbility extends AbstractAbility
     protected function defaultExecuteCallback(): ?callable
     {
         $settings = $this->designSettingsService->getDesignOptions();
+        $storage = new Storage($settings);
 
-        return static function ($input = null) use ($settings) {
-            if (empty($settings)) {
+        return static function ($input = null) use ($storage) {
+            if ($storage->isEmpty()) {
                 return __('Design settings could not be found.', 'simplybook');
             }
 
-            $key = is_array($input) ? ($input['key'] ?? null) : null;
-
-            if (!is_string($key) || $key === '') {
-                return $settings;
+            if (empty($input) || !is_array($input) || empty($input['key'])) {
+                return $storage->all();
             }
 
-            if (!array_key_exists($key, $settings)) {
+            $search = (string) $input['key'];
+            if ($storage->isEmpty($search)) {
                 return sprintf(
-                    /* translators: %s: design setting key */
+                    /* translators: %s: user-provided search key */
                     __('Design setting "%s" could not be found.', 'simplybook'),
-                    $key
+                    $search
                 );
             }
 
-            return [$key => $settings[$key]];
+            return $storage->get($search);
         };
     }
 
