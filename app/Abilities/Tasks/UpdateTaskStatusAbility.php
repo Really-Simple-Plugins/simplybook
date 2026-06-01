@@ -116,7 +116,7 @@ class UpdateTaskStatusAbility extends AbstractAbility
                 );
             }
 
-            $task = $service->getTaskFromId($taskId);
+            $task = $service->getTask($taskId);
             if (empty($task)) {
                 return __('Task not found.', 'simplybook');
             }
