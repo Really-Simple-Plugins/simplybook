@@ -11,6 +11,38 @@ final class ProviderManager extends AbstractManager
     /**
      * @inheritDoc
      */
+    protected function type(): string
+    {
+        return 'provider';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function path(): string
+    {
+        return $this->env->getString('plugin.providers_path');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function namespace(): string
+    {
+        return 'SimplyBook\Providers\\';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function suffix(): string
+    {
+        return 'Provider';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isRegistrable(object $class): bool
     {
         return $class instanceof ProviderInterface;
