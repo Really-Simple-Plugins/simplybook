@@ -7,6 +7,8 @@ namespace SimplyBook\Bootstrap;
 use SimplyBook\Managers\FeatureManager;
 use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
+use SimplyBook\Managers\ListenerManager;
+use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Support\Helpers\Uninstall;
 use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Managers\ControllerManager;
@@ -24,6 +26,7 @@ final class Plugin
     private EndpointManager $endpointManager;
     private ControllerManager $controllerManager;
     private AbilitiesManager $abilitiesManager;
+    private ListenerManager $listenerManager;
 
     /**
      * Plugin constructor
@@ -37,6 +40,7 @@ final class Plugin
         $this->endpointManager = $app->make(EndpointManager::class);
         $this->controllerManager = $app->make(ControllerManager::class);
         $this->abilitiesManager = $app->make(AbilitiesManager::class);
+        $this->listenerManager = $app->make(ListenerManager::class);
     }
 
     /**
