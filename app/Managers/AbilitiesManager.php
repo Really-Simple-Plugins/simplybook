@@ -21,7 +21,7 @@ use SimplyBook\Interfaces\AbilityInterface;
  * - app/Abilities/Example/ExampleAbility.php
  * - app/Abilities/Pro/AdvancedExample/AdvancedExampleAbility.php
  */
-final class AbilitiesManager extends AbstractDynamicManagerAlt
+final class AbilitiesManager extends AbstractManager
 {
     use HasAllowlistControl;
 
@@ -30,6 +30,14 @@ final class AbilitiesManager extends AbstractDynamicManagerAlt
      * @var array<string, array> name => arguments
      */
     private array $abilities = [];
+
+    /**
+     * @inheritDoc
+     */
+    protected function type(): string
+    {
+        return 'abilities';
+    }
 
     /**
      * @inheritDoc
