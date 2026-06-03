@@ -16,6 +16,38 @@ final class EndpointManager extends AbstractManager
     use HasAllowlistControl;
 
     private array $routes = [];
+    
+    /**
+     * @inheritDoc
+     */
+    protected function type(): string
+    {
+        return 'endpoint';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function path(): string
+    {
+        return $this->env->getString('plugin.endpoints_path');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function namespace(): string
+    {
+        return 'SimplyBook\Http\Endpoints\\';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function suffix(): string
+    {
+        return 'Endpoint';
+    }
 
     /**
      * @inheritDoc

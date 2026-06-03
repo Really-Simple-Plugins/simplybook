@@ -8,7 +8,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\FormException;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
-class SettingEndpoints implements MultiEndpointInterface
+class SettingEndpoint implements MultiEndpointInterface
 {
     use LegacySave;
     use HasRestAccess;

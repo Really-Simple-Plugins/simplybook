@@ -7,7 +7,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
-class SubscriptionEndpoints implements MultiEndpointInterface
+class SubscriptionEndpoint implements MultiEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
