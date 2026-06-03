@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
+use SplFileInfo;
 use LogicException;
-use DirectoryIterator;
+use FilesystemIterator;
 use ReflectionException;
 use SimplyBook\Bootstrap\App;
+use RecursiveIteratorIterator;
+use RecursiveDirectoryIterator;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -23,11 +26,11 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 abstract class AbstractManager
 {
     /**
-     * Internal key to recognize "Pro" classes/directories. Can be ignored when
-     * building the namespace and class names. Just adding a "Pro" folder in
-     * the dynamic lookup path is enough to mark classes as Pro-only.
+     * Directory name that marks a (sub)tree as Pro-only. When the Pro plugin
+     * is not enabled, any class living under a directory with this name is
+     * skipped during discovery.
      */
-    private const PRO_KEY_HANDLE = 'Pro:';
+    private const PRO_DIRECTORY = 'Pro';
 
     protected EnvironmentConfig $env;
     protected GeneralConfig $config;
@@ -192,122 +195,112 @@ abstract class AbstractManager
      *      //         └── AdvancedExampleSuffix.php
      *
      *      return [
-     *          'SimplyBook\Path\ClassnameSuffix',
+     *          'SimplyBook\Path\FooBar\ClassnameSuffix',
      *          'SimplyBook\Path\Pro\AdvancedFooBar\AdvancedExampleSuffix',
      *      ]
      */
     private function getRootClasses(): array
     {
-        $classTitles = $this->getClassesFromPath(
-            $this->path()
-        );
-        $fullyQualifiedClasses = [];
-
-        foreach ($classTitles as $title) {
-            $fullyQualifiedClass = $this->getNamespacedClassPrefix($title);
-            if (class_exists($fullyQualifiedClass)) {
-                $fullyQualifiedClasses[] = $fullyQualifiedClass;
-            }
-        }
-
-        return apply_filters("simplybook_{$this->type()}_classes", $fullyQualifiedClasses);
+        $classes = $this->discoverClasses();
+        return apply_filters("simplybook_{$this->type()}_classes", $classes);
     }
 
     /**
-     * Method finds all directory names in the dynamic lookup path. If a "Pro"
-     * directory is found, it will look for subdirectories within it and prefix
-     * their names with {@see PRO_KEY_HANDLE}. This prefix is handled later
-     * when building the fully qualified class names via
-     * {@see getNamespacedClassPrefix()}.
+     * Walk the lookup path recursively and return the fully qualified names of
+     * every concrete class whose file matches the suffix configured by the
+     * child manager. Classes living under a {@see PRO_DIRECTORY} segment are
+     * skipped when the Pro plugin is not enabled.
      */
-    private function getClassesFromPath(
-        string $path,
-        string $namespacePrefix = '',
-        bool $isProDirectory = false
-    ): array {
-        $proEnabled = $this->env->getBoolean('plugin.pro');
-
-        $suffix = $this->suffix();
-        $classes = [];
-
-        // Abort if given path is empty or does not exist
-        if (empty($path) || !file_exists($path)) {
-            return $classes;
+    private function discoverClasses(): array
+    {
+        $basePath = $this->path();
+        if (empty($basePath) || !is_dir($basePath)) {
+            return [];
         }
 
-        foreach (new DirectoryIterator($path) as $fileInfo) {
-            if ($fileInfo->isDot()) {
+        $baseNamespace = rtrim($this->namespace(), '\\');
+        $proEnabled = $this->env->getBoolean('plugin.pro');
+        $classes = [];
+
+        foreach ($this->phpFilesIn($basePath) as $file) {
+            $name = $file->getBasename('.php');
+
+            if ($this->hasExpectedSuffix($name) === false || $this->isAbstractClass($name)) {
                 continue;
             }
 
-            if ($fileInfo->isDir()) {
-                $directoryName = $fileInfo->getFilename();
+            $fullyQualifiedClass = $this->getFullyQualifiedClass($file, $baseNamespace, $basePath);
 
-                $childIsProDirectory = ($isProDirectory || $directoryName === 'Pro');
-
-                if ($proEnabled === false && $childIsProDirectory) {
-                    continue;
-                }
-
-                $childNamespacePrefix = $namespacePrefix . $directoryName . '\\';
-
-                $classes = array_merge(
-                    $classes,
-                    $this->getClassesFromPath(
-                        $fileInfo->getPathname(),
-                        $childNamespacePrefix,
-                        $childIsProDirectory
-                    )
-                );
-
+            if ($proEnabled === false && $this->isProNamespace($fullyQualifiedClass)) {
                 continue;
             }
 
-            if ($fileInfo->getExtension() !== 'php') {
-                continue;
+            if (class_exists($fullyQualifiedClass)) {
+                $classes[] = $fullyQualifiedClass;
             }
-
-            $name = $fileInfo->getBasename('.php');
-
-            if (substr($name, -strlen($suffix)) !== $suffix) {
-                continue;
-            }
-
-            if (strpos($name, 'Abstract') === 0) {
-                continue;
-            }
-
-            $className = $namespacePrefix . $name;
-
-            if ($isProDirectory) {
-                $className = self::PRO_KEY_HANDLE . $className;
-            }
-
-            $classes[] = $className;
         }
 
         return $classes;
     }
 
     /**
-     * Build the namespaced class prefix based on the provided title.
-     * Example: "ExampleThing" => "SimplyBook\Path\ExampleThing\".
-     * @return string The namespaced class prefix, or an empty string if the
-     * directory corresponding to the namespace doesn't exist or Pro is
-     * required but not installed.
+     * Yield every `.php` file found below the given path, recursively.
+     * @return iterable<SplFileInfo>
      */
-    private function getNamespacedClassPrefix(string $title): string
+    private function phpFilesIn(string $path): iterable
     {
-        $needsPro = strpos($title, self::PRO_KEY_HANDLE) !== false;
-        if ($needsPro && !$this->env->getBoolean('plugin.pro')) {
-            return ''; // Pro not installed, abort
-        }
+        $directory = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+        $iterator = new RecursiveIteratorIterator($directory);
 
-        if ($needsPro) {
-            $title = substr($title, strlen(self::PRO_KEY_HANDLE));
+        foreach ($iterator as $file) {
+            if ($file->isFile() && $file->getExtension() === 'php') {
+                yield $file;
+            }
         }
+    }
 
-        $namespacesPath = rtrim($this->namespace(), '\\');
-        return $namespacesPath . '\\' . ($needsPro ? 'Pro\\' : '') . $title;
+    /**
+     * Build the fully qualified class name for the given PHP file by mirroring
+     * its directory structure (below the lookup root) onto the base namespace.
+     *
+     * Normalization happens to be compatible with Windows ánd Linux paths.
+     */
+    private function getFullyQualifiedClass(SplFileInfo $file, string $baseNamespace, string $basePath): string
+    {
+        $normalizedBasePath = rtrim(wp_normalize_path($basePath), '/');
+        $normalizedFileDirectory = wp_normalize_path($file->getPath());
+
+        $directoryBelowBasePath = substr($normalizedFileDirectory, strlen($normalizedBasePath));
+        $directoryNamespace = str_replace('/', '\\', $directoryBelowBasePath);
+
+        return $baseNamespace . $directoryNamespace . '\\' . $file->getBasename('.php');
+    }
+
+    /**
+     * Check whether any segment of the given namespace marks the class as
+     * Pro-only.
+     */
+    private function isProNamespace(string $namespace): bool
+    {
+        $segments = explode('\\', trim($namespace, '\\'));
+        return in_array(self::PRO_DIRECTORY, $segments, true);
+    }
+
+    /**
+     * Check whether the given class basename ends with the suffix configured
+     * by the child manager via {@see suffix()}.
+     */
+    private function hasExpectedSuffix(string $name): bool
+    {
+        $suffix = $this->suffix();
+        return substr($name, -strlen($suffix)) === $suffix;
+    }
+
+    /**
+     * Check whether the given class basename starts with "Abstract".
+     */
+    private function isAbstractClass(string $name): bool
+    {
+        return strpos($name, 'Abstract') === 0;
     }
 }
