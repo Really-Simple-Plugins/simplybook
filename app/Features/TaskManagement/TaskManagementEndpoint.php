@@ -4,8 +4,9 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Interfaces\MultiEndpointInterface;
 
-class TaskManagementEndpoints
+class TaskManagementEndpoint implements MultiEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
@@ -17,36 +18,33 @@ class TaskManagementEndpoints
         $this->service = $service;
     }
 
-    public function register(): void
+    /**
+     * Only enable this endpoint if the user has access to the admin area
+     */
+    public function enabled(): bool
     {
-        add_filter('simplybook_rest_routes', [$this, 'addTaskRoutes']);
+        return $this->adminAccessAllowed();
     }
 
     /**
-     * Add the task routes to the REST API.
+     * @inheritDoc
      */
-    public function addTaskRoutes(array $routes): array
+    public function registerRoutes(): array
     {
-        if ($this->adminAccessAllowed() === false) {
-            return $routes;
-        }
-
-        $routes['get_tasks'] = [
-            'methods' => \WP_REST_Server::READABLE,
-            'callback' => [$this, 'getTasksCallback'],
+        return [
+            'get_tasks' => [
+                'methods' => \WP_REST_Server::READABLE,
+                'callback' => [$this, 'getTasksCallback'],
+            ],
+            'dismiss_task' => [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'dismissTaskCallback'],
+            ],
+            'snooze_task' => [
+                'methods' => \WP_REST_Server::CREATABLE,
+                'callback' => [$this, 'snoozeTaskCallback'],
+            ]
         ];
-
-        $routes['dismiss_task'] = [
-            'methods' => \WP_REST_Server::CREATABLE,
-            'callback' => [$this, 'dismissTaskCallback'],
-        ];
-
-        $routes['snooze_task'] = [
-            'methods' => \WP_REST_Server::CREATABLE,
-            'callback' => [$this, 'snoozeTaskCallback'],
-        ];
-
-        return $routes;
     }
 
     /**

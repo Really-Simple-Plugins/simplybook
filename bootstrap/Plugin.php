@@ -10,7 +10,6 @@ use SimplyBook\Managers\EndpointManager;
 use SimplyBook\Managers\ListenerManager;
 use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Support\Helpers\Uninstall;
-use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Managers\ControllerManager;
 
 /**
@@ -56,7 +55,8 @@ final class Plugin
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this->providerManager, 'findAndRegister']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this->featureManager, 'findAndRegister']); // Makes sure features exist when Controllers need them
-        add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
+        add_action('simplybook_features_loaded', [$this->controllerManager, 'findAndRegister']); // Control the functionality of the plugin
+        add_action('simplybook_controllers_loaded', [$this->listenerManager, 'findAndRegister']);
         add_action('init', [$this->abilitiesManager, 'findAndRegister'], 1); // Loaded on init so Features and Controllers can register Abilities and translations can be used
         add_action('rest_api_init', [$this->endpointManager, 'findAndRegister']);
         add_action('admin_init', [$this, 'fireActivationHook']);
@@ -129,74 +129,5 @@ final class Plugin
     {
         $uninstallInstance = new Uninstall();
         $uninstallInstance->handlePluginUninstall();
-    }
-
-    /**
-     * Register Plugin providers. First step in the booting process of the
-     * plugin. Is hooked into plugins_loaded to make sure we only boot the
-     * plugin after all other plugins are loaded. This plugin depends on the
-     * providerManager to fire the simplybook_providers_loaded action.
-     * @uses do_action simplybook_providers_loaded
-     */
-    public function registerProviders(): void
-    {
-        $this->providerManager->register([
-            \SimplyBook\Providers\SimplyBookApiProvider::class,
-        ]);
-    }
-
-    /**
-     * Register Controllers. Hooked into simplybook_features_loaded to make sure
-     * features are available to the Controllers.
-     * @uses do_action simplybook_controllers_loaded
-     */
-    public function registerControllers(): void
-    {
-        $this->controllerManager->register([
-            \SimplyBook\Controllers\DashboardController::class,
-            \SimplyBook\Controllers\AdminController::class,
-            \SimplyBook\Controllers\SettingsController::class,
-            \SimplyBook\Controllers\CapabilityController::class,
-            \SimplyBook\Controllers\ScheduleController::class,
-            \SimplyBook\Controllers\WidgetController::class,
-            \SimplyBook\Controllers\BlockController::class,
-            \SimplyBook\Controllers\DesignSettingsController::class,
-            \SimplyBook\Controllers\ServicesController::class,
-            \SimplyBook\Controllers\ServiceProvidersController::class,
-            \SimplyBook\Controllers\ReviewController::class,
-            \SimplyBook\Controllers\TrialExpirationController::class,
-            \SimplyBook\Controllers\WidgetTrackingController::class,
-            \SimplyBook\Controllers\OnboardingNoticeController::class,
-            \SimplyBook\Controllers\BookingPageController::class,
-            \SimplyBook\Controllers\CompanyInfoController::class,
-        ]);
-    }
-
-    /**
-     * Register the plugins REST API endpoint instances. Hooked into
-     * rest_api_init to make sure the REST API is available.
-     * @uses do_action simplybook_endpoints_loaded
-     */
-    public function registerEndpoints(): void
-    {
-        $this->endpointManager->register([
-            \SimplyBook\Http\Endpoints\LoginUrlEndpoint::class,
-            \SimplyBook\Http\Endpoints\ServicesEndpoint::class,
-            \SimplyBook\Http\Endpoints\ServicesProvidersEndpoint::class,
-            \SimplyBook\Http\Endpoints\SettingEndpoints::class,
-            \SimplyBook\Http\Endpoints\WidgetEndpoint::class,
-            \SimplyBook\Http\Endpoints\DomainEndpoint::class,
-            \SimplyBook\Http\Endpoints\RemotePluginsEndpoint::class,
-            \SimplyBook\Http\Endpoints\WaitForRegistrationEndpoint::class,
-            \SimplyBook\Http\Endpoints\RelatedPluginEndpoints::class,
-            \SimplyBook\Http\Endpoints\BlockEndpoints::class,
-            \SimplyBook\Http\Endpoints\LogOutEndpoint::class,
-            \SimplyBook\Http\Endpoints\TipsTricksEndpoint::class,
-            \SimplyBook\Http\Endpoints\StatisticsEndpoint::class,
-            \SimplyBook\Http\Endpoints\SubscriptionEndpoints::class,
-            \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
-            \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
-            \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
-        ]);
     }
 }

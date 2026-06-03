@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace SimplyBook\Managers;
 
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\FeatureInterface;
 
 /**
@@ -15,12 +14,20 @@ use SimplyBook\Interfaces\FeatureInterface;
  * needed. We prevent loading feature files by utilizing the
  * {@see AbstractLoader} class at {@see FeatureManager:92}
  */
-final class FeatureManager extends AbstractDynamicManager
+final class FeatureManager extends AbstractManager
 {
     /**
      * @inheritDoc
      */
-    protected function getDynamicLookupPath(): string
+    protected function type(): string
+    {
+        return 'features';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function path(): string
     {
         return $this->env->getString('plugin.features_path');
     }
@@ -28,36 +35,17 @@ final class FeatureManager extends AbstractDynamicManager
     /**
      * @inheritDoc
      */
-    protected function getFullQualifiedRootClass(string $namespacedPrefix): string
-    {
-        return $namespacedPrefix . 'Controller';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getDynamicNamespace(): string
+    protected function namespace(): string
     {
         return 'SimplyBook\Features\\';
     }
 
     /**
-     * Override default check from parent to ensure the {Feature}Loader class
-     * exists and accepts the current context.
+     * @inheritDoc
      */
-    protected function isFullDirectoryRegistrable(string $fqRootClass, string $namespacedPrefix): bool
+    protected function suffix(): string
     {
-        $loaderClassString = $namespacedPrefix . 'Loader';
-        if (class_exists($loaderClassString) === false) {
-            return false;
-        }
-
-        $loader = App::getInstance()->make($loaderClassString, false, false);
-        if (!$loader->isEnabled() || !$loader->inScope()) {
-            return false;
-        }
-
-        return true;
+        return 'Feature';
     }
 
     /**
@@ -73,7 +61,9 @@ final class FeatureManager extends AbstractDynamicManager
      */
     public function registerClass(object $class): void
     {
-        $class->register();
+        if ($class->isEnabled() && $class->inScope()) {
+            $class->boot();
+        }
     }
 
     /**

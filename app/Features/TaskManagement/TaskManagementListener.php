@@ -4,6 +4,7 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Services\PromotionService;
+use SimplyBook\Interfaces\ListenerInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
 /**
@@ -14,7 +15,7 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
  * lot of complexity, and we could consider to move responsibility for event
  * handling to somewhere else to reduce complexity.
  */
-class TaskManagementListener
+class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
     private PromotionService $promotionService;

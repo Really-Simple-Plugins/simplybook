@@ -3,30 +3,23 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Interfaces\TaskInterface;
-use SimplyBook\Interfaces\FeatureInterface;
+use SimplyBook\Interfaces\ControllerInterface;
 
 /**
  * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class registers all
  * Task classes and because of that is coupled with these classes by design.
  */
-class TaskManagementController implements FeatureInterface
+class TaskManagementController implements ControllerInterface
 {
-    private TaskManagementEndpoints $endpoints;
     private TaskManagementService $service;
-    private TaskManagementListener $listener;
 
-    public function __construct(TaskManagementService $service, TaskManagementEndpoints $endpoints, TaskManagementListener $listener)
+    public function __construct(TaskManagementService $service)
     {
         $this->service = $service;
-        $this->endpoints = $endpoints;
-        $this->listener = $listener;
     }
 
     public function register(): void
     {
-        $this->endpoints->register();
-        $this->listener->listen();
-
         $this->initiateTasks();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeTasks']);
         add_action('simplybook_plugin_version_upgrade', [$this, 'migrateTaskOptions'], 10, 2);
@@ -78,7 +71,7 @@ class TaskManagementController implements FeatureInterface
         }
 
         $this->service->addTasks(
-            $this->getTaskClassStrings()
+            $this->getTaskClassStrings(),
         );
     }
 
@@ -94,7 +87,7 @@ class TaskManagementController implements FeatureInterface
         }
 
         $this->service->upgradeTasks(
-            $this->getTaskClassStrings()
+            $this->getTaskClassStrings(),
         );
     }
 
