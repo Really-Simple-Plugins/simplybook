@@ -1523,7 +1523,7 @@ class ApiClient
      * we get fresh data from the API.
      * @uses wp_cache_delete
      */
-    private function clearRequestCache(string $endpoint): void
+    public function clearRequestCache(string $endpoint): void
     {
         wp_cache_delete($this->requestKey($endpoint), 'simplybook');
     }

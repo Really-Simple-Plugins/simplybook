@@ -43,6 +43,28 @@ abilities:
     idempotent: ""
     show_in_rest: "1"
     
+  - name: simplybook/get-schedule
+    label: Get Working Hours
+    category: simplybook
+    description: Returns the configured working hours per day from SimplyBook.me (including days off). Optionally narrow the result by service provider and/or service. Does NOT account for existing bookings, so the response indicates when work is rostered, not when there are free slots. The date range is optional and defaults to today when omitted; if only one date is supplied the other defaults to the same value.
+    input_schema: '{"type":"object","properties":{"provider_id":{"type":["string","integer"],"description":"Optional. The ID of the service provider to filter by."},"service_id":{"type":["string","integer"],"description":"Optional. The ID of the service to filter by."},"date_from":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"Start of the date range in YYYY-MM-DD format. Defaults to today."},"date_to":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"End of the date range in YYYY-MM-DD format. Defaults to date_from (or today)."}}}'
+    output_schema: '{"type":["array","string"],"description":"Zero-indexed list of working-hour entries (one per day) for the requested filters and date range. Each entry contains the date, the start and end of the working window and a day-off flag; it does not reflect existing bookings. Returns a human-readable message instead when the schedule could not be retrieved.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/get-available-slots
+    label: Get Available Booking Slots
+    category: simplybook
+    description: Returns the bookable time slots for a given SimplyBook.me service, provider and date. Unlike the working-hours ability, this reflects actual availability after existing bookings have been taken into account, so it answers the question "when can a booking be placed?".
+    input_schema: '{"type":"object","required":["date"],"properties":{"service_id":{"type":["string","integer"],"description":"Optional. The ID of the service to filter by."},"provider_id":{"type":["string","integer"],"description":"Optional. The ID of the service provider to filter by."},"date":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"The date to check, in YYYY-MM-DD format."},"count":{"type":"integer","minimum":1,"description":"Optional. Number of attendees for a group booking. Defaults to 1."}}}'
+    output_schema: '{"type":["array","string"],"description":"Zero-indexed list of bookable time slots for the requested service, provider and date. Returns a human-readable message instead when the slots could not be retrieved.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
   - name: simplybook/list-tasks
     label: List Tasks
     category: simplybook
