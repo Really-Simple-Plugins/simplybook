@@ -25,7 +25,7 @@ class RelatedPluginService
 
     /**
      * Use this method as the default way to set the plugin config. For an
-     * example see {@see RelatedPluginEndpoints}
+     * example see {@see RelatedPluginEndpoint}
      */
     public function setPluginConfig(array $pluginConfig): void
     {
