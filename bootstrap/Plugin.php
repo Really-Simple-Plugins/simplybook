@@ -50,7 +50,7 @@ final class Plugin
         register_uninstall_hook($pluginBaseFile, 'SimplyBook\Bootstrap\Plugin::uninstall');
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
-        add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
+        add_action('plugins_loaded', [$this->providerManager, 'findAndRegister']); // Provide functionality to the plugin
         add_action('simplybook_providers_loaded', [$this->featureManager, 'findAndRegister']); // Makes sure features exist when Controllers need them
         add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
         add_action('init', [$this->abilitiesManager, 'findAndRegister'], 1); // Loaded on init so Features and Controllers can register Abilities and translations can be used
