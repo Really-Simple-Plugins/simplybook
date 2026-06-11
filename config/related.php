@@ -12,7 +12,7 @@ return [
             'create' => admin_url('options-general.php?page=metricool'),
             'url' => 'https://wordpress.org/plugins/metricool/',
             'title' => 'Metricool - ' . __('Social Media Management', 'simplybook'),
-            'color' => '#e35899'
+            'color' => '#e6fe55'
         ],
         'really-simple-ssl' => [
             'slug' => 'really-simple-ssl',
