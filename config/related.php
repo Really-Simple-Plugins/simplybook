@@ -5,6 +5,15 @@
 // The related config can only be used AFTER or ON the 'init' hook.
 return [
     'plugins' => [
+        'metricool' => [
+            'slug' => 'metricool',
+            'options_prefix' => 'metricool',
+            'activation_slug' => 'metricool' . DIRECTORY_SEPARATOR . 'metricool.php',
+            'create' => admin_url('options-general.php?page=metricool'),
+            'url' => 'https://wordpress.org/plugins/metricool/',
+            'title' => 'Metricool - ' . __('Social Media Management', 'simplybook'),
+            'color' => '#e35899'
+        ],
         'really-simple-ssl' => [
             'slug' => 'really-simple-ssl',
             'options_prefix' => 'rsssl',
