@@ -173,51 +173,6 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Activate the task by setting the status to 'open'
-     */
-    public function open(): void
-    {
-        $this->status = self::STATUS_OPEN;
-    }
-
-    /**
-     * Set the task to 'urgent' status
-     */
-    public function urgent(): void
-    {
-        $this->status = self::STATUS_URGENT;
-    }
-
-    /**
-     * Set the task to 'upgrade' status
-     */
-    public function upgrade(): void
-    {
-        $this->status = self::STATUS_UPGRADE;
-    }
-
-    /**
-     * Dismiss the task by setting the status to 'dismissed'. Only allowed if
-     * the task is not required.
-     */
-    public function dismiss(): void
-    {
-        if ($this->required) {
-            return; // Not allowed
-        }
-
-        $this->status = self::STATUS_DISMISSED;
-    }
-
-    /**
-     * Complete the task by setting the status to 'completed'
-     */
-    public function completed(): void
-    {
-        $this->status = self::STATUS_COMPLETED;
-    }
-
-    /**
      * Hide the task by setting the status to 'hidden'
      */
     public function hide(): void
