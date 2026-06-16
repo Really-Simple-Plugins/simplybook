@@ -95,13 +95,14 @@ trait IsFilterable
     {
         $filterMethod = 'apply' . StringUtility::snakeToPascalCase($filterName) . 'Filter';
 
+        // execute custom filter
         if (method_exists($this, $filterMethod)) {
-            // execute custom filter
             $this->{$filterMethod}($filterValue);
-        } else {
-            // execute default filter
-            $this->applyFilter($filterName, $filterValue);
+            return;
         }
+
+        // execute default filter
+        $this->applyFilter($filterName, $filterValue);
     }
 
     /**
