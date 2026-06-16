@@ -16,7 +16,7 @@ final class EndpointManager extends AbstractManager
     use HasAllowlistControl;
 
     private array $routes = [];
-    
+
     /**
      * @inheritDoc
      */
@@ -116,8 +116,8 @@ final class EndpointManager extends AbstractManager
      * simplybook_rest_routes filter. A controller of feature should be
      * instantiated before this manager is called and the controller should
      * hook into the simplybook_rest_routes filter to add its own routes.
-     * @uses apply_filters simplybook_rest_routes
      * @throws InvalidArgumentException
+     * @uses apply_filters simplybook_rest_routes
      */
     public function registerWordPressRestRoutes(): void
     {
@@ -130,7 +130,7 @@ final class EndpointManager extends AbstractManager
 
             if (!is_callable($callback)) {
                 throw new InvalidArgumentException(
-                    sprintf('The callback for the route "%s" is not callable.', $route)
+                    sprintf('The callback for the route "%s" is not callable.', $route),
                 );
             }
 
@@ -144,7 +144,7 @@ final class EndpointManager extends AbstractManager
                 $arguments['args'] = $data['args'];
             }
 
-            register_rest_route($this->env->getString('http.namespace') . '/' . $version, $route, $arguments);
+            register_rest_route($this->env->getString('http.namespace').'/'.$version, $route, $arguments);
         }
     }
 
@@ -218,7 +218,7 @@ final class EndpointManager extends AbstractManager
             return new WP_Error(
                 'rest_forbidden',
                 __('Forbidden.', 'simplybook'),
-                ['status' => 403]
+                ['status' => 403],
             );
         }
 
