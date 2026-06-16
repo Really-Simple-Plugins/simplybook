@@ -47,7 +47,7 @@ abstract class AbstractManager
      * the  child Manager registers should be added to the container registry.
      * For details see: {@see App::make}
      */
-    protected bool $useRegistryForDependencies = true;
+    protected bool $registerDependencies = true;
 
     /**
      * Inject config storage classes
@@ -130,7 +130,7 @@ abstract class AbstractManager
                 throw new LogicException("Class must be a fully qualified name. Given type: $type");
             }
 
-            $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->useRegistryForDependencies);
+            $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->registerDependencies);
 
             if ($this->isRegistrable($class) === false) {
                 throw new LogicException("Class is not registrable: " . $fullyClassifiedName);
