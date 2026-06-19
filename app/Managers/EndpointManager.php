@@ -6,47 +6,31 @@ use WP_Error;
 use WP_REST_Request;
 use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Interfaces\SingleEndpointInterface;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 final class EndpointManager extends AbstractManager
 {
     use HasNonces;
-    use HasAllowlistControl;
 
     private array $routes = [];
+    private EnvironmentConfig $env;
+
+    /**
+     * Bind the env
+     */
+    public function __construct(EnvironmentConfig $env)
+    {
+        $this->env = $env;
+    }
 
     /**
      * @inheritDoc
      */
     protected function type(): string
     {
-        return 'endpoint';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function path(): string
-    {
-        return $this->env->getString('plugin.endpoints_path');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function namespace(): string
-    {
-        return 'SimplyBook\Http\Endpoints\\';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function suffix(): string
-    {
-        return 'Endpoint';
+        return 'endpoints';
     }
 
     /**
@@ -74,12 +58,14 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * @inheritDoc
+     * After all routes are in memory, we register them at the right time in
+     * WordPress.
+     * @uses do_action simplybook_{@see type}_loaded
      */
-    public function afterRegister(): void
+    protected function afterRegister(): void
     {
         $this->registerWordPressRestRoutes();
-        do_action('simplybook_endpoints_loaded');
+        do_action('simplybook_' . $this->type() . '_loaded');
     }
 
     /**
@@ -112,25 +98,20 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * This method provides a way to register custom REST routes via the
-     * simplybook_rest_routes filter. A controller of feature should be
-     * instantiated before this manager is called and the controller should
-     * hook into the simplybook_rest_routes filter to add its own routes.
+     * All routes that are registered in memory are registered at the right
+     * time in WordPress.
      * @throws InvalidArgumentException
-     * @uses apply_filters simplybook_rest_routes
      */
     public function registerWordPressRestRoutes(): void
     {
-        $routes = $this->getPluginRestRoutes();
-
-        foreach ($routes as $route => $data) {
+        foreach ($this->routes as $route => $data) {
             $version = ($data['version'] ?? $this->env->getString('http.version'));
             $callback = ($data['callback'] ?? null);
             $middleware = ($data['middleware'] ?? null);
 
             if (!is_callable($callback)) {
                 throw new InvalidArgumentException(
-                    sprintf('The callback for the route "%s" is not callable.', $route),
+                    sprintf('The callback for the route "%s" is not callable.', $route)
                 );
             }
 
@@ -146,30 +127,6 @@ final class EndpointManager extends AbstractManager
 
             register_rest_route($this->env->getString('http.namespace') . '/' . $version, $route, $arguments);
         }
-    }
-
-    /**
-     * Get the plugins REST routes
-     * @uses apply_filters simplybook_rest_routes
-     */
-    private function getPluginRestRoutes(): array
-    {
-        /**
-         * Filter: simplybook_rest_routes
-         * Can be used to add or modify the REST routes
-         *
-         * @param array $routes
-         * @return array
-         * @example [
-         *      'route' => [ // key is the route name
-         *          'methods' => 'GET', // required
-         *          'callback' => 'callback_function', // required
-         *          'permission_callback' => 'permission_callback_function', // optional to override the default permission callback
-         *          'version' => 'v1' // optional to override the default version
-         *      ]
-         * ]
-         */
-        return apply_filters('simplybook_rest_routes', $this->routes);
     }
 
     /**
@@ -218,7 +175,7 @@ final class EndpointManager extends AbstractManager
             return new WP_Error(
                 'rest_forbidden',
                 __('Forbidden.', 'simplybook'),
-                ['status' => 403],
+                ['status' => 403]
             );
         }
 

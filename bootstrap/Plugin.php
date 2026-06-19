@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace SimplyBook\Bootstrap;
 
 use SimplyBook\Managers\FeatureManager;
-use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\EndpointManager;
+use SimplyBook\Managers\ProviderManager;
 use SimplyBook\Managers\ListenerManager;
-use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Support\Helpers\Uninstall;
+use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Managers\ControllerManager;
 
 /**
@@ -53,12 +53,12 @@ final class Plugin
         register_uninstall_hook($pluginBaseFile, 'SimplyBook\Bootstrap\Plugin::uninstall');
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
-        add_action('plugins_loaded', [$this->providerManager, 'findAndRegister']); // Provide functionality to the plugin
-        add_action('simplybook_providers_loaded', [$this->featureManager, 'findAndRegister']); // Makes sure features exist when Controllers need them
-        add_action('simplybook_features_loaded', [$this->controllerManager, 'findAndRegister']); // Control the functionality of the plugin
-        add_action('simplybook_controllers_loaded', [$this->listenerManager, 'findAndRegister']);
-        add_action('init', [$this->abilitiesManager, 'findAndRegister'], 1); // Loaded on init so Features and Controllers can register Abilities and translations can be used
-        add_action('rest_api_init', [$this->endpointManager, 'findAndRegister']);
+        add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
+        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
+        add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
+        add_action('simplybook_controllers_loaded', [$this, 'registerListeners']);
+        add_action('init', [$this, 'registerAbilities'], 1); // Loaded on init so Features and Controllers can register Abilities and translations can be used
+        add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
     }
 
@@ -129,5 +129,119 @@ final class Plugin
     {
         $uninstallInstance = new Uninstall();
         $uninstallInstance->handlePluginUninstall();
+    }
+
+    /**
+     * Register Plugin providers. First step in the booting process of the
+     * plugin. Is hooked into plugins_loaded to make sure we only boot the
+     * plugin after all other plugins are loaded. This plugin depends on the
+     * providerManager to fire the simplybook_providers_loaded action.
+     */
+    public function registerProviders(): void
+    {
+        $this->providerManager->register([
+            \SimplyBook\Providers\SimplyBookApiProvider::class,
+        ]);
+    }
+
+    /**
+     * Register the plugin features. Hooked into simplybook_providers_loaded to
+     * make sure providers are available to the Features.
+     */
+    public function registerFeatures(): void
+    {
+        $this->featureManager->register([
+            \SimplyBook\Features\Onboarding\OnboardingFeature::class,
+            \SimplyBook\Features\TaskManagement\TaskManagementFeature::class,
+            \SimplyBook\Features\Notifications\NotificationsFeature::class,
+        ]);
+    }
+
+    /**
+     * Register Controllers. Hooked into simplybook_features_loaded to make sure
+     * features are available to the Controllers.
+     */
+    public function registerControllers(): void
+    {
+        $this->controllerManager->register([
+            \SimplyBook\Controllers\DashboardController::class,
+            \SimplyBook\Controllers\AdminController::class,
+            \SimplyBook\Controllers\SettingsController::class,
+            \SimplyBook\Controllers\CapabilityController::class,
+            \SimplyBook\Controllers\ScheduleController::class,
+            \SimplyBook\Controllers\WidgetController::class,
+            \SimplyBook\Controllers\BlockController::class,
+            \SimplyBook\Controllers\DesignSettingsController::class,
+            \SimplyBook\Controllers\ServicesController::class,
+            \SimplyBook\Controllers\ServiceProvidersController::class,
+            \SimplyBook\Controllers\ReviewController::class,
+            \SimplyBook\Controllers\TrialExpirationController::class,
+            \SimplyBook\Controllers\WidgetTrackingController::class,
+            \SimplyBook\Controllers\OnboardingNoticeController::class,
+            \SimplyBook\Controllers\BookingPageController::class,
+            \SimplyBook\Controllers\CompanyInfoController::class,
+            \SimplyBook\Controllers\UpgradeController::class,
+        ]);
+    }
+
+    /**
+     * Register the plugins REST API endpoint instances. Hooked into
+     * rest_api_init to make sure the REST API is available.
+     * @uses do_action simplybook_endpoints_loaded
+     */
+    public function registerEndpoints(): void
+    {
+        $this->endpointManager->register([
+            \SimplyBook\Http\Endpoints\LoginUrlEndpoint::class,
+            \SimplyBook\Http\Endpoints\ServicesEndpoint::class,
+            \SimplyBook\Http\Endpoints\ServicesProvidersEndpoint::class,
+            \SimplyBook\Http\Endpoints\SettingEndpoint::class,
+            \SimplyBook\Http\Endpoints\WidgetEndpoint::class,
+            \SimplyBook\Http\Endpoints\DomainEndpoint::class,
+            \SimplyBook\Http\Endpoints\RemotePluginsEndpoint::class,
+            \SimplyBook\Http\Endpoints\WaitForRegistrationEndpoint::class,
+            \SimplyBook\Http\Endpoints\RelatedPluginEndpoint::class,
+            \SimplyBook\Http\Endpoints\BlockEndpoint::class,
+            \SimplyBook\Http\Endpoints\LogOutEndpoint::class,
+            \SimplyBook\Http\Endpoints\TipsTricksEndpoint::class,
+            \SimplyBook\Http\Endpoints\StatisticsEndpoint::class,
+            \SimplyBook\Http\Endpoints\SubscriptionEndpoint::class,
+            \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
+            \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
+            \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
+        ]);
+    }
+
+    /**
+     * Register the plugins listeners. The base plugin does not have any
+     * listeners yet. Currently used to hook listeners from Features into
+     * the registering process.
+     */
+    public function registerListeners(): void
+    {
+        $this->listenerManager->register([]);
+    }
+
+    /**
+     * Register the plugins Abilities with the WP Abilities API. Hooked into
+     * init so Features and Controllers can register their own Abilities via
+     * the simplybook_plugin_abilities filter and translations can be used.
+     */
+    public function registerAbilities(): void
+    {
+        $this->abilitiesManager->register([
+            \SimplyBook\Abilities\Design\ListDesignSettingsAbility::class,
+            \SimplyBook\Abilities\Design\UpdateDesignSettingsAbility::class,
+            \SimplyBook\Abilities\Providers\ListProvidersAbility::class,
+            \SimplyBook\Abilities\Providers\UpdateProviderAbility::class,
+            \SimplyBook\Abilities\Schedule\GetAvailableSlotsAbility::class,
+            \SimplyBook\Abilities\Schedule\GetScheduleAbility::class,
+            \SimplyBook\Abilities\Services\ListServicesAbility::class,
+            \SimplyBook\Abilities\Services\UpdateServiceAbility::class,
+            \SimplyBook\Abilities\Statistics\CountRecentBookingsAbility::class,
+            \SimplyBook\Abilities\Statistics\GetStatisticsAbility::class,
+            \SimplyBook\Abilities\Tasks\ListTasksAbility::class,
+            \SimplyBook\Abilities\Tasks\UpdateTaskStatusAbility::class,
+        ]);
     }
 }

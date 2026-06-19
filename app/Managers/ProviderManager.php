@@ -13,31 +13,7 @@ final class ProviderManager extends AbstractManager
      */
     protected function type(): string
     {
-        return 'provider';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function path(): string
-    {
-        return $this->env->getString('plugin.providers_path');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function namespace(): string
-    {
-        return 'SimplyBook\Providers\\';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function suffix(): string
-    {
-        return 'Provider';
+        return 'providers';
     }
 
     /**
@@ -54,13 +30,5 @@ final class ProviderManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $class->provide();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterRegister(): void
-    {
-        do_action('simplybook_providers_loaded');
     }
 }

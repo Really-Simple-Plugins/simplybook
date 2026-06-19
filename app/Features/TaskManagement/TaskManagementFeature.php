@@ -13,9 +13,9 @@ final class TaskManagementFeature implements FeatureInterface
      */
     public function boot(): void
     {
-        add_filter('simplybook_controller_classes', [$this, 'registerControllers']);
-        add_filter('simplybook_endpoint_classes', [$this, 'registerEndpoints']);
-        add_filter('simplybook_listener_classes', [$this, 'registerListener']);
+        add_filter('simplybook_plugin_controllers', [$this, 'registerControllers']);
+        add_filter('simplybook_plugin_endpoints', [$this, 'registerEndpoints']);
+        add_filter('simplybook_plugin_listeners', [$this, 'registerListener']);
     }
 
     /**

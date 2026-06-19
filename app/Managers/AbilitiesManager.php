@@ -9,21 +9,20 @@ use WP_Abilities_Registry;
 use WP_Ability_Categories_Registry;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\AbilityInterface;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 /**
- * This manager loads Ability classes automatically from the registered
- * abilities_path from the environment configuration. To boot this process
- * call the {@see findAndRegister} method on 'init' and it will do the rest.
- *
- * To make an Ability class registrable, it must implement the naming format:
- * {AbilityName}/{AbilityName}Ability.php and implement the
- * {@see AbilityInterface} interface. For example:
- * - app/Abilities/Example/ExampleAbility.php
- * - app/Abilities/Pro/AdvancedExample/AdvancedExampleAbility.php
+ * To boot this manager call the {@see register} method on 'init' and it will
+ * do the rest.
  */
 final class AbilitiesManager extends AbstractManager
 {
     use HasAllowlistControl;
+
+    /**
+     * Config used to read ability information
+     */
+    private GeneralConfig $config;
 
     /**
      * All the registered abilities
@@ -32,48 +31,19 @@ final class AbilitiesManager extends AbstractManager
     private array $abilities = [];
 
     /**
+     * Bind the config
+     */
+    public function __construct(GeneralConfig $config)
+    {
+        $this->config = $config;
+    }
+
+    /**
      * @inheritDoc
      */
     protected function type(): string
     {
         return 'abilities';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function path(): string
-    {
-        return $this->env->getString('plugin.abilities_path');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function namespace(): string
-    {
-        return 'SimplyBook\Abilities\\';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function suffix(): string
-    {
-        return 'Ability';
-    }
-
-    /**
-     * Ensure that the AbilitiesManager is initialized during the "init" action
-     * to enable it to hook into the WP Abilities API via {@see afterRegister}
-     * correctly.
-     * @throws LogicException if not called during the "init" action
-     */
-    protected function beforeFindAndRegister(): void
-    {
-        if (current_filter() !== 'init') {
-            throw new LogicException('The AbilitiesManager must be initialized during the "init" action.');
-        }
     }
 
     /**
@@ -90,6 +60,21 @@ final class AbilitiesManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $this->abilities[$class->getName()] = $class->toArray();
+    }
+
+    /**
+     * Ensure that the AbilitiesManager is initialized during the "init" action
+     * to enable it to hook into the WP Abilities API via {@see afterRegister}
+     * correctly.
+     * @throws LogicException if not called during the "init" action
+     */
+    protected function beforeRegister(array $classes): array
+    {
+        if (current_filter() !== 'init') {
+            throw new LogicException('The AbilitiesManager must be initialized during the "init" action.');
+        }
+
+        return apply_filters('simplybook_plugin_' . $this->type(), $classes);
     }
 
     /**

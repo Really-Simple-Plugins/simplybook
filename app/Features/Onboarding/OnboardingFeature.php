@@ -28,7 +28,7 @@ final class OnboardingFeature implements FeatureInterface
      */
     public function boot(): void
     {
-        add_filter('simplybook_endpoint_classes', [$this, 'registerEndpoints']);
+        add_filter('simplybook_plugin_endpoints', [$this, 'registerEndpoints']);
     }
 
     /**

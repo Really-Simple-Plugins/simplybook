@@ -13,31 +13,7 @@ final class ControllerManager extends AbstractManager
      */
     protected function type(): string
     {
-        return 'controller';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function path(): string
-    {
-        return $this->env->getString('plugin.controllers_path');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function namespace(): string
-    {
-        return 'SimplyBook\Controllers\\';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function suffix(): string
-    {
-        return 'Controller';
+        return 'controllers';
     }
 
     /**
@@ -54,13 +30,5 @@ final class ControllerManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $class->register();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterRegister(): void
-    {
-        do_action('simplybook_controllers_loaded');
     }
 }

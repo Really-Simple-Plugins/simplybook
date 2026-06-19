@@ -13,31 +13,7 @@ final class ListenerManager extends AbstractManager
      */
     protected function type(): string
     {
-        return 'listener';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function path(): string
-    {
-        return $this->env->getString('plugin.listeners_path');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function namespace(): string
-    {
-        return 'SimplyBook\Listeners\\';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function suffix(): string
-    {
-        return 'Listener';
+        return 'listeners';
     }
 
     /**
@@ -54,13 +30,5 @@ final class ListenerManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $class->listen();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterRegister(): void
-    {
-        do_action('simplybook_listeners_loaded');
     }
 }
