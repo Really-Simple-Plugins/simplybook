@@ -435,7 +435,7 @@ class ApiClient
             $responseStorage->getString('refresh_token'),
             $domain,
             $this->get_company_login(),
-            $responseStorage->getInt('company_id'),
+            $responseStorage->getInt('company_id')
         );
 
         Event::dispatch(Event::AUTH_SUCCEEDED);
@@ -603,7 +603,7 @@ class ApiClient
             $callbackUrl,
             $captchaToken,
             $company->category,
-            $userAgent,
+            $userAgent
         );
 
         $response = (object) $rawResponse['body'];

@@ -104,7 +104,7 @@ class UpdateTaskStatusAbility extends AbstractAbility
                 return sprintf(
                     /* translators: %1$s: The required argument. */
                     __('Required argument "%1$s" not found.', 'simplybook'),
-                    "id",
+                    "id"
                 );
             }
 
@@ -112,7 +112,7 @@ class UpdateTaskStatusAbility extends AbstractAbility
                 return sprintf(
                     /* translators: %1$s: The required argument. */
                     __('Required argument "%1$s" not found.', 'simplybook'),
-                    "status",
+                    "status"
                 );
             }
 

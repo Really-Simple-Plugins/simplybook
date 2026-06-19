@@ -125,7 +125,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
                 $companyLogin,
                 $storage->getString('auth_session_id'),
                 $storage->getString('two_fa_type'),
-                $storage->getString('two_fa_code'),
+                $storage->getString('two_fa_code')
             );
         } catch (RestDataException $e) {
             // Default code 200 because React side still used request() here
@@ -152,7 +152,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
             $this->client->requestSmsForUser(
                 $storage->getString('domain'),
                 $storage->getString('company_login'),
-                $storage->getString('auth_session_id'),
+                $storage->getString('auth_session_id')
             );
         } catch (Exception $e) {
             return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
@@ -197,7 +197,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
             $responseStorage->getString('refresh_token'),
             $parsedDomain,
             $companyLogin,
-            $responseStorage->getInt('company_id'),
+            $responseStorage->getInt('company_id')
         );
 
         $this->service->setOnboardingCompleted();

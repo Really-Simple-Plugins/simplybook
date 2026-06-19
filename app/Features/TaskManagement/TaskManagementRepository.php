@@ -79,7 +79,7 @@ class TaskManagementRepository
         // upgrade
         if ($taskExists && ($task->reactivateOnUpgrade() === false)) {
             $task->setStatus(
-                $existingTask->getStatus(),
+                $existingTask->getStatus()
             );
         }
 

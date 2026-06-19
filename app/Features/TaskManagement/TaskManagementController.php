@@ -71,7 +71,7 @@ class TaskManagementController implements ControllerInterface
         }
 
         $this->service->addTasks(
-            $this->getTaskClassStrings(),
+            $this->getTaskClassStrings()
         );
     }
 
@@ -87,7 +87,7 @@ class TaskManagementController implements ControllerInterface
         }
 
         $this->service->upgradeTasks(
-            $this->getTaskClassStrings(),
+            $this->getTaskClassStrings()
         );
     }
 

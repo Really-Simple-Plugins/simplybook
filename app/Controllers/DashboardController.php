@@ -108,7 +108,7 @@ class DashboardController implements ControllerInterface
             'simplybook-integration',
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
-            $menuPosition,
+            $menuPosition
         );
 
         add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
