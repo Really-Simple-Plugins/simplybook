@@ -62,7 +62,7 @@ abstract class AbstractManager
      */
     protected function afterRegister(): void
     {
-        do_action('simplybook_' . $this->type() . '_loaded');
+        do_action('simplybook_plugin_' . $this->type() . '_loaded');
     }
 
     /**

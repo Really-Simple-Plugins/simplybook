@@ -86,7 +86,7 @@ final class AbilitiesManager extends AbstractManager
         add_action('wp_abilities_api_categories_init', [$this, 'registerAbilitiesCategory']);
         add_action('wp_abilities_api_init', [$this, 'registerAbilities']);
 
-        do_action('simplybook_abilities_loaded');
+        do_action('simplybook_plugin_abilities_loaded');
     }
 
     /**
