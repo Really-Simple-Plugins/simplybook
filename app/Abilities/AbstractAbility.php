@@ -284,7 +284,7 @@ abstract class AbstractAbility implements AbilityInterface
             throw new AbilityApiUnavailableException('WP Abilities API not available.');
         }
 
-        $namespacedAbilityName = ($this->config()->getString('abilities.namespace', 'simplybook') . '/' . $this->getName());
+        $namespacedAbilityName = $this->getNamespacedName();
         if (wp_has_ability($namespacedAbilityName) === false) {
             throw new AbilityFailedException('Ability not registered: ' . $namespacedAbilityName);
         }
@@ -302,6 +302,16 @@ abstract class AbstractAbility implements AbilityInterface
     }
 
     /**
+     * Method is used to build and return the full namespace of the ability.
+     * @uses config()->getString('abilities.namespace', 'simplybook')
+     * @uses getName()
+     */
+    private function getNamespacedName(): string
+    {
+        return ($this->config()->getString('abilities.namespace', 'simplybook') . '/' . $this->getName());
+    }
+
+    /**
      * Helper method to check if the ability is already registered in the
      * WP Abilities API. Useful to prevent manipulating the ability after
      * registration.
@@ -312,8 +322,7 @@ abstract class AbstractAbility implements AbilityInterface
             return false;
         }
 
-        $namespacedAbilityName = ($this->config()->getString('abilities.namespace', 'simplybook') . '/' . $this->getName());
-        return wp_has_ability($namespacedAbilityName);
+        return wp_has_ability($this->getNamespacedName());
     }
 
     /**
