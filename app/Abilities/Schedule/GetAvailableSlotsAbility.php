@@ -84,7 +84,7 @@ class GetAvailableSlotsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $slot = $this->slot;
 

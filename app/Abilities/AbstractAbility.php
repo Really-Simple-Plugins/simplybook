@@ -89,9 +89,9 @@ abstract class AbstractAbility implements AbilityInterface
     /**
      * Subclasses may override to provide a (static) default execute callable.
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
-        return null;
+        return $this->executeCallback;
     }
 
     /**
@@ -143,7 +143,7 @@ abstract class AbstractAbility implements AbilityInterface
             return $this->executeCallback;
         }
 
-        $default = $this->defaultExecuteCallback();
+        $default = $this->executeCallback();
         if (is_callable($default)) {
             return $default;
         }

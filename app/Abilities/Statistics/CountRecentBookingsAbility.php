@@ -57,7 +57,7 @@ class CountRecentBookingsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $statistics = $this->statistics;
 

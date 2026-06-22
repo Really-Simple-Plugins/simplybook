@@ -75,7 +75,7 @@ class UpdateProviderAbility extends AbstractAbility
      * @return callable -> string|array Either an error message or the updated
      *         provider attributes.
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $provider = $this->provider;
 

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Services;
 
-use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Http\Entities\Service;
+use SimplyBook\Abilities\AbstractAbility;
 
 class ListServicesAbility extends AbstractAbility
 {
@@ -60,7 +60,7 @@ class ListServicesAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $service = $this->service;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SimplyBook\Abilities\Services;
 
 use Throwable;
-use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Http\Entities\Service;
+use SimplyBook\Abilities\AbstractAbility;
 
 class UpdateServiceAbility extends AbstractAbility
 {
@@ -73,7 +73,7 @@ class UpdateServiceAbility extends AbstractAbility
      * @return callable -> string|array Either an error message or the updated
      *         service attributes.
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $service = $this->service;
 

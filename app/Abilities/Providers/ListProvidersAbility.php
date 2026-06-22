@@ -60,7 +60,7 @@ class ListProvidersAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $provider = $this->provider;
 

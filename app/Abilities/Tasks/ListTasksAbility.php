@@ -92,7 +92,7 @@ class ListTasksAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $feature = $this->feature;
         $service = $this->service;

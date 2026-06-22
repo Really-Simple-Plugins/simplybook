@@ -65,7 +65,7 @@ class ListDesignSettingsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $settings = $this->designSettingsService->getDesignOptions();
         $storage = new Storage($settings);

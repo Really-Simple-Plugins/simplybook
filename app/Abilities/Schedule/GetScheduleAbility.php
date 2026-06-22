@@ -83,7 +83,7 @@ class GetScheduleAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultExecuteCallback(): ?callable
+    protected function executeCallback(): ?callable
     {
         $schedule = $this->schedule;
 
