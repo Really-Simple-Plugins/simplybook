@@ -65,14 +65,9 @@ class TaskManagementService
      *
      * @param TaskInterface[] $tasks
      * @return TaskInterface[]
-     * @throws InvalidArgumentException If the status is not allowed
      */
     private function filterTasksByStatus(array $tasks, string $status): array
     {
-        if (!in_array($status, AbstractTask::allowedStatuses(), true)) {
-            throw new InvalidArgumentException('Invalid status filter: ' . $status);
-        }
-
         return array_filter($tasks, static function (TaskInterface $task) use ($status): bool {
             return $task->getStatus() === $status;
         });

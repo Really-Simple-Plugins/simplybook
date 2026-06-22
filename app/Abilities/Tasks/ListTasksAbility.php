@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Tasks;
 
-use InvalidArgumentException;
+use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
 use SimplyBook\Features\TaskManagement\TaskManagementFeature;
@@ -106,12 +106,8 @@ class ListTasksAbility extends AbstractAbility
 
             try {
                 return $service->getTasks($statusFilter);
-            } catch (InvalidArgumentException $e) {
-                return sprintf(
-                    /* translators: %1$s: Status */
-                    __('Could not filter tasks on given status: %1$s', 'simplybook'),
-                    $statusFilter
-                );
+            } catch (Throwable $e) {
+                return __('An error occurred while listing the tasks.', 'simplybook');
             }
         };
     }
