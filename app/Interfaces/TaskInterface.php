@@ -36,12 +36,15 @@ interface TaskInterface
 
     /**
      * Method is used to add an action to the UI of the task item.
-     * @example
-     * [
-     *      'type' => 'button',
-     *      'text' => 'Button text',
-     *      'link' => 'https://example.com' | '/services/new,
-     * ]
+     *
+     * Return example:
+     *
+     *      [
+     *          'type' => 'button',
+     *          'text' => 'Button text',
+     *          'link' => "https://example.com" // or: "/services/new",
+     *      ]
+     *
      * @return array
      */
     public function getAction(): array;
@@ -56,6 +59,16 @@ interface TaskInterface
      * Reads if the task is required
      */
     public function isRequired(): bool;
+
+    /**
+     * Reads if the task is premium
+     */
+    public function isPremium(): bool;
+
+    /**
+     * Reads if the task is related to a special feature
+     */
+    public function isSpecialFeature(): bool;
 
     /**
      * Reads if the task is snoozable

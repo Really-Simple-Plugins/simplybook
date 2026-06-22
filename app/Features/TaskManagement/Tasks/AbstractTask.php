@@ -189,7 +189,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Reads if the task is premium
+     * @inheritDoc
      */
     public function isPremium(): bool
     {
@@ -197,7 +197,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Reads if the task is related to a special feature
+     * @inheritDoc
      */
     public function isSpecialFeature(): bool
     {

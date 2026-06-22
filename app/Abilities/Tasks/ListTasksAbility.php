@@ -83,7 +83,23 @@ class ListTasksAbility extends AbstractAbility
                 'status' => [
                     'type' => 'string',
                     'enum' => AbstractTask::allowedStatuses(),
-                    'description' => __('Optional. Filter tasks by status. Omit to return all tasks.', 'simplybook'),
+                    'description' => __('Optional. Filter tasks by status.', 'simplybook'),
+                ],
+                'required' => [
+                    'type' => 'boolean',
+                    'description' => __('Optional. Filter tasks by whether they are required.', 'simplybook'),
+                ],
+                'premium' => [
+                    'type' => 'boolean',
+                    'description' => __('Optional. Filter tasks by whether they are premium.', 'simplybook'),
+                ],
+                'special_feature' => [
+                    'type' => 'boolean',
+                    'description' => __('Optional. Filter tasks by whether they are a special feature.', 'simplybook'),
+                ],
+                'snoozed' => [
+                    'type' => 'boolean',
+                    'description' => __('Optional. Filter tasks by whether they are snoozed.', 'simplybook'),
                 ],
             ],
         ];
@@ -102,10 +118,10 @@ class ListTasksAbility extends AbstractAbility
                 return __('Please finish the onboarding process first to be able to list tasks.', 'simplybook');
             }
 
-            $statusFilter = is_array($input) ? ($input['status'] ?? null) : null;
+            $filters = is_array($input) ? $input : [];
 
             try {
-                return $service->getTasks($statusFilter);
+                return $service->getTasks($filters);
             } catch (Throwable $e) {
                 return __('An error occurred while listing the tasks.', 'simplybook');
             }

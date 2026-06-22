@@ -42,17 +42,16 @@ class TaskManagementService
      * @param bool $strict Used on {@see TaskManagementRepository::getAllTasks()}
      *
      * @return array<int, array<string, mixed>>
-     * @throws InvalidArgumentException Through {@see filterTasksByStatus()}
      */
-    public function getTasks(?string $statusFilter = null, bool $strict = false): array
+    public function getTasks(?array $filters = [], bool $strict = false): array
     {
         $tasks = $this->repository->getAllTasks($strict);
 
-        if ($statusFilter !== null) {
-            $tasks = $this->filterTasksByStatus($tasks, $statusFilter);
+        if (!empty($filters)) {
+            $tasks = $this->filterTasks($filters, $tasks);
         }
 
-        // Convert each task to an array (array_map).
+        // Convert each task to an array.
         $tasks = array_map(static function (TaskInterface $task): array {
             return $task->toArray();
         }, $tasks);
@@ -62,16 +61,43 @@ class TaskManagementService
     }
 
     /**
-     * Filter the given tasks by status. Keys are preserved; the caller is
-     * responsible for reindexing when needed.
+     * Filter tasks by the given filters
      *
+     * @param array<string, mixed> $filters key: filter name, value: filter value
      * @param TaskInterface[] $tasks
+     *
      * @return TaskInterface[]
      */
-    private function filterTasksByStatus(array $tasks, string $status): array
+    public function filterTasks(array $filters, array $tasks): array
     {
-        return array_filter($tasks, static function (TaskInterface $task) use ($status): bool {
-            return $task->getStatus() === $status;
+        return array_filter($tasks, static function (TaskInterface $task) use ($filters): bool {
+            foreach ($filters as $filter => $value) {
+                switch ($filter) {
+                    case 'status':
+                        $match = ($task->getStatus() === (string) $value);
+                        break;
+                    case 'required':
+                        $match = ($task->isRequired() === (bool) $value);
+                        break;
+                    case 'premium':
+                        $match = ($task->isPremium() === (bool) $value);
+                        break;
+                    case 'special_feature':
+                        $match = ($task->isSpecialFeature() === (bool) $value);
+                        break;
+                    case 'snoozed':
+                        $match = ($task->isSnoozed() === (bool) $value);
+                        break;
+                    default:
+                        $match = false; // Unknown filter, so no tasks match
+                }
+
+                if (!$match) {
+                    return false;
+                }
+            }
+
+            return true;
         });
     }
 
