@@ -54,9 +54,9 @@ final class Plugin
 
         add_action('plugins_loaded', [$this, 'loadPluginTextDomain']);
         add_action('plugins_loaded', [$this, 'registerProviders']); // Provide functionality to the plugin
-        add_action('simplybook_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
-        add_action('simplybook_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
-        add_action('simplybook_controllers_loaded', [$this, 'registerListeners']);
+        add_action('simplybook_plugin_providers_loaded', [$this, 'registerFeatures']); // Makes sure features exist when Controllers need them
+        add_action('simplybook_plugin_features_loaded', [$this, 'registerControllers']); // Control the functionality of the plugin
+        add_action('simplybook_plugin_controllers_loaded', [$this, 'registerListeners']);
         add_action('init', [$this, 'registerAbilities'], 1); // Loaded on init so Features and Controllers can register Abilities and translations can be used
         add_action('rest_api_init', [$this, 'registerEndpoints']);
         add_action('admin_init', [$this, 'fireActivationHook']);
