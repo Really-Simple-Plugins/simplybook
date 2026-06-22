@@ -58,7 +58,7 @@ abstract class AbstractManager
 
     /**
      * Method called after all classes given to the manager are registered.
-     * @uses do_action simplybook_{@see type}_loaded
+     * @uses do_action simplybook_plugin_{@see type}_loaded
      */
     protected function afterRegister(): void
     {
