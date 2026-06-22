@@ -20,18 +20,11 @@ return [
     'plugin' => [
         'name' => 'SimplyBook.me',
         'version' => '3.3.1',
-        'pro' => true,
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
         'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
         'lang_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
         'view_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
-        'controllers_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR,
-        'endpoints_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Http' . DIRECTORY_SEPARATOR . 'Endpoints' . DIRECTORY_SEPARATOR,
-        'features_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Features' . DIRECTORY_SEPARATOR,
-        'abilities_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Abilities' . DIRECTORY_SEPARATOR,
-        'providers_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Providers' . DIRECTORY_SEPARATOR,
-        'listeners_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Controllers' . DIRECTORY_SEPARATOR . 'Listeners' . DIRECTORY_SEPARATOR,
         'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',
         'dir'  => plugin_basename(dirname(__DIR__)),
         'base_file' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
@@ -112,7 +105,6 @@ return [
             ['value' => 'default:booking.names.uk', 'label' => 'booking.names.uk'],
             ['value' => 'default:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['value' => 'default:booking.register365.ie', 'label' => 'booking.register365.ie'],
-            // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ]
 ];
