@@ -56,7 +56,7 @@ final class TaskManagementFeature implements FeatureInterface
      */
     public function isEnabled(): bool
     {
-        return (bool)get_option('simplybook_onboarding_completed', false);
+        return (bool) get_option('simplybook_onboarding_completed', false);
     }
 
     /**
