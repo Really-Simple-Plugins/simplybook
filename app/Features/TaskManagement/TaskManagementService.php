@@ -39,6 +39,8 @@ class TaskManagementService
      * Get all tasks as plain associative arrays, optionally filtered by
      * status. Returns a zero-indexed list so the result is JSON-array friendly.
      *
+     * @param bool $strict Used on {@see TaskManagementRepository::getAllTasks()}
+     *
      * @return array<int, array<string, mixed>>
      * @throws InvalidArgumentException Through {@see filterTasksByStatus()}
      */
