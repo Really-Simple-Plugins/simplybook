@@ -72,7 +72,7 @@ class ListServicesAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function defaultPermissionCallback(): ?callable
+    protected function permissionCallback(): ?callable
     {
         return static function () {
             return current_user_can('simplybook_manage');

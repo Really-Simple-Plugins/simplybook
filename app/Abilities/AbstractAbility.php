@@ -154,9 +154,9 @@ abstract class AbstractAbility implements AbilityInterface
     /**
      * Subclasses may override to provide a (static) default permission callable.
      */
-    protected function defaultPermissionCallback(): ?callable
+    protected function permissionCallback(): ?callable
     {
-        return null;
+        return $this->permissionCallback;
     }
 
     /**
@@ -207,7 +207,7 @@ abstract class AbstractAbility implements AbilityInterface
             return $this->permissionCallback;
         }
 
-        $default = $this->defaultPermissionCallback();
+        $default = $this->permissionCallback();
         if (is_callable($default)) {
             return $default;
         }
