@@ -231,7 +231,8 @@ class TaskManagementService
      */
     public function updateStatusFromId(string $taskId, string $status): ?TaskInterface
     {
-        if (!in_array($status, AbstractTask::allowedStatuses(), true)) {
+        $allowedStatuses = AbstractTask::allowedStatuses();
+        if (!in_array($status, $allowedStatuses, true)) {
             throw new InvalidArgumentException('Invalid status: ' . $status);
         }
 
