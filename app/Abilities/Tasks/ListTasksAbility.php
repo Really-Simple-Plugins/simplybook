@@ -5,14 +5,23 @@ declare(strict_types=1);
 namespace SimplyBook\Abilities\Tasks;
 
 use InvalidArgumentException;
-use SimplyBook\Bootstrap\App;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
+use SimplyBook\Features\TaskManagement\TaskManagementFeature;
 use SimplyBook\Features\TaskManagement\TaskManagementService;
 
 class ListTasksAbility extends AbstractAbility
 {
     public const NAME = 'list-tasks';
+
+    private TaskManagementFeature $feature;
+    private TaskManagementService $service;
+
+    public function __construct(TaskManagementFeature $feature, TaskManagementService $service)
+    {
+        $this->feature = $feature;
+        $this->service = $service;
+    }
 
     /**
      * @inheritDoc
@@ -85,14 +94,12 @@ class ListTasksAbility extends AbstractAbility
      */
     protected function defaultExecuteCallback(): ?callable
     {
-        $service = null;
-        if (class_exists(TaskManagementService::class)) {
-            $service = App::getInstance()->get(TaskManagementService::class);
-        }
+        $feature = $this->feature;
+        $service = $this->service;
 
-        return static function ($input = null) use ($service) {
-            if ($service === null) {
-                return __('Tasks are not available yet.', 'simplybook');
+        return static function ($input = null) use ($feature, $service) {
+            if ($feature->isEnabled() === false) {
+                return __('Please finish the onboarding process first to be able to list tasks.', 'simplybook');
             }
 
             $statusFilter = is_array($input) ? ($input['status'] ?? null) : null;
