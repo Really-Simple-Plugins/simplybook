@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding\Endpoints;
 
-use Exception;
+use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Http\ApiClient;
@@ -95,7 +95,7 @@ class CallbackEndpoint implements SingleEndpointInterface
                 $company->email,
                 $this->decryptString($company->password)
             );
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->log('Authentication after registration failed: ' . $e->getMessage());
             return $this->handleCallbackFailure($e->getMessage(), 401);
         }

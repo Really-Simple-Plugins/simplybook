@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Design;
 
-use Exception;
+use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Services\DesignSettingsService;
 
@@ -78,7 +78,7 @@ class UpdateDesignSettingsAbility extends AbstractAbility
 
             try {
                 do_action('simplybook_save_design_settings', $input['settings']);
-            } catch (Exception $e) {
+            } catch (Throwable $e) {
                 return __('The provided design settings could not be saved.', 'simplybook');
             }
 

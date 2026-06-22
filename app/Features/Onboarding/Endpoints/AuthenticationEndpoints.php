@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding\Endpoints;
 
-use Exception;
+use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Http\ApiClient;
@@ -90,7 +90,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
             }
 
             return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
             ], false, __('Unknown error occurred, please verify your credentials.', 'simplybook'), 500);
@@ -130,7 +130,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
         } catch (RestDataException $e) {
             // Default code 200 because React side still used request() here
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
             ], false, __('Unknown 2FA error occurred, please verify your credentials.', 'simplybook')); // Default code 200 because React side still used request() here
@@ -154,7 +154,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
                 $storage->getString('company_login'),
                 $storage->getString('auth_session_id')
             );
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
         }
 

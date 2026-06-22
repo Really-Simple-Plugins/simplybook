@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Services;
 
-use Exception;
+use Throwable;
 use Plugin_Upgrader;
 use WP_Ajax_Upgrader_Skin;
 use SimplyBook\Support\Helpers\Storage;
@@ -113,7 +113,7 @@ class RelatedPluginService
 
         try {
             $pluginInfo = $this->getCurrentPluginInfo();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return false;
         }
 

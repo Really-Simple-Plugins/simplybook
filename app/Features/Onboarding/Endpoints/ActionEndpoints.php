@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding\Endpoints;
 
-use Exception;
+use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Traits\HasRestAccess;
@@ -74,7 +74,7 @@ class ActionEndpoints implements MultiEndpointInterface
          */
         try {
             do_action('simplybook_save_onboarding_widget_style', $storage);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $message = __('Something went wrong while saving the widget style settings. Please try again.', 'simplybook');
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),

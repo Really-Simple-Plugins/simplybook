@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\Onboarding\Endpoints;
 
-use Exception;
+use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Http\ApiClient;
@@ -81,7 +81,7 @@ class CreateAccountEndpoint implements SingleEndpointInterface
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
             return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
         }
