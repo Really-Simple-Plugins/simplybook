@@ -18,8 +18,8 @@ class BookingPageService
 
     /**
      * Generate the booking page with the SimplyBook widget shortcode.
-     * Uses a translatable slug so Dutch users get "kalender" instead of "calendar".
-     * WordPress automatically handles slug uniqueness by appending -2, -3, etc.
+     * Uses a fixed slug. WordPress automatically handles slug uniqueness by
+     * appending -2, -3, etc.
      *
      * @return array{
      *      success: bool,
@@ -40,12 +40,9 @@ class BookingPageService
             ];
         }
 
-        $slug = __('calendar', 'simplybook');
-        $title = sprintf(
-            /* translators: %1$s is the brand name "SimplyBook.me" (do not translate) */
-            __('%1$s Booking page', 'simplybook'),
-            'SimplyBook.me'
-        );
+        $slug = 'booking';
+        /* translators: Default title for the generated SimplyBook booking page. */
+        $title = __('Book Now', 'simplybook');
 
         $pageId = (new PageBuilder())
             ->setTitle($title)
