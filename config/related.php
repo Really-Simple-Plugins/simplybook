@@ -11,7 +11,11 @@ return [
             'activation_slug' => 'metricool' . DIRECTORY_SEPARATOR . 'metricool.php',
             'create' => admin_url('options-general.php?page=metricool'),
             'url' => 'https://wordpress.org/plugins/metricool/',
-            'title' => 'Metricool - ' . __('Social Media Management', 'simplybook'),
+            'title' => sprintf(
+                /* translators: %s: plugin name. */
+                __('%s - Social Media Management', 'simplybook'),
+                'Metricool'
+            ),
             'color' => '#e6fe55'
         ],
         'really-simple-ssl' => [
