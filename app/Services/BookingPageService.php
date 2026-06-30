@@ -18,8 +18,8 @@ class BookingPageService
 
     /**
      * Generate the booking page with the SimplyBook widget shortcode.
-     * Uses a fixed slug. WordPress automatically handles slug uniqueness by
-     * appending -2, -3, etc.
+     * Uses a translatable slug. WordPress automatically handles slug uniqueness
+     * by appending -2, -3, etc.
      *
      * @return array{
      *      success: bool,
@@ -40,7 +40,8 @@ class BookingPageService
             ];
         }
 
-        $slug = 'booking';
+        /* translators: URL slug for the generated booking page. Use lowercase words separated by hyphens. */
+        $slug = __('booking', 'simplybook');
         /* translators: Default title for the generated SimplyBook booking page. */
         $title = __('Book Now', 'simplybook');
 
