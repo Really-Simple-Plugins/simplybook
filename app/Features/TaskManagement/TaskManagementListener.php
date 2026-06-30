@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use Throwable;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Services\PromotionService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
@@ -66,6 +67,10 @@ class TaskManagementListener
         $this->service->flagTaskUrgent(
             Tasks\AddMandatoryProviderTask::IDENTIFIER
         );
+
+        $this->service->hideTask(
+            Tasks\MaxedOutProvidersTask::IDENTIFIER
+        );
     }
 
     /**
@@ -106,6 +111,8 @@ class TaskManagementListener
                 Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
+
+        $this->handleProviderCountLimit($providersAmount);
     }
 
     /**
@@ -207,7 +214,7 @@ class TaskManagementListener
             );
         }
 
-        if ($amountLeft > 1) {
+        if ($amountLeft > 0) {
             $this->service->hideTask(
                 Tasks\MaxedOutProvidersTask::IDENTIFIER
             );
@@ -218,6 +225,47 @@ class TaskManagementListener
                 Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
+    }
+
+    /**
+     * Handle provider limit changes based on the fresh provider count.
+     */
+    private function handleProviderCountLimit(int $providersAmount): void
+    {
+        $providerLimitTotal = $this->getProviderLimitTotal();
+
+        if ($providerLimitTotal <= 0) {
+            return;
+        }
+
+        if ($providersAmount >= $providerLimitTotal) {
+            $this->service->flagTaskUrgent(
+                Tasks\MaxedOutProvidersTask::IDENTIFIER
+            );
+            return;
+        }
+
+        $this->service->hideTask(
+            Tasks\MaxedOutProvidersTask::IDENTIFIER
+        );
+    }
+
+    /**
+     * Return the provider limit for the current subscription, if known.
+     */
+    private function getProviderLimitTotal(): int
+    {
+        try {
+            $subscriptionData = $this->subscriptionDataService->all(true);
+
+            if (empty($subscriptionData)) {
+                $subscriptionData = $this->subscriptionDataService->restore();
+            }
+        } catch (Throwable $e) {
+            return 0;
+        }
+
+        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
     }
 
     /**

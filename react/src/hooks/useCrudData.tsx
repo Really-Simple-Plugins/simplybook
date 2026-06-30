@@ -26,6 +26,15 @@ interface CrudDataReturn {
 const useCrudData = (route: string): CrudDataReturn => {
     const client = new HttpClient(route);
     const queryClient = useQueryClient();
+    const getTasksRoute = 'get_tasks';
+
+    const invalidateRouteQueries = () => {
+        void queryClient.invalidateQueries({ queryKey: [route] });
+
+        if (route === 'providers') {
+            void queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+        }
+    };
 
     const { refetch, isLoading, error, data: response } = useQuery({
         queryKey: [route],
@@ -37,7 +46,7 @@ const useCrudData = (route: string): CrudDataReturn => {
     const createMutation = useMutation({
         mutationFn: (data: any) => client.post(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [route] });
+            invalidateRouteQueries();
         },
     });
 
@@ -83,7 +92,7 @@ const useCrudData = (route: string): CrudDataReturn => {
     const deleteMutation = useMutation({
         mutationFn: (id: string | number) => client.setRoute(`${route}/${id}`).delete(),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [route] });
+            invalidateRouteQueries();
         },
     });
 

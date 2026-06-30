@@ -19,6 +19,9 @@ const NotificationContextStub = {
     triggerNotificationById: () => {
         return false;
     },
+    removeNotificationById: () => {
+        return false;
+    },
     getAllNotifications: () => {
         return false;
     },
@@ -95,6 +98,16 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
     }
 
     /**
+     * Remove a notification from the active notification list by its id.
+     */
+    const removeNotificationById = (id: string) => {
+        setActiveNotifications((prev) => {
+            if (!prev.some((notice) => notice.id === id)) return prev;
+            return prev.filter((notice) => notice.id !== id);
+        });
+    }
+
+    /**
      * Get all notifications. Can be useful during development to see all
      * registered notifications.
      */
@@ -112,7 +125,7 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
 
     return (
         <NotificationContext.Provider
-            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, getAllNotifications}}
+            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, removeNotificationById, getAllNotifications}}
         >
             {children}
         </NotificationContext.Provider>
