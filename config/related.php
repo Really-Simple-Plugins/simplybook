@@ -12,9 +12,9 @@ return [
             'create' => admin_url('options-general.php?page=metricool'),
             'url' => 'https://wordpress.org/plugins/metricool/',
             'title' => sprintf(
-                /* translators: %s: plugin name. */
-                __('%s - Social Media Management', 'simplybook'),
-                'Metricool'
+                /* translators: %s: Plugin name: "Metricool -". */
+                __('%s Social Media Management', 'simplybook'),
+                'Metricool -'
             ),
             'color' => '#e6fe55'
         ],
@@ -26,7 +26,11 @@ return [
             'constant_premium' => 'rsssl_pro',
             'url' => 'https://wordpress.org/plugins/really-simple-ssl/',
             'upgrade_url' => 'https://really-simple-ssl.com/pro?src=simplybook-plugin',
-            'title' => "Really Simple Security - " . __("Lightweight plugin. Heavyweight security features.", "simplybook" ),
+            'title' => sprintf(
+                /* translators: %s: Plugin name: "Really Simple Security -". */
+                __('%s Lightweight plugin. Heavyweight security features.', 'simplybook'),
+                'Really Simple Security -'
+            ),
             'color' => '#f4bf3e'
         ],
         'complianz-gdpr' => [
@@ -38,7 +42,11 @@ return [
             'create' => admin_url('admin.php?page=complianz'),
             'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
             'upgrade_url' => 'https://complianz.io?src=simplybook-plugin',
-            'title' => 'Complianz - ' . __('Consent Management as it should be', 'simplybook'),
+            'title' => sprintf(
+                /* translators: %s: Plugin name: "Complianz -". */
+                __('%s Consent Management as it should be', 'simplybook'),
+                'Complianz -'
+            ),
             'color' => '#009fff'
         ],
         'complianz-terms-conditions' => [
@@ -49,7 +57,13 @@ return [
             'create' => admin_url('admin.php?page=terms-conditions'),
             'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
             'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
-            'title' => 'Complianz - '. __("Terms & Conditions", "simplybook"),
+            'title' => sprintf(
+                /* translators: %s: Plugin name prefix, "Complianz -".
+                 * "Terms & Conditions" is part of the plugin name and can be translated for clarity.
+                 */
+                __('%s Terms & Conditions', 'simplybook'),
+                'Complianz -'
+            ),
             'color' => '#000000'
         ],
     ],
