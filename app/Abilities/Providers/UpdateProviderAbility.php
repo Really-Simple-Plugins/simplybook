@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Providers;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Http\Entities\ServiceProvider;
@@ -81,7 +82,11 @@ class UpdateProviderAbility extends AbstractAbility
 
         return static function ($input = null) use ($provider) {
             if (!is_array($input) || empty($input['id'])) {
-                return __('A valid service provider ID is required.', 'simplybook');
+                $code = 'simplybook_provider_invalid_input';
+                $message = __('A valid service provider ID is required.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             $searchId = (string) $input['id'];
@@ -90,7 +95,11 @@ class UpdateProviderAbility extends AbstractAbility
                 $provider->find($searchId)->fill($input, false);
                 $provider->update();
             } catch (Throwable $e) {
-                return __('The service provider could not be updated.', 'simplybook');
+                $code = 'simplybook_provider_update_failed';
+                $message = __('The service provider could not be updated.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
 
             return $provider->attributes();

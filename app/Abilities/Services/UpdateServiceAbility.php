@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Services;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Abilities\AbstractAbility;
@@ -79,7 +80,11 @@ class UpdateServiceAbility extends AbstractAbility
 
         return static function ($input = null) use ($service) {
             if (!is_array($input) || empty($input['id'])) {
-                return __('A valid service ID is required.', 'simplybook');
+                $code = 'simplybook_service_invalid_input';
+                $message = __('A valid service ID is required.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             $searchId = (string) $input['id'];
@@ -88,7 +93,11 @@ class UpdateServiceAbility extends AbstractAbility
                 $service->find($searchId)->fill($input, false);
                 $service->update();
             } catch (Throwable $e) {
-                return __('The service could not be updated.', 'simplybook');
+                $code = 'simplybook_service_update_failed';
+                $message = __('The service could not be updated.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
 
             return $service->attributes();

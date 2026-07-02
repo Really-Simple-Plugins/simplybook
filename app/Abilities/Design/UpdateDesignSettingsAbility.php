@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Design;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Services\DesignSettingsService;
@@ -73,13 +74,23 @@ class UpdateDesignSettingsAbility extends AbstractAbility
 
         return static function ($input = null) use ($service) {
             if (!is_array($input) || empty($input['settings']) || !is_array($input['settings'])) {
-                return __('A non-empty "settings" object is required.', 'simplybook');
+                $code = 'simplybook_design_settings_invalid_input';
+                $message = __('A non-empty "settings" object is required.', 'simplybook');
+
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             try {
                 do_action('simplybook_save_design_settings', $input['settings']);
             } catch (Throwable $e) {
-                return __('The provided design settings could not be saved.', 'simplybook');
+                $code = 'simplybook_design_settings_save_failed';
+                $message = __('The provided design settings could not be saved.', 'simplybook');
+
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
 
             // Re-fetch so the caller sees the merged, persisted state.

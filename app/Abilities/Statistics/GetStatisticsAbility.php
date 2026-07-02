@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Statistics;
 
+use WP_Error;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Services\Entities\StatisticsService;
@@ -74,7 +75,11 @@ class GetStatisticsAbility extends AbstractAbility
             $storage = new Storage($data);
 
             if ($storage->isEmpty()) {
-                return __('Statistics could not be found.', 'simplybook');
+                $code = 'simplybook_statistics_not_found';
+                $message = __('Statistics could not be found.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 404,
+                ]);
             }
 
             if (empty($input) || !is_array($input) || empty($input['key'])) {
@@ -83,11 +88,16 @@ class GetStatisticsAbility extends AbstractAbility
 
             $search = (string) $input['key'];
             if ($storage->isEmpty($search)) {
-                return sprintf(
+                $code = 'simplybook_statistic_not_found';
+                $message = sprintf(
                     /* translators: %s: user-provided search key */
                     __('Statistic "%s" could not be found.', 'simplybook'),
-                    $search
+                    esc_html($search)
                 );
+
+                return new WP_Error($code, $message, [
+                    'status' => 404,
+                ]);
             }
 
             return $storage->get($search);

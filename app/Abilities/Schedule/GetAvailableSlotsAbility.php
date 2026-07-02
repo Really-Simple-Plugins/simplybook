@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Schedule;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Http\Entities\AvailableSlot;
@@ -90,7 +91,11 @@ class GetAvailableSlotsAbility extends AbstractAbility
 
         return static function ($input = null) use ($slot) {
             if (!is_array($input) || empty($input['date'])) {
-                return __('A valid date is required.', 'simplybook');
+                $code = 'simplybook_available_slots_invalid_input';
+                $message = __('A valid date is required.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             $filters = [
@@ -112,7 +117,11 @@ class GetAvailableSlotsAbility extends AbstractAbility
             try {
                 return $slot->filter($filters)->all();
             } catch (Throwable $e) {
-                return __('The available slots could not be retrieved.', 'simplybook');
+                $code = 'simplybook_available_slots_fetch_failed';
+                $message = __('The available slots could not be retrieved.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
         };
     }

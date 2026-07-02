@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Tasks;
 
+use WP_Error;
 use InvalidArgumentException;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -101,41 +102,46 @@ class UpdateTaskStatusAbility extends AbstractAbility
 
         return static function ($input = null) use ($feature, $service) {
             if ($feature->isEnabled() === false) {
-                return __('Please finish the onboarding process first to be able to update a task.', 'simplybook');
+                $code = 'simplybook_task_feature_disabled';
+                $message = __('Please finish the onboarding process first to be able to update a task.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 403,
+                ]);
             }
 
             $taskId = is_array($input) ? (string) ($input['id'] ?? '') : null;
             $status = is_array($input) ? (string) ($input['status'] ?? '') : null;
 
-            if (empty($taskId)) {
-                return sprintf(
-                    /* translators: %1$s: The required argument. */
-                    __('Required argument "%1$s" not found.', 'simplybook'),
-                    "id"
-                );
-            }
-
-            if (empty($status)) {
-                return sprintf(
-                    /* translators: %1$s: The required argument. */
-                    __('Required argument "%1$s" not found.', 'simplybook'),
-                    "status"
-                );
+            if (empty($taskId) || empty($status)) {
+                $code = 'simplybook_task_missing_argument';
+                $message =  __('Required arguments "id" & "status" should both be given.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             $task = $service->getTask($taskId);
             if (empty($task)) {
-                return __('Task not found.', 'simplybook');
+                $code = 'simplybook_task_not_found';
+                $message = __('Task not found.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 404,
+                ]);
             }
 
             try {
                 $task = $service->updateStatusFromId($taskId, $status);
             } catch (InvalidArgumentException $e) {
-                return sprintf(
+                $code = 'simplybook_task_invalid_status';
+                $message = sprintf(
                     /* translators: %1$s: Status */
                     __('Could not use status "%1$s" to update th task.', 'simplybook'),
-                    $status
+                    esc_html($status)
                 );
+
+                return new WP_Error($code, $message, [
+                    'status' => 400,
+                ]);
             }
 
             return $task->toArray();

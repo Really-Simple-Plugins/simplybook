@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Tasks;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -115,7 +116,11 @@ class ListTasksAbility extends AbstractAbility
 
         return static function ($input = null) use ($feature, $service) {
             if ($feature->isEnabled() === false) {
-                return __('Please finish the onboarding process first to be able to list tasks.', 'simplybook');
+                $code = 'simplybook_tasks_feature_disabled';
+                $message = __('Please finish the onboarding process first to be able to list tasks.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 403,
+                ]);
             }
 
             $filters = is_array($input) ? $input : [];
@@ -123,7 +128,11 @@ class ListTasksAbility extends AbstractAbility
             try {
                 return $service->getTasks($filters);
             } catch (Throwable $e) {
-                return __('An error occurred while listing the tasks.', 'simplybook');
+                $code = 'simplybook_tasks_fetch_failed';
+                $message = __('An error occurred while listing the tasks.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
         };
     }

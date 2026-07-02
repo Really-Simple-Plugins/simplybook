@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities\Schedule;
 
+use WP_Error;
 use Throwable;
 use SimplyBook\Http\Entities\Schedule;
 use SimplyBook\Abilities\AbstractAbility;
@@ -110,7 +111,11 @@ class GetScheduleAbility extends AbstractAbility
             try {
                 return $schedule->filter($filters)->all();
             } catch (Throwable $e) {
-                return __('The schedule could not be retrieved.', 'simplybook');
+                $code = 'simplybook_schedule_fetch_failed';
+                $message = __('The schedule could not be retrieved.', 'simplybook');
+                return new WP_Error($code, $message, [
+                    'status' => 500,
+                ]);
             }
         };
     }
