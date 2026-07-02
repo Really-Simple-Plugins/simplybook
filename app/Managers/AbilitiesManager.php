@@ -7,8 +7,8 @@ namespace SimplyBook\Managers;
 use LogicException;
 use WP_Abilities_Registry;
 use WP_Ability_Categories_Registry;
+use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Interfaces\AbilityInterface;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 /**
@@ -51,7 +51,7 @@ final class AbilitiesManager extends AbstractManager
      */
     public function isRegistrable(object $class): bool
     {
-        return $class instanceof AbilityInterface;
+        return $class instanceof AbstractAbility;
     }
 
     /**

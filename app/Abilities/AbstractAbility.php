@@ -8,12 +8,11 @@ use WP_Error;
 use RuntimeException;
 use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Interfaces\AbilityInterface;
 use SimplyBook\Exceptions\AbilityFailedException;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Exceptions\AbilityApiUnavailableException;
 
-abstract class AbstractAbility implements AbilityInterface
+abstract class AbstractAbility
 {
     /**
      * Property may be overridden child-classes via dependency-injection. If
