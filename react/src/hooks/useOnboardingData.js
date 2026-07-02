@@ -163,7 +163,7 @@ const useOnboardingData = () => {
                     return false;
                 }
 
-                updateOnboardingCompleted(true);
+                await updateOnboardingCompleted(true);
                 setApiError('');
                 return true;
             },
@@ -198,25 +198,25 @@ const useOnboardingData = () => {
     });
 
     // Mutation for updating data
-    const { mutate: updateData } = useMutation({
+    const { mutateAsync: updateData } = useMutation({
         mutationFn: async (newData) => {
             queryClient.setQueryData(["onboarding_data"], (oldData) => ({
                 ...oldData,
                 ...newData,
             }));
-            queryClient.invalidateQueries(["onboarding_data"]);
+            await queryClient.invalidateQueries({queryKey: ["onboarding_data"]});
         },
     });
 
-    const { mutate: updateOnboardingCompleted } = useMutation({
+    const { mutateAsync: updateOnboardingCompleted } = useMutation({
         mutationFn: async (completed) => {
             queryClient.setQueryData(["onboarding_data"], (oldData) => ({
                 ...oldData,
                 onboardingCompleted: completed,
             }));
         },
-        onSuccess: () => {
-            queryClient.invalidateQueries(["onboarding_data"]);
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({queryKey: ["onboarding_data"]});
         },
     });
 

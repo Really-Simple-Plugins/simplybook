@@ -9,6 +9,10 @@ interface CheckboxInputProps extends InputHTMLAttributes<HTMLInputElement> {
     onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
+const isCheckedValue = (value: unknown): boolean => (
+    value === true || value === 1 || value === "1" || value === "true"
+);
+
 /**
  * Styled text input component
  * @param props - Props for the input component
@@ -24,10 +28,14 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
         ...props
     }, ref) => {
         // Default is a truthy value. (true, 1, "1", "true")
-        // @ts-ignore
-        const [checked, setChecked] = useState((value == true));
-        // @ts-ignore
-        const [valueState, setValueState] = useState((value == true ? 1 : 0));
+        const [checked, setChecked] = useState(isCheckedValue(value));
+        const [valueState, setValueState] = useState((isCheckedValue(value) ? 1 : 0));
+
+        useEffect(() => {
+            const nextChecked = isCheckedValue(value);
+            setChecked(nextChecked);
+            setValueState((nextChecked ? 1 : 0));
+        }, [value]);
 
         const checkBoxClasses = clsx(
             "input-type-checkbox relative shrink-0 w-10 h-6 bg-gray-200 peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:bg-blue-600",

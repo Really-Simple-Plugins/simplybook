@@ -349,12 +349,10 @@ class OnboardingController implements FeatureInterface
      */
     protected function saveLoginCompanyData(string $userLogin, string $password): void
     {
-        $companyBuilder = new CompanyBuilder();
-        $companyBuilder->setUserLogin($userLogin)->setPassword(
-            $this->service->encryptString($password)
-        );
-
-        $this->service->storeCompanyData($companyBuilder);
+        $this->service->updateCompanyData([
+            'userLogin' => sanitize_text_field($userLogin),
+            'password' => sanitize_text_field($this->service->encryptString($password)),
+        ]);
     }
 
     /**
