@@ -66,7 +66,7 @@ class GetStatisticsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function executeCallback(): ?callable
+    protected function getExecuteCallback(): ?callable
     {
         $statistics = $this->statistics;
 
@@ -107,7 +107,7 @@ class GetStatisticsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function permissionCallback(): ?callable
+    protected function getPermissionCallback(): ?callable
     {
         return static function () {
             return current_user_can('simplybook_manage');

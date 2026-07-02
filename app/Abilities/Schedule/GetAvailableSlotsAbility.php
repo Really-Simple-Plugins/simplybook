@@ -85,7 +85,7 @@ class GetAvailableSlotsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function executeCallback(): ?callable
+    protected function getExecuteCallback(): ?callable
     {
         $slot = $this->slot;
 
@@ -129,7 +129,7 @@ class GetAvailableSlotsAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function permissionCallback(): ?callable
+    protected function getPermissionCallback(): ?callable
     {
         return static function () {
             return current_user_can('simplybook_manage');

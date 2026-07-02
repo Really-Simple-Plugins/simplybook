@@ -74,7 +74,7 @@ class UpdateServiceAbility extends AbstractAbility
      * @return callable -> string|array Either an error message or the updated
      *         service attributes.
      */
-    protected function executeCallback(): ?callable
+    protected function getExecuteCallback(): ?callable
     {
         $service = $this->service;
 
@@ -107,7 +107,7 @@ class UpdateServiceAbility extends AbstractAbility
     /**
      * @inheritDoc
      */
-    protected function permissionCallback(): ?callable
+    protected function getPermissionCallback(): ?callable
     {
         return static function () {
             return current_user_can('simplybook_manage');
