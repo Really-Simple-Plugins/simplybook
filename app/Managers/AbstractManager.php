@@ -73,7 +73,7 @@ abstract class AbstractManager
      * @throws LogicException When a developer is doing it wrong.
      * @throws ReflectionException When the controller cannot be loaded.
      */
-    public function register(array $classes): void
+    final public function register(array $classes): void
     {
         $this->beforeRegister();
 
