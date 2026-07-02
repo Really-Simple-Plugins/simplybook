@@ -27,8 +27,7 @@ abstract class AbstractManager
     /**
      * Child class should return the type of classes it registers. In plural
      * form. The value is used to identify the type of classes parsed through
-     * the hooks the Manager fires via the methods {@see beforeRegister}
-     * and {@see afterRegister}.
+     * the hooks the Manager fires in {@see register}
      */
     abstract protected function type(): string;
 
@@ -64,9 +63,18 @@ abstract class AbstractManager
     }
 
     /**
-     * Register the given class as long as the entries are registrable according
-     * to the child managers. Class are autowired, but not registered via
-     * {@see App::make}
+     * Register the given class as long as the entries are registrable
+     * according to the child managers. Classes are autowired and based
+     * on the {@see useRegistry} property they are registered in the container.
+     *
+     *  Example filters / hooks:
+     *
+     *       simplybook_plugin_controllers / simplybook_plugin_controllers_loaded
+     *       simplybook_plugin_endpoints / simplybook_plugin_endpoints_loaded
+     *       simplybook_plugin_abilities / simplybook_plugin_abilities_loaded
+     *       simplybook_plugin_listeners / simplybook_plugin_listeners_loaded
+     *       simplybook_plugin_features / simplybook_plugin_features_loaded
+     *
      *
      * @uses apply_filters simplybook_plugin_{@see type} to filter classes
      * @uses do_action simplybook_plugin_{@see type}_loaded after registration
