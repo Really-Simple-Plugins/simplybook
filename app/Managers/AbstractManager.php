@@ -40,8 +40,8 @@ abstract class AbstractManager
     abstract public function isRegistrable(object $class): bool;
 
     /**
-     * Logic to register the given class. If this method can be executed is
-     * checked by the {@see isRegistrable} method.
+     * Logic to register the given class. You can keep it simple. All checks
+     * for registerability should be done in the {@see isRegistrable} method.
      */
     abstract public function registerClass(object $class): void;
 
