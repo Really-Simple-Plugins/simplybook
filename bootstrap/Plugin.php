@@ -13,10 +13,13 @@ use SimplyBook\Managers\AbilitiesManager;
 use SimplyBook\Managers\ControllerManager;
 
 /**
- * @SuppressWarnings("PHPMD.CouplingBetweenObjects") This class is responsible
- * for booting the plugin and as such needs to interact with multiple classes.
- * Refactoring this class to reduce coupling would not make it more
- * readable or maintainable.
+ * @SuppressWarnings("PHPMD.CouplingBetweenObjects")
+ * @SuppressWarnings("PHPMD.TooManyPublicMethods")
+ *
+ * This class is responsible for booting the plugin and as such needs to
+ * interact with, and expose entry points to, many other classes. Splitting it
+ * up to reduce coupling or the number of public methods would not make it
+ * more readable or maintainable.
  */
 final class Plugin
 {
