@@ -48,8 +48,6 @@ return [
         'recaptcha' => [
             'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
             'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
-            'google_privacy_policy_url' => 'https://policies.google.com/privacy',
-            'google_terms_url' => 'https://policies.google.com/terms',
         ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
