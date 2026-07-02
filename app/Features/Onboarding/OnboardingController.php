@@ -351,7 +351,7 @@ class OnboardingController implements FeatureInterface
     {
         $this->service->updateCompanyData([
             'userLogin' => sanitize_text_field($userLogin),
-            'password' => sanitize_text_field($this->service->encryptString($password)),
+            'password' => $this->service->encryptString($password),
         ]);
     }
 
