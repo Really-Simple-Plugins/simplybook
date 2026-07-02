@@ -46,23 +46,21 @@ abstract class AbstractManager
     abstract public function registerClass(object $class): void;
 
     /**
-     * Method called before all classes given to the manager are registered.
-     * @uses apply_filters simplybook_plugin_{@see type}
-     *
-     * @return array Make sure to return the given classes at all times.
+     * Method called before all classes given to the manager are registered. Can
+     * be used by child-classes to initiate functionality that should be called
+     * before the registration of the classes.
      */
-    protected function beforeRegister(array $classes): array
+    protected function beforeRegister(): void
     {
-        return apply_filters('simplybook_plugin_' . $this->type(), $classes);
     }
 
     /**
-     * Method called after all classes given to the manager are registered.
-     * @uses do_action simplybook_plugin_{@see type}_loaded
+     * Method called after all classes given to the manager are registered. Can
+     * be used by child-classes to initiate functionality that should be called
+     * after the registration of the classes.
      */
     protected function afterRegister(): void
     {
-        do_action('simplybook_plugin_' . $this->type() . '_loaded');
     }
 
     /**
@@ -70,12 +68,16 @@ abstract class AbstractManager
      * to the child managers. Class are autowired, but not registered via
      * {@see App::make}
      *
+     * @uses apply_filters simplybook_plugin_{@see type} to filter classes
+     *
      * @throws LogicException When a developer is doing it wrong.
      * @throws ReflectionException When the controller cannot be loaded.
      */
     public function register(array $classes): void
     {
-        $classes = $this->beforeRegister($classes);
+        $this->beforeRegister();
+
+        $classes = apply_filters('simplybook_plugin_' . $this->type(), $classes);
 
         foreach ($classes as $fullyClassifiedName) {
             if (is_string($fullyClassifiedName) === false) {
@@ -93,5 +95,7 @@ abstract class AbstractManager
         }
 
         $this->afterRegister();
+
+        do_action('simplybook_plugin_' . $this->type() . '_loaded');
     }
 }

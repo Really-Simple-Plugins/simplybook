@@ -68,13 +68,11 @@ final class AbilitiesManager extends AbstractManager
      * correctly.
      * @throws LogicException if not called during the "init" action
      */
-    protected function beforeRegister(array $classes): array
+    protected function beforeRegister(): void
     {
         if (current_filter() !== 'init') {
             throw new LogicException('The AbilitiesManager must be initialized during the "init" action.');
         }
-
-        return apply_filters('simplybook_plugin_' . $this->type(), $classes);
     }
 
     /**
@@ -85,8 +83,6 @@ final class AbilitiesManager extends AbstractManager
     {
         add_action('wp_abilities_api_categories_init', [$this, 'registerAbilitiesCategory']);
         add_action('wp_abilities_api_init', [$this, 'registerAbilities']);
-
-        do_action('simplybook_plugin_abilities_loaded');
     }
 
     /**

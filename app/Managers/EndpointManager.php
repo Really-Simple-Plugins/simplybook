@@ -65,7 +65,6 @@ final class EndpointManager extends AbstractManager
     protected function afterRegister(): void
     {
         $this->registerWordPressRestRoutes();
-        do_action('simplybook_' . $this->type() . '_loaded');
     }
 
     /**
