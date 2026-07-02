@@ -69,6 +69,7 @@ abstract class AbstractManager
      * {@see App::make}
      *
      * @uses apply_filters simplybook_plugin_{@see type} to filter classes
+     * @uses do_action simplybook_plugin_{@see type}_loaded after registration
      *
      * @throws LogicException When a developer is doing it wrong.
      * @throws ReflectionException When the controller cannot be loaded.
