@@ -3,6 +3,7 @@
 namespace SimplyBook\Services;
 
 use Throwable;
+use Exception;
 use Plugin_Upgrader;
 use WP_Ajax_Upgrader_Skin;
 use SimplyBook\Support\Helpers\Storage;
