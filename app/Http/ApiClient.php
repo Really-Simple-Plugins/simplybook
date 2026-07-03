@@ -736,6 +736,86 @@ class ApiClient
     }
 
     /**
+     * Get the sanitized embed configuration for the SimplyBook subscription widget.
+     */
+    public function getSubscriptionWidgetEmbedCode(string $returnUrl, string $containerId): array
+    {
+        if ($this->authenticationFailedFlag || $this->company_registration_complete() === false) {
+            return [];
+        }
+
+        if (!$this->tokenIsValid('admin')) {
+            $this->refresh_token('admin');
+        }
+
+        if (!$this->tokenIsValid('admin')) {
+            $this->log('Token not valid, cannot retrieve subscription widget embed code');
+            return [];
+        }
+
+        $requestUrl = add_query_arg(
+            [
+                'return_url' => esc_url_raw($returnUrl),
+                'container_id' => sanitize_html_class($containerId),
+                'locale' => $this->get_locale(),
+                'memory_router' => 1,
+            ],
+            $this->endpoint('admin/subscription-widget/embed-code')
+        );
+
+        $response = wp_safe_remote_get(
+            $requestUrl,
+            [
+                'headers' => $this->get_headers(true, 'admin'),
+                'timeout' => 15,
+                'sslverify' => true,
+            ]
+        );
+
+        if (is_wp_error($response)) {
+            $this->log('WP_Error during subscription widget embed code request: ' . $response->get_error_message());
+            return [];
+        }
+
+        $responseCode = wp_remote_retrieve_response_code($response);
+        $responseBody = wp_remote_retrieve_body($response);
+        $responseData = json_decode($responseBody, true);
+
+        if ($responseCode < 200 || $responseCode >= 300 || !is_array($responseData)) {
+            $this->log('Invalid subscription widget embed code response.');
+            return [];
+        }
+
+        $widgetData = $responseData;
+        if (isset($responseData['result']) && is_array($responseData['result'])) {
+            $widgetData = $responseData['result'];
+        }
+
+        $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
+        if (empty($scriptUrl) || parse_url($scriptUrl, PHP_URL_SCHEME) !== 'https') {
+            $this->log('Invalid subscription widget script URL.');
+            return [];
+        }
+
+        $params = $widgetData['params'] ?? [];
+        if (!is_array($params)) {
+            $this->log('Invalid subscription widget params.');
+            return [];
+        }
+
+        $responseContainerId = sanitize_html_class((string) ($widgetData['container_id'] ?? $containerId));
+        if (empty($responseContainerId)) {
+            $responseContainerId = sanitize_html_class($containerId);
+        }
+
+        return [
+            'container_id' => $responseContainerId,
+            'script_url' => $scriptUrl,
+            'params' => $params,
+        ];
+    }
+
+    /**
      * Get all statistics
      */
     public function get_statistics(): array

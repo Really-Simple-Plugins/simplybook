@@ -156,6 +156,19 @@ abstract class AbstractEntityService
     }
 
     /**
+     * Clear persisted and request-local cache for this data service.
+     */
+    final public function clearCache(): void
+    {
+        if ($this->persistent !== false) {
+            delete_option($this->getCacheName());
+        }
+
+        wp_cache_delete($this->getWpCacheName(true), $this->getWpCacheGroup());
+        wp_cache_delete($this->getWpCacheName(false), $this->getWpCacheGroup());
+    }
+
+    /**
      * Method can be used by child implementations to normalize or transform
      * the raw data fetched from the API before it is persisted. By default,
      * it returns the data as-is.

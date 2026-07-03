@@ -51,7 +51,7 @@ class ChristmasPromotionTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Claim discount', 'simplybook'),
-            'login_link' => 'v2/r/payment-widget',
+            'link' => simplybook_plans_prices_url(),
         ];
     }
 }

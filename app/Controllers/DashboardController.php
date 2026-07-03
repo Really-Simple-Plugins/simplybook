@@ -9,12 +9,16 @@ use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Services\ThemeColorService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class DashboardController implements ControllerInterface
 {
+    private const DASHBOARD_MENU_SLUG = 'simplybook-integration';
+    private const SUBSCRIPTION_RETURN_FLAG = 'simplybook_subscription_return';
+
     use LegacyLoad; // Needed for get_option
     use HasViews;
     use HasUserAccess;
@@ -25,14 +29,22 @@ class DashboardController implements ControllerInterface
     private RequestStorage $request;
     private GeneralConfig $config;
     private ThemeColorService $themeColorService;
+    private SubscriptionDataService $subscriptionDataService;
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService)
-    {
+    public function __construct(
+        ApiClient $client,
+        EnvironmentConfig $env,
+        GeneralConfig $config,
+        RequestStorage $request,
+        ThemeColorService $themeColorService,
+        SubscriptionDataService $subscriptionDataService
+    ) {
         $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
         $this->themeColorService = $themeColorService;
+        $this->subscriptionDataService = $subscriptionDataService;
     }
 
     public function register(): void
@@ -43,6 +55,7 @@ class DashboardController implements ControllerInterface
 
         add_action('admin_menu', [$this, 'addDashboardPage']);
         add_action('admin_init', [$this, 'maybeResetRegistration']);
+        add_action('admin_init', [$this, 'maybeClearSubscriptionCacheOnReturn']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
 
         // Redirect on the activation hook, but do it after anything else.
@@ -105,14 +118,33 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook') . $menuCounterHtml,
             'simplybook_manage',
-            'simplybook-integration',
+            self::DASHBOARD_MENU_SLUG,
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
             $menuPosition,
         );
 
-        add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
-        add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);
+        $dashboardHookSuffix = add_submenu_page(
+            self::DASHBOARD_MENU_SLUG,
+            esc_html__('Dashboard', 'simplybook'),
+            esc_html__('Dashboard', 'simplybook'),
+            'simplybook_manage',
+            self::DASHBOARD_MENU_SLUG,
+            [$this, 'renderReactApp']
+        );
+
+        $plansPricesHookSuffix = add_submenu_page(
+            self::DASHBOARD_MENU_SLUG,
+            esc_html__('Plans & Prices', 'simplybook'),
+            esc_html__('Plans & Prices', 'simplybook'),
+            'simplybook_manage',
+            simplybook_plans_prices_menu_slug(),
+            [$this, 'renderReactApp']
+        );
+
+        $this->enqueueReactAppForHook($pageHookSuffix);
+        $this->enqueueReactAppForHook($dashboardHookSuffix);
+        $this->enqueueReactAppForHook($plansPricesHookSuffix);
     }
 
     /**
@@ -266,6 +298,8 @@ class DashboardController implements ControllerInterface
      */
     private function localizedReactSettings(array $chunkTranslation): array
     {
+        $currentPage = $this->request->getString('global.page');
+
         return apply_filters(
             'simplybook_localize_dashboard_script',
             [
@@ -277,6 +311,8 @@ class DashboardController implements ControllerInterface
                 'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
+                'plans_prices_url' => simplybook_plans_prices_url(),
+                'default_route' => ($currentPage === simplybook_plans_prices_menu_slug()) ? '/plans-prices' : '',
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
@@ -314,6 +350,19 @@ class DashboardController implements ControllerInterface
     }
 
     /**
+     * Clear stale subscription data when returning from the payment flow.
+     */
+    public function maybeClearSubscriptionCacheOnReturn(): void
+    {
+        if ($this->request->getString('global.' . self::SUBSCRIPTION_RETURN_FLAG) !== '1') {
+            return;
+        }
+
+        wp_cache_delete('simplybook_subscription_data', 'simplybook');
+        $this->subscriptionDataService->clearCache();
+    }
+
+    /**
      * Safe way to read the menu count from the options table. Returns 0 if
      * the Task Management feature is not available in the current context.
      */
@@ -324,5 +373,18 @@ class DashboardController implements ControllerInterface
         }
 
         return get_option(\SimplyBook\Features\TaskManagement\Tasks\AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
+    }
+
+    /**
+     * Enqueue the shared React admin assets on a WordPress admin page hook.
+     */
+    private function enqueueReactAppForHook(string $pageHookSuffix): void
+    {
+        if (empty($pageHookSuffix)) {
+            return;
+        }
+
+        add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
+        add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);
     }
 }

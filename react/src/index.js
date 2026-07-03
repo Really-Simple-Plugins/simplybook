@@ -18,6 +18,31 @@ import { Route as rootRoute } from "./routes/__root.jsx";
 // Import the generated route tree
 import { routeTree } from "./routeTree.gen";
 
+const replaceEmptyHashWithDefaultRoute = () => {
+  if (
+    typeof window === "undefined" ||
+    typeof simplybook === "undefined" ||
+    !simplybook.default_route ||
+    window.location.hash
+  ) {
+    return;
+  }
+
+  const defaultRoute = simplybook.default_route.startsWith("/")
+    ? simplybook.default_route
+    : `/${simplybook.default_route}`;
+
+  const defaultUrl = new URL(window.location.href);
+  defaultUrl.hash = defaultRoute;
+  window.history.replaceState(window.history.state, "", defaultUrl.toString());
+};
+
+replaceEmptyHashWithDefaultRoute();
+
+if (typeof window !== "undefined") {
+  window.addEventListener("hashchange", replaceEmptyHashWithDefaultRoute);
+}
+
 const hashHistory = createHashHistory();
 const HOUR_IN_SECONDS = 3600;
 const queryCache = new QueryCache({

@@ -43,7 +43,7 @@ class TrialExpiredTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('Upgrade', 'simplybook'),
-            'login_link' => 'v2/r/payment-widget#/',
+            'link' => simplybook_plans_prices_url(),
         ];
     }
 }

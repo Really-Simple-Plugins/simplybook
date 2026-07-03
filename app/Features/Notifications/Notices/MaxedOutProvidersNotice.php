@@ -45,7 +45,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
     {
         return [
             'text' => __('Upgrade now', 'simplybook'),
-            'login_link' => '/v2/r/payment-widget',
+            'link' => simplybook_plans_prices_url(),
         ];
     }
 }

@@ -68,3 +68,21 @@ if (!function_exists('simplybook_is_wp_json_request')) {
         return (strpos($currentRequestUri, $restUrlPrefix) !== false) || $isPlainPermalink;
     }
 }
+
+if (!function_exists('simplybook_plans_prices_menu_slug')) {
+    /**
+     * Get the menu slug for the Plans & Prices page.
+     */
+    function simplybook_plans_prices_menu_slug(): string {
+        return 'simplybook-plans-prices';
+    }
+}
+
+if (!function_exists('simplybook_plans_prices_url')) {
+    /**
+     * Get the admin URL for the Plans & Prices page.
+     */
+    function simplybook_plans_prices_url(): string {
+        return admin_url('admin.php?page=' . simplybook_plans_prices_menu_slug());
+    }
+}
