@@ -16,13 +16,13 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class DashboardController implements ControllerInterface
 {
-    private const DASHBOARD_MENU_SLUG = 'simplybook-integration';
-    private const SUBSCRIPTION_RETURN_FLAG = 'simplybook_subscription_return';
-
     use LegacyLoad; // Needed for get_option
     use HasViews;
     use HasUserAccess;
     use HasAllowlistControl;
+
+    private const DASHBOARD_MENU_SLUG = 'simplybook-integration';
+    private const SUBSCRIPTION_RETURN_FLAG = 'simplybook_subscription_return';
 
     private ApiClient $client;
     private EnvironmentConfig $env;
