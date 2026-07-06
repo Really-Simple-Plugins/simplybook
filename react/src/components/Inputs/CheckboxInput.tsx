@@ -41,10 +41,7 @@ const CheckboxInput = forwardRef<HTMLInputElement, CheckboxInputProps>(
                     type="checkbox"
                     checked={checked}
                     onChange={(e) => {
-                        const nextValue = e.target.checked ? 1 : 0;
-
-                        e.target.value = String(nextValue);
-                        setValueState(nextValue);
+                        setValueState((e.target.checked ? 1 : 0));
                         setChecked(e.target.checked);
                         if (onChange) {
                             onChange(e);
