@@ -1,21 +1,43 @@
+import { __ } from "@wordpress/i18n";
+import useSubscriptionData from "../../hooks/useSubscriptionData";
 import Label from "./Label";
 
-const SubscriptionLabel = ({ children, labelVariant, link = "" }) => {
+const SubscriptionLabel = () => {
+    const { subscriptionPlan, expiresIn, isExpired, isLoading } = useSubscriptionData();
+    const plansPricesUrl = simplybook?.plans_prices_url || "";
+
+    if (isLoading || !subscriptionPlan) {
+        return null;
+    }
+
+    const labelVariant = isExpired ? "trial-expired" : "trial";
+    const labelText = isExpired
+        ? `${subscriptionPlan} ${__("is expired.", "simplybook")}`
+        : getSubscriptionLabelText(subscriptionPlan, expiresIn);
+
     const subscriptionLabel = (
         <Label labelVariant={labelVariant}>
-            {children}
+            {labelText}
         </Label>
     );
 
-    if (!link) {
+    if (!plansPricesUrl) {
         return subscriptionLabel;
     }
 
     return (
-        <a href={link} className="no-underline hover:opacity-80 focus:outline-hidden">
+        <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden">
             {subscriptionLabel}
         </a>
     );
+};
+
+const getSubscriptionLabelText = (subscriptionPlan, expiresIn) => {
+    if (subscriptionPlan.toUpperCase() === "TRIAL" || expiresIn < 30) {
+        return `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    }
+
+    return subscriptionPlan;
 };
 
 SubscriptionLabel.displayName = "SubscriptionLabel";

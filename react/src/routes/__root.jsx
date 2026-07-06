@@ -5,15 +5,7 @@ import {
 } from "@tanstack/react-router";
 import ErrorBoundary from "../components/Common/ErrorBoundary";
 
-const getDefaultRoute = () => {
-  if (typeof simplybook === "undefined" || !simplybook.default_route) {
-    return "";
-  }
-
-  return simplybook.default_route.startsWith("/")
-    ? simplybook.default_route
-    : `/${simplybook.default_route}`;
-};
+const getDefaultRoute = () => simplybook?.default_route ?? "";
 
 // Lazy load router devtools
 const TanStackRouterDevtools = React.lazy(() =>

@@ -4,16 +4,13 @@ import LoginLink from "./LoginLink";
 import { __ } from "@wordpress/i18n";
 import { useEffect } from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
-import useSubscriptionData from "../../hooks/useSubscriptionData";
 import useTaskData from "../../hooks/useTaskData";
-import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
 import LiveAgent from "./LiveAgent";
 import SubscriptionLabel from "./SubscriptionLabel";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
-    const { subscriptionPlan, expiresIn, isExpired, isLoading, hasError } = useSubscriptionData();
     const { isLoading: tasksLoading, getRemainingTasks } = useTaskData();
     const tasksOpen = getRemainingTasks().length;
 
@@ -35,12 +32,6 @@ const Header = () => {
     }, [onboardingCompleted]);
 
     const linkClassName = "text-base px-4 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300 hover:text-primary";
-    const plansPricesUrl = simplybook?.plans_prices_url || "";
-
-    let expireText = subscriptionPlan;
-    if (subscriptionPlan.toUpperCase() === 'TRIAL' || (expiresIn < 30)) {
-        expireText = `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
-    }
 
     return (
         <div className="bg-white ">
@@ -100,16 +91,7 @@ const Header = () => {
                     py-6 w-full ms-auto flex items-center justify-between px-0
                     xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
                 ">
-                    {!isLoading && !isExpired && subscriptionPlan && (
-                        <SubscriptionLabel labelVariant="trial" link={plansPricesUrl}>
-                            {expireText}
-                        </SubscriptionLabel>
-                    )}
-                    {!isLoading && isExpired && subscriptionPlan && (
-                        <SubscriptionLabel labelVariant="trial-expired" link={plansPricesUrl}>
-                            {subscriptionPlan} {__("is expired.", "simplybook")}
-                        </SubscriptionLabel>
-                    )}
+                    <SubscriptionLabel />
                     <LiveAgent/>
                 </div>
             </header>
