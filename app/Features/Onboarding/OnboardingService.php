@@ -66,21 +66,10 @@ class OnboardingService
      */
     public function storeCompanyData(CompanyBuilder $companyBuilder): void
     {
-        $this->updateCompanyData($companyBuilder->toArray());
-    }
-
-    /**
-     * Update specific company data fields in the options.
-     */
-    public function updateCompanyData(array $companyData): void
-    {
         $options = get_option('simplybook_company_data', []);
 
-        $filteredCompanyData = array_filter(
-            $companyData,
-            static fn($value): bool => ($value !== '' && $value !== null)
-        );
-        foreach ($filteredCompanyData as $key => $value) {
+        $companyData = array_filter($companyBuilder->toArray());
+        foreach ($companyData as $key => $value) {
             $options[$key] = $value;
         }
 

@@ -163,8 +163,6 @@ const OnboardingStep = ({
      * back to step 1.
      */
     const restartOnboarding = async () => {
-        const { onboardingCompleted: _ignored, ...currentFormData } = getValues();
-
         try {
             await httpClient.setRoute('onboarding/retry_onboarding').setPayload({
                 user_confirmed: true,
@@ -174,9 +172,7 @@ const OnboardingStep = ({
             return false;
         }
 
-        await updateData(currentFormData);
-        await setOnboardingCompleted(false);
-        reset(currentFormData);
+        setOnboardingCompleted(false);
         setApiError('');
         await navigate({to: getURLForStep(1)});
     }
