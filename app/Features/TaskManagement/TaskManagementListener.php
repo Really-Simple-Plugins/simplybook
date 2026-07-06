@@ -231,7 +231,7 @@ class TaskManagementListener
      */
     private function handleProviderCountLimit(int $providersAmount): void
     {
-        $providerLimitTotal = $this->subscriptionDataService->getProviderLimitTotal();
+        $providerLimitTotal = $this->subscriptionDataService->getFreshProviderLimitTotal();
 
         if ($providerLimitTotal <= 0) {
             return;

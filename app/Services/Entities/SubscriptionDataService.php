@@ -28,18 +28,12 @@ class SubscriptionDataService extends AbstractEntityService
     }
 
     /**
-     * Return the provider limit and refresh subscription data when needed.
-     * Provider-count task events need the current plan limit to avoid stale
-     * maxed-out provider task state after cached subscription data expires.
+     * Return the provider limit from fresh subscription data.
      */
-    public function getProviderLimitTotal(): int
+    public function getFreshProviderLimitTotal(): int
     {
         try {
-            $subscriptionData = $this->all(true);
-
-            if (empty($subscriptionData)) {
-                $subscriptionData = $this->restore();
-            }
+            $subscriptionData = $this->restore();
         } catch (Throwable $e) {
             return 0;
         }
