@@ -35,7 +35,7 @@ class ServicesProvidersEndpoint extends AbstractCrudEndpoint
         $response = parent::createItem($request);
 
         if ($response->get_status() >= 200 && $response->get_status() < 300) {
-            // A successful create guarantees at least one provider exists.
+            // The providers query refresh dispatches the exact count.
             $this->dispatchCurrentProviderCount(1);
         }
 
@@ -59,26 +59,22 @@ class ServicesProvidersEndpoint extends AbstractCrudEndpoint
         }
 
         $updatedProviderCount = max(0, $currentProviderCount - 1);
-
-        if ($updatedProviderCount === 0) {
-            Event::dispatch(Event::EMPTY_PROVIDERS);
-            return $response;
-        }
-
-        Event::dispatch(Event::HAS_PROVIDERS, [
-            'count' => $updatedProviderCount,
-        ]);
+        $this->dispatchCurrentProviderCount($updatedProviderCount);
 
         return $response;
     }
 
     /**
      * Return a clear provider-limit error when SimplyBook rejects the create
-     * and the current subscription data indicates no provider slots remain.
+     * with a provider-limit response.
      */
     protected function processRequestThrowable(Throwable $exception, string $action = ''): WP_REST_Response
     {
-        if ($exception instanceof RestDataException && $action === 'create' && $this->providerLimitReached()) {
+        if (
+            $exception instanceof RestDataException
+            && $action === 'create'
+            && $this->subscriptionDataService->isProviderLimitReachedResponse($exception)
+        ) {
             return $this->sendHttpResponse(
                 [
                     'code' => 'provider_limit_reached',
@@ -93,18 +89,10 @@ class ServicesProvidersEndpoint extends AbstractCrudEndpoint
     }
 
     /**
-     * Dispatch the current provider count, if it can be read.
+     * Dispatch provider task state for a provider count.
      */
-    private function dispatchCurrentProviderCount(int $minimumProviderCount = 0): void
+    private function dispatchCurrentProviderCount(int $providerCount): void
     {
-        $providerCount = $this->getCurrentProviderCount();
-
-        if ($providerCount === null) {
-            return;
-        }
-
-        $providerCount = max($minimumProviderCount, $providerCount);
-
         if ($providerCount === 0) {
             Event::dispatch(Event::EMPTY_PROVIDERS);
             return;
@@ -125,21 +113,5 @@ class ServicesProvidersEndpoint extends AbstractCrudEndpoint
         } catch (Throwable $e) {
             return null;
         }
-    }
-
-    /**
-     * Check if the current provider count reaches the provider limit.
-     */
-    private function providerLimitReached(): bool
-    {
-        $currentProviderCount = $this->getCurrentProviderCount();
-
-        if ($currentProviderCount === null) {
-            return false;
-        }
-
-        $providerLimitTotal = $this->subscriptionDataService->getProviderLimitTotal();
-
-        return $providerLimitTotal > 0 && $currentProviderCount >= $providerLimitTotal;
     }
 }

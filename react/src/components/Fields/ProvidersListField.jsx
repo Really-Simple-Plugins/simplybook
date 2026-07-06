@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import { __ } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -10,34 +10,31 @@ import ButtonInput from "../Inputs/ButtonInput";
 import { useBlocker } from "@tanstack/react-router";
 import { useNotifications } from "../../context/NotificationContext";
 
+const MAXED_OUT_PROVIDERS_NOTICE_ID = 'maxed_out_providers';
+
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
-    const { providersRemaining, providersTotal } = useSubscriptionData();
-    const { triggerNotificationById, removeNotificationById } = useNotifications();
-    const hasTriggeredMaxedOutNotice = useRef(false);
+    const { providersRemaining, providersLimit, hasProviderLimit } = useSubscriptionData();
+    const { triggerNotificationById, removeNotificationById, isActiveNotification } = useNotifications();
 
-    const currentProviderCount = crudState.providers?.filter(provider => provider != null).length ?? 0;
+    const providersTotal = crudState.providers?.filter(provider => provider != null).length ?? 0;
     const pendingNewProviderCount = crudState.unsavedProviders?.some(provider => provider?.id === "new") ? 1 : 0;
-    const normalizedProvidersTotal = Number(providersTotal) || 0;
-    const hasProviderLimit = normalizedProvidersTotal > 0;
-    const isAtSavedProviderLimit = hasProviderLimit && currentProviderCount >= normalizedProvidersTotal;
-    const isAtProviderLimit = hasProviderLimit && (currentProviderCount + pendingNewProviderCount) >= normalizedProvidersTotal;
+    const isAtSavedProviderLimit = hasProviderLimit && providersTotal >= providersLimit;
+    const isAtProviderLimit = hasProviderLimit && (providersTotal + pendingNewProviderCount) >= providersLimit;
     const canStartNewProvider = !isAtProviderLimit;
 
     useEffect(() => {
         if (!isAtSavedProviderLimit) {
-            hasTriggeredMaxedOutNotice.current = false;
-            removeNotificationById('maxed_out_providers');
+            removeNotificationById(MAXED_OUT_PROVIDERS_NOTICE_ID);
             return;
         }
 
-        if (hasTriggeredMaxedOutNotice.current) {
+        if (isActiveNotification(MAXED_OUT_PROVIDERS_NOTICE_ID)) {
             return;
         }
 
-        triggerNotificationById('maxed_out_providers');
-        hasTriggeredMaxedOutNotice.current = true;
-    }, [isAtSavedProviderLimit, removeNotificationById, triggerNotificationById]);
+        triggerNotificationById(MAXED_OUT_PROVIDERS_NOTICE_ID);
+    }, [isAtSavedProviderLimit, isActiveNotification, removeNotificationById, triggerNotificationById]);
 
     useBlocker({
         shouldBlockFn: ({ next }) => {
@@ -115,7 +112,7 @@ const ProvidersListField = () => {
                 </div>
                 {hasProviderLimit && (
                     <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
-                        <span>{`Service Providers: ${currentProviderCount} / ${normalizedProvidersTotal}`}</span>
+                        <span>{`Service Providers: ${providersTotal} / ${providersLimit}`}</span>
                     </div>
                 )}
             </div>

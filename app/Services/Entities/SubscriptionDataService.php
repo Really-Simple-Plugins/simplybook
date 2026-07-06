@@ -3,6 +3,7 @@
 namespace SimplyBook\Services\Entities;
 
 use Throwable;
+use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Helpers\Event;
 
 class SubscriptionDataService extends AbstractEntityService
@@ -27,7 +28,9 @@ class SubscriptionDataService extends AbstractEntityService
     }
 
     /**
-     * Return the provider limit for the current subscription, if known.
+     * Return the provider limit and refresh subscription data when needed.
+     * Provider-count task events need the current plan limit to avoid stale
+     * maxed-out provider task state after cached subscription data expires.
      */
     public function getProviderLimitTotal(): int
     {
@@ -41,7 +44,73 @@ class SubscriptionDataService extends AbstractEntityService
             return 0;
         }
 
+        return $this->extractProviderLimitTotal($subscriptionData);
+    }
+
+    /**
+     * Check whether a SimplyBook error response reports the provider limit.
+     */
+    public function isProviderLimitReachedResponse(RestDataException $exception): bool
+    {
+        $responseParts = $this->flattenErrorResponse($exception->getData());
+        $responseParts[] = $exception->getMessage();
+        $responseText = strtolower(implode(' ', $responseParts));
+
+        return $this->containsAny($responseText, [
+            'provider_limit',
+            'provider limit',
+            'providers',
+            'service provider',
+        ]) && $this->containsAny($responseText, [
+            'limit',
+            'maximum',
+            'maxed',
+        ]);
+    }
+
+    /**
+     * Flatten response keys and values into searchable strings.
+     */
+    private function flattenErrorResponse(array $response): array
+    {
+        $values = [];
+
+        foreach ($response as $key => $value) {
+            $values[] = (string) $key;
+
+            if (is_array($value)) {
+                $values = array_merge($values, $this->flattenErrorResponse($value));
+                continue;
+            }
+
+            if (is_scalar($value)) {
+                $values[] = (string) $value;
+            }
+        }
+
+        return $values;
+    }
+
+    /**
+     * Extract the provider limit total from subscription data.
+     */
+    private function extractProviderLimitTotal(array $subscriptionData): int
+    {
         return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
+    }
+
+    /**
+     * Check whether a haystack includes any of the configured needles.
+     */
+    private function containsAny(string $haystack, array $needles): bool
+    {
+        foreach ($needles as $needle) {
+            if (stripos($haystack, $needle) !== false) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

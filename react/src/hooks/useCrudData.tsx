@@ -28,11 +28,13 @@ const useCrudData = (route: string): CrudDataReturn => {
     const queryClient = useQueryClient();
     const getTasksRoute = 'get_tasks';
 
-    const invalidateRouteQueries = () => {
-        void queryClient.invalidateQueries({ queryKey: [route] });
+    const invalidateRouteQueries = async () => {
+        await queryClient.invalidateQueries({ queryKey: [route] });
 
         if (route === 'providers') {
-            void queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+            // The providers GET dispatches provider-count task events server-side,
+            // refresh tasks after that so the task list reflects the new count.
+            await queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
         }
     };
 
@@ -46,7 +48,7 @@ const useCrudData = (route: string): CrudDataReturn => {
     const createMutation = useMutation({
         mutationFn: (data: any) => client.post(data),
         onSuccess: () => {
-            invalidateRouteQueries();
+            void invalidateRouteQueries();
         },
     });
 
@@ -92,7 +94,7 @@ const useCrudData = (route: string): CrudDataReturn => {
     const deleteMutation = useMutation({
         mutationFn: (id: string | number) => client.setRoute(`${route}/${id}`).delete(),
         onSuccess: () => {
-            invalidateRouteQueries();
+            void invalidateRouteQueries();
         },
     });
 

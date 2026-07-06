@@ -22,6 +22,9 @@ const NotificationContextStub = {
     removeNotificationById: () => {
         return false;
     },
+    isActiveNotification: () => {
+        return false;
+    },
     getAllNotifications: () => {
         return false;
     },
@@ -108,6 +111,13 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
     }
 
     /**
+     * Check if a notification is currently active.
+     */
+    const isActiveNotification = (id: string) => {
+        return activeNotifications.some((notice) => notice.id === id);
+    }
+
+    /**
      * Get all notifications. Can be useful during development to see all
      * registered notifications.
      */
@@ -125,7 +135,7 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
 
     return (
         <NotificationContext.Provider
-            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, removeNotificationById, getAllNotifications}}
+            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, removeNotificationById, isActiveNotification, getAllNotifications}}
         >
             {children}
         </NotificationContext.Provider>
