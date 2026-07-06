@@ -6,6 +6,7 @@ namespace SimplyBook\Abilities;
 
 use RuntimeException;
 use ReflectionException;
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 
 abstract class AbstractAbility
@@ -108,25 +109,52 @@ abstract class AbstractAbility
     }
 
     /**
-     * Default category is set in {@see AbilitiesManager::registerAbilities},
-     * but a subclass may override to provide a specific category. Make sure
-     * to register the category earlier in the WordPress lifecycle if using
-     * a custom one.
+     * Optional. A child class may provide a specific category for the ability.
+     * Is automatically detected and registered, in time, by the
+     * {@see AbilitiesManager::registerAbilitiesCategory} method. If not
+     * provided, the default category is used.
+     *
+     * Example return format
+     *
+     *      [
+     *          'slug' => 'my-category',
+     *          'label' => 'My Category',
+     *          'description' => 'My Category Description',
+     *      ]
      */
-    public function getCategory(): ?string
+    public function getCategory(): ?array
     {
         return null;
     }
 
     /**
+     * Method is used in the {@see toArray} method to get the category slug for
+     * registration in {@see AbilitiesManager::registerAbilities}. If no
+     * specific category is registered, the default category is used.
+     */
+    final public function getCategorySlug(): ?string
+    {
+        $category = $this->getCategory();
+        if (is_null($category)) {
+            return null;
+        }
+
+        if (empty($category['slug'])) {
+            throw new InvalidArgumentException('Ability category misses slug');
+        }
+
+        return sanitize_title($category['slug']);
+    }
+
+    /**
      * Convert the ability to an array suitable for registration with the
-     * WP Abilities API. Registration is done in
-     * {@see AbilitiesManager::registerAbilities}.
+     * WP Abilities API. Empty values are omitted from the array. Registration
+     * is done in {@see AbilitiesManager::registerAbilities}.
      */
     final public function toArray(): array
     {
         return array_filter([
-            'category' => $this->getCategory(),
+            'category' => $this->getCategorySlug(),
             'label' => $this->getLabel(),
             'description' => $this->getDescription(),
             'input_schema' => $this->getInputSchema(),

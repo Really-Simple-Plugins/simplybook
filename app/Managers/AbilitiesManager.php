@@ -31,6 +31,13 @@ final class AbilitiesManager extends AbstractManager
     private array $abilities = [];
 
     /**
+     * All the categories of the registered abilities
+     * @var array<string, array> slug => arguments. Arguments documented
+     * here: {@see AbstractAbility::getCategory()}
+     */
+    private array $categories = [];
+
+    /**
      * Bind the config
      */
     public function __construct(GeneralConfig $config)
@@ -60,6 +67,23 @@ final class AbilitiesManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $this->abilities[$class->getName()] = $class->toArray();
+
+        $this->registerCategory(
+            $class->getCategory()
+        );
+    }
+
+    /**
+     * Register the given category if it is valid.
+     */
+    private function registerCategory(?array $category): void
+    {
+        if ($this->isValidCategory($category)) {
+            return;
+        }
+
+        $slug = sanitize_title($category['slug']);
+        $this->categories[$slug] = $category;
     }
 
     /**
@@ -86,32 +110,62 @@ final class AbilitiesManager extends AbstractManager
     }
 
     /**
-     * Register the SimplyBook abilities category that we use for all the
-     * plugin abilities
+     * Register the default plugin category and register the specific categories
+     * defined by the ability classes.
      * @internal Should be called from wp_abilities_api_categories_init action
+     * @throws LogicException if the default abilities category is not valid
      */
-    public function registerAbilitiesCategory(WP_Ability_Categories_Registry $registry): void
+    public function registerAbilitiesCategory(WP_Ability_Categories_Registry $categories): void
     {
-        $registry->register(
-            $this->config->getString('abilities.category', 'simplybook'),
+        if (!$this->isValidCategory($this->config->get('abilities.category'))) {
+            throw new LogicException('The default abilities category is not valid.');
+        }
+
+        $categories->register(
+            $this->config->getTitle('abilities.category.slug', 'simplybook'),
             [
-                'label' => __('SimplyBook.me plugin abilities', 'simplybook'),
-                'description' => __('Abilities related to the SimplyBook.me plugin.', 'simplybook'),
+                'label' => $this->config->getString('abilities.category.label', 'simplybook'),
+                'description' => $this->config->getString('abilities.category.description', 'simplybook'),
             ]
         );
+
+        foreach ($this->categories as $category) {
+            if (!$this->isValidCategory($category)) {
+                continue;
+            }
+
+            $slug = sanitize_title($category['slug']);
+            $categories->register($slug, [
+                'label' => sanitize_text_field($category['label']),
+                'description' => sanitize_text_field($category['description']),
+            ]);
+        }
     }
 
     /**
-     * Register all the SimplyBook plugin abilities with the WP Abilities API,
-     * using the registered abilities from the {@see registerClass} method.
+     * Register all the plugin abilities with the WP Abilities API, using the
+     * registered abilities from the {@see registerClass} method.
      * @internal Should be called from wp_abilities_api_init action
      */
-    public function registerAbilities(WP_Abilities_Registry $registry): void
+    public function registerAbilities(WP_Abilities_Registry $abilities): void
     {
         foreach ($this->abilities as $name => $arguments) {
-            $arguments['category'] ??= $this->config->getString('abilities.category', 'simplybook');
+            $arguments['category'] ??= $this->config->getTitle('abilities.category.slug', 'simplybook');
             $prefixedAbilityName = ($this->config->getString('abilities.namespace', 'simplybook') . '/' . $name);
-            $registry->register($prefixedAbilityName, $arguments);
+            $abilities->register($prefixedAbilityName, $arguments);
         }
+    }
+
+    /**
+     * A category is valid if it has a name, label and description. As per
+     * documentation: {@see AbstractAbility::getCategory}
+     */
+    private function isValidCategory(?array $category): bool
+    {
+        if (is_null($category)) {
+            return false;
+        }
+
+        return isset($category['slug'], $category['label'], $category['description']);
     }
 }

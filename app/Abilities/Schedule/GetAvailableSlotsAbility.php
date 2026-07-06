@@ -37,6 +37,18 @@ class GetAvailableSlotsAbility extends AbstractAbility
     }
 
     /**
+     * Specific category for the Schedule abilities.
+     */
+    public function getCategory(): ?array
+    {
+        return [
+            'slug' => 'simplybook-schedule',
+            'label' => __('Simplybook.me Schedule abilities', 'simplybook'),
+            'description' => __('Abilities related to the Simplybook.me Schedule API.', 'simplybook'),
+        ];
+    }
+
+    /**
      * @inheritDoc
      */
     public function getInputSchema(): ?array
