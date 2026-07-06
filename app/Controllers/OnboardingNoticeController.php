@@ -157,10 +157,18 @@ class OnboardingNoticeController implements ControllerInterface
     }
 
     /**
-     * Check if the company registration time is more than 3 days ago.
+     * Determine whether the installation age allows the notice to show.
+     *
+     * Regular installs can show the notice immediately, Extendify installs keep
+     * the activation delay.
      */
     private function pluginInstallationTimeSuitableForNotice(): bool
     {
+        $extendifySiteIdExists = get_option('extendify_site_id', false) !== false;
+        if ($extendifySiteIdExists === false) {
+            return true;
+        }
+
         $pluginActivationTimestamp = get_option('simplybook_activation_unix_timestamp');
         if (empty($pluginActivationTimestamp)) {
             return false;
