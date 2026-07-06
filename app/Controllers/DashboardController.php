@@ -358,7 +358,6 @@ class DashboardController implements ControllerInterface
             return;
         }
 
-        wp_cache_delete('simplybook_subscription_data', 'simplybook');
         $this->subscriptionDataService->clearCache();
     }
 

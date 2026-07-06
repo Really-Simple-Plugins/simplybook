@@ -8,8 +8,8 @@ import useSubscriptionData from "../../hooks/useSubscriptionData";
 import useTaskData from "../../hooks/useTaskData";
 import Icon from "./Icon";
 import ButtonLink from "../Buttons/ButtonLink";
-import Label from "./Label";
 import LiveAgent from "./LiveAgent";
+import SubscriptionLabel from "./SubscriptionLabel";
 
 const Header = () => {
     const { onboardingCompleted } = useOnboardingData();
@@ -36,24 +36,6 @@ const Header = () => {
 
     const linkClassName = "text-base px-4 py-[23px] text-tertiary border-b-4  border-transparent [&.active]:border-tertiary focus:outline-hidden relative ease-in-out duration-300 hover:text-primary";
     const plansPricesUrl = simplybook?.plans_prices_url || "";
-
-    const renderSubscriptionLabel = (children, labelVariant) => {
-        const subscriptionLabel = (
-            <Label labelVariant={labelVariant}>
-                {children}
-            </Label>
-        );
-
-        if (!plansPricesUrl) {
-            return subscriptionLabel;
-        }
-
-        return (
-            <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden">
-                {subscriptionLabel}
-            </a>
-        );
-    };
 
     let expireText = subscriptionPlan;
     if (subscriptionPlan.toUpperCase() === 'TRIAL' || (expiresIn < 30)) {
@@ -119,15 +101,14 @@ const Header = () => {
                     xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
                 ">
                     {!isLoading && !isExpired && subscriptionPlan && (
-                        renderSubscriptionLabel(expireText, "trial")
+                        <SubscriptionLabel labelVariant="trial" link={plansPricesUrl}>
+                            {expireText}
+                        </SubscriptionLabel>
                     )}
                     {!isLoading && isExpired && subscriptionPlan && (
-                        renderSubscriptionLabel(
-                            <>
-                                {subscriptionPlan} {__("is expired.", "simplybook")}
-                            </>,
-                            "trial-expired"
-                        )
+                        <SubscriptionLabel labelVariant="trial-expired" link={plansPricesUrl}>
+                            {subscriptionPlan} {__("is expired.", "simplybook")}
+                        </SubscriptionLabel>
                     )}
                     <LiveAgent/>
                 </div>

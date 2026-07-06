@@ -6,11 +6,15 @@ import HttpClient from "../../api/requests/HttpClient";
 const WIDGET_ROUTE = "subscription_widget_embed_code";
 const WIDGET_CONTAINER_ID = "simplybook-subscription-widget";
 const WIDGET_SCRIPT_ID = "simplybook-subscription-widget-script";
+const getWidgetLoadErrorMessage = () => __("Plans & Prices could not be loaded.", "simplybook");
 
 const SubscriptionWidget = () => {
     const client = useMemo(() => new HttpClient(WIDGET_ROUTE), []);
     const initialized = useRef(false);
-    const [scriptError, setScriptError] = useState("");
+    const [scriptLoaded, setScriptLoaded] = useState(
+        typeof window !== "undefined" && typeof window.SbPayWidget === "function"
+    );
+    const [loadError, setLoadError] = useState("");
 
     const { error, data: response } = useQuery({
         queryKey: [WIDGET_ROUTE],
@@ -24,83 +28,63 @@ const SubscriptionWidget = () => {
     const containerId = widget?.container_id || WIDGET_CONTAINER_ID;
 
     useEffect(() => {
-        if (!widget?.script_url || initialized.current) {
+        if (!error) {
             return;
         }
 
-        const initializeWidget = () => {
-            if (initialized.current) {
-                return;
-            }
+        console.error("Subscription widget configuration failed to load:", error);
+        setLoadError(getWidgetLoadErrorMessage());
+    }, [error]);
 
-            if (typeof window.SbPayWidget !== "function") {
-                setScriptError(__("Plans & Prices could not be loaded.", "simplybook"));
-                return;
-            }
-
-            try {
-                new window.SbPayWidget(containerId, widget.params || {});
-                initialized.current = true;
-                setScriptError("");
-            } catch (widgetError) {
-                console.error("Subscription widget failed to initialize:", widgetError);
-                setScriptError(__("Plans & Prices could not be loaded.", "simplybook"));
-            }
-        };
-
-        const handleScriptError = () => {
-            setScriptError(__("Plans & Prices could not be loaded.", "simplybook"));
-        };
-
-        const existingScript = document.getElementById(WIDGET_SCRIPT_ID);
-        if (existingScript) {
-            if (existingScript.dataset.loaded === "true" || typeof window.SbPayWidget === "function") {
-                existingScript.dataset.loaded = "true";
-                initializeWidget();
-                return;
-            }
-
-            existingScript.addEventListener("load", initializeWidget);
-            existingScript.addEventListener("error", handleScriptError);
-
-            return () => {
-                existingScript.removeEventListener("load", initializeWidget);
-                existingScript.removeEventListener("error", handleScriptError);
-            };
+    useEffect(() => {
+        if (!widget?.script_url || scriptLoaded) {
+            return;
         }
 
         const script = document.createElement("script");
         script.id = WIDGET_SCRIPT_ID;
         script.src = widget.script_url;
         script.async = true;
-        script.dataset.loaded = "false";
 
-        const handleScriptLoad = () => {
-            script.dataset.loaded = "true";
-            initializeWidget();
+        script.onload = () => setScriptLoaded(true);
+        script.onerror = (scriptError) => {
+            console.error("Subscription widget script failed to load:", scriptError);
+            setLoadError(getWidgetLoadErrorMessage());
         };
 
-        script.addEventListener("load", handleScriptLoad);
-        script.addEventListener("error", handleScriptError);
         document.body.appendChild(script);
 
         return () => {
-            script.removeEventListener("load", handleScriptLoad);
-            script.removeEventListener("error", handleScriptError);
+            script.onload = null;
+            script.onerror = null;
         };
-    }, [containerId, widget]);
+    }, [scriptLoaded, widget?.script_url]);
+
+    useEffect(() => {
+        if (!widget || !scriptLoaded || initialized.current) {
+            return;
+        }
+
+        try {
+            if (typeof window.SbPayWidget !== "function") {
+                throw new Error("SbPayWidget constructor is missing.");
+            }
+
+            new window.SbPayWidget(containerId, widget.params || {});
+            initialized.current = true;
+            setLoadError("");
+        } catch (widgetError) {
+            console.error("Subscription widget failed to initialize:", widgetError);
+            setLoadError(getWidgetLoadErrorMessage());
+        }
+    }, [containerId, scriptLoaded, widget]);
 
     return (
         <div className="mx-auto flex max-w-screen-2xl w-full">
             <div className="my-4 w-full min-h-[640px] bg-white p-6">
-                {error && (
+                {loadError && (
                     <p className="text-sm text-red-600">
-                        {__("Plans & Prices could not be loaded.", "simplybook")}
-                    </p>
-                )}
-                {scriptError && (
-                    <p className="text-sm text-red-600">
-                        {scriptError}
+                        {loadError}
                     </p>
                 )}
                 <div id={containerId} className="w-full min-h-[640px]" />
