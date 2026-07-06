@@ -164,8 +164,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function pluginInstallationTimeSuitableForNotice(): bool
     {
-        $extendifySiteIdExists = get_option('extendify_site_id', false) !== false;
-        if ($extendifySiteIdExists === false) {
+        if (get_option('extendify_site_id', false) === false) {
             return true;
         }
 
