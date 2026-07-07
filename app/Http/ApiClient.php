@@ -742,10 +742,12 @@ class ApiClient
             return [];
         }
 
+        $responseContainerId = sanitize_html_class($containerId);
+
         $requestUrl = add_query_arg(
             [
                 'return_url' => esc_url_raw($returnUrl),
-                'container_id' => sanitize_html_class($containerId),
+                'container_id' => $responseContainerId,
                 'locale' => $this->get_locale(),
                 'memory_router' => 1,
             ],
@@ -789,11 +791,6 @@ class ApiClient
         if (!is_array($params)) {
             $this->log('Invalid subscription widget params.');
             return [];
-        }
-
-        $responseContainerId = sanitize_html_class((string) ($widgetData['container_id'] ?? $containerId));
-        if (empty($responseContainerId)) {
-            $responseContainerId = sanitize_html_class($containerId);
         }
 
         return [
