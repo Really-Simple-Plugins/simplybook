@@ -38,7 +38,7 @@ class SubscriptionDataService extends AbstractEntityService
             return 0;
         }
 
-        return $this->extractProviderLimitTotal($subscriptionData);
+        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
     }
 
     /**
@@ -46,65 +46,14 @@ class SubscriptionDataService extends AbstractEntityService
      */
     public function isProviderLimitReachedResponse(RestDataException $exception): bool
     {
-        $responseParts = $this->flattenErrorResponse($exception->getData());
-        $responseParts[] = $exception->getMessage();
-        $responseText = strtolower(implode(' ', $responseParts));
-
-        return $this->containsAny($responseText, [
-            'provider_limit',
-            'provider limit',
-            'providers',
-            'service provider',
-        ]) && $this->containsAny($responseText, [
-            'limit',
-            'maximum',
-            'maxed',
-        ]);
-    }
-
-    /**
-     * Flatten response keys and values into searchable strings.
-     */
-    private function flattenErrorResponse(array $response): array
-    {
-        $values = [];
-
-        foreach ($response as $key => $value) {
-            $values[] = (string) $key;
-
-            if (is_array($value)) {
-                $values = array_merge($values, $this->flattenErrorResponse($value));
-                continue;
-            }
-
-            if (is_scalar($value)) {
-                $values[] = (string) $value;
-            }
+        if ($exception->getResponseCode() !== 403) {
+            return false;
         }
 
-        return $values;
-    }
+        $message = $exception->getData()['message'] ?? '';
 
-    /**
-     * Extract the provider limit total from subscription data.
-     */
-    private function extractProviderLimitTotal(array $subscriptionData): int
-    {
-        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
-    }
-
-    /**
-     * Check whether a haystack includes any of the configured needles.
-     */
-    private function containsAny(string $haystack, array $needles): bool
-    {
-        foreach ($needles as $needle) {
-            if (stripos($haystack, $needle) !== false) {
-                return true;
-            }
-        }
-
-        return false;
+        return is_string($message)
+            && stripos($message, 'provider limit has been reached') !== false;
     }
 
     /**
