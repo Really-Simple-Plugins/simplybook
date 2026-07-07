@@ -19,9 +19,12 @@ class ExtendifyDataService
      */
     private ?array $cachedData = null;
 
-    public function isActive(): bool
+    /**
+     * Check whether the Extendify plugin is currently active.
+     */
+    public function isPluginActive(): bool
     {
-        return get_option('extendify_site_id', false) !== false;
+        return is_plugin_active('extendify/extendify.php');
     }
 
     /**

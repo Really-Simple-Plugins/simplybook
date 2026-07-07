@@ -167,7 +167,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function pluginInstallationTimeSuitableForNotice(): bool
     {
-        if ($this->extendifyDataService->isActive() === false) {
+        if ($this->extendifyDataService->isPluginActive() === false) {
             return true;
         }
 
