@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -20,12 +21,14 @@ class OnboardingNoticeController implements ControllerInterface
 
     private EnvironmentConfig $env;
     private RequestStorage $request;
+    private ExtendifyDataService $extendifyDataService;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request, ExtendifyDataService $extendifyDataService, NoticeDismissalService $noticeDismissalService)
     {
         $this->env = $env;
         $this->request = $request;
+        $this->extendifyDataService = $extendifyDataService;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -164,7 +167,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function pluginInstallationTimeSuitableForNotice(): bool
     {
-        if (get_option('extendify_site_id', false) === false) {
+        if ($this->extendifyDataService->isActive() === false) {
             return true;
         }
 

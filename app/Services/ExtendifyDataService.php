@@ -19,6 +19,11 @@ class ExtendifyDataService
      */
     private ?array $cachedData = null;
 
+    public function isActive(): bool
+    {
+        return get_option('extendify_site_id', false) !== false;
+    }
+
     /**
      * Get all Extendify data.
      *
