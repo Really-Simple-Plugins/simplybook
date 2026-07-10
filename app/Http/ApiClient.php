@@ -744,36 +744,20 @@ class ApiClient
 
         $responseContainerId = sanitize_html_class($containerId);
 
-        $requestUrl = add_query_arg(
+        $endpoint = add_query_arg(
             [
                 'return_url' => esc_url_raw($returnUrl),
                 'container_id' => $responseContainerId,
                 'locale' => $this->get_locale(),
                 'memory_router' => 1,
             ],
-            $this->endpoint('admin/subscription-widget/embed-code')
+            'admin/subscription-widget/embed-code'
         );
 
-        $response = wp_safe_remote_get(
-            $requestUrl,
-            [
-                'headers' => $this->get_headers(true, 'admin'),
-                'timeout' => 15,
-                'sslverify' => true,
-            ]
-        );
-
-        if (is_wp_error($response)) {
-            $this->log('WP_Error during subscription widget embed code request: ' . $response->get_error_message());
-            return [];
-        }
-
-        $responseCode = wp_remote_retrieve_response_code($response);
-        $responseBody = wp_remote_retrieve_body($response);
-        $responseData = json_decode($responseBody, true);
-
-        if ($responseCode < 200 || $responseCode >= 300 || !is_array($responseData)) {
-            $this->log('Invalid subscription widget embed code response.');
+        try {
+            $responseData = $this->request('GET', $endpoint);
+        } catch (RestDataException $e) {
+            $this->log('Subscription widget embed code request failed: ' . $e->getMessage());
             return [];
         }
 
@@ -1558,9 +1542,13 @@ class ApiClient
         $this->clearRequestCache($endpoint);
 
         if (is_wp_error($response)) {
+            $errorData = $response->get_error_data();
+            $errorData = is_array($errorData) ? $errorData : [];
+            $errorData['wp_error_code'] = (string) $response->get_error_code();
+
             throw (new RestDataException($response->get_error_message()))
-                ->setResponseCode($response->get_error_code())
-                ->setData($response->get_error_data());
+                ->setResponseCode(500)
+                ->setData($errorData);
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);

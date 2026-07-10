@@ -6,6 +6,7 @@ use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class SubscriptionWidgetEndpoint implements SingleEndpointInterface
 {
@@ -14,13 +15,14 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'subscription_widget_embed_code';
     private const CONTAINER_ID = 'simplybook-subscription-widget';
-    private const RETURN_FLAG = 'simplybook_subscription_return';
 
     private ApiClient $client;
+    private EnvironmentConfig $env;
 
-    public function __construct(ApiClient $client)
+    public function __construct(ApiClient $client, EnvironmentConfig $env)
     {
         $this->client = $client;
+        $this->env = $env;
     }
 
     /**
@@ -50,12 +52,16 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
         ];
     }
 
+    /**
+     * Retrieve the subscription widget embed configuration for the Plans &
+     * Prices page.
+     */
     public function callback(\WP_REST_Request $request): \WP_REST_Response
     {
         $returnUrl = add_query_arg(
-            self::RETURN_FLAG,
+            $this->env->getString('plugin.plans_prices_return_flag'),
             '1',
-            simplybook_plans_prices_url()
+            $this->env->getUrl('plugin.plans_prices_url')
         );
 
         $widgetData = $this->client->getSubscriptionWidgetEmbedCode($returnUrl, self::CONTAINER_ID);

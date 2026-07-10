@@ -22,7 +22,6 @@ class DashboardController implements ControllerInterface
     use HasAllowlistControl;
 
     private const DASHBOARD_MENU_SLUG = 'simplybook-integration';
-    private const SUBSCRIPTION_RETURN_FLAG = 'simplybook_subscription_return';
 
     private ApiClient $client;
     private EnvironmentConfig $env;
@@ -138,7 +137,7 @@ class DashboardController implements ControllerInterface
             esc_html__('Plans & Prices', 'simplybook'),
             esc_html__('Plans & Prices', 'simplybook'),
             'simplybook_manage',
-            simplybook_plans_prices_menu_slug(),
+            $this->env->getString('plugin.plans_prices_menu_slug'),
             [$this, 'renderReactApp']
         );
 
@@ -311,8 +310,10 @@ class DashboardController implements ControllerInterface
                 'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
-                'plans_prices_url' => simplybook_plans_prices_url(),
-                'default_route' => ($currentPage === simplybook_plans_prices_menu_slug()) ? '/plans-prices' : '',
+                'plans_prices_url' => $this->env->getUrl('plugin.plans_prices_url'),
+                'default_route' => (
+                    $currentPage === $this->env->getString('plugin.plans_prices_menu_slug')
+                ) ? '/plans-prices' : '',
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
@@ -354,7 +355,7 @@ class DashboardController implements ControllerInterface
      */
     public function maybeClearSubscriptionCacheOnReturn(): void
     {
-        if ($this->request->getString('global.' . self::SUBSCRIPTION_RETURN_FLAG) !== '1') {
+        if ($this->request->getString('global.' . $this->env->getString('plugin.plans_prices_return_flag')) !== '1') {
             return;
         }
 

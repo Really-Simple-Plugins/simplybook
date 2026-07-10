@@ -3,6 +3,7 @@
  * Variables that should be passed to the view
  * @var string $logoUrl
  * @var string $message
+ * @var string $plansPricesUrl
  */
 ?>
 
@@ -53,7 +54,7 @@
             <div class="rsp-buttons-row">
                 <a
                     class="button button-primary"
-                    href="<?php echo esc_url(simplybook_plans_prices_url()); ?>"
+                    href="<?php echo esc_url($plansPricesUrl); ?>"
                 >
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>

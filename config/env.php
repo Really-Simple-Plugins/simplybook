@@ -14,6 +14,8 @@
  * This information can be used early in the WordPress lifecycle because no
  * translations are used.
  */
+$plansPricesMenuSlug = 'simplybook-plans-prices';
+
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
@@ -34,6 +36,9 @@ return [
         'views_url' => plugin_dir_url(__DIR__).'views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
         'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+        'plans_prices_menu_slug' => $plansPricesMenuSlug,
+        'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
+        'plans_prices_return_flag' => 'simplybook_subscription_return',
     ],
     'http' => [
         'version' => 'v1',

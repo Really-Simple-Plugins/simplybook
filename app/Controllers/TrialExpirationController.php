@@ -39,8 +39,11 @@ class TrialExpirationController implements ControllerInterface
         'simplybook',
     ];
 
-    public function __construct(EnvironmentConfig $env, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
-    {
+    public function __construct(
+        EnvironmentConfig $env,
+        SubscriptionDataService $subscriptionService,
+        NoticeDismissalService $noticeDismissalService
+    ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
         $this->noticeDismissalService = $noticeDismissalService;
@@ -79,6 +82,7 @@ class TrialExpirationController implements ControllerInterface
         $this->render('admin/trial-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
+            'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
         ]);
     }
 

@@ -2,6 +2,14 @@ import { __ } from "@wordpress/i18n";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import Label from "./Label";
 
+const getSubscriptionLabelText = (subscriptionPlan, expiresIn) => {
+    if (subscriptionPlan.toUpperCase() === "TRIAL" || expiresIn < 30) {
+        return `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+    }
+
+    return subscriptionPlan;
+};
+
 const SubscriptionLabel = () => {
     const { subscriptionPlan, expiresIn, isExpired, isLoading } = useSubscriptionData();
     const plansPricesUrl = simplybook?.plans_prices_url || "";
@@ -30,14 +38,6 @@ const SubscriptionLabel = () => {
             {subscriptionLabel}
         </a>
     );
-};
-
-const getSubscriptionLabelText = (subscriptionPlan, expiresIn) => {
-    if (subscriptionPlan.toUpperCase() === "TRIAL" || expiresIn < 30) {
-        return `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
-    }
-
-    return subscriptionPlan;
 };
 
 SubscriptionLabel.displayName = "SubscriptionLabel";
