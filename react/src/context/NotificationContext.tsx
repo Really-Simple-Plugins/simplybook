@@ -89,10 +89,15 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
     };
 
     /**
-     * Trigger a notification by its id. This will first get the notice object
-     * by its id and then call the triggerNotification function.
+     * Trigger a notification by its id. Does nothing when the notification
+     * is already active. Otherwise it will first get the notice object by
+     * its id and then call the triggerNotification function.
      */
     const triggerNotificationById = (id: string) => {
+        if (isActiveNotification(id)) {
+            return;
+        }
+
         const template = getNoticeObject(id);
         if (!template) {
             return console.warn(`Notification "${id}" not found`);

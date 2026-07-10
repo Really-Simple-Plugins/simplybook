@@ -21,23 +21,18 @@ const useSubscriptionData = () => {
         console.error('Error fetching subscription data: ', error.message);
     }
 
-    const smsRemaining = Number(response?.data?.limits?.sms_limit?.rest ?? 0) || 0;
-    const smsTotal = Number(response?.data?.limits?.sms_limit?.total ?? 0) || 0;
-    const bookingsRemaining = Number(response?.data?.limits?.sheduler_limit?.rest ?? 0) || 0;
-    const bookingsTotal = Number(response?.data?.limits?.sheduler_limit?.total ?? 0) || 0;
-    const providersRemaining = Number(response?.data?.limits?.provider_limit?.rest ?? 0) || 0;
-    const providersLimit = Number(response?.data?.limits?.provider_limit?.total ?? 0) || 0;
+    const providersLimit = Number(response?.data?.limits?.provider_limit?.total ?? 0);
 
     return {
         subscription: response?.data,
         subscriptionPlan: (response?.data?.subscription_name ?? ''),
         expiresIn: (response?.data?.expire_in ?? 0),
         isExpired:(response?.data?.is_expired ?? false),
-        smsRemaining,
-        smsTotal,
-        bookingsRemaining,
-        bookingsTotal,
-        providersRemaining,
+        smsRemaining: Number(response?.data?.limits?.sms_limit?.rest ?? 0),
+        smsTotal: Number(response?.data?.limits?.sms_limit?.total ?? 0),
+        bookingsRemaining: Number(response?.data?.limits?.sheduler_limit?.rest ?? 0),
+        bookingsTotal: Number(response?.data?.limits?.sheduler_limit?.total ?? 0),
+        providersRemaining: Number(response?.data?.limits?.provider_limit?.rest ?? 0),
         providersLimit,
         hasProviderLimit: providersLimit > 0,
         getSubscriptionData: refetch,

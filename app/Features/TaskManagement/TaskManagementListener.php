@@ -37,6 +37,8 @@ class TaskManagementListener
         add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
         add_action('simplybook_event_' . Event::HAS_PROVIDERS, [$this, 'handleHasProviders']);
+        add_action('simplybook_event_' . Event::PROVIDER_CREATED, [$this, 'handleProviderAmountChanged']);
+        add_action('simplybook_event_' . Event::PROVIDER_DELETED, [$this, 'handleProviderAmountChanged']);
         add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
         add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
         add_action('simplybook_event_' . Event::SPECIAL_FEATURES_LOADED, [$this, 'handleSpecialFeaturesLoaded']);
@@ -111,7 +113,25 @@ class TaskManagementListener
             );
         }
 
-        $this->handleProviderCountLimit($providersAmount);
+        $providerLimitTotal = $this->getProviderLimitTotal();
+        if ($providerLimitTotal > 0) {
+            $this->handleProviderLimit(
+                max(0, ($providerLimitTotal - $providersAmount)),
+                $providerLimitTotal
+            );
+        }
+    }
+
+    /**
+     * Handle the provider created and deleted events. The amount of providers
+     * changed, so we refresh the subscription data to keep the provider limit
+     * up-to-date. Refreshing dispatches {@see Event::SUBSCRIPTION_DATA_LOADED}
+     * which is handled by {@see self::handleSubscriptionDataLoaded} to update
+     * the task status based on the fresh limits.
+     */
+    public function handleProviderAmountChanged(): void
+    {
+        $this->subscriptionDataService->restore();
     }
 
     /**
@@ -227,26 +247,18 @@ class TaskManagementListener
     }
 
     /**
-     * Handle provider limit changes based on the fresh provider count.
+     * Get the total provider limit from the subscription data. The data is
+     * restored when the cached data has expired.
      */
-    private function handleProviderCountLimit(int $providersAmount): void
+    private function getProviderLimitTotal(): int
     {
-        $providerLimitTotal = $this->subscriptionDataService->getFreshProviderLimitTotal();
+        $subscriptionData = $this->subscriptionDataService->all(true);
 
-        if ($providerLimitTotal <= 0) {
-            return;
+        if (empty($subscriptionData)) {
+            $subscriptionData = $this->subscriptionDataService->restore();
         }
 
-        if ($providersAmount >= $providerLimitTotal) {
-            $this->service->flagTaskUrgent(
-                Tasks\MaxedOutProvidersTask::IDENTIFIER
-            );
-            return;
-        }
-
-        $this->service->hideTask(
-            Tasks\MaxedOutProvidersTask::IDENTIFIER
-        );
+        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
     }
 
     /**

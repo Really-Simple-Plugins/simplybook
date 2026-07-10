@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import HttpClient from "../api/requests/HttpClient";
+import useTaskData from "./useTaskData";
 
 interface CrudDataParams {
     id: string | number;
@@ -26,17 +27,7 @@ interface CrudDataReturn {
 const useCrudData = (route: string): CrudDataReturn => {
     const client = new HttpClient(route);
     const queryClient = useQueryClient();
-    const getTasksRoute = 'get_tasks';
-
-    const invalidateRouteQueries = async () => {
-        await queryClient.invalidateQueries({ queryKey: [route] });
-
-        if (route === 'providers') {
-            // The providers GET dispatches provider-count task events server-side,
-            // refresh tasks after that so the task list reflects the new count.
-            await queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
-        }
-    };
+    const { invalidateTaskQuery } = useTaskData();
 
     const { refetch, isLoading, error, data: response } = useQuery({
         queryKey: [route],
@@ -47,8 +38,9 @@ const useCrudData = (route: string): CrudDataReturn => {
 
     const createMutation = useMutation({
         mutationFn: (data: any) => client.post(data),
-        onSuccess: () => {
-            void invalidateRouteQueries();
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [route] });
+            await invalidateTaskQuery();
         },
     });
 
@@ -85,16 +77,18 @@ const useCrudData = (route: string): CrudDataReturn => {
                 queryClient.setQueryData([route], context.previousData);
             }
         },
-        onSettled: () => {
+        onSettled: async () => {
             // Always refetch after error or success to ensure server state
-            queryClient.invalidateQueries({ queryKey: [route] });
+            await queryClient.invalidateQueries({ queryKey: [route] });
+            await invalidateTaskQuery();
         },
     });
 
     const deleteMutation = useMutation({
         mutationFn: (id: string | number) => client.setRoute(`${route}/${id}`).delete(),
-        onSuccess: () => {
-            void invalidateRouteQueries();
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: [route] });
+            await invalidateTaskQuery();
         },
     });
 

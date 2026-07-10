@@ -15,7 +15,7 @@ const MAXED_OUT_PROVIDERS_NOTICE_ID = 'maxed_out_providers';
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
     const { providersRemaining, providersLimit, hasProviderLimit } = useSubscriptionData();
-    const { triggerNotificationById, removeNotificationById, isActiveNotification } = useNotifications();
+    const { triggerNotificationById, removeNotificationById } = useNotifications();
 
     const providersTotal = crudState.providers?.filter(provider => provider != null).length ?? 0;
     const pendingNewProviderCount = crudState.unsavedProviders?.some(provider => provider?.id === "new") ? 1 : 0;
@@ -29,12 +29,8 @@ const ProvidersListField = () => {
             return;
         }
 
-        if (isActiveNotification(MAXED_OUT_PROVIDERS_NOTICE_ID)) {
-            return;
-        }
-
         triggerNotificationById(MAXED_OUT_PROVIDERS_NOTICE_ID);
-    }, [isAtSavedProviderLimit, isActiveNotification, removeNotificationById, triggerNotificationById]);
+    }, [isAtSavedProviderLimit, removeNotificationById, triggerNotificationById]);
 
     useBlocker({
         shouldBlockFn: ({ next }) => {

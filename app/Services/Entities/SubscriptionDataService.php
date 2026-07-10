@@ -2,8 +2,6 @@
 
 namespace SimplyBook\Services\Entities;
 
-use Throwable;
-use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Support\Helpers\Event;
 
 class SubscriptionDataService extends AbstractEntityService
@@ -25,35 +23,6 @@ class SubscriptionDataService extends AbstractEntityService
     public function fetch(): array
     {
         return $this->client->get_subscription_data();
-    }
-
-    /**
-     * Return the provider limit from fresh subscription data.
-     */
-    public function getFreshProviderLimitTotal(): int
-    {
-        try {
-            $subscriptionData = $this->restore();
-        } catch (Throwable $e) {
-            return 0;
-        }
-
-        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
-    }
-
-    /**
-     * Check whether a SimplyBook error response reports the provider limit.
-     */
-    public function isProviderLimitReachedResponse(RestDataException $exception): bool
-    {
-        if ($exception->getResponseCode() !== 403) {
-            return false;
-        }
-
-        $message = $exception->getData()['message'] ?? '';
-
-        return is_string($message)
-            && stripos($message, 'provider limit has been reached') !== false;
     }
 
     /**
