@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
@@ -108,7 +108,14 @@ const ProvidersListField = () => {
                 </div>
                 {hasProviderLimit && (
                     <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
-                        <span>{`Service Providers: ${providersTotal} / ${providersLimit}`}</span>
+                        <span>
+                            {sprintf(
+                                /* translators: 1: Current provider count. 2: Provider limit. */
+                                __('Service Providers: %1$d / %2$d', 'simplybook'),
+                                providersTotal,
+                                providersLimit,
+                            )}
+                        </span>
                     </div>
                 )}
             </div>

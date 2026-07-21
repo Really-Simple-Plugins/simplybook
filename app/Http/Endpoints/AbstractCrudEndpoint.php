@@ -91,15 +91,6 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
     }
 
     /**
-     * Can be used by child classes to perform additional actions before the
-     * entity is created.
-     * @return void
-     */
-    protected function beforeCreate(): void
-    {
-    }
-
-    /**
      * Create a new entity based on the request parameters. It will catch any
      * validation errors or exceptions thrown during the creation process.
      * @internal Override this method if you want to customize the logic.
@@ -109,8 +100,6 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         if ($request->isEmpty()) {
             return $this->sendHttpResponse([], false, esc_html__('Could not create entity, no data provided.', 'simplybook'), 400);
         }
-
-        $this->beforeCreate();
 
         try {
             $this->entity->create(

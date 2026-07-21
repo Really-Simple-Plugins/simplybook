@@ -112,14 +112,6 @@ class TaskManagementListener
                 Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
-
-        $providerLimitTotal = $this->getProviderLimitTotal();
-        if ($providerLimitTotal > 0) {
-            $this->handleProviderLimit(
-                max(0, ($providerLimitTotal - $providersAmount)),
-                $providerLimitTotal
-            );
-        }
     }
 
     /**
@@ -244,21 +236,6 @@ class TaskManagementListener
                 Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
-    }
-
-    /**
-     * Get the total provider limit from the subscription data. The data is
-     * restored when the cached data has expired.
-     */
-    private function getProviderLimitTotal(): int
-    {
-        $subscriptionData = $this->subscriptionDataService->all(true);
-
-        if (empty($subscriptionData)) {
-            $subscriptionData = $this->subscriptionDataService->restore();
-        }
-
-        return (int) ($subscriptionData['limits']['provider_limit']['total'] ?? 0);
     }
 
     /**

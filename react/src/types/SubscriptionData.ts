@@ -5,16 +5,16 @@ export interface SubscriptionData {
         is_expired: boolean;
         limits: {
             sms_limit: {
-                rest: number | string;
-                total: number | string;
+                rest: number;
+                total: number;
             };
             sheduler_limit: { // Typo intended, its misspelled in the API
-                rest: number | string;
-                total: number | string;
+                rest: number;
+                total: number;
             };
             provider_limit: {
-                rest: number | string;
-                total: number | string;
+                rest: number;
+                total: number;
             };
         };
     }
