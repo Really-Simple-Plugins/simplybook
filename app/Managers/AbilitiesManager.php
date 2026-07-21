@@ -9,7 +9,8 @@ use WP_Abilities_Registry;
 use WP_Ability_Categories_Registry;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Traits\HasAllowlistControl;
-use SimplyBook\Support\Helpers\Storages\GeneralConfig;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
 
 /**
  * To boot this manager call the {@see register} method on 'init' and it will
@@ -20,9 +21,9 @@ final class AbilitiesManager extends AbstractManager
     use HasAllowlistControl;
 
     /**
-     * Config used to read ability information
+     * Used to read environment variables
      */
-    private GeneralConfig $config;
+    private EnvironmentConfig $env;
 
     /**
      * All the registered abilities
@@ -32,17 +33,16 @@ final class AbilitiesManager extends AbstractManager
 
     /**
      * All the categories of the registered abilities
-     * @var array<string, array> slug => arguments. Arguments documented
-     * here: {@see AbstractAbility::getCategory()}
+     * @var array<string, AbstractAbilityCategory>
      */
     private array $categories = [];
 
     /**
      * Bind the config
      */
-    public function __construct(GeneralConfig $config)
+    public function __construct(EnvironmentConfig $env)
     {
-        $this->config = $config;
+        $this->env = $env;
     }
 
     /**
@@ -62,28 +62,14 @@ final class AbilitiesManager extends AbstractManager
     }
 
     /**
-     * @inheritDoc
+     * Method is used to store the given classes in the {@see abilities}
+     * property. Each {@see AbstractAbility} class registers their category in
+     * the {@see categories} property.
      */
     public function registerClass(object $class): void
     {
         $this->abilities[$class->getName()] = $class->toArray();
-
-        $this->registerCategory(
-            $class->getCategory()
-        );
-    }
-
-    /**
-     * Register the given category if it is valid.
-     */
-    private function registerCategory(?array $category): void
-    {
-        if ($this->isValidCategory($category)) {
-            return;
-        }
-
-        $slug = sanitize_title($category['slug']);
-        $this->categories[$slug] = $category;
+        $this->categories[$class->getCategorySlug()] = $class->getCategory();
     }
 
     /**
@@ -110,34 +96,17 @@ final class AbilitiesManager extends AbstractManager
     }
 
     /**
-     * Register the default plugin category and register the specific categories
-     * defined by the ability classes.
+     * Register the {@see AbstractAbilityCategory} categories stored in the
+     * {@see categories} property.
      * @internal Should be called from wp_abilities_api_categories_init action
-     * @throws LogicException if the default abilities category is not valid
      */
-    public function registerAbilitiesCategory(WP_Ability_Categories_Registry $categories): void
+    public function registerAbilitiesCategory(WP_Ability_Categories_Registry $registry): void
     {
-        if (!$this->isValidCategory($this->config->get('abilities.category'))) {
-            throw new LogicException('The default abilities category is not valid.');
-        }
-
-        $categories->register(
-            $this->config->getTitle('abilities.category.slug', 'simplybook'),
-            [
-                'label' => $this->config->getString('abilities.category.label', 'simplybook'),
-                'description' => $this->config->getString('abilities.category.description', 'simplybook'),
-            ]
-        );
-
-        foreach ($this->categories as $category) {
-            if (!$this->isValidCategory($category)) {
-                continue;
-            }
-
-            $slug = sanitize_title($category['slug']);
-            $categories->register($slug, [
-                'label' => sanitize_text_field($category['label']),
-                'description' => sanitize_text_field($category['description']),
+        foreach ($this->categories as $slug => $category) {
+            $categorySlug = sanitize_title($slug);
+            $registry->register($categorySlug, [
+                'label' => sanitize_text_field($category->getLabel()),
+                'description' => sanitize_text_field($category->getDescription()),
             ]);
         }
     }
@@ -147,25 +116,11 @@ final class AbilitiesManager extends AbstractManager
      * registered abilities from the {@see registerClass} method.
      * @internal Should be called from wp_abilities_api_init action
      */
-    public function registerAbilities(WP_Abilities_Registry $abilities): void
+    public function registerAbilities(WP_Abilities_Registry $registry): void
     {
         foreach ($this->abilities as $name => $arguments) {
-            $arguments['category'] ??= $this->config->getTitle('abilities.category.slug', 'simplybook');
-            $prefixedAbilityName = ($this->config->getString('abilities.namespace', 'simplybook') . '/' . $name);
-            $abilities->register($prefixedAbilityName, $arguments);
+            $prefixedAbilityName = ($this->env->getString('plugin.namespace') . '/' . $name);
+            $registry->register($prefixedAbilityName, $arguments);
         }
-    }
-
-    /**
-     * A category is valid if it has a name, label and description. As per
-     * documentation: {@see AbstractAbility::getCategory}
-     */
-    private function isValidCategory(?array $category): bool
-    {
-        if (is_null($category)) {
-            return false;
-        }
-
-        return isset($category['slug'], $category['label'], $category['description']);
     }
 }

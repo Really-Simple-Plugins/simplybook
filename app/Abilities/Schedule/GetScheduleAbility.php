@@ -8,6 +8,8 @@ use WP_Error;
 use Throwable;
 use SimplyBook\Http\Entities\Schedule;
 use SimplyBook\Abilities\AbstractAbility;
+use SimplyBook\Abilities\Categories\ScheduleCategory;
+use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
 
 class GetScheduleAbility extends AbstractAbility
 {
@@ -38,14 +40,11 @@ class GetScheduleAbility extends AbstractAbility
 
     /**
      * Specific category for the Schedule abilities.
+     * @return class-string<AbstractAbilityCategory>
      */
-    public function getCategory(): ?array
+    public function getCategory(): string
     {
-        return [
-            'slug' => 'simplybook-schedule',
-            'label' => __('Simplybook.me Schedule abilities', 'simplybook'),
-            'description' => __('Abilities related to the Simplybook.me Schedule API.', 'simplybook'),
-        ];
+        return ScheduleCategory::class;
     }
 
     /**

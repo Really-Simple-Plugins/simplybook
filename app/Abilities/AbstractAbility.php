@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities;
 
+use Throwable;
 use RuntimeException;
 use ReflectionException;
 use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
+use SimplyBook\Abilities\Categories\DefaultCategory;
+use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
 
 abstract class AbstractAbility
 {
@@ -114,36 +117,38 @@ abstract class AbstractAbility
      * {@see AbilitiesManager::registerAbilitiesCategory} method. If not
      * provided, the default category is used.
      *
-     * Example return format
-     *
-     *      [
-     *          'slug' => 'my-category',
-     *          'label' => 'My Category',
-     *          'description' => 'My Category Description',
-     *      ]
+     * @return class-string<AbstractAbilityCategory>
      */
-    public function getCategory(): ?array
+    public function getCategory(): string
     {
-        return null;
+        return DefaultCategory::class;
+    }
+
+    /**
+     * Get the category instance from the container. If the category is not
+     * resolvable from the container, a new instance is created.
+     * @uses App::get()
+     */
+    final public function getCategoryInstance(): AbstractAbilityCategory
+    {
+        try {
+            return App::getInstance()->get($this->getCategory());
+        } catch (Throwable $e) {
+            $class = $this->getCategory();
+            return new $class();
+        }
     }
 
     /**
      * Method is used in the {@see toArray} method to get the category slug for
-     * registration in {@see AbilitiesManager::registerAbilities}. If no
-     * specific category is registered, the default category is used.
+     * registration in {@see AbilitiesManager::registerAbilities}.
+     *
+     * @throws InvalidArgumentException If category misses slug.
      */
-    final public function getCategorySlug(): ?string
+    final public function getCategorySlug(): string
     {
-        $category = $this->getCategory();
-        if (is_null($category)) {
-            return null;
-        }
-
-        if (empty($category['slug'])) {
-            throw new InvalidArgumentException('Ability category misses slug');
-        }
-
-        return sanitize_title($category['slug']);
+        $category = $this->getCategoryInstance();
+        return sanitize_title($category->getSlug());
     }
 
     /**
