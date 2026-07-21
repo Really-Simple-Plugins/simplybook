@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SimplyBook\Abilities\Categories;
+namespace SimplyBook\Abilities\Schedule;
+
+use SimplyBook\Abilities\AbstractAbilityCategory;
 
 class ScheduleCategory extends AbstractAbilityCategory
 {

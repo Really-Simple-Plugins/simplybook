@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Abilities\Categories;
+namespace SimplyBook\Abilities;
 
 abstract class AbstractAbilityCategory
 {

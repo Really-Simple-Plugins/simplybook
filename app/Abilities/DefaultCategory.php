@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace SimplyBook\Abilities\Categories;
+namespace SimplyBook\Abilities;
 
 class DefaultCategory extends AbstractAbilityCategory
 {

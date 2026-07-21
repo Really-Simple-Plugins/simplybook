@@ -8,8 +8,7 @@ use WP_Error;
 use Throwable;
 use SimplyBook\Http\Entities\Schedule;
 use SimplyBook\Abilities\AbstractAbility;
-use SimplyBook\Abilities\Categories\ScheduleCategory;
-use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
+use SimplyBook\Abilities\AbstractAbilityCategory;
 
 class GetScheduleAbility extends AbstractAbility
 {

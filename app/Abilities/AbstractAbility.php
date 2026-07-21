@@ -9,8 +9,6 @@ use RuntimeException;
 use ReflectionException;
 use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Abilities\Categories\DefaultCategory;
-use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
 
 abstract class AbstractAbility
 {
