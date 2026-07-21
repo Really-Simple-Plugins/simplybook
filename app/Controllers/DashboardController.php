@@ -21,8 +21,6 @@ class DashboardController implements ControllerInterface
     use HasUserAccess;
     use HasAllowlistControl;
 
-    private const DASHBOARD_MENU_SLUG = 'simplybook-integration';
-
     private ApiClient $client;
     private EnvironmentConfig $env;
     private RequestStorage $request;
@@ -98,6 +96,8 @@ class DashboardController implements ControllerInterface
      */
     public function addDashboardPage(): void
     {
+        $dashboardMenuSlug = $this->env->getString('plugin.dashboard_menu_slug');
+
         /**
          * Filter: simplybook_menu_position
          * Can be used to change the position of the menu item in the admin menu.
@@ -117,23 +117,23 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook') . $menuCounterHtml,
             'simplybook_manage',
-            self::DASHBOARD_MENU_SLUG,
+            $dashboardMenuSlug,
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
             $menuPosition,
         );
 
         $dashboardHookSuffix = add_submenu_page(
-            self::DASHBOARD_MENU_SLUG,
+            $dashboardMenuSlug,
             esc_html__('Dashboard', 'simplybook'),
             esc_html__('Dashboard', 'simplybook'),
             'simplybook_manage',
-            self::DASHBOARD_MENU_SLUG,
+            $dashboardMenuSlug,
             [$this, 'renderReactApp']
         );
 
         $plansPricesHookSuffix = add_submenu_page(
-            self::DASHBOARD_MENU_SLUG,
+            $dashboardMenuSlug,
             esc_html__('Plans & Prices', 'simplybook'),
             esc_html__('Plans & Prices', 'simplybook'),
             'simplybook_manage',

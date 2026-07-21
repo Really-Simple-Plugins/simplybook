@@ -2,6 +2,9 @@
     exit;
 }
 
+$dashboardMenuSlug = 'simplybook-integration';
+$plansPricesMenuSlug = 'simplybook-plans-prices';
+
 /**
  * This file is NOT loaded in the config. All other files áre loaded in one
  * config object in the container. This file is loaded separately via
@@ -14,8 +17,6 @@
  * This information can be used early in the WordPress lifecycle because no
  * translations are used.
  */
-$plansPricesMenuSlug = 'simplybook-plans-prices';
-
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
@@ -35,7 +36,8 @@ return [
         'assets_url' => plugin_dir_url(__DIR__).'assets/',
         'views_url' => plugin_dir_url(__DIR__).'views/',
         'react_url' => plugin_dir_url(__DIR__).'react',
-        'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+        'dashboard_menu_slug' => $dashboardMenuSlug,
+        'dashboard_url' => admin_url('admin.php?page=' . $dashboardMenuSlug),
         'plans_prices_menu_slug' => $plansPricesMenuSlug,
         'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
         'plans_prices_return_flag' => 'simplybook_subscription_return',
