@@ -16,7 +16,7 @@ return [
                 __('%s Social Media Management', 'simplybook'),
                 'Metricool -'
             ),
-            'color' => '#e6fe55'
+            'color' => '#f87fdd'
         ],
         'really-simple-ssl' => [
             'slug' => 'really-simple-ssl',
