@@ -9,8 +9,8 @@ use WP_Abilities_Registry;
 use WP_Ability_Categories_Registry;
 use SimplyBook\Abilities\AbstractAbility;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Abilities\AbstractAbilityCategory;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
-use SimplyBook\Abilities\Categories\AbstractAbilityCategory;
 
 /**
  * To boot this manager call the {@see register} method on 'init' and it will
@@ -69,7 +69,7 @@ final class AbilitiesManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $this->abilities[$class->getName()] = $class->toArray();
-        $this->categories[$class->getCategorySlug()] = $class->getCategory();
+        $this->categories[$class->getCategorySlug()] = $class->getCategoryInstance();
     }
 
     /**
