@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace SimplyBook\Abilities;
 
-class DefaultCategory extends AbstractAbilityCategory
+class DefaultAbilityCategory extends AbstractAbilityCategory
 {
     /**
      * @inheritDoc

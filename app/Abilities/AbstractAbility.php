@@ -119,7 +119,7 @@ abstract class AbstractAbility
      */
     public function getCategory(): string
     {
-        return DefaultCategory::class;
+        return DefaultAbilityCategory::class;
     }
 
     /**
