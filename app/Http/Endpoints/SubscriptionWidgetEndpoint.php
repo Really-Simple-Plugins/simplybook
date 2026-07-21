@@ -3,8 +3,10 @@
 namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -12,6 +14,7 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
+    use HasLogging;
 
     public const ROUTE = 'subscription_widget_embed_code';
     private const CONTAINER_ID = 'simplybook-subscription-widget';
@@ -64,7 +67,18 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
             $this->env->getUrl('plugin.plans_prices_url')
         );
 
-        $widgetData = $this->client->getSubscriptionWidgetEmbedCode($returnUrl, self::CONTAINER_ID);
+        try {
+            $widgetData = $this->client->getSubscriptionWidgetEmbedCode($returnUrl, self::CONTAINER_ID);
+        } catch (RestDataException $e) {
+            $this->log('Subscription widget embed code request failed: ' . $e->getMessage());
+            return $this->sendHttpResponse(
+                $e->getData(),
+                false,
+                $e->getMessage(),
+                $e->getResponseCode()
+            );
+        }
+
         if (empty($widgetData)) {
             return $this->sendHttpResponse([], false, 'Subscription widget embed code could not be loaded.', 502);
         }

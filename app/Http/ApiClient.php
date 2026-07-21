@@ -726,11 +726,20 @@ class ApiClient
 
     /**
      * Get the sanitized embed configuration for the SimplyBook subscription widget.
+     * @throws RestDataException
      */
     public function getSubscriptionWidgetEmbedCode(string $returnUrl, string $containerId): array
     {
-        if ($this->authenticationFailedFlag || $this->company_registration_complete() === false) {
-            return [];
+        if ($this->authenticationFailedFlag) {
+            throw (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
+                ->setResponseCode(401)
+                ->setData(['reason' => 'authentication_failed']);
+        }
+
+        if ($this->company_registration_complete() === false) {
+            throw (new RestDataException('Company registration is incomplete.'))
+                ->setResponseCode(409)
+                ->setData(['reason' => 'company_registration_incomplete']);
         }
 
         if (!$this->tokenIsValid('admin')) {
@@ -739,7 +748,9 @@ class ApiClient
 
         if (!$this->tokenIsValid('admin')) {
             $this->log('Token not valid, cannot retrieve subscription widget embed code');
-            return [];
+            throw (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
+                ->setResponseCode(401)
+                ->setData(['reason' => 'invalid_admin_token']);
         }
 
         $responseContainerId = sanitize_html_class($containerId);
@@ -754,12 +765,7 @@ class ApiClient
             'admin/subscription-widget/embed-code'
         );
 
-        try {
-            $responseData = $this->request('GET', $endpoint);
-        } catch (RestDataException $e) {
-            $this->log('Subscription widget embed code request failed: ' . $e->getMessage());
-            return [];
-        }
+        $responseData = $this->request('GET', $endpoint);
 
         $widgetData = (isset($responseData['result']) && is_array($responseData['result']))
             ? $responseData['result']
