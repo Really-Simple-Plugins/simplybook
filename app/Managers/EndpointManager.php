@@ -124,7 +124,7 @@ final class EndpointManager extends AbstractManager
                 $arguments['args'] = $data['args'];
             }
 
-            register_rest_route($this->env->getString('http.namespace') . '/' . $version, $route, $arguments);
+            register_rest_route($this->env->getString('plugin.namespace') . '/' . $version, $route, $arguments);
         }
     }
 

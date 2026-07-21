@@ -273,7 +273,7 @@ class DashboardController implements ControllerInterface
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
-                'rest_namespace' => $this->env->getString('http.namespace'),
+                'rest_namespace' => $this->env->getString('plugin.namespace'),
                 'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),

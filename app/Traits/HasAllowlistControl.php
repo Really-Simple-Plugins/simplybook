@@ -46,7 +46,7 @@ trait HasAllowlistControl
      */
     public function restRequestIsAllowed(): bool
     {
-        $pluginHttpNamespace = App::getInstance()->get(EnvironmentConfig::class)->getString('http.namespace');
+        $pluginHttpNamespace = App::getInstance()->get(EnvironmentConfig::class)->getString('plugin.namespace');
         $validWpJsonRequest = (
             isset($_SERVER['REQUEST_URI'])
             // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

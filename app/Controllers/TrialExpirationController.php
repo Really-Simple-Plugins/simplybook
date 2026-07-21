@@ -104,7 +104,7 @@ class TrialExpirationController implements ControllerInterface
             sprintf(
                 'const simplebookSSOConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    $this->env->getString('http.namespace') . '/' . $this->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
+                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

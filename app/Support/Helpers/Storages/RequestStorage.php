@@ -38,7 +38,7 @@ final class RequestStorage extends Storage
      */
     public function isRestRequest(): bool
     {
-        $pluginHttpNamespace = $this->env->getString('http.namespace');
+        $pluginHttpNamespace = $this->env->getString('plugin.namespace');
         $restUrlPrefix = trailingslashit(rest_get_url_prefix());
 
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized

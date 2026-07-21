@@ -19,6 +19,7 @@ if (!defined('ABSPATH')) {
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
+        'namespace' => 'simplybook',
         'version' => '3.3.1',
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
@@ -37,7 +38,6 @@ return [
     ],
     'http' => [
         'version' => 'v1',
-        'namespace' => 'simplybook',
     ],
     'simplybook' => [
         'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
