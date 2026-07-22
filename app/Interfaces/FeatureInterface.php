@@ -4,13 +4,13 @@ namespace SimplyBook\Interfaces;
 
 /**
  * This interface can be used to boot a feature. Features will only be accepted
- * and booted by {@see FeatureManagerNew} when they implement this interface.
+ * and booted by {@see FeatureManager} when they implement this interface.
  */
 interface FeatureInterface
 {
     /**
      * This method should be used to boot the complete feature. The
-     * {@see FeatureManagerNew} will make sure the method is called in the boot
+     * {@see FeatureManager} will make sure the method is called in the boot
      * process of the plugin. Will most likely contain all the hooks and
      * filters to boot controllers, listeners, endpoints, providers, etc.
      */
