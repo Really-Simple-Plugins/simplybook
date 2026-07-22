@@ -9,14 +9,6 @@ class DefaultAbilityCategory extends AbstractAbilityCategory
     /**
      * @inheritDoc
      */
-    public function getSlug(): string
-    {
-        return 'simplybook';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getLabel(): string
     {
         return __('SimplyBook.me General Abilities', 'simplybook');

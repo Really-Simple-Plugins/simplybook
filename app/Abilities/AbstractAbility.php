@@ -157,7 +157,6 @@ abstract class AbstractAbility
     final public function toArray(): array
     {
         return array_filter([
-            'name' => $this->getName(),
             'category' => $this->getCategorySlug(),
             'label' => $this->getLabel(),
             'description' => $this->getDescription(),

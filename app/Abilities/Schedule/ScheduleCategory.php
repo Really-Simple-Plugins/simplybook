@@ -11,14 +11,6 @@ class ScheduleCategory extends AbstractAbilityCategory
     /**
      * @inheritDoc
      */
-    public function getSlug(): string
-    {
-        return 'simplybook/schedule';
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function getLabel(): string
     {
         return __('SimplyBook.me Schedule Abilities', 'simplybook');
