@@ -68,8 +68,11 @@ final class AbilitiesManager extends AbstractManager
      */
     public function registerClass(object $class): void
     {
-        $this->abilities[$class->getName()] = $class->toArray();
-        $this->categories[$class->getCategorySlug()] = $class->getCategoryInstance();
+        $name = sanitize_key($class->getName());
+        $categorySlug = sanitize_key($class->getCategorySlug());
+
+        $this->abilities[$name] = $class->toArray();
+        $this->categories[$categorySlug] = $class->getCategoryInstance();
     }
 
     /**
@@ -102,8 +105,8 @@ final class AbilitiesManager extends AbstractManager
      */
     public function registerAbilitiesCategory(WP_Ability_Categories_Registry $registry): void
     {
-        foreach ($this->categories as $slug => $category) {
-            $categorySlug = sanitize_title($slug);
+        foreach ($this->categories as $category) {
+            $categorySlug = sanitize_title($category->getSlug());
             $registry->register($categorySlug, [
                 'label' => sanitize_text_field($category->getLabel()),
                 'description' => sanitize_text_field($category->getDescription()),
@@ -118,9 +121,11 @@ final class AbilitiesManager extends AbstractManager
      */
     public function registerAbilities(WP_Abilities_Registry $registry): void
     {
-        foreach ($this->abilities as $name => $arguments) {
-            $prefixedAbilityName = ($this->env->getString('plugin.namespace') . '/' . $name);
-            $registry->register($prefixedAbilityName, $arguments);
+        foreach ($this->abilities as $arguments) {
+            $name = sanitize_text_field($arguments['name']);
+            $namespace = $this->env->getString('plugin.namespace', 'simplybook');
+
+            $registry->register(($namespace . '/' . $name), $arguments);
         }
     }
 }
