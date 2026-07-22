@@ -146,7 +146,7 @@ abstract class AbstractAbility
     final public function getCategorySlug(): string
     {
         $category = $this->getCategoryInstance();
-        return sanitize_title($category->getSlug());
+        return $category->getSlug();
     }
 
     /**
