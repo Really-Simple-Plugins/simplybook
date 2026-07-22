@@ -6,6 +6,8 @@ namespace SimplyBook\Abilities;
 
 class DefaultAbilityCategory extends AbstractAbilityCategory
 {
+    public const SLUG = 'simplybook';
+
     /**
      * @inheritDoc
      */

@@ -8,6 +8,8 @@ use SimplyBook\Abilities\AbstractAbilityCategory;
 
 class ScheduleCategory extends AbstractAbilityCategory
 {
+    public const SLUG = 'simplybook-schedule';
+
     /**
      * @inheritDoc
      */
