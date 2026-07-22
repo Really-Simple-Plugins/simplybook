@@ -106,21 +106,20 @@ final class AbilitiesManager extends AbstractManager
     public function registerAbilitiesCategory(WP_Ability_Categories_Registry $registry): void
     {
         foreach ($this->categories as $category) {
-            $categorySlug = sanitize_title($category->getSlug());
-
-            $registry->register($categorySlug, $category->toArray());
+            $registry->register($category->getSlug(), $category->toArray());
         }
     }
 
     /**
      * Register all the plugin abilities with the WP Abilities API, using the
-     * registered abilities from the {@see registerClass} method.
+     * registered abilities from the {@see registerClass} method. All names
+     * are namespaced with the plugin namespace.
      * @internal Should be called from wp_abilities_api_init action
      */
     public function registerAbilities(WP_Abilities_Registry $registry): void
     {
         foreach ($this->abilities as $ability) {
-            $name = sanitize_text_field($ability->getName());
+            $name = $ability->getName();
             $namespace = $this->env->getString('plugin.namespace', 'simplybook');
 
             $registry->register(($namespace . '/' . $name), $ability->toArray());

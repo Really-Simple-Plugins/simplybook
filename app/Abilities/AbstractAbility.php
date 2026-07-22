@@ -67,7 +67,8 @@ abstract class AbstractAbility
 
     /**
      * Get the ability name defined in the subclass constant NAME. Can only
-     * contain lowercase letters and hyphens.
+     * contain lowercase letters and hyphens. Documented here:
+     * {@see wp_register_ability}
      *
      * Example
      *
@@ -79,13 +80,7 @@ abstract class AbstractAbility
             throw new RuntimeException('Ability NAME constant not defined in class: ' . static::class);
         }
 
-        $name = static::NAME;
-
-        if (preg_match('/^[a-z\-]+$/', $name) !== 1) {
-            throw new RuntimeException('Ability NAME constant must contain only lowercase letters and hyphens: ' . static::class);
-        }
-
-        return $name;
+        return static::NAME;
     }
 
     /**
