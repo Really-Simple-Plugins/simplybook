@@ -2,6 +2,8 @@
 
 namespace SimplyBook\Abilities;
 
+use RuntimeException;
+
 abstract class AbstractAbilityCategory
 {
     /**
@@ -33,7 +35,11 @@ abstract class AbstractAbilityCategory
      */
     final public function getSlug(): string
     {
-        return sanitize_title($this->getLabel());
+        if (!defined('static::SLUG')) {
+            throw new RuntimeException('AbilityCategory SLUG constant not defined in class: ' . static::class);
+        }
+
+        return static::SLUG;
     }
 
     /**
