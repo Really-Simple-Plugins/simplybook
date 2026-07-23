@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-11T13:30:46+00:00\n"
+"POT-Creation-Date: 2026-07-23T12:25:34+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: simplybook\n"
@@ -37,6 +37,330 @@ msgstr ""
 #. Author URI of the plugin
 #: simplybook.php
 msgid "https://really-simple-plugins.com"
+msgstr ""
+
+#: app/Abilities/DefaultAbilityCategory.php:16
+msgid "SimplyBook.me General Abilities"
+msgstr ""
+
+#: app/Abilities/DefaultAbilityCategory.php:24
+msgid "Abilities related to the SimplyBook.me plugin."
+msgstr ""
+
+#: app/Abilities/Design/ListDesignSettingsAbility.php:28
+msgid "List Design Settings"
+msgstr ""
+
+#: app/Abilities/Design/ListDesignSettingsAbility.php:36
+msgid "Returns the saved SimplyBook.me design settings as key/value pairs. Optionally returns a single setting when a key is provided."
+msgstr ""
+
+#: app/Abilities/Design/ListDesignSettingsAbility.php:49
+msgid "Optional. The design setting key to return. Omit to return all design settings. Use dot notation to get nested values."
+msgstr ""
+
+#: app/Abilities/Design/ListDesignSettingsAbility.php:62
+msgid "The full design settings map, a nested section, a scalar value resolved by dot-notation, or a human-readable message when the settings or requested key could not be found."
+msgstr ""
+
+#: app/Abilities/Design/ListDesignSettingsAbility.php:77
+msgid "Design settings could not be found."
+msgstr ""
+
+#. translators: %s: user-provided search key
+#: app/Abilities/Design/ListDesignSettingsAbility.php:92
+#, php-format
+msgid "Design setting \"%s\" could not be found."
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:28
+msgid "Update Design Settings"
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:36
+msgid "Updates one or more SimplyBook.me design settings. Values are validated against the design fields configuration to prevent accidental type mismatches before being saved."
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:50
+msgid "Map of design setting keys to their new values. Nested groups (e.g. \"theme_settings\") are passed as nested objects."
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:64
+msgid "The updated design settings map on success, or a human-readable message describing the validation or save error."
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:78
+msgid "A non-empty \"settings\" object is required."
+msgstr ""
+
+#: app/Abilities/Design/UpdateDesignSettingsAbility.php:89
+msgid "The provided design settings could not be saved."
+msgstr ""
+
+#: app/Abilities/Providers/ListProvidersAbility.php:26
+msgid "List Providers"
+msgstr ""
+
+#: app/Abilities/Providers/ListProvidersAbility.php:34
+msgid "Returns all SimplyBook.me service providers (staff) currently configured on the connected company."
+msgstr ""
+
+#: app/Abilities/Providers/ListProvidersAbility.php:52
+msgid "Zero-indexed list of service providers as returned by the SimplyBook.me API. Empty when no company is connected or no providers exist."
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:28
+msgid "Update Service Provider"
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:36
+msgid "Updates a single SimplyBook.me service provider identified by its ID. Only the supplied fields are changed; values are validated and sanitized by the ServiceProvider entity before being sent to the SimplyBook.me API."
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:50
+msgid "The ID of the service provider to update."
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:68
+msgid "The updated service provider attributes on success, or a human-readable message describing why the update could not be performed."
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:86
+msgid "A valid service provider ID is required."
+msgstr ""
+
+#: app/Abilities/Providers/UpdateProviderAbility.php:99
+msgid "The service provider could not be updated."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:29
+msgid "Get Available Booking Slots"
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:37
+msgid "Returns the bookable time slots for a given SimplyBook.me service, provider and date. Unlike the working-hours ability, this reflects actual availability after existing bookings have been taken into account, so it answers the question \"when can a booking be placed?\"."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:60
+#: app/Abilities/Schedule/GetScheduleAbility.php:63
+msgid "Optional. The ID of the service to filter by."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:64
+#: app/Abilities/Schedule/GetScheduleAbility.php:59
+msgid "Optional. The ID of the service provider to filter by."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:69
+msgid "The date to check, in YYYY-MM-DD format."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:74
+msgid "Optional. Number of attendees for a group booking. Defaults to 1."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:87
+msgid "Zero-indexed list of bookable time slots for the requested service, provider and date. Returns a human-readable message instead when the slots could not be retrieved."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:105
+msgid "A valid date is required."
+msgstr ""
+
+#: app/Abilities/Schedule/GetAvailableSlotsAbility.php:131
+msgid "The available slots could not be retrieved."
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:29
+msgid "Get Working Hours"
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:37
+msgid "Returns the configured working hours per day from SimplyBook.me (including days off). Optionally narrow the result by service provider and/or service. Does NOT account for existing bookings, so the response indicates when work is rostered, not when there are free slots. The date range is optional and defaults to today when omitted; if only one date is supplied the other defaults to the same value."
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:68
+msgid "Start of the date range in YYYY-MM-DD format. Defaults to today."
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:73
+msgid "End of the date range in YYYY-MM-DD format. Defaults to date_from (or today)."
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:86
+msgid "Zero-indexed list of working-hour entries (one per day) for the requested filters and date range. Each entry contains the date, the start and end of the working window and a day-off flag; it does not reflect existing bookings. Returns a human-readable message instead when the schedule could not be retrieved."
+msgstr ""
+
+#: app/Abilities/Schedule/GetScheduleAbility.php:125
+msgid "The schedule could not be retrieved."
+msgstr ""
+
+#: app/Abilities/Schedule/ScheduleCategory.php:18
+msgid "SimplyBook.me Schedule Abilities"
+msgstr ""
+
+#: app/Abilities/Schedule/ScheduleCategory.php:26
+msgid "Abilities related to the Simplybook.me Schedule API."
+msgstr ""
+
+#: app/Abilities/Services/ListServicesAbility.php:26
+msgid "List Services"
+msgstr ""
+
+#: app/Abilities/Services/ListServicesAbility.php:34
+msgid "Returns all SimplyBook.me services currently configured on the connected company."
+msgstr ""
+
+#: app/Abilities/Services/ListServicesAbility.php:52
+msgid "Zero-indexed list of services as returned by the SimplyBook.me API. Empty when no company is connected or no services exist."
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:28
+msgid "Update Service"
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:36
+msgid "Updates a single SimplyBook.me service identified by its ID. Only the supplied fields are changed; values are validated and sanitized by the Service entity before being sent to the SimplyBook.me API."
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:50
+msgid "The ID of the service to update."
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:66
+msgid "The updated service attributes on success, or a human-readable message describing why the update could not be performed."
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:84
+msgid "A valid service ID is required."
+msgstr ""
+
+#: app/Abilities/Services/UpdateServiceAbility.php:97
+msgid "The service could not be updated."
+msgstr ""
+
+#: app/Abilities/Statistics/CountRecentBookingsAbility.php:26
+msgid "Count Recent Bookings"
+msgstr ""
+
+#: app/Abilities/Statistics/CountRecentBookingsAbility.php:34
+msgid "Returns the number of SimplyBook.me bookings made on the connected company in the last 30 days."
+msgstr ""
+
+#: app/Abilities/Statistics/CountRecentBookingsAbility.php:53
+msgid "Number of bookings on the connected company in the last 30 days. Zero when no company is connected or no bookings exist."
+msgstr ""
+
+#: app/Abilities/Statistics/GetStatisticsAbility.php:28
+msgid "Get Statistics"
+msgstr ""
+
+#: app/Abilities/Statistics/GetStatisticsAbility.php:36
+msgid "Returns the cached SimplyBook.me statistics for the connected company (e.g. bookings today, bookings this week, bookings in the last 30 days, most popular service and provider). Optionally returns a single value when a key is provided."
+msgstr ""
+
+#: app/Abilities/Statistics/GetStatisticsAbility.php:49
+msgid "Optional. The statistics key to return. Omit to return all statistics. Use dot notation to get nested values (e.g. \"most_popular_service.name\")."
+msgstr ""
+
+#: app/Abilities/Statistics/GetStatisticsAbility.php:62
+msgid "The full statistics map, a nested section, a scalar value resolved by dot-notation, or a human-readable message when the statistics or requested key could not be found."
+msgstr ""
+
+#: app/Abilities/Statistics/GetStatisticsAbility.php:79
+msgid "Statistics could not be found."
+msgstr ""
+
+#. translators: %s: user-provided search key
+#: app/Abilities/Statistics/GetStatisticsAbility.php:94
+#, php-format
+msgid "Statistic \"%s\" could not be found."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:32
+msgid "List Tasks"
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:40
+msgid "Returns all SimplyBook.me plugin tasks."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:52
+msgid "List of tasks, each represented as an associative array."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:70
+msgid "Human-readable message returned when the task management feature is not available."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:87
+msgid "Optional. Filter tasks by status."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:91
+msgid "Optional. Filter tasks by whether they are required."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:95
+msgid "Optional. Filter tasks by whether they are premium."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:99
+msgid "Optional. Filter tasks by whether they are a special feature."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:103
+msgid "Optional. Filter tasks by whether they are snoozed."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:120
+msgid "Please finish the onboarding process first to be able to list tasks."
+msgstr ""
+
+#: app/Abilities/Tasks/ListTasksAbility.php:132
+msgid "An error occurred while listing the tasks."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:32
+msgid "Update Task Status"
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:40
+msgid "Updates the status of a SimplyBook.me plugin task identified by its ID."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:54
+msgid "The unique identifier of the task to update."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:59
+msgid "The new status to assign to the task."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:74
+msgid "The updated task represented as an associative array."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:89
+msgid "Human-readable message returned when the task management feature is not available or when the update could not be performed."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:106
+msgid "Please finish the onboarding process first to be able to update a task."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:117
+msgid "Required arguments \"id\" & \"status\" should both be given."
+msgstr ""
+
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:126
+msgid "Task not found."
+msgstr ""
+
+#. translators: %1$s: Status
+#: app/Abilities/Tasks/UpdateTaskStatusAbility.php:138
+#, php-format
+msgid "Could not use status \"%1$s\" to update th task."
 msgstr ""
 
 #: app/Controllers/AdminController.php:51
@@ -165,84 +489,84 @@ msgstr ""
 msgid "It seems that you haven't published the booking widget on the front-end of your site. Please use the shortcode or Gutenberg Widget to create your booking page to accept bookings!"
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:145
-msgid "An error occurred while creating your account. Please try again."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:164
-msgid "Please enter a valid email address."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:168
-msgid "Please accept the terms and conditions."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:205
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:78
 msgid "Something went wrong while saving the widget style settings. Please try again."
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:211
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:84
 msgid "Successfully saved widget style settings"
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:251
-#: app/Features/Onboarding/OnboardingController.php:291
-msgid "Please fill in all fields."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:268
-msgid "Unknown error occurred, please verify your credentials."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:275
-msgid "Login successful."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:308
-msgid "Unknown 2FA error occurred, please verify your credentials."
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:313
-msgid "Successfully authenticated user"
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:377
-msgid "Successfully requested SMS code"
-msgstr ""
-
-#: app/Features/Onboarding/OnboardingController.php:389
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:114
 msgid "Successfully finished onboarding!"
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:393
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:118
 msgid "An error occurred while finishing the onboarding process"
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:407
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:132
 msgid "Successfully removed all previous data."
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:410
+#: app/Features/Onboarding/Endpoints/ActionEndpoints.php:135
 msgid "An error occurred while trying to remove previous data."
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:438
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:79
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:119
+msgid "Please fill in all fields."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:96
+msgid "Unknown error occurred, please verify your credentials."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:103
+msgid "Login successful."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:136
+msgid "Unknown 2FA error occurred, please verify your credentials."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:141
+msgid "Successfully authenticated user"
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:161
+msgid "Successfully requested SMS code"
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/CallbackEndpoint.php:87
 msgid "Company data not found. Please restart registration."
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:479
+#: app/Features/Onboarding/Endpoints/CallbackEndpoint.php:128
 msgid "Successfully registered company."
 msgstr ""
 
-#: app/Features/Onboarding/OnboardingController.php:489
+#: app/Features/Onboarding/Endpoints/CallbackEndpoint.php:138
 msgid "An error occurred during the registration process"
 msgstr ""
 
-#: app/Features/TaskManagement/Tasks/AbstractTask.php:299
+#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:86
+msgid "An error occurred while creating your account. Please try again."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:105
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:109
+msgid "Please accept the terms and conditions."
+msgstr ""
+
+#: app/Features/TaskManagement/Tasks/AbstractTask.php:263
 msgid "Premium"
 msgstr ""
 
-#: app/Features/TaskManagement/Tasks/AbstractTask.php:303
+#: app/Features/TaskManagement/Tasks/AbstractTask.php:267
 msgid "Special feature"
 msgstr ""
 
@@ -500,7 +824,7 @@ msgstr ""
 msgid "An error occurred while saving, please try again."
 msgstr ""
 
-#: app/Http/Endpoints/BlockEndpoints.php:121
+#: app/Http/Endpoints/BlockEndpoint.php:121
 #: app/Support/Widgets/ElementorWidget.php:233
 msgid "Any provider"
 msgstr ""
@@ -529,11 +853,11 @@ msgstr ""
 msgid "No themes found"
 msgstr ""
 
-#: app/Http/Endpoints/SettingEndpoints.php:56
+#: app/Http/Endpoints/SettingEndpoint.php:56
 msgid "No data to save"
 msgstr ""
 
-#: app/Http/Endpoints/SettingEndpoints.php:114
+#: app/Http/Endpoints/SettingEndpoint.php:114
 msgid "Error processing settings"
 msgstr ""
 
@@ -543,6 +867,15 @@ msgstr ""
 
 #: app/Http/Entities/AbstractEntity.php:295
 msgid "Field is required."
+msgstr ""
+
+#: app/Http/Entities/AvailableSlot.php:29
+msgid "Available Slot"
+msgstr ""
+
+#: app/Http/Entities/Schedule.php:29
+#: config/menus.php:76
+msgid "Schedule"
 msgstr ""
 
 #: app/Http/Entities/Service.php:44
@@ -583,7 +916,7 @@ msgstr ""
 msgid "The email address can only be changed once per day."
 msgstr ""
 
-#: app/Managers/EndpointManager.php:188
+#: app/Managers/EndpointManager.php:176
 msgid "Forbidden."
 msgstr ""
 
@@ -1851,10 +2184,6 @@ msgstr ""
 #: config/menus.php:71
 #: react/build/107.8745086527139fc0466a.js:1
 msgid "Notifications"
-msgstr ""
-
-#: config/menus.php:76
-msgid "Schedule"
 msgstr ""
 
 #: config/menus.php:81
