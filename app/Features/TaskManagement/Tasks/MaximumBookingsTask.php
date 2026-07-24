@@ -33,7 +33,7 @@ class MaximumBookingsTask extends AbstractTask
     {
         $this->setStatus(self::STATUS_HIDDEN);
         $this->env = $env;
-        $this->version = '1.0.1';
+        $this->setVersion('1.0.1');
     }
 
     /**

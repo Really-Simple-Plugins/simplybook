@@ -29,11 +29,15 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
     }
 
     /**
-     * Only enable this endpoint if the user has access to the admin area.
+     * Only enable this endpoint if the user has admin access and the SimplyBook
+     * account is ready to make authenticated API requests.
      */
     public function enabled(): bool
     {
-        return $this->adminAccessAllowed();
+        return $this->adminAccessAllowed()
+            && !$this->client->authenticationHasFailed()
+            && !empty($this->client->getToken('admin'))
+            && $this->client->tokenIsValid('admin');
     }
 
     /**

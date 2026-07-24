@@ -730,18 +730,6 @@ class ApiClient
      */
     public function getSubscriptionWidgetEmbedCode(string $returnUrl, string $containerId): array
     {
-        if ($this->authenticationFailedFlag) {
-            throw (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
-                ->setResponseCode(401)
-                ->setData(['reason' => 'authentication_failed']);
-        }
-
-        if ($this->company_registration_complete() === false) {
-            throw (new RestDataException('Company registration is incomplete.'))
-                ->setResponseCode(409)
-                ->setData(['reason' => 'company_registration_incomplete']);
-        }
-
         if (!$this->tokenIsValid('admin')) {
             $this->refresh_token('admin');
         }

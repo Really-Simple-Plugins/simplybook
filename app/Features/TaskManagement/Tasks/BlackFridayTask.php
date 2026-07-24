@@ -35,7 +35,7 @@ class BlackFridayTask extends AbstractTask
         $this->hide();
 
         $this->env = $env;
-        $this->version = '1.0.2';
+        $this->setVersion('1.0.2');
     }
 
     /**
