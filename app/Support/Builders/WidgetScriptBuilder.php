@@ -183,23 +183,33 @@ class WidgetScriptBuilder
     {
         $content = $this->widgetTemplate;
         foreach ($this->getWidgetSettings() as $key => $setting) {
-            $searchable = '{{ ' . $key . ' }}';
+            // The placeholders in the templates are always quoted, the quotes
+            // are replaced as well because the encoded value contains them.
+            $searchable = '"{{ ' . $key . ' }}"';
 
-            if (is_array($setting)) {
-                $setting = json_encode($setting);
-                $searchable = '"{{ ' . $key . ' }}"'; // Also replace the quotes
-            }
-
-            // This will work the same as a false value. Therefor it is not an
-            // issue that the empty check triggers for these false(y) values.
-            if (empty($setting)) {
-                $setting = '';
-            }
-
-            $content = str_replace($searchable, $setting, $content);
+            $content = str_replace($searchable, $this->encodeSetting($setting), $content);
         }
 
         return $content;
+    }
+
+    /**
+     * Method is used for encoding a setting value so it can safely be placed
+     * inside the JavaScript of the widget template.
+     * @param mixed $setting
+     */
+    private function encodeSetting($setting): string
+    {
+        if (is_array($setting) === false) {
+            // This will work the same as a false value. Therefor it is not an
+            // issue that the empty check triggers for these false(y) values.
+            $setting = (empty($setting) ? '' : (string) $setting);
+        }
+
+        return (string) wp_json_encode(
+            $setting,
+            (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
+        );
     }
 
     /**

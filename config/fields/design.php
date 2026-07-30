@@ -174,6 +174,7 @@ return
             'label'    => __('Theme', 'simplybook'),
             'control' => 'self',
             'default'  => 'default',
+            'regex'    => '/^[a-zA-Z0-9_-]+$/', // Theme IDs only, see getThemeList
             'translations' => [
                 'flexible_week' => __('Flexible weekly', 'simplybook'),
                 'flexible_provider' => __('Flexible Provider', 'simplybook'),
