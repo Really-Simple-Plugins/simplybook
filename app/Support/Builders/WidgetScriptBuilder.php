@@ -181,16 +181,17 @@ class WidgetScriptBuilder
      */
     private function getWidgetScript(): string
     {
-        $content = $this->widgetTemplate;
+        $placeholders = [];
+        $encodedSettings = [];
+
         foreach ($this->getWidgetSettings() as $key => $setting) {
             // The placeholders in the templates are always quoted, the quotes
             // are replaced as well because the encoded value contains them.
-            $searchable = '"{{ ' . $key . ' }}"';
-
-            $content = str_replace($searchable, $this->encodeSetting($setting), $content);
+            $placeholders[] = '"{{ ' . $key . ' }}"';
+            $encodedSettings[] = $this->encodeSetting($setting);
         }
 
-        return $content;
+        return str_replace($placeholders, $encodedSettings, $this->widgetTemplate);
     }
 
     /**
