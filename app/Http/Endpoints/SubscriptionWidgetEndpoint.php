@@ -35,9 +35,7 @@ class SubscriptionWidgetEndpoint implements SingleEndpointInterface
     public function enabled(): bool
     {
         return $this->adminAccessAllowed()
-            && !$this->client->authenticationHasFailed()
-            && !empty($this->client->getToken('admin'))
-            && $this->client->tokenIsValid('admin');
+            && $this->client->isAuthenticated();
     }
 
     /**
