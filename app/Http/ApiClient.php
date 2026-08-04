@@ -757,7 +757,7 @@ class ApiClient
 
         $widgetData = (isset($responseData['result']) && is_array($responseData['result']))
             ? $responseData['result']
-            : [];
+            : $responseData;
 
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
         if (empty($scriptUrl) || parse_url($scriptUrl, PHP_URL_SCHEME) !== 'https') {
