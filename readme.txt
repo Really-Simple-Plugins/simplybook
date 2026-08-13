@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 7.0
 Requires PHP: 7.4
-Stable tag: 3.3.1
+Stable tag: 3.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,6 +88,18 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.4.0 - 2026-08-18 =
+* Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
+* Added: New submenu to manage your SimplyBook.me plans and prices.
+* Added: The Metricool WordPress plugin is added to the "Other plugins" section.
+* Added: Stricter theme setting validation.
+* Changed: The title of the generated booking page now defaults to "Book now".
+* Changed: reCAPTCHA description no longer mentions the Google policies.
+* Changed: The informative sign-up notice is triggered after installation.
+* Fixed: Marketing opt-in choice is retained after a failed submition.
+* Fixed: The "Add new provider"-button is now reacting reliably.
+* Fixed: New translatable texts are now reliably added to the .pot file.
+
 = 3.3.1 - 2026-05-19 =
 * Changed: Tested up to version to WordPress 7.0.
 * Changed: PHP Mess Detector is now used in development, improving code style.
