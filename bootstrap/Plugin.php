@@ -190,7 +190,6 @@ final class Plugin
     /**
      * Register the plugins REST API endpoint instances. Hooked into
      * rest_api_init to make sure the REST API is available.
-     * @uses do_action simplybook_endpoints_loaded
      */
     public function registerEndpoints(): void
     {
@@ -209,6 +208,7 @@ final class Plugin
             \SimplyBook\Http\Endpoints\TipsTricksEndpoint::class,
             \SimplyBook\Http\Endpoints\StatisticsEndpoint::class,
             \SimplyBook\Http\Endpoints\SubscriptionEndpoint::class,
+            \SimplyBook\Http\Endpoints\SubscriptionWidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
             \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,

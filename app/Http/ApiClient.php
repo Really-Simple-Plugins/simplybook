@@ -721,18 +721,57 @@ class ApiClient
             return [];
         }
 
-        $found = false;
-        $cacheName = 'simplybook_subscription_data';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+        return $this->api_call('admin/tariff/current', [], 'GET');
+    }
 
-        if ($found && is_array($cacheValue)) {
-            return $cacheValue;
+    /**
+     * Get the sanitized embed configuration for the SimplyBook subscription widget.
+     * @throws RestDataException
+     */
+    public function getSubscriptionWidgetEmbedCode(string $returnUrl, string $containerId): array
+    {
+        if (!$this->tokenIsValid('admin')) {
+            $this->refresh_token('admin');
         }
 
-        $response = $this->api_call('admin/tariff/current', [], 'GET');
+        if (!$this->tokenIsValid('admin')) {
+            $this->log('Token not valid, cannot retrieve subscription widget embed code');
+            throw (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
+                ->setResponseCode(401)
+                ->setData(['reason' => 'invalid_admin_token']);
+        }
 
-        wp_cache_set($cacheName, $response, 'simplybook', MINUTE_IN_SECONDS);
-        return $response;
+        $responseContainerId = sanitize_html_class($containerId);
+
+        $endpoint = add_query_arg(
+            [
+                'return_url' => esc_url_raw($returnUrl),
+                'container_id' => $responseContainerId,
+                'locale' => $this->get_locale(),
+                'memory_router' => 1,
+            ],
+            'admin/subscription-widget/embed-code'
+        );
+
+        $widgetData = $this->request('GET', $endpoint);
+
+        $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
+        if (empty($scriptUrl) || parse_url($scriptUrl, PHP_URL_SCHEME) !== 'https') {
+            $this->log('Invalid subscription widget script URL.');
+            return [];
+        }
+
+        $params = $widgetData['params'] ?? [];
+        if (!is_array($params)) {
+            $this->log('Invalid subscription widget params.');
+            return [];
+        }
+
+        return [
+            'container_id' => $responseContainerId,
+            'script_url' => $scriptUrl,
+            'params' => $params,
+        ];
     }
 
     /**
@@ -1493,9 +1532,13 @@ class ApiClient
         $this->clearRequestCache($endpoint);
 
         if (is_wp_error($response)) {
+            $errorData = $response->get_error_data();
+            $errorData = is_array($errorData) ? $errorData : [];
+            $errorData['wp_error_code'] = (string) $response->get_error_code();
+
             throw (new RestDataException($response->get_error_message()))
-                ->setResponseCode($response->get_error_code())
-                ->setData($response->get_error_data());
+                ->setResponseCode(500)
+                ->setData($errorData);
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);

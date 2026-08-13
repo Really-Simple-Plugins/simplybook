@@ -32,10 +32,10 @@ abstract class AbstractTask implements TaskInterface
     public const MENU_BUBBLE_OPTION_KEY = 'simplybook_task_bubble_counter';
 
     /**
-     * Override this property to define the version of the task. This version is
-     * used to determine if the task should be upgraded during a plugin update.
+     * The version used to determine if the task should be upgraded during a
+     * plugin update.
      */
-    protected string $version;
+    private string $version;
 
     /**
      * Override this property to define if the task is required or not. If the
@@ -111,6 +111,14 @@ abstract class AbstractTask implements TaskInterface
     public function getVersion(): string
     {
         return $this->version ?? '1.0.0';
+    }
+
+    /**
+     * Set the version used to determine if the task should be upgraded.
+     */
+    protected function setVersion(string $version): void
+    {
+        $this->version = $version;
     }
 
     /**

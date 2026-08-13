@@ -38,6 +38,8 @@ class TaskManagementListener implements ListenerInterface
         add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
         add_action('simplybook_event_' . Event::HAS_PROVIDERS, [$this, 'handleHasProviders']);
+        add_action('simplybook_event_' . Event::PROVIDER_CREATED, [$this, 'handleProviderAmountChanged']);
+        add_action('simplybook_event_' . Event::PROVIDER_DELETED, [$this, 'handleProviderAmountChanged']);
         add_action('simplybook_event_' . Event::NAVIGATE_TO_SIMPLYBOOK, [$this, 'handleNavigateToSimplyBook']);
         add_action('simplybook_event_' . Event::SUBSCRIPTION_DATA_LOADED, [$this, 'handleSubscriptionDataLoaded']);
         add_action('simplybook_event_' . Event::SPECIAL_FEATURES_LOADED, [$this, 'handleSpecialFeaturesLoaded']);
@@ -66,6 +68,10 @@ class TaskManagementListener implements ListenerInterface
     {
         $this->service->flagTaskUrgent(
             Tasks\AddMandatoryProviderTask::IDENTIFIER
+        );
+
+        $this->service->hideTask(
+            Tasks\MaxedOutProvidersTask::IDENTIFIER
         );
     }
 
@@ -107,6 +113,18 @@ class TaskManagementListener implements ListenerInterface
                 Tasks\AddAllProvidersTask::IDENTIFIER
             );
         }
+    }
+
+    /**
+     * Handle the provider created and deleted events. The amount of providers
+     * changed, so we refresh the subscription data to keep the provider limit
+     * up-to-date. Refreshing dispatches {@see Event::SUBSCRIPTION_DATA_LOADED}
+     * which is handled by {@see self::handleSubscriptionDataLoaded} to update
+     * the task status based on the fresh limits.
+     */
+    public function handleProviderAmountChanged(): void
+    {
+        $this->subscriptionDataService->restore();
     }
 
     /**
@@ -208,7 +226,7 @@ class TaskManagementListener implements ListenerInterface
             );
         }
 
-        if ($amountLeft > 1) {
+        if ($amountLeft > 0) {
             $this->service->hideTask(
                 Tasks\MaxedOutProvidersTask::IDENTIFIER
             );

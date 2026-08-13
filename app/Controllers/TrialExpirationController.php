@@ -7,7 +7,6 @@ use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
-use SimplyBook\Http\Endpoints\LoginUrlEndpoint;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -40,8 +39,11 @@ class TrialExpirationController implements ControllerInterface
         'simplybook',
     ];
 
-    public function __construct(EnvironmentConfig $env, SubscriptionDataService $subscriptionService, NoticeDismissalService $noticeDismissalService)
-    {
+    public function __construct(
+        EnvironmentConfig $env,
+        SubscriptionDataService $subscriptionService,
+        NoticeDismissalService $noticeDismissalService
+    ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
         $this->noticeDismissalService = $noticeDismissalService;
@@ -80,6 +82,7 @@ class TrialExpirationController implements ControllerInterface
         $this->render('admin/trial-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
+            'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
         ]);
     }
 
@@ -90,26 +93,6 @@ class TrialExpirationController implements ControllerInterface
         }
 
         $this->noticeDismissalService->enqueue();
-
-        wp_enqueue_script(
-            'simplybook-admin-sso',
-            $this->env->getUrl('plugin.assets_url') . 'js/sso/admin-sso-links.js',
-            [],
-            $this->env->getString('plugin.version'),
-            false
-        );
-
-        wp_add_inline_script(
-            'simplybook-admin-sso',
-            sprintf(
-                'const simplebookSSOConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url(
-                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . LoginUrlEndpoint::ROUTE
-                ))),
-                wp_json_encode(wp_create_nonce('wp_rest'))
-            ),
-            'before'
-        );
     }
 
     private function canRenderTrialNotice(): bool

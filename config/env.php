@@ -4,6 +4,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+$dashboardMenuSlug = 'simplybook-integration';
+$plansPricesMenuSlug = 'simplybook-plans-prices';
+
 /**
  * This file is NOT loaded in the config. All other files áre loaded in one
  * config object in the container. This file is loaded separately via
@@ -34,7 +37,11 @@ return [
         'assets_url' => plugin_dir_url(__DIR__) . 'assets/',
         'views_url' => plugin_dir_url(__DIR__) . 'views/',
         'react_url' => plugin_dir_url(__DIR__) . 'react',
-        'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+        'dashboard_menu_slug' => $dashboardMenuSlug,
+        'dashboard_url' => admin_url('admin.php?page=' . $dashboardMenuSlug),
+        'plans_prices_menu_slug' => $plansPricesMenuSlug,
+        'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
+        'plans_prices_return_flag' => 'simplybook_subscription_return',
     ],
     'http' => [
         'version' => 'v1',
@@ -48,8 +55,6 @@ return [
         'recaptcha' => [
             'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
             'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
-            'google_privacy_policy_url' => 'https://policies.google.com/privacy',
-            'google_terms_url' => 'https://policies.google.com/terms',
         ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
