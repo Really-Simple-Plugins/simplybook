@@ -201,16 +201,36 @@ class WidgetScriptBuilder
      */
     private function encodeSetting($setting): string
     {
-        if (is_array($setting) === false) {
-            // This will work the same as a false value. Therefor it is not an
-            // issue that the empty check triggers for these false(y) values.
-            $setting = (empty($setting) ? '' : (string) $setting);
-        }
+        $sanitizedSetting = $this->sanitizeSetting($setting);
 
         return (string) wp_json_encode(
-            $setting,
+            $sanitizedSetting,
             (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
         );
+    }
+
+    /**
+     * Sanitize a setting value so it stays harmless after the JavaScript
+     * engine decodes the JSON escaping and the widget writes the value into
+     * the DOM. The JSON escaping only protects the HTML context of the
+     * script tag, not the sinks used by the widget itself.
+     *
+     * @param mixed $setting
+     * @return array|string
+     */
+    private function sanitizeSetting($setting)
+    {
+        if (is_array($setting)) {
+            return array_map([$this, 'sanitizeSetting'], $setting);
+        }
+
+        if (empty($setting)) {
+            // This will work the same as a false value. Therefor it is not an
+            // issue that the empty check triggers for these false(y) values.
+            return '';
+        }
+
+        return sanitize_text_field((string) $setting);
     }
 
     /**
