@@ -14,12 +14,6 @@ class BlackFridayTask extends AbstractTask
     protected bool $required = true;
 
     /**
-     * @since 3.2.4 bumped version due to the addition of a constructor
-     * argument.
-     */
-    protected string $version = '1.0.1';
-
-    /**
      * The environment configuration
      */
     private EnvironmentConfig $env;
@@ -28,12 +22,20 @@ class BlackFridayTask extends AbstractTask
      * We hide this task by default, and it is updated to "upgrade" status
      * during Black Friday period ánd only for Trial users in the
      * {@see TaskManagementListener}
+     *
+     * @since 3.2.4 bumped version to 1.0.1 due to the addition of a
+     * constructor argument.
+     * @since 3.3.2 bumped version to 1.0.2 due to the new
+     * plugin.plans_prices_url env key. Version is set in the constructor
+     * because property defaults leak into unserialized legacy instances,
+     * defeating the version compare on upgrade.
      */
     public function __construct(EnvironmentConfig $env)
     {
         $this->hide();
 
         $this->env = $env;
+        $this->setVersion('1.0.2');
     }
 
     /**
@@ -57,7 +59,7 @@ class BlackFridayTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Claim discount', 'simplybook'),
-            'login_link' => 'v2/r/payment-widget',
+            'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
 }

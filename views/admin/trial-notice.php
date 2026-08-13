@@ -3,6 +3,7 @@
  * Variables that should be passed to the view
  * @var string $logoUrl
  * @var string $message
+ * @var string $plansPricesUrl
  */
 ?>
 
@@ -33,7 +34,7 @@
     .rsp-trial .rsp-trial-content {
         margin-left: 30px;
     }
-    <?php if (is_rtl()): ?>
+    <?php if (is_rtl()) : ?>
          .rsp-trial .rsp-trial-content {
              margin-left:0;
              margin-right:30px;
@@ -53,9 +54,7 @@
             <div class="rsp-buttons-row">
                 <a
                     class="button button-primary"
-                    href="#"
-                    data-sso-path="v2/r/payment-widget#"
-                    data-loading-text="<?php echo esc_attr(__('Redirecting..', 'simplybook')); ?>"
+                    href="<?php echo esc_url($plansPricesUrl); ?>"
                 >
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>

@@ -186,6 +186,7 @@ final class Plugin
             \SimplyBook\Http\Endpoints\TipsTricksEndpoint::class,
             \SimplyBook\Http\Endpoints\StatisticsEndpoint::class,
             \SimplyBook\Http\Endpoints\SubscriptionEndpoints::class,
+            \SimplyBook\Http\Endpoints\SubscriptionWidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
             \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,

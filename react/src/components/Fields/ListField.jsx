@@ -82,7 +82,7 @@ const ListField = forwardRef(
                     <ListItem upgrade={false} key={item.id+item.source} label={label} link={getEditLink(item.id)} item={item} />
                 ))}
                 {providersFetched && showUpsell && (
-                    <ListItem upgrade={true} label={label} link="v2/r/payment-widget" item={premiumItem} />
+                    <ListItem upgrade={true} label={label} link={simplybook?.plans_prices_url || ""} item={premiumItem} />
                 )}
             </div>
         );
