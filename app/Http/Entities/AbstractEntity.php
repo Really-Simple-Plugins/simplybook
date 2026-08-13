@@ -268,7 +268,7 @@ abstract class AbstractEntity
     /**
      * Validate the required attributes of the entity. Errors format should be
      * consistent with
-     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::processAttributesException}
+     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::processSaveException}
      *
      * @throws FormException
      */

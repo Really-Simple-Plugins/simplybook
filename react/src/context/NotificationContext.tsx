@@ -19,6 +19,12 @@ const NotificationContextStub = {
     triggerNotificationById: () => {
         return false;
     },
+    removeNotificationById: () => {
+        return false;
+    },
+    isActiveNotification: () => {
+        return false;
+    },
     getAllNotifications: () => {
         return false;
     },
@@ -83,15 +89,37 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
     };
 
     /**
-     * Trigger a notification by its id. This will first get the notice object
-     * by its id and then call the triggerNotification function.
+     * Trigger a notification by its id. Does nothing when the notification
+     * is already active. Otherwise it will first get the notice object by
+     * its id and then call the triggerNotification function.
      */
     const triggerNotificationById = (id: string) => {
+        if (isActiveNotification(id)) {
+            return;
+        }
+
         const template = getNoticeObject(id);
         if (!template) {
             return console.warn(`Notification "${id}" not found`);
         }
         triggerNotification(template);
+    }
+
+    /**
+     * Remove a notification from the active notification list by its id.
+     */
+    const removeNotificationById = (id: string) => {
+        setActiveNotifications((prev) => {
+            if (!prev.some((notice) => notice.id === id)) return prev;
+            return prev.filter((notice) => notice.id !== id);
+        });
+    }
+
+    /**
+     * Check if a notification is currently active.
+     */
+    const isActiveNotification = (id: string) => {
+        return activeNotifications.some((notice) => notice.id === id);
     }
 
     /**
@@ -112,7 +140,7 @@ export const NotificationProvider = ({children}: {children: React.ReactNode}) =>
 
     return (
         <NotificationContext.Provider
-            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, getAllNotifications}}
+            value={{activeNotifications, getNotification: getNoticeObject, triggerNotification, triggerNotificationById, removeNotificationById, isActiveNotification, getAllNotifications}}
         >
             {children}
         </NotificationContext.Provider>
