@@ -196,6 +196,8 @@ return
                 'Hide past days on calendar' => __('Hide unavailable days on calendar', 'simplybook'),
                 'Display timeline sidebar' => __('Display calendar layout sidebar', 'simplybook'),
                 'Image fit mode' => __('Image scale mode', 'simplybook'),
+                'Show end time' => __('Show end time', 'simplybook'),
+                'Hide images on booking steps' => __('Hide images on booking steps', 'simplybook'),
             ],
         ],
         'theme_settings' => [
