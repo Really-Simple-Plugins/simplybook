@@ -51,7 +51,6 @@ class DashboardController implements ControllerInterface
         }
 
         add_action('admin_menu', [$this, 'addDashboardPage']);
-        add_action('admin_init', [$this, 'maybeResetRegistration']);
         add_action('admin_init', [$this, 'maybeClearSubscriptionCacheOnReturn']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
 
@@ -335,19 +334,6 @@ class DashboardController implements ControllerInterface
     private function isOnboardingCompleted(): bool
     {
         return get_option('simplybook_onboarding_completed', false);
-    }
-
-    /**
-     * Reset the company registration if the user has requested it by setting
-     * the `reset_registration` query parameter to `true`
-     */
-    public function maybeResetRegistration(): void
-    {
-        if ($this->request->getString('global.reset_registration', 'false') !== 'true') {
-            return;
-        }
-
-        $this->client->reset_registration();
     }
 
     /**

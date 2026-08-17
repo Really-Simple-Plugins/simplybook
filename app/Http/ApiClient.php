@@ -534,13 +534,6 @@ class ApiClient
         return true;
     }
 
-    public function reset_registration(): void
-    {
-        $this->delete_company_login();
-        $this->clearTokens();
-        delete_option('simplybook_completed_step');
-    }
-
     /**
      * Registers a company with the API.
      *
