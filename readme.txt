@@ -98,6 +98,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Changed: The informative sign-up notice is triggered after installation.
 * Fixed: Marketing opt-in choice is retained after a failed submission.
 * Fixed: The "Add new provider"-button is now reacting reliably.
+* Fixed: Added missing translations for theme settings.
 * Fixed: New translatable texts are now reliably added to the .pot file.
 
 = 3.3.1 - 2026-05-19 =
