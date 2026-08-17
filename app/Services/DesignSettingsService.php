@@ -220,6 +220,11 @@ class DesignSettingsService
                 $invalid = true;
             }
 
+            // Checkbox values must be booleans
+            if (($config['type'] === 'checkbox') && !is_bool($value)) {
+                $invalid = true;
+            }
+
             // If text is not empty, but not a valid string
             if (($config['type'] === 'text') && (empty(sanitize_text_field($value)) || !is_string($value))) {
                 $invalid = true;
