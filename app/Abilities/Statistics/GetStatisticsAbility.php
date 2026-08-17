@@ -87,7 +87,7 @@ class GetStatisticsAbility extends AbstractAbility
             }
 
             $search = (string) $input['key'];
-            if ($storage->isEmpty($search)) {
+            if (!$storage->has($search)) {
                 $code = 'simplybook_statistic_not_found';
                 $message = sprintf(
                     /* translators: %s: user-provided search key */

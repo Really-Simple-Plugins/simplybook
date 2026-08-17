@@ -85,7 +85,7 @@ class ListDesignSettingsAbility extends AbstractAbility
             }
 
             $search = (string) $input['key'];
-            if ($storage->isEmpty($search)) {
+            if (!$storage->has($search)) {
                 $code = 'simplybook_design_setting_not_found';
                 $message = sprintf(
                     /* translators: %s: user-provided search key */

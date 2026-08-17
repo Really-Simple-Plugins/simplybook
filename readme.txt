@@ -96,7 +96,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Changed: The title of the generated booking page now defaults to "Book now".
 * Changed: reCAPTCHA description no longer mentions the Google policies.
 * Changed: The informative sign-up notice is triggered after installation.
-* Fixed: Marketing opt-in choice is retained after a failed submition.
+* Fixed: Marketing opt-in choice is retained after a failed submission.
 * Fixed: The "Add new provider"-button is now reacting reliably.
 * Fixed: New translatable texts are now reliably added to the .pot file.
 
