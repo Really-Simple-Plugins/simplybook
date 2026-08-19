@@ -268,7 +268,7 @@ abstract class AbstractEntity
     /**
      * Validate the required attributes of the entity. Errors format should be
      * consistent with
-     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::processAttributesException}
+     * {@see \SimplyBook\Http\Endpoints\AbstractCrudEndpoint::processSaveException}
      *
      * @throws FormException
      */
@@ -437,6 +437,8 @@ abstract class AbstractEntity
         $endpoint = trailingslashit($this->getEndpoint()) . sanitize_text_field($this->{$this->primaryKey});
         $this->client->put($endpoint, $this->json());
 
+        $this->deleteCache();
+
         return true;
     }
 
@@ -456,6 +458,8 @@ abstract class AbstractEntity
 
         $endpoint = trailingslashit($this->getEndpoint()) . $primary;
         $this->client->delete($endpoint);
+
+        $this->deleteCache();
 
         return true;
     }
@@ -484,6 +488,19 @@ abstract class AbstractEntity
         }
 
         $this->{$this->primaryKey} = $response[$this->primaryKey];
+
+        $this->deleteCache();
+
         return $this;
+    }
+
+    /**
+     * Invalidate the cached collection response for this entity. Called after
+     * any mutation so subsequent reads through {@see all()} return fresh
+     * data instead of a stale cached list.
+     */
+    protected function deleteCache(): void
+    {
+        $this->client->clearRequestCache($this->getEndpoint());
     }
 }

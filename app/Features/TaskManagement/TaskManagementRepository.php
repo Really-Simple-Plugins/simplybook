@@ -29,13 +29,13 @@ class TaskManagementRepository
 
     /**
      * Retrieve all registered tasks
+     * @param bool $strict If true, tasks with status 'hidden' are removed
      * @return TaskInterface[]
      */
     public function getAllTasks(bool $strict = false): array
     {
         $tasks = $this->tasks;
 
-        // If strict mode is enabled, remove tasks that are hidden
         if ($strict) {
             $tasks = array_filter($tasks, function ($task) {
                 return $task->getStatus() !== AbstractTask::STATUS_HIDDEN;
@@ -79,7 +79,7 @@ class TaskManagementRepository
         // upgrade
         if ($taskExists && ($task->reactivateOnUpgrade() === false)) {
             $task->setStatus(
-                $existingTask->getStatus(),
+                $existingTask->getStatus()
             );
         }
 

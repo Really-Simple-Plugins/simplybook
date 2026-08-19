@@ -26,18 +26,23 @@ class SubscriptionDataService extends AbstractEntityService
     }
 
     /**
-     * Process the subscription data and identify the limits by giving each
-     * limit array item a key representing the limit type. We do this because
-     * we need the limits in an associative array format.
+     * Process the subscription data by keying limits by type and normalizing
+     * their remaining and total values as integers.
      */
     protected function processData(array $data): array
     {
-        if (empty($data) || empty($data['limits'])) {
+        if (empty($data) || empty($data['limits']) || !is_array($data['limits'])) {
             return $data;
         }
 
-        $limits = $data['limits'];
-        $data['limits'] = array_column($limits, null, 'key');
+        $limits = array_column($data['limits'], null, 'key');
+        foreach ($limits as $key => $limit) {
+            $limit['rest'] = is_numeric($limit['rest'] ?? null) ? (int) $limit['rest'] : 0;
+            $limit['total'] = is_numeric($limit['total'] ?? null) ? (int) $limit['total'] : 0;
+            $limits[$key] = $limit;
+        }
+
+        $data['limits'] = $limits;
         return $data;
     }
 

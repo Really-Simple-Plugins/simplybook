@@ -68,14 +68,12 @@ phpcs:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPCS" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=nofilter \
+        -filter-mode=diff_context \
         -level=warning \
         -fail-level=any \
         < phpcs-checkstyle.xml >/dev/null
-
-      exit "$PHPCS_EXIT"
   artifacts:
-    when: on_failure
+    when: always
     paths:
       - phpcs-checkstyle.xml
       - phpcs-report.txt
@@ -125,14 +123,12 @@ phpstan:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPStan" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=nofilter \
+        -filter-mode=diff_context \
         -level=warning \
         -fail-level=any \
         < phpstan-checkstyle.xml >/dev/null
-
-      exit "$PHPSTAN_EXIT"
   artifacts:
-    when: on_failure
+    when: always
     paths:
       - phpstan-checkstyle.xml
     expire_in: 1 week
@@ -179,14 +175,12 @@ phpmd:reviewdog:
       reviewdog -f=checkstyle \
         -name="PHPMD" \
         -reporter=gitlab-mr-discussion \
-        -filter-mode=nofilter \
+        -filter-mode=diff_context \
         -level=warning \
         -fail-level=any \
         < phpmd-checkstyle.xml >/dev/null
-
-      exit "$PHPMD_EXIT"
   artifacts:
-    when: on_failure
+    when: always
     paths:
       - phpmd-checkstyle.xml
     expire_in: 1 week

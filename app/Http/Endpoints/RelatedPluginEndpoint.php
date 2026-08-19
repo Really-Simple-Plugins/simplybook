@@ -8,7 +8,7 @@ use SimplyBook\Services\RelatedPluginService;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
-class RelatedPluginEndpoints implements MultiEndpointInterface
+class RelatedPluginEndpoint implements MultiEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { __ } from '@wordpress/i18n';
+import React, { useEffect } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useCrudContext } from '../../context/CrudContext';
@@ -8,21 +8,29 @@ import ProviderForm from './Partials/ProviderForm';
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import ButtonInput from "../Inputs/ButtonInput";
 import { useBlocker } from "@tanstack/react-router";
+import { useNotifications } from "../../context/NotificationContext";
+
+const MAXED_OUT_PROVIDERS_NOTICE_ID = 'maxed_out_providers';
 
 const ProvidersListField = () => {
     const { crudState, dispatch } = useCrudContext();
-    const { providersRemaining, providersTotal, getSubscriptionData } = useSubscriptionData();
-    const [providerCount, setProviderCount] = useState(providersTotal - providersRemaining);
+    const { providersRemaining, providersLimit, hasProviderLimit } = useSubscriptionData();
+    const { triggerNotificationById, removeNotificationById } = useNotifications();
+
+    const providersTotal = crudState.providers?.filter(provider => provider != null).length ?? 0;
+    const pendingNewProviderCount = crudState.unsavedProviders?.some(provider => provider?.id === "new") ? 1 : 0;
+    const isAtSavedProviderLimit = hasProviderLimit && providersTotal >= providersLimit;
+    const isAtProviderLimit = hasProviderLimit && (providersTotal + pendingNewProviderCount) >= providersLimit;
+    const canStartNewProvider = !isAtProviderLimit;
 
     useEffect(() => {
-        //TODO: after changes to caching
-        // getSubscriptionData().then((data) => {
-        //     console.log(data);
-        // });
-        if (crudState.providers) {
-            setProviderCount(crudState.providers.length);
+        if (!isAtSavedProviderLimit) {
+            removeNotificationById(MAXED_OUT_PROVIDERS_NOTICE_ID);
+            return;
         }
-    }, [crudState.providers]);
+
+        triggerNotificationById(MAXED_OUT_PROVIDERS_NOTICE_ID);
+    }, [isAtSavedProviderLimit, removeNotificationById, triggerNotificationById]);
 
     useBlocker({
         shouldBlockFn: ({ next }) => {
@@ -66,7 +74,7 @@ const ProvidersListField = () => {
             {/* If there's no providers and we're not loading, render message, else render Provider List */}
             {!crudState.isLoading && crudState.providers && crudState.providers.length === 0 ? (
                 <div className="text-center py-8 text-gray-500">
-                    {__('No service providers found.', 'simplybook') + (providersRemaining > 0 ? __('Click "Add Service Provider" to create your first service provider.', 'simplybook') : '')}
+                    {__('No service providers found.', 'simplybook') + (providersRemaining > 0 || !hasProviderLimit ? ' ' + __('Click "Add Service Provider" to create your first service provider.', 'simplybook') : '')}
                 </div>
             ) : (
                 <div className="space-y-6">
@@ -80,11 +88,11 @@ const ProvidersListField = () => {
                 </div>
             )}
 
-            {/* Only show add new provider if user is allowed to add one */}
-            {providersRemaining > 0 && (
-                <>
-                    <div className="flex justify-between items-center mb-4">
-                        <div className="flex items-center gap-3">
+            <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-3">
+                    {(canStartNewProvider || crudState.isCreatingNewProvider) && (
+                        <>
+                            {/* Only show add new provider if user is allowed to add one */}
                             <ButtonInput
                                 type="button"
                                 className="font-bold border-secondary bg-secondary text-white"
@@ -95,23 +103,38 @@ const ProvidersListField = () => {
                                 <FontAwesomeIcon icon={faPlus} className="w-4 h-4 me-2 text-white font-bold"/>
                                 {crudState.isCreatingNewProvider ? __('Cancel New Service Provider', 'simplybook') : __('Add Service Provider', 'simplybook')}
                             </ButtonInput>
-                        </div>
-                        <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
-                            <span>{`Providers: ${providerCount} / ${providersTotal}`}</span>
-                        </div>
-                    </div>
-
-                    {/* Add New Provider Form */}
-                    {crudState.isCreatingNewProvider && (
-                        <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
-                            <h4 className="text-md font-medium mb-4">{__('Add New Service Provider', 'simplybook')}</h4>
-                            <ProviderForm
-                                providerId={"new"}
-                                provider={defaultNewProvider}
-                            />
-                        </div>
+                        </>
                     )}
-                </>
+                </div>
+                {hasProviderLimit && (
+                    <div className={"rounded-md px-2 py-1 text-tertiary font-bold bg-blue-100"}>
+                        <span>
+                            {sprintf(
+                                /* translators: 1: Current provider count. 2: Provider limit. */
+                                __('Service Providers: %1$d / %2$d', 'simplybook'),
+                                providersTotal,
+                                providersLimit,
+                            )}
+                        </span>
+                    </div>
+                )}
+            </div>
+
+            {isAtSavedProviderLimit && (
+                <div className="mb-6 rounded-md bg-blue-100 px-4 py-3 text-sm font-medium text-tertiary">
+                    {__('You have reached the maximum number of Service Providers for your plan.', 'simplybook')}
+                </div>
+            )}
+
+            {/* Add New Provider Form */}
+            {crudState.isCreatingNewProvider && (
+                <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">
+                    <h4 className="text-md font-medium mb-4">{__('Add New Service Provider', 'simplybook')}</h4>
+                    <ProviderForm
+                        providerId={"new"}
+                        provider={defaultNewProvider}
+                    />
+                </div>
             )}
         </div>
     );

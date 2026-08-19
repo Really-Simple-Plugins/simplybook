@@ -14,6 +14,11 @@ use SimplyBook\Exceptions\RestDataException;
 use SimplyBook\Http\Entities\AbstractEntity;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
+/**
+ * @SuppressWarnings("PHPMD.ExcessiveClassComplexity") This abstract class is
+ * the blueprint for all CRUD endpoints. By adding complexity here we can
+ * reduce complexity in the actual endpoint classes. This is by design.
+ */
 abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 {
     use HasRestAccess;
@@ -104,6 +109,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'create');
         }
 
+        $this->afterCreate();
+
         // translators: %s is either 'Service' or 'Service Provider'
         $successMessage = sprintf(
             __('%s successfully saved!', 'simplybook'),
@@ -111,6 +118,15 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         );
 
         return $this->sendHttpResponse($this->entity->attributes(), true, $successMessage);
+    }
+
+    /**
+     * Can be used by child classes to perform additional actions after the
+     * entity is successfully created.
+     * @return void
+     */
+    protected function afterCreate(): void
+    {
     }
 
     /**
@@ -195,7 +211,18 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             ], false, esc_html__('Something went wrong while deleting.', 'simplybook'), 500);
         }
 
+        $this->afterDelete();
+
         return $this->sendHttpResponse();
+    }
+
+    /**
+     * Can be used by child classes to perform additional actions after the
+     * entity is successfully deleted.
+     * @return void
+     */
+    protected function afterDelete(): void
+    {
     }
 
     /**
@@ -228,21 +255,34 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
         switch ($action) {
             case 'update':
             case 'create':
-                return $this->processAttributesException($exception);
+                return $this->processSaveException($exception);
             default:
                 return $this->sendHttpResponse($exception->getData(), false, $exception->getMessage(), $exception->getResponseCode());
         }
     }
 
     /**
-     * Method specifically for handling an attribute exceptions. It should create
-     * translated, user-friendly, error messages based on the faulty attributes
-     * that we receive in the SimplyBook response. Errors format should be
-     * consistent with the entity validation method:
+     * Method for handling exceptions that occur while saving an entity. When
+     * a subscription limit is reached a clear error message is returned.
+     * Otherwise, it should create translated, user-friendly, error messages
+     * based on the faulty attributes that we receive in the SimplyBook
+     * response. Errors format should be consistent with the entity
+     * validation method:
      * {@see \SimplyBook\Http\Entities\AbstractEntity::validate}
      */
-    protected function processAttributesException(RestDataException $exception): WP_REST_Response
+    protected function processSaveException(RestDataException $exception): WP_REST_Response
     {
+        if ($this->limitHasBeenReached($exception)) {
+            return $this->sendHttpResponse(
+                [
+                    'code' => 'limit_reached',
+                ],
+                false,
+                esc_html__('You have reached the limit of your plan. Please upgrade your plan if you want to add more.', 'simplybook'),
+                409
+            );
+        }
+
         $exceptionData = $exception->getData();
         if (empty($exceptionData['data'])) {
             return new WP_REST_Response([
@@ -257,6 +297,19 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             'message' => __('An error occurred while saving, please try again.', 'simplybook'),
             'errors' => $translatedErrors,
         ], 500);
+    }
+
+    /**
+     * Check whether a SimplyBook error response reports that a subscription
+     * limit has been reached. For example: "Provider limit has been reached"
+     * when creating a Service Provider while the limit is maxed out.
+     */
+    protected function limitHasBeenReached(RestDataException $exception): bool
+    {
+        $message = ($exception->getData()['message'] ?? '');
+
+        return is_string($message)
+            && stripos($message, 'limit has been reached') !== false;
     }
 
     /**

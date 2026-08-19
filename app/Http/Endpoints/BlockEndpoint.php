@@ -8,7 +8,7 @@ use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 
-class BlockEndpoints implements MultiEndpointInterface
+class BlockEndpoint implements MultiEndpointInterface
 {
     use HasApiAccess;
 
