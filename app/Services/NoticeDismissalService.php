@@ -87,7 +87,7 @@ class NoticeDismissalService
             sprintf(
                 'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    $this->env->getString('http.namespace') . '/' . $this->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

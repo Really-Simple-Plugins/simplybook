@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -20,12 +21,14 @@ class OnboardingNoticeController implements ControllerInterface
 
     private EnvironmentConfig $env;
     private RequestStorage $request;
+    private ExtendifyDataService $extendifyDataService;
     private NoticeDismissalService $noticeDismissalService;
 
-    public function __construct(EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request, ExtendifyDataService $extendifyDataService, NoticeDismissalService $noticeDismissalService)
     {
         $this->env = $env;
         $this->request = $request;
+        $this->extendifyDataService = $extendifyDataService;
         $this->noticeDismissalService = $noticeDismissalService;
     }
 
@@ -157,10 +160,17 @@ class OnboardingNoticeController implements ControllerInterface
     }
 
     /**
-     * Check if the company registration time is more than 3 days ago.
+     * Determine whether the installation age allows the notice to show.
+     *
+     * Regular installs can show the notice immediately, Extendify installs keep
+     * the activation delay.
      */
     private function pluginInstallationTimeSuitableForNotice(): bool
     {
+        if ($this->extendifyDataService->isPluginActive() === false) {
+            return true;
+        }
+
         $pluginActivationTimestamp = get_option('simplybook_activation_unix_timestamp');
         if (empty($pluginActivationTimestamp)) {
             return false;

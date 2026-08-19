@@ -3,26 +3,19 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Interfaces\NoticeInterface;
-use SimplyBook\Interfaces\FeatureInterface;
+use SimplyBook\Interfaces\ControllerInterface;
 
-class NotificationsController implements FeatureInterface
+class NotificationsController implements ControllerInterface
 {
-    private NotificationsEndpoints $endpoints;
     private NotificationsService $service;
-    private NotificationListener $listener;
 
-    public function __construct(NotificationsEndpoints $endpoints, NotificationsService $service, NotificationListener $listener)
+    public function __construct(NotificationsService $service)
     {
         $this->service = $service;
-        $this->endpoints = $endpoints;
-        $this->listener = $listener;
     }
 
     public function register(): void
     {
-        $this->endpoints->register();
-        $this->listener->listen();
-
         $this->initiateNotices();
         add_action('simplybook_plugin_version_upgrade', [$this, 'upgradeNotices']);
     }
@@ -40,12 +33,12 @@ class NotificationsController implements FeatureInterface
     private function getNoticeClassStrings(): array
     {
         return [
-             Notices\AddMandatoryProviderNotice::class,
-             Notices\MaxedOutProvidersNotice::class,
-             Notices\AddMandatoryServiceNotice::class,
-             Notices\MaxedOutServicesNotice::class,
-             Notices\FailedAuthenticationNotice::class,
-             Notices\PublishWidgetNotice::class,
+            Notices\AddMandatoryProviderNotice::class,
+            Notices\MaxedOutProvidersNotice::class,
+            Notices\AddMandatoryServiceNotice::class,
+            Notices\MaxedOutServicesNotice::class,
+            Notices\FailedAuthenticationNotice::class,
+            Notices\PublishWidgetNotice::class,
         ];
     }
 

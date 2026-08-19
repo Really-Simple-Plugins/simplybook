@@ -62,14 +62,9 @@ const ThemeConfigGroup = forwardRef(({
         }
 
         /**
-         * Translate the config title. If the config title is not set, use the
-         * config key as the title.
+         * Translate the config title using the config key.
          */
-        if (!config.config_title) {
-            config.config_title = (parentSetting?.translations[config.config_key] ?? config.config_key);
-        } else {
-            config.config_title = (parentSetting?.translations[config.config_title] ?? config.config_title);
-        }
+        config.config_title = parentSetting?.translations?.[config.config_key] ?? config.config_title;
 
         groups[config.config_type].push(config);
         return groups;

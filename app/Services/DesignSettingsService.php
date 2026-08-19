@@ -58,13 +58,13 @@ class DesignSettingsService
      * @uses wp_cache_get
      * @uses wp_cache_set Set the cache for 60 seconds.
      */
-    public function getDesignOptions(): array
+    public function getDesignOptions(bool $skipCache = false): array
     {
         $found = false;
         $cacheName = 'design_settings';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
-        if ($found && is_array($cacheValue)) {
+        if (!$skipCache && $found && is_array($cacheValue)) {
             return $cacheValue;
         }
 
@@ -217,6 +217,11 @@ class DesignSettingsService
 
             // If number is not empty, but not a valid number
             if (($config['type'] === 'number') && !empty($value) && !is_numeric($value)) {
+                $invalid = true;
+            }
+
+            // Checkbox values must be booleans
+            if (($config['type'] === 'checkbox') && !is_bool($value)) {
                 $invalid = true;
             }
 

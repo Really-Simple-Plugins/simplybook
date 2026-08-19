@@ -99,7 +99,7 @@ class WidgetEndpoint implements MultiEndpointInterface
             $widgetSettings = $this->service->getFallbackSettings(
                 $storage->getString('primary'),
                 $storage->getString('secondary'),
-                $storage->getString('active'),
+                $storage->getString('active')
             );
         }
 

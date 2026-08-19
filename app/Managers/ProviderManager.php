@@ -11,6 +11,14 @@ final class ProviderManager extends AbstractManager
     /**
      * @inheritDoc
      */
+    protected function type(): string
+    {
+        return 'providers';
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function isRegistrable(object $class): bool
     {
         return $class instanceof ProviderInterface;
@@ -22,13 +30,5 @@ final class ProviderManager extends AbstractManager
     public function registerClass(object $class): void
     {
         $class->provide();
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function afterRegister(): void
-    {
-        do_action('simplybook_providers_loaded');
     }
 }
