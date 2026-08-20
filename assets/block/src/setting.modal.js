@@ -1,4 +1,3 @@
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 import {__} from "@wordpress/i18n";
 import {Modal, PanelBody, Button, SelectControl} from "@wordpress/components";
 
@@ -17,7 +16,7 @@ export default function SettingsModal(options) {
                 {!isUserAuthorized ? (
                     <p className="sb-widget-alert">
                         {__('You are not authorized in ', 'simplybook')}
-                        <a href={simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
+                        <a href={window.simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
                     </p>
                 ) : (
                     <>

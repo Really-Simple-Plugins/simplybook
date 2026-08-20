@@ -9,6 +9,9 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class BlockController implements ControllerInterface
 {
+    private const BLOCK_EDITOR_SCRIPT_HANDLE = 'simplybook-widget-editor-script';
+    private const BLOCK_EDITOR_STYLE_HANDLE = 'simplybook-widget-editor-style';
+
     private EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
@@ -61,10 +64,31 @@ class BlockController implements ControllerInterface
      */
     private function registerGutenbergBlockTypeManually(): void
     {
+        $assetsDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
+        $assetsData = file_exists($assetsDataPath) ? include($assetsDataPath) : [];
+
+        wp_register_script(
+            self::BLOCK_EDITOR_SCRIPT_HANDLE,
+            $this->env->getUrl('plugin.assets_url') . 'block/build/index.js',
+            ($assetsData['dependencies'] ?? []),
+            ($assetsData['version'] ?? ''),
+            true
+        );
+
+        wp_register_style(
+            self::BLOCK_EDITOR_STYLE_HANDLE,
+            $this->env->getUrl('plugin.assets_url') . 'block/build/index.css',
+            [],
+            $this->env->getString('plugin.version')
+        );
+
         register_block_type('simplybook/widget', [
             'title' => 'SimplyBook.me Widget',
             'icon' => 'simplybook',
             'category' => 'widgets',
+            'api_version' => '3',
+            'editor_script' => self::BLOCK_EDITOR_SCRIPT_HANDLE,
+            'editor_style' => self::BLOCK_EDITOR_STYLE_HANDLE,
             'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
             'attributes' => [
                 'location' => [
@@ -88,39 +112,29 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Load scripts and styles for Gutenberg editor. If the widget is not yet
-     * registered in the current context, ensure it's registered before
-     * enqueuing assets. This prevents issues in auto-installation situations.
+     * Configure the Gutenberg block editor assets. If the widget is not yet
+     * registered in the current context, register and enqueue it before adding
+     * localized data and translations. This supports auto-installation.
      */
     public function enqueueGutenbergBlockEditorAssets(): void
     {
+        $registeredLate = false;
+
         if (
             class_exists('\WP_Block_Type_Registry')
             && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')
         ) {
             $this->registerGutenbergBlockType();
+            // WordPress already ran its registered block asset enqueue pass.
+            $registeredLate = true;
         }
 
-        $assetsData = include($this->env->getString('plugin.assets_path') . '/block/build/index.asset.php');
-        $indexJs = $this->env->getUrl('plugin.assets_url') . 'block/build/index.js';
-        $indexCss = $this->env->getUrl('plugin.assets_url') . 'block/build/index.css';
-        $preview = $this->env->getUrl('plugin.assets_url') . '/img/preview.png';
-
-        wp_enqueue_script(
-            'simplybook-block',
-            $indexJs,
-            ($assetsData['dependencies'] ?? []),
-            ($assetsData['version'] ?? ''),
-            true
-        );
-
         wp_localize_script(
-            'simplybook-block',
+            self::BLOCK_EDITOR_SCRIPT_HANDLE,
             'simplybook',
             [
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
-                'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'rest_namespace' => $this->env->getString('plugin.namespace'),
@@ -132,14 +146,12 @@ class BlockController implements ControllerInterface
             ]
         );
 
-        // Add widget.js script in the header of the page. We need it to be
-        // Loaded as soon as possible, as our widgets are dependent on it.
-        wp_enqueue_script('simplybookMePl_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
+        wp_set_script_translations(self::BLOCK_EDITOR_SCRIPT_HANDLE, 'simplybook');
 
-        wp_register_style('simplybookMePl_widget_styles', $indexCss, [], $this->env->getString('plugin.version'));
-        wp_enqueue_style('simplybookMePl_widget_styles');
-
-        wp_set_script_translations('simplybook-block', 'simplybook');
+        if ($registeredLate) {
+            wp_enqueue_script(self::BLOCK_EDITOR_SCRIPT_HANDLE);
+            wp_enqueue_style(self::BLOCK_EDITOR_STYLE_HANDLE);
+        }
     }
 
     /**
