@@ -1,15 +1,18 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, Button, Dashicon } from '@wordpress/components';
+import { BlockControls, useBlockProps } from '@wordpress/block-editor';
+import { PanelBody, Button, Dashicon, Modal, ToolbarButton, ToolbarGroup } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import './editor.scss';
 import SettingsModal from "./setting.modal";
 import request from "../../../react/src/api/requests/request";
 
+const previewAttributes = ['location', 'category', 'service', 'provider'];
+
 export default function Edit(props) {
 	const { attributes, setAttributes } = props;
 	const blockProps = useBlockProps();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [previewUrl, setPreviewUrl] = useState(null);
 	const [isUserAuthorized, setIsUserAuthorized] = useState(false);
 	const [locations, setLocations] = useState([]);
 	const [categories, setCategories] = useState([]);
@@ -42,6 +45,20 @@ export default function Edit(props) {
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
+	const closePreview = () => setPreviewUrl(null);
+
+	const openPreview = () => {
+		const url = new URL(window.simplybook.preview_url);
+
+		previewAttributes.forEach(attribute => {
+			const value = attributes[attribute];
+			if (value && value !== '0') {
+				url.searchParams.set(attribute, String(value));
+			}
+		});
+
+		setPreviewUrl(url.toString());
+	};
 
 	useEffect(() => {
 		if (locations.length > 0) {
@@ -69,6 +86,17 @@ export default function Edit(props) {
 
 	return (
 		<>
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+						icon="visibility"
+						disabled={!isUserAuthorized}
+						onClick={openPreview}
+					>
+						{__('Preview', 'simplybook')}
+					</ToolbarButton>
+				</ToolbarGroup>
+			</BlockControls>
 			<div {...blockProps}>
 				<PanelBody>
 					<div className={'sb-widget-container'}>
@@ -123,6 +151,20 @@ export default function Edit(props) {
 				</PanelBody>
 				{isModalOpen &&
 					<SettingsModal isUserAuthorized={isUserAuthorized} locations={locations} categories={categories} services={services} providers={providers} attributes={attributes} setAttributes={setAttributes} saveParameters={saveParameters} closeModal={closeModal}/>
+				}
+				{previewUrl &&
+					<Modal
+						className="sb-widget-preview-modal"
+						title={__('Widget preview', 'simplybook')}
+						onRequestClose={closePreview}
+					>
+						<iframe
+							className="sb-widget-preview-frame"
+							src={previewUrl}
+							title={__('SimplyBook.me widget preview', 'simplybook')}
+							referrerPolicy="no-referrer"
+						/>
+					</Modal>
 				}
 			</div>
 		</>

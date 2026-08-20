@@ -4,6 +4,7 @@ namespace SimplyBook\Controllers;
 
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
+use SimplyBook\Traits\HasViews;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -14,6 +15,9 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
+    use HasViews;
+
+    public const BLOCK_PREVIEW_ACTION = 'simplybook_block_preview';
 
     private ApiClient $client;
     private EnvironmentConfig $env;
@@ -29,6 +33,7 @@ class WidgetController implements ControllerInterface
     public function register(): void
     {
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
+        add_action('admin_post_' . self::BLOCK_PREVIEW_ACTION, [$this, 'renderBlockPreview']);
 
         // Removed since: NL14RSP2-219 - kept for reference
         // add_shortcode('simplybook_reviews', [$this, 'renderReviewsWidget']);
@@ -47,6 +52,41 @@ class WidgetController implements ControllerInterface
         }
 
         return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i_calendar');
+    }
+
+    /**
+     * Render a self-contained widget preview for the block editor iframe.
+     */
+    public function renderBlockPreview(): void
+    {
+        if (!current_user_can('simplybook_manage')) {
+            wp_die(esc_html__('You are not allowed to preview this widget.', 'simplybook'), '', ['response' => 403]);
+        }
+
+        check_admin_referer(self::BLOCK_PREVIEW_ACTION);
+
+        $widgetContent = $this->buildWidgetScriptTemplate(
+            'calendar',
+            $this->getBlockPreviewAttributes(),
+            'sbw_z0hg2i_calendar'
+        );
+
+        if (empty($widgetContent)) {
+            wp_die(esc_html__('The widget preview could not be loaded.', 'simplybook'), '', ['response' => 500]);
+        }
+
+        nocache_headers();
+        send_nosniff_header();
+        send_frame_options_header();
+        header('Content-Type: text/html; charset=' . get_option('blog_charset'));
+        header('Referrer-Policy: no-referrer');
+        header('X-Robots-Tag: noindex, nofollow');
+
+        $this->render('admin/block-preview', [
+            'widgetContent' => $widgetContent,
+            'widgetScriptUrl' => $this->env->getUrl('simplybook.widget_script_url'),
+        ]);
+        exit;
     }
 
     /**
@@ -71,6 +111,20 @@ class WidgetController implements ControllerInterface
      */
     private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
+        $content = $this->buildWidgetScriptTemplate($widgetType, $attributes, $wrapperID);
+        if (empty($content)) {
+            return '';
+        }
+
+        $this->enqueueRemoteWidgetScript();
+        return $content;
+    }
+
+    /**
+     * Build the widget markup without enqueuing it in the current document.
+     */
+    private function buildWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
+    {
         try {
             $builder = new WidgetScriptBuilder();
             $builder->setWidgetType($widgetType)
@@ -90,8 +144,38 @@ class WidgetController implements ControllerInterface
             return '';
         }
 
-        $this->enqueueRemoteWidgetScript();
         return $content;
+    }
+
+    /**
+     * Retrieve and sanitize supported widget attributes from the preview URL.
+     */
+    private function getBlockPreviewAttributes(): array
+    {
+        $attributes = [];
+
+        foreach (['location', 'category', 'service', 'provider'] as $attribute) {
+            if (!isset($_GET[$attribute])) {
+                continue;
+            }
+
+            $value = sanitize_text_field(wp_unslash($_GET[$attribute]));
+            if (empty($value)) {
+                continue;
+            }
+
+            if ($attribute === 'provider' && $value === 'any') {
+                $attributes[$attribute] = $value;
+                continue;
+            }
+
+            $value = absint($value);
+            if ($value > 0) {
+                $attributes[$attribute] = $value;
+            }
+        }
+
+        return $attributes;
     }
 
     /**

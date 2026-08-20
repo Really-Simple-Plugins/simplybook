@@ -212,3 +212,14 @@
     padding-bottom: 0;
   }
 }
+
+.components-modal__frame.sb-widget-preview-modal {
+  width: min(960px, calc(100% - 32px));
+}
+
+.sb-widget-preview-frame {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  border: 0;
+}

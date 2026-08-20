@@ -45,6 +45,14 @@ class BlockController implements ControllerInterface
             return;
         }
 
+        // WordPress reuses this metadata-generated handle when it is already registered.
+        wp_register_style(
+            self::BLOCK_EDITOR_STYLE_HANDLE,
+            $this->env->getUrl('plugin.assets_url') . 'block/build/index.css',
+            [],
+            $this->env->getString('plugin.version')
+        );
+
         $blockMetaData = $this->env->getString('plugin.assets_path') . '/block/build/block.json';
         if (file_exists($blockMetaData) === false) {
             $this->registerGutenbergBlockTypeManually();
@@ -66,6 +74,7 @@ class BlockController implements ControllerInterface
     {
         $assetsDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
         $assetsData = file_exists($assetsDataPath) ? include($assetsDataPath) : [];
+        $assetsData = is_array($assetsData) ? $assetsData : [];
 
         wp_register_script(
             self::BLOCK_EDITOR_SCRIPT_HANDLE,
@@ -73,13 +82,6 @@ class BlockController implements ControllerInterface
             ($assetsData['dependencies'] ?? []),
             ($assetsData['version'] ?? ''),
             true
-        );
-
-        wp_register_style(
-            self::BLOCK_EDITOR_STYLE_HANDLE,
-            $this->env->getUrl('plugin.assets_url') . 'block/build/index.css',
-            [],
-            $this->env->getString('plugin.version')
         );
 
         register_block_type('simplybook/widget', [
@@ -112,9 +114,9 @@ class BlockController implements ControllerInterface
     }
 
     /**
-     * Configure the Gutenberg block editor assets. If the widget is not yet
-     * registered in the current context, register and enqueue it before adding
-     * localized data and translations. This supports auto-installation.
+     * Configure the Gutenberg block editor assets. A block registered at this
+     * point must be enqueued explicitly because WordPress's normal asset pass
+     * has already run.
      */
     public function enqueueGutenbergBlockEditorAssets(): void
     {
@@ -142,6 +144,13 @@ class BlockController implements ControllerInterface
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
+                'preview_url' => add_query_arg(
+                    [
+                        'action' => WidgetController::BLOCK_PREVIEW_ACTION,
+                        '_wpnonce' => wp_create_nonce(WidgetController::BLOCK_PREVIEW_ACTION),
+                    ],
+                    admin_url('admin-post.php')
+                ),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
             ]
         );
