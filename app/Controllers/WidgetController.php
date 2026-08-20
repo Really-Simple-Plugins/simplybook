@@ -86,7 +86,6 @@ class WidgetController implements ControllerInterface
             'widgetContent' => $widgetContent,
             'widgetScriptUrl' => $this->env->getUrl('simplybook.widget_script_url'),
         ]);
-        exit;
     }
 
     /**
