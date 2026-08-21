@@ -173,6 +173,7 @@ final class Plugin
             \SimplyBook\Controllers\CapabilityController::class,
             \SimplyBook\Controllers\ScheduleController::class,
             \SimplyBook\Controllers\WidgetController::class,
+            \SimplyBook\Controllers\BlockPreviewController::class,
             \SimplyBook\Controllers\BlockController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,
             \SimplyBook\Controllers\ServicesController::class,

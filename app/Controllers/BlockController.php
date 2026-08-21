@@ -4,14 +4,12 @@ namespace SimplyBook\Controllers;
 
 use Elementor\Widgets_Manager;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
 use SimplyBook\Support\Widgets\ElementorWidget;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class BlockController implements ControllerInterface
 {
-    private const BLOCK_EDITOR_SCRIPT_HANDLE = 'simplybook-widget-editor-script';
-    private const BLOCK_EDITOR_STYLE_HANDLE = 'simplybook-widget-editor-style';
-
     private EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
@@ -28,111 +26,78 @@ class BlockController implements ControllerInterface
 
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
         add_action('init', [$this, 'registerGutenbergBlockType'], 20);
-        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']); // For auto-installation purposes
 
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
     /**
-     * Configure Gutenberg block with attributes and render callback.
-     * @since 3.3.0 Added usage of register_block_type_from_metadata for better
-     * compatibility with auto-installation.
+     * Configure the Gutenberg block from its metadata.
      */
     public function registerGutenbergBlockType(): void
     {
-        // Check if the block is already registered to prevent duplicate registration
-        if (class_exists('\WP_Block_Type_Registry') && \WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')) {
+        $registry = \WP_Block_Type_Registry::get_instance();
+        if ($registry->is_registered('simplybook/widget')) {
             return;
         }
-
-        // WordPress reuses this metadata-generated handle when it is already registered.
-        wp_register_style(
-            self::BLOCK_EDITOR_STYLE_HANDLE,
-            $this->env->getUrl('plugin.assets_url') . 'block/build/index.css',
-            [],
-            $this->env->getString('plugin.version')
-        );
 
         $blockMetaData = $this->env->getString('plugin.assets_path') . '/block/build/block.json';
         if (file_exists($blockMetaData) === false) {
-            $this->registerGutenbergBlockTypeManually();
             return;
         }
 
-        register_block_type_from_metadata($blockMetaData, [
+        $blockType = register_block_type($blockMetaData, [
             'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
             // Overwrite the .json entry to support translations.
             'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
         ]);
+
+        if ($blockType) {
+            $this->setEditorStyleVersion($blockType);
+        }
     }
 
     /**
-     * Manually configure Gutenberg block without the use of the block.json file.
-     * @since 3.3.0 added as a fallback method for {@see registerGutenbergBlockType}
+     * Use the generated build version to invalidate cached editor styles.
      */
-    private function registerGutenbergBlockTypeManually(): void
+    private function setEditorStyleVersion(\WP_Block_Type $blockType): void
     {
-        $assetsDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
-        $assetsData = file_exists($assetsDataPath) ? include($assetsDataPath) : [];
-        $assetsData = is_array($assetsData) ? $assetsData : [];
+        $assetDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
+        $assetData = file_exists($assetDataPath) ? include $assetDataPath : [];
+        $version = is_array($assetData) ? ($assetData['version'] ?? null) : null;
+        if (!is_string($version)) {
+            return;
+        }
 
-        wp_register_script(
-            self::BLOCK_EDITOR_SCRIPT_HANDLE,
-            $this->env->getUrl('plugin.assets_url') . 'block/build/index.js',
-            ($assetsData['dependencies'] ?? []),
-            ($assetsData['version'] ?? ''),
-            true
-        );
-
-        register_block_type('simplybook/widget', [
-            'title' => 'SimplyBook.me Widget',
-            'icon' => 'simplybook',
-            'category' => 'widgets',
-            'api_version' => '3',
-            'editor_script' => self::BLOCK_EDITOR_SCRIPT_HANDLE,
-            'editor_style' => self::BLOCK_EDITOR_STYLE_HANDLE,
-            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
-            'attributes' => [
-                'location' => [
-                    'type' => 'integer',
-                    'default' => 0
-                ],
-                'category' => [
-                    'type' => 'integer',
-                    'default' => 0
-                ],
-                'provider' => [
-                    'type' => 'string', // Provider ID can be a sting like "any"
-                    'default' => '0'
-                ],
-                'service' => [
-                    'type' => 'integer',
-                    'default' => 0
-                ],
-            ],
-        ]);
+        foreach ($blockType->editor_style_handles as $styleHandle) {
+            $style = wp_styles()->registered[$styleHandle] ?? null;
+            if ($style) {
+                $style->ver = $version;
+            }
+        }
     }
 
     /**
-     * Configure the Gutenberg block editor assets. A block registered at this
-     * point must be enqueued explicitly because WordPress's normal asset pass
-     * has already run.
+     * Configure the Gutenberg block editor assets.
      */
     public function enqueueGutenbergBlockEditorAssets(): void
     {
+        $blockType = \WP_Block_Type_Registry::get_instance()->get_registered('simplybook/widget');
         $registeredLate = false;
 
-        if (
-            class_exists('\WP_Block_Type_Registry')
-            && !\WP_Block_Type_Registry::get_instance()->is_registered('simplybook/widget')
-        ) {
+        if (!$blockType) {
             $this->registerGutenbergBlockType();
-            // WordPress already ran its registered block asset enqueue pass.
+            $blockType = \WP_Block_Type_Registry::get_instance()->get_registered('simplybook/widget');
             $registeredLate = true;
         }
 
+        if (!$blockType || empty($blockType->editor_script_handles)) {
+            return;
+        }
+
+        $editorScriptHandle = $blockType->editor_script_handles[0];
+
         wp_localize_script(
-            self::BLOCK_EDITOR_SCRIPT_HANDLE,
+            $editorScriptHandle,
             'simplybook',
             [
                 'ajax_url' => admin_url('admin-ajax.php'),
@@ -146,8 +111,8 @@ class BlockController implements ControllerInterface
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'preview_url' => add_query_arg(
                     [
-                        'action' => WidgetController::BLOCK_PREVIEW_ACTION,
-                        '_wpnonce' => wp_create_nonce(WidgetController::BLOCK_PREVIEW_ACTION),
+                        'action' => BlockPreviewController::ACTION,
+                        '_wpnonce' => wp_create_nonce(BlockPreviewController::ACTION),
                     ],
                     admin_url('admin-post.php')
                 ),
@@ -155,11 +120,16 @@ class BlockController implements ControllerInterface
             ]
         );
 
-        wp_set_script_translations(self::BLOCK_EDITOR_SCRIPT_HANDLE, 'simplybook');
+        wp_set_script_translations($editorScriptHandle, 'simplybook');
 
         if ($registeredLate) {
-            wp_enqueue_script(self::BLOCK_EDITOR_SCRIPT_HANDLE);
-            wp_enqueue_style(self::BLOCK_EDITOR_STYLE_HANDLE);
+            foreach ($blockType->editor_script_handles as $scriptHandle) {
+                wp_enqueue_script($scriptHandle);
+            }
+
+            foreach ($blockType->editor_style_handles as $styleHandle) {
+                wp_enqueue_style($styleHandle);
+            }
         }
     }
 
@@ -177,26 +147,8 @@ class BlockController implements ControllerInterface
      */
     public function renderGutenbergWidgetBlock(array $attributes = []): string
     {
-        $attributes = array_filter($attributes, function ($value) {
-            return !empty($value);
-        });
-
-        $shortcode = '[simplybook_widget' . $this->attributesToString($attributes) . ']';
-
         // Process the shortcode explicitly for FSE compatibility
-        return do_shortcode($shortcode);
-    }
-
-    /**
-     * Format attributes as shortcode parameters.
-     */
-    private function attributesToString(array $attributes): string
-    {
-        $result = '';
-        foreach ($attributes as $key => $value) {
-            $result .= ' ' . sanitize_text_field($key) . '="' . sanitize_text_field($value) . '"';
-        }
-        return $result;
+        return do_shortcode((new WidgetShortcodeBuilder($attributes))->build());
     }
 
     /**

@@ -1,7 +1,6 @@
 <?php
 /**
  * @var string $widgetContent
- * @var string $widgetScriptUrl
  */
 ?>
 <!doctype html>
@@ -24,7 +23,7 @@
             padding: 16px;
         }
     </style>
-    <script src="<?php echo esc_url($widgetScriptUrl); ?>"></script>
+    <?php wp_print_scripts('simplybook_widget_scripts'); ?>
 </head>
 <body>
     <?php
