@@ -2,10 +2,11 @@
 
 namespace SimplyBook\Controllers;
 
+use WP_Block_Type_Registry;
 use Elementor\Widgets_Manager;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
 use SimplyBook\Support\Widgets\ElementorWidget;
+use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class BlockController implements ControllerInterface
@@ -27,6 +28,9 @@ class BlockController implements ControllerInterface
         add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
         add_action('init', [$this, 'registerGutenbergBlockType'], 20);
 
+        // For auto-installation purposes
+        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']);
+
         add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
     }
 
@@ -35,8 +39,8 @@ class BlockController implements ControllerInterface
      */
     public function registerGutenbergBlockType(): void
     {
-        $registry = \WP_Block_Type_Registry::get_instance();
-        if ($registry->is_registered('simplybook/widget')) {
+        $registry = class_exists('WP_Block_Type_Registry') ? WP_Block_Type_Registry::get_instance() : null;
+        if ($registry && $registry->is_registered('simplybook/widget')) {
             return;
         }
 
@@ -62,14 +66,18 @@ class BlockController implements ControllerInterface
     private function setEditorStyleVersion(\WP_Block_Type $blockType): void
     {
         $assetDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
-        $assetData = file_exists($assetDataPath) ? include $assetDataPath : [];
-        $version = is_array($assetData) ? ($assetData['version'] ?? null) : null;
+        if (!file_exists($assetDataPath)) {
+            return;
+        }
+
+        $assetData = (array) include $assetDataPath;
+        $version = ($assetData['version'] ?? null);
         if (!is_string($version)) {
             return;
         }
 
         foreach ($blockType->editor_style_handles as $styleHandle) {
-            $style = wp_styles()->registered[$styleHandle] ?? null;
+            $style = (wp_styles()->registered[$styleHandle] ?? null);
             if ($style) {
                 $style->ver = $version;
             }
