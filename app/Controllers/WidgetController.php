@@ -2,32 +2,30 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Support\Helpers\Event;
-use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\DesignSettingsService;
-use SimplyBook\Support\Builders\WidgetScriptBuilder;
+use SimplyBook\Services\WidgetRenderService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
-    private ApiClient $client;
-    private EnvironmentConfig $env;
-    protected DesignSettingsService $service;
+    private const WIDGET_SCRIPT_HANDLE = 'simplybook_widget_scripts';
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, DesignSettingsService $service)
+    private EnvironmentConfig $env;
+    private WidgetRenderService $widgetRenderer;
+
+    public function __construct(EnvironmentConfig $env, WidgetRenderService $widgetRenderer)
     {
-        $this->client = $client;
         $this->env = $env;
-        $this->service = $service;
+        $this->widgetRenderer = $widgetRenderer;
     }
 
     public function register(): void
     {
+        add_action('init', [$this, 'registerRemoteWidgetScript']);
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
 
         // Removed since: NL14RSP2-219 - kept for reference
@@ -46,7 +44,7 @@ class WidgetController implements ControllerInterface
             Event::dispatch(Event::CALENDAR_PUBLISHED);
         }
 
-        return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i_calendar');
+        return $this->renderWidget('calendar', $attributes, 'sbw_z0hg2i_calendar');
     }
 
     /**
@@ -54,7 +52,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderReviewsWidget(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('reviews', $attributes, 'sbw_z0hg2i_reviews');
+        return $this->renderWidget('reviews', $attributes, 'sbw_z0hg2i_reviews');
     }
 
     /**
@@ -62,31 +60,16 @@ class WidgetController implements ControllerInterface
      */
     public function renderBookingButton(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('booking-button', $attributes);
+        return $this->renderWidget('booking-button', $attributes);
     }
 
     /**
-     * Load the widget script template dynamically
-     * @uses \SimplyBook\Builders\WidgetScriptBuilder
+     * Render a widget for shortcode output and enqueue its remote dependency.
      */
-    private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
+    private function renderWidget(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
-        try {
-            $builder = new WidgetScriptBuilder();
-            $builder->setWidgetType($widgetType)
-                ->setAttributes($attributes)
-                ->setWidgetSettings($this->service->getDesignOptions())
-                ->isAuthenticated(
-                    $this->client->isAuthenticated()
-                )
-                ->withHTML();
-
-            if (!empty($wrapperID)) {
-                $builder->setWrapperID($wrapperID);
-            }
-
-            $content = $builder->build();
-        } catch (BuilderException $e) {
+        $content = $this->widgetRenderer->render($widgetType, $attributes, $wrapperID);
+        if ($content === '') {
             return '';
         }
 
@@ -100,6 +83,21 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
+        wp_enqueue_script(self::WIDGET_SCRIPT_HANDLE);
+    }
+
+    /**
+     * Register the remote widget script so it can be enqueued for regular
+     * shortcode rendering or printed explicitly in the block preview.
+     */
+    public function registerRemoteWidgetScript(): void
+    {
+        wp_register_script(
+            self::WIDGET_SCRIPT_HANDLE,
+            $this->env->getUrl('simplybook.widget_script_url'),
+            [],
+            $this->env->getString('simplybook.widget_script_version'),
+            false
+        );
     }
 }

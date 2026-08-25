@@ -1,9 +1,9 @@
 <?php
 
-namespace SimplyBook\Controllers;
+namespace SimplyBook\Controllers\Gutenberg;
 
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
+use SimplyBook\Services\WidgetRenderService;
 use SimplyBook\Traits\HasViews;
 
 class BlockPreviewController implements ControllerInterface
@@ -11,6 +11,13 @@ class BlockPreviewController implements ControllerInterface
     use HasViews;
 
     public const ACTION = 'simplybook_block_preview';
+
+    private WidgetRenderService $widgetRenderer;
+
+    public function __construct(WidgetRenderService $widgetRenderer)
+    {
+        $this->widgetRenderer = $widgetRenderer;
+    }
 
     public function register(): void
     {
@@ -35,8 +42,11 @@ class BlockPreviewController implements ControllerInterface
         header('Referrer-Policy: no-referrer');
         header('X-Robots-Tag: noindex, nofollow');
 
-        $shortcode = (new WidgetShortcodeBuilder($this->getAttributes()))->build();
-        $widgetContent = do_shortcode($shortcode);
+        $widgetContent = $this->widgetRenderer->render(
+            'calendar',
+            $this->getAttributes(),
+            'sbw_z0hg2i_calendar'
+        );
         if (empty($widgetContent)) {
             wp_die(esc_html__('The widget preview could not be loaded.', 'simplybook'), '', ['response' => 500]);
         }

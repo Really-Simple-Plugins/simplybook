@@ -1,16 +1,17 @@
 <?php
 
-namespace SimplyBook\Controllers;
+namespace SimplyBook\Support\Widgets;
 
-use WP_Block_Type_Registry;
-use Elementor\Widgets_Manager;
-use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Support\Widgets\ElementorWidget;
+use SimplyBook\Controllers\Gutenberg\BlockPreviewController;
 use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use WP_Block_Type;
+use WP_Block_Type_Registry;
 
-class BlockController implements ControllerInterface
+class GutenbergWidget
 {
+    private const BLOCK_NAME = 'simplybook/widget';
+
     private EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
@@ -18,29 +19,13 @@ class BlockController implements ControllerInterface
         $this->env = $env;
     }
 
-    public function register(): void
-    {
-        if (!function_exists('register_block_type')) {
-            // Block editor is not available.
-            return;
-        }
-
-        add_action('enqueue_block_editor_assets', [$this, 'enqueueGutenbergBlockEditorAssets']);
-        add_action('init', [$this, 'registerGutenbergBlockType'], 20);
-
-        // For auto-installation purposes
-        add_action('simplybook_activation', [$this, 'registerGutenbergBlockType']);
-
-        add_action('elementor/widgets/register', [$this, 'registerElementorWidget']);
-    }
-
     /**
      * Configure the Gutenberg block from its metadata.
      */
-    public function registerGutenbergBlockType(): void
+    public function register(): void
     {
-        $registry = class_exists('WP_Block_Type_Registry') ? WP_Block_Type_Registry::get_instance() : null;
-        if ($registry && $registry->is_registered('simplybook/widget')) {
+        $registry = class_exists(WP_Block_Type_Registry::class) ? WP_Block_Type_Registry::get_instance() : null;
+        if ($registry && $registry->is_registered(self::BLOCK_NAME)) {
             return;
         }
 
@@ -50,7 +35,7 @@ class BlockController implements ControllerInterface
         }
 
         $blockType = register_block_type($blockMetaData, [
-            'render_callback' => [$this, 'renderGutenbergWidgetBlock'],
+            'render_callback' => [$this, 'render'],
             // Overwrite the .json entry to support translations.
             'description' => esc_html__('A widget for Simplybook.me', 'simplybook'),
         ]);
@@ -63,7 +48,7 @@ class BlockController implements ControllerInterface
     /**
      * Use the generated build version to invalidate cached editor styles.
      */
-    private function setEditorStyleVersion(\WP_Block_Type $blockType): void
+    private function setEditorStyleVersion(WP_Block_Type $blockType): void
     {
         $assetDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
         if (!file_exists($assetDataPath)) {
@@ -87,14 +72,14 @@ class BlockController implements ControllerInterface
     /**
      * Configure the Gutenberg block editor assets.
      */
-    public function enqueueGutenbergBlockEditorAssets(): void
+    public function enqueueEditorAssets(): void
     {
-        $blockType = \WP_Block_Type_Registry::get_instance()->get_registered('simplybook/widget');
+        $blockType = WP_Block_Type_Registry::get_instance()->get_registered(self::BLOCK_NAME);
         $registeredLate = false;
 
         if (!$blockType) {
-            $this->registerGutenbergBlockType();
-            $blockType = \WP_Block_Type_Registry::get_instance()->get_registered('simplybook/widget');
+            $this->register();
+            $blockType = WP_Block_Type_Registry::get_instance()->get_registered(self::BLOCK_NAME);
             $registeredLate = true;
         }
 
@@ -153,19 +138,8 @@ class BlockController implements ControllerInterface
      * shortcode is rendered, the resulting content no longer contains a "[", so
      * subsequent calls simply return the already-rendered output.
      */
-    public function renderGutenbergWidgetBlock(array $attributes = []): string
+    public function render(array $attributes = []): string
     {
-        // Process the shortcode explicitly for FSE compatibility
         return do_shortcode((new WidgetShortcodeBuilder($attributes))->build());
-    }
-
-    /**
-     * Add SimplyBook widget to Elementor if available.
-     *
-     * @param Widgets_Manager $widgetsManager Elementor widgets manager.
-     */
-    public function registerElementorWidget(Widgets_Manager $widgetsManager): void
-    {
-        $widgetsManager->register(new ElementorWidget());
     }
 }
