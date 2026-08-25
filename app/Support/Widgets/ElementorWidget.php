@@ -9,7 +9,6 @@ use Elementor\Controls_Manager;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
-use SimplyBook\Support\Builders\WidgetShortcodeBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ElementorWidget extends Widget_Base
@@ -108,13 +107,13 @@ class ElementorWidget extends Widget_Base
     }
 
     /**
-     * Converts widget settings to SimplyBook shortcode and renders it.
+     * Converts widget settings to SimplyBook shortcode and prints it.
      */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
 
-        echo do_shortcode((new WidgetShortcodeBuilder($settings))->build());
+        (new ShortcodeWidget($settings))->print();
     }
 
     /**

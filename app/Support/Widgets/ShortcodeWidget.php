@@ -1,8 +1,8 @@
 <?php
 
-namespace SimplyBook\Support\Builders;
+namespace SimplyBook\Support\Widgets;
 
-final class WidgetShortcodeBuilder
+class ShortcodeWidget
 {
     private const NAME = 'simplybook_widget';
 
@@ -21,9 +21,25 @@ final class WidgetShortcodeBuilder
     }
 
     /**
+     * Render the widget through its shortcode.
+     */
+    public function render(): string
+    {
+        return do_shortcode($this->buildShortcode());
+    }
+
+    /**
+     * Render the widget through its shortcode and print the result.
+     */
+    public function print(): void
+    {
+        echo $this->render();
+    }
+
+    /**
      * Build a SimplyBook widget shortcode from supported attributes.
      */
-    public function build(): string
+    private function buildShortcode(): string
     {
         $attributePairs = [];
 

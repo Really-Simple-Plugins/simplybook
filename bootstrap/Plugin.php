@@ -173,7 +173,6 @@ final class Plugin
             \SimplyBook\Controllers\CapabilityController::class,
             \SimplyBook\Controllers\ScheduleController::class,
             \SimplyBook\Controllers\WidgetController::class,
-            \SimplyBook\Controllers\Gutenberg\BlockPreviewController::class,
             \SimplyBook\Controllers\Gutenberg\GutenbergController::class,
             \SimplyBook\Controllers\Elementor\ElementorController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,

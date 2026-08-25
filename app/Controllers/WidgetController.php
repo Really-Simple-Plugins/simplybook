@@ -2,10 +2,13 @@
 
 namespace SimplyBook\Controllers;
 
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\WidgetRenderService;
+use SimplyBook\Services\DesignSettingsService;
+use SimplyBook\Support\Builders\WidgetScriptBuilder;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class WidgetController implements ControllerInterface
@@ -14,13 +17,15 @@ class WidgetController implements ControllerInterface
 
     private const WIDGET_SCRIPT_HANDLE = 'simplybook_widget_scripts';
 
+    private ApiClient $client;
     private EnvironmentConfig $env;
-    private WidgetRenderService $widgetRenderer;
+    protected DesignSettingsService $service;
 
-    public function __construct(EnvironmentConfig $env, WidgetRenderService $widgetRenderer)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, DesignSettingsService $service)
     {
+        $this->client = $client;
         $this->env = $env;
-        $this->widgetRenderer = $widgetRenderer;
+        $this->service = $service;
     }
 
     public function register(): void
@@ -65,11 +70,27 @@ class WidgetController implements ControllerInterface
 
     /**
      * Render a widget for shortcode output and enqueue its remote dependency.
+     *
+     * @uses \SimplyBook\Support\Builders\WidgetScriptBuilder
      */
     private function renderWidget(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
-        $content = $this->widgetRenderer->render($widgetType, $attributes, $wrapperID);
-        if ($content === '') {
+        try {
+            $builder = new WidgetScriptBuilder();
+            $builder->setWidgetType($widgetType)
+                ->setAttributes($attributes)
+                ->setWidgetSettings($this->service->getDesignOptions())
+                ->isAuthenticated(
+                    $this->client->isAuthenticated()
+                )
+                ->withHTML();
+
+            if (!empty($wrapperID)) {
+                $builder->setWrapperID($wrapperID);
+            }
+
+            $content = $builder->build();
+        } catch (BuilderException $e) {
             return '';
         }
 
