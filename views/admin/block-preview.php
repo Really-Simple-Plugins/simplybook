@@ -1,6 +1,7 @@
 <?php
 /**
  * @var string $widgetContent
+ * @var string $widgetScriptHandle
  */
 ?>
 <!doctype html>
@@ -23,7 +24,7 @@
             padding: 16px;
         }
     </style>
-    <?php wp_print_scripts('simplybook_widget_scripts'); ?>
+    <?php wp_print_scripts($widgetScriptHandle); ?>
 </head>
 <body>
     <?php

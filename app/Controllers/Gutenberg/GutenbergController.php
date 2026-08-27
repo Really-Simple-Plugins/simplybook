@@ -5,16 +5,11 @@ namespace SimplyBook\Controllers\Gutenberg;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 use SimplyBook\Support\Widgets\GutenbergWidget;
-use SimplyBook\Traits\HasViews;
 use WP_Block_Type;
 use WP_Block_Type_Registry;
 
 class GutenbergController implements ControllerInterface
 {
-    use HasViews;
-
-    private const PREVIEW_ACTION = 'simplybook_block_preview';
-
     private EnvironmentConfig $env;
     private GutenbergWidget $widget;
 
@@ -26,8 +21,6 @@ class GutenbergController implements ControllerInterface
 
     public function register(): void
     {
-        add_action('admin_post_' . self::PREVIEW_ACTION, [$this, 'renderBlockPreview']);
-
         if (!function_exists('register_block_type')) {
             // Block editor is not available.
             return;
@@ -124,13 +117,7 @@ class GutenbergController implements ControllerInterface
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
-                'preview_url' => add_query_arg(
-                    [
-                        'action' => self::PREVIEW_ACTION,
-                        '_wpnonce' => wp_create_nonce(self::PREVIEW_ACTION),
-                    ],
-                    admin_url('admin-post.php')
-                ),
+                'preview_url' => BlockPreviewController::previewUrl(),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
             ]
         );
@@ -146,58 +133,5 @@ class GutenbergController implements ControllerInterface
                 wp_enqueue_style($styleHandle);
             }
         }
-    }
-
-    /**
-     * Render a self-contained widget preview for the block editor iframe.
-     */
-    public function renderBlockPreview(): void
-    {
-        if (!current_user_can('simplybook_manage')) {
-            wp_die(esc_html__('You are not allowed to preview this widget.', 'simplybook'), '', ['response' => 403]);
-        }
-
-        check_admin_referer(self::PREVIEW_ACTION);
-
-        nocache_headers();
-        send_nosniff_header();
-        send_frame_options_header();
-        header('Content-Type: text/html; charset=' . get_option('blog_charset'));
-        header('Referrer-Policy: no-referrer');
-        header('X-Robots-Tag: noindex, nofollow');
-
-        $widgetContent = $this->widget->render($this->getPreviewAttributes());
-        if (empty($widgetContent)) {
-            wp_die(esc_html__('The widget preview could not be loaded.', 'simplybook'), '', ['response' => 500]);
-        }
-
-        $this->render('admin/block-preview', ['widgetContent' => $widgetContent]);
-    }
-
-    /**
-     * Retrieve supported widget attributes from the preview URL.
-     */
-    private function getPreviewAttributes(): array
-    {
-        $attributes = [];
-
-        foreach (['location', 'category', 'service', 'provider'] as $attribute) {
-            if (!isset($_GET[$attribute])) {
-                continue;
-            }
-
-            $value = sanitize_text_field(wp_unslash($_GET[$attribute]));
-            if ($attribute === 'provider' && $value === 'any') {
-                $attributes[$attribute] = $value;
-                continue;
-            }
-
-            $value = absint($value);
-            if ($value > 0) {
-                $attributes[$attribute] = $value;
-            }
-        }
-
-        return $attributes;
     }
 }
