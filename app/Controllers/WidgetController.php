@@ -3,29 +3,34 @@
 namespace SimplyBook\Controllers;
 
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Controllers\Gutenberg\BlockPreviewController;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\DesignSettingsService;
 use SimplyBook\Support\Builders\WidgetScriptBuilder;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
+    private const WIDGET_SCRIPT_HANDLE = 'simplybook_widget_scripts';
+
     private ApiClient $client;
+    private EnvironmentConfig $env;
     protected DesignSettingsService $service;
 
-    public function __construct(ApiClient $client, DesignSettingsService $service)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, DesignSettingsService $service)
     {
         $this->client = $client;
+        $this->env = $env;
         $this->service = $service;
     }
 
     public function register(): void
     {
+        add_action('init', [$this, 'registerRemoteWidgetScript']);
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
 
         // Removed since: NL14RSP2-219 - kept for reference
@@ -99,6 +104,20 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script(BlockPreviewController::WIDGET_SCRIPT_HANDLE);
+        wp_enqueue_script(self::WIDGET_SCRIPT_HANDLE);
+    }
+
+    /**
+     * Register the remote dependency shared by shortcode and block rendering.
+     */
+    public function registerRemoteWidgetScript(): void
+    {
+        wp_register_script(
+            self::WIDGET_SCRIPT_HANDLE,
+            $this->env->getUrl('simplybook.widget_script_url'),
+            [],
+            $this->env->getString('simplybook.widget_script_version'),
+            false
+        );
     }
 }

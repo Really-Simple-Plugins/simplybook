@@ -3,7 +3,6 @@
 namespace SimplyBook\Controllers\Gutenberg;
 
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 use SimplyBook\Support\Widgets\GutenbergWidget;
 use SimplyBook\Traits\HasViews;
 
@@ -11,22 +10,17 @@ class BlockPreviewController implements ControllerInterface
 {
     use HasViews;
 
-    public const WIDGET_SCRIPT_HANDLE = 'simplybook_widget_scripts';
-
     private const PREVIEW_ACTION = 'simplybook_block_preview';
 
-    private EnvironmentConfig $env;
     private GutenbergWidget $widget;
 
-    public function __construct(EnvironmentConfig $env, GutenbergWidget $widget)
+    public function __construct(GutenbergWidget $widget)
     {
-        $this->env = $env;
         $this->widget = $widget;
     }
 
     public function register(): void
     {
-        add_action('init', [$this, 'registerRemoteWidgetScript']);
         add_action('admin_post_' . self::PREVIEW_ACTION, [$this, 'renderBlockPreview']);
     }
 
@@ -41,20 +35,6 @@ class BlockPreviewController implements ControllerInterface
                 '_wpnonce' => wp_create_nonce(self::PREVIEW_ACTION),
             ],
             admin_url('admin-post.php')
-        );
-    }
-
-    /**
-     * Register the remote script once so shortcode and preview rendering share a handle.
-     */
-    public function registerRemoteWidgetScript(): void
-    {
-        wp_register_script(
-            self::WIDGET_SCRIPT_HANDLE,
-            $this->env->getUrl('simplybook.widget_script_url'),
-            [],
-            $this->env->getString('simplybook.widget_script_version'),
-            false
         );
     }
 
@@ -81,10 +61,7 @@ class BlockPreviewController implements ControllerInterface
             wp_die(esc_html__('The widget preview could not be loaded.', 'simplybook'), '', ['response' => 500]);
         }
 
-        $this->render('admin/block-preview', [
-            'widgetContent' => $widgetContent,
-            'widgetScriptHandle' => self::WIDGET_SCRIPT_HANDLE,
-        ]);
+        $this->render('admin/block-preview', ['widgetContent' => $widgetContent]);
     }
 
     /**
