@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers\Gutenberg;
 
-use WP_Block_Type_Registry;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Widgets\GutenbergWidget;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -42,8 +41,7 @@ class GutenbergController implements ControllerInterface
      */
     public function registerWidget(): void
     {
-        $registry = class_exists(WP_Block_Type_Registry::class) ? WP_Block_Type_Registry::get_instance() : null;
-        if ($registry && $registry->is_registered($this->widget->getName())) {
+        if ($this->widget->isRegistered()) {
             return;
         }
 

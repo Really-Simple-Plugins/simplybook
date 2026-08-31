@@ -17,6 +17,7 @@ class GutenbergWidget
 
     /**
      * The name is used as an identifier in the {@see WP_Block_Type_Registry}
+     * and includes the plugin namespace.
      */
     public function getName(): string
     {
@@ -37,6 +38,10 @@ class GutenbergWidget
      */
     public function register(): void
     {
+        if (!function_exists('register_block_type')) {
+            return;
+        }
+
         $blockMetaData = $this->env->getString('plugin.assets_path') . '/block/build/block.json';
         if (file_exists($blockMetaData) === false) {
             return;
@@ -59,7 +64,26 @@ class GutenbergWidget
      */
     public function get(): ?WP_Block_Type
     {
+        if (!class_exists('WP_Block_Type_Registry')) {
+            return null;
+        }
+
         return WP_Block_Type_Registry::get_instance()->get_registered(
+            $this->getName()
+        );
+    }
+
+    /**
+     * Use the {@see WP_Block_Type_Registry} to determine if the widget has
+     * been registered.
+     */
+    public function isRegistered(): bool
+    {
+        if (!class_exists('WP_Block_Type_Registry')) {
+            return false;
+        }
+
+        return WP_Block_Type_Registry::get_instance()->is_registered(
             $this->getName()
         );
     }
