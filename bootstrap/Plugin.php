@@ -174,7 +174,6 @@ final class Plugin
             \SimplyBook\Controllers\ScheduleController::class,
             \SimplyBook\Controllers\WidgetController::class,
             \SimplyBook\Controllers\Gutenberg\GutenbergController::class,
-            \SimplyBook\Controllers\Gutenberg\BlockPreviewController::class,
             \SimplyBook\Controllers\Elementor\ElementorController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,
             \SimplyBook\Controllers\ServicesController::class,
