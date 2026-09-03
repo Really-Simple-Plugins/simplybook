@@ -11,6 +11,14 @@ class UpgradeController implements ControllerInterface
 {
     private const LEGACY_VERSION = '2.3';
 
+    /**
+     * The only version that did not save itself in _simplybook_current_version.
+     * In this version {@see checkForUpgrades} was hooked to an action that
+     * did not exist anymore.
+     * @since 3.5.0
+     */
+    private const UNSAVED_VERSION = '3.4.0';
+
     private EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
@@ -20,7 +28,7 @@ class UpgradeController implements ControllerInterface
 
     public function register(): void
     {
-        add_action('simplybook_controllers_loaded', [$this, 'checkForUpgrades']);
+        add_action('simplybook_plugin_controllers_loaded', [$this, 'checkForUpgrades']);
     }
 
     /**
@@ -30,8 +38,8 @@ class UpgradeController implements ControllerInterface
      * prevent the option from being deleted when a user logs out. As if
      * it is a private SimplyBook option.
      *
-     * @hooked simplybook_controllers_loaded to make sure Controllers can hook
-     * into simplybook_plugin_version_upgrade. Even this one.
+     * @hooked simplybook_plugin_controllers_loaded to make sure Controllers
+     * can hook into simplybook_plugin_version_upgrade. Even this one.
      *
      * @uses do_action simplybook_plugin_version_upgrade
      */
@@ -42,12 +50,8 @@ class UpgradeController implements ControllerInterface
             return; // Nothing to do
         }
 
-        // This could be one if-statement, but this makes it readable that we
-        // do not query the database if we do not need to.
         if (empty($previousSavedVersion)) {
-            if ($this->isUpgradeFromLegacy()) {
-                $previousSavedVersion = self::LEGACY_VERSION;
-            }
+            $previousSavedVersion = $this->getPreviousVersionWhenNotSaved();
         }
 
         // Trigger upgrade hook if we are upgrading from a previous version.
@@ -58,6 +62,38 @@ class UpgradeController implements ControllerInterface
 
         // Also makes sure $previousSavedVersion will only be empty one time
         update_option('_simplybook_current_version', $this->env->getString('plugin.version'), false);
+    }
+
+    /**
+     * Used by {@see checkForUpgrades} when _simplybook_current_version is
+     * empty. All 3.x versions before 3.4.0 saved their version. So when the
+     * plugin is not a legacy plugin and not a new install, the previous
+     * version must be 3.4.0. Returns an empty string for a new install.
+     * @since 3.5.0
+     */
+    private function getPreviousVersionWhenNotSaved(): string
+    {
+        if ($this->isUpgradeFromLegacy()) {
+            return self::LEGACY_VERSION;
+        }
+
+        if ($this->isNewInstall()) {
+            return '';
+        }
+
+        return self::UNSAVED_VERSION;
+    }
+
+    /**
+     * The activation flag is set by
+     * {@see \SimplyBook\Bootstrap\Plugin::activation} and removed on
+     * admin_init. This controller saves the version before admin_init. So
+     * when the flag exists, the plugin was not used before.
+     * @since 3.5.0
+     */
+    private function isNewInstall(): bool
+    {
+        return get_option('simplybook_activation_flag', false) !== false;
     }
 
     /**
