@@ -12,12 +12,14 @@ class UpgradeController implements ControllerInterface
     private const LEGACY_VERSION = '2.3';
 
     /**
-     * The only version that did not save itself in _simplybook_current_version.
-     * In this version {@see checkForUpgrades} was hooked to an action that
-     * did not exist anymore.
+     * First version that did not save itself in _simplybook_current_version.
+     * From 3.2.4 to 3.3.1 this controller was not registered. In 3.4.0
+     * {@see checkForUpgrades} was hooked to an action that did not exist
+     * anymore. Using the first version makes sure all migrations since then
+     * still run.
      * @since 3.5.0
      */
-    private const UNSAVED_VERSION = '3.4.0';
+    private const FIRST_UNSAVED_VERSION = '3.2.4';
 
     private EnvironmentConfig $env;
 
@@ -66,9 +68,9 @@ class UpgradeController implements ControllerInterface
 
     /**
      * Used by {@see checkForUpgrades} when _simplybook_current_version is
-     * empty. All 3.x versions before 3.4.0 saved their version. So when the
+     * empty. All 3.x versions before 3.2.4 saved their version. So when the
      * plugin is not a legacy plugin and not a new install, the previous
-     * version must be 3.4.0. Returns an empty string for a new install.
+     * version is 3.2.4 or higher. Returns an empty string for a new install.
      * @since 3.5.0
      */
     private function getPreviousVersionWhenNotSaved(): string
@@ -81,7 +83,7 @@ class UpgradeController implements ControllerInterface
             return '';
         }
 
-        return self::UNSAVED_VERSION;
+        return self::FIRST_UNSAVED_VERSION;
     }
 
     /**
