@@ -9,6 +9,13 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class UpgradeController implements ControllerInterface
 {
+
+    /**
+     * The last version of the legacy plugin that did never safe the
+     * _simplybook_current_version option.
+     * @since 3.0.0
+     * @var string
+     */
     private const LEGACY_VERSION = '2.3';
 
     /**
@@ -17,6 +24,7 @@ class UpgradeController implements ControllerInterface
      * {@see \SimplyBook\Bootstrap\Plugin}.
      *
      * @since 3.5.0
+     * @var string
      */
     private const FIRST_UNSAVED_VERSION = '3.2.4';
 
@@ -46,19 +54,19 @@ class UpgradeController implements ControllerInterface
      */
     public function checkForUpgrades(): void
     {
-        $previousSavedVersion = (string) get_option('_simplybook_current_version', '');
-        if ($previousSavedVersion === $this->env->getString('plugin.version')) {
+        $previousVersion = (string) get_option('_simplybook_current_version', '');
+        if ($previousVersion === $this->env->getString('plugin.version')) {
             return; // Nothing to do
         }
 
-        if (empty($previousSavedVersion)) {
-            $previousSavedVersion = $this->getPreviousVersionWhenNotSaved();
+        if (empty($previousVersion)) {
+            $previousVersion = $this->getUnsavedVersion();
         }
 
         // Trigger upgrade hook if we are upgrading from a previous version.
         // Action can be used by Controllers to hook into the upgrade process
-        if (!empty($previousSavedVersion)) {
-            do_action('simplybook_plugin_version_upgrade', $previousSavedVersion, $this->env->getString('plugin.version'));
+        if (!empty($previousVersion)) {
+            do_action('simplybook_plugin_version_upgrade', $previousVersion, $this->env->getString('plugin.version'));
         }
 
         // Also makes sure $previousSavedVersion will only be empty one time
@@ -73,7 +81,7 @@ class UpgradeController implements ControllerInterface
      *
      * @since 3.5.0
      */
-    private function getPreviousVersionWhenNotSaved(): string
+    private function getUnsavedVersion(): string
     {
         if ($this->isUpgradeFromLegacy()) {
             return self::LEGACY_VERSION;
