@@ -9,7 +9,6 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class UpgradeController implements ControllerInterface
 {
-
     /**
      * The last version of the legacy plugin that did never safe the
      * _simplybook_current_version option.
