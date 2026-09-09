@@ -47,16 +47,14 @@ class GutenbergWidget
             return;
         }
 
-        $block = register_block_type($blockMetaData, [
+        add_filter('block_type_metadata', [$this, 'setEditorStyleVersion']);
+
+        register_block_type($blockMetaData, [
             'render_callback' => [$this, 'render'],
             'description' => $this->getDescription(),
         ]);
 
-        if (!$block) {
-            return;
-        }
-
-        $this->setEditorStyleVersion($block);
+        remove_filter('block_type_metadata', [$this, 'setEditorStyleVersion']);
     }
 
     /**
@@ -114,26 +112,15 @@ class GutenbergWidget
     }
 
     /**
-     * Use the generated build version to invalidate cached editor styles.
+     * Use the plugin version to invalidate cached editor styles.
      */
-    private function setEditorStyleVersion(WP_Block_Type $block): void
+    public function setEditorStyleVersion(array $metaData): array
     {
-        $assetDataPath = $this->env->getString('plugin.assets_path') . '/block/build/index.asset.php';
-        if (!file_exists($assetDataPath)) {
-            return;
+        if ($metaData['name'] !== $this->getName()) {
+            return $metaData;
         }
 
-        $assetData = (array) include $assetDataPath;
-        $version = ($assetData['version'] ?? null);
-        if (!is_string($version)) {
-            return;
-        }
-
-        foreach ($block->editor_style_handles as $styleHandle) {
-            $style = (wp_styles()->registered[$styleHandle] ?? null);
-            if ($style) {
-                $style->ver = $version;
-            }
-        }
+        $metaData['version'] = $this->env->getString('plugin.version');
+        return $metaData;
     }
 }
