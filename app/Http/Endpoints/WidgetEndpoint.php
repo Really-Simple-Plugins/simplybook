@@ -72,7 +72,6 @@ class WidgetEndpoint implements MultiEndpointInterface
      * Get and return widget javascript in the HTTP Response. A preview
      * widget is build on the current form data, which is not saved to the
      * database yet.
-     * @throws FormException|\Exception
      */
     public function getPreviewWidget(\WP_REST_Request $request): \WP_REST_Response
     {
