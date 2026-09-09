@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Http\Endpoints;
 
+use SimplyBook\Exceptions\FormException;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
@@ -71,6 +72,7 @@ class WidgetEndpoint implements MultiEndpointInterface
      * Get and return widget javascript in the HTTP Response. A preview
      * widget is build on the current form data, which is not saved to the
      * database yet.
+     * @throws FormException|\Exception
      */
     public function getPreviewWidget(\WP_REST_Request $request): \WP_REST_Response
     {
@@ -100,6 +102,17 @@ class WidgetEndpoint implements MultiEndpointInterface
                 $storage->getString('primary'),
                 $storage->getString('secondary'),
                 $storage->getString('active')
+            );
+        }
+
+        try {
+            $this->service->validateSettings($widgetSettings);
+        } catch(FormException $e) {
+            return $this->sendHttpResponse(
+                ['errors' => $e->getErrors()],
+                false,
+                esc_html__('Invalid settings', 'simplybook'),
+                400
             );
         }
 
