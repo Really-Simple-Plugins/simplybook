@@ -5,6 +5,7 @@ namespace SimplyBook\Controllers\Gutenberg;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Widgets\GutenbergWidget;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Support\Widgets\ShortcodeWidget;
 
 class GutenbergController implements ControllerInterface
 {
@@ -26,7 +27,7 @@ class GutenbergController implements ControllerInterface
             return;
         }
 
-        add_action('init', [$this, 'registerWidget'], 20);
+        add_action('admin_init', [$this, 'registerWidget'], 20);
         add_action('enqueue_block_editor_assets', [$this, 'enqueueEditorAssets']);
         add_action('admin_post_' . self::PREVIEW_ACTION, [$this, 'renderBlockPreview']);
 
@@ -128,7 +129,7 @@ class GutenbergController implements ControllerInterface
         header('X-Robots-Tag: noindex, nofollow');
 
         $this->widget->print(
-            $this->getPreviewAttributes()
+            $this->getBlockPreviewAttributes()
         );
 
         wp_print_scripts();
@@ -137,11 +138,11 @@ class GutenbergController implements ControllerInterface
     /**
      * Accept only supported block attributes from the preview URL.
      */
-    private function getPreviewAttributes(): array
+    private function getBlockPreviewAttributes(): array
     {
         $attributes = [];
 
-        foreach (['location', 'category', 'service', 'provider'] as $attribute) {
+        foreach (ShortcodeWidget::ATTRIBUTES as $attribute) {
             if (!isset($_GET[$attribute])) {
                 continue;
             }

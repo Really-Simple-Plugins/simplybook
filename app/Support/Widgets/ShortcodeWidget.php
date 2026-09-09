@@ -6,7 +6,7 @@ class ShortcodeWidget
 {
     private const NAME = 'simplybook_widget';
 
-    private const ATTRIBUTES = [
+    public const ATTRIBUTES = [
         'location',
         'category',
         'service',
