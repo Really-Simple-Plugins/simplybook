@@ -8,38 +8,27 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  */
 import {
     faArrowUpRightFromSquare,
-    faBullhorn,
     faCalendarDay,
     faCalendarWeek,
-    faCheck,
     faChevronDown,
     faChevronUp,
     faCircle,
     faCircleCheck,
     faCircleExclamation,
     faCircleXmark,
-    faClock,
     faEye,
-    faFileCircleXmark,
     faGlobe,
     faInfoCircle,
-    faLinesLeaning,
-    faShoppingCart,
     faSpinner,
     faSquareArrowUpRight,
-    faTimes,
     faTriangleExclamation,
-    faTrophy,
-    faUserGroup
+    faTrophy
 } from "@fortawesome/free-solid-svg-icons";
-
-import { faYoutube } from "@fortawesome/free-brands-svg-icons"; // Map your icons to keys for easy referencing
 
 // Map your icons to keys for easy referencing
 const iconMap = {
     "calendar-day": faCalendarDay,
     "calendar-week": faCalendarWeek,
-    "retry": faFileCircleXmark,
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
     "circle-xmark": faCircleXmark,
@@ -47,21 +36,13 @@ const iconMap = {
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
-    "check": faCheck,
     "info-circle": faInfoCircle,
     "warning-circle": faCircleExclamation,
-    "times": faTimes,
     "trophy": faTrophy,
-    "user-group": faUserGroup,
     "eye": faEye,
-    "bullhorn": faBullhorn,
     "support": faGlobe,
-    "clock": faClock,
     "circle": faCircle,
-    "cart": faShoppingCart,
-    "target-blank": faArrowUpRightFromSquare,
-    "youtube": faYoutube,
-    "tips": faLinesLeaning
+    "target-blank": faArrowUpRightFromSquare
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {
