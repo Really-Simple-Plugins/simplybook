@@ -27,7 +27,7 @@ class GutenbergController implements ControllerInterface
             return;
         }
 
-        add_action('admin_init', [$this, 'registerWidget'], 20);
+        add_action('init', [$this, 'registerWidget'], 20);
         add_action('enqueue_block_editor_assets', [$this, 'enqueueEditorAssets']);
         add_action('admin_post_' . self::PREVIEW_ACTION, [$this, 'renderBlockPreview']);
 
