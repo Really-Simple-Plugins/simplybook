@@ -7,41 +7,33 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  * be visible local and not pushed to main/production
  */
 import {
-  fas,
-  faCircle,
-  faSquareArrowUpRight,
-  faSpinner,
-  faChevronDown,
-  faChevronUp,
-  faCheck,
-  faTimes,
-  faTrophy,
-  faUserGroup,
-  faEye,
-  faBullhorn,
-  faClock,
-  faSupport,
-  faShoppingCart,
-  faCircleCheck,
-  faCircleXmark,
-  faArrowUpRightFromSquare,
-  faLinesLeaning,
-  faTriangleExclamation
- } from "@fortawesome/free-solid-svg-icons";
+    faArrowUpRightFromSquare,
+    faBullhorn,
+    faCalendarDay,
+    faCalendarWeek,
+    faCheck,
+    faChevronDown,
+    faChevronUp,
+    faCircle,
+    faCircleCheck,
+    faCircleExclamation,
+    faCircleXmark,
+    faClock,
+    faEye,
+    faFileCircleXmark,
+    faGlobe,
+    faInfoCircle,
+    faLinesLeaning,
+    faShoppingCart,
+    faSpinner,
+    faSquareArrowUpRight,
+    faTimes,
+    faTriangleExclamation,
+    faTrophy,
+    faUserGroup
+} from "@fortawesome/free-solid-svg-icons";
 
- import { 
-  faGlobe,
-  faFileSlash,
-  faFileCircleXmark,
-  faCalendarDay,
-  faCalendarWeek,
-  faCircleExclamation,
-  faInfoCircle
-} from "@fortawesome/pro-regular-svg-icons";
-
- import { 
-  faYoutube 
-} from "@fortawesome/free-brands-svg-icons";
+import { faYoutube } from "@fortawesome/free-brands-svg-icons"; // Map your icons to keys for easy referencing
 
 // Map your icons to keys for easy referencing
 const iconMap = {
