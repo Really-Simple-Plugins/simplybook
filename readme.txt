@@ -60,6 +60,12 @@ Really Simple Plugins is the creator of most-used plugins Really Simple Security
 Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
 Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
 
+= Source code =
+
+This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
+
+To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
+
 == Installation ==
 
 = <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
@@ -77,12 +83,6 @@ Yes, we need to authenticate your site as your bookings will be processed throug
 
 = What if I already have a SimplyBook me account? =
 You can skip the onboarding and login with your existing login credentials.
-
-== Source code ==
-
-This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
-
-To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
 
 == Screenshots ==
 
