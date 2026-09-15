@@ -131,36 +131,37 @@ final class EndpointManager extends AbstractManager
     /**
      * This method is used to add middleware to the callback function. The
      * middleware should be a callable function that takes a request as an
-     * argument and returns a response. The default middleware is to switch
-     * the user locale to the current user locale. The locale is restored
-     * after the callback has run.
+     * argument and returns a response. The default middleware runs the
+     * callback in the user locale.
      */
     public function callbackMiddleware(?callable $callback, ?callable $middleware): callable
     {
         return function ($request) use ($callback, $middleware) {
             if (is_callable($middleware)) {
                 $middleware($request);
-                $response = $callback($request);
-                restore_previous_locale();
-                return $response;
+                return $callback($request);
             }
 
-            $this->defaultMiddlewareCallback();
-            $response = $callback($request);
-            restore_previous_locale();
-            return $response;
+            return $this->defaultMiddlewareCallback($callback, $request);
         };
     }
 
     /**
-     * This method is used to switch the user locale to the current user locale.
-     * This is important because we will otherwise show the default site
+     * This method is used to run the callback in the locale of the current
+     * user. This is important because we will otherwise show the default site
      * language to the user for the Tasks and Notifications. Those
-     * translations are created in PHP and not in JS.
+     * translations are created in PHP and not in JS. The locale is restored
+     * after the callback so the change stays inside our own request handling.
+     *
+     * @return mixed The response of the callback.
      */
-    private function defaultMiddlewareCallback(): void
+    private function defaultMiddlewareCallback(callable $callback, WP_REST_Request $request)
     {
         switch_to_user_locale(get_current_user_id());
+        $response = $callback($request);
+        restore_previous_locale();
+
+        return $response;
     }
 
     /**
