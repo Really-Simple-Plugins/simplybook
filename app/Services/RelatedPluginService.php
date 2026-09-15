@@ -151,9 +151,6 @@ class RelatedPluginService
 
         //when activated from the network admin, we assume the user wants network activated
         $networkwide = is_multisite() && is_network_admin();
-        if (!defined('DOING_CRON')) {
-            define('DOING_CRON', true);
-        }
 
         if (!function_exists('activate_plugin')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
