@@ -169,20 +169,15 @@ final class EndpointManager extends AbstractManager
      */
     public function defaultPermissionCallback(WP_REST_Request $request)
     {
-        if (current_user_can('simplybook_manage') === false) {
-            return $this->forbiddenError();
-        }
-
-        $method = $request->get_method();
-        $nonce = $request->get_param('nonce');
-
-        // For methods that modify data, verify the nonce
         $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
-        if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
-            return $this->forbiddenError();
+        $requiresNonce = in_array($request->get_method(), $methodsRequiringNonce);
+        $validNonce = ($requiresNonce === false) || $this->verifyNonce($request->get_param('nonce'));
+
+        if (current_user_can('simplybook_manage') && $validNonce) {
+            return true;
         }
 
-        return true;
+        return $this->forbiddenError();
     }
 
     /**
