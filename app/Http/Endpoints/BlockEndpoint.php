@@ -2,7 +2,10 @@
 
 namespace SimplyBook\Http\Endpoints;
 
+use WP_Error;
+use WP_REST_Request;
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
@@ -10,6 +13,7 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoint implements MultiEndpointInterface
 {
+    use HasNonces;
     use HasApiAccess;
 
     public const ROUTE = 'internal';
@@ -43,24 +47,51 @@ class BlockEndpoint implements MultiEndpointInterface
             self::ROUTE . '/is-authorized' => [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'companyRegistrationIsCompleted'],
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
             ],
             self::ROUTE . '/locations' => [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getLocations'],
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
             ],
             self::ROUTE . '/services' => [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getServices'],
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
             ],
             self::ROUTE . '/categories' => [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getCategories'],
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
             ],
             self::ROUTE . '/providers' => [
                 'methods' => \WP_REST_Server::CREATABLE,
                 'callback' => [$this, 'getProviders'],
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
             ],
         ];
+    }
+
+    /**
+     * The block editor calls these routes. Every user that can edit posts
+     * must be able to use the block. Check the 'edit_posts' capability and
+     * the nonce.
+     * @return bool|WP_Error
+     */
+    public function blockEditorAccessAllowed(WP_REST_Request $request)
+    {
+        $canEditPosts = current_user_can('edit_posts');
+        $validNonce = $this->verifyNonce($request->get_param('nonce'));
+
+        if ($canEditPosts && $validNonce) {
+            return true;
+        }
+
+        return new WP_Error(
+            'rest_forbidden',
+            __('Forbidden.', 'simplybook'),
+            ['status' => rest_authorization_required_code()]
+        );
     }
 
     /**

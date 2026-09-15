@@ -159,12 +159,22 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * The default permission callback, will check if the nonce is valid and if
-     * the user has the required permissions to do a request.
+     * The default permission callback. Checks if the current user has the
+     * 'simplybook_manage' capability. For methods that modify data, it also
+     * checks if the nonce is valid.
+     *
      * @return bool|WP_Error
      */
     public function defaultPermissionCallback(WP_REST_Request $request)
     {
+        if (current_user_can('simplybook_manage') === false) {
+            return new WP_Error(
+                'rest_forbidden',
+                __('Forbidden.', 'simplybook'),
+                ['status' => rest_authorization_required_code()]
+            );
+        }
+
         $method = $request->get_method();
         $nonce = $request->get_param('nonce');
 
