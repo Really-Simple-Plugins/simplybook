@@ -7,6 +7,7 @@ use WP_REST_Request;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasApiAccess;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
@@ -15,6 +16,7 @@ class BlockEndpoint implements MultiEndpointInterface
 {
     use HasNonces;
     use HasApiAccess;
+    use HasRestAccess;
 
     public const ROUTE = 'internal';
 
@@ -88,11 +90,7 @@ class BlockEndpoint implements MultiEndpointInterface
             return true;
         }
 
-        return new WP_Error(
-            'rest_forbidden',
-            __('Forbidden.', 'simplybook'),
-            ['status' => rest_authorization_required_code()]
-        );
+        return $this->forbiddenError();
     }
 
     /**

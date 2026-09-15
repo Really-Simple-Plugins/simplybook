@@ -6,6 +6,7 @@ use WP_Error;
 use WP_REST_Request;
 use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -13,6 +14,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 final class EndpointManager extends AbstractManager
 {
     use HasNonces;
+    use HasRestAccess;
 
     private array $routes = [];
     private EnvironmentConfig $env;
@@ -168,11 +170,7 @@ final class EndpointManager extends AbstractManager
     public function defaultPermissionCallback(WP_REST_Request $request)
     {
         if (current_user_can('simplybook_manage') === false) {
-            return new WP_Error(
-                'rest_forbidden',
-                __('Forbidden.', 'simplybook'),
-                ['status' => rest_authorization_required_code()]
-            );
+            return $this->forbiddenError();
         }
 
         $method = $request->get_method();
@@ -181,11 +179,7 @@ final class EndpointManager extends AbstractManager
         // For methods that modify data, verify the nonce
         $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
         if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
-            return new WP_Error(
-                'rest_forbidden',
-                __('Forbidden.', 'simplybook'),
-                ['status' => 403]
-            );
+            return $this->forbiddenError();
         }
 
         return true;
