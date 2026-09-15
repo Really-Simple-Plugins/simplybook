@@ -43,12 +43,7 @@ SimplyBook.me can be used for free up to 50 appointments per month. In addition,
 SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings, calendar, and settings. On top of that you will get an admin app where you can manage all your bookings, handle appointments, adjust scheduling, and accept payments on the go. Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
 For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/</a>
 
-This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you familiarize yourself with the privacy policy and terms of use of SimplyBook.me at the following links:
-
-* <a href="https://simplybook.me/en/policy" rel="friend" title="SimplyBook Privacy Policy" target="_blank">Privacy Policy</a>
-* <a href="https://simplybook.me/en/terms-and-conditions" rel="friend" title="SimplyBook Terms of Use" target="_blank">Terms of Use</a>
-
-This will help you better understand the terms of use of the plugin and ensure your confidentiality.
+This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you read the External services section below. It describes each external service, the data the plugin sends, and links to the privacy policy and terms of use of each service.
 
 This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins
 
@@ -78,6 +73,27 @@ Yes, we need to authenticate your site as your bookings will be processed throug
 = What if I already have a SimplyBook me account? =
 You can skip the onboarding and login with your existing login credentials.
 
+== External services ==
+
+This plugin connects to the external services below. Each paragraph describes the service, what the plugin uses it for, what data the plugin sends, and when the plugin sends it. Each paragraph links to the terms of service and the privacy policy of the service.
+
+= SimplyBook.me API =
+The plugin connects to the SimplyBook.me API (user-api.simplybook.it, user-api-v2.simplybook.it and the other SimplyBook.me domains you can select at login). The plugin uses this API to log in, to read and save your company settings, services and service providers, and to show your bookings and statistics in the plugin dashboard. The plugin sends your SimplyBook.me company login, user login and password when you log in. The plugin sends your site URL, the plugin version, the WordPress version and the PHP version with each request. The plugin sends your company settings, services and service providers when you change them in the plugin dashboard. The plugin reads your bookings and statistics when you open the plugin dashboard. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+
+= SimplyBook.me booking widget =
+The booking widget loads the script https://simplybook.me/v2/widget/widget.js from SimplyBook.me. The browser of a visitor loads this script on each page that contains the booking widget (shortcode, Gutenberg block or Elementor widget). The widget sends the IP address of the visitor to SimplyBook.me when the page loads. The widget sends the booking form input of the visitor (for example name, e-mail address, phone number, selected service, provider and time) to SimplyBook.me when the visitor makes a booking. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+
+= SimplyBook.me demo widget =
+When your site is not connected to a SimplyBook.me account, the booking widget shows a demo. The demo widget connects to https://demowidgetwpplugin.simplybook.it. The browser of a visitor sends its IP address to this server when the visitor opens a page with the demo widget. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+
+= Really Simple Plugins account service =
+The onboarding uses the Really Simple Plugins account service at https://simplybook.rsp-auth.com to create a new SimplyBook.me account. Really Simple Plugins operates this service. The plugin sends your site URL, the plugin name, version and path, and an installation ID when the onboarding starts. The plugin sends your e-mail address, password, company login, business category, marketing consent, the callback URL of your site and the reCAPTCHA token when you submit the "Create your account" step. Terms: https://really-simple-ssl.com/legal/terms-of-use/. Privacy: https://really-simple-ssl.com/legal/privacy-statement/.
+
+= Google reCAPTCHA Enterprise =
+The onboarding uses Google reCAPTCHA Enterprise to protect the account creation form against abuse. The browser of the admin loads the script https://www.google.com/recaptcha/enterprise.js when the admin opens the "Create your account" step. Google receives the IP address and browser data of the admin. The browser sends a reCAPTCHA token to Google when the admin submits the form. Terms: https://policies.google.com/terms. Privacy: https://policies.google.com/privacy.
+
+= LiveAgent live chat =
+The plugin dashboard shows a "Live Help" button for SimplyBook.me support. The browser of the admin loads the LiveAgent script https://simply.ladesk.com/scripts/track.js when the admin opens the plugin dashboard. LiveAgent receives the IP address and browser data of the admin. LiveAgent receives the chat messages of the admin when the admin starts a chat. Terms: https://www.liveagent.com/terms-and-conditions/. Privacy: https://www.liveagent.com/privacy-policy/.
 
 == Screenshots ==
 
