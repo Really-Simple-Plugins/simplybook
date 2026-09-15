@@ -76,6 +76,7 @@ class BlockEndpoint implements MultiEndpointInterface
      * The block editor calls these routes. Every user that can edit posts
      * must be able to use the block. Check the 'edit_posts' capability and
      * the nonce.
+     *
      * @return bool|WP_Error
      */
     public function blockEditorAccessAllowed(WP_REST_Request $request)
