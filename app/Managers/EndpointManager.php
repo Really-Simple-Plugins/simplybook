@@ -132,18 +132,23 @@ final class EndpointManager extends AbstractManager
      * This method is used to add middleware to the callback function. The
      * middleware should be a callable function that takes a request as an
      * argument and returns a response. The default middleware is to switch
-     * the user locale to the current user locale.
+     * the user locale to the current user locale. The locale is restored
+     * after the callback has run.
      */
     public function callbackMiddleware(?callable $callback, ?callable $middleware): callable
     {
         return function ($request) use ($callback, $middleware) {
             if (is_callable($middleware)) {
                 $middleware($request);
-                return $callback($request);
+                $response = $callback($request);
+                restore_previous_locale();
+                return $response;
             }
 
             $this->defaultMiddlewareCallback();
-            return $callback($request);
+            $response = $callback($request);
+            restore_previous_locale();
+            return $response;
         };
     }
 
