@@ -162,8 +162,9 @@ class TaskManagementListener implements ListenerInterface
         }
 
         if (!empty($subscription)) {
-            $this->handleBlackFridayTask($subscription);
-            $this->handleChristmasPromotionTask($subscription);
+            foreach ($this->service->getPromotionTasks() as $promotionTask) {
+                $this->handlePromotionTask($promotionTask, $subscription);
+            }
         }
 
         $this->handleSubscriptionLimits($limits);
@@ -329,64 +330,31 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Method will only set the Black Friday task visible and mark it as upgrade
-     * if the current subscription is 'Trial' and the current date is between
-     * the Black Friday start and end date mentioned in the env config. A
-     * dismissed task stays dismissed.
+     * Method will only set the promotion task visible and mark it as upgrade
+     * if the current subscription is 'Trial' and the promotion period is
+     * running. A dismissed task stays dismissed.
      */
-    private function handleBlackFridayTask(string $subscriptionType): void
+    private function handlePromotionTask(Tasks\AbstractPromotionTask $task, string $subscriptionType): void
     {
-        if ($this->service->isTaskDismissed(Tasks\BlackFridayTask::IDENTIFIER)) {
+        if ($this->service->isTaskDismissed($task->getId())) {
             return;
         }
 
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
-        if ($isTrial && $this->promotionService->isBlackFriday()) {
+        if ($isTrial && $task->isActive($this->promotionService)) {
             $this->service->setTaskBubbleCounter(1);
-            $this->service->markTaskUpgrade(
-                Tasks\BlackFridayTask::IDENTIFIER
-            );
+            $this->service->markTaskUpgrade($task->getId());
             return;
         }
 
         $this->service->setTaskBubbleCounter(0);
-        $this->service->hideTask(
-            Tasks\BlackFridayTask::IDENTIFIER
-        );
+        $this->service->hideTask($task->getId());
     }
 
     /**
-     * Method will only set the Christmas promo task visible and mark it as
-     * upgrade if the current subscription is 'Trial' and the current date
-     * is between the Christmas promo start and end date mentioned in the
-     * env config. A dismissed task stays dismissed.
-     */
-    private function handleChristmasPromotionTask(string $subscriptionType): void
-    {
-        if ($this->service->isTaskDismissed(Tasks\ChristmasPromotionTask::IDENTIFIER)) {
-            return;
-        }
-
-        $isTrial = (strtolower($subscriptionType) === 'trial');
-
-        if ($isTrial && $this->promotionService->isChristmasPeriod()) {
-            $this->service->setTaskBubbleCounter(1);
-            $this->service->markTaskUpgrade(
-                Tasks\ChristmasPromotionTask::IDENTIFIER
-            );
-            return;
-        }
-
-        $this->service->setTaskBubbleCounter(0);
-        $this->service->hideTask(
-            Tasks\ChristmasPromotionTask::IDENTIFIER
-        );
-    }
-
-    /**
-     * Reset the menu bubble counter that {@see handleBlackFridayTask} or
-     * {@see handleChristmasPromotionTask} set for the promotion.
+     * Reset the menu bubble counter that {@see handlePromotionTask} set for
+     * the promotion.
      */
     public function handlePromotionTaskDismissed(): void
     {
@@ -401,14 +369,13 @@ class TaskManagementListener implements ListenerInterface
      */
     public function handleDateDrivenTasks(): void
     {
-        if ($this->promotionService->isBlackFriday()) {
-            $this->handleBlackFridayTask(
-                (string) $this->subscriptionDataService->search('subscription_name', '')
-            );
-        }
+        foreach ($this->service->getPromotionTasks() as $promotionTask) {
+            if ($promotionTask->isActive($this->promotionService) === false) {
+                continue;
+            }
 
-        if ($this->promotionService->isChristmasPeriod()) {
-            $this->handleChristmasPromotionTask(
+            $this->handlePromotionTask(
+                $promotionTask,
                 (string) $this->subscriptionDataService->search('subscription_name', '')
             );
         }

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
+use SimplyBook\Features\TaskManagement\Tasks\AbstractPromotionTask;
 
 /**
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
@@ -33,6 +34,19 @@ class TaskManagementService
     public function getTask(string $taskId): ?TaskInterface
     {
         return $this->repository->getTask($taskId);
+    }
+
+    /**
+     * Used by the {@see TaskManagementListener} to handle all promotions
+     * without knowing the individual promotion tasks.
+     *
+     * @return AbstractPromotionTask[]
+     */
+    public function getPromotionTasks(): array
+    {
+        return array_filter($this->repository->getAllTasks(), static function (TaskInterface $task): bool {
+            return $task instanceof AbstractPromotionTask;
+        });
     }
 
     /**

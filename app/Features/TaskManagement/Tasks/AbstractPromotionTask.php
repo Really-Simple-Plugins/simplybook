@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
+use SimplyBook\Services\PromotionService;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -24,6 +25,13 @@ abstract class AbstractPromotionTask extends AbstractTask
         $this->hide();
         $this->env = $env;
     }
+
+    /**
+     * Whether the promotion period of this task is running right now. The
+     * service is passed in because tasks are serialized and must not hold
+     * one.
+     */
+    abstract public function isActive(PromotionService $promotionService): bool;
 
     /**
      * Notify the {@see TaskManagementListener} so it can reset the menu
