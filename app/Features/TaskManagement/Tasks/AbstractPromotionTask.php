@@ -2,14 +2,15 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Services\PromotionService;
+use Carbon\Carbon;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Base for a time limited promotion for Trial users. The task is hidden by
  * default. The {@see TaskManagementListener} shows it, and sets the menu
- * bubble counter, during the promotion period.
+ * bubble counter, during the promotion period. The period is read from the
+ * env config under `simplybook.{IDENTIFIER}.start_date` and `end_date`.
  */
 abstract class AbstractPromotionTask extends AbstractTask
 {
@@ -27,11 +28,44 @@ abstract class AbstractPromotionTask extends AbstractTask
     }
 
     /**
-     * Whether the promotion period of this task is running right now. The
-     * service is passed in because tasks are serialized and must not hold
-     * one.
+     * Whether the promotion period is running right now. The result is
+     * cached for an hour because this runs on every admin page load. Near
+     * the end of the period the cache is reduced to 5 minutes so the task
+     * disappears on time.
      */
-    abstract public function isActive(PromotionService $promotionService): bool;
+    public function isActive(): bool
+    {
+        $hasCache = false;
+        $cacheName = 'simplybook_promotion_' . $this->getId() . '_is_active';
+        $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
+
+        // The $hasCache variable is set by reference in wp_cache_get
+        if ($hasCache) {
+            return (bool) $cache;
+        }
+
+        $timezone = wp_timezone();
+        $now = Carbon::now($timezone);
+
+        $start = Carbon::parse(
+            $this->env->getString('simplybook.' . $this->getId() . '.start_date'),
+            $timezone
+        );
+        $end = Carbon::parse(
+            $this->env->getString('simplybook.' . $this->getId() . '.end_date'),
+            $timezone
+        )->endOfDay();
+
+        $cacheDuration = HOUR_IN_SECONDS;
+        if ($now->diffInSeconds($end, false) <= $cacheDuration) {
+            $cacheDuration = MINUTE_IN_SECONDS * 5;
+        }
+
+        $isActive = $now->betweenIncluded($start, $end);
+
+        wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
+        return $isActive;
+    }
 
     /**
      * Notify the {@see TaskManagementListener} so it can reset the menu

@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Services\PromotionService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ChristmasPromotionTask extends AbstractPromotionTask
@@ -19,14 +18,6 @@ class ChristmasPromotionTask extends AbstractPromotionTask
     {
         parent::__construct($env);
         $this->setVersion('1.0.2');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isActive(PromotionService $promotionService): bool
-    {
-        return $promotionService->isChristmasPeriod();
     }
 
     /**

@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
-use SimplyBook\Services\PromotionService;
 use SimplyBook\Interfaces\ListenerInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
@@ -18,16 +17,13 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
-    private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
         TaskManagementService $service,
-        PromotionService $promotionService,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
-        $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
     }
 
@@ -342,7 +338,7 @@ class TaskManagementListener implements ListenerInterface
 
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
-        if ($isTrial && $task->isActive($this->promotionService)) {
+        if ($isTrial && $task->isActive()) {
             $this->service->setTaskBubbleCounter(1);
             $this->service->markTaskUpgrade($task->getId());
             return;
@@ -370,7 +366,7 @@ class TaskManagementListener implements ListenerInterface
     public function handleDateDrivenTasks(): void
     {
         foreach ($this->service->getPromotionTasks() as $promotionTask) {
-            if ($promotionTask->isActive($this->promotionService) === false) {
+            if ($promotionTask->isActive() === false) {
                 continue;
             }
 
