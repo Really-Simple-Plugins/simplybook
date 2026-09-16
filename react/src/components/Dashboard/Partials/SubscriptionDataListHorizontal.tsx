@@ -24,7 +24,7 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
     }
 
     let message = subscriptionPlan + ': ' + expiresIn + ' ' + __("days left", "simplybook");
-    let expiredMessage = subscriptionPlan + ' ' + __("is expired", "simplybook");
+    let expiredMessage = subscriptionPlan + ' ' + __("ended - choose your plan", "simplybook");
 
     return (
         <>

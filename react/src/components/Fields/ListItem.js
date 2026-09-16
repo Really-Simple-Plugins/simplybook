@@ -60,7 +60,7 @@ const ListItem = forwardRef(
                                     btnVariant={"square-small"}
                                     link={link}
                                 >
-                                    {__("Upgrade", "simplybook")}
+                                    {__("View plans", "simplybook")}
                                 </ButtonLink>
                             </div>
                         </div>

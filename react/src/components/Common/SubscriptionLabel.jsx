@@ -20,7 +20,7 @@ const SubscriptionLabel = () => {
 
     const labelVariant = isExpired ? "trial-expired" : "trial";
     const labelText = isExpired
-        ? `${subscriptionPlan} ${__("is expired.", "simplybook")}`
+        ? `${subscriptionPlan} ${__("ended - choose your plan", "simplybook")}`
         : getSubscriptionLabelText(subscriptionPlan, expiresIn);
 
     const subscriptionLabel = (
@@ -34,7 +34,7 @@ const SubscriptionLabel = () => {
     }
 
     return (
-        <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden">
+        <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden" title={__("You can continue for free with up to 50 bookings per month.", "simplybook")}>
             {subscriptionLabel}
         </a>
     );
