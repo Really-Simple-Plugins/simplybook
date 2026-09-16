@@ -4,7 +4,7 @@ namespace SimplyBook\Services\Admin;
 
 /**
  * Manages the number shown in the bubble next to the SimplyBook admin
- * menu item. The number tells the user how many items need attention.
+ * menu item.
  */
 class BubbleCounterService
 {
@@ -20,8 +20,7 @@ class BubbleCounterService
     }
 
     /**
-     * Adds the amount to the stored number. Use this when new items need
-     * the attention of the user.
+     * Adds the amount to the stored number.
      */
     public function increase(int $amount = 1): void
     {
@@ -29,9 +28,8 @@ class BubbleCounterService
     }
 
     /**
-     * Subtracts the amount from the stored number. Use this when an item no
-     * longer needs the attention of the user. The number never goes below
-     * 0, because a negative bubble has no meaning.
+     * Subtracts the amount from the stored number. The number never goes
+     * below 0, because a negative bubble has no meaning.
      */
     public function decrease(int $amount = 1): void
     {
