@@ -16,7 +16,7 @@ class TrialExpiredTask extends AbstractTask
     /**
      * @inheritDoc
      */
-    protected bool $premium = true;
+    protected bool $premium = false;
 
     private EnvironmentConfig $env;
 
@@ -28,12 +28,13 @@ class TrialExpiredTask extends AbstractTask
      *
      * @since 3.3.2 bumped version due to the addition of a constructor
      * argument.
+     * @since 3.4.1 bumped version due to changed wording and premium flag.
      */
     public function __construct(EnvironmentConfig $env)
     {
         $this->setStatus(self::STATUS_HIDDEN);
         $this->env = $env;
-        $this->setVersion('1.0.1');
+        $this->setVersion('1.0.2');
     }
 
     /**
@@ -41,7 +42,7 @@ class TrialExpiredTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('Your Trial period has expired! Please consider all premium features!', 'simplybook');
+        return __('Your trial period has ended. Select the Free plan to keep using SimplyBook.me for free, or choose a paid plan for more features.', 'simplybook');
     }
 
     /**
@@ -51,7 +52,7 @@ class TrialExpiredTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => __('Upgrade', 'simplybook'),
+            'text' => __('Choose plan', 'simplybook'),
             'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
