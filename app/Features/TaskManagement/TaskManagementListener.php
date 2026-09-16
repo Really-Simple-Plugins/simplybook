@@ -330,10 +330,15 @@ class TaskManagementListener implements ListenerInterface
     /**
      * Method will only set the Black Friday task visible and mark it as upgrade
      * if the current subscription is 'Trial' and the current date is between
-     * the Black Friday start and end date mentioned in the env config.
+     * the Black Friday start and end date mentioned in the env config. A
+     * dismissed task stays dismissed.
      */
     private function handleBlackFridayTask(string $subscriptionType): void
     {
+        if ($this->service->isTaskDismissed(Tasks\BlackFridayTask::IDENTIFIER)) {
+            return;
+        }
+
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
         if ($isTrial && $this->promotionService->isBlackFriday()) {
@@ -354,10 +359,14 @@ class TaskManagementListener implements ListenerInterface
      * Method will only set the Christmas promo task visible and mark it as
      * upgrade if the current subscription is 'Trial' and the current date
      * is between the Christmas promo start and end date mentioned in the
-     * env config.
+     * env config. A dismissed task stays dismissed.
      */
     private function handleChristmasPromotionTask(string $subscriptionType): void
     {
+        if ($this->service->isTaskDismissed(Tasks\ChristmasPromotionTask::IDENTIFIER)) {
+            return;
+        }
+
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
         if ($isTrial && $this->promotionService->isChristmasPeriod()) {
