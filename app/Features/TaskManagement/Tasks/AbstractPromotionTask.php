@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Support\Utility\DateUtility;
-use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
@@ -56,17 +55,6 @@ abstract class AbstractPromotionTask extends AbstractTask
 
         wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
         return $isActive;
-    }
-
-    /**
-     * Notify the {@see TaskManagementListener} that this promotion is
-     * dismissed.
-     */
-    public function onDismiss(): void
-    {
-        Event::dispatch(Event::PROMOTION_TASK_DISMISSED, [
-            'task' => $this,
-        ]);
     }
 
     /**

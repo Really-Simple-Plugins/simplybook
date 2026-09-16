@@ -254,14 +254,6 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Override this method when the task needs a side effect on dismiss. See
-     * {@see AbstractPromotionTask} for an example.
-     */
-    public function onDismiss(): void
-    {
-    }
-
-    /**
      * Build the label for the task. This is used to display the task in the
      * tasks dashboard component. The label is used to indicate if the task
      * is premium or a special feature. If not, the label reflects the status.

@@ -48,7 +48,7 @@ class TaskManagementListener implements ListenerInterface
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
         add_action('simplybook_event_' . Event::COMPANY_INFO_LOADED, [$this, 'handleCompanyInfoLoaded']);
         add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
-        add_action('simplybook_event_' . Event::PROMOTION_TASK_DISMISSED, [$this, 'handlePromotionTaskDismissed']);
+        add_action('simplybook_event_' . Event::TASK_DISMISSED, [$this, 'handleTaskDismissed']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -369,11 +369,18 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Lower the menu bubble counter by one because the dismissed promotion
-     * task is no longer visible. See {@see handlePromotionTasks}.
+     * Lower the menu bubble counter by one when a promotion task is
+     * dismissed. The bubble only counts promotion tasks, see
+     * {@see handlePromotionTasks}. Other tasks do not change the bubble.
      */
-    public function handlePromotionTaskDismissed(): void
+    public function handleTaskDismissed(array $arguments): void
     {
+        $task = $arguments['task'] ?? null;
+
+        if (!$task instanceof Tasks\AbstractPromotionTask) {
+            return;
+        }
+
         $this->bubbleCounter->decrease();
     }
 

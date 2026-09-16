@@ -89,13 +89,4 @@ interface TaskInterface
      * Clear the snooze state for this task
      */
     public function clearSnooze(): void;
-
-    /**
-     * Handle the dismiss callback of the task. The repository calls this
-     * method after it stored the dismissed status. A task can dispatch an
-     * event here so the listener can handle side effects.
-     *
-     * @see \SimplyBook\Features\TaskManagement\TaskManagementListener
-     */
-    public function onDismiss(): void;
 }

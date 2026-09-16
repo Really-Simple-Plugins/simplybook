@@ -149,7 +149,9 @@ class TaskManagementRepository
         }
 
         if ($status === AbstractTask::STATUS_DISMISSED) {
-            $task->onDismiss();
+            Event::dispatch(Event::TASK_DISMISSED, [
+                'task' => $task,
+            ]);
         }
 
         $task->setStatus($status);
