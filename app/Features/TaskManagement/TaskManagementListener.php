@@ -324,38 +324,43 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Handle all promotion tasks. The menu bubble counter starts at 0 and
-     * {@see handlePromotionTask} increases it for each visible task.
+     * Handle all promotion tasks. The menu bubble counter is set once to
+     * the number of promotion tasks that are visible after handling.
      */
     private function handlePromotionTasks(string $subscriptionType): void
     {
-        $this->service->setTaskBubbleCounter(0);
+        $visibleCount = 0;
 
         foreach ($this->service->getPromotionTasks() as $promotionTask) {
-            $this->handlePromotionTask($promotionTask, $subscriptionType);
+            if ($this->handlePromotionTask($promotionTask, $subscriptionType)) {
+                $visibleCount++;
+            }
         }
+
+        $this->service->setTaskBubbleCounter($visibleCount);
     }
 
     /**
      * Method will only set the promotion task visible and mark it as upgrade
      * if the current subscription is 'Trial' and the promotion period is
-     * running. A dismissed task stays dismissed.
+     * running. A dismissed task stays dismissed. Returns true when the task
+     * is visible after handling.
      */
-    private function handlePromotionTask(Tasks\AbstractPromotionTask $task, string $subscriptionType): void
+    private function handlePromotionTask(Tasks\AbstractPromotionTask $task, string $subscriptionType): bool
     {
         if ($this->service->isTaskDismissed($task->getId())) {
-            return;
+            return false;
         }
 
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
         if ($isTrial && $task->isPromotionActive()) {
             $this->service->markTaskUpgrade($task->getId());
-            $this->service->increaseTaskBubbleCounter();
-            return;
+            return true;
         }
 
         $this->service->hideTask($task->getId());
+        return false;
     }
 
     /**
