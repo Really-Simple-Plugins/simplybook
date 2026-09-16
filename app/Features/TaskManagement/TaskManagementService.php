@@ -250,11 +250,6 @@ class TaskManagementService
         return (int) get_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
     }
 
-    public function increaseTaskBubbleCounter(): void
-    {
-        $this->setTaskBubbleCounter($this->getTaskBubbleCounter() + 1);
-    }
-
     /**
      * The counter never goes below 0.
      */
