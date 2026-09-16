@@ -338,7 +338,7 @@ class TaskManagementListener implements ListenerInterface
 
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
-        if ($isTrial && $task->isActive()) {
+        if ($isTrial && $task->isPromotionActive()) {
             $this->service->setTaskBubbleCounter(1);
             $this->service->markTaskUpgrade($task->getId());
             return;
@@ -366,7 +366,7 @@ class TaskManagementListener implements ListenerInterface
     public function handleDateDrivenTasks(): void
     {
         foreach ($this->service->getPromotionTasks() as $promotionTask) {
-            if ($promotionTask->isActive() === false) {
+            if ($promotionTask->isPromotionActive() === false) {
                 continue;
             }
 

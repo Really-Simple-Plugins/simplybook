@@ -33,7 +33,7 @@ abstract class AbstractPromotionTask extends AbstractTask
      * the end of the period the cache is reduced to 5 minutes so the task
      * disappears on time.
      */
-    public function isActive(): bool
+    public function isPromotionActive(): bool
     {
         $hasCache = false;
         $cacheName = 'simplybook_promotion_' . $this->getId() . '_is_active';
@@ -48,11 +48,11 @@ abstract class AbstractPromotionTask extends AbstractTask
         $endDate = $this->env->getString('simplybook.' . $this->getId() . '.end_date');
 
         $cacheDuration = HOUR_IN_SECONDS;
-        if (DateUtility::secondsUntilEndOfDate($endDate) <= $cacheDuration) {
+        if (DateUtility::secondsUntil($endDate) <= $cacheDuration) {
             $cacheDuration = MINUTE_IN_SECONDS * 5;
         }
 
-        $isActive = DateUtility::isNowBetweenDates($startDate, $endDate);
+        $isActive = DateUtility::isNowBetween($startDate, $endDate);
 
         wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
         return $isActive;

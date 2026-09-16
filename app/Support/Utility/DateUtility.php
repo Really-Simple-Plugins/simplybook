@@ -11,7 +11,7 @@ class DateUtility
      * inclusive: the range runs from 00:00 on the start date until 23:59:59
      * on the end date, in the WordPress timezone.
      */
-    public static function isNowBetweenDates(string $startDate, string $endDate): bool
+    public static function isNowBetween(string $startDate, string $endDate): bool
     {
         $timezone = wp_timezone();
 
@@ -26,7 +26,7 @@ class DateUtility
      * timezone. Negative when that moment has passed. Used to shorten cache
      * times near a deadline.
      */
-    public static function secondsUntilEndOfDate(string $date): int
+    public static function secondsUntil(string $date): int
     {
         $timezone = wp_timezone();
 
