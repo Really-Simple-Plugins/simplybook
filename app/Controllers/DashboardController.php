@@ -9,6 +9,7 @@ use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Services\ThemeColorService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
+use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -25,14 +26,22 @@ class DashboardController implements ControllerInterface
     private RequestStorage $request;
     private GeneralConfig $config;
     private ThemeColorService $themeColorService;
+    private SubscriptionDataService $subscriptionDataService;
 
-    public function __construct(ApiClient $client, EnvironmentConfig $env, GeneralConfig $config, RequestStorage $request, ThemeColorService $themeColorService)
-    {
+    public function __construct(
+        ApiClient $client,
+        EnvironmentConfig $env,
+        GeneralConfig $config,
+        RequestStorage $request,
+        ThemeColorService $themeColorService,
+        SubscriptionDataService $subscriptionDataService
+    ) {
         $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
         $this->themeColorService = $themeColorService;
+        $this->subscriptionDataService = $subscriptionDataService;
     }
 
     public function register(): void
@@ -42,7 +51,7 @@ class DashboardController implements ControllerInterface
         }
 
         add_action('admin_menu', [$this, 'addDashboardPage']);
-        add_action('admin_init', [$this, 'maybeResetRegistration']);
+        add_action('admin_init', [$this, 'maybeClearSubscriptionCacheOnReturn']);
         add_action('admin_enqueue_scripts', [$this, 'enqueueSimplyBookDashiconStyle']);
 
         // Redirect on the activation hook, but do it after anything else.
@@ -86,6 +95,8 @@ class DashboardController implements ControllerInterface
      */
     public function addDashboardPage(): void
     {
+        $dashboardMenuSlug = $this->env->getString('plugin.dashboard_menu_slug');
+
         /**
          * Filter: simplybook_menu_position
          * Can be used to change the position of the menu item in the admin menu.
@@ -105,14 +116,33 @@ class DashboardController implements ControllerInterface
             esc_html__('SimplyBook.me', 'simplybook'),
             esc_html__('SimplyBook.me', 'simplybook') . $menuCounterHtml,
             'simplybook_manage',
-            'simplybook-integration',
+            $dashboardMenuSlug,
             [$this, 'renderReactApp'],
             'dashicons-simplybook',
-            $menuPosition,
+            $menuPosition
         );
 
-        add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
-        add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);
+        $dashboardHookSuffix = add_submenu_page(
+            $dashboardMenuSlug,
+            esc_html__('Dashboard', 'simplybook'),
+            esc_html__('Dashboard', 'simplybook'),
+            'simplybook_manage',
+            $dashboardMenuSlug,
+            [$this, 'renderReactApp']
+        );
+
+        $plansPricesHookSuffix = add_submenu_page(
+            $dashboardMenuSlug,
+            esc_html__('Plans & Prices', 'simplybook'),
+            esc_html__('Plans & Prices', 'simplybook'),
+            'simplybook_manage',
+            $this->env->getString('plugin.plans_prices_menu_slug'),
+            [$this, 'renderReactApp']
+        );
+
+        $this->enqueueReactAppForHook($pageHookSuffix);
+        $this->enqueueReactAppForHook($dashboardHookSuffix);
+        $this->enqueueReactAppForHook($plansPricesHookSuffix);
     }
 
     /**
@@ -266,6 +296,8 @@ class DashboardController implements ControllerInterface
      */
     private function localizedReactSettings(array $chunkTranslation): array
     {
+        $currentPage = $this->request->getString('global.page');
+
         return apply_filters(
             'simplybook_localize_dashboard_script',
             [
@@ -273,10 +305,14 @@ class DashboardController implements ControllerInterface
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'rest_url' => get_rest_url(),
-                'rest_namespace' => $this->env->getString('http.namespace'),
+                'rest_namespace' => $this->env->getString('plugin.namespace'),
                 'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),
+                'plans_prices_url' => $this->env->getUrl('plugin.plans_prices_url'),
+                'default_route' => (
+                    $currentPage === $this->env->getString('plugin.plans_prices_menu_slug')
+                ) ? '/plans-prices' : '',
                 'assets_url' => $this->env->getUrl('plugin.assets_url'),
                 'debug' => defined('SIMPLYBOOK_DEBUG') && SIMPLYBOOK_DEBUG,
                 'json_translations' => ($chunkTranslation['json_translations'] ?? []),
@@ -301,16 +337,15 @@ class DashboardController implements ControllerInterface
     }
 
     /**
-     * Reset the company registration if the user has requested it by setting
-     * the `reset_registration` query parameter to `true`
+     * Clear stale subscription data when returning from the payment flow.
      */
-    public function maybeResetRegistration(): void
+    public function maybeClearSubscriptionCacheOnReturn(): void
     {
-        if ($this->request->getString('global.reset_registration', 'false') !== 'true') {
+        if ($this->request->getString('global.' . $this->env->getString('plugin.plans_prices_return_flag')) !== '1') {
             return;
         }
 
-        $this->client->reset_registration();
+        $this->subscriptionDataService->clearCache();
     }
 
     /**
@@ -324,5 +359,18 @@ class DashboardController implements ControllerInterface
         }
 
         return get_option(\SimplyBook\Features\TaskManagement\Tasks\AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
+    }
+
+    /**
+     * Enqueue the shared React admin assets on a WordPress admin page hook.
+     */
+    private function enqueueReactAppForHook(string $pageHookSuffix): void
+    {
+        if (empty($pageHookSuffix)) {
+            return;
+        }
+
+        add_action("admin_print_styles-$pageHookSuffix", [$this, 'enqueueDashboardStyles']);
+        add_action("admin_print_scripts-$pageHookSuffix", [$this, 'enqueueReactScripts']);
     }
 }

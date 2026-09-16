@@ -7,12 +7,9 @@ namespace SimplyBook\Managers;
 use LogicException;
 use ReflectionException;
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 abstract class AbstractManager
 {
-    protected EnvironmentConfig $env;
-
     /**
      * Overwrite this property to true when the entries that the child Manager
      * registers should be added to the container registry. For details see:
@@ -28,12 +25,11 @@ abstract class AbstractManager
     protected bool $registerDependencies = true;
 
     /**
-     * Bind the env
+     * Child class should return the type of classes it registers. In plural
+     * form. The value is used to identify the type of classes parsed through
+     * the hooks the Manager fires in {@see register}
      */
-    public function __construct(EnvironmentConfig $env)
-    {
-        $this->env = $env;
-    }
+    abstract protected function type(): string;
 
     /**
      * Child class should check if the given class can be registered. For
@@ -43,26 +39,55 @@ abstract class AbstractManager
     abstract public function isRegistrable(object $class): bool;
 
     /**
-     * Logic to register the given class. If this method can be executed is
-     * checked by the {@see isRegistrable} method.
+     * Logic to register the given class. You can keep it simple. All checks
+     * for registerability should be done in the {@see isRegistrable} method.
      */
     abstract public function registerClass(object $class): void;
 
     /**
-     * Method called after all classes given to the manager are registered.
+     * Method called before all classes given to the manager are registered. Can
+     * be used by child-classes to initiate functionality that should be called
+     * before the registration of the classes.
      */
-    abstract public function afterRegister(): void;
+    protected function beforeRegister(): void
+    {
+    }
 
     /**
-     * Register the given class as long as the entries are registrable according
-     * to the child managers. Class are autowired, but not registered via
-     * {@see App::make}
+     * Method called after all classes given to the manager are registered. Can
+     * be used by child-classes to initiate functionality that should be called
+     * after the registration of the classes.
+     */
+    protected function afterRegister(): void
+    {
+    }
+
+    /**
+     * Register the given class as long as the entries are registrable
+     * according to the child managers. Classes are autowired and based
+     * on the {@see useRegistry} property they are registered in the container.
+     *
+     *  Example filters / hooks:
+     *
+     *       simplybook_plugin_controllers / simplybook_plugin_controllers_loaded
+     *       simplybook_plugin_endpoints / simplybook_plugin_endpoints_loaded
+     *       simplybook_plugin_abilities / simplybook_plugin_abilities_loaded
+     *       simplybook_plugin_listeners / simplybook_plugin_listeners_loaded
+     *       simplybook_plugin_features / simplybook_plugin_features_loaded
+     *
+     *
+     * @uses apply_filters simplybook_plugin_{@see type} to filter classes
+     * @uses do_action simplybook_plugin_{@see type}_loaded after registration
      *
      * @throws LogicException When a developer is doing it wrong.
      * @throws ReflectionException When the controller cannot be loaded.
      */
-    public function register(array $classes): void
+    final public function register(array $classes): void
     {
+        $this->beforeRegister();
+
+        $classes = apply_filters('simplybook_plugin_' . $this->type(), $classes);
+
         foreach ($classes as $fullyClassifiedName) {
             if (is_string($fullyClassifiedName) === false) {
                 $type = gettype($fullyClassifiedName);
@@ -79,5 +104,7 @@ abstract class AbstractManager
         }
 
         $this->afterRegister();
+
+        do_action('simplybook_plugin_' . $this->type() . '_loaded');
     }
 }

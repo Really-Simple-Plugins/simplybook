@@ -1,6 +1,11 @@
-<?php if (!defined('ABSPATH')) {
+<?php
+
+if (!defined('ABSPATH')) {
     exit;
 }
+
+$dashboardMenuSlug = 'simplybook-integration';
+$plansPricesMenuSlug = 'simplybook-plans-prices';
 
 /**
  * This file is NOT loaded in the config. All other files áre loaded in one
@@ -17,27 +22,29 @@
 return [
     'plugin' => [
         'name' => 'SimplyBook.me',
-        'version' => '3.3.1',
-        'pro' => true,
+        'namespace' => 'simplybook',
+        'version' => '3.4.0',
         'path' => dirname(__DIR__),
-        'base_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
-        'assets_path' => dirname(__DIR__). DIRECTORY_SEPARATOR .'assets' . DIRECTORY_SEPARATOR,
-        'lang_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'assets'. DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
-        'view_path' => dirname(__DIR__).DIRECTORY_SEPARATOR.'views'. DIRECTORY_SEPARATOR,
-        'feature_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR . 'Features' . DIRECTORY_SEPARATOR,
-        'react_path' => dirname(__DIR__). DIRECTORY_SEPARATOR . 'react',
+        'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
+        'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
+        'lang_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
+        'view_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
+        'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',
         'dir'  => plugin_basename(dirname(__DIR__)),
         'base_file' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
         'lang' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages',
         'url'  => plugin_dir_url(__DIR__),
-        'assets_url' => plugin_dir_url(__DIR__).'assets/',
-        'views_url' => plugin_dir_url(__DIR__).'views/',
-        'react_url' => plugin_dir_url(__DIR__).'react',
-        'dashboard_url' => admin_url('admin.php?page=simplybook-integration'),
+        'assets_url' => plugin_dir_url(__DIR__) . 'assets/',
+        'views_url' => plugin_dir_url(__DIR__) . 'views/',
+        'react_url' => plugin_dir_url(__DIR__) . 'react',
+        'dashboard_menu_slug' => $dashboardMenuSlug,
+        'dashboard_url' => admin_url('admin.php?page=' . $dashboardMenuSlug),
+        'plans_prices_menu_slug' => $plansPricesMenuSlug,
+        'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
+        'plans_prices_return_flag' => 'simplybook_subscription_return',
     ],
     'http' => [
         'version' => 'v1',
-        'namespace' => 'simplybook',
     ],
     'simplybook' => [
         'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
@@ -48,8 +55,6 @@ return [
         'recaptcha' => [
             'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
             'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
-            'google_privacy_policy_url' => 'https://policies.google.com/privacy',
-            'google_terms_url' => 'https://policies.google.com/terms',
         ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
@@ -105,7 +110,6 @@ return [
             ['value' => 'default:booking.names.uk', 'label' => 'booking.names.uk'],
             ['value' => 'default:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
             ['value' => 'default:booking.register365.ie', 'label' => 'booking.register365.ie'],
-            // wp.simplybook.ovh gets added in development mode via App::provide('simplybook_domains')
         ]
     ]
 ];

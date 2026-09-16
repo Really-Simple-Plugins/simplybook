@@ -123,7 +123,7 @@ class BlockController implements ControllerInterface
                 'preview' => $preview,
                 'nonce' => wp_create_nonce('simplybook_nonce'),
                 'x_wp_nonce' => wp_create_nonce('wp_rest'),
-                'rest_namespace' => $this->env->getString('http.namespace'),
+                'rest_namespace' => $this->env->getString('plugin.namespace'),
                 'rest_version' => $this->env->getString('http.version'),
                 'site_url' => site_url(),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),

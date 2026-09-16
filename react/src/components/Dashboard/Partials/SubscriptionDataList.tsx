@@ -1,5 +1,6 @@
 import React from "react";
 import LoginLink from "../../Common/LoginLink";
+import Icon from "../../Common/Icon";
 import { __ } from "@wordpress/i18n";
 import Label from "../../Common/Label";
 import { SubscriptionDataListProps } from "../../../types/subscriptiondata/SubscriptionDataListProps";
@@ -18,17 +19,25 @@ const SubscriptionDataList: React.FC<SubscriptionDataListProps> = ({
             remaining > total ?  "border-red-600 text-red-600" : "border-green-600 text-green-600"
         )
     );
+    const isExternalLink = page?.startsWith("http://") || page?.startsWith("https://");
 
     return (
         <>
-            <LoginLink
-                iconName="square-arrow-up-right"
-                iconClass="px-2"
-                className={linkClassName}
-                page={page}
-            >
-                {__(`${title}`, "simplybook")}
-            </LoginLink>
+            {isExternalLink ? (
+                <a href={page} className={linkClassName}>
+                    {__(`${title}`, "simplybook")}
+                    <Icon className="px-2" name="square-arrow-up-right" />
+                </a>
+            ) : (
+                <LoginLink
+                    iconName="square-arrow-up-right"
+                    iconClass="px-2"
+                    className={linkClassName}
+                    page={page}
+                >
+                    {__(`${title}`, "simplybook")}
+                </LoginLink>
+            )}
             <Label labelVariant="ghost" className={labelClassName}>
                 {total - remaining} / {total}
             </Label>

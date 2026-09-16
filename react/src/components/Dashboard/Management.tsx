@@ -21,7 +21,7 @@ const DataList = [
     },
     {
         title: __("SMS Credits", "simplybook"),
-        link: "/v2/r/payment-widget#/products",
+        link: simplybook?.plans_prices_url || "",
         id: "sms_limit", // Data from useSubscriptionData is found on ID
     },
     {

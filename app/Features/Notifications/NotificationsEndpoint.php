@@ -4,39 +4,47 @@ namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Traits\HasAllowlistControl;
+use SimplyBook\Interfaces\SingleEndpointInterface;
 
-class NotificationsEndpoints
+class NotificationsEndpoint implements SingleEndpointInterface
 {
     use HasRestAccess;
     use HasAllowlistControl;
 
     private NotificationsService $service;
 
+    public const ROUTE = 'get_notices';
+
     public function __construct(NotificationsService $service)
     {
         $this->service = $service;
     }
 
-    public function register(): void
+    /**
+     * Only enable this endpoint if the user has access to the admin area
+     */
+    public function enabled(): bool
     {
-        add_filter('simplybook_rest_routes', [$this, 'addNotificationRoutes']);
+        return $this->adminAccessAllowed();
     }
 
     /**
-     * Add the Notification routes to the REST API.
+     * @inheritDoc
      */
-    public function addNotificationRoutes(array $routes): array
+    public function registerRoute(): string
     {
-        if ($this->adminAccessAllowed() === false) {
-            return $routes;
-        }
+        return self::ROUTE;
+    }
 
-        $routes['get_notices'] = [
+    /**
+     * @inheritDoc
+     */
+    public function registerArguments(): array
+    {
+        return [
             'methods' => \WP_REST_Server::READABLE,
             'callback' => [$this, 'getNoticesCallback'],
         ];
-
-        return $routes;
     }
 
     /**

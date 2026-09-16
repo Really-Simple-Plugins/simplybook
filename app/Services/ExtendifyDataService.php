@@ -20,6 +20,14 @@ class ExtendifyDataService
     private ?array $cachedData = null;
 
     /**
+     * Check whether the Extendify plugin is currently active.
+     */
+    public function isPluginActive(): bool
+    {
+        return is_plugin_active('extendify/extendify.php');
+    }
+
+    /**
      * Get all Extendify data.
      *
      * @return array The Extendify data or empty array if not available

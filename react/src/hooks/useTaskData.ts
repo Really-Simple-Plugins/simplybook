@@ -66,6 +66,14 @@ const useTaskData = () => {
     }
 
     /**
+     * Invalidate the tasks query so the tasks are refetched. Useful after
+     * actions that change the task status server-side.
+     */
+    const invalidateTaskQuery = async () => {
+        await queryClient.invalidateQueries({ queryKey: [getTasksRoute] });
+    };
+
+    /**
      * Handles the mutation for dismissing a task.
      */
     const { mutate: dismissTask } = useMutation({
@@ -132,6 +140,7 @@ const useTaskData = () => {
         snoozeTask,
         getRemainingTasks,
         getCompletionPercentage,
+        invalidateTaskQuery,
     };
 };
 

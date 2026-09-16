@@ -58,8 +58,7 @@ const ListItem = forwardRef(
                                 <ButtonLink
                                     className={"bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary"}
                                     btnVariant={"square-small"}
-                                    target="_blank"
-                                    loginLink="v2/r/payment-widget"
+                                    link={link}
                                 >
                                     {__("Upgrade", "simplybook")}
                                 </ButtonLink>
