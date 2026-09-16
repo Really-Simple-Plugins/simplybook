@@ -324,20 +324,18 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Handle all promotion tasks and set the menu bubble counter to the
-     * number of promotion tasks that are visible after handling.
+     * Handle all promotion tasks. The menu bubble counter starts at 0 and
+     * goes up by one for each promotion task that is visible after handling.
      */
     private function handlePromotionTasks(string $subscriptionType): void
     {
-        $visibleTasks = 0;
+        $this->service->setTaskBubbleCounter(0);
 
         foreach ($this->service->getPromotionTasks() as $promotionTask) {
             if ($this->handlePromotionTask($promotionTask, $subscriptionType)) {
-                $visibleTasks++;
+                $this->service->increaseTaskBubbleCounter();
             }
         }
-
-        $this->service->setTaskBubbleCounter($visibleTasks);
     }
 
     /**
@@ -369,9 +367,7 @@ class TaskManagementListener implements ListenerInterface
      */
     public function handlePromotionTaskDismissed(): void
     {
-        $this->service->setTaskBubbleCounter(
-            max(0, $this->service->getTaskBubbleCounter() - 1)
-        );
+        $this->service->decreaseTaskBubbleCounter();
     }
 
     /**
