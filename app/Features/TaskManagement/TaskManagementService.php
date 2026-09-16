@@ -247,6 +247,11 @@ class TaskManagementService
         update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
     }
 
+    public function getTaskBubbleCounter(): int
+    {
+        return (int) get_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
+    }
+
     /**
      * Snooze a task for a specified duration. Only works for snoozable tasks.
      * The task's getStatus() will return 'hidden' while snoozed.
