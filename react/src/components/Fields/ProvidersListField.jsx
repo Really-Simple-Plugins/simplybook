@@ -122,7 +122,7 @@ const ProvidersListField = () => {
 
             {isAtSavedProviderLimit && (
                 <div className="mb-6 rounded-md bg-blue-100 px-4 py-3 text-sm font-medium text-tertiary">
-                    {__('You have reached the maximum number of Service Providers for your SimplyBook.me plan.', 'simplybook')}
+                    {__('You have reached the maximum number of Service Providers for your plan.', 'simplybook')}
                 </div>
             )}
 

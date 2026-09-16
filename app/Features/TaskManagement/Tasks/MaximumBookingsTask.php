@@ -41,7 +41,7 @@ class MaximumBookingsTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('You have reached the maximum number of bookings for your SimplyBook.me plan', 'simplybook');
+        return __('You have reached the maximum number of bookings for your plan', 'simplybook');
     }
 
     /**

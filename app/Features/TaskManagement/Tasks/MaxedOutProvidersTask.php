@@ -40,7 +40,7 @@ class MaxedOutProvidersTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('You have reached the maximum number of Service Providers for your SimplyBook.me plan', 'simplybook');
+        return __('You have reached the maximum number of Service Providers for your plan', 'simplybook');
     }
 
     /**
