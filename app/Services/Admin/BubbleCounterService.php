@@ -3,11 +3,8 @@
 namespace SimplyBook\Services\Admin;
 
 /**
- * Manages the counter shown in the SimplyBook admin menu bubble. The
- * {@see \SimplyBook\Features\TaskManagement\TaskManagementListener}
- * increases and decreases the counter. The
- * {@see \SimplyBook\Controllers\DashboardController} reads it to render
- * the bubble.
+ * Manages the number shown in the bubble next to the SimplyBook admin
+ * menu item. The number tells the user how many items need attention.
  */
 class BubbleCounterService
 {
