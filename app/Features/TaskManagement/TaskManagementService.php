@@ -238,27 +238,6 @@ class TaskManagementService
     }
 
     /**
-     * Update the task bubble counter shown in the admin menu
-     */
-    public function setTaskBubbleCounter(int $count): void
-    {
-        update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
-    }
-
-    public function getTaskBubbleCounter(): int
-    {
-        return (int) get_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
-    }
-
-    /**
-     * The counter never goes below 0.
-     */
-    public function decreaseTaskBubbleCounter(): void
-    {
-        $this->setTaskBubbleCounter(max(0, $this->getTaskBubbleCounter() - 1));
-    }
-
-    /**
      * Snooze a task for a specified duration. Only works for snoozable tasks.
      * The task's getStatus() will return 'hidden' while snoozed.
      */

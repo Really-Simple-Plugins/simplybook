@@ -17,13 +17,16 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
+    private TaskBubbleCounterService $bubbleCounter;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
         TaskManagementService $service,
+        TaskBubbleCounterService $bubbleCounter,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
+        $this->bubbleCounter = $bubbleCounter;
         $this->subscriptionDataService = $subscriptionDataService;
     }
 
@@ -337,7 +340,7 @@ class TaskManagementListener implements ListenerInterface
             }
         }
 
-        $this->service->setTaskBubbleCounter($visibleCount);
+        $this->bubbleCounter->set($visibleCount);
     }
 
     /**
@@ -369,7 +372,7 @@ class TaskManagementListener implements ListenerInterface
      */
     public function handlePromotionTaskDismissed(): void
     {
-        $this->service->decreaseTaskBubbleCounter();
+        $this->bubbleCounter->decrease();
     }
 
     /**
