@@ -44,9 +44,7 @@ class TaskManagementService
      */
     public function getPromotionTasks(): array
     {
-        return array_filter($this->repository->getAllTasks(), static function (TaskInterface $task): bool {
-            return $task instanceof AbstractPromotionTask;
-        });
+        return $this->repository->getPromotionTasks();
     }
 
     /**
