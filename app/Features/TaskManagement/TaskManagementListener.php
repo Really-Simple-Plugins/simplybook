@@ -48,6 +48,7 @@ class TaskManagementListener implements ListenerInterface
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
         add_action('simplybook_event_' . Event::COMPANY_INFO_LOADED, [$this, 'handleCompanyInfoLoaded']);
         add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
+        add_action('simplybook_event_' . Event::PROMOTION_TASK_DISMISSED, [$this, 'handlePromotionTaskDismissed']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -381,6 +382,15 @@ class TaskManagementListener implements ListenerInterface
         $this->service->hideTask(
             Tasks\ChristmasPromotionTask::IDENTIFIER
         );
+    }
+
+    /**
+     * Reset the menu bubble counter that {@see handleBlackFridayTask} or
+     * {@see handleChristmasPromotionTask} set for the promotion.
+     */
+    public function handlePromotionTaskDismissed(): void
+    {
+        $this->service->setTaskBubbleCounter(0);
     }
 
     /**

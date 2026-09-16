@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
+use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ChristmasPromotionTask extends AbstractTask
@@ -50,12 +51,12 @@ class ChristmasPromotionTask extends AbstractTask
     }
 
     /**
-     * The promotion sets the menu bubble counter. Reset the counter so the
-     * admin menu badge disappears after the dismiss.
+     * The {@see TaskManagementListener} sets the menu bubble counter for this
+     * promotion. Notify the listener so it can reset the counter.
      */
     public function onDismiss(): void
     {
-        update_option(self::MENU_BUBBLE_OPTION_KEY, 0);
+        Event::dispatch(Event::PROMOTION_TASK_DISMISSED);
     }
 
     /**
