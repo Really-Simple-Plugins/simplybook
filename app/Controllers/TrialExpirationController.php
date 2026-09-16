@@ -8,6 +8,7 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\NoticeDismissalService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface
@@ -16,9 +17,16 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
+    private const SNOOZED_UNTIL_META_KEY = 'simplybook_trial_notice_snoozed_until';
+    private const ELIGIBILITY_CACHE_NAME = 'can_render_trial_expiration_notice';
+
+    private string $trialAction = 'rsp_trial_form_submit';
+    private string $trialNonceName = 'rsp_trial_nonce';
+
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
     private NoticeDismissalService $noticeDismissalService;
+    private RequestStorage $request;
 
     /**
      * Exact screen base identifiers on which the trial notice should not
@@ -42,11 +50,13 @@ class TrialExpirationController implements ControllerInterface
     public function __construct(
         EnvironmentConfig $env,
         SubscriptionDataService $subscriptionService,
-        NoticeDismissalService $noticeDismissalService
+        NoticeDismissalService $noticeDismissalService,
+        RequestStorage $request
     ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
         $this->noticeDismissalService = $noticeDismissalService;
+        $this->request = $request;
     }
 
     public function register(): void
@@ -57,6 +67,7 @@ class TrialExpirationController implements ControllerInterface
 
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showTrialExpirationNotice']);
+        add_action('admin_init', [$this, 'processTrialNoticeFormSubmit']);
     }
 
     public function showTrialExpirationNotice(): void
@@ -83,7 +94,38 @@ class TrialExpirationController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
+            'trialAction' => $this->trialAction,
+            'trialNonceName' => $this->trialNonceName,
         ]);
+    }
+
+    /**
+     * Process the "Remind me tomorrow" and "Don't show again" buttons of
+     * the trial notice. Both choices are stored per user.
+     */
+    public function processTrialNoticeFormSubmit(): void
+    {
+        if ($this->request->isEmpty('global.rsp_trial_form')) {
+            return;
+        }
+
+        $nonce = $this->request->get('global.' . $this->trialNonceName);
+        if (wp_verify_nonce($nonce, $this->trialAction) === false) {
+            return; // Invalid nonce
+        }
+
+        $userId = get_current_user_id();
+        $choice = $this->request->getString('global.rsp_trial_choice');
+
+        if ($choice === 'later') {
+            update_user_meta($userId, self::SNOOZED_UNTIL_META_KEY, (time() + DAY_IN_SECONDS));
+        }
+
+        if ($choice === 'never') {
+            $this->noticeDismissalService->dismissNotice($userId, 'trial');
+        }
+
+        wp_cache_delete(self::ELIGIBILITY_CACHE_NAME, 'simplybook');
     }
 
     public function enqueueScripts(): void
@@ -97,9 +139,12 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
+        if ($this->isCurrentScreenExcluded()) {
+            return false;
+        }
+
         $found = false;
-        $cacheName = 'can_render_trial_expiration_notice';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+        $cacheValue = wp_cache_get(self::ELIGIBILITY_CACHE_NAME, 'simplybook', false, $found);
 
         if ($found) {
             return (bool) $cacheValue;
@@ -107,21 +152,25 @@ class TrialExpirationController implements ControllerInterface
 
         $isEligible = $this->isEligibleForTrialNotice();
         $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
-        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+        wp_cache_set(self::ELIGIBILITY_CACHE_NAME, $isEligible, 'simplybook', $cacheDuration);
 
         return $isEligible;
     }
 
     /**
      * Check all sequential eligibility conditions for the trial notice.
+     * The current screen is not part of these conditions because the
+     * result is cached and must stay valid on every screen.
      */
     private function isEligibleForTrialNotice(): bool
     {
-        if ($this->isCurrentScreenExcluded()) {
+        $userId = get_current_user_id();
+
+        if ($this->noticeDismissalService->isNoticeDismissed($userId, 'trial')) {
             return false;
         }
 
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
+        if ($this->isSnoozed($userId)) {
             return false;
         }
 
@@ -140,6 +189,16 @@ class TrialExpirationController implements ControllerInterface
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
+    }
+
+    /**
+     * Check if the user clicked "Remind me tomorrow" less than a day ago.
+     */
+    private function isSnoozed(int $userId): bool
+    {
+        $snoozedUntil = (int) get_user_meta($userId, self::SNOOZED_UNTIL_META_KEY, true);
+
+        return $snoozedUntil > time();
     }
 
     /**
