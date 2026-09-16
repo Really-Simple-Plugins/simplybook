@@ -75,25 +75,26 @@ You can skip the onboarding and login with your existing login credentials.
 
 == External services ==
 
-This plugin connects to the external services below. Each paragraph describes the service, what the plugin uses it for, what data the plugin sends, and when the plugin sends it. Each paragraph links to the terms of service and the privacy policy of the service.
+This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version. The Plans & Prices page loads a subscription script from SimplyBook.me.
 
-= SimplyBook.me API =
-The plugin connects to the SimplyBook.me API (user-api.simplybook.it, user-api-v2.simplybook.it or the other SimplyBook.me domain you select at login). The plugin uses this API to log in, to manage your company settings, and to show your bookings and statistics in the plugin dashboard. The plugin sends your login credentials when you log in. The plugin sends your site URL and technical data about your site (plugin, WordPress and PHP version) with each request. The plugin sends your company settings when you change them in the plugin dashboard. The plugin reads your booking data and statistical data when you open the plugin dashboard. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
 
-= SimplyBook.me booking widget =
-The booking widget loads a script from simplybook.me. The browser of a visitor loads this script on each page that contains the booking widget (shortcode, Gutenberg block or Elementor widget). The widget sends the IP address of the visitor to SimplyBook.me when the page loads. The widget sends the booking data of the visitor to SimplyBook.me when the visitor makes a booking. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+During onboarding the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives the IP address and browser data of the admin. No cookies are set before the admin plays the video.
 
-= SimplyBook.me demo widget =
-When your site is not connected to a SimplyBook.me account, the booking widget shows a demo. The demo widget connects to demowidgetwpplugin.simplybook.it. The browser of a visitor sends its IP address to this server when the visitor opens a page with the demo widget. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+The "Live Help" button in the plugin dashboard loads LiveAgent live chat. LiveAgent receives the IP address and browser data of the admin when the dashboard opens, and the chat messages when the admin starts a chat.
 
-= Really Simple Plugins account service =
-The onboarding uses the Really Simple Plugins account service at simplybook.rsp-auth.com to create a new SimplyBook.me account. Really Simple Plugins operates this service. The plugin sends your site URL and technical data about the plugin installation when the onboarding starts. The plugin sends your account details and the reCAPTCHA token when you submit the "Create your account" step. Terms: https://really-simple-ssl.com/legal/terms-of-use/. Privacy: https://really-simple-ssl.com/legal/privacy-statement/.
+For more information:
 
-= Google reCAPTCHA Enterprise =
-The onboarding uses Google reCAPTCHA Enterprise to protect the account creation form against abuse. The browser of the admin loads the reCAPTCHA script from www.google.com when the admin opens the "Create your account" step. Google receives the IP address and browser data of the admin. The browser sends a reCAPTCHA token to Google when the admin submits the form. Terms: https://policies.google.com/terms. Privacy: https://policies.google.com/privacy.
-
-= LiveAgent live chat =
-The plugin dashboard shows a "Live Help" button for SimplyBook.me support. The browser of the admin loads the LiveAgent chat script from simply.ladesk.com when the admin opens the plugin dashboard. LiveAgent receives the IP address and browser data of the admin. LiveAgent receives the chat messages of the admin when the admin starts a chat. Terms: https://www.liveagent.com/terms-and-conditions/. Privacy: https://www.liveagent.com/privacy-policy/.
+* SimplyBook.me - [Terms of Use](https://simplybook.me/en/terms-and-conditions)
+* SimplyBook.me - [Privacy Policy](https://simplybook.me/en/policy)
+* Really Simple Plugins - [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/)
+* Really Simple Plugins - [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
+* Google reCAPTCHA - [Terms of Service](https://policies.google.com/terms)
+* Google reCAPTCHA - [Privacy Policy](https://policies.google.com/privacy)
+* YouTube - [Terms of Service](https://www.youtube.com/t/terms)
+* YouTube - [Privacy Policy](https://policies.google.com/privacy)
+* LiveAgent - [Terms and Conditions](https://www.liveagent.com/terms-and-conditions/)
+* LiveAgent - [Privacy Policy](https://www.liveagent.com/privacy-policy/)
 
 == Screenshots ==
 
