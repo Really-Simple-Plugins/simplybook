@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Interfaces\ListenerInterface;
-use SimplyBook\Services\BubbleCounterService;
+use SimplyBook\Services\Admin\BubbleCounterService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimplyBook\Services;
+namespace SimplyBook\Services\Admin;
 
 /**
  * Manages the counter shown in the SimplyBook admin menu bubble. The

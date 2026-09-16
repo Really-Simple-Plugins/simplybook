@@ -7,7 +7,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Services\ThemeColorService;
-use SimplyBook\Services\BubbleCounterService;
+use SimplyBook\Services\Admin\BubbleCounterService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
