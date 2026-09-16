@@ -11,8 +11,8 @@ class BubbleCounterService
     private const OPTION_KEY = 'simplybook_task_bubble_counter';
 
     /**
-     * Method is used by the DashboardController to render the bubble in the
-     * admin menu. Returns 0 when no bubble is stored, so no bubble is shown.
+     * Returns the number to show in the bubble. Returns 0 when nothing is
+     * stored, so no bubble is shown.
      */
     public function current(): int
     {
@@ -20,8 +20,8 @@ class BubbleCounterService
     }
 
     /**
-     * Method is used by the TaskManagementListener when promotion tasks
-     * become visible. Adds the amount to the stored number.
+     * Adds the amount to the stored number. Use this when new items need
+     * the attention of the user.
      */
     public function increase(int $amount = 1): void
     {
@@ -29,9 +29,9 @@ class BubbleCounterService
     }
 
     /**
-     * Method is used by the TaskManagementListener when the user dismisses
-     * a promotion task. Subtracts the amount from the stored number. The
-     * number never goes below 0, because a negative bubble has no meaning.
+     * Subtracts the amount from the stored number. Use this when an item no
+     * longer needs the attention of the user. The number never goes below
+     * 0, because a negative bubble has no meaning.
      */
     public function decrease(int $amount = 1): void
     {
@@ -39,9 +39,8 @@ class BubbleCounterService
     }
 
     /**
-     * Method is used by the TaskManagementListener before it counts the
-     * visible promotion tasks again. Sets the number back to 0 so the
-     * bubble does not keep a stale number from a previous run.
+     * Sets the number back to 0. Use this before you count the items again,
+     * so the bubble does not keep a stale number from a previous run.
      */
     public function reset(): void
     {
