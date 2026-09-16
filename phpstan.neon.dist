@@ -17,6 +17,10 @@ parameters:
         - identifier: class.notFound
           message: '#\b(Elementor)\\#'
 
+        # The WP Abilities API is not part of WordPress core, so its classes are unknown here
+        - identifier: class.notFound
+          message: '#\bWP_(Abilities_Registry|Ability_Categories_Registry)\b#'
+
         # We accept just the type "array" instead of "array<int,string>"
         - identifier: missingType.iterableValue
 

@@ -3,8 +3,9 @@
 namespace SimplyBook\Features\Notifications;
 
 use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Interfaces\ListenerInterface;
 
-class NotificationListener
+class NotificationListener implements ListenerInterface
 {
     private NotificationsService $service;
 

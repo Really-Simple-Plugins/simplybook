@@ -22,12 +22,16 @@ class ChristmasPromotionTask extends AbstractTask
      * We hide this task by default, and it is updated to "upgrade" status
      * during Christmas period ánd only for Trial users in the
      * {@see TaskManagementListener}
+     *
+     * @since 3.3.2 bumped version due to the new
+     * plugin.plans_prices_url env key.
      */
     public function __construct(EnvironmentConfig $env)
     {
         $this->hide();
 
         $this->env = $env;
+        $this->setVersion('1.0.1');
     }
 
     /**
@@ -51,7 +55,7 @@ class ChristmasPromotionTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => esc_html__('Claim discount', 'simplybook'),
-            'login_link' => 'v2/r/payment-widget',
+            'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
 }

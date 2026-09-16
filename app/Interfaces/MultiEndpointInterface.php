@@ -14,7 +14,7 @@ interface MultiEndpointInterface
      * and the value is an array of arguments to pass to the register_rest_route
      * function: {@see EndpointManager::registerWordPressRestRoutes}.
      *
-     * Arguments you can use are documented with filter: simplybook_rest_routes
+     * Arguments you can use are documented here: {@see register_rest_route}
      * in method: {@see EndpointManager::getPluginRoutes}
      */
     public function registerRoutes(): array;

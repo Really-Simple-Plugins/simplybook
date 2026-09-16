@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace SimplyBook\Providers;
 
 use SimplyBook\Bootstrap\App;
-use SimplyBook\Support\Utility\StringUtility;
 use SimplyBook\Interfaces\ProviderInterface;
+use SimplyBook\Support\Utility\StringUtility;
 
 /**
  * Providers are classes that provide functionality to the container. Child
@@ -16,7 +16,7 @@ use SimplyBook\Interfaces\ProviderInterface;
  * provide{Function} method instead of setting it in the
  * container {@see App}
  */
-class Provider implements ProviderInterface
+class AbstractProvider implements ProviderInterface
 {
     /**
      * Register the provided services. Will be used to find and call the

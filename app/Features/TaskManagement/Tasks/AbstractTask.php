@@ -32,10 +32,10 @@ abstract class AbstractTask implements TaskInterface
     public const MENU_BUBBLE_OPTION_KEY = 'simplybook_task_bubble_counter';
 
     /**
-     * Override this property to define the version of the task. This version is
-     * used to determine if the task should be upgraded during a plugin update.
+     * The version used to determine if the task should be upgraded during a
+     * plugin update.
      */
-    protected string $version;
+    private string $version;
 
     /**
      * Override this property to define if the task is required or not. If the
@@ -114,6 +114,14 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
+     * Set the version used to determine if the task should be upgraded.
+     */
+    protected function setVersion(string $version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
      * @inheritDoc
      */
     public function getStatus(): string
@@ -147,15 +155,7 @@ abstract class AbstractTask implements TaskInterface
      */
     public function setStatus(string $status): void
     {
-        $knownStatuses = [
-            self::STATUS_OPEN,
-            self::STATUS_UPGRADE,
-            self::STATUS_URGENT,
-            self::STATUS_DISMISSED,
-            self::STATUS_COMPLETED,
-            self::STATUS_PREMIUM,
-            self::STATUS_HIDDEN,
-        ];
+        $knownStatuses = self::allowedStatuses();
         if (!in_array($status, $knownStatuses)) {
             return; // Not allowed
         }
@@ -164,48 +164,20 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Activate the task by setting the status to 'open'
+     * Return the list of allowed statuses for this task
+     * @return string[]
      */
-    public function open(): void
+    public static function allowedStatuses(): array
     {
-        $this->status = self::STATUS_OPEN;
-    }
-
-    /**
-     * Set the task to 'urgent' status
-     */
-    public function urgent(): void
-    {
-        $this->status = self::STATUS_URGENT;
-    }
-
-    /**
-     * Set the task to 'upgrade' status
-     */
-    public function upgrade(): void
-    {
-        $this->status = self::STATUS_UPGRADE;
-    }
-
-    /**
-     * Dismiss the task by setting the status to 'dismissed'. Only allowed if
-     * the task is not required.
-     */
-    public function dismiss(): void
-    {
-        if ($this->required) {
-            return; // Not allowed
-        }
-
-        $this->status = self::STATUS_DISMISSED;
-    }
-
-    /**
-     * Complete the task by setting the status to 'completed'
-     */
-    public function completed(): void
-    {
-        $this->status = self::STATUS_COMPLETED;
+        return [
+            self::STATUS_OPEN,
+            self::STATUS_UPGRADE,
+            self::STATUS_URGENT,
+            self::STATUS_DISMISSED,
+            self::STATUS_COMPLETED,
+            self::STATUS_PREMIUM,
+            self::STATUS_HIDDEN,
+        ];
     }
 
     /**
@@ -225,7 +197,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Reads if the task is premium
+     * @inheritDoc
      */
     public function isPremium(): bool
     {
@@ -233,7 +205,7 @@ abstract class AbstractTask implements TaskInterface
     }
 
     /**
-     * Reads if the task is related to a special feature
+     * @inheritDoc
      */
     public function isSpecialFeature(): bool
     {

@@ -2,9 +2,23 @@
 
 namespace SimplyBook\Features\Notifications\Notices;
 
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+
 class MaxedOutProvidersNotice extends AbstractNotice
 {
     public const IDENTIFIER = 'maxed_out_providers';
+
+    private EnvironmentConfig $env;
+
+    /**
+     * @since 3.3.2 bumped version due to the addition of a constructor
+     * argument.
+     */
+    public function __construct(EnvironmentConfig $env)
+    {
+        $this->env = $env;
+        $this->version = '1.0.1';
+    }
 
     /**
      * @inheritDoc
@@ -45,7 +59,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
     {
         return [
             'text' => __('Upgrade now', 'simplybook'),
-            'login_link' => '/v2/r/payment-widget',
+            'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
 }

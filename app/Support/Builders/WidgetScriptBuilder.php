@@ -181,25 +181,56 @@ class WidgetScriptBuilder
      */
     private function getWidgetScript(): string
     {
-        $content = $this->widgetTemplate;
+        $placeholders = [];
+        $encodedSettings = [];
+
         foreach ($this->getWidgetSettings() as $key => $setting) {
-            $searchable = '{{ ' . $key . ' }}';
-
-            if (is_array($setting)) {
-                $setting = json_encode($setting);
-                $searchable = '"{{ ' . $key . ' }}"'; // Also replace the quotes
-            }
-
-            // This will work the same as a false value. Therefor it is not an
-            // issue that the empty check triggers for these false(y) values.
-            if (empty($setting)) {
-                $setting = '';
-            }
-
-            $content = str_replace($searchable, $setting, $content);
+            // The placeholders in the templates are always quoted, the quotes
+            // are replaced as well because the encoded value contains them.
+            $placeholders[] = '"{{ ' . $key . ' }}"';
+            $encodedSettings[] = $this->encodeSetting($setting);
         }
 
-        return $content;
+        return str_replace($placeholders, $encodedSettings, $this->widgetTemplate);
+    }
+
+    /**
+     * Method is used for encoding a setting value so it can safely be placed
+     * inside the JavaScript of the widget template.
+     * @param mixed $setting
+     */
+    private function encodeSetting($setting): string
+    {
+        $sanitizedSetting = $this->sanitizeSetting($setting);
+
+        return (string) wp_json_encode(
+            $sanitizedSetting,
+            (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
+        );
+    }
+
+    /**
+     * Sanitize a setting value so it stays harmless after the JavaScript
+     * engine decodes the JSON escaping and the widget writes the value into
+     * the DOM. The JSON escaping only protects the HTML context of the
+     * script tag, not the sinks used by the widget itself.
+     *
+     * @param mixed $setting
+     * @return array|string
+     */
+    private function sanitizeSetting($setting)
+    {
+        if (is_array($setting)) {
+            return array_map([$this, 'sanitizeSetting'], $setting);
+        }
+
+        if (empty($setting)) {
+            // This will work the same as a false value. Therefor it is not an
+            // issue that the empty check triggers for these false(y) values.
+            return '';
+        }
+
+        return sanitize_text_field((string) $setting);
     }
 
     /**

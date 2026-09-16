@@ -6,16 +6,32 @@ use WP_Error;
 use WP_REST_Request;
 use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
-use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Interfaces\SingleEndpointInterface;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 final class EndpointManager extends AbstractManager
 {
     use HasNonces;
-    use HasAllowlistControl;
 
     private array $routes = [];
+    private EnvironmentConfig $env;
+
+    /**
+     * Bind the env
+     */
+    public function __construct(EnvironmentConfig $env)
+    {
+        $this->env = $env;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function type(): string
+    {
+        return 'endpoints';
+    }
 
     /**
      * @inheritDoc
@@ -42,12 +58,13 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * @inheritDoc
+     * After all routes are in memory, we register them at the right time in
+     * WordPress.
+     * @uses do_action simplybook_{@see type}_loaded
      */
-    public function afterRegister(): void
+    protected function afterRegister(): void
     {
         $this->registerWordPressRestRoutes();
-        do_action('simplybook_endpoints_loaded');
     }
 
     /**
@@ -80,18 +97,13 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * This method provides a way to register custom REST routes via the
-     * simplybook_rest_routes filter. A controller of feature should be
-     * instantiated before this manager is called and the controller should
-     * hook into the simplybook_rest_routes filter to add its own routes.
-     * @uses apply_filters simplybook_rest_routes
+     * All routes that are registered in memory are registered at the right
+     * time in WordPress.
      * @throws InvalidArgumentException
      */
     public function registerWordPressRestRoutes(): void
     {
-        $routes = $this->getPluginRestRoutes();
-
-        foreach ($routes as $route => $data) {
+        foreach ($this->routes as $route => $data) {
             $version = ($data['version'] ?? $this->env->getString('http.version'));
             $callback = ($data['callback'] ?? null);
             $middleware = ($data['middleware'] ?? null);
@@ -112,32 +124,8 @@ final class EndpointManager extends AbstractManager
                 $arguments['args'] = $data['args'];
             }
 
-            register_rest_route($this->env->getString('http.namespace') . '/' . $version, $route, $arguments);
+            register_rest_route($this->env->getString('plugin.namespace') . '/' . $version, $route, $arguments);
         }
-    }
-
-    /**
-     * Get the plugins REST routes
-     * @uses apply_filters simplybook_rest_routes
-     */
-    private function getPluginRestRoutes(): array
-    {
-        /**
-         * Filter: simplybook_rest_routes
-         * Can be used to add or modify the REST routes
-         *
-         * @param array $routes
-         * @return array
-         * @example [
-         *      'route' => [ // key is the route name
-         *          'methods' => 'GET', // required
-         *          'callback' => 'callback_function', // required
-         *          'permission_callback' => 'permission_callback_function', // optional to override the default permission callback
-         *          'version' => 'v1' // optional to override the default version
-         *      ]
-         * ]
-         */
-        return apply_filters('simplybook_rest_routes', $this->routes);
     }
 
     /**

@@ -19,8 +19,6 @@ export const SIMPLYBOOK_OTHER_DOMAIN_VALUE = "Other";
 // reCAPTCHA configuration
 export const SIMPLYBOOK_RECAPTCHA_SITE_KEY = simplybook.recaptcha?.site_key || '';
 export const SIMPLYBOOK_RECAPTCHA_SCRIPT_URL = simplybook.recaptcha?.script_url || '';
-export const SIMPLYBOOK_GOOGLE_PRIVACY_POLICY_URL = simplybook.recaptcha?.google_privacy_policy_url || '';
-export const SIMPLYBOOK_GOOGLE_TERMS_URL = simplybook.recaptcha?.google_terms_url || '';
 
 /**
  * Retrieves the specified URL ('site_url' or 'admin_ajax_url') from burst_settings.

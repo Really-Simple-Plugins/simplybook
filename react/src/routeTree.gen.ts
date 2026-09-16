@@ -17,6 +17,7 @@ import { Route as rootRoute } from './routes/__root'
 // Create Virtual Routes
 
 const SettingsLazyImport = createFileRoute('/settings')()
+const PlansPricesLazyImport = createFileRoute('/plans-prices')()
 const OnboardingLazyImport = createFileRoute('/onboarding')()
 const IndexLazyImport = createFileRoute('/')()
 const SettingsSettingsIdLazyImport = createFileRoute('/settings/$settingsId')()
@@ -34,6 +35,12 @@ const SettingsLazyRoute = SettingsLazyImport.update({
   path: '/settings',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/settings.lazy').then((d) => d.Route))
+
+const PlansPricesLazyRoute = PlansPricesLazyImport.update({
+  id: '/plans-prices',
+  path: '/plans-prices',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/plans-prices.lazy').then((d) => d.Route))
 
 const OnboardingLazyRoute = OnboardingLazyImport.update({
   id: '/onboarding',
@@ -88,6 +95,13 @@ declare module '@tanstack/react-router' {
       path: '/onboarding'
       fullPath: '/onboarding'
       preLoaderRoute: typeof OnboardingLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/plans-prices': {
+      id: '/plans-prices'
+      path: '/plans-prices'
+      fullPath: '/plans-prices'
+      preLoaderRoute: typeof PlansPricesLazyImport
       parentRoute: typeof rootRoute
     }
     '/settings': {
@@ -152,6 +166,7 @@ const SettingsLazyRouteWithChildren = SettingsLazyRoute._addFileChildren(
 export interface FileRoutesByFullPath {
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
+  '/plans-prices': typeof PlansPricesLazyRoute
   '/settings': typeof SettingsLazyRouteWithChildren
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
@@ -161,6 +176,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
+  '/plans-prices': typeof PlansPricesLazyRoute
   '/settings': typeof SettingsLazyRouteWithChildren
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
@@ -171,6 +187,7 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/': typeof IndexLazyRoute
   '/onboarding': typeof OnboardingLazyRouteWithChildren
+  '/plans-prices': typeof PlansPricesLazyRoute
   '/settings': typeof SettingsLazyRouteWithChildren
   '/onboarding/create-your-account': typeof OnboardingCreateYourAccountLazyRoute
   '/onboarding/style-widget': typeof OnboardingStyleWidgetLazyRoute
@@ -182,6 +199,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/onboarding'
+    | '/plans-prices'
     | '/settings'
     | '/onboarding/create-your-account'
     | '/onboarding/style-widget'
@@ -190,6 +208,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/onboarding'
+    | '/plans-prices'
     | '/settings'
     | '/onboarding/create-your-account'
     | '/onboarding/style-widget'
@@ -198,6 +217,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/onboarding'
+    | '/plans-prices'
     | '/settings'
     | '/onboarding/create-your-account'
     | '/onboarding/style-widget'
@@ -208,12 +228,14 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexLazyRoute: typeof IndexLazyRoute
   OnboardingLazyRoute: typeof OnboardingLazyRouteWithChildren
+  PlansPricesLazyRoute: typeof PlansPricesLazyRoute
   SettingsLazyRoute: typeof SettingsLazyRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexLazyRoute: IndexLazyRoute,
   OnboardingLazyRoute: OnboardingLazyRouteWithChildren,
+  PlansPricesLazyRoute: PlansPricesLazyRoute,
   SettingsLazyRoute: SettingsLazyRouteWithChildren,
 }
 
@@ -229,6 +251,7 @@ export const routeTree = rootRoute
       "children": [
         "/",
         "/onboarding",
+        "/plans-prices",
         "/settings"
       ]
     },
@@ -241,6 +264,9 @@ export const routeTree = rootRoute
         "/onboarding/create-your-account",
         "/onboarding/style-widget"
       ]
+    },
+    "/plans-prices": {
+      "filePath": "plans-prices.lazy.jsx"
     },
     "/settings": {
       "filePath": "settings.lazy.jsx",

@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement;
 
+use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
@@ -35,12 +36,69 @@ class TaskManagementService
     }
 
     /**
-     * Get all tasks
+     * Get all tasks as plain associative arrays, optionally filtered by
+     * status. Returns a zero-indexed list so the result is JSON-array friendly.
+     *
+     * @param bool $strict Used on {@see TaskManagementRepository::getAllTasks()}
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function getTasks(?array $filters = [], bool $strict = false): array
+    {
+        $tasks = $this->repository->getAllTasks($strict);
+
+        if (!empty($filters)) {
+            $tasks = $this->filterTasks($filters, $tasks);
+        }
+
+        // Convert each task to an array.
+        $tasks = array_map(static function (TaskInterface $task): array {
+            return $task->toArray();
+        }, $tasks);
+
+        // Reindex to a zero-based list (array_values) -> JSON-array friendly.
+        return array_values($tasks);
+    }
+
+    /**
+     * Filter tasks by the given filters
+     *
+     * @param array<string, mixed> $filters key: filter name, value: filter value
+     * @param TaskInterface[] $tasks
+     *
      * @return TaskInterface[]
      */
-    public function getAllTasks(bool $strict = false): array
+    public function filterTasks(array $filters, array $tasks): array
     {
-        return $this->repository->getAllTasks($strict);
+        return array_filter($tasks, static function (TaskInterface $task) use ($filters): bool {
+            foreach ($filters as $filter => $value) {
+                switch ($filter) {
+                    case 'status':
+                        $match = ($task->getStatus() === (string) $value);
+                        break;
+                    case 'required':
+                        $match = ($task->isRequired() === (bool) $value);
+                        break;
+                    case 'premium':
+                        $match = ($task->isPremium() === (bool) $value);
+                        break;
+                    case 'special_feature':
+                        $match = ($task->isSpecialFeature() === (bool) $value);
+                        break;
+                    case 'snoozed':
+                        $match = ($task->isSnoozed() === (bool) $value);
+                        break;
+                    default:
+                        $match = false; // Unknown filter, so no tasks match
+                }
+
+                if (!$match) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 
     /**
@@ -189,6 +247,24 @@ class TaskManagementService
 
         $task->snooze();
         $this->repository->addTask($task);
+    }
+
+    /**
+     * Update the status of a task identified by its ID. Returns the updated
+     * task on success, or null when the status is not allowed or the task
+     * could not be found.
+     * @throws InvalidArgumentException If the status is not allowed
+     */
+    public function updateStatusFromId(string $taskId, string $status): ?TaskInterface
+    {
+        $allowedStatuses = AbstractTask::allowedStatuses();
+        if (!in_array($status, $allowedStatuses, true)) {
+            throw new InvalidArgumentException('Invalid status: ' . $status);
+        }
+
+        $this->repository->updateTaskStatus($taskId, $status);
+
+        return $this->repository->getTask($taskId);
     }
 
     /**

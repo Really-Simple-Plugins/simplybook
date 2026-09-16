@@ -1,0 +1,133 @@
+abilities:
+  - name: simplybook/get-available-slots
+    label: Get Available Booking Slots
+    category: simplybook-schedule
+    description: Returns the bookable time slots for a given SimplyBook.me service, provider and date. Unlike the working-hours ability, this reflects actual availability after existing bookings have been taken into account, so it answers the question "when can a booking be placed?".
+    input_schema: '{"type":"object","required":["date"],"properties":{"service_id":{"type":["string","integer"],"description":"Optional. The ID of the service to filter by."},"provider_id":{"type":["string","integer"],"description":"Optional. The ID of the service provider to filter by."},"date":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"The date to check, in YYYY-MM-DD format."},"count":{"type":"integer","minimum":1,"description":"Optional. Number of attendees for a group booking. Defaults to 1."}}}'
+    output_schema: '{"type":["array","string"],"description":"Zero-indexed list of bookable time slots for the requested service, provider and date. Returns a human-readable message instead when the slots could not be retrieved.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/get-schedule
+    label: Get Working Hours
+    category: simplybook-schedule
+    description: Returns the configured working hours per day from SimplyBook.me (including days off). Optionally narrow the result by service provider and/or service. Does NOT account for existing bookings, so the response indicates when work is rostered, not when there are free slots. The date range is optional and defaults to today when omitted; if only one date is supplied the other defaults to the same value.
+    input_schema: '{"type":"object","properties":{"provider_id":{"type":["string","integer"],"description":"Optional. The ID of the service provider to filter by."},"service_id":{"type":["string","integer"],"description":"Optional. The ID of the service to filter by."},"date_from":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"Start of the date range in YYYY-MM-DD format. Defaults to today."},"date_to":{"type":"string","pattern":"^\\d{4}-\\d{2}-\\d{2}$","description":"End of the date range in YYYY-MM-DD format. Defaults to date_from (or today)."}}}'
+    output_schema: '{"type":["array","string"],"description":"Zero-indexed list of working-hour entries (one per day) for the requested filters and date range. Each entry contains the date, the start and end of the working window and a day-off flag; it does not reflect existing bookings. Returns a human-readable message instead when the schedule could not be retrieved.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/list-design-settings
+    label: List Design Settings
+    category: simplybook
+    description: Returns the saved SimplyBook.me design settings as key/value pairs. Optionally returns a single setting when a key is provided.
+    input_schema: '{"type":["object","null"],"properties":{"key":{"type":"string","description":"Optional. The design setting key to return. Omit to return all design settings. Use dot notation to get nested values."}}}'
+    output_schema: '{"type":["object","array","string","boolean","number","null"],"description":"The full design settings map, a nested section, a scalar value resolved by dot-notation, or a human-readable message when the settings or requested key could not be found."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/update-design-settings
+    label: Update Design Settings
+    category: simplybook
+    description: Updates one or more SimplyBook.me design settings. Values are validated against the design fields configuration to prevent accidental type mismatches before being saved.
+    input_schema: '{"type":"object","required":["settings"],"properties":{"settings":{"type":"object","description":"Map of design setting keys to their new values. Nested groups (e.g. \"theme_settings\") are passed as nested objects.","additionalProperties":true}}}'
+    output_schema: '{"type":["object","string","null"],"description":"The updated design settings map on success, or a human-readable message describing the validation or save error."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/list-providers
+    label: List Providers
+    category: simplybook
+    description: Returns all SimplyBook.me service providers (staff) currently configured on the connected company.
+    input_schema: '[]'
+    output_schema: '{"type":"array","description":"Zero-indexed list of service providers as returned by the SimplyBook.me API. Empty when no company is connected or no providers exist.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/update-provider
+    label: Update Service Provider
+    category: simplybook
+    description: Updates a single SimplyBook.me service provider identified by its ID. Only the supplied fields are changed; values are validated and sanitized by the ServiceProvider entity before being sent to the SimplyBook.me API.
+    input_schema: '{"type":"object","required":["id"],"properties":{"id":{"type":["string","integer"],"description":"The ID of the service provider to update."},"name":{"type":"string"},"email":{"type":"string"},"phone":{"type":"string"},"qty":{"type":"integer"},"is_visible":{"type":"boolean"}}}'
+    output_schema: '{"type":["object","string","null"],"description":"The updated service provider attributes on success, or a human-readable message describing why the update could not be performed."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/list-services
+    label: List Services
+    category: simplybook
+    description: Returns all SimplyBook.me services currently configured on the connected company.
+    input_schema: '[]'
+    output_schema: '{"type":"array","description":"Zero-indexed list of services as returned by the SimplyBook.me API. Empty when no company is connected or no services exist.","items":{"type":"object","additionalProperties":true}}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/update-service
+    label: Update Service
+    category: simplybook
+    description: Updates a single SimplyBook.me service identified by its ID. Only the supplied fields are changed; values are validated and sanitized by the Service entity before being sent to the SimplyBook.me API.
+    input_schema: '{"type":"object","required":["id"],"properties":{"id":{"type":["string","integer"],"description":"The ID of the service to update."},"name":{"type":"string"},"duration":{"type":"integer"},"is_visible":{"type":"boolean"}}}'
+    output_schema: '{"type":["object","string","null"],"description":"The updated service attributes on success, or a human-readable message describing why the update could not be performed."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/count-recent-bookings
+    label: Count Recent Bookings
+    category: simplybook
+    description: Returns the number of SimplyBook.me bookings made on the connected company in the last 30 days.
+    input_schema: '[]'
+    output_schema: '{"type":"integer","minimum":0,"description":"Number of bookings on the connected company in the last 30 days. Zero when no company is connected or no bookings exist."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/get-statistics
+    label: Get Statistics
+    category: simplybook
+    description: Returns the cached SimplyBook.me statistics for the connected company (e.g. bookings today, bookings this week, bookings in the last 30 days, most popular service and provider). Optionally returns a single value when a key is provided.
+    input_schema: '{"type":["object","null"],"properties":{"key":{"type":"string","description":"Optional. The statistics key to return. Omit to return all statistics. Use dot notation to get nested values (e.g. \"most_popular_service.name\")."}}}'
+    output_schema: '{"type":["object","array","string","boolean","number","null"],"description":"The full statistics map, a nested section, a scalar value resolved by dot-notation, or a human-readable message when the statistics or requested key could not be found."}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/list-tasks
+    label: List Tasks
+    category: simplybook
+    description: Returns all SimplyBook.me plugin tasks.
+    input_schema: '{"type":["object","null"],"properties":{"status":{"type":"string","enum":["open","upgrade","urgent","dismissed","completed","premium","hidden"],"description":"Optional. Filter tasks by status."},"required":{"type":"boolean","description":"Optional. Filter tasks by whether they are required."},"premium":{"type":"boolean","description":"Optional. Filter tasks by whether they are premium."},"special_feature":{"type":"boolean","description":"Optional. Filter tasks by whether they are a special feature."},"snoozed":{"type":"boolean","description":"Optional. Filter tasks by whether they are snoozed."}}}'
+    output_schema: '{"oneOf":[{"type":"array","description":"List of tasks, each represented as an associative array.","items":{"type":"object","properties":{"id":{"type":"string"},"text":{"type":"string"},"label":{"type":"string"},"status":{"type":"string"},"premium":{"type":"boolean"},"special_feature":{"type":"boolean"},"type":{"type":"string"},"action":{"type":"object"},"snoozable":{"type":"boolean"}}}},{"type":"string","description":"Human-readable message returned when the task management feature is not available."}]}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    
+  - name: simplybook/update-task-status
+    label: Update Task Status
+    category: simplybook
+    description: Updates the status of a SimplyBook.me plugin task identified by its ID.
+    input_schema: '{"type":"object","required":["id","status"],"properties":{"id":{"type":"string","description":"The unique identifier of the task to update."},"status":{"type":"string","enum":["open","upgrade","urgent","dismissed","completed","premium","hidden"],"description":"The new status to assign to the task."}}}'
+    output_schema: '{"oneOf":[{"type":"object","description":"The updated task represented as an associative array.","properties":{"id":{"type":"string"},"text":{"type":"string"},"label":{"type":"string"},"status":{"type":"string"},"premium":{"type":"boolean"},"special_feature":{"type":"boolean"},"type":{"type":"string"},"action":{"type":"object"},"snoozable":{"type":"boolean"}}},{"type":"string","description":"Human-readable message returned when the task management feature is not available or when the update could not be performed."}]}'
+    readonly: ""
+    destructive: ""
+    idempotent: ""
+    show_in_rest: "1"
+    

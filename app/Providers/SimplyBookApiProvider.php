@@ -5,7 +5,7 @@ namespace SimplyBook\Providers;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Http\ApiClient;
 
-class SimplyBookApiProvider extends Provider
+class SimplyBookApiProvider extends AbstractProvider
 {
     /**
      * @inheritDoc

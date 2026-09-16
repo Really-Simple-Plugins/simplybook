@@ -1,5 +1,5 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
-import { __, sprintf } from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import { useEffect } from "react";
 import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import LeftColumn from "../../components/Grid/LeftColumn";
@@ -7,9 +7,7 @@ import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
 import {
     SIMPLYBOOK_RECAPTCHA_SITE_KEY,
-    SIMPLYBOOK_RECAPTCHA_SCRIPT_URL,
-    SIMPLYBOOK_GOOGLE_PRIVACY_POLICY_URL,
-    SIMPLYBOOK_GOOGLE_TERMS_URL
+    SIMPLYBOOK_RECAPTCHA_SCRIPT_URL
 } from "../../api/config";
 
 const path = "/onboarding/create-your-account";
@@ -23,13 +21,9 @@ export const Route = createLazyFileRoute(path)({
  */
 function RecaptchaDisclosure() {
     return (
-        <p className="text-xs text-gray-400 mt-4 text-center" dangerouslySetInnerHTML={{
-            __html: sprintf(
-                __("This page is protected by reCAPTCHA and the Google %s and %s apply.", "simplybook"),
-                `<a href="${SIMPLYBOOK_GOOGLE_PRIVACY_POLICY_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Privacy Policy", "simplybook")}</a>`,
-                `<a href="${SIMPLYBOOK_GOOGLE_TERMS_URL}" target="_blank" rel="noopener noreferrer" class="underline">${__("Terms of Service", "simplybook")}</a>`
-            )
-        }} />
+        <p className="text-xs text-gray-400 mt-4 text-center">
+            {__("This page is protected by reCAPTCHA.", "simplybook")}
+        </p>
     );
 }
 

@@ -3,7 +3,6 @@ import ModalBackground from "../Partials/ModalBackground";
 import { __ } from "@wordpress/i18n";
 
 const InstallAppTaskModalContent = () => {
-    // @ts-ignore
     const assetsUrl = simplybook.assets_url;
 
     return (

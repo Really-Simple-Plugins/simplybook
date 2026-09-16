@@ -1,18 +1,11 @@
 import {
   createRootRoute,
-  Link,
   Outlet,
   redirect,
-  useNavigate,
 } from "@tanstack/react-router";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect } from "react";
 import ErrorBoundary from "../components/Common/ErrorBoundary";
 
-const getData = async ({ queryKey }) => {
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-  return false;
-};
+const getDefaultRoute = () => simplybook?.default_route ?? "";
 
 // Lazy load router devtools
 const TanStackRouterDevtools = React.lazy(() =>
@@ -22,6 +15,16 @@ const TanStackRouterDevtools = React.lazy(() =>
 );
 
 export const Route = createRootRoute({
+  beforeLoad: ({ location }) => {
+    const defaultRoute = getDefaultRoute();
+
+    if (defaultRoute && (location.pathname === "/" || location.pathname === "")) {
+      throw redirect({
+        to: defaultRoute,
+        replace: true,
+      });
+    }
+  },
   component: () => {
 
     return (

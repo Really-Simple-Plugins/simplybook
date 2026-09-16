@@ -19,6 +19,8 @@ class Event
     public const EMPTY_PROVIDERS = 'empty_providers';
     public const HAS_SERVICES = 'has_services';
     public const HAS_PROVIDERS = 'has_providers';
+    public const PROVIDER_CREATED = 'provider_created';
+    public const PROVIDER_DELETED = 'provider_deleted';
     public const NAVIGATE_TO_SIMPLYBOOK = 'navigate_to_simplybook';
     public const SUBSCRIPTION_DATA_LOADED = 'subscription_data_loaded';
     public const SPECIAL_FEATURES_LOADED = 'special_features_loaded';

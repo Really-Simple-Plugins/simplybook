@@ -2,31 +2,33 @@ import { useEffect, useState } from "react";
 import {__} from "@wordpress/i18n";
 
 const LiveAgent = (props: { style?: string }) => {
-    const [chatButton, setChatButton] = useState<any>(null);
-
-    // @ts-ignore - TypeScript does not recognize simplybook as a global
-    if (!window.simplybook?.support?.enabled) {
-        return;
-    }
+    const [chatButton, setChatButton] = useState<LiveAgentButton | null>(null);
+    const liveAgentScriptUrl = window.simplybook?.support?.widget?.url;
+    const supportEnabled = window.simplybook?.support?.enabled === true && !!liveAgentScriptUrl;
 
     useEffect(() => {
+        if (!supportEnabled || !liveAgentScriptUrl) {
+            return;
+        }
+
         const script = document.createElement("script");
         script.id = "la_x2s6df8d";
         script.defer = true;
-        // @ts-ignore
-        script.src = window.simplybook.support.widget.url;
+        script.src = liveAgentScriptUrl;
 
         script.onload = function () {
-            // @ts-ignore
             if (window.LiveAgent) {
-                // @ts-ignore
                 const btn = window.LiveAgent.createButton('0r62zimg', script);
                 setChatButton(btn);
             }
         };
 
         document.head.appendChild(script);
-    }, []);
+    }, [supportEnabled, liveAgentScriptUrl]);
+
+    if (!supportEnabled) {
+        return null;
+    }
 
     const handleClick = () => {
         if (chatButton?.onClick) {
