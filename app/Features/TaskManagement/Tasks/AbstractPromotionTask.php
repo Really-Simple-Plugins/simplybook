@@ -64,7 +64,9 @@ abstract class AbstractPromotionTask extends AbstractTask
      */
     public function onDismiss(): void
     {
-        Event::dispatch(Event::PROMOTION_TASK_DISMISSED);
+        Event::dispatch(Event::PROMOTION_TASK_DISMISSED, [
+            'task' => $this,
+        ]);
     }
 
     /**
