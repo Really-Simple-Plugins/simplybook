@@ -54,6 +54,15 @@ class BlackFridayTask extends AbstractTask
     }
 
     /**
+     * The promotion sets the menu bubble counter. Reset the counter so the
+     * admin menu badge disappears after the dismiss.
+     */
+    public function onDismiss(): void
+    {
+        update_option(self::MENU_BUBBLE_OPTION_KEY, 0);
+    }
+
+    /**
      * @inheritDoc
      */
     public function getAction(): array

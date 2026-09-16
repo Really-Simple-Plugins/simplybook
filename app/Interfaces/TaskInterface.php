@@ -89,4 +89,9 @@ interface TaskInterface
      * Clear the snooze state for this task
      */
     public function clearSnooze(): void;
+
+    /**
+     * Run task specific side effects after the user dismissed the task
+     */
+    public function onDismiss(): void;
 }

@@ -137,6 +137,10 @@ class TaskManagementRepository
             $task->clearSnooze();
         }
 
+        if ($status === AbstractTask::STATUS_DISMISSED) {
+            $task->onDismiss();
+        }
+
         $task->setStatus($status);
         $this->addTask($task);
     }
