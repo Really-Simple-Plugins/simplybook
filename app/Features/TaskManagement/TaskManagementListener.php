@@ -333,16 +333,16 @@ class TaskManagementListener implements ListenerInterface
      */
     private function handlePromotionTasks(string $subscriptionType): void
     {
-        $visibleCount = 0;
+        $bubbleCount = 0;
 
         foreach ($this->service->getPromotionTasks() as $promotionTask) {
             if ($this->handlePromotionTask($promotionTask, $subscriptionType)) {
-                $visibleCount++;
+                $bubbleCount++;
             }
         }
 
         $this->bubbleCounter->reset();
-        $this->bubbleCounter->increase($visibleCount);
+        $this->bubbleCounter->increase($bubbleCount);
     }
 
     /**
