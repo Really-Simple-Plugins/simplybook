@@ -41,7 +41,7 @@ class MaximumBookingsTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('You have reached the maximum number of bookings for your plan', 'simplybook');
+        return __('You have reached the maximum number of bookings for your SimplyBook.me plan', 'simplybook');
     }
 
     /**
@@ -51,7 +51,7 @@ class MaximumBookingsTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => __('Upgrade', 'simplybook'),
+            'text' => __('View plans', 'simplybook'),
             'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
