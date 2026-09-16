@@ -7,6 +7,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
 use SimplyBook\Services\ThemeColorService;
+use SimplyBook\Services\BubbleCounterService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
@@ -26,6 +27,7 @@ class DashboardController implements ControllerInterface
     private RequestStorage $request;
     private GeneralConfig $config;
     private ThemeColorService $themeColorService;
+    private BubbleCounterService $bubbleCounter;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
@@ -34,6 +36,7 @@ class DashboardController implements ControllerInterface
         GeneralConfig $config,
         RequestStorage $request,
         ThemeColorService $themeColorService,
+        BubbleCounterService $bubbleCounter,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->client = $client;
@@ -41,6 +44,7 @@ class DashboardController implements ControllerInterface
         $this->request = $request;
         $this->config = $config;
         $this->themeColorService = $themeColorService;
+        $this->bubbleCounter = $bubbleCounter;
         $this->subscriptionDataService = $subscriptionDataService;
     }
 
@@ -107,7 +111,7 @@ class DashboardController implements ControllerInterface
         $menuPosition = apply_filters('simplybook_menu_position', 59);
 
         $menuCounterHtml = '';
-        $menuCounter = $this->getMenuCount();
+        $menuCounter = $this->bubbleCounter->get();
         if ($menuCounter > 0) {
             $menuCounterHtml = "<span class='menu-counter' style='position: absolute; top: 2px; z-index: 0; right: 4px;'>{$menuCounter}</span>";
         }
@@ -346,19 +350,6 @@ class DashboardController implements ControllerInterface
         }
 
         $this->subscriptionDataService->clearCache();
-    }
-
-    /**
-     * Safe way to read the menu count from the options table. Returns 0 if
-     * the Task Management feature is not available in the current context.
-     */
-    private function getMenuCount(): int
-    {
-        if (class_exists('\SimplyBook\Features\TaskManagement\Tasks\AbstractTask') === false) {
-            return 0;
-        }
-
-        return get_option(\SimplyBook\Features\TaskManagement\Tasks\AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
     }
 
     /**
