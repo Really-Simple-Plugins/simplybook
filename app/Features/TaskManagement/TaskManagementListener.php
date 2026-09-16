@@ -328,8 +328,8 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Handle all promotion tasks. The menu bubble counter is set once to
-     * the number of promotion tasks that are visible after handling.
+     * Handle all promotion tasks. The menu bubble counter is reset and then
+     * increased once with the number of visible promotion tasks.
      */
     private function handlePromotionTasks(string $subscriptionType): void
     {
@@ -341,7 +341,8 @@ class TaskManagementListener implements ListenerInterface
             }
         }
 
-        $this->bubbleCounter->set($visibleCount);
+        $this->bubbleCounter->reset();
+        $this->bubbleCounter->increase($visibleCount);
     }
 
     /**

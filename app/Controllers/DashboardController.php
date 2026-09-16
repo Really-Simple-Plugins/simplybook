@@ -111,7 +111,7 @@ class DashboardController implements ControllerInterface
         $menuPosition = apply_filters('simplybook_menu_position', 59);
 
         $menuCounterHtml = '';
-        $menuCounter = $this->bubbleCounter->get();
+        $menuCounter = $this->bubbleCounter->current();
         if ($menuCounter > 0) {
             $menuCounterHtml = "<span class='menu-counter' style='position: absolute; top: 2px; z-index: 0; right: 4px;'>{$menuCounter}</span>";
         }
