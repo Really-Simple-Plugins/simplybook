@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class BlackFridayTask extends PromotionTask
+class BlackFridayTask extends AbstractPromotionTask
 {
     public const IDENTIFIER = 'black_friday';
 

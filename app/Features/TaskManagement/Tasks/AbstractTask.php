@@ -262,7 +262,7 @@ abstract class AbstractTask implements TaskInterface
 
     /**
      * Override this method when the task needs a side effect on dismiss. See
-     * {@see PromotionTask} for an example.
+     * {@see AbstractPromotionTask} for an example.
      */
     public function onDismiss(): void
     {

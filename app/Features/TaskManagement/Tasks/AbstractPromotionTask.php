@@ -10,7 +10,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  * default. The {@see TaskManagementListener} shows it, and sets the menu
  * bubble counter, during the promotion period.
  */
-abstract class PromotionTask extends AbstractTask
+abstract class AbstractPromotionTask extends AbstractTask
 {
     /**
      * @inheritDoc

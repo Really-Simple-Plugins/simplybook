@@ -4,7 +4,7 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class ChristmasPromotionTask extends PromotionTask
+class ChristmasPromotionTask extends AbstractPromotionTask
 {
     public const IDENTIFIER = 'christmas_promo';
 
