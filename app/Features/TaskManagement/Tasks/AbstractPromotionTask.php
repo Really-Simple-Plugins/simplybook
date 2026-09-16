@@ -8,9 +8,9 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Base for a time limited promotion for Trial users. The task is hidden by
- * default. The {@see TaskManagementListener} shows it, and sets the menu
- * bubble counter, during the promotion period. The period is read from the
- * env config under `simplybook.{IDENTIFIER}.start_date` and `end_date`.
+ * default. The {@see TaskManagementListener} shows it during the promotion
+ * period. The period is read from the env config under
+ * `simplybook.{IDENTIFIER}.start_date` and `end_date`.
  */
 abstract class AbstractPromotionTask extends AbstractTask
 {
@@ -59,8 +59,8 @@ abstract class AbstractPromotionTask extends AbstractTask
     }
 
     /**
-     * Notify the {@see TaskManagementListener} so it can reset the menu
-     * bubble counter it set for this promotion.
+     * Notify the {@see TaskManagementListener} that this promotion is
+     * dismissed.
      */
     public function onDismiss(): void
     {
