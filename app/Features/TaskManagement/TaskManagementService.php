@@ -6,6 +6,8 @@ use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
+use SimplyBook\Features\TaskManagement\Tasks\BlackFridayTask;
+use SimplyBook\Features\TaskManagement\Tasks\ChristmasPromotionTask;
 
 /**
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
@@ -177,11 +179,28 @@ class TaskManagementService
 
     /**
      * Dismiss a task by setting the status to 'dismissed'. Only allowed if
-     * the task is not required.
+     * the task is not required. Dismissing a promotion task also resets the
+     * menu bubble counter.
      */
     public function dismissTask(string $taskId): void
     {
         $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_DISMISSED);
+
+        if ($this->isPromotionTask($taskId) && $this->isTaskDismissed($taskId)) {
+            $this->setTaskBubbleCounter(0);
+        }
+    }
+
+    /**
+     * Check if the task is one of the promotion tasks that set the menu
+     * bubble counter.
+     */
+    private function isPromotionTask(string $taskId): bool
+    {
+        return in_array($taskId, [
+            BlackFridayTask::IDENTIFIER,
+            ChristmasPromotionTask::IDENTIFIER,
+        ], true);
     }
 
     /**
@@ -265,6 +284,20 @@ class TaskManagementService
         $this->repository->updateTaskStatus($taskId, $status);
 
         return $this->repository->getTask($taskId);
+    }
+
+    /**
+     * Check if a task is dismissed
+     */
+    public function isTaskDismissed(string $taskId): bool
+    {
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null) {
+            return false;
+        }
+
+        return $task->getStatus() === AbstractTask::STATUS_DISMISSED;
     }
 
     /**
