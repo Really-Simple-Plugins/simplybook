@@ -58,12 +58,6 @@ return [
         ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
-        'support' => [
-            'enabled' => true,
-            'widget' => [
-                'url' => 'https://simply.ladesk.com/scripts/track.js',
-            ],
-        ],
         'black_friday' => [
             'discount_percentage' => 25,
             'promo_code' => 'BLACKFRIDAY',
