@@ -11,8 +11,7 @@ class BubbleCounterService
     private const OPTION_KEY = 'simplybook_task_bubble_counter';
 
     /**
-     * Get the current notification bubble count. Returns 0 when no count
-     * is stored.
+     * Get the current notification bubble count.
      */
     public function current(): int
     {
