@@ -75,25 +75,31 @@ You can skip the onboarding and login with your existing login credentials.
 
 == External services ==
 
-This plugin connects to the external services below. Each paragraph describes the service, what the plugin uses it for, what data the plugin sends, and when the plugin sends it. Each paragraph links to the terms of service and the privacy policy of the service.
+This plugin connects to the services below. The plugin sends no data to these services until the moment named per service.
 
-= SimplyBook.me API =
-The plugin connects to the SimplyBook.me API (user-api.simplybook.it, user-api-v2.simplybook.it or the other SimplyBook.me domain you select at login). The plugin uses this API to log in, to manage your company settings, and to show your bookings and statistics in the plugin dashboard. The plugin sends your login credentials when you log in. The plugin sends your site URL and technical data about your site (plugin, WordPress and PHP version) with each request. The plugin sends your company settings when you change them in the plugin dashboard. The plugin reads your booking data and statistical data when you open the plugin dashboard. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+**SimplyBook.me API** (simplybook.it domains). Runs the booking system behind the plugin. Sends your login credentials at login. Sends your site URL, plugin, WordPress and PHP version with each request. Sends your company settings when you save them. Loads your bookings and statistics in the plugin dashboard. Also loads the subscription script for the Plans & Prices page.
 
-= SimplyBook.me booking widget =
-The booking widget loads a script from simplybook.me. The browser of a visitor loads this script on each page that contains the booking widget (shortcode, Gutenberg block or Elementor widget). The widget sends the IP address of the visitor to SimplyBook.me when the page loads. The widget sends the booking data of the visitor to SimplyBook.me when the visitor makes a booking. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+* [Terms of Use](https://simplybook.me/en/terms-and-conditions) - [Privacy Policy](https://simplybook.me/en/policy)
 
-= SimplyBook.me demo widget =
-When your site is not connected to a SimplyBook.me account, the booking widget shows a demo. The demo widget connects to demowidgetwpplugin.simplybook.it. The browser of a visitor sends its IP address to this server when the visitor opens a page with the demo widget. Terms: https://simplybook.me/en/terms-and-conditions. Privacy: https://simplybook.me/en/policy.
+**SimplyBook.me booking widget** (simplybook.me). Shows the booking form to your visitors. Sends the IP address of the visitor when a page with the widget loads. Sends the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
 
-= Really Simple Plugins account service =
-The onboarding uses the Really Simple Plugins account service at simplybook.rsp-auth.com to create a new SimplyBook.me account. Really Simple Plugins operates this service. The plugin sends your site URL and technical data about the plugin installation when the onboarding starts. The plugin sends your account details and the reCAPTCHA token when you submit the "Create your account" step. Terms: https://really-simple-ssl.com/legal/terms-of-use/. Privacy: https://really-simple-ssl.com/legal/privacy-statement/.
+* [Terms of Use](https://simplybook.me/en/terms-and-conditions) - [Privacy Policy](https://simplybook.me/en/policy)
 
-= Google reCAPTCHA Enterprise =
-The onboarding uses Google reCAPTCHA Enterprise to protect the account creation form against abuse. The browser of the admin loads the reCAPTCHA script from www.google.com when the admin opens the "Create your account" step. Google receives the IP address and browser data of the admin. The browser sends a reCAPTCHA token to Google when the admin submits the form. Terms: https://policies.google.com/terms. Privacy: https://policies.google.com/privacy.
+**Really Simple Plugins account service** (simplybook.rsp-auth.com). Creates your SimplyBook.me account during onboarding. Sends your site URL and plugin installation data when onboarding starts. Sends your account details and the reCAPTCHA token when you submit "Create your account".
 
-= LiveAgent live chat =
-The plugin dashboard shows a "Live Help" button for SimplyBook.me support. The browser of the admin loads the LiveAgent chat script from simply.ladesk.com when the admin opens the plugin dashboard. LiveAgent receives the IP address and browser data of the admin. LiveAgent receives the chat messages of the admin when the admin starts a chat. Terms: https://www.liveagent.com/terms-and-conditions/. Privacy: https://www.liveagent.com/privacy-policy/.
+* [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/) - [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
+
+**Google reCAPTCHA Enterprise** (www.google.com). Protects the account creation form. Google receives the IP address and browser data of the admin when the form opens, and a token when the admin submits it.
+
+* [Terms of Service](https://policies.google.com/terms) - [Privacy Policy](https://policies.google.com/privacy)
+
+**YouTube** (www.youtube-nocookie.com). Shows a tutorial video on the account creation step. Google receives the IP address and browser data of the admin when the step opens. No cookies are set before the admin plays the video.
+
+* [Terms of Service](https://www.youtube.com/t/terms) - [Privacy Policy](https://policies.google.com/privacy)
+
+**LiveAgent live chat** (simply.ladesk.com). Powers the "Live Help" button in the plugin dashboard. Receives the IP address and browser data of the admin when the dashboard opens, and the chat messages when the admin starts a chat.
+
+* [Terms and Conditions](https://www.liveagent.com/terms-and-conditions/) - [Privacy Policy](https://www.liveagent.com/privacy-policy/)
 
 == Screenshots ==
 
