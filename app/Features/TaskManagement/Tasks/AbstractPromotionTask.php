@@ -2,7 +2,7 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use Carbon\Carbon;
+use SimplyBook\Support\Utility\DateUtility;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -44,24 +44,15 @@ abstract class AbstractPromotionTask extends AbstractTask
             return (bool) $cache;
         }
 
-        $timezone = wp_timezone();
-        $now = Carbon::now($timezone);
-
-        $start = Carbon::parse(
-            $this->env->getString('simplybook.' . $this->getId() . '.start_date'),
-            $timezone
-        );
-        $end = Carbon::parse(
-            $this->env->getString('simplybook.' . $this->getId() . '.end_date'),
-            $timezone
-        )->endOfDay();
+        $startDate = $this->env->getString('simplybook.' . $this->getId() . '.start_date');
+        $endDate = $this->env->getString('simplybook.' . $this->getId() . '.end_date');
 
         $cacheDuration = HOUR_IN_SECONDS;
-        if ($now->diffInSeconds($end, false) <= $cacheDuration) {
+        if (DateUtility::secondsUntilEndOfDate($endDate) <= $cacheDuration) {
             $cacheDuration = MINUTE_IN_SECONDS * 5;
         }
 
-        $isActive = $now->betweenIncluded($start, $end);
+        $isActive = DateUtility::isNowBetweenDates($startDate, $endDate);
 
         wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
         return $isActive;
