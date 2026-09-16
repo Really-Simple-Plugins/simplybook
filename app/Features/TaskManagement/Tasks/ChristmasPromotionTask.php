@@ -2,28 +2,13 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class ChristmasPromotionTask extends AbstractTask
+class ChristmasPromotionTask extends PromotionTask
 {
     public const IDENTIFIER = 'christmas_promo';
 
     /**
-     * @inheritDoc
-     */
-    protected bool $required = false;
-
-    /**
-     * The environment configuration
-     */
-    private EnvironmentConfig $env;
-
-    /**
-     * We hide this task by default, and it is updated to "upgrade" status
-     * during Christmas period ánd only for Trial users in the
-     * {@see TaskManagementListener}
-     *
      * @since 3.3.2 bumped version due to the new
      * plugin.plans_prices_url env key.
      * @since 3.4.1 bumped version to 1.0.2 because the task is no longer
@@ -31,9 +16,7 @@ class ChristmasPromotionTask extends AbstractTask
      */
     public function __construct(EnvironmentConfig $env)
     {
-        $this->hide();
-
-        $this->env = $env;
+        parent::__construct($env);
         $this->setVersion('1.0.2');
     }
 
@@ -48,26 +31,5 @@ class ChristmasPromotionTask extends AbstractTask
             '<strong>' . $this->env->getString('simplybook.christmas_promo.discount_percentage') . '%</strong>',
             '<code>' . $this->env->getString('simplybook.christmas_promo.promo_code') . '</code>'
         );
-    }
-
-    /**
-     * The {@see TaskManagementListener} sets the menu bubble counter for this
-     * promotion. Notify the listener so it can reset the counter.
-     */
-    public function onDismiss(): void
-    {
-        Event::dispatch(Event::PROMOTION_TASK_DISMISSED);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAction(): array
-    {
-        return [
-            'type' => 'button',
-            'text' => esc_html__('Claim discount', 'simplybook'),
-            'link' => $this->env->getUrl('plugin.plans_prices_url'),
-        ];
     }
 }
