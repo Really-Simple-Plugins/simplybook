@@ -75,31 +75,26 @@ You can skip the onboarding and login with your existing login credentials.
 
 == External services ==
 
-This plugin connects to the services below. The plugin sends no data to these services until the moment named per service.
+This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version. The Plans & Prices page loads a subscription script from SimplyBook.me.
 
-**SimplyBook.me API** (simplybook.it domains). Runs the booking system behind the plugin. Sends your login credentials at login. Sends your site URL, plugin, WordPress and PHP version with each request. Sends your company settings when you save them. Loads your bookings and statistics in the plugin dashboard. Also loads the subscription script for the Plans & Prices page.
+The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
 
-* [Terms of Use](https://simplybook.me/en/terms-and-conditions) - [Privacy Policy](https://simplybook.me/en/policy)
+During onboarding the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives the IP address and browser data of the admin. No cookies are set before the admin plays the video.
 
-**SimplyBook.me booking widget** (simplybook.me). Shows the booking form to your visitors. Sends the IP address of the visitor when a page with the widget loads. Sends the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
+The "Live Help" button in the plugin dashboard loads LiveAgent live chat. LiveAgent receives the IP address and browser data of the admin when the dashboard opens, and the chat messages when the admin starts a chat.
 
-* [Terms of Use](https://simplybook.me/en/terms-and-conditions) - [Privacy Policy](https://simplybook.me/en/policy)
+For more information:
 
-**Really Simple Plugins account service** (simplybook.rsp-auth.com). Creates your SimplyBook.me account during onboarding. Sends your site URL and plugin installation data when onboarding starts. Sends your account details and the reCAPTCHA token when you submit "Create your account".
-
-* [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/) - [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
-
-**Google reCAPTCHA Enterprise** (www.google.com). Protects the account creation form. Google receives the IP address and browser data of the admin when the form opens, and a token when the admin submits it.
-
-* [Terms of Service](https://policies.google.com/terms) - [Privacy Policy](https://policies.google.com/privacy)
-
-**YouTube** (www.youtube-nocookie.com). Shows a tutorial video on the account creation step. Google receives the IP address and browser data of the admin when the step opens. No cookies are set before the admin plays the video.
-
-* [Terms of Service](https://www.youtube.com/t/terms) - [Privacy Policy](https://policies.google.com/privacy)
-
-**LiveAgent live chat** (simply.ladesk.com). Powers the "Live Help" button in the plugin dashboard. Receives the IP address and browser data of the admin when the dashboard opens, and the chat messages when the admin starts a chat.
-
-* [Terms and Conditions](https://www.liveagent.com/terms-and-conditions/) - [Privacy Policy](https://www.liveagent.com/privacy-policy/)
+* SimplyBook.me - [Terms of Use](https://simplybook.me/en/terms-and-conditions)
+* SimplyBook.me - [Privacy Policy](https://simplybook.me/en/policy)
+* Really Simple Plugins - [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/)
+* Really Simple Plugins - [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
+* Google reCAPTCHA - [Terms of Service](https://policies.google.com/terms)
+* Google reCAPTCHA - [Privacy Policy](https://policies.google.com/privacy)
+* YouTube - [Terms of Service](https://www.youtube.com/t/terms)
+* YouTube - [Privacy Policy](https://policies.google.com/privacy)
+* LiveAgent - [Terms and Conditions](https://www.liveagent.com/terms-and-conditions/)
+* LiveAgent - [Privacy Policy](https://www.liveagent.com/privacy-policy/)
 
 == Screenshots ==
 
