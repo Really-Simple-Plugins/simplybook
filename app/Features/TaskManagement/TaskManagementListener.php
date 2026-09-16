@@ -4,6 +4,7 @@ namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Interfaces\ListenerInterface;
+use SimplyBook\Services\BubbleCounterService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
 /**
@@ -17,12 +18,12 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
-    private TaskBubbleCounterService $bubbleCounter;
+    private BubbleCounterService $bubbleCounter;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
         TaskManagementService $service,
-        TaskBubbleCounterService $bubbleCounter,
+        BubbleCounterService $bubbleCounter,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
