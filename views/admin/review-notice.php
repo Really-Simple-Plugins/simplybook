@@ -7,7 +7,7 @@
  */
 ?>
 
-<div id="message" class="updated fade notice is-dismissible rsp-review really-simple-plugins simplybook-notice" data-notice-id="review">
+<div id="message" class="updated fade notice is-dismissible rsp-review simplybook-notice" data-notice-id="review">
     <div class="rsp-container">
         <div class="rsp-notice-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
         <div class="rsp-notice-content">
