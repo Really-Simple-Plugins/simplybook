@@ -69,9 +69,11 @@ class ReviewController implements ControllerInterface
     /**
      * Check if the review notice can be rendered. True when:
      * - The user still has an authenticated SimplyBook session
-     * - The user has not dismissed or snoozed the notice
+     * - The user has not dismissed the notice
      * - The plugin first-use time is suitable for review
+     * - The review notice dismissed time has passed
      * - The amount of bookings is greater than the threshold
+     * - The user is not on an edit screen
      */
     private function canRenderReviewNotice(): bool
     {

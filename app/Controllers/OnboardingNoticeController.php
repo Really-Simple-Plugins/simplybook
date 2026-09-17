@@ -62,8 +62,11 @@ class OnboardingNoticeController implements ControllerInterface
     /**
      * Check if the notice can be rendered. True when:
      * - The user never finished the onboarding
-     * - The user has not dismissed or snoozed the notice
+     * - The user has not dismissed the notice
      * - The plugin activation timestamp is suitable for notice
+     * - The notice dismissed time has passed
+     * - The user is not on an edit screen
+     * - The user is not on the plugin page
      */
     private function canRenderNotice(): bool
     {
