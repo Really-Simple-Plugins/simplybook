@@ -45,15 +45,30 @@ For a more detailed understanding of the SimplyBook.me service, you can explore 
 
 This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you read the External services section below. It describes each external service, the data the plugin sends, and links to the privacy policy and terms of use of each service.
 
-This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins
-
-= About Really Simple Plugins: =
-Really Simple Plugins is the creator of most-used plugins Really Simple Security and Complianz. With a total of ~6 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
+This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins.
 
 = Benefits of the Online booking system =
 
 Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
 Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
+
+= About Really Simple Plugins =
+Really Simple Plugins is the creator of most-used plugins Really Simple Security and Complianz. With a total of ~6 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
+
+== External services ==
+
+This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version. The Plans & Prices page loads a subscription script from SimplyBook.me.
+
+The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
+
+During onboarding the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives the IP address and browser data of the admin. No cookies are set before the admin plays the video.
+
+For more information:
+
+* SimplyBook.me: [Terms and Conditions](https://simplybook.me/en/terms-and-conditions) & [Privacy Policy](https://simplybook.me/en/policy)
+* Really Simple Plugins: [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/) & [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
+* Google reCAPTCHA: [Terms of Service](https://policies.google.com/terms) & [Privacy Policy](https://policies.google.com/privacy)
+* YouTube: [Terms of Service](https://www.youtube.com/t/terms) & [Privacy Policy](https://policies.google.com/privacy)
 
 == Installation ==
 
@@ -72,29 +87,6 @@ Yes, we need to authenticate your site as your bookings will be processed throug
 
 = What if I already have a SimplyBook me account? =
 You can skip the onboarding and login with your existing login credentials.
-
-== External services ==
-
-This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version. The Plans & Prices page loads a subscription script from SimplyBook.me.
-
-The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
-
-During onboarding the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives the IP address and browser data of the admin. No cookies are set before the admin plays the video.
-
-The "Live Help" button in the plugin dashboard loads LiveAgent live chat. LiveAgent receives the IP address and browser data of the admin when the dashboard opens, and the chat messages when the admin starts a chat.
-
-For more information:
-
-* SimplyBook.me - [Terms of Use](https://simplybook.me/en/terms-and-conditions)
-* SimplyBook.me - [Privacy Policy](https://simplybook.me/en/policy)
-* Really Simple Plugins - [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/)
-* Really Simple Plugins - [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
-* Google reCAPTCHA - [Terms of Service](https://policies.google.com/terms)
-* Google reCAPTCHA - [Privacy Policy](https://policies.google.com/privacy)
-* YouTube - [Terms of Service](https://www.youtube.com/t/terms)
-* YouTube - [Privacy Policy](https://policies.google.com/privacy)
-* LiveAgent - [Terms and Conditions](https://www.liveagent.com/terms-and-conditions/)
-* LiveAgent - [Privacy Policy](https://www.liveagent.com/privacy-policy/)
 
 == Screenshots ==
 
