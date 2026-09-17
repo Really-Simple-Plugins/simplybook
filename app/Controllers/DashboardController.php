@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
@@ -21,7 +20,6 @@ class DashboardController implements ControllerInterface
     use HasUserAccess;
     use HasAllowlistControl;
 
-    private ApiClient $client;
     private EnvironmentConfig $env;
     private RequestStorage $request;
     private GeneralConfig $config;
@@ -29,14 +27,12 @@ class DashboardController implements ControllerInterface
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
-        ApiClient $client,
         EnvironmentConfig $env,
         GeneralConfig $config,
         RequestStorage $request,
         ThemeColorService $themeColorService,
         SubscriptionDataService $subscriptionDataService
     ) {
-        $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
