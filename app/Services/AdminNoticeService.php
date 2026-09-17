@@ -149,6 +149,9 @@ class AdminNoticeService
     }
 
 
+    /**
+     * Check if the "never" button hides the notice for the whole site.
+     */
     private function isNoticeDismissed(string $noticeId): bool
     {
         return $this->getChoice($noticeId) === self::CHOICE_NEVER;
@@ -156,8 +159,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the "later" choice still hides the notice. The snooze ends
-     * when the snooze seconds after the click have passed.
+     * Check if the notice is snoozed within the given seconds.
      */
     private function isNoticeSnoozed(string $noticeId, int $snoozeSeconds): bool
     {
@@ -210,18 +212,27 @@ class AdminNoticeService
     }
 
 
+    /**
+     * Each notice has its own option for the choice.
+     */
     private function choiceOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_choice';
     }
 
 
+    /**
+     * Each notice has its own option for the snooze timestamp.
+     */
     private function snoozedAtOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_dismissed_time';
     }
 
 
+    /**
+     * Check if the X button hides the notice for the current user.
+     */
     private function isNoticeDismissedForUser(string $noticeId): bool
     {
         return in_array($noticeId, $this->getDismissedNoticesForUser(), true);
@@ -239,12 +250,18 @@ class AdminNoticeService
     }
 
 
+    /**
+     * Write the notice IDs that the current user dismissed with the X button.
+     */
     private function storeDismissedNoticesForUser(array $noticeIds): bool
     {
         return update_user_meta(get_current_user_id(), self::META_KEY, $noticeIds) !== false;
     }
 
 
+    /**
+     * Build the full REST URL of a route of {@see AdminNoticesEndpoint}.
+     */
     private function restUrl(string $route): string
     {
         return esc_url_raw(rest_url(
