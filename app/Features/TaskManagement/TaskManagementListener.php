@@ -148,7 +148,7 @@ class TaskManagementListener implements ListenerInterface
 
         if (!empty($subscription) && $subscription === 'Trial') {
             if ($isExpired) {
-                $this->service->openTask(
+                $this->service->flagTaskUrgent(
                     Tasks\TrialExpiredTask::IDENTIFIER
                 );
             }
