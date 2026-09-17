@@ -1,15 +1,6 @@
 /**
  * SimplyBook Admin Notice Handler
  *
- * Dismisses or snoozes admin notices via the REST API. The X button
- * dismisses the notice for the current user. The buttons with a
- * data-notice-action attribute dismiss ("dismiss") or snooze ("snooze")
- * the notice for the whole site.
- *
- * WordPress adds the X button on jQuery ready. This script depends on
- * jquery, so its ready callback runs after that. wp.apiFetch adds the
- * REST root URL and the nonce to each request.
- *
  * @since 3.2.1
  */
 jQuery(function ($) {
@@ -19,15 +10,18 @@ jQuery(function ($) {
         const $notice = $(this);
         const noticeId = $notice.data('noticeId');
 
+        // X button: dismiss the notice for the current user.
         $notice.find('.notice-dismiss').on('click', function () {
             dismissNoticeForUser(noticeId);
         });
 
+        // "Later" button: snooze the notice for the whole site.
         $notice.find('[data-notice-action="snooze"]').on('click', function () {
             snoozeNotice(noticeId);
             $notice.remove();
         });
 
+        // "Never" button: dismiss the notice for the whole site.
         $notice.find('[data-notice-action="dismiss"]').on('click', function () {
             dismissNotice(noticeId);
             $notice.remove();
