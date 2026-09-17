@@ -109,8 +109,11 @@ class AdminNoticeService
     }
 
     /**
-     * Enqueue the stylesheet of the notices and the script that handles the
-     * buttons of a notice. WordPress prints both in the admin footer.
+     * Print the stylesheet of the notices before the first notice and
+     * enqueue the script that handles the buttons. The admin_notices action
+     * runs after the admin head. A stylesheet in the footer would show the
+     * notice without styles for a moment. WordPress prints the script in the
+     * admin footer.
      */
     private function enqueueAssets(): void
     {
@@ -120,12 +123,13 @@ class AdminNoticeService
 
         $this->assetsEnqueued = true;
 
-        wp_enqueue_style(
+        wp_register_style(
             'simplybook-admin-notices',
             $this->env->getUrl('plugin.assets_url') . 'css/admin-notices.css',
             [],
             $this->env->getString('plugin.version')
         );
+        wp_print_styles('simplybook-admin-notices');
 
         wp_enqueue_script(
             'simplybook-notice-dismiss',
