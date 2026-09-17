@@ -55,10 +55,15 @@ This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes it
 
 This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins.
 
-= Benefits of the online booking system =
+= What the plugin does for you =
 
-Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
-Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
+The plugin brings SimplyBook.me into your WordPress dashboard. You do not need to leave WordPress to get started.
+
+* **Start in minutes.** Register a free SimplyBook.me account from the plugin onboarding, or log in with an existing account. Custom domains and 2FA are supported.
+* **Place the widget anywhere.** Add the booking calendar with the SimplyBook.me Gutenberg block, the Elementor widget or a shortcode.
+* **Match your theme.** The plugin reads your theme colors and uses them as the default widget style. Adjust colors and layout in the settings.
+* **Manage services in WordPress.** Create and edit services, service providers and their details from the plugin.
+* **Keep track.** The plugin dashboard shows your recent bookings and open setup tasks.
 
 = About Really Simple Plugins =
 Really Simple Plugins is the creator of most-used plugins Really Simple Security and Complianz. With a total of ~6 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
