@@ -9,7 +9,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  * Shared logic for the admin notices. The X button hides a notice for the
  * current user in user meta. The "never" and "later" buttons hide a notice
  * for the whole site in wp_options. The buttons call the routes of
- * {@see \SimplyBook\Http\Endpoints\AdminNoticesEndpoint}.
+ * {@see \SimplyBook\Http\Endpoints\AdminNoticesEndpoints}.
  */
 class AdminNoticeService
 {

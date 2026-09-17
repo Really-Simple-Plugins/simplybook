@@ -211,7 +211,7 @@ final class Plugin
             \SimplyBook\Http\Endpoints\SubscriptionWidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
-            \SimplyBook\Http\Endpoints\AdminNoticesEndpoint::class,
+            \SimplyBook\Http\Endpoints\AdminNoticesEndpoints::class,
         ]);
     }
 
