@@ -47,7 +47,7 @@ This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes it
 
 This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins.
 
-= Benefits of the Online booking system =
+= Benefits of the online booking system =
 
 Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
 Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
