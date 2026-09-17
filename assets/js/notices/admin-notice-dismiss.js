@@ -4,7 +4,6 @@
  * Dismisses or snoozes admin notices via the REST API. The X button
  * dismisses the notice. Buttons with a data-notice-action attribute
  * dismiss ("dismiss") or snooze ("snooze") the notice and hide it.
- * Uses event delegation to handle dynamically added buttons.
  *
  * @since 3.2.1
  */
@@ -19,15 +18,17 @@
     }
 
     function init() {
-        // Single event listener for all notices
-        document.addEventListener('click', function(e) {
-            const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
-            if (!notice || !notice.dataset.noticeType) {
-                return;
-            }
+        document.querySelectorAll('.notice.is-dismissible[data-notice-type]').forEach(bindNotice);
+    }
 
-            const noticeId = notice.dataset.noticeType;
+    function bindNotice(notice) {
+        const noticeId = notice.dataset.noticeType;
+        if (!noticeId) {
+            return;
+        }
 
+        // WordPress adds the X button after DOM ready, so listen on the notice.
+        notice.addEventListener('click', function(e) {
             if (e.target.closest('.notice-dismiss')) {
                 dismissNoticeForUser(noticeId);
                 return;
