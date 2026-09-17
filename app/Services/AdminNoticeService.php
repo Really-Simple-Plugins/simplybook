@@ -110,15 +110,10 @@ class AdminNoticeService
         wp_enqueue_script(
             'simplybook-notice-dismiss',
             $this->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
-            ['jquery'],
+            ['jquery', 'wp-api-fetch'],
             $this->env->getString('plugin.version'),
             true
         );
-
-        wp_localize_script('simplybook-notice-dismiss', 'simplybookNoticesConfig', [
-            'restUrl' => $this->restUrl(),
-            'nonce' => wp_create_nonce('wp_rest'),
-        ]);
     }
 
 
@@ -250,17 +245,5 @@ class AdminNoticeService
     private function updateUserDismissedNotices(array $noticeIds): bool
     {
         return update_user_meta(get_current_user_id(), self::META_KEY, $noticeIds) !== false;
-    }
-
-
-    /**
-     * Build the REST URL of the plugin. The script appends the route of
-     * {@see \SimplyBook\Http\Endpoints\AdminNoticesEndpoint}.
-     */
-    private function restUrl(): string
-    {
-        return esc_url_raw(rest_url(
-            $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/'
-        ));
     }
 }

@@ -7,7 +7,8 @@
  * the notice for the whole site.
  *
  * WordPress adds the X button on jQuery ready. This script depends on
- * jquery, so its ready callback runs after that.
+ * jquery, so its ready callback runs after that. wp.apiFetch adds the
+ * REST root URL and the nonce to each request.
  *
  * @since 3.2.1
  */
@@ -46,18 +47,10 @@ jQuery(function ($) {
     }
 
     function sendRequest(route, noticeId) {
-        if (!simplybookNoticesConfig?.restUrl || !simplybookNoticesConfig?.nonce) {
-            return;
-        }
-
-        fetch(simplybookNoticesConfig.restUrl + route, {
+        wp.apiFetch({
+            path: 'simplybook/v1/' + route,
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-WP-Nonce': simplybookNoticesConfig.nonce
-            },
-            credentials: 'same-origin',
-            body: JSON.stringify({ notice_id: noticeId })
+            data: { notice_id: noticeId }
         });
     }
 });
