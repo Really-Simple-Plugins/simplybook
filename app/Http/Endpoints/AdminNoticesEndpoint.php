@@ -64,7 +64,7 @@ class AdminNoticesEndpoint implements MultiEndpointInterface
     {
         $noticeId = $request->get_param('notice_id');
 
-        $success = $this->service->dismissNoticeForUser(get_current_user_id(), $noticeId);
+        $success = $this->service->dismissNoticeForUser($noticeId);
 
         return $this->respond($noticeId, $success, __('Failed to dismiss notice.', 'simplybook'));
     }
