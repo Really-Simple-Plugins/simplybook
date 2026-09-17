@@ -17,36 +17,48 @@ jQuery(function () {
     document.querySelectorAll('.notice[data-notice-type]').forEach(function (notice) {
         const noticeId = notice.dataset.noticeType;
 
-        const dismissButton = notice.querySelector('.notice-dismiss');
-        if (dismissButton) {
-            dismissButton.addEventListener('click', function () {
-                sendRequest(simplybookNoticesConfig?.dismissForUserUrl, noticeId);
+        const dismissForUserButton = notice.querySelector('.notice-dismiss');
+        if (dismissForUserButton) {
+            dismissForUserButton.addEventListener('click', function () {
+                dismissNoticeForUser(noticeId);
             });
         }
 
         const snoozeButton = notice.querySelector('[data-notice-action="snooze"]');
         if (snoozeButton) {
             snoozeButton.addEventListener('click', function () {
-                sendRequest(simplybookNoticesConfig?.snoozeUrl, noticeId);
+                snoozeNotice(noticeId);
                 notice.remove();
             });
         }
 
-        const neverButton = notice.querySelector('[data-notice-action="dismiss"]');
-        if (neverButton) {
-            neverButton.addEventListener('click', function () {
-                sendRequest(simplybookNoticesConfig?.dismissUrl, noticeId);
+        const dismissButton = notice.querySelector('[data-notice-action="dismiss"]');
+        if (dismissButton) {
+            dismissButton.addEventListener('click', function () {
+                dismissNotice(noticeId);
                 notice.remove();
             });
         }
     });
 
-    function sendRequest(url, noticeId) {
-        if (!url || !simplybookNoticesConfig?.nonce) {
+    function dismissNoticeForUser(noticeId) {
+        sendRequest('notices/dismiss-for-user', noticeId);
+    }
+
+    function dismissNotice(noticeId) {
+        sendRequest('notices/dismiss', noticeId);
+    }
+
+    function snoozeNotice(noticeId) {
+        sendRequest('notices/snooze', noticeId);
+    }
+
+    function sendRequest(route, noticeId) {
+        if (!simplybookNoticesConfig?.restUrl || !simplybookNoticesConfig?.nonce) {
             return;
         }
 
-        fetch(url, {
+        fetch(simplybookNoticesConfig.restUrl + route, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

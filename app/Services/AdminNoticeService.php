@@ -119,10 +119,8 @@ class AdminNoticeService
         wp_add_inline_script(
             'simplybook-notice-dismiss',
             sprintf(
-                'const simplybookNoticesConfig = { dismissForUserUrl: %s, dismissUrl: %s, snoozeUrl: %s, nonce: %s };',
-                wp_json_encode($this->restUrl(AdminNoticesEndpoint::DISMISS_FOR_USER_ROUTE)),
-                wp_json_encode($this->restUrl(AdminNoticesEndpoint::DISMISS_ROUTE)),
-                wp_json_encode($this->restUrl(AdminNoticesEndpoint::SNOOZE_ROUTE)),
+                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
+                wp_json_encode($this->restUrl()),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),
             'before'
@@ -262,12 +260,13 @@ class AdminNoticeService
 
 
     /**
-     * Build the full REST URL of a route of {@see AdminNoticesEndpoint}.
+     * Build the REST URL of the plugin. The script appends the route of
+     * {@see AdminNoticesEndpoint}.
      */
-    private function restUrl(string $route): string
+    private function restUrl(): string
     {
         return esc_url_raw(rest_url(
-            $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . $route
+            $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/'
         ));
     }
 }
