@@ -16,6 +16,12 @@ abstract class AbstractPromotionTask extends AbstractTask
      */
     protected bool $required = false;
 
+    /**
+     * A dismissed promotion task must show again each year. Bump the task
+     * version in the release before the promotion to reset the status.
+     */
+    protected bool $reactivateOnUpgrade = true;
+
     protected EnvironmentConfig $env;
 
     public function __construct(EnvironmentConfig $env)
