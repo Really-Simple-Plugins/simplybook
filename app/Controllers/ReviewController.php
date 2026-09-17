@@ -74,6 +74,7 @@ class ReviewController implements ControllerInterface
      * - The review notice snooze duration has passed
      * - The amount of bookings is greater than the threshold
      * - The user is not on an edit screen
+     * - The user is not on the plugin page
      */
     private function canRenderReviewNotice(): bool
     {

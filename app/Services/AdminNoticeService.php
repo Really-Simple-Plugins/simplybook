@@ -22,10 +22,12 @@ class AdminNoticeService
 
     /**
      * Don't render the notices on any of these screens. Gutenberg removes the
-     * class that makes a notice dismissible on the post screen.
+     * class that makes a notice dismissible on the post screen. Notices break
+     * the UI of our own pages.
      */
     private const EXCLUDED_SCREEN_BASES = [
         'post',
+        'simplybook',
     ];
 
     private EnvironmentConfig $env;
@@ -142,25 +144,23 @@ class AdminNoticeService
 
 
     /**
-     * Check if the current admin screen is a page of this plugin. Some
-     * notices do not render on our own pages.
-     */
-    public function isPluginScreen(): bool
-    {
-        $screen = get_current_screen();
-
-        return $screen && str_contains($screen->base, 'simplybook');
-    }
-
-
-    /**
      * Check if the current admin screen may show a notice.
      */
     private function currentScreenAllowsNotice(): bool
     {
         $screen = get_current_screen();
 
-        return !$screen || (in_array($screen->base, self::EXCLUDED_SCREEN_BASES, true) === false);
+        if (!$screen) {
+            return true;
+        }
+
+        foreach (self::EXCLUDED_SCREEN_BASES as $base) {
+            if (str_contains($screen->base, $base)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
