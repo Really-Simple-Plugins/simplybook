@@ -88,6 +88,9 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.4.1 =
+* Removed: The "Live Help" chat button and the third-party LiveAgent script.
+
 = 3.4.0 - 2026-08-19 =
 * Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
 * Added: New submenu to manage your SimplyBook.me plans and prices.
