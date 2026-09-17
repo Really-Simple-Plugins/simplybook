@@ -40,7 +40,7 @@ SimplyBook.me can be used for free up to 50 appointments per month. In addition,
 
 = Why SimplyBook.me? =
 
-SimplyBook.me is the online booking system behind the plugin. Your clients book your services on your site at any time. You manage the bookings in the SimplyBook.me admin or in the mobile app.
+SimplyBook.me is the online booking system behind the plugin. Your clients book your services on your site at any time. You manage the bookings in the plugin dashboard, the SimplyBook.me admin or the mobile app.
 
 * **Fewer no-shows.** SimplyBook.me sends automatic email and SMS reminders for every booking.
 * **No double bookings.** Services, providers and schedules live in one calendar. Clients only see free time slots.
@@ -51,9 +51,7 @@ SimplyBook.me is the online booking system behind the plugin. Your clients book 
 
 Thousands of businesses all over the world use SimplyBook.me. Read more at [SimplyBook.me](https://simplybook.me/?ref=wordpress).
 
-This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you read the External services section below. It describes each external service, the data the plugin sends, and links to the privacy policy and terms of use of each service.
-
-This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins.
+This is the official SimplyBook.me plugin. SimplyBook.me and Really Simple Plugins develop it together. SimplyBook.me is ISO 27001 certified. The plugin stores your settings, bookings and client data on SimplyBook.me through its API. Read the External services section below for each service the plugin connects to, the data it sends, and the privacy policy and terms of each service.
 
 = What the plugin does for you =
 
@@ -90,13 +88,13 @@ For more information:
 == Frequently Asked Questions ==
 
 = Is SimplyBook.me free to use? =
-Yes, the plugin and registering an account at SimplyBook.me is entirely free, without the need to add credit card information. You can fully use the booking widget and use our mobile app for iOS or Android to manage your bookings, up to 50 bookings per month. Additionally, you can even use 1 of our 'Special Features' within the Free plan.
+Yes, the plugin and registering an account at SimplyBook.me is entirely free, without the need to add credit card information. You can fully use the booking widget and use the SimplyBook.me mobile app for iOS or Android to manage your bookings, up to 50 bookings per month. Additionally, you can even use 1 of the SimplyBook.me 'Special Features' within the Free plan.
 
 = Can I try SimplyBook.me's Special Features before subscribing? =
-Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you will be reset to the Free plan, or you can decide to subscribe to our paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
+Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you will be reset to the Free plan, or you can decide to subscribe to the SimplyBook.me paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
-Yes, we need to authenticate your site as your bookings will be processed through our API. This allows us to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me)
+Yes, the plugin needs to authenticate your site as your bookings are processed through the SimplyBook.me API. This allows SimplyBook.me to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me)
 
 = What if I already have a SimplyBook me account? =
 You can skip the onboarding and login with your existing login credentials.
