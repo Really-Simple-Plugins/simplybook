@@ -5,7 +5,7 @@ const SubscriptionWidget = () => {
 
     return (
         <div className="mx-auto flex max-w-screen-2xl w-full">
-            <div className="mb-4 w-full min-h-[640px] bg-white p-6">
+            <div className="my-4 w-full min-h-[640px] bg-white p-6">
                 {loadError && (
                     <p className="text-sm text-red-600">
                         {loadError}
