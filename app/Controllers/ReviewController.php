@@ -5,7 +5,6 @@ namespace SimplyBook\Controllers;
 use Carbon\Carbon;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Services\PluginFirstUseTimeService;
-use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\AdminNoticeService;
@@ -13,7 +12,6 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ReviewController implements ControllerInterface
 {
-    use HasViews;
     use HasAllowlistControl;
 
     private const NOTICE_ID = 'review';
@@ -41,7 +39,6 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showLeaveReviewNotice']);
     }
 
@@ -62,7 +59,7 @@ class ReviewController implements ControllerInterface
             '</a>'
         );
 
-        $this->render('admin/review-notice', [
+        $this->adminNoticeService->renderNotice('admin/review-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'reviewUrl' => $this->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
@@ -116,19 +113,6 @@ class ReviewController implements ControllerInterface
         $thirtyDaysAgo = Carbon::now()->subDays(30);
 
         return $timestamp->isBefore($thirtyDaysAgo);
-    }
-
-    /**
-     * Enqueue scripts for notice dismiss functionality
-     */
-    public function enqueueScripts(): void
-    {
-        // Only enqueue if the notice will be shown
-        if ($this->canRenderReviewNotice() === false) {
-            return;
-        }
-
-        $this->adminNoticeService->enqueue();
     }
 
     /**

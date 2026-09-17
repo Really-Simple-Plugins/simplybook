@@ -3,7 +3,6 @@
 namespace SimplyBook\Controllers;
 
 use Carbon\Carbon;
-use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\ExtendifyDataService;
@@ -12,7 +11,6 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class OnboardingNoticeController implements ControllerInterface
 {
-    use HasViews;
     use HasAllowlistControl;
 
     private const NOTICE_ID = 'complete_onboarding';
@@ -35,7 +33,6 @@ class OnboardingNoticeController implements ControllerInterface
             return;
         }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showCompleteOnboardingNotice']);
     }
 
@@ -55,7 +52,7 @@ class OnboardingNoticeController implements ControllerInterface
             '</a>'
         );
 
-        $this->render('admin/complete-onboarding-notice', [
+        $this->adminNoticeService->renderNotice('admin/complete-onboarding-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'onboardingUrl' => $this->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
@@ -137,18 +134,5 @@ class OnboardingNoticeController implements ControllerInterface
         $daysAgo = Carbon::now()->subDays($daysAgo);
 
         return $timestamp->isBefore($daysAgo);
-    }
-
-    /**
-     * Enqueue scripts for notice dismiss functionality
-     */
-    public function enqueueScripts(): void
-    {
-        // Only enqueue if the notice will be shown
-        if ($this->canRenderNotice() === false) {
-            return;
-        }
-
-        $this->adminNoticeService->enqueue();
     }
 }

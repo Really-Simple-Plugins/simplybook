@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Services;
 
+use SimplyBook\Traits\HasViews;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
@@ -12,6 +13,8 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  */
 class AdminNoticeService
 {
+    use HasViews;
+
     private const META_KEY = 'simplybook_dismissed_notices';
 
     private const CHOICE_LATER = 'later';
@@ -26,7 +29,7 @@ class AdminNoticeService
     ];
 
     private EnvironmentConfig $env;
-    private bool $scriptEnqueued = false;
+    private bool $assetsEnqueued = false;
 
     public function __construct(EnvironmentConfig $env)
     {
@@ -96,17 +99,26 @@ class AdminNoticeService
 
 
     /**
-     * Enqueue the stylesheet of the notices and the script that handles the
-     * buttons of a notice. Call this method in the admin_enqueue_scripts
-     * action.
+     * Render the view of a notice with its stylesheet and script. Call this
+     * method in the admin_notices action.
      */
-    public function enqueue(): void
+    public function renderNotice(string $view, array $variables): void
     {
-        if ($this->scriptEnqueued) {
+        $this->enqueueAssets();
+        $this->render($view, $variables);
+    }
+
+    /**
+     * Enqueue the stylesheet of the notices and the script that handles the
+     * buttons of a notice. WordPress prints both in the admin footer.
+     */
+    private function enqueueAssets(): void
+    {
+        if ($this->assetsEnqueued) {
             return;
         }
 
-        $this->scriptEnqueued = true;
+        $this->assetsEnqueued = true;
 
         wp_enqueue_style(
             'simplybook-admin-notices',

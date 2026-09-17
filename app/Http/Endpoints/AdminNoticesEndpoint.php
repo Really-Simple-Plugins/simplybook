@@ -10,7 +10,7 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 /**
  * REST routes for the buttons of an admin notice. The X button hides a
  * notice for the current user. The "never" and "later" buttons hide a
- * notice for the whole site. See {@see AdminNoticeService::enqueue()}.
+ * notice for the whole site. See {@see AdminNoticeService::renderNotice()}.
  */
 class AdminNoticesEndpoint implements MultiEndpointInterface
 {

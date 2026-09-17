@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -12,7 +11,6 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface
 {
-    use HasViews;
     use HasAllowlistControl;
     use LegacyLoad;
 
@@ -39,7 +37,6 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showTrialExpirationNotice']);
     }
 
@@ -63,20 +60,11 @@ class TrialExpirationController implements ControllerInterface
             );
         }
 
-        $this->render('admin/trial-notice', [
+        $this->adminNoticeService->renderNotice('admin/trial-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
         ]);
-    }
-
-    public function enqueueScripts(): void
-    {
-        if ($this->canRenderTrialNotice() === false) {
-            return;
-        }
-
-        $this->adminNoticeService->enqueue();
     }
 
     private function canRenderTrialNotice(): bool
