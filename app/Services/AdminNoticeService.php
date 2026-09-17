@@ -111,9 +111,9 @@ class AdminNoticeService
         wp_enqueue_script(
             'simplybook-notice-dismiss',
             $this->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
-            [],
+            ['jquery'],
             $this->env->getString('plugin.version'),
-            false
+            true
         );
 
         wp_add_inline_script(
