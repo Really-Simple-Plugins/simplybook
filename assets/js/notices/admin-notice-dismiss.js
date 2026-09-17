@@ -29,7 +29,7 @@
             const noticeId = notice.dataset.noticeType;
 
             if (e.target.closest('.notice-dismiss')) {
-                dismissNotice(noticeId);
+                dismissNoticeForUser(noticeId);
                 return;
             }
 
@@ -41,7 +41,7 @@
             e.preventDefault();
 
             if (button.dataset.noticeAction === 'snooze') {
-                snoozeNotice(noticeId, parseInt(button.dataset.snoozeSeconds, 10));
+                snoozeNotice(noticeId);
             } else {
                 dismissNotice(noticeId);
             }
@@ -50,17 +50,16 @@
         });
     }
 
+    function dismissNoticeForUser(noticeId) {
+        sendRequest(simplybookNoticesConfig?.dismissForUserUrl, { notice_id: noticeId });
+    }
+
     function dismissNotice(noticeId) {
         sendRequest(simplybookNoticesConfig?.dismissUrl, { notice_id: noticeId });
     }
 
-    function snoozeNotice(noticeId, seconds) {
-        const data = { notice_id: noticeId };
-        if (seconds) {
-            data.seconds = seconds;
-        }
-
-        sendRequest(simplybookNoticesConfig?.snoozeUrl, data);
+    function snoozeNotice(noticeId) {
+        sendRequest(simplybookNoticesConfig?.snoozeUrl, { notice_id: noticeId });
     }
 
     function sendRequest(url, data) {
