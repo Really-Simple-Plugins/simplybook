@@ -81,6 +81,12 @@ For more information:
 * Google reCAPTCHA: [Terms of Service](https://policies.google.com/terms) & [Privacy Policy](https://policies.google.com/privacy)
 * YouTube: [Terms of Service](https://www.youtube.com/t/terms) & [Privacy Policy](https://policies.google.com/privacy)
 
+= Source code =
+
+This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
+
+To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
+
 == Installation ==
 
 = [Detailed instructions with photos here](https://help.simplybook.me/index.php/WordPress_integration) =
