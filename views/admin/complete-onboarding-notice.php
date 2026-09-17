@@ -61,7 +61,7 @@
     <?php endif; ?>
 </style>
 
-<div id="message" class="updated fade notice is-dismissible rsp-complete-onboarding simplybook-notice" data-notice-id="complete_onboarding">
+<div id="message" class="updated fade notice is-dismissible rsp-complete-onboarding really-simple-plugins" data-notice-id="complete_onboarding">
     <div class="rsp-container">
         <div class="rsp-complete-onboarding-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="notice-logo"></div>
         <div class="rsp-complete-onboarding-form">
