@@ -2,24 +2,154 @@
 
 namespace SimplyBook\Services;
 
+use Carbon\Carbon;
 use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
- * Stores the per-user state of admin notices. A notice can be dismissed
- * for good or snoozed until a point in time. The service also enqueues
- * the script that handles the X button of a notice.
+ * Shared logic for the admin notices of the plugin. The service stores
+ * the per-user dismissed and snoozed state, reads the "later" or "never"
+ * choice from the notice form, checks the current screen, caches the
+ * eligibility result and enqueues the script for the X button.
  */
 class AdminNoticeService
 {
+    public const CHOICE_LATER = 'later';
+    public const CHOICE_NEVER = 'never';
+
     private const META_KEY = 'simplybook_dismissed_notices';
     private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
+    private const FORM_FIELD = 'rsp_notice_form';
+    private const CHOICE_FIELD = 'rsp_notice_choice';
+    private const NONCE_NAME = 'rsp_notice_nonce';
+
+    /**
+     * Notices break the Gutenberg editor and the React app of the plugin.
+     * No notice renders on a screen whose base matches one of these.
+     */
+    private const EXCLUDED_SCREEN_BASES = [
+        'post',
+        'simplybook',
+    ];
 
     private EnvironmentConfig $env;
+    private RequestStorage $request;
 
-    public function __construct(EnvironmentConfig $env)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request)
     {
         $this->env = $env;
+        $this->request = $request;
+    }
+
+    /**
+     * Return the variables every notice view needs to render the form with
+     * the "later" and "never" buttons.
+     */
+    public function formVariables(string $noticeId): array
+    {
+        return [
+            'noticeId' => $noticeId,
+            'formField' => self::FORM_FIELD,
+            'choiceField' => self::CHOICE_FIELD,
+            'nonceAction' => $this->nonceAction($noticeId),
+            'nonceName' => self::NONCE_NAME,
+        ];
+    }
+
+    /**
+     * Read the choice the user made in the form of the given notice. Returns
+     * null when the request holds no form submit for this notice or the
+     * nonce is not valid.
+     */
+    public function submittedChoice(string $noticeId): ?string
+    {
+        if ($this->request->getString('global.' . self::FORM_FIELD) !== $noticeId) {
+            return null;
+        }
+
+        $nonce = $this->request->get('global.' . self::NONCE_NAME);
+        if (wp_verify_nonce($nonce, $this->nonceAction($noticeId)) === false) {
+            return null;
+        }
+
+        $choice = $this->request->getString('global.' . self::CHOICE_FIELD);
+
+        return in_array($choice, [self::CHOICE_LATER, self::CHOICE_NEVER], true) ? $choice : null;
+    }
+
+    /**
+     * Check if the current admin screen may show a notice.
+     */
+    public function currentScreenAllowsNotice(): bool
+    {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return true;
+        }
+
+        foreach (self::EXCLUDED_SCREEN_BASES as $base) {
+            if (str_contains($screen->base, $base)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Run the eligibility check of a notice and cache the result. A positive
+     * result is cached for one minute, a negative result for ten minutes.
+     * The screen check runs before the cache, because the result must stay
+     * valid on every screen.
+     */
+    public function canRender(string $noticeId, callable $isEligible): bool
+    {
+        if ($this->currentScreenAllowsNotice() === false) {
+            return false;
+        }
+
+        $found = false;
+        $cacheName = $this->cacheName($noticeId);
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
+        }
+
+        $eligible = (bool) $isEligible();
+        $cacheDuration = ($eligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
+        wp_cache_set($cacheName, $eligible, 'simplybook', $cacheDuration);
+
+        return $eligible;
+    }
+
+    /**
+     * Remove the cached eligibility result. Call this after the state of a
+     * notice changed in the same request.
+     */
+    public function forgetCanRender(string $noticeId): void
+    {
+        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
+    }
+
+    /**
+     * Check if the given amount of days has passed since the timestamp.
+     * @param string|float|int $timestamp
+     */
+    public function daysHavePassedSince($timestamp, int $days): bool
+    {
+        return Carbon::createFromTimestamp($timestamp)->isBefore(Carbon::now()->subDays($days));
+    }
+
+    private function nonceAction(string $noticeId): string
+    {
+        return 'rsp_notice_form_submit_' . $noticeId;
+    }
+
+    private function cacheName(string $noticeId): string
+    {
+        return 'can_render_' . $noticeId . '_notice';
     }
 
     /**
