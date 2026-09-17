@@ -33,25 +33,6 @@ class AdminNoticeService
     }
 
     /**
-     * Check if the current admin screen may show a notice.
-     */
-    private function currentScreenAllowsNotice(): bool
-    {
-        $screen = get_current_screen();
-        if (!$screen) {
-            return true;
-        }
-
-        foreach (self::EXCLUDED_SCREEN_BASES as $base) {
-            if (str_contains($screen->base, $base)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * Run the eligibility check of a notice and cache the result. A positive
      * result is cached for one minute, a negative result for ten minutes.
      * The screen check and the per-user check run before the cache, because
@@ -82,10 +63,6 @@ class AdminNoticeService
         return $eligible;
     }
 
-    private function cacheName(string $noticeId): string
-    {
-        return 'can_render_' . $noticeId . '_notice';
-    }
 
     /**
      * Hide a notice for a specific user for good.
@@ -105,18 +82,6 @@ class AdminNoticeService
         return $result !== false;
     }
 
-    /**
-     * Check if the user dismissed the notice for good or the snooze time
-     * has not passed yet.
-     */
-    private function isNoticeHiddenForUser(int $userId, string $noticeId): bool
-    {
-        if (in_array($noticeId, $this->getDismissedNotices($userId), true)) {
-            return true;
-        }
-
-        return $this->getSnoozedNotice($userId, $noticeId) > time();
-    }
 
     /**
      * Hide a notice for a specific user until the given amount of seconds
@@ -127,46 +92,6 @@ class AdminNoticeService
         return $this->storeSnoozedNotice($userId, $noticeId, (time() + $seconds));
     }
 
-    /**
-     * Return an array of dismissed notices for a specific user
-     */
-    private function getDismissedNotices(int $userId): array
-    {
-        $dismissed = get_user_meta($userId, self::META_KEY, true);
-
-        return is_array($dismissed) ? $dismissed : [];
-    }
-
-    /**
-     * Return the snooze end timestamp of a notice for a specific user. Zero
-     * means the notice was never snoozed.
-     */
-    private function getSnoozedNotice(int $userId, string $noticeId): int
-    {
-        return (int) ($this->getSnoozedNotices($userId)[$noticeId] ?? 0);
-    }
-
-    /**
-     * Return the snooze end timestamps for a specific user, keyed by
-     * notice ID.
-     */
-    private function getSnoozedNotices(int $userId): array
-    {
-        $snoozed = get_user_meta($userId, self::SNOOZE_META_KEY, true);
-
-        return is_array($snoozed) ? $snoozed : [];
-    }
-
-    /**
-     * Save the snooze end timestamp of a notice for a specific user.
-     */
-    private function storeSnoozedNotice(int $userId, string $noticeId, int $snoozedUntil): bool
-    {
-        $snoozedNotices = $this->getSnoozedNotices($userId);
-        $snoozedNotices[$noticeId] = $snoozedUntil;
-
-        return update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices) !== false;
-    }
 
     /**
      * Call this method to enqueue the script that handles the X button and
@@ -198,6 +123,92 @@ class AdminNoticeService
             'before'
         );
     }
+
+
+    /**
+     * Check if the current admin screen may show a notice.
+     */
+    private function currentScreenAllowsNotice(): bool
+    {
+        $screen = get_current_screen();
+        if (!$screen) {
+            return true;
+        }
+
+        foreach (self::EXCLUDED_SCREEN_BASES as $base) {
+            if (str_contains($screen->base, $base)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    private function cacheName(string $noticeId): string
+    {
+        return 'can_render_' . $noticeId . '_notice';
+    }
+
+
+    /**
+     * Check if the user dismissed the notice for good or the snooze time
+     * has not passed yet.
+     */
+    private function isNoticeHiddenForUser(int $userId, string $noticeId): bool
+    {
+        if (in_array($noticeId, $this->getDismissedNotices($userId), true)) {
+            return true;
+        }
+
+        return $this->getSnoozedNotice($userId, $noticeId) > time();
+    }
+
+
+    /**
+     * Return an array of dismissed notices for a specific user
+     */
+    private function getDismissedNotices(int $userId): array
+    {
+        $dismissed = get_user_meta($userId, self::META_KEY, true);
+
+        return is_array($dismissed) ? $dismissed : [];
+    }
+
+
+    /**
+     * Return the snooze end timestamp of a notice for a specific user. Zero
+     * means the notice was never snoozed.
+     */
+    private function getSnoozedNotice(int $userId, string $noticeId): int
+    {
+        return (int) ($this->getSnoozedNotices($userId)[$noticeId] ?? 0);
+    }
+
+
+    /**
+     * Return the snooze end timestamps for a specific user, keyed by
+     * notice ID.
+     */
+    private function getSnoozedNotices(int $userId): array
+    {
+        $snoozed = get_user_meta($userId, self::SNOOZE_META_KEY, true);
+
+        return is_array($snoozed) ? $snoozed : [];
+    }
+
+
+    /**
+     * Save the snooze end timestamp of a notice for a specific user.
+     */
+    private function storeSnoozedNotice(int $userId, string $noticeId, int $snoozedUntil): bool
+    {
+        $snoozedNotices = $this->getSnoozedNotices($userId);
+        $snoozedNotices[$noticeId] = $snoozedUntil;
+
+        return update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices) !== false;
+    }
+
 
     private function restUrl(string $route): string
     {
