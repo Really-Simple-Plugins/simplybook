@@ -4,7 +4,6 @@
  * @var string $logoUrl
  * @var string $reviewUrl
  * @var string $reviewMessage
- * @var array $noticeForm Keys: noticeId, formField, choiceField, nonceAction, nonceName
  */
 ?>
 
@@ -65,23 +64,21 @@
 <div id="message" class="updated fade notice is-dismissible rsp-review really-simple-plugins" data-notice-type="review">
     <div class="rsp-container">
         <div class="rsp-review-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
-        <form class="rsp-review-form" action="" method="POST">
-            <?php wp_nonce_field($noticeForm['nonceAction'], $noticeForm['nonceName']); ?>
-            <input type="hidden" name="<?php echo esc_attr($noticeForm['formField']); ?>" value="<?php echo esc_attr($noticeForm['noticeId']); ?>">
+        <div class="rsp-review-form">
             <?php echo wp_kses_post(wpautop($reviewMessage)); ?>
             <div class="rsp-buttons-row">
                 <a class="button button-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($reviewUrl); ?>">
                     <?php esc_html_e('Leave a review', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="later">
+                <button type="button" class="link" data-notice-action="snooze" data-snooze-seconds="<?php echo esc_attr(30 * DAY_IN_SECONDS); ?>">
                     <?php esc_html_e('Maybe later', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="never">
+                <button type="button" class="link" data-notice-action="dismiss">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>

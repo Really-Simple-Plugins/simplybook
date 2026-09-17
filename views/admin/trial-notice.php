@@ -4,7 +4,6 @@
  * @var string $logoUrl
  * @var string $message
  * @var string $plansPricesUrl
- * @var array $noticeForm Keys: noticeId, formField, choiceField, nonceAction, nonceName
  */
 ?>
 
@@ -69,9 +68,7 @@
 <div id="message" class="notice notice-warning is-dismissible rsp-trial really-simple-plugins" data-notice-type="trial">
     <div class="rsp-container">
         <div class="rsp-trial-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="simplybook-logo"></div>
-        <form class="rsp-trial-content rsp-trial-form" action="" method="POST">
-            <?php wp_nonce_field($noticeForm['nonceAction'], $noticeForm['nonceName']); ?>
-            <input type="hidden" name="<?php echo esc_attr($noticeForm['formField']); ?>" value="<?php echo esc_attr($noticeForm['noticeId']); ?>">
+        <div class="rsp-trial-content rsp-trial-form">
             <?php echo wp_kses_post(wpautop($message)); ?>
             <div class="rsp-buttons-row">
                 <a
@@ -81,14 +78,14 @@
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="later">
+                <button type="button" class="link" data-notice-action="snooze" data-snooze-seconds="<?php echo esc_attr(DAY_IN_SECONDS); ?>">
                     <?php esc_html_e('Remind me tomorrow', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="never">
+                <button type="button" class="link" data-notice-action="dismiss">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </div>

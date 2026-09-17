@@ -2,27 +2,19 @@
 
 namespace SimplyBook\Services;
 
-use Carbon\Carbon;
 use SimplyBook\Http\Endpoints\AdminNoticesEndpoint;
-use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Shared logic for the admin notices of the plugin. The service stores
- * the per-user dismissed and snoozed state, handles the "later" or "never"
- * choice of the notice form, checks the current screen, caches the
- * eligibility result and enqueues the script for the X button.
+ * the per-user dismissed and snoozed state, checks the current screen,
+ * caches the eligibility result and enqueues the script that calls the
+ * dismiss and snooze routes of {@see AdminNoticesEndpoint}.
  */
 class AdminNoticeService
 {
-    private const CHOICE_LATER = 'later';
-    private const CHOICE_NEVER = 'never';
-
     private const META_KEY = 'simplybook_dismissed_notices';
     private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
-    private const FORM_FIELD = 'rsp_notice_form';
-    private const CHOICE_FIELD = 'rsp_notice_choice';
-    private const NONCE_NAME = 'rsp_notice_nonce';
 
     /**
      * Notices break the Gutenberg editor and the React app of the plugin.
@@ -34,117 +26,10 @@ class AdminNoticeService
     ];
 
     private EnvironmentConfig $env;
-    private RequestStorage $request;
 
-    public function __construct(EnvironmentConfig $env, RequestStorage $request)
+    public function __construct(EnvironmentConfig $env)
     {
         $this->env = $env;
-        $this->request = $request;
-    }
-
-    /**
-     * Return the variables every notice view needs to render the form with
-     * the "later" and "never" buttons.
-     */
-    public function formVariables(string $noticeId): array
-    {
-        return [
-            'noticeId' => $noticeId,
-            'formField' => self::FORM_FIELD,
-            'choiceField' => self::CHOICE_FIELD,
-            'nonceAction' => $this->nonceAction($noticeId),
-            'nonceName' => self::NONCE_NAME,
-        ];
-    }
-
-    /**
-     * Handle the form submit of a site wide notice. The service stores the
-     * choice in the option simplybook_{noticeId}_notice_choice. For "later"
-     * it also stores the time in simplybook_{noticeId}_notice_dismissed_time.
-     * Nothing happens when the request holds no valid form submit for this
-     * notice.
-     */
-    public function handleFormSubmit(string $noticeId): void
-    {
-        $choice = $this->submittedChoice($noticeId);
-        if ($choice === null) {
-            return;
-        }
-
-        if ($choice === self::CHOICE_LATER) {
-            update_option($this->dismissedTimeOptionName($noticeId), time(), false);
-        }
-
-        update_option($this->choiceOptionName($noticeId), $choice, false);
-
-        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
-    }
-
-    /**
-     * Handle the form submit of a per-user notice. "Later" snoozes the
-     * notice for $snoozeSeconds, "never" dismisses it for the current user.
-     * Nothing happens when the request holds no valid form submit for this
-     * notice.
-     */
-    public function handleUserFormSubmit(string $noticeId, int $snoozeSeconds): void
-    {
-        $choice = $this->submittedChoice($noticeId);
-        if ($choice === null) {
-            return;
-        }
-
-        $userId = get_current_user_id();
-
-        if ($choice === self::CHOICE_LATER) {
-            $this->snoozeNotice($userId, $noticeId, $snoozeSeconds);
-        }
-
-        if ($choice === self::CHOICE_NEVER) {
-            $this->dismissNotice($userId, $noticeId);
-        }
-
-        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
-    }
-
-    /**
-     * Check if the stored choice of a site wide notice hides the notice.
-     * "Never" hides the notice for good. "Later" hides the notice until
-     * $laterDays have passed since the choice.
-     * @see handleFormSubmit()
-     */
-    public function choiceHidesNotice(string $noticeId, int $laterDays): bool
-    {
-        if (get_option($this->choiceOptionName($noticeId)) === self::CHOICE_NEVER) {
-            return true;
-        }
-
-        $dismissedTime = get_option($this->dismissedTimeOptionName($noticeId));
-        if (empty($dismissedTime)) {
-            return false;
-        }
-
-        return Carbon::createFromTimestamp($dismissedTime)->isAfter(Carbon::now()->subDays($laterDays));
-    }
-
-    /**
-     * Read the choice the user made in the form of the given notice. Returns
-     * null when the request holds no form submit for this notice or the
-     * nonce is not valid.
-     */
-    private function submittedChoice(string $noticeId): ?string
-    {
-        if ($this->request->getString('global.' . self::FORM_FIELD) !== $noticeId) {
-            return null;
-        }
-
-        $nonce = $this->request->get('global.' . self::NONCE_NAME);
-        if (wp_verify_nonce($nonce, $this->nonceAction($noticeId)) === false) {
-            return null;
-        }
-
-        $choice = $this->request->getString('global.' . self::CHOICE_FIELD);
-
-        return in_array($choice, [self::CHOICE_LATER, self::CHOICE_NEVER], true) ? $choice : null;
     }
 
     /**
@@ -216,24 +101,9 @@ class AdminNoticeService
         return $value;
     }
 
-    private function nonceAction(string $noticeId): string
-    {
-        return 'rsp_notice_form_submit_' . $noticeId;
-    }
-
     private function cacheName(string $noticeId): string
     {
         return 'can_render_' . $noticeId . '_notice';
-    }
-
-    private function choiceOptionName(string $noticeId): string
-    {
-        return 'simplybook_' . $noticeId . '_notice_choice';
-    }
-
-    private function dismissedTimeOptionName(string $noticeId): string
-    {
-        return 'simplybook_' . $noticeId . '_notice_dismissed_time';
     }
 
     /**
@@ -318,9 +188,9 @@ class AdminNoticeService
     }
 
     /**
-     * Call this method to enqueue the required scripts for the dismissal
-     * functionality to work. You can only execute this method in the
-     * admin_enqueue_scripts filter.
+     * Call this method to enqueue the script that handles the X button and
+     * the "later" and "never" buttons of a notice. You can only execute
+     * this method in the admin_enqueue_scripts filter.
      */
     public function enqueue(): void
     {
@@ -339,13 +209,19 @@ class AdminNoticeService
         wp_add_inline_script(
             'simplybook-notice-dismiss',
             sprintf(
-                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode(esc_url_raw(rest_url(
-                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . AdminNoticesEndpoint::DISMISS_ROUTE
-                ))),
+                'const simplybookNoticesConfig = { dismissUrl: %s, snoozeUrl: %s, nonce: %s };',
+                wp_json_encode($this->restUrl(AdminNoticesEndpoint::DISMISS_ROUTE)),
+                wp_json_encode($this->restUrl(AdminNoticesEndpoint::SNOOZE_ROUTE)),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),
             'before'
         );
+    }
+
+    private function restUrl(string $route): string
+    {
+        return esc_url_raw(rest_url(
+            $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . $route
+        ));
     }
 }

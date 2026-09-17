@@ -1,8 +1,10 @@
 /**
- * SimplyBook Admin Notice Dismiss Handler
+ * SimplyBook Admin Notice Handler
  *
- * Handles permanent dismissal of admin notices via REST API.
- * Uses event delegation to handle dynamically added dismiss buttons.
+ * Dismisses or snoozes admin notices via the REST API. The X button
+ * dismisses the notice. Buttons with a data-notice-action attribute
+ * dismiss ("dismiss") or snooze ("snooze") the notice and hide it.
+ * Uses event delegation to handle dynamically added buttons.
  *
  * @since 3.2.1
  */
@@ -19,34 +21,46 @@
     function init() {
         // Single event listener for all notices
         document.addEventListener('click', function(e) {
-            if (!e.target.classList.contains('notice-dismiss') && !e.target.closest('.notice-dismiss')) {
-                return;
-            }
-
             const notice = e.target.closest('.notice.is-dismissible[data-notice-type]');
-            const noticeType = notice?.dataset.noticeType;
-
-            if (!notice || !noticeType) {
+            if (!notice || !notice.dataset.noticeType) {
                 return;
             }
 
-            dismissNotice(noticeType);
+            if (e.target.closest('.notice-dismiss')) {
+                sendRequest('dismiss', notice.dataset.noticeType);
+                return;
+            }
+
+            const button = e.target.closest('[data-notice-action]');
+            if (!button) {
+                return;
+            }
+
+            e.preventDefault();
+            sendRequest(button.dataset.noticeAction, notice.dataset.noticeType, button.dataset.snoozeSeconds);
+            notice.remove();
         });
     }
 
-    function dismissNotice(noticeType) {
-        if (!simplybookNoticesConfig?.restUrl || !simplybookNoticesConfig?.nonce) {
+    function sendRequest(action, noticeId, snoozeSeconds) {
+        const url = (action === 'snooze') ? simplybookNoticesConfig?.snoozeUrl : simplybookNoticesConfig?.dismissUrl;
+        if (!url || !simplybookNoticesConfig?.nonce) {
             return;
         }
 
-        fetch(simplybookNoticesConfig.restUrl, {
+        const body = { notice_id: noticeId };
+        if (action === 'snooze' && snoozeSeconds) {
+            body.seconds = parseInt(snoozeSeconds, 10);
+        }
+
+        fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-WP-Nonce': simplybookNoticesConfig.nonce
             },
             credentials: 'same-origin',
-            body: JSON.stringify({ notice_id: noticeType })
+            body: JSON.stringify(body)
         });
     }
 
