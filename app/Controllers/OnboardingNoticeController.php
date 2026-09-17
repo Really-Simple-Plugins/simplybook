@@ -64,7 +64,7 @@ class OnboardingNoticeController implements ControllerInterface
      * - The user never finished the onboarding
      * - The user has not dismissed the notice
      * - The plugin activation timestamp is suitable for notice
-     * - The notice dismissed time has passed
+     * - The notice snooze duration has passed
      * - The user is not on an edit screen
      * - The user is not on the plugin page
      */

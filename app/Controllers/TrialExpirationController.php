@@ -70,7 +70,7 @@ class TrialExpirationController implements ControllerInterface
     /**
      * Check if the trial notice can be rendered. True when:
      * - The user has not dismissed the notice
-     * - The trial notice dismissed time has passed
+     * - The trial notice snooze duration has passed
      * - The user is not on an edit screen
      * - The user is not on the plugin page
      * - The user finished the onboarding
