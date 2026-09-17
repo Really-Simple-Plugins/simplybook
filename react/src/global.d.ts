@@ -63,7 +63,12 @@ type LiveAgentGlobal = {
 
 declare const simplybook: SimplyBookGlobal;
 
+declare class SimplybookWidget {
+    constructor(config: Record<string, unknown>);
+}
+
 interface Window {
     simplybook?: SimplyBookGlobal;
     LiveAgent?: LiveAgentGlobal;
+    SimplybookWidget?: typeof SimplybookWidget;
 }

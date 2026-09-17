@@ -7,6 +7,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 class WidgetScriptBuilder
 {
@@ -14,6 +15,7 @@ class WidgetScriptBuilder
     use HasAllowlistControl;
 
     protected EnvironmentConfig $env;
+    protected GeneralConfig $config;
 
     protected bool $withHTML = false;
     protected string $widgetType = '';
@@ -43,6 +45,7 @@ class WidgetScriptBuilder
     public function __construct()
     {
         $this->env = App::getInstance()->get(EnvironmentConfig::class);
+        $this->config = App::getInstance()->get(GeneralConfig::class);
     }
 
     /**
@@ -69,6 +72,40 @@ class WidgetScriptBuilder
     }
 
     /**
+     * Build a widget configuration based on the given settings.
+     * @throws BuilderException
+     */
+    public function buildConfig(): array
+    {
+        if (empty($this->widgetType) || empty($this->widgetSettings)) {
+            throw new BuilderException('Widget not set up correctly');
+        }
+
+        $widgetConfig = $this->config->get('widgets.' . $this->widgetType, []);
+
+        if (empty($widgetConfig)) {
+            throw new BuilderException('Widget configuration not found');
+        }
+
+        $settings = $this->escapeSettings($this->getWidgetSettings());
+
+        // Set static config first
+        $config = $widgetConfig['static'] ?? [];
+
+        foreach ($widgetConfig['settings'] as $key => $setting) {
+            if ($key === 'app_config') {
+                foreach ($setting as $appConfigKey => $appConfigSetting) {
+                    $config[$key][$appConfigKey] = ($settings[$appConfigSetting] ?? '');
+                }
+            } else {
+                $config[$key] = ($settings[$setting] ?? '');
+            }
+        }
+
+        return $config;
+    }
+
+    /**
      * Set the widget type
      * @throws BuilderException
      */
@@ -78,7 +115,6 @@ class WidgetScriptBuilder
             throw new BuilderException('Invalid widget type');
         }
 
-        $this->setWidgetTemplate($widgetType);
         $this->widgetType = $widgetType;
         return $this;
     }
@@ -132,24 +168,6 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Set the widget template
-     * @throws BuilderException
-     */
-    private function setWidgetTemplate(string $widgetType): void
-    {
-        $widgetTypeTemplate = $this->env->getString('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
-        if (!file_exists($widgetTypeTemplate)) {
-            throw new BuilderException('Widget template not found');
-        }
-
-        ob_start();
-        include $widgetTypeTemplate;
-        $script = ob_get_clean();
-
-        $this->widgetTemplate = $script;
-    }
-
-    /**
      * Sanitize an array of attributes by removing all attributes that are
      * not in the accepted attributes list and sanitizing the keys and values.
      *
@@ -175,62 +193,44 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Create the widget script based on the widget template and settings. All
-     * settings are searched by the setting key and replaced with the value in
-     * the template.
+     * Create the widget script based on the widget template and settings.
+     * The config is encoded as JSON and placed inside the widget script.
      */
     private function getWidgetScript(): string
     {
-        $placeholders = [];
-        $encodedSettings = [];
-
-        foreach ($this->getWidgetSettings() as $key => $setting) {
-            // The placeholders in the templates are always quoted, the quotes
-            // are replaced as well because the encoded value contains them.
-            $placeholders[] = '"{{ ' . $key . ' }}"';
-            $encodedSettings[] = $this->encodeSetting($setting);
-        }
-
-        return str_replace($placeholders, $encodedSettings, $this->widgetTemplate);
-    }
-
-    /**
-     * Method is used for encoding a setting value so it can safely be placed
-     * inside the JavaScript of the widget template.
-     * @param mixed $setting
-     */
-    private function encodeSetting($setting): string
-    {
-        $sanitizedSetting = $this->sanitizeSetting($setting);
-
-        return (string) wp_json_encode(
-            $sanitizedSetting,
+        $config = (string) wp_json_encode(
+            $this->buildConfig(),
             (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
         );
+
+        return $this->view('public/widget', [
+            'config' => $config,
+        ]);
     }
 
     /**
-     * Sanitize a setting value so it stays harmless after the JavaScript
-     * engine decodes the JSON escaping and the widget writes the value into
-     * the DOM. The JSON escaping only protects the HTML context of the
-     * script tag, not the sinks used by the widget itself.
+     * Escape a setting value for the HTML sinks in the remote widget script.
+     * The JSON encoding only protects the script tag. The widget decodes the
+     * JSON and writes the values into an iframe attribute with innerHTML.
+     * Arrays are escaped recursively. Empty values become an empty string.
      *
      * @param mixed $setting
      * @return array|string
      */
-    private function sanitizeSetting($setting)
+    private function escapeSettings($setting)
     {
         if (is_array($setting)) {
-            return array_map([$this, 'sanitizeSetting'], $setting);
+            return array_map([$this, 'escapeSettings'], $setting);
         }
 
-        if (empty($setting)) {
-            // This will work the same as a false value. Therefor it is not an
-            // issue that the empty check triggers for these false(y) values.
-            return '';
+        $decoded = json_decode($setting, true);
+        if (is_array($decoded)) {
+            return (string) wp_json_encode(
+                array_map([$this, 'escapeSettings'], $decoded),
+            );
         }
 
-        return sanitize_text_field((string) $setting);
+        return esc_attr((string) $setting);
     }
 
     /**
