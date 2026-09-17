@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
+use Carbon\Carbon;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Services\PluginFirstUseTimeService;
 use SimplyBook\Traits\HasViews;
@@ -80,7 +81,7 @@ class ReviewController implements ControllerInterface
     /**
      * Check if the review notice can be rendered. True when:
      * - The user still has an authenticated SimplyBook session
-     * - The user has not dismissed the notice
+     * - The user has not dismissed or snoozed the notice
      * - The plugin first-use time is suitable for review
      * - The review notice dismissed time has passed
      * - The amount of bookings is greater than the threshold
@@ -96,21 +97,11 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        // Check if user dismissed via X button
-        if ($this->adminNoticeService->isNoticeDismissed(get_current_user_id(), self::NOTICE_ID)) {
-            return false;
-        }
-
-        // Check if user dismissed via form button
-        if ($this->adminNoticeService->isNeverChoiceStored(self::NOTICE_ID)) {
+        if ($this->adminNoticeService->choiceHidesNotice(self::NOTICE_ID, 30)) {
             return false;
         }
 
         if ($this->pluginFirstUseTimeSuitableForReview() === false) {
-            return false;
-        }
-
-        if ($this->adminNoticeService->laterChoiceHasExpired(self::NOTICE_ID, 30) === false) {
             return false;
         }
 
@@ -127,7 +118,7 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        return $this->adminNoticeService->daysHavePassedSince($pluginFirstUseTime, 30);
+        return Carbon::createFromTimestamp($pluginFirstUseTime)->isBefore(Carbon::now()->subDays(30));
     }
 
     /**

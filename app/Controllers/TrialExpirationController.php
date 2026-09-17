@@ -99,16 +99,6 @@ class TrialExpirationController implements ControllerInterface
      */
     private function isEligibleForTrialNotice(): bool
     {
-        $userId = get_current_user_id();
-
-        if ($this->adminNoticeService->isNoticeDismissed($userId, self::NOTICE_ID)) {
-            return false;
-        }
-
-        if ($this->adminNoticeService->isNoticeSnoozed($userId, self::NOTICE_ID)) {
-            return false;
-        }
-
         // User who did not complete the onboarding shouldn't see this notice
         if (get_option('simplybook_onboarding_completed', false) === false) {
             return false;

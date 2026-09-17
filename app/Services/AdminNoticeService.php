@@ -3,7 +3,7 @@
 namespace SimplyBook\Services;
 
 use Carbon\Carbon;
-use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
+use SimplyBook\Http\Endpoints\AdminNoticesEndpoint;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -107,27 +107,23 @@ class AdminNoticeService
     }
 
     /**
-     * Check if the "never" choice of a site wide notice is stored.
+     * Check if the stored choice of a site wide notice hides the notice.
+     * "Never" hides the notice for good. "Later" hides the notice until
+     * $laterDays have passed since the choice.
      * @see handleFormSubmit()
      */
-    public function isNeverChoiceStored(string $noticeId): bool
+    public function choiceHidesNotice(string $noticeId, int $laterDays): bool
     {
-        return get_option($this->choiceOptionName($noticeId)) === self::CHOICE_NEVER;
-    }
-
-    /**
-     * Check if the "later" choice of a site wide notice has expired. True
-     * when the choice was never made.
-     * @see handleFormSubmit()
-     */
-    public function laterChoiceHasExpired(string $noticeId, int $days): bool
-    {
-        $dismissedTime = get_option($this->dismissedTimeOptionName($noticeId));
-        if (empty($dismissedTime)) {
+        if (get_option($this->choiceOptionName($noticeId)) === self::CHOICE_NEVER) {
             return true;
         }
 
-        return $this->daysHavePassedSince($dismissedTime, $days);
+        $dismissedTime = get_option($this->dismissedTimeOptionName($noticeId));
+        if (empty($dismissedTime)) {
+            return false;
+        }
+
+        return Carbon::createFromTimestamp($dismissedTime)->isAfter(Carbon::now()->subDays($laterDays));
     }
 
     /**
@@ -173,12 +169,16 @@ class AdminNoticeService
     /**
      * Run the eligibility check of a notice and cache the result. A positive
      * result is cached for one minute, a negative result for ten minutes.
-     * The screen check runs before the cache, because the result must stay
-     * valid on every screen.
+     * The screen check and the per-user check run before the cache, because
+     * the cached result is shared by all screens and all users.
      */
     public function canRender(string $noticeId, callable $isEligible): bool
     {
         if ($this->currentScreenAllowsNotice() === false) {
+            return false;
+        }
+
+        if ($this->isNoticeHiddenForUser(get_current_user_id(), $noticeId)) {
             return false;
         }
 
@@ -214,15 +214,6 @@ class AdminNoticeService
         wp_cache_set($cacheKey, $value, 'simplybook', $seconds);
 
         return $value;
-    }
-
-    /**
-     * Check if the given amount of days has passed since the timestamp.
-     * @param string|float|int $timestamp
-     */
-    public function daysHavePassedSince($timestamp, int $days): bool
-    {
-        return Carbon::createFromTimestamp($timestamp)->isBefore(Carbon::now()->subDays($days));
     }
 
     private function nonceAction(string $noticeId): string
@@ -263,29 +254,26 @@ class AdminNoticeService
         return $result !== false;
     }
 
-    public function isNoticeDismissed(int $userId, string $noticeId): bool
+    /**
+     * Check if the user dismissed the notice for good or the snooze time
+     * has not passed yet.
+     */
+    private function isNoticeHiddenForUser(int $userId, string $noticeId): bool
     {
-        $dismissedNotices = $this->getDismissedNotices($userId);
+        if (in_array($noticeId, $this->getDismissedNotices($userId), true)) {
+            return true;
+        }
 
-        return in_array($noticeId, $dismissedNotices, true);
+        return $this->getSnoozedNotice($userId, $noticeId) > time();
     }
 
     /**
      * Hide a notice for a specific user until the given amount of seconds
      * has passed.
      */
-    private function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
+    public function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
     {
         return $this->storeSnoozedNotice($userId, $noticeId, (time() + $seconds));
-    }
-
-    /**
-     * Check if the snooze time of a notice has not passed yet for a
-     * specific user.
-     */
-    public function isNoticeSnoozed(int $userId, string $noticeId): bool
-    {
-        return $this->getSnoozedNotice($userId, $noticeId) > time();
     }
 
     /**
@@ -353,7 +341,7 @@ class AdminNoticeService
             sprintf(
                 'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
                 wp_json_encode(esc_url_raw(rest_url(
-                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . NoticesDismissEndpoint::ROUTE
+                    $this->env->getString('plugin.namespace') . '/' . $this->env->getString('http.version') . '/' . AdminNoticesEndpoint::DISMISS_ROUTE
                 ))),
                 wp_json_encode(wp_create_nonce('wp_rest'))
             ),

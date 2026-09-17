@@ -46,7 +46,7 @@
                 'X-WP-Nonce': simplybookNoticesConfig.nonce
             },
             credentials: 'same-origin',
-            body: JSON.stringify({ notice_type: noticeType })
+            body: JSON.stringify({ notice_id: noticeType })
         });
     }
 

@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
+use Carbon\Carbon;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
@@ -73,7 +74,7 @@ class OnboardingNoticeController implements ControllerInterface
     /**
      * Check if the notice can be rendered. True when:
      * - The user never finished the onboarding
-     * - The user has not dismissed the notice
+     * - The user has not dismissed or snoozed the notice
      * - The plugin activation timestamp is suitable for notice
      * - The notice dismissed time has passed
      */
@@ -87,21 +88,11 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function isEligibleForNotice(): bool
     {
-        // Check if user dismissed via form button
-        if ($this->adminNoticeService->isNeverChoiceStored(self::NOTICE_ID)) {
+        if ($this->adminNoticeService->choiceHidesNotice(self::NOTICE_ID, 7)) {
             return false;
         }
 
         if ($this->pluginInstallationTimeSuitableForNotice() === false) {
-            return false;
-        }
-
-        if ($this->adminNoticeService->laterChoiceHasExpired(self::NOTICE_ID, 7) === false) {
-            return false;
-        }
-
-        // Check if user dismissed via X button
-        if ($this->adminNoticeService->isNoticeDismissed(get_current_user_id(), self::NOTICE_ID)) {
             return false;
         }
 
@@ -130,7 +121,7 @@ class OnboardingNoticeController implements ControllerInterface
             return false;
         }
 
-        return $this->adminNoticeService->daysHavePassedSince($pluginActivationTimestamp, 3);
+        return Carbon::createFromTimestamp($pluginActivationTimestamp)->isBefore(Carbon::now()->subDays(3));
     }
 
     /**
