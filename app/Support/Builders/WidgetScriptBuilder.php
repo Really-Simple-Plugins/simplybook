@@ -73,6 +73,7 @@ class WidgetScriptBuilder
 
     /**
      * Build a widget configuration based on the given settings.
+     * The configuration is used to initialize the widget.
      * @throws BuilderException
      */
     public function buildConfig(): array
@@ -83,26 +84,34 @@ class WidgetScriptBuilder
 
         $widgetConfig = $this->config->get('widgets.' . $this->widgetType, []);
 
-        if (empty($widgetConfig)) {
+        if (empty($widgetConfig) || !isset($widgetConfig['settings'])) {
             throw new BuilderException('Widget configuration not found');
         }
 
-        $settings = $this->escapeSettings($this->getWidgetSettings());
+        $settings = $this->getWidgetSettings();
 
-        // Set static config first
-        $config = $widgetConfig['static'] ?? [];
+        // Set static config first: are set as is since it's not a user setting
+        $staticConfig = $widgetConfig['static'] ?? [];
 
-        foreach ($widgetConfig['settings'] as $key => $setting) {
-            if ($key === 'app_config') {
-                foreach ($setting as $appConfigKey => $appConfigSetting) {
-                    $config[$key][$appConfigKey] = ($settings[$appConfigSetting] ?? '');
-                }
-            } else {
-                $config[$key] = ($settings[$setting] ?? '');
-            }
-        }
+        $config = array_merge(
+            $staticConfig,
+            $this->mapSettings($widgetConfig['settings'], $settings)
+        );
 
-        return $config;
+        return $this->escapeSettings($config);
+    }
+
+    /**
+     * Map the widget settings to the widget configuration. The mapping is
+     * defined in the widget configuration file. The mapping can be nested.
+     */
+    private function mapSettings(array $mapping, array $settings): array
+    {
+        return array_map(function ($settingName) use ($settings) {
+            return is_array($settingName)
+                ? $this->mapSettings($settingName, $settings)
+                : ($settings[$settingName] ?? '');
+        }, $mapping);
     }
 
     /**
@@ -198,13 +207,8 @@ class WidgetScriptBuilder
      */
     private function getWidgetScript(): string
     {
-        $config = (string) wp_json_encode(
-            $this->buildConfig(),
-            (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
-        );
-
         return $this->view('public/widget', [
-            'config' => $config,
+            'config' => $this->buildConfig(),
         ]);
     }
 
