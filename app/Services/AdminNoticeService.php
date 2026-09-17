@@ -25,8 +25,7 @@ class AdminNoticeService
      */
     private const EXCLUDED_SCREENS = [
         '/^post$/',
-        '/^toplevel_page_simplybook-integration$/',
-        '/_page_simplybook-plans-prices$/',
+        '/_page_simplybook-.+$/',
     ];
 
     private EnvironmentConfig $env;
