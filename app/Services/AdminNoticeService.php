@@ -21,10 +21,12 @@ class AdminNoticeService
     private const CHOICE_NEVER = 'never';
 
     /**
-     * Gutenberg removes the class that makes a notice dismissible on this
-     * screen, so no notice renders here.
+     * Don't render the notices on any of these screens. Gutenberg removes the
+     * class that makes a notice dismissible on the post screen.
      */
-    private const EXCLUDED_SCREEN_BASE = 'post';
+    private const EXCLUDED_SCREEN_BASES = [
+        'post',
+    ];
 
     private EnvironmentConfig $env;
     private bool $assetsEnqueued = false;
@@ -154,7 +156,7 @@ class AdminNoticeService
     {
         $screen = get_current_screen();
 
-        return !$screen || ($screen->base !== self::EXCLUDED_SCREEN_BASE);
+        return !$screen || (in_array($screen->base, self::EXCLUDED_SCREEN_BASES, true) === false);
     }
 
 
