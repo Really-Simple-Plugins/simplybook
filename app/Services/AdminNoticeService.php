@@ -25,7 +25,8 @@ class AdminNoticeService
      */
     private const EXCLUDED_SCREENS = [
         'post',
-        'simplybook',
+        'toplevel_page_simplybook-integration',
+        'simplybook-me_page_simplybook-plans-prices',
     ];
 
     private EnvironmentConfig $env;
@@ -152,13 +153,7 @@ class AdminNoticeService
             return true;
         }
 
-        foreach (self::EXCLUDED_SCREENS as $base) {
-            if (str_contains($screen->base, $base)) {
-                return false;
-            }
-        }
-
-        return true;
+        return in_array($screen->base, self::EXCLUDED_SCREENS, true) === false;
     }
 
 
