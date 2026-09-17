@@ -76,22 +76,13 @@ class TrialExpirationController implements ControllerInterface
      */
     public function processTrialNoticeFormSubmit(): void
     {
-        $choice = $this->adminNoticeService->submittedChoice(self::NOTICE_ID);
-        if ($choice === null) {
-            return;
-        }
-
         $userId = get_current_user_id();
 
-        if ($choice === AdminNoticeService::CHOICE_LATER) {
-            $this->adminNoticeService->snoozeNotice($userId, self::NOTICE_ID, DAY_IN_SECONDS);
-        }
-
-        if ($choice === AdminNoticeService::CHOICE_NEVER) {
-            $this->adminNoticeService->dismissNotice($userId, self::NOTICE_ID);
-        }
-
-        $this->adminNoticeService->forgetCanRender(self::NOTICE_ID);
+        $this->adminNoticeService->handleFormSubmit(
+            self::NOTICE_ID,
+            fn() => $this->adminNoticeService->snoozeNotice($userId, self::NOTICE_ID, DAY_IN_SECONDS),
+            fn() => $this->adminNoticeService->dismissNotice($userId, self::NOTICE_ID)
+        );
     }
 
     public function enqueueScripts(): void
@@ -142,16 +133,19 @@ class TrialExpirationController implements ControllerInterface
 
     private function getTrialInfo(): ?array
     {
-        $found = false;
-        $cacheKey = 'simplybook_trial_info';
-        $cacheGroup = 'simplybook';
-        $cachedInfo = wp_cache_get($cacheKey, $cacheGroup, false, $found);
-        $cacheDuration = (5 * MINUTE_IN_SECONDS);
+        return $this->adminNoticeService->remember(
+            'simplybook_trial_info',
+            fn() => $this->fetchTrialInfo(),
+            (5 * MINUTE_IN_SECONDS)
+        );
+    }
 
-        if ($found && is_array($cachedInfo)) {
-            return $cachedInfo;
-        }
-
+    /**
+     * Read the trial state from the subscription data. Returns null when the
+     * account has no trial subscription.
+     */
+    private function fetchTrialInfo(): ?array
+    {
         $subscriptionData = $this->subscriptionService->all(true);
 
         if (empty($subscriptionData)) {
@@ -159,27 +153,21 @@ class TrialExpirationController implements ControllerInterface
         }
 
         if (empty($subscriptionData)) {
-            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         $subscriptionName = ($subscriptionData['subscription_name'] ?? '');
         if ($subscriptionName !== 'Trial') {
-            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         $isExpired = ($subscriptionData['is_expired'] ?? false);
         $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
-        $trialInfo = [
+        return [
             'is_expired' => (bool) $isExpired,
             'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
             'days_since_expiration' => $isExpired ? abs((int) $expireIn) : 0,
         ];
-
-        wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
-
-        return $trialInfo;
     }
 }

@@ -73,17 +73,14 @@ class ReviewController implements ControllerInterface
      */
     public function processReviewFormSubmit(): void
     {
-        $choice = $this->adminNoticeService->submittedChoice(self::NOTICE_ID);
-        if ($choice === null) {
-            return;
-        }
-
-        if ($choice === AdminNoticeService::CHOICE_LATER) {
-            update_option('simplybook_review_notice_dismissed_time', time(), false);
-        }
-
-        update_option('simplybook_review_notice_choice', $choice, false);
-        $this->adminNoticeService->forgetCanRender(self::NOTICE_ID);
+        $this->adminNoticeService->handleFormSubmit(
+            self::NOTICE_ID,
+            function () {
+                update_option('simplybook_review_notice_dismissed_time', time(), false);
+                update_option('simplybook_review_notice_choice', AdminNoticeService::CHOICE_LATER, false);
+            },
+            fn() => update_option('simplybook_review_notice_choice', AdminNoticeService::CHOICE_NEVER, false)
+        );
     }
 
     /**
