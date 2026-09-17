@@ -26,8 +26,10 @@
                 return;
             }
 
+            const noticeId = notice.dataset.noticeType;
+
             if (e.target.closest('.notice-dismiss')) {
-                sendRequest('dismiss', notice.dataset.noticeType);
+                dismissNotice(noticeId);
                 return;
             }
 
@@ -37,20 +39,33 @@
             }
 
             e.preventDefault();
-            sendRequest(button.dataset.noticeAction, notice.dataset.noticeType, button.dataset.snoozeSeconds);
+
+            if (button.dataset.noticeAction === 'snooze') {
+                snoozeNotice(noticeId, parseInt(button.dataset.snoozeSeconds, 10));
+            } else {
+                dismissNotice(noticeId);
+            }
+
             notice.remove();
         });
     }
 
-    function sendRequest(action, noticeId, snoozeSeconds) {
-        const url = (action === 'snooze') ? simplybookNoticesConfig?.snoozeUrl : simplybookNoticesConfig?.dismissUrl;
-        if (!url || !simplybookNoticesConfig?.nonce) {
-            return;
+    function dismissNotice(noticeId) {
+        sendRequest(simplybookNoticesConfig?.dismissUrl, { notice_id: noticeId });
+    }
+
+    function snoozeNotice(noticeId, seconds) {
+        const data = { notice_id: noticeId };
+        if (seconds) {
+            data.seconds = seconds;
         }
 
-        const body = { notice_id: noticeId };
-        if (action === 'snooze' && snoozeSeconds) {
-            body.seconds = parseInt(snoozeSeconds, 10);
+        sendRequest(simplybookNoticesConfig?.snoozeUrl, data);
+    }
+
+    function sendRequest(url, data) {
+        if (!url || !simplybookNoticesConfig?.nonce) {
+            return;
         }
 
         fetch(url, {
@@ -60,7 +75,7 @@
                 'X-WP-Nonce': simplybookNoticesConfig.nonce
             },
             credentials: 'same-origin',
-            body: JSON.stringify(body)
+            body: JSON.stringify(data)
         });
     }
 
