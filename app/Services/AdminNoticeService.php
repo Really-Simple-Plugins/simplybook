@@ -19,8 +19,7 @@ class AdminNoticeService
     private const CHOICE_NEVER = 'never';
 
     /**
-     * Notices break the Gutenberg editor and the React app of the plugin.
-     * No notice renders on a screen whose base matches one of these.
+     * Don't render the notices on any of these screens
      */
     private const EXCLUDED_SCREEN_BASES = [
         'post',
@@ -37,7 +36,10 @@ class AdminNoticeService
 
     /**
      * Check if the notice is not dismissed or snoozed, and if the current
-     * screen allows a notice.
+     * screen allows a notice. The controller holds the snooze duration of its
+     * notice.
+     *
+     * @param int $snoozeDuration Duration in seconds.
      */
     public function canRender(string $noticeId, int $snoozeDuration): bool
     {
@@ -58,7 +60,7 @@ class AdminNoticeService
 
 
     /**
-     * Hide the notice for the current user for good, by the X button.
+     * Dismiss the notice for the current user, by the X button.
      */
     public function dismissNoticeForUser(string $noticeId): bool
     {
@@ -70,12 +72,12 @@ class AdminNoticeService
 
         $dismissedNotices[] = $noticeId;
 
-        return $this->storeDismissedNoticesForUser($dismissedNotices);
+        return $this->updateUserDismissedNotices($dismissedNotices);
     }
 
 
     /**
-     * Hide the notice for the whole site for good, by the "never" button.
+     * Dismiss the notice for the whole site, by the "never" button.
      */
     public function dismissNotice(string $noticeId): bool
     {
@@ -84,8 +86,7 @@ class AdminNoticeService
 
 
     /**
-     * Hide the notice for the whole site for a while, by the "later" button.
-     * The controller decides how long, see {@see canRender()}.
+     * Mark the notice as snoozed for the whole site, by the "later" button.
      */
     public function snoozeNotice(string $noticeId): bool
     {
@@ -150,7 +151,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the notice is hidden for the whole site.
+     * Check if the notice is dismissed for the whole site.
      */
     private function isNoticeDismissed(string $noticeId): bool
     {
@@ -160,6 +161,8 @@ class AdminNoticeService
 
     /**
      * Check if the notice is snoozed within the snooze duration.
+     *
+     * @param int $snoozeDuration Duration in seconds.
      */
     private function isNoticeSnoozed(string $noticeId, int $snoozeDuration): bool
     {
@@ -174,17 +177,16 @@ class AdminNoticeService
 
 
     /**
-     * Read the choice from simplybook_{noticeId}_notice_choice. Returns
-     * "later", "never" or an empty string.
+     * Read "later" or "never" choice from simplybook_{noticeId}_notice_choice
      */
-    private function getChoice(string $noticeId): string
+    private function getChoice(string $noticeId): ?string
     {
-        return (string) get_option($this->choiceOptionName($noticeId), '');
+        return get_option($this->choiceOptionName($noticeId), null);
     }
 
 
     /**
-     * Write the choice to simplybook_{noticeId}_notice_choice.
+     * Write "later" or "never" to simplybook_{noticeId}_notice_choice.
      */
     private function storeChoice(string $noticeId, string $choice): bool
     {
@@ -193,7 +195,7 @@ class AdminNoticeService
 
 
     /**
-     * Read the timestamp of the "later" click from
+     * Read the snoozedAt timestamp of the notice from
      * simplybook_{noticeId}_notice_dismissed_time.
      */
     private function getSnoozedAt(string $noticeId): int
@@ -203,7 +205,7 @@ class AdminNoticeService
 
 
     /**
-     * Write the timestamp of the "later" click to
+     * Store the snoozeAt timestamp to
      * simplybook_{noticeId}_notice_dismissed_time.
      */
     private function storeSnoozedAt(string $noticeId, int $snoozedAt): bool
@@ -213,7 +215,7 @@ class AdminNoticeService
 
 
     /**
-     * Each notice has its own option for the choice.
+     * Each notice has its own option for the "later" or "never" choice.
      */
     private function choiceOptionName(string $noticeId): string
     {
@@ -231,7 +233,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the notice is hidden for the current user.
+     * Check if the notice is dismissed by the current user.
      */
     private function isNoticeDismissedForUser(string $noticeId): bool
     {
@@ -240,7 +242,7 @@ class AdminNoticeService
 
 
     /**
-     * Read the notice IDs hidden for the current user.
+     * Get the dismissed notice IDs for the current user.
      */
     private function getDismissedNoticesForUser(): array
     {
@@ -251,9 +253,9 @@ class AdminNoticeService
 
 
     /**
-     * Write the notice IDs hidden for the current user by the X button.
+     * Update the dismissed notice IDs for the current user.
      */
-    private function storeDismissedNoticesForUser(array $noticeIds): bool
+    private function updateUserDismissedNotices(array $noticeIds): bool
     {
         return update_user_meta(get_current_user_id(), self::META_KEY, $noticeIds) !== false;
     }
