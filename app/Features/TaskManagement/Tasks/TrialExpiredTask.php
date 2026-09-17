@@ -42,7 +42,7 @@ class TrialExpiredTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('Your trial has ended. Continue for free, or choose a paid plan for more bookings.', 'simplybook');
+        return __('Your trial has ended. Continue for free, or choose a paid plan for more bookings', 'simplybook');
     }
 
     /**
