@@ -14,7 +14,7 @@
 jQuery(function ($) {
     'use strict';
 
-    $('.notice.really-simple-plugins[data-notice-type]').each(function () {
+    $('.simplybook-notice[data-notice-type]').each(function () {
         const $notice = $(this);
         const noticeId = $notice.data('noticeType');
 

@@ -65,7 +65,7 @@
     <?php endif; ?>
 </style>
 
-<div id="message" class="notice notice-warning is-dismissible rsp-trial really-simple-plugins" data-notice-type="trial">
+<div id="message" class="notice notice-warning is-dismissible rsp-trial simplybook-notice" data-notice-type="trial">
     <div class="rsp-container">
         <div class="rsp-trial-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="simplybook-logo"></div>
         <div class="rsp-trial-content rsp-trial-form">
