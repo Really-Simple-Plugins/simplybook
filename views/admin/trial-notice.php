@@ -7,7 +7,7 @@
  */
 ?>
 
-<div id="message" class="notice notice-warning is-dismissible rsp-trial really-simple-plugins" data-notice-id="trial">
+<div id="message" class="notice notice-warning is-dismissible rsp-trial really-simple-plugins simplybook-notice" data-notice-id="trial">
     <div class="rsp-container">
         <div class="rsp-notice-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="simplybook-logo"></div>
         <div class="rsp-notice-content">

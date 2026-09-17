@@ -6,7 +6,7 @@
 jQuery(function ($) {
     'use strict';
 
-    $('.notice.really-simple-plugins').each(function () {
+    $('.notice.simplybook-notice').each(function () {
         const $notice = $(this);
         const noticeId = $notice.data('noticeId');
 
