@@ -5,7 +5,6 @@ namespace SimplyBook\Features\TaskManagement;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
-use SimplyBook\Features\TaskManagement\Tasks\AbstractPromotionTask;
 use SimplyBook\Features\TaskManagement\Tasks\PublishWidgetTask;
 
 class TaskManagementRepository
@@ -26,16 +25,6 @@ class TaskManagementRepository
     public function getTask(string $taskId): ?TaskInterface
     {
         return $this->tasks[$taskId] ?? null;
-    }
-
-    /**
-     * @return AbstractPromotionTask[]
-     */
-    public function getPromotionTasks(): array
-    {
-        return array_filter($this->tasks, static function (TaskInterface $task): bool {
-            return $task instanceof AbstractPromotionTask;
-        });
     }
 
     /**
@@ -146,12 +135,6 @@ class TaskManagementRepository
         // Clear snooze when task reaches a final state
         if (in_array($status, [AbstractTask::STATUS_COMPLETED, AbstractTask::STATUS_DISMISSED], true)) {
             $task->clearSnooze();
-        }
-
-        if ($status === AbstractTask::STATUS_DISMISSED) {
-            Event::dispatch(Event::TASK_DISMISSED, [
-                'task' => $task,
-            ]);
         }
 
         $task->setStatus($status);

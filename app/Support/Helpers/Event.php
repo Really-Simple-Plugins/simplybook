@@ -31,7 +31,6 @@ class Event
     public const PUBLISH_WIDGET_TASK_DISMISSED = 'publish_widget_task_dismissed';
     public const COMPANY_INFO_LOADED = 'company_info_loaded';
     public const BOOKING_PAGE_VISITED = 'booking_page_visited';
-    public const TASK_DISMISSED = 'task_dismissed';
 
     /**
      * Execute a WordPress event based on our constants.
