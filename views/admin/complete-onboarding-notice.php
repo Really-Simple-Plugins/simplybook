@@ -71,7 +71,7 @@
                     <?php esc_html_e('Complete onboarding', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="button" class="link" data-notice-action="snooze" data-snooze-seconds="<?php echo esc_attr(7 * DAY_IN_SECONDS); ?>">
+                <button type="button" class="link" data-notice-action="snooze">
                     <?php esc_html_e('Remind me later', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>

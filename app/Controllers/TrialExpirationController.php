@@ -17,6 +17,7 @@ class TrialExpirationController implements ControllerInterface
     use LegacyLoad;
 
     private const NOTICE_ID = 'trial';
+    private const SNOOZE_SECONDS = DAY_IN_SECONDS;
 
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
@@ -80,7 +81,7 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
-        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID)) {
+        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID, self::SNOOZE_SECONDS)) {
             return false;
         }
 

@@ -78,7 +78,7 @@
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="button" class="link" data-notice-action="snooze" data-snooze-seconds="<?php echo esc_attr(DAY_IN_SECONDS); ?>">
+                <button type="button" class="link" data-notice-action="snooze">
                     <?php esc_html_e('Remind me tomorrow', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
