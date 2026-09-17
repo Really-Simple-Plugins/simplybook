@@ -5,10 +5,6 @@
     margin: 16px;
 }
 
-.notice.simplybook-notice {
-    border-left: 4px solid #333;
-}
-
 .notice.simplybook-notice.rsp-trial {
     border-left-color: #d63638;
 }
@@ -53,11 +49,6 @@
     cursor: pointer;
     padding: 0;
     font-size: inherit;
-}
-
-.rtl .notice.simplybook-notice {
-    border-left: 0;
-    border-right: 4px solid #333;
 }
 
 .rtl .notice.simplybook-notice.rsp-trial {
