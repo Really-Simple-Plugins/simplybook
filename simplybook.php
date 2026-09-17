@@ -37,7 +37,7 @@ add_filter('simplybook_subscription_data', function (array $data): array {
     $data['expire_in'] = -3;
     $data['limits'] = [
         ['key' => 'sheduler_limit', 'total' => 50, 'rest' => 0],
-        ['key' => 'provider_limit', 'total' => 5, 'rest' => 0],
+        ['key' => 'provider_limit', 'total' => 4, 'rest' => 0],
         ['key' => 'sms_limit', 'total' => 0, 'rest' => 0],
     ];
     return $data;
