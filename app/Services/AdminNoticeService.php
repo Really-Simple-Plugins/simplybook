@@ -36,8 +36,8 @@ class AdminNoticeService
     }
 
     /**
-     * Check the screen, the user dismissal, the site dismissal and the
-     * snooze. A snooze lasts the given seconds.
+     * Check if the notice is not dismissed or snoozed, and if the current
+     * screen allows a notice.
      */
     public function canRender(string $noticeId, int $snoozeSeconds): bool
     {
