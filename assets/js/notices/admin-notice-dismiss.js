@@ -2,68 +2,52 @@
  * SimplyBook Admin Notice Handler
  *
  * Dismisses or snoozes admin notices via the REST API. The X button
- * dismisses the notice. Buttons with a data-notice-action attribute
- * dismiss ("dismiss") or snooze ("snooze") the notice and hide it.
+ * dismisses the notice for the current user. The buttons with a
+ * data-notice-action attribute dismiss ("dismiss") or snooze ("snooze")
+ * the notice for the whole site.
+ *
+ * WordPress adds the X button on jQuery ready. The window load event
+ * fires after that, so all buttons exist at init.
  *
  * @since 3.2.1
  */
 (function() {
     'use strict';
 
-    // Initialize on DOM ready
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    window.addEventListener('load', init);
 
     function init() {
-        document.querySelectorAll('.notice.is-dismissible[data-notice-type]').forEach(bindNotice);
+        document.querySelectorAll('.notice[data-notice-type]').forEach(bindNotice);
     }
 
     function bindNotice(notice) {
         const noticeId = notice.dataset.noticeType;
-        if (!noticeId) {
-            return;
+
+        const dismissButton = notice.querySelector('.notice-dismiss');
+        if (dismissButton) {
+            dismissButton.addEventListener('click', function() {
+                sendRequest(simplybookNoticesConfig?.dismissForUserUrl, noticeId);
+            });
         }
 
-        // WordPress adds the X button after DOM ready, so listen on the notice.
-        notice.addEventListener('click', function(e) {
-            if (e.target.closest('.notice-dismiss')) {
-                dismissNoticeForUser(noticeId);
-                return;
-            }
+        const snoozeButton = notice.querySelector('[data-notice-action="snooze"]');
+        if (snoozeButton) {
+            snoozeButton.addEventListener('click', function() {
+                sendRequest(simplybookNoticesConfig?.snoozeUrl, noticeId);
+                notice.remove();
+            });
+        }
 
-            const button = e.target.closest('[data-notice-action]');
-            if (!button) {
-                return;
-            }
-
-            e.preventDefault();
-
-            if (button.dataset.noticeAction === 'snooze') {
-                snoozeNotice(noticeId);
-            } else {
-                dismissNotice(noticeId);
-            }
-
-            notice.remove();
-        });
+        const neverButton = notice.querySelector('[data-notice-action="dismiss"]');
+        if (neverButton) {
+            neverButton.addEventListener('click', function() {
+                sendRequest(simplybookNoticesConfig?.dismissUrl, noticeId);
+                notice.remove();
+            });
+        }
     }
 
-    function dismissNoticeForUser(noticeId) {
-        sendRequest(simplybookNoticesConfig?.dismissForUserUrl, { notice_id: noticeId });
-    }
-
-    function dismissNotice(noticeId) {
-        sendRequest(simplybookNoticesConfig?.dismissUrl, { notice_id: noticeId });
-    }
-
-    function snoozeNotice(noticeId) {
-        sendRequest(simplybookNoticesConfig?.snoozeUrl, { notice_id: noticeId });
-    }
-
-    function sendRequest(url, data) {
+    function sendRequest(url, noticeId) {
         if (!url || !simplybookNoticesConfig?.nonce) {
             return;
         }
@@ -75,7 +59,7 @@
                 'X-WP-Nonce': simplybookNoticesConfig.nonce
             },
             credentials: 'same-origin',
-            body: JSON.stringify(data)
+            body: JSON.stringify({ notice_id: noticeId })
         });
     }
 
