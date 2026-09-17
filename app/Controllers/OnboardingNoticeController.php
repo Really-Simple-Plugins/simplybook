@@ -92,6 +92,10 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function isEligibleForNotice(): bool
     {
+        if ($this->adminNoticeService->isPluginScreen()) {
+            return false;
+        }
+
         if ($this->pluginInstallationTimeSuitableForNotice() === false) {
             return false;
         }

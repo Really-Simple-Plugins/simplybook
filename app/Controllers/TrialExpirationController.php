@@ -93,6 +93,10 @@ class TrialExpirationController implements ControllerInterface
      */
     private function isEligibleForTrialNotice(): bool
     {
+        if ($this->adminNoticeService->isPluginScreen()) {
+            return false;
+        }
+
         // User who did not complete the onboarding shouldn't see this notice
         if (get_option('simplybook_onboarding_completed', false) === false) {
             return false;
