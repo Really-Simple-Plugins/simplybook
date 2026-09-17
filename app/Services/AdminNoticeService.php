@@ -6,13 +6,10 @@ use SimplyBook\Http\Endpoints\AdminNoticesEndpoint;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
- * Shared logic for the admin notices of the plugin. The service stores the
- * dismissed and snoozed state of a notice, checks the current screen and
- * enqueues the script that calls the routes of {@see AdminNoticesEndpoint}.
- *
- * The X button hides a notice for the current user only. The "never" and
- * "later" buttons hide a notice for the whole site. Both states live in
- * different stores: user meta for the user, wp_options for the site.
+ * Shared logic for the admin notices. The X button hides a notice for the
+ * current user in user meta. The "never" and "later" buttons hide a notice
+ * for the whole site in wp_options. The buttons call the routes of
+ * {@see AdminNoticesEndpoint}.
  */
 class AdminNoticeService
 {
@@ -39,10 +36,8 @@ class AdminNoticeService
     }
 
     /**
-     * Check if a notice must stay hidden on the current request. The snooze
-     * seconds define how long the "later" choice hides the notice. Call this
-     * before any cached eligibility check, because the cached result is
-     * shared by all screens and all users.
+     * Check the screen, the user dismissal, the site dismissal and the
+     * snooze. The snooze seconds define how long "later" hides the notice.
      */
     public function isNoticeHidden(string $noticeId, int $snoozeSeconds): bool
     {
@@ -101,9 +96,8 @@ class AdminNoticeService
 
 
     /**
-     * Call this method to enqueue the script that handles the X button and
-     * the "later" and "never" buttons of a notice. Call this method in the
-     * admin_enqueue_scripts action.
+     * Enqueue the script that handles the buttons of a notice. Call this
+     * method in the admin_enqueue_scripts action.
      */
     public function enqueue(): void
     {
@@ -162,8 +156,8 @@ class AdminNoticeService
 
 
     /**
-     * The "later" choice hides the notice until the snooze seconds after
-     * the click have passed.
+     * Check if the "later" choice still hides the notice. The snooze ends
+     * when the snooze seconds after the click have passed.
      */
     private function isNoticeSnoozed(string $noticeId, int $snoozeSeconds): bool
     {
@@ -178,20 +172,17 @@ class AdminNoticeService
 
 
     /**
-     * Read the site choice of a notice from its own wp_options row. The row
-     * name is `simplybook_{noticeId}_notice_choice`. The value is "later",
-     * "never" or an empty string when no choice was made.
+     * Read the choice from simplybook_{noticeId}_notice_choice. Returns
+     * "later", "never" or an empty string.
      */
     private function getChoice(string $noticeId): string
     {
-        return (string) get_option($this->choiceOptionName($noticeId));
+        return (string) get_option($this->choiceOptionName($noticeId), '');
     }
 
 
     /**
-     * Write the site choice of a notice to its own wp_options row. The row
-     * name is `simplybook_{noticeId}_notice_choice`. The row does not
-     * autoload.
+     * Write the choice to simplybook_{noticeId}_notice_choice.
      */
     private function storeChoice(string $noticeId, string $choice): bool
     {
@@ -200,21 +191,18 @@ class AdminNoticeService
 
 
     /**
-     * Read the snooze time of a notice from its own wp_options row. The row
-     * name is `simplybook_{noticeId}_notice_dismissed_time`. The value is
-     * the Unix timestamp of the "later" click, or 0 when the notice was
-     * never snoozed.
+     * Read the timestamp of the "later" click from
+     * simplybook_{noticeId}_notice_dismissed_time.
      */
     private function getSnoozedAt(string $noticeId): int
     {
-        return (int) get_option($this->snoozedAtOptionName($noticeId));
+        return (int) get_option($this->snoozedAtOptionName($noticeId), 0);
     }
 
 
     /**
-     * Write the snooze time of a notice to its own wp_options row. The row
-     * name is `simplybook_{noticeId}_notice_dismissed_time`. The row does
-     * not autoload.
+     * Write the timestamp of the "later" click to
+     * simplybook_{noticeId}_notice_dismissed_time.
      */
     private function storeSnoozedAt(string $noticeId, int $snoozedAt): bool
     {
@@ -222,21 +210,12 @@ class AdminNoticeService
     }
 
 
-    /**
-     * Each notice has its own row for the site choice, for example
-     * `simplybook_trial_notice_choice`.
-     */
     private function choiceOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_choice';
     }
 
 
-    /**
-     * Each notice has its own row for the snooze time, for example
-     * `simplybook_trial_notice_dismissed_time`. The name keeps the
-     * "dismissed_time" suffix of the older plugin versions.
-     */
     private function snoozedAtOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_dismissed_time';
@@ -251,7 +230,6 @@ class AdminNoticeService
 
     /**
      * Read the notice IDs that the current user dismissed with the X button.
-     * All notices share one user meta row, `simplybook_dismissed_notices`.
      */
     private function getDismissedNoticesForUser(): array
     {
