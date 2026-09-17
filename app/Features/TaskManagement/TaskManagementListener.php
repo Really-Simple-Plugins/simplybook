@@ -3,8 +3,8 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
+use SimplyBook\Services\PromotionService;
 use SimplyBook\Interfaces\ListenerInterface;
-use SimplyBook\Services\Admin\BubbleCounterService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
 /**
@@ -18,16 +18,16 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
-    private BubbleCounterService $bubbleCounter;
+    private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
         TaskManagementService $service,
-        BubbleCounterService $bubbleCounter,
+        PromotionService $promotionService,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
-        $this->bubbleCounter = $bubbleCounter;
+        $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
     }
 
@@ -48,7 +48,6 @@ class TaskManagementListener implements ListenerInterface
         add_action('simplybook_event_' . Event::CALENDAR_UNPUBLISHED, [$this, 'handleCalendarUnPublished']);
         add_action('simplybook_event_' . Event::COMPANY_INFO_LOADED, [$this, 'handleCompanyInfoLoaded']);
         add_action('simplybook_event_' . Event::BOOKING_PAGE_VISITED, [$this, 'handleBookingPageVisited']);
-        add_action('simplybook_event_' . Event::TASK_DISMISSED, [$this, 'handleTaskDismissed']);
         add_action('simplybook_save_design_settings', [$this, 'handleDesignSettingsSaved']);
     }
 
@@ -328,60 +327,74 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Handle all promotion tasks. The menu bubble counter is reset and then
-     * increased once with the number of visible promotion tasks.
+     * Handle all promotion tasks. The menu bubble counter is set to the
+     * number of visible promotion tasks.
      */
     private function handlePromotionTasks(string $subscriptionType): void
     {
         $bubbleCount = 0;
 
-        foreach ($this->service->getPromotionTasks() as $promotionTask) {
-            if ($this->handlePromotionTask($promotionTask, $subscriptionType)) {
-                $bubbleCount++;
-            }
+        if ($this->handleBlackFridayTask($subscriptionType)) {
+            $bubbleCount++;
         }
 
-        $this->bubbleCounter->reset();
-        $this->bubbleCounter->increase($bubbleCount);
+        if ($this->handleChristmasPromotionTask($subscriptionType)) {
+            $bubbleCount++;
+        }
+
+        $this->service->setTaskBubbleCounter($bubbleCount);
     }
 
     /**
-     * Method will only set the promotion task visible and mark it as upgrade
-     * if the current subscription is 'Trial' and the promotion period is
-     * running. A dismissed task stays dismissed. Returns true when the task
-     * is visible after handling.
+     * Method will only set the Black Friday task visible and mark it as upgrade
+     * if the current subscription is 'Trial' and the current date is between
+     * the Black Friday start and end date mentioned in the env config.
+     * Returns true when the task is visible after handling.
      */
-    private function handlePromotionTask(Tasks\AbstractPromotionTask $task, string $subscriptionType): bool
+    private function handleBlackFridayTask(string $subscriptionType): bool
     {
-        if ($this->service->isTaskDismissed($task->getId())) {
+        return $this->handlePromotionTask(
+            Tasks\BlackFridayTask::IDENTIFIER,
+            $this->promotionService->isBlackFriday(),
+            $subscriptionType
+        );
+    }
+
+    /**
+     * Method will only set the Christmas promo task visible and mark it as
+     * upgrade if the current subscription is 'Trial' and the current date
+     * is between the Christmas promo start and end date mentioned in the
+     * env config. Returns true when the task is visible after handling.
+     */
+    private function handleChristmasPromotionTask(string $subscriptionType): bool
+    {
+        return $this->handlePromotionTask(
+            Tasks\ChristmasPromotionTask::IDENTIFIER,
+            $this->promotionService->isChristmasPeriod(),
+            $subscriptionType
+        );
+    }
+
+    /**
+     * Mark the promotion task as upgrade when the promotion is active for a
+     * Trial user. Hide the task otherwise. A dismissed task stays dismissed.
+     * Returns true when the task is visible after handling.
+     */
+    private function handlePromotionTask(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
+    {
+        if ($this->service->isTaskDismissed($taskId)) {
             return false;
         }
 
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
-        if ($isTrial && $task->isPromotionActive()) {
-            $this->service->markTaskUpgrade($task->getId());
+        if ($isTrial && $isPromotionActive) {
+            $this->service->markTaskUpgrade($taskId);
             return true;
         }
 
-        $this->service->hideTask($task->getId());
+        $this->service->hideTask($taskId);
         return false;
-    }
-
-    /**
-     * Lower the menu bubble counter by one when a promotion task is
-     * dismissed. The bubble only counts promotion tasks, see
-     * {@see handlePromotionTasks}. Other tasks do not change the bubble.
-     */
-    public function handleTaskDismissed(array $arguments): void
-    {
-        $task = $arguments['task'] ?? null;
-
-        if (!$task instanceof Tasks\AbstractPromotionTask) {
-            return;
-        }
-
-        $this->bubbleCounter->decrease();
     }
 
     /**
