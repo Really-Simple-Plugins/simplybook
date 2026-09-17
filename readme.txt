@@ -41,7 +41,7 @@ SimplyBook.me can be used for free up to 50 appointments per month. In addition,
 = Why SimplyBook.me? =
 
 SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings, calendar, and settings. On top of that you will get an admin app where you can manage all your bookings, handle appointments, adjust scheduling, and accept payments on the go. Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
-For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/</a>
+For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: [SimplyBook.me](https://simplybook.me/?ref=wordpress)
 
 This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you read the External services section below. It describes each external service, the data the plugin sends, and links to the privacy policy and terms of use of each service.
 
@@ -72,7 +72,7 @@ For more information:
 
 == Installation ==
 
-= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
+= [Detailed instructions with photos here](https://help.simplybook.me/index.php/WordPress_integration) =
 
 == Frequently Asked Questions ==
 
@@ -83,7 +83,7 @@ Yes, the plugin and registering an account at SimplyBook.me is entirely free, wi
 Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you will be reset to the Free plan, or you can decide to subscribe to our paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
-Yes, we need to authenticate your site as your bookings will be processed through our API. This allows us to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at https://simplybook.me
+Yes, we need to authenticate your site as your bookings will be processed through our API. This allows us to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me)
 
 = What if I already have a SimplyBook me account? =
 You can skip the onboarding and login with your existing login credentials.
@@ -98,7 +98,7 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = 3.4.0 - 2026-08-19 =
-* Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
+* Added: The plugin now uses the [WordPress Abilities API](https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/)
 * Added: New submenu to manage your SimplyBook.me plans and prices.
 * Added: The Metricool WordPress plugin is added to the "Other plugins" section.
 * Added: Stricter theme setting validation.
