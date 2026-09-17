@@ -17,12 +17,15 @@ class SubscriptionDataService extends AbstractEntityService
     protected string $identifier = 'subscription_data';
 
     /**
-     * Fetch the subscription data from the SimplyBook API
+     * Fetch the subscription data from the SimplyBook API. The filter allows
+     * developers to override the data, for example to preview the plugin in
+     * a "trial ended" or "limit reached" state.
      * @return array The subscription data
      */
     public function fetch(): array
     {
-        return $this->client->get_subscription_data();
+        $data = $this->client->get_subscription_data();
+        return (array) apply_filters('simplybook_subscription_data', $data);
     }
 
     /**
