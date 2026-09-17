@@ -268,6 +268,20 @@ class TaskManagementService
     }
 
     /**
+     * Check if a task is dismissed
+     */
+    public function isTaskDismissed(string $taskId): bool
+    {
+        $task = $this->repository->getTask($taskId);
+
+        if ($task === null) {
+            return false;
+        }
+
+        return $task->getStatus() === AbstractTask::STATUS_DISMISSED;
+    }
+
+    /**
      * Check if a task is completed
      */
     public function isTaskCompleted(string $taskId): bool

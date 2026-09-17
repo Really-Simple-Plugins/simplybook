@@ -377,11 +377,15 @@ class TaskManagementListener implements ListenerInterface
 
     /**
      * Mark the promotion task as upgrade when the promotion is active for a
-     * Trial user. Hide the task otherwise. Returns true when the task is
-     * visible after handling.
+     * Trial user. Hide the task otherwise. A dismissed task stays dismissed.
+     * Returns true when the task is visible after handling.
      */
     private function markPromotionTaskWhenTrial(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
     {
+        if ($this->service->isTaskDismissed($taskId)) {
+            return false;
+        }
+
         $isTrial = (strtolower($subscriptionType) === 'trial');
 
         if ($isTrial && $isPromotionActive) {
