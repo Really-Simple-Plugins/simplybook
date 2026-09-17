@@ -73,6 +73,7 @@ class WidgetScriptBuilder
 
     /**
      * Build a widget configuration based on the given settings.
+     * The configuration is used to initialize the widget.
      * @throws BuilderException
      */
     public function buildConfig(): array
@@ -87,15 +88,17 @@ class WidgetScriptBuilder
             throw new BuilderException('Widget configuration not found');
         }
 
-        $settings = $this->escapeSettings($this->getWidgetSettings());
+        $settings = $this->getWidgetSettings();
 
         // Set static config first: are set as is since it's not a user setting
         $staticConfig = $widgetConfig['static'] ?? [];
 
-        return array_merge(
+        $config = array_merge(
             $staticConfig,
             $this->mapSettings($widgetConfig['settings'], $settings)
         );
+
+        return $this->escapeSettings($config);
     }
 
     /**
@@ -104,14 +107,11 @@ class WidgetScriptBuilder
      */
     private function mapSettings(array $mapping, array $settings): array
     {
-        $config = [];
-        foreach ($mapping as $key => $settingName) {
-            $config[$key] = is_array($settingName)
+        return array_map(function ($settingName) use ($settings) {
+            return is_array($settingName)
                 ? $this->mapSettings($settingName, $settings)
                 : ($settings[$settingName] ?? '');
-        }
-
-        return $config;
+        }, $mapping);
     }
 
     /**
@@ -207,13 +207,8 @@ class WidgetScriptBuilder
      */
     private function getWidgetScript(): string
     {
-        $config = (string) wp_json_encode(
-            $this->buildConfig(),
-            (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
-        );
-
         return $this->view('public/widget', [
-            'config' => $config,
+            'config' => $this->buildConfig(),
         ]);
     }
 
