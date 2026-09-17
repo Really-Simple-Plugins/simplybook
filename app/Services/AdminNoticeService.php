@@ -110,6 +110,10 @@ class AdminNoticeService
             return;
         }
 
+        if (wp_script_is('simplybook-notice-dismiss', 'enqueued')) {
+            return;
+        }
+
         wp_enqueue_script(
             'simplybook-notice-dismiss',
             $this->env->getUrl('plugin.assets_url') . 'js/notices/admin-notice-dismiss.js',
