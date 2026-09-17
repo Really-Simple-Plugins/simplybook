@@ -15,8 +15,8 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  */
 class AdminNoticeService
 {
-    public const CHOICE_LATER = 'later';
-    public const CHOICE_NEVER = 'never';
+    private const CHOICE_LATER = 'later';
+    private const CHOICE_NEVER = 'never';
 
     private const META_KEY = 'simplybook_dismissed_notices';
     private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
@@ -58,21 +58,76 @@ class AdminNoticeService
     }
 
     /**
-     * Handle the form submit of a notice. The service calls $onLater or
-     * $onNever for the choice of the user and then removes the cached
-     * eligibility result. Nothing happens when the request holds no valid
-     * form submit for this notice.
+     * Handle the form submit of a site wide notice. The service stores the
+     * choice in the option simplybook_{noticeId}_notice_choice. For "later"
+     * it also stores the time in simplybook_{noticeId}_notice_dismissed_time.
+     * Nothing happens when the request holds no valid form submit for this
+     * notice.
      */
-    public function handleFormSubmit(string $noticeId, callable $onLater, callable $onNever): void
+    public function handleFormSubmit(string $noticeId): void
     {
         $choice = $this->submittedChoice($noticeId);
         if ($choice === null) {
             return;
         }
 
-        ($choice === self::CHOICE_LATER) ? $onLater() : $onNever();
+        if ($choice === self::CHOICE_LATER) {
+            update_option($this->dismissedTimeOptionName($noticeId), time(), false);
+        }
+
+        update_option($this->choiceOptionName($noticeId), $choice, false);
 
         wp_cache_delete($this->cacheName($noticeId), 'simplybook');
+    }
+
+    /**
+     * Handle the form submit of a per-user notice. "Later" snoozes the
+     * notice for $snoozeSeconds, "never" dismisses it for the current user.
+     * Nothing happens when the request holds no valid form submit for this
+     * notice.
+     */
+    public function handleUserFormSubmit(string $noticeId, int $snoozeSeconds): void
+    {
+        $choice = $this->submittedChoice($noticeId);
+        if ($choice === null) {
+            return;
+        }
+
+        $userId = get_current_user_id();
+
+        if ($choice === self::CHOICE_LATER) {
+            $this->snoozeNotice($userId, $noticeId, $snoozeSeconds);
+        }
+
+        if ($choice === self::CHOICE_NEVER) {
+            $this->dismissNotice($userId, $noticeId);
+        }
+
+        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
+    }
+
+    /**
+     * Check if the "never" choice of a site wide notice is stored.
+     * @see handleFormSubmit()
+     */
+    public function isNeverChoiceStored(string $noticeId): bool
+    {
+        return get_option($this->choiceOptionName($noticeId)) === self::CHOICE_NEVER;
+    }
+
+    /**
+     * Check if the "later" choice of a site wide notice has expired. True
+     * when the choice was never made.
+     * @see handleFormSubmit()
+     */
+    public function laterChoiceHasExpired(string $noticeId, int $days): bool
+    {
+        $dismissedTime = get_option($this->dismissedTimeOptionName($noticeId));
+        if (empty($dismissedTime)) {
+            return true;
+        }
+
+        return $this->daysHavePassedSince($dismissedTime, $days);
     }
 
     /**
@@ -99,7 +154,7 @@ class AdminNoticeService
     /**
      * Check if the current admin screen may show a notice.
      */
-    public function currentScreenAllowsNotice(): bool
+    private function currentScreenAllowsNotice(): bool
     {
         $screen = get_current_screen();
         if (!$screen) {
@@ -180,6 +235,16 @@ class AdminNoticeService
         return 'can_render_' . $noticeId . '_notice';
     }
 
+    private function choiceOptionName(string $noticeId): string
+    {
+        return 'simplybook_' . $noticeId . '_notice_choice';
+    }
+
+    private function dismissedTimeOptionName(string $noticeId): string
+    {
+        return 'simplybook_' . $noticeId . '_notice_dismissed_time';
+    }
+
     /**
      * Hide a notice for a specific user for good.
      */
@@ -209,7 +274,7 @@ class AdminNoticeService
      * Hide a notice for a specific user until the given amount of seconds
      * has passed.
      */
-    public function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
+    private function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
     {
         return $this->storeSnoozedNotice($userId, $noticeId, (time() + $seconds));
     }

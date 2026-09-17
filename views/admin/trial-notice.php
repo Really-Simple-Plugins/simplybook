@@ -4,11 +4,7 @@
  * @var string $logoUrl
  * @var string $message
  * @var string $plansPricesUrl
- * @var string $noticeId
- * @var string $formField
- * @var string $choiceField
- * @var string $nonceAction
- * @var string $nonceName
+ * @var array $noticeForm Keys: noticeId, formField, choiceField, nonceAction, nonceName
  */
 ?>
 
@@ -74,8 +70,8 @@
     <div class="rsp-container">
         <div class="rsp-trial-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="simplybook-logo"></div>
         <form class="rsp-trial-content rsp-trial-form" action="" method="POST">
-            <?php wp_nonce_field($nonceAction, $nonceName); ?>
-            <input type="hidden" name="<?php echo esc_attr($formField); ?>" value="<?php echo esc_attr($noticeId); ?>">
+            <?php wp_nonce_field($noticeForm['nonceAction'], $noticeForm['nonceName']); ?>
+            <input type="hidden" name="<?php echo esc_attr($noticeForm['formField']); ?>" value="<?php echo esc_attr($noticeForm['noticeId']); ?>">
             <?php echo wp_kses_post(wpautop($message)); ?>
             <div class="rsp-buttons-row">
                 <a
@@ -85,11 +81,11 @@
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($choiceField); ?>" value="later">
+                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="later">
                     <?php esc_html_e('Remind me tomorrow', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="submit" class="link" name="<?php echo esc_attr($choiceField); ?>" value="never">
+                <button type="submit" class="link" name="<?php echo esc_attr($noticeForm['choiceField']); ?>" value="never">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>

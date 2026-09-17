@@ -65,7 +65,8 @@ class ReviewController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'reviewUrl' => $this->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
-        ] + $this->adminNoticeService->formVariables(self::NOTICE_ID));
+            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
+        ]);
     }
 
     /**
@@ -73,14 +74,7 @@ class ReviewController implements ControllerInterface
      */
     public function processReviewFormSubmit(): void
     {
-        $this->adminNoticeService->handleFormSubmit(
-            self::NOTICE_ID,
-            function () {
-                update_option('simplybook_review_notice_dismissed_time', time(), false);
-                update_option('simplybook_review_notice_choice', AdminNoticeService::CHOICE_LATER, false);
-            },
-            fn() => update_option('simplybook_review_notice_choice', AdminNoticeService::CHOICE_NEVER, false)
-        );
+        $this->adminNoticeService->handleFormSubmit(self::NOTICE_ID);
     }
 
     /**
@@ -108,8 +102,7 @@ class ReviewController implements ControllerInterface
         }
 
         // Check if user dismissed via form button
-        $previousChoice = get_option('simplybook_review_notice_choice');
-        if ($previousChoice === AdminNoticeService::CHOICE_NEVER) {
+        if ($this->adminNoticeService->isNeverChoiceStored(self::NOTICE_ID)) {
             return false;
         }
 
@@ -117,7 +110,7 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        if ($this->reviewNoticeDismissedTimeHasPassed() === false) {
+        if ($this->adminNoticeService->laterChoiceHasExpired(self::NOTICE_ID, 30) === false) {
             return false;
         }
 
@@ -135,19 +128,6 @@ class ReviewController implements ControllerInterface
         }
 
         return $this->adminNoticeService->daysHavePassedSince($pluginFirstUseTime, 30);
-    }
-
-    /**
-     * Check if the review notice dismissed time is more than 30 days ago.
-     */
-    private function reviewNoticeDismissedTimeHasPassed(): bool
-    {
-        $reviewNoticeDismissedTime = get_option('simplybook_review_notice_dismissed_time');
-        if (empty($reviewNoticeDismissedTime)) {
-            return true; // default true to show the notice
-        }
-
-        return $this->adminNoticeService->daysHavePassedSince($reviewNoticeDismissedTime, 30);
     }
 
     /**

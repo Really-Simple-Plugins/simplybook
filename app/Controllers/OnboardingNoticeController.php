@@ -58,7 +58,8 @@ class OnboardingNoticeController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'onboardingUrl' => $this->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
-        ] + $this->adminNoticeService->formVariables(self::NOTICE_ID));
+            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
+        ]);
     }
 
     /**
@@ -66,14 +67,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     public function processCompleteOnboardingNoticeFormSubmit(): void
     {
-        $this->adminNoticeService->handleFormSubmit(
-            self::NOTICE_ID,
-            function () {
-                update_option('simplybook_complete_onboarding_notice_dismissed_time', time(), false);
-                update_option('simplybook_complete_onboarding_notice_choice', AdminNoticeService::CHOICE_LATER, false);
-            },
-            fn() => update_option('simplybook_complete_onboarding_notice_choice', AdminNoticeService::CHOICE_NEVER, false)
-        );
+        $this->adminNoticeService->handleFormSubmit(self::NOTICE_ID);
     }
 
     /**
@@ -94,8 +88,7 @@ class OnboardingNoticeController implements ControllerInterface
     private function isEligibleForNotice(): bool
     {
         // Check if user dismissed via form button
-        $previousChoice = get_option('simplybook_complete_onboarding_notice_choice');
-        if ($previousChoice === AdminNoticeService::CHOICE_NEVER) {
+        if ($this->adminNoticeService->isNeverChoiceStored(self::NOTICE_ID)) {
             return false;
         }
 
@@ -103,7 +96,7 @@ class OnboardingNoticeController implements ControllerInterface
             return false;
         }
 
-        if ($this->noticeDismissedTimeHasPassed() === false) {
+        if ($this->adminNoticeService->laterChoiceHasExpired(self::NOTICE_ID, 7) === false) {
             return false;
         }
 
@@ -138,19 +131,6 @@ class OnboardingNoticeController implements ControllerInterface
         }
 
         return $this->adminNoticeService->daysHavePassedSince($pluginActivationTimestamp, 3);
-    }
-
-    /**
-     * Check if the notice dismissed time is more than 7 days ago.
-     */
-    private function noticeDismissedTimeHasPassed(): bool
-    {
-        $noticeDismissedTime = get_option('simplybook_complete_onboarding_notice_dismissed_time');
-        if (empty($noticeDismissedTime)) {
-            return true; // default true to show the notice
-        }
-
-        return $this->adminNoticeService->daysHavePassedSince($noticeDismissedTime, 7);
     }
 
     /**

@@ -67,7 +67,8 @@ class TrialExpirationController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
-        ] + $this->adminNoticeService->formVariables(self::NOTICE_ID));
+            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
+        ]);
     }
 
     /**
@@ -76,13 +77,7 @@ class TrialExpirationController implements ControllerInterface
      */
     public function processTrialNoticeFormSubmit(): void
     {
-        $userId = get_current_user_id();
-
-        $this->adminNoticeService->handleFormSubmit(
-            self::NOTICE_ID,
-            fn() => $this->adminNoticeService->snoozeNotice($userId, self::NOTICE_ID, DAY_IN_SECONDS),
-            fn() => $this->adminNoticeService->dismissNotice($userId, self::NOTICE_ID)
-        );
+        $this->adminNoticeService->handleUserFormSubmit(self::NOTICE_ID, DAY_IN_SECONDS);
     }
 
     public function enqueueScripts(): void
