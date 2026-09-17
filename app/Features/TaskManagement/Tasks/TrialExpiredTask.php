@@ -42,7 +42,7 @@ class TrialExpiredTask extends AbstractTask
      */
     public function getText(): string
     {
-        return __('Your trial period has ended. Select the Free plan to keep using SimplyBook.me for free, or choose a paid plan for more features.', 'simplybook');
+        return __('Your trial has ended. Select the Free plan or a paid plan to continue.', 'simplybook');
     }
 
     /**
