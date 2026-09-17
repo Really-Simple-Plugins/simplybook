@@ -107,19 +107,16 @@ class TrialExpirationController implements ControllerInterface
 
     private function getTrialInfo(): ?array
     {
-        return $this->adminNoticeService->remember(
-            'simplybook_trial_info',
-            fn() => $this->fetchTrialInfo(),
-            (5 * MINUTE_IN_SECONDS)
-        );
-    }
+        $found = false;
+        $cacheKey = 'simplybook_trial_info';
+        $cacheGroup = 'simplybook';
+        $cachedInfo = wp_cache_get($cacheKey, $cacheGroup, false, $found);
+        $cacheDuration = (5 * MINUTE_IN_SECONDS);
 
-    /**
-     * Read the trial state from the subscription data. Returns null when the
-     * account has no trial subscription.
-     */
-    private function fetchTrialInfo(): ?array
-    {
+        if ($found && is_array($cachedInfo)) {
+            return $cachedInfo;
+        }
+
         $subscriptionData = $this->subscriptionService->all(true);
 
         if (empty($subscriptionData)) {
@@ -127,21 +124,27 @@ class TrialExpirationController implements ControllerInterface
         }
 
         if (empty($subscriptionData)) {
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         $subscriptionName = ($subscriptionData['subscription_name'] ?? '');
         if ($subscriptionName !== 'Trial') {
+            wp_cache_set($cacheKey, null, $cacheGroup, $cacheDuration);
             return null;
         }
 
         $isExpired = ($subscriptionData['is_expired'] ?? false);
         $expireIn = ($subscriptionData['expire_in'] ?? 0);
 
-        return [
+        $trialInfo = [
             'is_expired' => (bool) $isExpired,
             'days_remaining' => $isExpired ? 0 : max(0, (int) $expireIn),
             'days_since_expiration' => $isExpired ? abs((int) $expireIn) : 0,
         ];
+
+        wp_cache_set($cacheKey, $trialInfo, $cacheGroup, $cacheDuration);
+
+        return $trialInfo;
     }
 }

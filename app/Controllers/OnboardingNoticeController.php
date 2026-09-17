@@ -106,7 +106,19 @@ class OnboardingNoticeController implements ControllerInterface
             return false;
         }
 
-        return Carbon::createFromTimestamp($pluginActivationTimestamp)->isBefore(Carbon::now()->subDays(3));
+        return $this->timestampIsAfter($pluginActivationTimestamp, 3);
+    }
+
+    /**
+     * Check if the timestamp is after the given amount of days ago.
+     * @param string|float|int $timestamp
+     */
+    private function timestampIsAfter($timestamp, int $daysAgo = 7): bool
+    {
+        $timestamp = Carbon::createFromTimestamp($timestamp);
+        $daysAgo = Carbon::now()->subDays($daysAgo);
+
+        return $timestamp->isBefore($daysAgo);
     }
 
     /**

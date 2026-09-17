@@ -103,7 +103,19 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        return Carbon::createFromTimestamp($pluginFirstUseTime)->isBefore(Carbon::now()->subDays(30));
+        return $this->timestampIsThirtyDaysAgo($pluginFirstUseTime);
+    }
+
+    /**
+     * Check if the timestamp is more than 30 days ago.
+     * @param float|int|string $timestamp
+     */
+    private function timestampIsThirtyDaysAgo($timestamp): bool
+    {
+        $timestamp = Carbon::createFromTimestamp($timestamp);
+        $thirtyDaysAgo = Carbon::now()->subDays(30);
+
+        return $timestamp->isBefore($thirtyDaysAgo);
     }
 
     /**

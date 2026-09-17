@@ -67,38 +67,19 @@ class AdminNoticeService
             return false;
         }
 
-        return (bool) $this->remember(
-            $this->cacheName($noticeId),
-            fn() => (bool) $isEligible(),
-            MINUTE_IN_SECONDS,
-            (MINUTE_IN_SECONDS * 10)
-        );
-    }
-
-    /**
-     * Return the value from the object cache. When the cache has no value,
-     * the service runs $compute and stores the result. An empty result is
-     * stored for $secondsWhenEmpty when given, so a failed lookup does not
-     * run again on every request.
-     * @return mixed
-     */
-    public function remember(string $cacheKey, callable $compute, int $seconds, ?int $secondsWhenEmpty = null)
-    {
         $found = false;
-        $cachedValue = wp_cache_get($cacheKey, 'simplybook', false, $found);
+        $cacheName = $this->cacheName($noticeId);
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
 
         if ($found) {
-            return $cachedValue;
+            return (bool) $cacheValue;
         }
 
-        $value = $compute();
-        if (empty($value) && ($secondsWhenEmpty !== null)) {
-            $seconds = $secondsWhenEmpty;
-        }
+        $eligible = (bool) $isEligible();
+        $cacheDuration = ($eligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
+        wp_cache_set($cacheName, $eligible, 'simplybook', $cacheDuration);
 
-        wp_cache_set($cacheKey, $value, 'simplybook', $seconds);
-
-        return $value;
+        return $eligible;
     }
 
     private function cacheName(string $noticeId): string
