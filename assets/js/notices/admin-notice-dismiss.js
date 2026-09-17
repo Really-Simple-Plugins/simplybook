@@ -11,34 +11,26 @@
  *
  * @since 3.2.1
  */
-jQuery(function () {
+jQuery(function ($) {
     'use strict';
 
-    document.querySelectorAll('.notice[data-notice-type]').forEach(function (notice) {
-        const noticeId = notice.dataset.noticeType;
+    $('.notice[data-notice-type]').each(function () {
+        const $notice = $(this);
+        const noticeId = $notice.data('noticeType');
 
-        const dismissForUserButton = notice.querySelector('.notice-dismiss');
-        if (dismissForUserButton) {
-            dismissForUserButton.addEventListener('click', function () {
-                dismissNoticeForUser(noticeId);
-            });
-        }
+        $notice.find('.notice-dismiss').on('click', function () {
+            dismissNoticeForUser(noticeId);
+        });
 
-        const snoozeButton = notice.querySelector('[data-notice-action="snooze"]');
-        if (snoozeButton) {
-            snoozeButton.addEventListener('click', function () {
-                snoozeNotice(noticeId);
-                notice.remove();
-            });
-        }
+        $notice.find('[data-notice-action="snooze"]').on('click', function () {
+            snoozeNotice(noticeId);
+            $notice.remove();
+        });
 
-        const dismissButton = notice.querySelector('[data-notice-action="dismiss"]');
-        if (dismissButton) {
-            dismissButton.addEventListener('click', function () {
-                dismissNotice(noticeId);
-                notice.remove();
-            });
-        }
+        $notice.find('[data-notice-action="dismiss"]').on('click', function () {
+            dismissNotice(noticeId);
+            $notice.remove();
+        });
     });
 
     function dismissNoticeForUser(noticeId) {
