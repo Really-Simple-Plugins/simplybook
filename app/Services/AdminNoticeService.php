@@ -177,36 +177,66 @@ class AdminNoticeService
     }
 
 
+    /**
+     * Read the site choice of a notice from its own wp_options row. The row
+     * name is `simplybook_{noticeId}_notice_choice`. The value is "later",
+     * "never" or an empty string when no choice was made.
+     */
     private function getChoice(string $noticeId): string
     {
         return (string) get_option($this->choiceOptionName($noticeId));
     }
 
 
+    /**
+     * Write the site choice of a notice to its own wp_options row. The row
+     * name is `simplybook_{noticeId}_notice_choice`. The row does not
+     * autoload.
+     */
     private function storeChoice(string $noticeId, string $choice): bool
     {
         return update_option($this->choiceOptionName($noticeId), $choice, false);
     }
 
 
+    /**
+     * Read the snooze time of a notice from its own wp_options row. The row
+     * name is `simplybook_{noticeId}_notice_dismissed_time`. The value is
+     * the Unix timestamp of the "later" click, or 0 when the notice was
+     * never snoozed.
+     */
     private function getSnoozedAt(string $noticeId): int
     {
         return (int) get_option($this->snoozedAtOptionName($noticeId));
     }
 
 
+    /**
+     * Write the snooze time of a notice to its own wp_options row. The row
+     * name is `simplybook_{noticeId}_notice_dismissed_time`. The row does
+     * not autoload.
+     */
     private function storeSnoozedAt(string $noticeId, int $snoozedAt): bool
     {
         return update_option($this->snoozedAtOptionName($noticeId), $snoozedAt, false);
     }
 
 
+    /**
+     * Each notice has its own row for the site choice, for example
+     * `simplybook_trial_notice_choice`.
+     */
     private function choiceOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_choice';
     }
 
 
+    /**
+     * Each notice has its own row for the snooze time, for example
+     * `simplybook_trial_notice_dismissed_time`. The name keeps the
+     * "dismissed_time" suffix of the older plugin versions.
+     */
     private function snoozedAtOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_dismissed_time';
@@ -220,7 +250,8 @@ class AdminNoticeService
 
 
     /**
-     * Return the notice IDs that the current user dismissed with the X button.
+     * Read the notice IDs that the current user dismissed with the X button.
+     * All notices share one user meta row, `simplybook_dismissed_notices`.
      */
     private function getDismissedNoticesForUser(): array
     {
