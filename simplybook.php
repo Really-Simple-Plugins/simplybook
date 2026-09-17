@@ -29,23 +29,3 @@ require_once __DIR__ . '/vendor/autoload_packages.php';
 // Boot the plugin.
 $plugin = new SimplyBook\Bootstrap\Plugin();
 $plugin->boot();
-
-// TEMPORARY: demo state for screenshots (NL14RSP2-422). Remove before release.
-add_filter('simplybook_subscription_data', function (array $data): array {
-    $data['subscription_name'] = 'Trial';
-    $data['is_expired'] = true;
-    $data['expire_in'] = -3;
-    $data['limits'] = [
-        ['key' => 'sheduler_limit', 'total' => 50, 'rest' => 0],
-        ['key' => 'provider_limit', 'total' => 5, 'rest' => 0],
-        ['key' => 'sms_limit', 'total' => 0, 'rest' => 0],
-    ];
-    return $data;
-});
-
-add_action('admin_init', function (): void {
-    if (get_option('simplybook_demo_state_reset') === false) {
-        delete_option('simplybook_subscription_data');
-        update_option('simplybook_demo_state_reset', 1, false);
-    }
-});
