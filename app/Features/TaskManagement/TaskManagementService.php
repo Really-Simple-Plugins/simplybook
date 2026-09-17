@@ -6,7 +6,6 @@ use InvalidArgumentException;
 use SimplyBook\Bootstrap\App;
 use SimplyBook\Interfaces\TaskInterface;
 use SimplyBook\Features\TaskManagement\Tasks\AbstractTask;
-use SimplyBook\Features\TaskManagement\Tasks\AbstractPromotionTask;
 
 /**
  * @SuppressWarnings("PHPMD.TooManyPublicMethods")
@@ -34,17 +33,6 @@ class TaskManagementService
     public function getTask(string $taskId): ?TaskInterface
     {
         return $this->repository->getTask($taskId);
-    }
-
-    /**
-     * Used by the {@see TaskManagementListener} to handle all promotions
-     * without knowing the individual promotion tasks.
-     *
-     * @return AbstractPromotionTask[]
-     */
-    public function getPromotionTasks(): array
-    {
-        return $this->repository->getPromotionTasks();
     }
 
     /**
@@ -235,6 +223,14 @@ class TaskManagementService
     public function markTaskUpgrade(string $taskId): void
     {
         $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_UPGRADE);
+    }
+
+    /**
+     * Update the task bubble counter shown in the admin menu
+     */
+    public function setTaskBubbleCounter(int $count): void
+    {
+        update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
     }
 
     /**
