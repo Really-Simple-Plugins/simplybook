@@ -6,7 +6,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\NoticeService;
+use SimplyBook\Services\AdminNoticeService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -24,7 +24,7 @@ class TrialExpirationController implements ControllerInterface
 
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
-    private NoticeService $noticeService;
+    private AdminNoticeService $adminNoticeService;
     private RequestStorage $request;
 
     /**
@@ -49,12 +49,12 @@ class TrialExpirationController implements ControllerInterface
     public function __construct(
         EnvironmentConfig $env,
         SubscriptionDataService $subscriptionService,
-        NoticeService $noticeService,
+        AdminNoticeService $adminNoticeService,
         RequestStorage $request
     ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
-        $this->noticeService = $noticeService;
+        $this->adminNoticeService = $adminNoticeService;
         $this->request = $request;
     }
 
@@ -117,11 +117,11 @@ class TrialExpirationController implements ControllerInterface
         $choice = $this->request->getString('global.rsp_trial_choice');
 
         if ($choice === 'later') {
-            $this->noticeService->snoozeNotice($userId, 'trial', DAY_IN_SECONDS);
+            $this->adminNoticeService->snoozeNotice($userId, 'trial', DAY_IN_SECONDS);
         }
 
         if ($choice === 'never') {
-            $this->noticeService->dismissNotice($userId, 'trial');
+            $this->adminNoticeService->dismissNotice($userId, 'trial');
         }
 
         wp_cache_delete(self::ELIGIBILITY_CACHE_NAME, 'simplybook');
@@ -133,7 +133,7 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
-        $this->noticeService->enqueue();
+        $this->adminNoticeService->enqueue();
     }
 
     private function canRenderTrialNotice(): bool
@@ -165,11 +165,11 @@ class TrialExpirationController implements ControllerInterface
     {
         $userId = get_current_user_id();
 
-        if ($this->noticeService->isNoticeDismissed($userId, 'trial')) {
+        if ($this->adminNoticeService->isNoticeDismissed($userId, 'trial')) {
             return false;
         }
 
-        if ($this->noticeService->isNoticeSnoozed($userId, 'trial')) {
+        if ($this->adminNoticeService->isNoticeSnoozed($userId, 'trial')) {
             return false;
         }
 

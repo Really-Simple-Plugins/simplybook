@@ -10,7 +10,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
  * for good or snoozed until a point in time. The service also enqueues
  * the script that handles the X button of a notice.
  */
-class NoticeService
+class AdminNoticeService
 {
     private const META_KEY = 'simplybook_dismissed_notices';
     private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
@@ -23,65 +23,46 @@ class NoticeService
     }
 
     /**
-     * Dismiss a notice for a specific user
-     *
-     * @param int $userId The user ID
-     * @param string $noticeType The type of notice to dismiss
-     * @return bool True on success, false on failure
+     * Hide a notice for a specific user for good.
      */
-    public function dismissNotice(int $userId, string $noticeType): bool
+    public function dismissNotice(int $userId, string $noticeId): bool
     {
-
         $dismissedNotices = $this->getDismissedNotices($userId);
 
-        if (in_array($noticeType, $dismissedNotices, true)) {
+        if (in_array($noticeId, $dismissedNotices, true)) {
             return true;
         }
 
-        $dismissedNotices[] = $noticeType;
+        $dismissedNotices[] = $noticeId;
 
         $result = update_user_meta($userId, self::META_KEY, $dismissedNotices);
 
         return $result !== false;
     }
 
-    /**
-     * Check if a notice has been dismissed by a specific user
-     *
-     * @param int $userId The user ID
-     * @param string $noticeType The type of notice to check
-     * @return bool True if dismissed, false otherwise
-     */
-    public function isNoticeDismissed(int $userId, string $noticeType): bool
+    public function isNoticeDismissed(int $userId, string $noticeId): bool
     {
         $dismissedNotices = $this->getDismissedNotices($userId);
 
-        return in_array($noticeType, $dismissedNotices, true);
+        return in_array($noticeId, $dismissedNotices, true);
     }
 
     /**
      * Hide a notice for a specific user until the given amount of seconds
      * has passed.
      */
-    public function snoozeNotice(int $userId, string $noticeType, int $seconds): bool
+    public function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
     {
-        $snoozedNotices = $this->getSnoozedNotices($userId);
-        $snoozedNotices[$noticeType] = (time() + $seconds);
-
-        $result = update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices);
-
-        return $result !== false;
+        return $this->storeSnoozedNotice($userId, $noticeId, (time() + $seconds));
     }
 
     /**
      * Check if the snooze time of a notice has not passed yet for a
      * specific user.
      */
-    public function isNoticeSnoozed(int $userId, string $noticeType): bool
+    public function isNoticeSnoozed(int $userId, string $noticeId): bool
     {
-        $snoozedUntil = (int) ($this->getSnoozedNotices($userId)[$noticeType] ?? 0);
-
-        return $snoozedUntil > time();
+        return $this->getSnoozedNotice($userId, $noticeId) > time();
     }
 
     /**
@@ -95,14 +76,34 @@ class NoticeService
     }
 
     /**
+     * Return the snooze end timestamp of a notice for a specific user. Zero
+     * means the notice was never snoozed.
+     */
+    private function getSnoozedNotice(int $userId, string $noticeId): int
+    {
+        return (int) ($this->getSnoozedNotices($userId)[$noticeId] ?? 0);
+    }
+
+    /**
      * Return the snooze end timestamps for a specific user, keyed by
-     * notice type.
+     * notice ID.
      */
     private function getSnoozedNotices(int $userId): array
     {
         $snoozed = get_user_meta($userId, self::SNOOZE_META_KEY, true);
 
         return is_array($snoozed) ? $snoozed : [];
+    }
+
+    /**
+     * Save the snooze end timestamp of a notice for a specific user.
+     */
+    private function storeSnoozedNotice(int $userId, string $noticeId, int $snoozedUntil): bool
+    {
+        $snoozedNotices = $this->getSnoozedNotices($userId);
+        $snoozedNotices[$noticeId] = $snoozedUntil;
+
+        return update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices) !== false;
     }
 
     /**

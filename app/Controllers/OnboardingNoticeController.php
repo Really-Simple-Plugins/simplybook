@@ -7,7 +7,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\ExtendifyDataService;
-use SimplyBook\Services\NoticeService;
+use SimplyBook\Services\AdminNoticeService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -22,14 +22,14 @@ class OnboardingNoticeController implements ControllerInterface
     private EnvironmentConfig $env;
     private RequestStorage $request;
     private ExtendifyDataService $extendifyDataService;
-    private NoticeService $noticeService;
+    private AdminNoticeService $adminNoticeService;
 
-    public function __construct(EnvironmentConfig $env, RequestStorage $request, ExtendifyDataService $extendifyDataService, NoticeService $noticeService)
+    public function __construct(EnvironmentConfig $env, RequestStorage $request, ExtendifyDataService $extendifyDataService, AdminNoticeService $adminNoticeService)
     {
         $this->env = $env;
         $this->request = $request;
         $this->extendifyDataService = $extendifyDataService;
-        $this->noticeService = $noticeService;
+        $this->adminNoticeService = $adminNoticeService;
     }
 
     public function register(): void
@@ -147,7 +147,7 @@ class OnboardingNoticeController implements ControllerInterface
         }
 
         // Check if user dismissed via X button
-        if ($this->noticeService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
+        if ($this->adminNoticeService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
             return false;
         }
 
@@ -214,6 +214,6 @@ class OnboardingNoticeController implements ControllerInterface
             return;
         }
 
-        $this->noticeService->enqueue();
+        $this->adminNoticeService->enqueue();
     }
 }
