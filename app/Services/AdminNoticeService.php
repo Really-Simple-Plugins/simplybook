@@ -31,6 +31,7 @@ class AdminNoticeService
     ];
 
     private EnvironmentConfig $env;
+    private bool $scriptEnqueued = false;
 
     public function __construct(EnvironmentConfig $env)
     {
@@ -110,9 +111,11 @@ class AdminNoticeService
             return;
         }
 
-        if (wp_script_is('simplybook-notice-dismiss', 'enqueued')) {
+        if ($this->scriptEnqueued) {
             return;
         }
+
+        $this->scriptEnqueued = true;
 
         wp_enqueue_script(
             'simplybook-notice-dismiss',
