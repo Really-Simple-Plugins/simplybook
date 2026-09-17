@@ -50,21 +50,21 @@ class WidgetEndpoint implements MultiEndpointInterface
     }
 
     /**
-     * Get and return widget javascript in the HTTP Response
+     * Get and return widget configuration settings in the HTTP Response
      */
     public function getCalendarWidget(\WP_REST_Request $request): \WP_REST_Response
     {
         try {
             $builder = new WidgetScriptBuilder();
-            $content = $builder->setWidgetType('calendar')
+            $config = $builder->setWidgetType('calendar')
                 ->setWidgetSettings($this->service->getDesignOptions())
-                ->build();
+                ->buildConfig();
         } catch (BuilderException $e) {
-            $content = '';
+            $config = null;
         }
 
         return $this->sendHttpResponse([
-            'widget' => $content,
+            'widget' => $config,
         ]);
     }
 
@@ -106,7 +106,7 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         try {
             $this->service->validateSettings($widgetSettings);
-        } catch(FormException $e) {
+        } catch (FormException $e) {
             return $this->sendHttpResponse(
                 ['errors' => $e->getErrors()],
                 false,
@@ -117,15 +117,15 @@ class WidgetEndpoint implements MultiEndpointInterface
 
         try {
             $builder = new WidgetScriptBuilder();
-            $content = $builder->setWidgetType('calendar')
+            $config = $builder->setWidgetType('calendar')
                 ->setWidgetSettings($widgetSettings)
-                ->build();
+                ->buildConfig();
         } catch (BuilderException $e) {
-            $content = '';
+            $config = null;
         }
 
         return $this->sendHttpResponse([
-            'widget' => $content,
+            'widget' => $config,
         ]);
     }
 }

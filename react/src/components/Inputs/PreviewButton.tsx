@@ -44,18 +44,14 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
 
         // @ts-ignore
         createPreviewWidget(formData).then((response) => {
+            const config = response.data.widget;
 
-            // Create the script element
-            let newScriptElement = document.createElement('script');
-            newScriptElement.id = 'simplybook-preview-widget-script';
-            newScriptElement.innerHTML = response.data.widget;
+            if (!config || typeof SimplybookWidget !== "function") {
+                setPreviewError(__("The preview could not be loaded. Please try again.", "simplybook"));
+                return;
+            }
 
-            document.head.appendChild(newScriptElement);
-
-            // Dispatch custom element to load the widget
-            document.dispatchEvent(
-                new CustomEvent('loadSimplyBookPreviewWidget')
-            );
+            new SimplybookWidget(config);
         }).catch((error) => {
             console.error("Error loading preview widget:", error);
             setPreviewError(__("The preview could not be loaded. Please try again.", "simplybook"));
