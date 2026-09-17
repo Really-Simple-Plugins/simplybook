@@ -115,15 +115,10 @@ class AdminNoticeService
             true
         );
 
-        wp_add_inline_script(
-            'simplybook-notice-dismiss',
-            sprintf(
-                'const simplybookNoticesConfig = { restUrl: %s, nonce: %s };',
-                wp_json_encode($this->restUrl()),
-                wp_json_encode(wp_create_nonce('wp_rest'))
-            ),
-            'before'
-        );
+        wp_localize_script('simplybook-notice-dismiss', 'simplybookNoticesConfig', [
+            'restUrl' => $this->restUrl(),
+            'nonce' => wp_create_nonce('wp_rest'),
+        ]);
     }
 
 
