@@ -24,8 +24,8 @@ class AdminNoticeService
      * Don't render the notices on any of these screens.
      */
     private const EXCLUDED_SCREENS = [
-        '/^post$/',
-        '/simplybook/',
+        '/^post$/', // Post edit screen
+        '/simplybook/', // SimplyBook dashboard pages
     ];
 
     private EnvironmentConfig $env;
