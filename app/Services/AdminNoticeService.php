@@ -24,9 +24,9 @@ class AdminNoticeService
      * Don't render the notices on any of these screens.
      */
     private const EXCLUDED_SCREENS = [
-        'post',
-        'toplevel_page_simplybook-integration',
-        'simplybook-me_page_simplybook-plans-prices',
+        '/^post$/',
+        '/^toplevel_page_simplybook-integration$/',
+        '/_page_simplybook-plans-prices$/',
     ];
 
     private EnvironmentConfig $env;
@@ -153,7 +153,13 @@ class AdminNoticeService
             return true;
         }
 
-        return in_array($screen->base, self::EXCLUDED_SCREENS, true) === false;
+        foreach (self::EXCLUDED_SCREENS as $pattern) {
+            if (preg_match($pattern, $screen->base) === 1) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 
