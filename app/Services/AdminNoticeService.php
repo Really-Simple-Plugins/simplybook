@@ -21,11 +21,9 @@ class AdminNoticeService
     private const CHOICE_NEVER = 'never';
 
     /**
-     * Don't render the notices on any of these screens. Gutenberg removes the
-     * class that makes a notice dismissible on the post screen. Notices break
-     * the UI of our own pages.
+     * Don't render the notices on any of these screens.
      */
-    private const EXCLUDED_SCREEN_BASES = [
+    private const EXCLUDED_SCREENS = [
         'post',
         'simplybook',
     ];
@@ -154,7 +152,7 @@ class AdminNoticeService
             return true;
         }
 
-        foreach (self::EXCLUDED_SCREEN_BASES as $base) {
+        foreach (self::EXCLUDED_SCREENS as $base) {
             if (str_contains($screen->base, $base)) {
                 return false;
             }
