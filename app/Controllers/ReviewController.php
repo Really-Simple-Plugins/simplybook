@@ -17,7 +17,7 @@ class ReviewController implements ControllerInterface
     use HasAllowlistControl;
 
     private const NOTICE_ID = 'review';
-    private const SNOOZE_SECONDS = (30 * DAY_IN_SECONDS);
+    private const SNOOZE_DURATION = (30 * DAY_IN_SECONDS);
 
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
@@ -82,7 +82,7 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_SECONDS) === false) {
+        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
             return false;
         }
 

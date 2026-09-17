@@ -39,7 +39,7 @@ class AdminNoticeService
      * Check if the notice is not dismissed or snoozed, and if the current
      * screen allows a notice.
      */
-    public function canRender(string $noticeId, int $snoozeSeconds): bool
+    public function canRender(string $noticeId, int $snoozeDuration): bool
     {
         if ($this->currentScreenAllowsNotice() === false) {
             return false;
@@ -53,7 +53,7 @@ class AdminNoticeService
             return false;
         }
 
-        return $this->isNoticeSnoozed($noticeId, $snoozeSeconds) === false;
+        return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
     }
 
 
@@ -159,9 +159,9 @@ class AdminNoticeService
 
 
     /**
-     * Check if the notice is snoozed within the given seconds.
+     * Check if the notice is snoozed within the snooze duration.
      */
-    private function isNoticeSnoozed(string $noticeId, int $snoozeSeconds): bool
+    private function isNoticeSnoozed(string $noticeId, int $snoozeDuration): bool
     {
         if ($this->getChoice($noticeId) !== self::CHOICE_LATER) {
             return false;
@@ -169,7 +169,7 @@ class AdminNoticeService
 
         $snoozedAt = $this->getSnoozedAt($noticeId);
 
-        return ($snoozedAt + $snoozeSeconds) > time();
+        return ($snoozedAt + $snoozeDuration) > time();
     }
 
 

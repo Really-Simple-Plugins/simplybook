@@ -16,7 +16,7 @@ class OnboardingNoticeController implements ControllerInterface
     use HasAllowlistControl;
 
     private const NOTICE_ID = 'complete_onboarding';
-    private const SNOOZE_SECONDS = (7 * DAY_IN_SECONDS);
+    private const SNOOZE_DURATION = (7 * DAY_IN_SECONDS);
 
     private EnvironmentConfig $env;
     private ExtendifyDataService $extendifyDataService;
@@ -70,7 +70,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function canRenderNotice(): bool
     {
-        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_SECONDS) === false) {
+        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
             return false;
         }
 
