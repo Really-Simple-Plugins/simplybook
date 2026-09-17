@@ -9,8 +9,8 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Shared logic for the admin notices of the plugin. The service stores
- * the per-user dismissed and snoozed state, reads the "later" or "never"
- * choice from the notice form, checks the current screen, caches the
+ * the per-user dismissed and snoozed state, handles the "later" or "never"
+ * choice of the notice form, checks the current screen, caches the
  * eligibility result and enqueues the script for the X button.
  */
 class AdminNoticeService
@@ -58,11 +58,29 @@ class AdminNoticeService
     }
 
     /**
+     * Handle the form submit of a notice. The service calls $onLater or
+     * $onNever for the choice of the user and then removes the cached
+     * eligibility result. Nothing happens when the request holds no valid
+     * form submit for this notice.
+     */
+    public function handleFormSubmit(string $noticeId, callable $onLater, callable $onNever): void
+    {
+        $choice = $this->submittedChoice($noticeId);
+        if ($choice === null) {
+            return;
+        }
+
+        ($choice === self::CHOICE_LATER) ? $onLater() : $onNever();
+
+        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
+    }
+
+    /**
      * Read the choice the user made in the form of the given notice. Returns
      * null when the request holds no form submit for this notice or the
      * nonce is not valid.
      */
-    public function submittedChoice(string $noticeId): ?string
+    private function submittedChoice(string $noticeId): ?string
     {
         if ($this->request->getString('global.' . self::FORM_FIELD) !== $noticeId) {
             return null;
@@ -109,28 +127,38 @@ class AdminNoticeService
             return false;
         }
 
-        $found = false;
-        $cacheName = $this->cacheName($noticeId);
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found) {
-            return (bool) $cacheValue;
-        }
-
-        $eligible = (bool) $isEligible();
-        $cacheDuration = ($eligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
-        wp_cache_set($cacheName, $eligible, 'simplybook', $cacheDuration);
-
-        return $eligible;
+        return (bool) $this->remember(
+            $this->cacheName($noticeId),
+            fn() => (bool) $isEligible(),
+            MINUTE_IN_SECONDS,
+            (MINUTE_IN_SECONDS * 10)
+        );
     }
 
     /**
-     * Remove the cached eligibility result. Call this after the state of a
-     * notice changed in the same request.
+     * Return the value from the object cache. When the cache has no value,
+     * the service runs $compute and stores the result. An empty result is
+     * stored for $secondsWhenEmpty when given, so a failed lookup does not
+     * run again on every request.
+     * @return mixed
      */
-    public function forgetCanRender(string $noticeId): void
+    public function remember(string $cacheKey, callable $compute, int $seconds, ?int $secondsWhenEmpty = null)
     {
-        wp_cache_delete($this->cacheName($noticeId), 'simplybook');
+        $found = false;
+        $cachedValue = wp_cache_get($cacheKey, 'simplybook', false, $found);
+
+        if ($found) {
+            return $cachedValue;
+        }
+
+        $value = $compute();
+        if (empty($value) && ($secondsWhenEmpty !== null)) {
+            $seconds = $secondsWhenEmpty;
+        }
+
+        wp_cache_set($cacheKey, $value, 'simplybook', $seconds);
+
+        return $value;
     }
 
     /**
