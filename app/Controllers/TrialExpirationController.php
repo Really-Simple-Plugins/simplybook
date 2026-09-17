@@ -80,7 +80,23 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
-        return $this->adminNoticeService->canRender(self::NOTICE_ID, fn() => $this->isEligibleForTrialNotice());
+        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID)) {
+            return false;
+        }
+
+        $found = false;
+        $cacheName = 'can_render_trial_expiration_notice';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
+        }
+
+        $isEligible = $this->isEligibleForTrialNotice();
+        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
+        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+
+        return $isEligible;
     }
 
     /**

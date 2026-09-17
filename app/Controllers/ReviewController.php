@@ -77,12 +77,11 @@ class ReviewController implements ControllerInterface
      */
     private function canRenderReviewNotice(): bool
     {
-        return $this->adminNoticeService->canRender(self::NOTICE_ID, fn() => $this->isEligibleForReviewNotice());
-    }
-
-    private function isEligibleForReviewNotice(): bool
-    {
         if ($this->client->isAuthenticated() === false) {
+            return false;
+        }
+
+        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID)) {
             return false;
         }
 

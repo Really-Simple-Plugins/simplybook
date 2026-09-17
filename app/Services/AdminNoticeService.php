@@ -33,34 +33,18 @@ class AdminNoticeService
     }
 
     /**
-     * Run the eligibility check of a notice and cache the result. A positive
-     * result is cached for one minute, a negative result for ten minutes.
-     * The screen check and the per-user check run before the cache, because
-     * the cached result is shared by all screens and all users.
+     * Check if a notice must stay hidden on the current request. This is the
+     * case on an excluded screen and when the current user dismissed or
+     * snoozed the notice. Call this before any cached eligibility check,
+     * because the cached result is shared by all screens and all users.
      */
-    public function canRender(string $noticeId, callable $isEligible): bool
+    public function isNoticeHidden(string $noticeId): bool
     {
         if ($this->currentScreenAllowsNotice() === false) {
-            return false;
+            return true;
         }
 
-        if ($this->isNoticeHiddenForUser(get_current_user_id(), $noticeId)) {
-            return false;
-        }
-
-        $found = false;
-        $cacheName = $this->cacheName($noticeId);
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found) {
-            return (bool) $cacheValue;
-        }
-
-        $eligible = (bool) $isEligible();
-        $cacheDuration = ($eligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
-        wp_cache_set($cacheName, $eligible, 'simplybook', $cacheDuration);
-
-        return $eligible;
+        return $this->isNoticeHiddenForUser(get_current_user_id(), $noticeId);
     }
 
 
@@ -142,12 +126,6 @@ class AdminNoticeService
         }
 
         return true;
-    }
-
-
-    private function cacheName(string $noticeId): string
-    {
-        return 'can_render_' . $noticeId . '_notice';
     }
 
 

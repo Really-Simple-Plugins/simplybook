@@ -69,11 +69,28 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function canRenderNotice(): bool
     {
-        return $this->adminNoticeService->canRender(self::NOTICE_ID, fn() => $this->isEligibleForNotice());
+        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID)) {
+            return false;
+        }
+
+        $found = false;
+        $cacheName = 'can_render_onboarding_notice';
+        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
+
+        if ($found) {
+            return (bool) $cacheValue;
+        }
+
+        $isEligible = $this->isEligibleForNotice();
+        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
+        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
+
+        return $isEligible;
     }
 
     /**
      * Check all sequential eligibility conditions for the onboarding notice.
+     * This method does not cache the result; caching is handled by canRenderNotice().
      */
     private function isEligibleForNotice(): bool
     {
