@@ -2,14 +2,12 @@
 
 namespace SimplyBook\Features\TaskManagement\Tasks;
 
-use SimplyBook\Support\Utility\DateUtility;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Base for a time limited promotion for Trial users. The task is hidden by
  * default. The {@see TaskManagementListener} shows it during the promotion
- * period. The period is read from the env config under
- * `simplybook.{IDENTIFIER}.start_date` and `end_date`.
+ * period.
  */
 abstract class AbstractPromotionTask extends AbstractTask
 {
@@ -24,37 +22,6 @@ abstract class AbstractPromotionTask extends AbstractTask
     {
         $this->hide();
         $this->env = $env;
-    }
-
-    /**
-     * Whether the promotion period is running right now. The result is
-     * cached for an hour because this runs on every admin page load. Near
-     * the end of the period the cache is reduced to 5 minutes so the task
-     * disappears on time.
-     */
-    public function isPromotionActive(): bool
-    {
-        $hasCache = false;
-        $cacheName = 'simplybook_promotion_' . $this->getId() . '_is_active';
-        $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
-
-        // The $hasCache variable is set by reference in wp_cache_get
-        if ($hasCache) {
-            return (bool) $cache;
-        }
-
-        $startDate = $this->env->getString('simplybook.' . $this->getId() . '.start_date');
-        $endDate = $this->env->getString('simplybook.' . $this->getId() . '.end_date');
-
-        $cacheDuration = HOUR_IN_SECONDS;
-        if (DateUtility::secondsUntil($endDate) <= $cacheDuration) {
-            $cacheDuration = MINUTE_IN_SECONDS * 5;
-        }
-
-        $isActive = DateUtility::isNowBetween($startDate, $endDate);
-
-        wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
-        return $isActive;
     }
 
     /**
