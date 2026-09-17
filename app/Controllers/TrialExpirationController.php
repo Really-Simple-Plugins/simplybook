@@ -67,6 +67,16 @@ class TrialExpirationController implements ControllerInterface
         ]);
     }
 
+    /**
+     * Check if the trial notice can be rendered. True when:
+     * - The user has not dismissed the notice
+     * - The trial notice dismissed time has passed
+     * - The user is not on an edit screen
+     * - The user is not on the plugin page
+     * - The user finished the onboarding
+     * - The subscription is a trial
+     * - The trial expires within 2 days, or expired less than 30 days ago
+     */
     private function canRenderTrialNotice(): bool
     {
         if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
