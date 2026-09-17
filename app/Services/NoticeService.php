@@ -5,9 +5,15 @@ namespace SimplyBook\Services;
 use SimplyBook\Http\Endpoints\NoticesDismissEndpoint;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class NoticeDismissalService
+/**
+ * Stores the per-user state of admin notices. A notice can be dismissed
+ * for good or snoozed until a point in time. The service also enqueues
+ * the script that handles the X button of a notice.
+ */
+class NoticeService
 {
     private const META_KEY = 'simplybook_dismissed_notices';
+    private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
 
     private EnvironmentConfig $env;
 
@@ -54,6 +60,31 @@ class NoticeDismissalService
     }
 
     /**
+     * Hide a notice for a specific user until the given amount of seconds
+     * has passed.
+     */
+    public function snoozeNotice(int $userId, string $noticeType, int $seconds): bool
+    {
+        $snoozedNotices = $this->getSnoozedNotices($userId);
+        $snoozedNotices[$noticeType] = (time() + $seconds);
+
+        $result = update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices);
+
+        return $result !== false;
+    }
+
+    /**
+     * Check if the snooze time of a notice has not passed yet for a
+     * specific user.
+     */
+    public function isNoticeSnoozed(int $userId, string $noticeType): bool
+    {
+        $snoozedUntil = (int) ($this->getSnoozedNotices($userId)[$noticeType] ?? 0);
+
+        return $snoozedUntil > time();
+    }
+
+    /**
      * Return an array of dismissed notices for a specific user
      */
     private function getDismissedNotices(int $userId): array
@@ -61,6 +92,17 @@ class NoticeDismissalService
         $dismissed = get_user_meta($userId, self::META_KEY, true);
 
         return is_array($dismissed) ? $dismissed : [];
+    }
+
+    /**
+     * Return the snooze end timestamps for a specific user, keyed by
+     * notice type.
+     */
+    private function getSnoozedNotices(int $userId): array
+    {
+        $snoozed = get_user_meta($userId, self::SNOOZE_META_KEY, true);
+
+        return is_array($snoozed) ? $snoozed : [];
     }
 
     /**

@@ -4,7 +4,7 @@ namespace SimplyBook\Http\Endpoints;
 
 use SimplyBook\Traits\LegacySave;
 use SimplyBook\Traits\HasRestAccess;
-use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Services\NoticeService;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 
@@ -16,9 +16,9 @@ class NoticesDismissEndpoint implements SingleEndpointInterface
 
     public const ROUTE = 'notices/dismiss';
 
-    private NoticeDismissalService $service;
+    private NoticeService $service;
 
-    public function __construct(NoticeDismissalService $service)
+    public function __construct(NoticeService $service)
     {
         $this->service = $service;
     }

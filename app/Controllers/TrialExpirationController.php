@@ -6,7 +6,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Services\NoticeService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -17,7 +17,6 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
-    private const SNOOZED_UNTIL_META_KEY = 'simplybook_trial_notice_snoozed_until';
     private const ELIGIBILITY_CACHE_NAME = 'can_render_trial_expiration_notice';
 
     private string $trialAction = 'rsp_trial_form_submit';
@@ -25,7 +24,7 @@ class TrialExpirationController implements ControllerInterface
 
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
-    private NoticeDismissalService $noticeDismissalService;
+    private NoticeService $noticeService;
     private RequestStorage $request;
 
     /**
@@ -50,12 +49,12 @@ class TrialExpirationController implements ControllerInterface
     public function __construct(
         EnvironmentConfig $env,
         SubscriptionDataService $subscriptionService,
-        NoticeDismissalService $noticeDismissalService,
+        NoticeService $noticeService,
         RequestStorage $request
     ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
-        $this->noticeDismissalService = $noticeDismissalService;
+        $this->noticeService = $noticeService;
         $this->request = $request;
     }
 
@@ -118,11 +117,11 @@ class TrialExpirationController implements ControllerInterface
         $choice = $this->request->getString('global.rsp_trial_choice');
 
         if ($choice === 'later') {
-            update_user_meta($userId, self::SNOOZED_UNTIL_META_KEY, (time() + DAY_IN_SECONDS));
+            $this->noticeService->snoozeNotice($userId, 'trial', DAY_IN_SECONDS);
         }
 
         if ($choice === 'never') {
-            $this->noticeDismissalService->dismissNotice($userId, 'trial');
+            $this->noticeService->dismissNotice($userId, 'trial');
         }
 
         wp_cache_delete(self::ELIGIBILITY_CACHE_NAME, 'simplybook');
@@ -134,7 +133,7 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
-        $this->noticeDismissalService->enqueue();
+        $this->noticeService->enqueue();
     }
 
     private function canRenderTrialNotice(): bool
@@ -166,11 +165,11 @@ class TrialExpirationController implements ControllerInterface
     {
         $userId = get_current_user_id();
 
-        if ($this->noticeDismissalService->isNoticeDismissed($userId, 'trial')) {
+        if ($this->noticeService->isNoticeDismissed($userId, 'trial')) {
             return false;
         }
 
-        if ($this->isSnoozed($userId)) {
+        if ($this->noticeService->isNoticeSnoozed($userId, 'trial')) {
             return false;
         }
 
@@ -189,16 +188,6 @@ class TrialExpirationController implements ControllerInterface
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
-    }
-
-    /**
-     * Check if the user clicked "Remind me tomorrow" less than a day ago.
-     */
-    private function isSnoozed(int $userId): bool
-    {
-        $snoozedUntil = (int) get_user_meta($userId, self::SNOOZED_UNTIL_META_KEY, true);
-
-        return $snoozedUntil > time();
     }
 
     /**

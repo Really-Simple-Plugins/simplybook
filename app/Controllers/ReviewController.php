@@ -8,7 +8,7 @@ use SimplyBook\Services\PluginFirstUseTimeService;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Services\NoticeService;
 use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
@@ -26,15 +26,15 @@ class ReviewController implements ControllerInterface
     private PluginFirstUseTimeService $pluginFirstUseTimeService;
     private EnvironmentConfig $env;
     private RequestStorage $request;
-    private NoticeDismissalService $noticeDismissalService;
+    private NoticeService $noticeService;
 
-    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService, EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
+    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService, EnvironmentConfig $env, RequestStorage $request, NoticeService $noticeService)
     {
         $this->client = $client;
         $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
         $this->env = $env;
         $this->request = $request;
-        $this->noticeDismissalService = $noticeDismissalService;
+        $this->noticeService = $noticeService;
     }
 
     public function register(): void
@@ -115,7 +115,7 @@ class ReviewController implements ControllerInterface
         }
 
         // Check if user dismissed via X button
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'review')) {
+        if ($this->noticeService->isNoticeDismissed(get_current_user_id(), 'review')) {
             return false;
         }
 
@@ -195,7 +195,7 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        $this->noticeDismissalService->enqueue();
+        $this->noticeService->enqueue();
     }
 
     /**
