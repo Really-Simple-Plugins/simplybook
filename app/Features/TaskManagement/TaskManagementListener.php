@@ -334,7 +334,7 @@ class TaskManagementListener implements ListenerInterface
     {
         $bubbleCount = 0;
 
-        if ($this->handleBlackFridayTask($subscriptionType)) {
+        if ($this->handleBlackFridayPromotionTask($subscriptionType)) {
             $bubbleCount++;
         }
 
@@ -351,9 +351,9 @@ class TaskManagementListener implements ListenerInterface
      * the Black Friday start and end date mentioned in the env config.
      * Returns true when the task is visible after handling.
      */
-    private function handleBlackFridayTask(string $subscriptionType): bool
+    private function handleBlackFridayPromotionTask(string $subscriptionType): bool
     {
-        return $this->handlePromotionTask(
+        return $this->markPromotionTaskWhenTrial(
             Tasks\BlackFridayTask::IDENTIFIER,
             $this->promotionService->isBlackFriday(),
             $subscriptionType
@@ -368,7 +368,7 @@ class TaskManagementListener implements ListenerInterface
      */
     private function handleChristmasPromotionTask(string $subscriptionType): bool
     {
-        return $this->handlePromotionTask(
+        return $this->markPromotionTaskWhenTrial(
             Tasks\ChristmasPromotionTask::IDENTIFIER,
             $this->promotionService->isChristmasPeriod(),
             $subscriptionType
@@ -380,7 +380,7 @@ class TaskManagementListener implements ListenerInterface
      * Trial user. Hide the task otherwise. A dismissed task stays dismissed.
      * Returns true when the task is visible after handling.
      */
-    private function handlePromotionTask(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
+    private function markPromotionTaskWhenTrial(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
     {
         if ($this->service->isTaskDismissed($taskId)) {
             return false;
