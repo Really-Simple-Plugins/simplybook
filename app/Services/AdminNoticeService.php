@@ -96,8 +96,9 @@ class AdminNoticeService
 
 
     /**
-     * Enqueue the script that handles the buttons of a notice. Call this
-     * method in the admin_enqueue_scripts action.
+     * Enqueue the stylesheet of the notices and the script that handles the
+     * buttons of a notice. Call this method in the admin_enqueue_scripts
+     * action.
      */
     public function enqueue(): void
     {
@@ -106,6 +107,13 @@ class AdminNoticeService
         }
 
         $this->scriptEnqueued = true;
+
+        wp_enqueue_style(
+            'simplybook-admin-notices',
+            $this->env->getUrl('plugin.assets_url') . 'css/admin-notices.css',
+            [],
+            $this->env->getString('plugin.version')
+        );
 
         wp_enqueue_script(
             'simplybook-notice-dismiss',

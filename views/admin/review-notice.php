@@ -7,64 +7,10 @@
  */
 ?>
 
-<style>
-    .toplevel_page_simplybook-integration .rsp-review {
-        margin: 16px;
-    }
-    .rsp-review {
-        border-left:4px solid #333
-    }
-    .rsp-review .rsp-container {
-        display: flex;
-        padding:12px;
-    }
-    .rsp-review .rsp-container .dashicons {
-        margin-right:5px;
-        margin-left:15px;
-    }
-    .rsp-review .rsp-review-image {
-        width: 80px;
-        height: 80px;
-    }
-    .rsp-review .rsp-review-image img{
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center;
-    }
-    .rsp-review .rsp-buttons-row {
-        margin-top:10px;
-        display: flex;
-        align-items: center;
-    }
-    .rsp-review .rsp-review-form {
-        margin-left: 30px;
-    }
-    .rsp-review .rsp-review-form button.rsp-link {
-        background: none;
-        border: none;
-        color: #2271b1;
-        text-decoration: underline;
-        cursor: pointer;
-        padding: 0;
-        font-size: inherit;
-    }
-    <?php if (is_rtl()): ?>
-         .rsp-review .rsp-container .dashicons {
-             margin-left:5px;
-             margin-right:15px;
-         }
-        .rsp-review {
-            border-left: 0;
-            border-right: 4px solid #333;
-        }
-    <?php endif; ?>
-</style>
-
 <div id="message" class="updated fade notice is-dismissible rsp-review really-simple-plugins" data-notice-id="review">
     <div class="rsp-container">
-        <div class="rsp-review-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
-        <div class="rsp-review-form">
+        <div class="rsp-notice-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
+        <div class="rsp-notice-content">
             <?php echo wp_kses_post(wpautop($reviewMessage)); ?>
             <div class="rsp-buttons-row">
                 <a class="button button-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($reviewUrl); ?>">
