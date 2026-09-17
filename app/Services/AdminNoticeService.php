@@ -6,15 +6,20 @@ use SimplyBook\Http\Endpoints\AdminNoticesEndpoint;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
- * Shared logic for the admin notices of the plugin. The service stores
- * the per-user dismissed and snoozed state, checks the current screen,
- * caches the eligibility result and enqueues the script that calls the
- * dismiss and snooze routes of {@see AdminNoticesEndpoint}.
+ * Shared logic for the admin notices of the plugin. The service stores the
+ * dismissed and snoozed state of a notice, checks the current screen and
+ * enqueues the script that calls the routes of {@see AdminNoticesEndpoint}.
+ *
+ * The X button hides a notice for the current user only. The "never" and
+ * "later" buttons hide a notice for the whole site. Both states live in
+ * different stores: user meta for the user, wp_options for the site.
  */
 class AdminNoticeService
 {
     private const META_KEY = 'simplybook_dismissed_notices';
-    private const SNOOZE_META_KEY = 'simplybook_snoozed_notices';
+
+    private const CHOICE_LATER = 'later';
+    private const CHOICE_NEVER = 'never';
 
     /**
      * Notices break the Gutenberg editor and the React app of the plugin.
@@ -34,24 +39,30 @@ class AdminNoticeService
 
     /**
      * Check if a notice must stay hidden on the current request. This is the
-     * case on an excluded screen and when the current user dismissed or
-     * snoozed the notice. Call this before any cached eligibility check,
-     * because the cached result is shared by all screens and all users.
+     * case on an excluded screen, when the current user dismissed the notice
+     * with the X button and when the site choice hides the notice. The
+     * snooze seconds define how long the "later" choice hides the notice.
+     * Call this before any cached eligibility check, because the cached
+     * result is shared by all screens and all users.
      */
-    public function isNoticeHidden(string $noticeId): bool
+    public function isNoticeHidden(string $noticeId, int $snoozeSeconds): bool
     {
         if ($this->currentScreenAllowsNotice() === false) {
             return true;
         }
 
-        return $this->isNoticeHiddenForUser(get_current_user_id(), $noticeId);
+        if ($this->isNoticeDismissedForUser(get_current_user_id(), $noticeId)) {
+            return true;
+        }
+
+        return $this->choiceHidesNotice($noticeId, $snoozeSeconds);
     }
 
 
     /**
-     * Hide a notice for a specific user for good.
+     * Hide a notice for a specific user for good. Used by the X button.
      */
-    public function dismissNotice(int $userId, string $noticeId): bool
+    public function dismissNoticeForUser(int $userId, string $noticeId): bool
     {
         $dismissedNotices = $this->getDismissedNotices($userId);
 
@@ -68,12 +79,23 @@ class AdminNoticeService
 
 
     /**
-     * Hide a notice for a specific user until the given amount of seconds
-     * has passed.
+     * Hide a notice for the whole site for good. Used by the "never" button.
      */
-    public function snoozeNotice(int $userId, string $noticeId, int $seconds): bool
+    public function dismissNotice(string $noticeId): bool
     {
-        return $this->storeSnoozedNotice($userId, $noticeId, (time() + $seconds));
+        return $this->storeChoice($noticeId, self::CHOICE_NEVER);
+    }
+
+
+    /**
+     * Hide a notice for the whole site for a while. Used by the "later"
+     * button. The controller decides how long, see {@see isNoticeHidden()}.
+     */
+    public function snoozeNotice(string $noticeId): bool
+    {
+        update_option($this->dismissedTimeOptionName($noticeId), time(), false);
+
+        return $this->storeChoice($noticeId, self::CHOICE_LATER);
     }
 
 
@@ -99,7 +121,8 @@ class AdminNoticeService
         wp_add_inline_script(
             'simplybook-notice-dismiss',
             sprintf(
-                'const simplybookNoticesConfig = { dismissUrl: %s, snoozeUrl: %s, nonce: %s };',
+                'const simplybookNoticesConfig = { dismissForUserUrl: %s, dismissUrl: %s, snoozeUrl: %s, nonce: %s };',
+                wp_json_encode($this->restUrl(AdminNoticesEndpoint::DISMISS_FOR_USER_ROUTE)),
                 wp_json_encode($this->restUrl(AdminNoticesEndpoint::DISMISS_ROUTE)),
                 wp_json_encode($this->restUrl(AdminNoticesEndpoint::SNOOZE_ROUTE)),
                 wp_json_encode(wp_create_nonce('wp_rest'))
@@ -129,17 +152,9 @@ class AdminNoticeService
     }
 
 
-    /**
-     * Check if the user dismissed the notice for good or the snooze time
-     * has not passed yet.
-     */
-    private function isNoticeHiddenForUser(int $userId, string $noticeId): bool
+    private function isNoticeDismissedForUser(int $userId, string $noticeId): bool
     {
-        if (in_array($noticeId, $this->getDismissedNotices($userId), true)) {
-            return true;
-        }
-
-        return $this->getSnoozedNotice($userId, $noticeId) > time();
+        return in_array($noticeId, $this->getDismissedNotices($userId), true);
     }
 
 
@@ -155,36 +170,43 @@ class AdminNoticeService
 
 
     /**
-     * Return the snooze end timestamp of a notice for a specific user. Zero
-     * means the notice was never snoozed.
+     * Check if the site choice hides the notice: "never" hides it for good,
+     * "later" hides it until the snooze seconds after the click have passed.
      */
-    private function getSnoozedNotice(int $userId, string $noticeId): int
+    private function choiceHidesNotice(string $noticeId, int $snoozeSeconds): bool
     {
-        return (int) ($this->getSnoozedNotices($userId)[$noticeId] ?? 0);
+        $choice = get_option($this->choiceOptionName($noticeId));
+
+        if ($choice === self::CHOICE_NEVER) {
+            return true;
+        }
+
+        if ($choice !== self::CHOICE_LATER) {
+            return false;
+        }
+
+        $dismissedTime = (int) get_option($this->dismissedTimeOptionName($noticeId));
+
+        return ($dismissedTime + $snoozeSeconds) > time();
     }
 
 
-    /**
-     * Return the snooze end timestamps for a specific user, keyed by
-     * notice ID.
-     */
-    private function getSnoozedNotices(int $userId): array
+    private function storeChoice(string $noticeId, string $choice): bool
     {
-        $snoozed = get_user_meta($userId, self::SNOOZE_META_KEY, true);
-
-        return is_array($snoozed) ? $snoozed : [];
+        return update_option($this->choiceOptionName($noticeId), $choice, false)
+            || get_option($this->choiceOptionName($noticeId)) === $choice;
     }
 
 
-    /**
-     * Save the snooze end timestamp of a notice for a specific user.
-     */
-    private function storeSnoozedNotice(int $userId, string $noticeId, int $snoozedUntil): bool
+    private function choiceOptionName(string $noticeId): string
     {
-        $snoozedNotices = $this->getSnoozedNotices($userId);
-        $snoozedNotices[$noticeId] = $snoozedUntil;
+        return 'simplybook_' . $noticeId . '_notice_choice';
+    }
 
-        return update_user_meta($userId, self::SNOOZE_META_KEY, $snoozedNotices) !== false;
+
+    private function dismissedTimeOptionName(string $noticeId): string
+    {
+        return 'simplybook_' . $noticeId . '_notice_dismissed_time';
     }
 
 
