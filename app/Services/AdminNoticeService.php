@@ -2,14 +2,13 @@
 
 namespace SimplyBook\Services;
 
-use SimplyBook\Http\Endpoints\AdminNoticesEndpoint;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
  * Shared logic for the admin notices. The X button hides a notice for the
  * current user in user meta. The "never" and "later" buttons hide a notice
  * for the whole site in wp_options. The buttons call the routes of
- * {@see AdminNoticesEndpoint}.
+ * {@see \SimplyBook\Http\Endpoints\AdminNoticesEndpoint}.
  */
 class AdminNoticeService
 {
@@ -261,7 +260,7 @@ class AdminNoticeService
 
     /**
      * Build the REST URL of the plugin. The script appends the route of
-     * {@see AdminNoticesEndpoint}.
+     * {@see \SimplyBook\Http\Endpoints\AdminNoticesEndpoint}.
      */
     private function restUrl(): string
     {
