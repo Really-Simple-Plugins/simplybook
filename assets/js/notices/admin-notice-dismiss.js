@@ -14,9 +14,9 @@
 jQuery(function ($) {
     'use strict';
 
-    $('.simplybook-notice[data-notice-type]').each(function () {
+    $('.simplybook-notice[data-notice-id]').each(function () {
         const $notice = $(this);
-        const noticeId = $notice.data('noticeType');
+        const noticeId = $notice.data('noticeId');
 
         $notice.find('.notice-dismiss').on('click', function () {
             dismissNoticeForUser(noticeId);
