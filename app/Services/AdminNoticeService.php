@@ -37,23 +37,23 @@ class AdminNoticeService
 
     /**
      * Check the screen, the user dismissal, the site dismissal and the
-     * snooze. The snooze seconds define how long "later" hides the notice.
+     * snooze. A snooze lasts the given seconds.
      */
-    public function isNoticeHidden(string $noticeId, int $snoozeSeconds): bool
+    public function canRender(string $noticeId, int $snoozeSeconds): bool
     {
         if ($this->currentScreenAllowsNotice() === false) {
-            return true;
+            return false;
         }
 
         if ($this->isNoticeDismissedForUser($noticeId)) {
-            return true;
+            return false;
         }
 
         if ($this->isNoticeDismissed($noticeId)) {
-            return true;
+            return false;
         }
 
-        return $this->isNoticeSnoozed($noticeId, $snoozeSeconds);
+        return $this->isNoticeSnoozed($noticeId, $snoozeSeconds) === false;
     }
 
 
@@ -85,7 +85,7 @@ class AdminNoticeService
 
     /**
      * Hide a notice for the whole site for a while. Used by the "later"
-     * button. The controller decides how long, see {@see isNoticeHidden()}.
+     * button. The controller decides how long, see {@see canRender()}.
      */
     public function snoozeNotice(string $noticeId): bool
     {

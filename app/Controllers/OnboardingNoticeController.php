@@ -70,7 +70,7 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function canRenderNotice(): bool
     {
-        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID, self::SNOOZE_SECONDS)) {
+        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_SECONDS) === false) {
             return false;
         }
 

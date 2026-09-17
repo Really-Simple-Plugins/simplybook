@@ -81,7 +81,7 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
-        if ($this->adminNoticeService->isNoticeHidden(self::NOTICE_ID, self::SNOOZE_SECONDS)) {
+        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_SECONDS) === false) {
             return false;
         }
 
