@@ -102,15 +102,11 @@ class AdminNoticeService
 
     /**
      * Call this method to enqueue the script that handles the X button and
-     * the "later" and "never" buttons of a notice. You can only execute
-     * this method in the admin_enqueue_scripts filter.
+     * the "later" and "never" buttons of a notice. Call this method in the
+     * admin_enqueue_scripts action.
      */
     public function enqueue(): void
     {
-        if (current_filter() !== 'admin_enqueue_scripts') {
-            return;
-        }
-
         if ($this->scriptEnqueued) {
             return;
         }
