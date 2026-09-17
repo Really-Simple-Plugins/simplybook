@@ -15,7 +15,7 @@ class BlackFridayTask extends AbstractPromotionTask
      * plugin.plans_prices_url env key. Version is set in the constructor
      * because property defaults leak into unserialized legacy instances,
      * defeating the version compare on upgrade.
-     * @since 3.4.1 bumped version to 1.0.3 because the task is no longer
+     * @since 3.5.0 bumped version to 1.0.3 because the task is no longer
      * required so it can be dismissed.
      */
     public function __construct(EnvironmentConfig $env)

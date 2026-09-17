@@ -11,7 +11,7 @@ class ChristmasPromotionTask extends AbstractPromotionTask
     /**
      * @since 3.3.2 bumped version due to the new
      * plugin.plans_prices_url env key.
-     * @since 3.4.1 bumped version to 1.0.2 because the task is no longer
+     * @since 3.5.0 bumped version to 1.0.2 because the task is no longer
      * required so it can be dismissed.
      */
     public function __construct(EnvironmentConfig $env)
