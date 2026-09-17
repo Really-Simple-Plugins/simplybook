@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Traits;
 
+use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Support\Helpers\Storage;
@@ -61,5 +62,19 @@ trait HasRestAccess
             'data' => $data,
             'request_success' => true, // can be used to check if the response in react actually contains this array.
         ], $code);
+    }
+
+    /**
+     * Standardized error for a REST permission callback that denies access.
+     * The status is 401 for a visitor and 403 for a logged in user.
+     * @uses rest_authorization_required_code
+     */
+    public function forbiddenError(): WP_Error
+    {
+        return new WP_Error(
+            'rest_forbidden',
+            __('Forbidden.', 'simplybook'),
+            ['status' => rest_authorization_required_code()]
+        );
     }
 }

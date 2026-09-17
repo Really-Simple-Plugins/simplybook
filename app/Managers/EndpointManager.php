@@ -6,6 +6,7 @@ use WP_Error;
 use WP_REST_Request;
 use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -13,6 +14,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 final class EndpointManager extends AbstractManager
 {
     use HasNonces;
+    use HasRestAccess;
 
     private array $routes = [];
     private EnvironmentConfig $env;
@@ -165,26 +167,23 @@ final class EndpointManager extends AbstractManager
     }
 
     /**
-     * The default permission callback, will check if the nonce is valid and if
-     * the user has the required permissions to do a request.
+     * The default permission callback. Checks if the current user has the
+     * 'simplybook_manage' capability. For methods that modify data, it also
+     * checks if the nonce is valid.
+     *
      * @return bool|WP_Error
      */
     public function defaultPermissionCallback(WP_REST_Request $request)
     {
-        $method = $request->get_method();
-        $nonce = $request->get_param('nonce');
-
-        // For methods that modify data, verify the nonce
         $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
-        if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
-            return new WP_Error(
-                'rest_forbidden',
-                __('Forbidden.', 'simplybook'),
-                ['status' => 403]
-            );
+        $requiresNonce = in_array($request->get_method(), $methodsRequiringNonce);
+        $validNonce = ($requiresNonce === false) || $this->verifyNonce($request->get_param('nonce'));
+
+        if (current_user_can('simplybook_manage') && $validNonce) {
+            return true;
         }
 
-        return true;
+        return $this->forbiddenError();
     }
 
     /**
