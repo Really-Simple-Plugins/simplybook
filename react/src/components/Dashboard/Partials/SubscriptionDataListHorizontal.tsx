@@ -1,6 +1,6 @@
 import React from "react";
 import clsx from "clsx";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import{ SubscriptionDataListHorizontalProps } from "../../../types/subscriptiondata/SubscriptionDataListHorizontalProps";
 import ListWithIcon from "../../Common/ListWithIcon";
 import useSubscriptionData from "../../../hooks/useSubscriptionData";
@@ -25,10 +25,19 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
 
     const plansPricesUrl = simplybook?.plans_prices_url || "";
 
-    let message = subscriptionPlan + ': ' + expiresIn + ' ' + __("days left", "simplybook");
-    let expiredMessage = subscriptionPlan + ' ' + __("ended - choose your plan", "simplybook");
-    let expiredContent = plansPricesUrl ? (
-        <a href={plansPricesUrl} className="text-black hover:underline" title={__("You can continue for free with up to 50 bookings per month.", "simplybook")}>
+    const message = sprintf(
+        /* translators: 1: Subscription plan name. 2: Number of days left. */
+        __("%1$s: %2$d days left", "simplybook"),
+        subscriptionPlan,
+        expiresIn,
+    );
+    const expiredMessage = sprintf(
+        /* translators: %s: Subscription plan name. */
+        __("%s ended - choose your plan", "simplybook"),
+        subscriptionPlan,
+    );
+    const expiredContent = plansPricesUrl ? (
+        <a href={plansPricesUrl} className="text-black hover:underline" title={__("Choose your plan", "simplybook")}>
             {expiredMessage}
         </a>
     ) : expiredMessage;
