@@ -39,12 +39,10 @@ class AdminNoticeService
     }
 
     /**
-     * Check if a notice must stay hidden on the current request. This is the
-     * case on an excluded screen, when the current user dismissed the notice
-     * with the X button and when the site choice hides the notice. The
-     * snooze seconds define how long the "later" choice hides the notice.
-     * Call this before any cached eligibility check, because the cached
-     * result is shared by all screens and all users.
+     * Check if a notice must stay hidden on the current request. The snooze
+     * seconds define how long the "later" choice hides the notice. Call this
+     * before any cached eligibility check, because the cached result is
+     * shared by all screens and all users.
      */
     public function isNoticeHidden(string $noticeId, int $snoozeSeconds): bool
     {
@@ -52,20 +50,24 @@ class AdminNoticeService
             return true;
         }
 
-        if ($this->isNoticeDismissedForUser(get_current_user_id(), $noticeId)) {
+        if ($this->isNoticeDismissedForUser($noticeId)) {
             return true;
         }
 
-        return $this->choiceHidesNotice($noticeId, $snoozeSeconds);
+        if ($this->isNoticeDismissed($noticeId)) {
+            return true;
+        }
+
+        return $this->isNoticeSnoozed($noticeId, $snoozeSeconds);
     }
 
 
     /**
-     * Hide a notice for a specific user for good. Used by the X button.
+     * Hide a notice for the current user for good. Used by the X button.
      */
-    public function dismissNoticeForUser(int $userId, string $noticeId): bool
+    public function dismissNoticeForUser(string $noticeId): bool
     {
-        $dismissedNotices = $this->getDismissedNotices($userId);
+        $dismissedNotices = $this->getDismissedNoticesForUser();
 
         if (in_array($noticeId, $dismissedNotices, true)) {
             return true;
@@ -73,9 +75,7 @@ class AdminNoticeService
 
         $dismissedNotices[] = $noticeId;
 
-        $result = update_user_meta($userId, self::META_KEY, $dismissedNotices);
-
-        return $result !== false;
+        return $this->storeDismissedNoticesForUser($dismissedNotices);
     }
 
 
@@ -94,7 +94,7 @@ class AdminNoticeService
      */
     public function snoozeNotice(string $noticeId): bool
     {
-        update_option($this->dismissedTimeOptionName($noticeId), time(), false);
+        $this->storeSnoozedAt($noticeId, time());
 
         return $this->storeChoice($noticeId, self::CHOICE_LATER);
     }
@@ -159,49 +159,49 @@ class AdminNoticeService
     }
 
 
-    private function isNoticeDismissedForUser(int $userId, string $noticeId): bool
+    private function isNoticeDismissed(string $noticeId): bool
     {
-        return in_array($noticeId, $this->getDismissedNotices($userId), true);
+        return $this->getChoice($noticeId) === self::CHOICE_NEVER;
     }
 
 
     /**
-     * Return an array of dismissed notices for a specific user
+     * The "later" choice hides the notice until the snooze seconds after
+     * the click have passed.
      */
-    private function getDismissedNotices(int $userId): array
+    private function isNoticeSnoozed(string $noticeId, int $snoozeSeconds): bool
     {
-        $dismissed = get_user_meta($userId, self::META_KEY, true);
-
-        return is_array($dismissed) ? $dismissed : [];
-    }
-
-
-    /**
-     * Check if the site choice hides the notice: "never" hides it for good,
-     * "later" hides it until the snooze seconds after the click have passed.
-     */
-    private function choiceHidesNotice(string $noticeId, int $snoozeSeconds): bool
-    {
-        $choice = get_option($this->choiceOptionName($noticeId));
-
-        if ($choice === self::CHOICE_NEVER) {
-            return true;
-        }
-
-        if ($choice !== self::CHOICE_LATER) {
+        if ($this->getChoice($noticeId) !== self::CHOICE_LATER) {
             return false;
         }
 
-        $dismissedTime = (int) get_option($this->dismissedTimeOptionName($noticeId));
+        $snoozedAt = $this->getSnoozedAt($noticeId);
 
-        return ($dismissedTime + $snoozeSeconds) > time();
+        return ($snoozedAt + $snoozeSeconds) > time();
+    }
+
+
+    private function getChoice(string $noticeId): string
+    {
+        return (string) get_option($this->choiceOptionName($noticeId));
     }
 
 
     private function storeChoice(string $noticeId, string $choice): bool
     {
-        return update_option($this->choiceOptionName($noticeId), $choice, false)
-            || get_option($this->choiceOptionName($noticeId)) === $choice;
+        return update_option($this->choiceOptionName($noticeId), $choice, false);
+    }
+
+
+    private function getSnoozedAt(string $noticeId): int
+    {
+        return (int) get_option($this->snoozedAtOptionName($noticeId));
+    }
+
+
+    private function storeSnoozedAt(string $noticeId, int $snoozedAt): bool
+    {
+        return update_option($this->snoozedAtOptionName($noticeId), $snoozedAt, false);
     }
 
 
@@ -211,9 +211,32 @@ class AdminNoticeService
     }
 
 
-    private function dismissedTimeOptionName(string $noticeId): string
+    private function snoozedAtOptionName(string $noticeId): string
     {
         return 'simplybook_' . $noticeId . '_notice_dismissed_time';
+    }
+
+
+    private function isNoticeDismissedForUser(string $noticeId): bool
+    {
+        return in_array($noticeId, $this->getDismissedNoticesForUser(), true);
+    }
+
+
+    /**
+     * Return the notice IDs that the current user dismissed with the X button.
+     */
+    private function getDismissedNoticesForUser(): array
+    {
+        $dismissed = get_user_meta(get_current_user_id(), self::META_KEY, true);
+
+        return is_array($dismissed) ? $dismissed : [];
+    }
+
+
+    private function storeDismissedNoticesForUser(array $noticeIds): bool
+    {
+        return update_user_meta(get_current_user_id(), self::META_KEY, $noticeIds) !== false;
     }
 
 
