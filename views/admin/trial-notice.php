@@ -37,7 +37,7 @@
         margin-right:5px;
         margin-left:15px;
     }
-    .rsp-trial .rsp-trial-form button.link {
+    .rsp-trial .rsp-trial-form button.rsp-link {
         background: none;
         border: none;
         color: #2271b1;
@@ -78,11 +78,11 @@
                     <?php esc_html_e('Discover plans', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="button" class="link" data-notice-action="snooze">
+                <button type="button" class="rsp-link" data-notice-action="snooze">
                     <?php esc_html_e('Remind me tomorrow', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="button" class="link" data-notice-action="dismiss">
+                <button type="button" class="rsp-link" data-notice-action="dismiss">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>

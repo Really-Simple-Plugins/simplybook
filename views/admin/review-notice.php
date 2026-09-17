@@ -40,7 +40,7 @@
     .rsp-review .rsp-review-form {
         margin-left: 30px;
     }
-    .rsp-review .rsp-review-form button.link {
+    .rsp-review .rsp-review-form button.rsp-link {
         background: none;
         border: none;
         color: #2271b1;
@@ -71,11 +71,11 @@
                     <?php esc_html_e('Leave a review', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="button" class="link" data-notice-action="snooze">
+                <button type="button" class="rsp-link" data-notice-action="snooze">
                     <?php esc_html_e('Maybe later', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="button" class="link" data-notice-action="dismiss">
+                <button type="button" class="rsp-link" data-notice-action="dismiss">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>
