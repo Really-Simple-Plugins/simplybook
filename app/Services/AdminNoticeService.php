@@ -150,7 +150,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the notice is hidden by the "never" button.
+     * Check if the notice is hidden for the whole site.
      */
     private function isNoticeDismissed(string $noticeId): bool
     {
@@ -231,7 +231,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the notice is hidden for the current user by the X button.
+     * Check if the notice is hidden for the current user.
      */
     private function isNoticeDismissedForUser(string $noticeId): bool
     {
@@ -240,7 +240,7 @@ class AdminNoticeService
 
 
     /**
-     * Read the notice IDs hidden for the current user by the X button.
+     * Read the notice IDs hidden for the current user.
      */
     private function getDismissedNoticesForUser(): array
     {
