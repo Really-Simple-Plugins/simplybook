@@ -20,7 +20,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "private": true,
   "devDependencies": {
     "@tanstack/router-devtools": "^1.98.0",
     "@tanstack/router-plugin": "^1.98.0",
