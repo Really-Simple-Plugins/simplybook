@@ -23,8 +23,15 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
         return null;
     }
 
+    const plansPricesUrl = simplybook?.plans_prices_url || "";
+
     let message = subscriptionPlan + ': ' + expiresIn + ' ' + __("days left", "simplybook");
     let expiredMessage = subscriptionPlan + ' ' + __("ended - choose your plan", "simplybook");
+    let expiredContent = plansPricesUrl ? (
+        <a href={plansPricesUrl} className="text-black hover:underline" title={__("You can continue for free with up to 50 bookings per month.", "simplybook")}>
+            {expiredMessage}
+        </a>
+    ) : expiredMessage;
 
     return (
         <>
@@ -35,7 +42,7 @@ const SubscriptionDataListHorizontal: React.FC<SubscriptionDataListHorizontalPro
                         iconName={isExpired ? "circle-xmark" : "circle-check"}
                         iconSize="md"
                     >
-                        {isExpired ? expiredMessage : message}
+                        {isExpired ? expiredContent : message}
                     </ListWithIcon>
                 </ul>
             )}
