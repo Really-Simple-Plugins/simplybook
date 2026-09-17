@@ -83,23 +83,32 @@ class WidgetScriptBuilder
 
         $widgetConfig = $this->config->get('widgets.' . $this->widgetType, []);
 
-        if (empty($widgetConfig)) {
+        if (empty($widgetConfig) || !isset($widgetConfig['settings'])) {
             throw new BuilderException('Widget configuration not found');
         }
 
         $settings = $this->escapeSettings($this->getWidgetSettings());
 
-        // Set static config first
-        $config = $widgetConfig['static'] ?? [];
+        // Set static config first: are set as is since it's not a user setting
+        $staticConfig = $widgetConfig['static'] ?? [];
 
-        foreach ($widgetConfig['settings'] as $key => $setting) {
-            if ($key === 'app_config') {
-                foreach ($setting as $appConfigKey => $appConfigSetting) {
-                    $config[$key][$appConfigKey] = ($settings[$appConfigSetting] ?? '');
-                }
-            } else {
-                $config[$key] = ($settings[$setting] ?? '');
-            }
+        return array_merge(
+            $staticConfig,
+            $this->mapSettings($widgetConfig['settings'], $settings)
+        );
+    }
+
+    /**
+     * Map the widget settings to the widget configuration. The mapping is
+     * defined in the widget configuration file. The mapping can be nested.
+     */
+    private function mapSettings(array $mapping, array $settings): array
+    {
+        $config = [];
+        foreach ($mapping as $key => $settingName) {
+            $config[$key] = is_array($settingName)
+                ? $this->mapSettings($settingName, $settings)
+                : ($settings[$settingName] ?? '');
         }
 
         return $config;
