@@ -40,8 +40,16 @@ SimplyBook.me can be used for free up to 50 appointments per month. In addition,
 
 = Why SimplyBook.me? =
 
-SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings, calendar, and settings. On top of that you will get an admin app where you can manage all your bookings, handle appointments, adjust scheduling, and accept payments on the go. Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
-For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: [SimplyBook.me](https://simplybook.me/?ref=wordpress)
+SimplyBook.me is the online booking system behind the plugin. Your clients book your services on your site at any time. You manage the bookings in the SimplyBook.me admin or in the mobile app.
+
+* **Fewer no-shows.** SimplyBook.me sends automatic email and SMS reminders for every booking.
+* **No double bookings.** Services, providers and schedules live in one calendar. Clients only see free time slots.
+* **Insight into your business.** See statistics on bookings, cancellations, workload and revenue.
+* **More revenue per booking.** Offer service add-ons, products, memberships, packages and gift cards during booking.
+* **Fill quiet days.** Send email campaigns and offer coupons or loyalty points to your clients.
+* **Manage on the go.** Accept, move or cancel bookings in the mobile app for iOS and Android.
+
+Thousands of businesses all over the world use SimplyBook.me. Read more at [SimplyBook.me](https://simplybook.me/?ref=wordpress).
 
 This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you read the External services section below. It describes each external service, the data the plugin sends, and links to the privacy policy and terms of use of each service.
 
