@@ -36,7 +36,6 @@ class OnboardingNoticeController implements ControllerInterface
 
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showCompleteOnboardingNotice']);
-        add_action('admin_init', [$this, 'processCompleteOnboardingNoticeFormSubmit']);
     }
 
     /**
@@ -59,16 +58,7 @@ class OnboardingNoticeController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'onboardingUrl' => $this->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
-            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
         ]);
-    }
-
-    /**
-     * Process the complete onboarding notice form submit
-     */
-    public function processCompleteOnboardingNoticeFormSubmit(): void
-    {
-        $this->adminNoticeService->handleFormSubmit(self::NOTICE_ID);
     }
 
     /**
@@ -76,7 +66,6 @@ class OnboardingNoticeController implements ControllerInterface
      * - The user never finished the onboarding
      * - The user has not dismissed or snoozed the notice
      * - The plugin activation timestamp is suitable for notice
-     * - The notice dismissed time has passed
      */
     private function canRenderNotice(): bool
     {
@@ -88,10 +77,6 @@ class OnboardingNoticeController implements ControllerInterface
      */
     private function isEligibleForNotice(): bool
     {
-        if ($this->adminNoticeService->choiceHidesNotice(self::NOTICE_ID, 7)) {
-            return false;
-        }
-
         if ($this->pluginInstallationTimeSuitableForNotice() === false) {
             return false;
         }

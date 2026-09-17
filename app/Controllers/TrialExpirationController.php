@@ -40,7 +40,6 @@ class TrialExpirationController implements ControllerInterface
 
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showTrialExpirationNotice']);
-        add_action('admin_init', [$this, 'processTrialNoticeFormSubmit']);
     }
 
     public function showTrialExpirationNotice(): void
@@ -67,17 +66,7 @@ class TrialExpirationController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
-            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
         ]);
-    }
-
-    /**
-     * Process the "Remind me tomorrow" and "Don't show again" buttons of
-     * the trial notice. Both choices are stored per user.
-     */
-    public function processTrialNoticeFormSubmit(): void
-    {
-        $this->adminNoticeService->handleUserFormSubmit(self::NOTICE_ID, DAY_IN_SECONDS);
     }
 
     public function enqueueScripts(): void

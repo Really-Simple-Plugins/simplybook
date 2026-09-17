@@ -42,7 +42,6 @@ class ReviewController implements ControllerInterface
 
         add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showLeaveReviewNotice']);
-        add_action('admin_init', [$this, 'processReviewFormSubmit']);
     }
 
     /**
@@ -66,16 +65,7 @@ class ReviewController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'reviewUrl' => $this->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
-            'noticeForm' => $this->adminNoticeService->formVariables(self::NOTICE_ID),
         ]);
-    }
-
-    /**
-     * Process the review form submit
-     */
-    public function processReviewFormSubmit(): void
-    {
-        $this->adminNoticeService->handleFormSubmit(self::NOTICE_ID);
     }
 
     /**
@@ -83,7 +73,6 @@ class ReviewController implements ControllerInterface
      * - The user still has an authenticated SimplyBook session
      * - The user has not dismissed or snoozed the notice
      * - The plugin first-use time is suitable for review
-     * - The review notice dismissed time has passed
      * - The amount of bookings is greater than the threshold
      */
     private function canRenderReviewNotice(): bool
@@ -94,10 +83,6 @@ class ReviewController implements ControllerInterface
     private function isEligibleForReviewNotice(): bool
     {
         if ($this->client->isAuthenticated() === false) {
-            return false;
-        }
-
-        if ($this->adminNoticeService->choiceHidesNotice(self::NOTICE_ID, 30)) {
             return false;
         }
 
