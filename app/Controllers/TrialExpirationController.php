@@ -69,12 +69,12 @@ class TrialExpirationController implements ControllerInterface
         $daysRemaining = $trialInfo['days_remaining'];
         $isExpired = $trialInfo['is_expired'];
 
-        $message = esc_html__('Your SimplyBook.me trial of the Special Features has ended. You can continue for free with up to 50 bookings per month, or choose a paid plan for more bookings and features.', 'simplybook');
+        $message = esc_html__('Your SimplyBook.me trial of the Special Features has ended. You can continue for free, or choose a paid plan for more bookings and features.', 'simplybook');
 
         if (($isExpired === false) && ($daysRemaining > 0)) {
             $message = sprintf(
                 // translators: %d is replaced by the number of days remaining
-                __('Your SimplyBook.me trial of the Special Features ends in %d days. After the trial you can continue for free with up to 50 bookings per month, or choose a paid plan for more bookings and features.', 'simplybook'),
+                __('Your SimplyBook.me trial of the Special Features ends in %d days. After the trial you can continue for free, or choose a paid plan for more bookings and features.', 'simplybook'),
                 $daysRemaining
             );
         }
