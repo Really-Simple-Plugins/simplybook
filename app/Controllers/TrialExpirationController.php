@@ -8,7 +8,6 @@ use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\AdminNoticeService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
-use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface
@@ -17,45 +16,20 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
-    private const ELIGIBILITY_CACHE_NAME = 'can_render_trial_expiration_notice';
-
-    private string $trialAction = 'rsp_trial_form_submit';
-    private string $trialNonceName = 'rsp_trial_nonce';
+    private const NOTICE_ID = 'trial';
 
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
     private AdminNoticeService $adminNoticeService;
-    private RequestStorage $request;
-
-    /**
-     * Exact screen base identifiers on which the trial notice should not
-     * be displayed. A "base" is the unique slug WordPress assigns to every
-     * admin screen (e.g. "post", "edit", "upload").
-     */
-    private array $excludedScreenBases = [
-        'post',
-    ];
-
-    /**
-     * Substring patterns matched against the screen base. If any pattern
-     * is found anywhere inside the base string the screen is excluded.
-     * Use this for broad matches where multiple screens share a common
-     * keyword (e.g. "simplybook" matches every plugin-specific screen).
-     */
-    private array $excludedScreenPatterns = [
-        'simplybook',
-    ];
 
     public function __construct(
         EnvironmentConfig $env,
         SubscriptionDataService $subscriptionService,
-        AdminNoticeService $adminNoticeService,
-        RequestStorage $request
+        AdminNoticeService $adminNoticeService
     ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
         $this->adminNoticeService = $adminNoticeService;
-        $this->request = $request;
     }
 
     public function register(): void
@@ -93,9 +67,7 @@ class TrialExpirationController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
-            'trialAction' => $this->trialAction,
-            'trialNonceName' => $this->trialNonceName,
-        ]);
+        ] + $this->adminNoticeService->formVariables(self::NOTICE_ID));
     }
 
     /**
@@ -104,27 +76,22 @@ class TrialExpirationController implements ControllerInterface
      */
     public function processTrialNoticeFormSubmit(): void
     {
-        if ($this->request->isEmpty('global.rsp_trial_form')) {
+        $choice = $this->adminNoticeService->submittedChoice(self::NOTICE_ID);
+        if ($choice === null) {
             return;
         }
 
-        $nonce = $this->request->get('global.' . $this->trialNonceName);
-        if (wp_verify_nonce($nonce, $this->trialAction) === false) {
-            return; // Invalid nonce
-        }
-
         $userId = get_current_user_id();
-        $choice = $this->request->getString('global.rsp_trial_choice');
 
-        if ($choice === 'later') {
-            $this->adminNoticeService->snoozeNotice($userId, 'trial', DAY_IN_SECONDS);
+        if ($choice === AdminNoticeService::CHOICE_LATER) {
+            $this->adminNoticeService->snoozeNotice($userId, self::NOTICE_ID, DAY_IN_SECONDS);
         }
 
-        if ($choice === 'never') {
-            $this->adminNoticeService->dismissNotice($userId, 'trial');
+        if ($choice === AdminNoticeService::CHOICE_NEVER) {
+            $this->adminNoticeService->dismissNotice($userId, self::NOTICE_ID);
         }
 
-        wp_cache_delete(self::ELIGIBILITY_CACHE_NAME, 'simplybook');
+        $this->adminNoticeService->forgetCanRender(self::NOTICE_ID);
     }
 
     public function enqueueScripts(): void
@@ -138,38 +105,21 @@ class TrialExpirationController implements ControllerInterface
 
     private function canRenderTrialNotice(): bool
     {
-        if ($this->isCurrentScreenExcluded()) {
-            return false;
-        }
-
-        $found = false;
-        $cacheValue = wp_cache_get(self::ELIGIBILITY_CACHE_NAME, 'simplybook', false, $found);
-
-        if ($found) {
-            return (bool) $cacheValue;
-        }
-
-        $isEligible = $this->isEligibleForTrialNotice();
-        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
-        wp_cache_set(self::ELIGIBILITY_CACHE_NAME, $isEligible, 'simplybook', $cacheDuration);
-
-        return $isEligible;
+        return $this->adminNoticeService->canRender(self::NOTICE_ID, fn() => $this->isEligibleForTrialNotice());
     }
 
     /**
      * Check all sequential eligibility conditions for the trial notice.
-     * The current screen is not part of these conditions because the
-     * result is cached and must stay valid on every screen.
      */
     private function isEligibleForTrialNotice(): bool
     {
         $userId = get_current_user_id();
 
-        if ($this->adminNoticeService->isNoticeDismissed($userId, 'trial')) {
+        if ($this->adminNoticeService->isNoticeDismissed($userId, self::NOTICE_ID)) {
             return false;
         }
 
-        if ($this->adminNoticeService->isNoticeSnoozed($userId, 'trial')) {
+        if ($this->adminNoticeService->isNoticeSnoozed($userId, self::NOTICE_ID)) {
             return false;
         }
 
@@ -188,30 +138,6 @@ class TrialExpirationController implements ControllerInterface
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
-    }
-
-    /**
-     * Check if the screen the user is currently visiting should be excluded
-     * from showing the trial notice.
-     */
-    private function isCurrentScreenExcluded(): bool
-    {
-        $screen = get_current_screen();
-        if (!$screen) {
-            return false;
-        }
-
-        if (in_array($screen->base, $this->excludedScreenBases, true)) {
-            return true;
-        }
-
-        foreach ($this->excludedScreenPatterns as $pattern) {
-            if (str_contains($screen->base, $pattern)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function getTrialInfo(): ?array

@@ -2,13 +2,11 @@
 
 namespace SimplyBook\Controllers;
 
-use Carbon\Carbon;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Services\ExtendifyDataService;
 use SimplyBook\Services\AdminNoticeService;
-use SimplyBook\Support\Helpers\Storages\RequestStorage;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class OnboardingNoticeController implements ControllerInterface
@@ -16,18 +14,15 @@ class OnboardingNoticeController implements ControllerInterface
     use HasViews;
     use HasAllowlistControl;
 
-    private string $completeOnboardingAction = 'rsp_onboarding_notice_form_submit';
-    private string $completeOnboardingNonceName = 'rsp_onboarding_notice_nonce';
+    private const NOTICE_ID = 'complete_onboarding';
 
     private EnvironmentConfig $env;
-    private RequestStorage $request;
     private ExtendifyDataService $extendifyDataService;
     private AdminNoticeService $adminNoticeService;
 
-    public function __construct(EnvironmentConfig $env, RequestStorage $request, ExtendifyDataService $extendifyDataService, AdminNoticeService $adminNoticeService)
+    public function __construct(EnvironmentConfig $env, ExtendifyDataService $extendifyDataService, AdminNoticeService $adminNoticeService)
     {
         $this->env = $env;
-        $this->request = $request;
         $this->extendifyDataService = $extendifyDataService;
         $this->adminNoticeService = $adminNoticeService;
     }
@@ -63,9 +58,7 @@ class OnboardingNoticeController implements ControllerInterface
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'onboardingUrl' => $this->env->getUrl('plugin.dashboard_url'),
             'noticeMessage' => $noticeMessage,
-            'completeOnboardingAction' => $this->completeOnboardingAction,
-            'completeOnboardingNonceName' => $this->completeOnboardingNonceName,
-        ]);
+        ] + $this->adminNoticeService->formVariables(self::NOTICE_ID));
     }
 
     /**
@@ -73,24 +66,17 @@ class OnboardingNoticeController implements ControllerInterface
      */
     public function processCompleteOnboardingNoticeFormSubmit(): void
     {
-        if ($this->request->isEmpty('global.rsp_complete_onboarding_notice_form')) {
+        $choice = $this->adminNoticeService->submittedChoice(self::NOTICE_ID);
+        if ($choice === null) {
             return;
         }
 
-        $nonce = $this->request->get('global.' . $this->completeOnboardingNonceName);
-        if (wp_verify_nonce($nonce, $this->completeOnboardingAction) === false) {
-            return; // Invalid nonce
-        }
-
-        $choice = $this->request->getString('global.rsp_onboarding_notice_choice');
-        if ($choice === 'later') {
+        if ($choice === AdminNoticeService::CHOICE_LATER) {
             update_option('simplybook_complete_onboarding_notice_dismissed_time', time(), false);
-            update_option('simplybook_complete_onboarding_notice_choice', 'later', false);
         }
 
-        if ($choice === 'never') {
-            update_option('simplybook_complete_onboarding_notice_choice', 'never', false);
-        }
+        update_option('simplybook_complete_onboarding_notice_choice', $choice, false);
+        $this->adminNoticeService->forgetCanRender(self::NOTICE_ID);
     }
 
     /**
@@ -99,42 +85,20 @@ class OnboardingNoticeController implements ControllerInterface
      * - The user has not dismissed the notice
      * - The plugin activation timestamp is suitable for notice
      * - The notice dismissed time has passed
-     * - The user is not on an edit screen
-     * - The user is not on the plugin page
      */
     private function canRenderNotice(): bool
     {
-        $found = false;
-        $cacheName = 'can_render_onboarding_notice';
-        $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
-
-        if ($found) {
-            return (bool) $cacheValue;
-        }
-
-        $isEligible = $this->isEligibleForNotice();
-        $cacheDuration = ($isEligible ? MINUTE_IN_SECONDS : (MINUTE_IN_SECONDS * 10));
-        wp_cache_set($cacheName, $isEligible, 'simplybook', $cacheDuration);
-
-        return $isEligible;
+        return $this->adminNoticeService->canRender(self::NOTICE_ID, fn() => $this->isEligibleForNotice());
     }
 
     /**
      * Check all sequential eligibility conditions for the onboarding notice.
-     * This method does not cache the result; caching is handled by canRenderNotice().
      */
     private function isEligibleForNotice(): bool
     {
-        // Prevent showing the notice on edit screen, as gutenberg removes the
-        // class which makes it editable. Also hide if user is on plugin page.
-        $screen = get_current_screen();
-        if ($screen && (('post' === $screen->base) || (str_contains($screen->base, 'simplybook')))) {
-            return false;
-        }
-
         // Check if user dismissed via form button
         $previousChoice = get_option('simplybook_complete_onboarding_notice_choice');
-        if ($previousChoice === 'never') {
+        if ($previousChoice === AdminNoticeService::CHOICE_NEVER) {
             return false;
         }
 
@@ -147,7 +111,7 @@ class OnboardingNoticeController implements ControllerInterface
         }
 
         // Check if user dismissed via X button
-        if ($this->adminNoticeService->isNoticeDismissed(get_current_user_id(), 'complete_onboarding')) {
+        if ($this->adminNoticeService->isNoticeDismissed(get_current_user_id(), self::NOTICE_ID)) {
             return false;
         }
 
@@ -176,7 +140,7 @@ class OnboardingNoticeController implements ControllerInterface
             return false;
         }
 
-        return $this->timestampIsAfter($pluginActivationTimestamp, 3);
+        return $this->adminNoticeService->daysHavePassedSince($pluginActivationTimestamp, 3);
     }
 
     /**
@@ -189,19 +153,7 @@ class OnboardingNoticeController implements ControllerInterface
             return true; // default true to show the notice
         }
 
-        return $this->timestampIsAfter($noticeDismissedTime, 7);
-    }
-
-    /**
-     * Check if the timestamp is after the given amount of days ago.
-     * @param string|float|int $timestamp
-     */
-    private function timestampIsAfter($timestamp, int $daysAgo = 7): bool
-    {
-        $timestamp = Carbon::createFromTimestamp($timestamp);
-        $daysAgo = Carbon::now()->subDays($daysAgo);
-
-        return $timestamp->isBefore($daysAgo);
+        return $this->adminNoticeService->daysHavePassedSince($noticeDismissedTime, 7);
     }
 
     /**

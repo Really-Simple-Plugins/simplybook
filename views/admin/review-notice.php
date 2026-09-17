@@ -4,8 +4,11 @@
  * @var string $logoUrl
  * @var string $reviewUrl
  * @var string $reviewMessage
- * @var string $reviewAction
- * @var string $reviewNonceName
+ * @var string $noticeId
+ * @var string $formField
+ * @var string $choiceField
+ * @var string $nonceAction
+ * @var string $nonceName
  */
 ?>
 
@@ -67,19 +70,19 @@
     <div class="rsp-container">
         <div class="rsp-review-image"><img src="<?php echo esc_url($logoUrl); ?>" alt="review-logo"></div>
         <form class="rsp-review-form" action="" method="POST">
-            <?php wp_nonce_field($reviewAction, $reviewNonceName); ?>
-            <input type="hidden" name="rsp_review_form" value="1">
+            <?php wp_nonce_field($nonceAction, $nonceName); ?>
+            <input type="hidden" name="<?php echo esc_attr($formField); ?>" value="<?php echo esc_attr($noticeId); ?>">
             <?php echo wp_kses_post(wpautop($reviewMessage)); ?>
             <div class="rsp-buttons-row">
                 <a class="button button-primary" target="_blank" rel="noopener noreferrer" href="<?php echo esc_url($reviewUrl); ?>">
                     <?php esc_html_e('Leave a review', 'simplybook'); ?>
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
-                <button type="submit" class="link" name="rsp_review_choice" value="later">
+                <button type="submit" class="link" name="<?php echo esc_attr($choiceField); ?>" value="later">
                     <?php esc_html_e('Maybe later', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
-                <button type="submit" class="link" name="rsp_review_choice" value="never">
+                <button type="submit" class="link" name="<?php echo esc_attr($choiceField); ?>" value="never">
                     <?php esc_html_e('Don\'t show again', 'simplybook'); ?>
                 </button>
             </div>
