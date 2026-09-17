@@ -58,7 +58,7 @@ class AdminNoticeService
 
 
     /**
-     * Hide a notice for the current user for good. Used by the X button.
+     * Hide the notice for the current user for good, by the X button.
      */
     public function dismissNoticeForUser(string $noticeId): bool
     {
@@ -75,7 +75,7 @@ class AdminNoticeService
 
 
     /**
-     * Hide a notice for the whole site for good. Used by the "never" button.
+     * Hide the notice for the whole site for good, by the "never" button.
      */
     public function dismissNotice(string $noticeId): bool
     {
@@ -84,8 +84,8 @@ class AdminNoticeService
 
 
     /**
-     * Hide a notice for the whole site for a while. Used by the "later"
-     * button. The controller decides how long, see {@see canRender()}.
+     * Hide the notice for the whole site for a while, by the "later" button.
+     * The controller decides how long, see {@see canRender()}.
      */
     public function snoozeNotice(string $noticeId): bool
     {
@@ -150,7 +150,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the "never" button hides the notice for the whole site.
+     * Check if the notice is hidden by the "never" button.
      */
     private function isNoticeDismissed(string $noticeId): bool
     {
@@ -231,7 +231,7 @@ class AdminNoticeService
 
 
     /**
-     * Check if the X button hides the notice for the current user.
+     * Check if the notice is hidden for the current user by the X button.
      */
     private function isNoticeDismissedForUser(string $noticeId): bool
     {
@@ -240,7 +240,7 @@ class AdminNoticeService
 
 
     /**
-     * Read the notice IDs that the current user dismissed with the X button.
+     * Read the notice IDs hidden for the current user by the X button.
      */
     private function getDismissedNoticesForUser(): array
     {
@@ -251,7 +251,7 @@ class AdminNoticeService
 
 
     /**
-     * Write the notice IDs that the current user dismissed with the X button.
+     * Write the notice IDs hidden for the current user by the X button.
      */
     private function storeDismissedNoticesForUser(array $noticeIds): bool
     {
