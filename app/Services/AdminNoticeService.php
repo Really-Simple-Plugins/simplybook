@@ -24,16 +24,17 @@ class AdminNoticeService
     private const CHOICE_NEVER = 'never';
 
     /**
-     * Don't render any notice on the post edit screen, exact screen name.
+     * Post edit screen, exact screen name.
      */
-    private const EXCLUDED_SCREEN = '/^post$/';
+    private const POST_SCREEN = '/^post$/';
 
     /**
-     * Don't render the onboarding and review notices on the SimplyBook
-     * dashboard pages, part of screen name. The trial notice does render
-     * there.
+     * Don't render the notices on any of these screens.
      */
-    private const EXCLUDED_SCREEN_EXCEPT_TRIAL = '/simplybook/';
+    private const EXCLUDED_SCREENS = [
+        self::POST_SCREEN,
+        '/simplybook/', // SimplyBook dashboard pages, part of screen name
+    ];
 
     private EnvironmentConfig $env;
     private bool $assetsEnqueued = false;
@@ -66,19 +67,27 @@ class AdminNoticeService
      */
     public function canRender(string $noticeId, int $snoozeDuration): bool
     {
-        if ($this->currentScreenAllowsNotice($noticeId) === false) {
+        if ($this->currentScreenMatches(self::EXCLUDED_SCREENS)) {
             return false;
         }
 
-        if ($this->isNoticeDismissedForUser($noticeId)) {
+        return $this->isNoticeActive($noticeId, $snoozeDuration);
+    }
+
+
+    /**
+     * Same as {@see canRender()}, but the SimplyBook dashboard pages do show
+     * the notice. Used by the trial notice.
+     *
+     * @param int $snoozeDuration Duration in seconds.
+     */
+    public function canRenderOnSimplyBookScreens(string $noticeId, int $snoozeDuration): bool
+    {
+        if ($this->currentScreenMatches([self::POST_SCREEN])) {
             return false;
         }
 
-        if ($this->isNoticeDismissed($noticeId)) {
-            return false;
-        }
-
-        return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
+        return $this->isNoticeActive($noticeId, $snoozeDuration);
     }
 
 
@@ -163,25 +172,44 @@ class AdminNoticeService
 
 
     /**
-     * Check if the current admin screen may show the notice.
+     * Check if the base of the current admin screen matches one of the
+     * patterns.
+     *
+     * @param string[] $patterns
      */
-    private function currentScreenAllowsNotice(string $noticeId): bool
+    private function currentScreenMatches(array $patterns): bool
     {
         $screen = get_current_screen();
 
         if (!$screen) {
-            return true;
-        }
-
-        if (preg_match(self::EXCLUDED_SCREEN, $screen->base) === 1) {
             return false;
         }
 
-        if ($noticeId === TrialExpirationController::NOTICE_ID) {
-            return true;
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $screen->base) === 1) {
+                return true;
+            }
         }
 
-        return preg_match(self::EXCLUDED_SCREEN_EXCEPT_TRIAL, $screen->base) !== 1;
+        return false;
+    }
+
+
+    /**
+     * Check if the notice is not dismissed for the user or the site, and not
+     * snoozed.
+     */
+    private function isNoticeActive(string $noticeId, int $snoozeDuration): bool
+    {
+        if ($this->isNoticeDismissedForUser($noticeId)) {
+            return false;
+        }
+
+        if ($this->isNoticeDismissed($noticeId)) {
+            return false;
+        }
+
+        return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
     }
 
 
