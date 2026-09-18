@@ -28,10 +28,10 @@ const InstallAppTaskModalContent = () => {
                         </div>
                         <div className="flex flex-row gap-3 justify-around items-center w-full sm:max-w-[80%] lg:max-w-[70%]">
                             <a href="https://apps.apple.com/us/app/simplybook-me-admin/id1498910745" target="_blank">
-                                <img src={assetsUrl + "img/download-on-app-store.svg"} alt={__("Download on the App Store", "simplybook")}/>
+                                <img className="h-10 w-auto" src={assetsUrl + "img/download-on-app-store.svg"} alt={__("Download on the App Store", "simplybook")}/>
                             </a>
                             <a href="https://play.google.com/store/apps/details?id=me.simplybook.flutter_simplybook" target="_blank">
-                                <img src={assetsUrl + "img/get-it-on-google-play.svg"} alt={__("Get it on Google Play", "simplybook")}/>
+                                <img className="h-10 w-auto" src={assetsUrl + "img/get-it-on-google-play.svg"} alt={__("Get it on Google Play", "simplybook")}/>
                             </a>
                         </div>
                     </div>
