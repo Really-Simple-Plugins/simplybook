@@ -26,6 +26,10 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
         }
     };
 
+    /**
+     * A completed, dismissed or hidden task must not show the dismiss button.
+     * Only the listed statuses are dismissable.
+     */
     const taskIsDismissable = (): boolean => {
         return task.type === 'optional' && ['open', 'urgent', 'premium', 'upgrade'].includes(task.status);
     }
