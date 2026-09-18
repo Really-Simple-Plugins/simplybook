@@ -7,7 +7,7 @@ import clsx from "clsx";
 import DOMPurify from "dompurify";
 
 /**
- * Statuses "completed", "dismissed" or "hidden" marks the task inactive.
+ * The statuses "completed", "dismissed" and "hidden" mark the task inactive.
  */
 const inactiveStatuses: TaskStatus[] = ["completed", "dismissed", "hidden"];
 

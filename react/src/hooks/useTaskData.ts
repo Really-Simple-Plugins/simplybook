@@ -1,15 +1,16 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Task } from "../types/Task";
+import { Task, TaskStatus } from "../types/Task";
 import { TaskData } from "../types/TaskData";
 import HttpClient from "../api/requests/HttpClient";
 import useOnboardingData from "./useOnboardingData";
 
 const useTaskData = () => {
 
-    const statusPriority = {
+    const statusPriority: Record<TaskStatus, number> = {
         urgent: 0,
         upgrade: 5,
         open: 10,
+        premium: 15,
         completed: 20,
         dismissed: 30,
         hidden: 40,
