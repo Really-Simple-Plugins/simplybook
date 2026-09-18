@@ -46,6 +46,7 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
                     'required' => true,
                     'type' => 'string',
                     'enum' => $this->service->getAllNoticeIds(),
+                    'validate_callback' => 'rest_validate_request_arg',
                     'sanitize_callback' => 'sanitize_key',
                 ],
             ],
