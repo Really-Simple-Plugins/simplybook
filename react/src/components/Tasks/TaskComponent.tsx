@@ -27,7 +27,7 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
     };
 
     const taskIsDismissable = (): boolean => {
-        return task.type === 'optional';
+        return task.type === 'optional' && ['open', 'urgent', 'premium', 'upgrade'].includes(task.status);
     }
 
     const renderActionButton = () => {
