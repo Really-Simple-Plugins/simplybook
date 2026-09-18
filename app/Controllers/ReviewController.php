@@ -18,11 +18,11 @@ class ReviewController implements ControllerInterface
     private const SNOOZE_DURATION = (30 * DAY_IN_SECONDS);
 
     /**
-     * Don't render the notice on any of these screens.
+     * Don't render the notice on any of these screens. The SimplyBook
+     * dashboard pages do show this notice.
      */
     private const EXCLUDED_SCREENS = [
         '/^post$/', // Post edit screen, exact screen name
-        '/simplybook/', // SimplyBook dashboard pages, part of screen name
     ];
 
     private int $bookingThreshold = 2;
@@ -82,7 +82,6 @@ class ReviewController implements ControllerInterface
      * - The review notice snooze duration has passed
      * - The amount of bookings is greater than the threshold
      * - The user is not on an edit screen
-     * - The user is not on the plugin page
      */
     private function canRenderReviewNotice(): bool
     {

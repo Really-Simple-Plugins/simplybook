@@ -18,11 +18,11 @@ class TrialExpirationController implements ControllerInterface
     private const SNOOZE_DURATION = DAY_IN_SECONDS;
 
     /**
-     * Don't render the notice on any of these screens. The SimplyBook
-     * dashboard pages do show this notice.
+     * Don't render the notice on any of these screens.
      */
     private const EXCLUDED_SCREENS = [
         '/^post$/', // Post edit screen, exact screen name
+        '/simplybook/', // SimplyBook dashboard pages, part of screen name
     ];
 
     private EnvironmentConfig $env;
@@ -80,6 +80,7 @@ class TrialExpirationController implements ControllerInterface
      * - The user has not dismissed the notice
      * - The trial notice snooze duration has passed
      * - The user is not on an edit screen
+     * - The user is not on the plugin page
      * - The user finished the onboarding
      * - The subscription is a trial
      * - The trial expires within 2 days, or expired less than 30 days ago
