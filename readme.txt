@@ -72,7 +72,7 @@ This plugin is a bridge between your WordPress site and your SimplyBook.me booki
 
 The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
 
-During onboarding the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives the IP address and browser data of the admin. No cookies are set before the admin plays the video.
+During onboarding, the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives your IP address and browser data. No cookies are set before you play the video.
 
 For more information:
 
@@ -89,7 +89,7 @@ To build the admin app, run `npm install` and `npm run build` in the `react/` di
 
 == Installation ==
 
-= [Detailed instructions with photos here](https://help.simplybook.me/index.php/WordPress_integration) =
+You can find [detailed instructions with photos](https://help.simplybook.me/index.php/WordPress_integration) on the SimplyBook.me website.
 
 == Frequently Asked Questions ==
 
@@ -100,7 +100,7 @@ Yes, the plugin and registering an account at SimplyBook.me is entirely free, wi
 Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you can select the Free plan on the Plans & Prices page in the plugin, or you can subscribe to one of the SimplyBook.me paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
-Yes, the plugin needs to authenticate your site as your bookings are processed through the SimplyBook.me API. This allows SimplyBook.me to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me)
+Yes, the plugin needs to authenticate your site as your bookings are processed through the SimplyBook.me API. This allows SimplyBook.me to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me).
 
 = What if I already have a SimplyBook.me account? =
 You can skip the onboarding and log in with your existing SimplyBook.me credentials.
