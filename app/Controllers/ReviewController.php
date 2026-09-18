@@ -17,6 +17,14 @@ class ReviewController implements ControllerInterface
     public const NOTICE_ID = 'review';
     private const SNOOZE_DURATION = (30 * DAY_IN_SECONDS);
 
+    /**
+     * Don't render the notice on any of these screens.
+     */
+    private const EXCLUDED_SCREENS = [
+        '/^post$/', // Post edit screen, exact screen name
+        '/simplybook/', // SimplyBook dashboard pages, part of screen name
+    ];
+
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
 
@@ -82,7 +90,11 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        if ($this->adminNoticeService->canRender(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
+        if ($this->adminNoticeService->currentScreenMatches(self::EXCLUDED_SCREENS)) {
+            return false;
+        }
+
+        if ($this->adminNoticeService->isNoticeActive(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
             return false;
         }
 

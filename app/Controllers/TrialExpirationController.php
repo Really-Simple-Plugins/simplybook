@@ -17,6 +17,14 @@ class TrialExpirationController implements ControllerInterface
     public const NOTICE_ID = 'trial';
     private const SNOOZE_DURATION = DAY_IN_SECONDS;
 
+    /**
+     * Don't render the notice on any of these screens. The SimplyBook
+     * dashboard pages do show this notice.
+     */
+    private const EXCLUDED_SCREENS = [
+        '/^post$/', // Post edit screen, exact screen name
+    ];
+
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
     private AdminNoticeService $adminNoticeService;
@@ -78,7 +86,11 @@ class TrialExpirationController implements ControllerInterface
      */
     private function canRenderTrialNotice(): bool
     {
-        if ($this->adminNoticeService->canRenderOnSimplyBookScreens(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
+        if ($this->adminNoticeService->currentScreenMatches(self::EXCLUDED_SCREENS)) {
+            return false;
+        }
+
+        if ($this->adminNoticeService->isNoticeActive(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
             return false;
         }
 

@@ -23,19 +23,6 @@ class AdminNoticeService
     private const CHOICE_LATER = 'later';
     private const CHOICE_NEVER = 'never';
 
-    /**
-     * Post edit screen, exact screen name.
-     */
-    private const POST_SCREEN = '/^post$/';
-
-    /**
-     * Don't render the notices on any of these screens.
-     */
-    private const EXCLUDED_SCREENS = [
-        self::POST_SCREEN,
-        '/simplybook/', // SimplyBook dashboard pages, part of screen name
-    ];
-
     private EnvironmentConfig $env;
     private bool $assetsEnqueued = false;
 
@@ -59,35 +46,46 @@ class AdminNoticeService
     }
 
     /**
-     * Check if the notice is not dismissed or snoozed, and if the current
-     * screen allows a notice. The controller holds the snooze duration of its
-     * notice.
+     * Check if the notice is not dismissed for the user or the site, and not
+     * snoozed. The controller holds the snooze duration of its notice.
      *
      * @param int $snoozeDuration Duration in seconds.
      */
-    public function canRender(string $noticeId, int $snoozeDuration): bool
+    public function isNoticeActive(string $noticeId, int $snoozeDuration): bool
     {
-        if ($this->currentScreenMatches(self::EXCLUDED_SCREENS)) {
+        if ($this->isNoticeDismissedForUser($noticeId)) {
             return false;
         }
 
-        return $this->isNoticeActive($noticeId, $snoozeDuration);
+        if ($this->isNoticeDismissed($noticeId)) {
+            return false;
+        }
+
+        return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
     }
 
 
     /**
-     * Same as {@see canRender()}, but the SimplyBook dashboard pages do show
-     * the notice. Used by the trial notice.
+     * Check if the base of the current admin screen matches one of the
+     * patterns. The controller holds the screens that exclude its notice.
      *
-     * @param int $snoozeDuration Duration in seconds.
+     * @param string[] $patterns Regular expressions.
      */
-    public function canRenderOnSimplyBookScreens(string $noticeId, int $snoozeDuration): bool
+    public function currentScreenMatches(array $patterns): bool
     {
-        if ($this->currentScreenMatches([self::POST_SCREEN])) {
+        $screen = get_current_screen();
+
+        if (!$screen) {
             return false;
         }
 
-        return $this->isNoticeActive($noticeId, $snoozeDuration);
+        foreach ($patterns as $pattern) {
+            if (preg_match($pattern, $screen->base) === 1) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 
@@ -168,48 +166,6 @@ class AdminNoticeService
             $this->env->getString('plugin.version'),
             true
         );
-    }
-
-
-    /**
-     * Check if the base of the current admin screen matches one of the
-     * patterns.
-     *
-     * @param string[] $patterns
-     */
-    private function currentScreenMatches(array $patterns): bool
-    {
-        $screen = get_current_screen();
-
-        if (!$screen) {
-            return false;
-        }
-
-        foreach ($patterns as $pattern) {
-            if (preg_match($pattern, $screen->base) === 1) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-
-    /**
-     * Check if the notice is not dismissed for the user or the site, and not
-     * snoozed.
-     */
-    private function isNoticeActive(string $noticeId, int $snoozeDuration): bool
-    {
-        if ($this->isNoticeDismissedForUser($noticeId)) {
-            return false;
-        }
-
-        if ($this->isNoticeDismissed($noticeId)) {
-            return false;
-        }
-
-        return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
     }
 
 
