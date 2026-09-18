@@ -64,9 +64,9 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
     {
         $noticeId = $request->get_param('notice_id');
 
-        $success = $this->service->dismissNoticeForUser($noticeId);
+        $this->service->dismissNoticeForUser($noticeId);
 
-        return $this->respond($noticeId, $success, __('Failed to dismiss notice.', 'simplybook'));
+        return $this->respond($noticeId);
     }
 
     /**
@@ -76,9 +76,9 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
     {
         $noticeId = $request->get_param('notice_id');
 
-        $success = $this->service->dismissNotice($noticeId);
+        $this->service->dismissNotice($noticeId);
 
-        return $this->respond($noticeId, $success, __('Failed to dismiss notice.', 'simplybook'));
+        return $this->respond($noticeId);
     }
 
     /**
@@ -89,17 +89,17 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
     {
         $noticeId = $request->get_param('notice_id');
 
-        $success = $this->service->snoozeNotice($noticeId);
+        $this->service->snoozeNotice($noticeId);
 
-        return $this->respond($noticeId, $success, __('Failed to snooze notice.', 'simplybook'));
+        return $this->respond($noticeId);
     }
 
-    private function respond(string $noticeId, bool $success, string $errorMessage): \WP_REST_Response
+    /**
+     * Always a success response. update_option() returns false when the
+     * value did not change, so its result is not an error.
+     */
+    private function respond(string $noticeId): \WP_REST_Response
     {
-        if ($success === false) {
-            return $this->sendHttpResponse([], false, $errorMessage, 500);
-        }
-
         return $this->sendHttpResponse(['notice_id' => $noticeId], true);
     }
 }
