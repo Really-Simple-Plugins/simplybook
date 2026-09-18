@@ -24,12 +24,16 @@ class AdminNoticeService
     private const CHOICE_NEVER = 'never';
 
     /**
-     * Don't render the notices on any of these screens.
+     * Don't render any notice on the post edit screen, exact screen name.
      */
-    private const EXCLUDED_SCREENS = [
-        '/^post$/', // Post edit screen, exact screen name
-        '/simplybook/', // SimplyBook dashboard pages, part of screen name
-    ];
+    private const EXCLUDED_SCREEN = '/^post$/';
+
+    /**
+     * Don't render the onboarding and review notices on the SimplyBook
+     * dashboard pages, part of screen name. The trial notice does render
+     * there.
+     */
+    private const EXCLUDED_SCREEN_EXCEPT_TRIAL = '/simplybook/';
 
     private EnvironmentConfig $env;
     private bool $assetsEnqueued = false;
@@ -62,7 +66,7 @@ class AdminNoticeService
      */
     public function canRender(string $noticeId, int $snoozeDuration): bool
     {
-        if ($this->currentScreenAllowsNotice() === false) {
+        if ($this->currentScreenAllowsNotice($noticeId) === false) {
             return false;
         }
 
@@ -159,9 +163,9 @@ class AdminNoticeService
 
 
     /**
-     * Check if the current admin screen may show a notice.
+     * Check if the current admin screen may show the notice.
      */
-    private function currentScreenAllowsNotice(): bool
+    private function currentScreenAllowsNotice(string $noticeId): bool
     {
         $screen = get_current_screen();
 
@@ -169,13 +173,15 @@ class AdminNoticeService
             return true;
         }
 
-        foreach (self::EXCLUDED_SCREENS as $pattern) {
-            if (preg_match($pattern, $screen->base) === 1) {
-                return false;
-            }
+        if (preg_match(self::EXCLUDED_SCREEN, $screen->base) === 1) {
+            return false;
         }
 
-        return true;
+        if ($noticeId === TrialExpirationController::NOTICE_ID) {
+            return true;
+        }
+
+        return preg_match(self::EXCLUDED_SCREEN_EXCEPT_TRIAL, $screen->base) !== 1;
     }
 
 
