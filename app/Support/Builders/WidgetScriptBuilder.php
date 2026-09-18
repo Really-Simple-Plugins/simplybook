@@ -227,7 +227,7 @@ class WidgetScriptBuilder
             return array_map([$this, 'escapeSettings'], $setting);
         }
 
-        $decoded = json_decode($setting, true);
+        $decoded = json_decode((string) $setting, true);
         if (is_array($decoded)) {
             return (string) wp_json_encode(
                 array_map([$this, 'escapeSettings'], $decoded),
