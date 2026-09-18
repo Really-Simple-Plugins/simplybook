@@ -96,10 +96,6 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
         return $this->respond($noticeId);
     }
 
-    /**
-     * Always a success response. update_option() returns false when the
-     * value did not change, so its result is not an error.
-     */
     private function respond(string $noticeId): \WP_REST_Response
     {
         return $this->sendHttpResponse(['notice_id' => $noticeId], true);
