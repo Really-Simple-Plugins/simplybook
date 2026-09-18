@@ -14,7 +14,7 @@ class ReviewController implements ControllerInterface
 {
     use HasAllowlistControl;
 
-    private const NOTICE_ID = 'review';
+    public const NOTICE_ID = 'review';
     private const SNOOZE_DURATION = (30 * DAY_IN_SECONDS);
 
     private int $bookingThreshold = 2;

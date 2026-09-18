@@ -13,7 +13,7 @@ class OnboardingNoticeController implements ControllerInterface
 {
     use HasAllowlistControl;
 
-    private const NOTICE_ID = 'complete_onboarding';
+    public const NOTICE_ID = 'complete_onboarding';
     private const SNOOZE_DURATION = (7 * DAY_IN_SECONDS);
 
     private EnvironmentConfig $env;

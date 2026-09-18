@@ -3,6 +3,9 @@
 namespace SimplyBook\Services;
 
 use SimplyBook\Traits\HasViews;
+use SimplyBook\Controllers\ReviewController;
+use SimplyBook\Controllers\OnboardingNoticeController;
+use SimplyBook\Controllers\TrialExpirationController;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 /**
@@ -34,6 +37,20 @@ class AdminNoticeService
     public function __construct(EnvironmentConfig $env)
     {
         $this->env = $env;
+    }
+
+    /**
+     * IDs of all notices. Used to validate the notice_id of the REST routes.
+     *
+     * @return string[]
+     */
+    public function getAllNoticeIds(): array
+    {
+        return [
+            TrialExpirationController::NOTICE_ID,
+            ReviewController::NOTICE_ID,
+            OnboardingNoticeController::NOTICE_ID,
+        ];
     }
 
     /**

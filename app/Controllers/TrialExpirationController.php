@@ -14,7 +14,7 @@ class TrialExpirationController implements ControllerInterface
     use HasAllowlistControl;
     use LegacyLoad;
 
-    private const NOTICE_ID = 'trial';
+    public const NOTICE_ID = 'trial';
     private const SNOOZE_DURATION = DAY_IN_SECONDS;
 
     private EnvironmentConfig $env;
