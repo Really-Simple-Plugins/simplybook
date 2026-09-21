@@ -64,7 +64,6 @@ class AdminNoticeService
         return $this->isNoticeSnoozed($noticeId, $snoozeDuration) === false;
     }
 
-
     /**
      * Check if the base of the current admin screen matches one of the
      * patterns. The controller holds the screens that exclude its notice.
@@ -88,7 +87,6 @@ class AdminNoticeService
         return false;
     }
 
-
     /**
      * Dismiss the notice for the current user, by the X button.
      */
@@ -105,7 +103,6 @@ class AdminNoticeService
         return $this->updateUserDismissedNotices($dismissedNotices);
     }
 
-
     /**
      * Dismiss the notice for the whole site, by the "never" button.
      */
@@ -113,7 +110,6 @@ class AdminNoticeService
     {
         return $this->storeChoice($noticeId, self::CHOICE_NEVER);
     }
-
 
     /**
      * Mark the notice as snoozed for the whole site, by the "later" button.
@@ -124,7 +120,6 @@ class AdminNoticeService
 
         return $this->storeChoice($noticeId, self::CHOICE_LATER);
     }
-
 
     /**
      * Render the view of a notice with its stylesheet and script. Call this
@@ -168,7 +163,6 @@ class AdminNoticeService
         );
     }
 
-
     /**
      * Check if the notice is dismissed for the whole site.
      */
@@ -176,7 +170,6 @@ class AdminNoticeService
     {
         return $this->getChoice($noticeId) === self::CHOICE_NEVER;
     }
-
 
     /**
      * Check if the notice is snoozed within the snooze duration.
@@ -194,7 +187,6 @@ class AdminNoticeService
         return ($snoozedAt + $snoozeDuration) > time();
     }
 
-
     /**
      * Read "later" or "never" choice from simplybook_{noticeId}_notice_choice
      */
@@ -203,7 +195,6 @@ class AdminNoticeService
         return get_option($this->choiceOptionName($noticeId), null);
     }
 
-
     /**
      * Write "later" or "never" to simplybook_{noticeId}_notice_choice.
      */
@@ -211,7 +202,6 @@ class AdminNoticeService
     {
         return update_option($this->choiceOptionName($noticeId), $choice, false);
     }
-
 
     /**
      * Read the snoozedAt timestamp of the notice from
@@ -222,7 +212,6 @@ class AdminNoticeService
         return (int) get_option($this->snoozedAtOptionName($noticeId), 0);
     }
 
-
     /**
      * Store the snoozeAt timestamp to
      * simplybook_{noticeId}_notice_dismissed_time.
@@ -232,7 +221,6 @@ class AdminNoticeService
         return update_option($this->snoozedAtOptionName($noticeId), $snoozedAt, false);
     }
 
-
     /**
      * Each notice has its own option for the "later" or "never" choice.
      */
@@ -240,7 +228,6 @@ class AdminNoticeService
     {
         return 'simplybook_' . $noticeId . '_notice_choice';
     }
-
 
     /**
      * Each notice has its own option for the snooze timestamp.
@@ -250,7 +237,6 @@ class AdminNoticeService
         return 'simplybook_' . $noticeId . '_notice_dismissed_time';
     }
 
-
     /**
      * Check if the notice is dismissed by the current user.
      */
@@ -258,7 +244,6 @@ class AdminNoticeService
     {
         return in_array($noticeId, $this->getDismissedNoticesForUser(), true);
     }
-
 
     /**
      * Get the dismissed notice IDs for the current user.
@@ -269,7 +254,6 @@ class AdminNoticeService
 
         return is_array($dismissed) ? $dismissed : [];
     }
-
 
     /**
      * Update the dismissed notice IDs for the current user.
