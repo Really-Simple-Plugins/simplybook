@@ -64,7 +64,8 @@ return [
                 __('%s Terms & Conditions', 'simplybook'),
                 'Complianz -'
             ),
-            'color' => '#000000'
+            'color' => '#000000',
+            'redirect_transient' => 'cmplz_tc_redirect_to_settings',
         ],
     ],
 ];

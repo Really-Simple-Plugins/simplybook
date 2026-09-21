@@ -149,6 +149,7 @@ class RelatedPluginService
 
         $slug = $this->pluginConfig->getString('activation_slug');
 
+
         //when activated from the network admin, we assume the user wants network activated
         $networkwide = is_multisite() && is_network_admin();
 
@@ -161,7 +162,22 @@ class RelatedPluginService
             return false;
         }
 
+        $this->stopRedirectForPlugin();
+
         return true;
+    }
+
+    /**
+     * Disable the activation redirect by deleting the plugin's transient. Users
+     * should stay on the dashboard after activation.
+     */
+    protected function stopRedirectForPlugin(): void
+    {
+        $redirectTransientKey = $this->pluginConfig->getString('redirect_transient_key');
+
+        if (!empty($redirectTransientKey)) {
+            delete_transient($redirectTransientKey);
+        }
     }
 
     /**
