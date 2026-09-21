@@ -2,51 +2,41 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\NoticeDismissalService;
+use SimplyBook\Services\AdminNoticeService;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class TrialExpirationController implements ControllerInterface
 {
-    use HasViews;
     use HasAllowlistControl;
     use LegacyLoad;
 
+    public const NOTICE_ID = 'trial';
+    private const SNOOZE_DURATION = DAY_IN_SECONDS;
+
+    /**
+     * Don't render the notice on any of these screens.
+     */
+    private const EXCLUDED_SCREENS = [
+        '/^post$/', // Post edit screen, exact screen name
+        '/simplybook/', // SimplyBook dashboard pages, part of screen name
+    ];
+
     private EnvironmentConfig $env;
     private SubscriptionDataService $subscriptionService;
-    private NoticeDismissalService $noticeDismissalService;
-
-    /**
-     * Exact screen base identifiers on which the trial notice should not
-     * be displayed. A "base" is the unique slug WordPress assigns to every
-     * admin screen (e.g. "post", "edit", "upload").
-     */
-    private array $excludedScreenBases = [
-        'post',
-    ];
-
-    /**
-     * Substring patterns matched against the screen base. If any pattern
-     * is found anywhere inside the base string the screen is excluded.
-     * Use this for broad matches where multiple screens share a common
-     * keyword (e.g. "simplybook" matches every plugin-specific screen).
-     */
-    private array $excludedScreenPatterns = [
-        'simplybook',
-    ];
+    private AdminNoticeService $adminNoticeService;
 
     public function __construct(
         EnvironmentConfig $env,
         SubscriptionDataService $subscriptionService,
-        NoticeDismissalService $noticeDismissalService
+        AdminNoticeService $adminNoticeService
     ) {
         $this->env = $env;
         $this->subscriptionService = $subscriptionService;
-        $this->noticeDismissalService = $noticeDismissalService;
+        $this->adminNoticeService = $adminNoticeService;
     }
 
     public function register(): void
@@ -55,7 +45,6 @@ class TrialExpirationController implements ControllerInterface
             return;
         }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showTrialExpirationNotice']);
     }
 
@@ -79,24 +68,33 @@ class TrialExpirationController implements ControllerInterface
             );
         }
 
-        $this->render('admin/trial-notice', [
+        $this->adminNoticeService->renderNotice('admin/trial-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'message' => $message,
             'plansPricesUrl' => $this->env->getUrl('plugin.plans_prices_url'),
         ]);
     }
 
-    public function enqueueScripts(): void
-    {
-        if ($this->canRenderTrialNotice() === false) {
-            return;
-        }
-
-        $this->noticeDismissalService->enqueue();
-    }
-
+    /**
+     * Check if the trial notice can be rendered. True when:
+     * - The user has not dismissed the notice
+     * - The trial notice snooze duration has passed
+     * - The user is not on an edit screen
+     * - The user is not on the plugin page
+     * - The user finished the onboarding
+     * - The subscription is a trial
+     * - The trial expires within 2 days, or expired less than 30 days ago
+     */
     private function canRenderTrialNotice(): bool
     {
+        if ($this->adminNoticeService->currentScreenMatches(self::EXCLUDED_SCREENS)) {
+            return false;
+        }
+
+        if ($this->adminNoticeService->isNoticeActive(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
+            return false;
+        }
+
         $found = false;
         $cacheName = 'can_render_trial_expiration_notice';
         $cacheValue = wp_cache_get($cacheName, 'simplybook', false, $found);
@@ -117,14 +115,6 @@ class TrialExpirationController implements ControllerInterface
      */
     private function isEligibleForTrialNotice(): bool
     {
-        if ($this->isCurrentScreenExcluded()) {
-            return false;
-        }
-
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'trial')) {
-            return false;
-        }
-
         // User who did not complete the onboarding shouldn't see this notice
         if (get_option('simplybook_onboarding_completed', false) === false) {
             return false;
@@ -140,30 +130,6 @@ class TrialExpirationController implements ControllerInterface
         }
 
         return $trialInfo['is_expired'] || ($trialInfo['days_remaining'] <= 2);
-    }
-
-    /**
-     * Check if the screen the user is currently visiting should be excluded
-     * from showing the trial notice.
-     */
-    private function isCurrentScreenExcluded(): bool
-    {
-        $screen = get_current_screen();
-        if (!$screen) {
-            return false;
-        }
-
-        if (in_array($screen->base, $this->excludedScreenBases, true)) {
-            return true;
-        }
-
-        foreach ($this->excludedScreenPatterns as $pattern) {
-            if (str_contains($screen->base, $pattern)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private function getTrialInfo(): ?array
