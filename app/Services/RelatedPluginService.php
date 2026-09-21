@@ -162,22 +162,7 @@ class RelatedPluginService
             return false;
         }
 
-        $this->stopRedirectForPlugin();
-
         return true;
-    }
-
-    /**
-     * Disable the activation redirect by deleting the plugin's transient. Users
-     * should stay on the dashboard after activation.
-     */
-    protected function stopRedirectForPlugin(): void
-    {
-        $redirectTransientKey = $this->pluginConfig->getString('redirect_transient_key');
-
-        if (!empty($redirectTransientKey)) {
-            delete_transient($redirectTransientKey);
-        }
     }
 
     /**

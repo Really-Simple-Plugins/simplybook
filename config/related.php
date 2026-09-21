@@ -49,23 +49,5 @@ return [
             ),
             'color' => '#009fff'
         ],
-        'complianz-terms-conditions' => [
-            'slug' => 'complianz-terms-conditions',
-            'options_prefix' => 'cmplz_tc',
-            'activation_slug' => 'complianz-terms-conditions' . DIRECTORY_SEPARATOR . 'complianz-terms-conditions.php',
-            'constant_free' => 'cmplz_tc_version',
-            'create' => admin_url('admin.php?page=terms-conditions'),
-            'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
-            'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
-            'title' => sprintf(
-                /* translators: %s: Plugin name prefix, "Complianz -".
-                 * "Terms & Conditions" is part of the plugin name and can be translated for clarity.
-                 */
-                __('%s Terms & Conditions', 'simplybook'),
-                'Complianz -'
-            ),
-            'color' => '#000000',
-            'redirect_transient' => 'cmplz_tc_redirect_to_settings',
-        ],
     ],
 ];
