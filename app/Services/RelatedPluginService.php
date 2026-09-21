@@ -164,7 +164,6 @@ class RelatedPluginService
             return false;
         }
 
-        $this->cancelShepherdTour();
         return true;
     }
 
@@ -251,18 +250,5 @@ class RelatedPluginService
 
         set_transient($transientName, $pluginInfo, WEEK_IN_SECONDS);
         return $pluginInfo;
-    }
-
-    /**
-     * Cancel shepherd tour
-     * @todo - This should be moved to a separate service as its not specific to
-     * this class. Following SRP principle.
-     */
-    public function cancelShepherdTour(): void
-    {
-        $prefix = $this->pluginConfig->getString('options_prefix');
-        update_site_option($prefix . '_tour_started', false);
-        update_site_option($prefix . '_tour_shown_once', true);
-        delete_transient($prefix . '_redirect_to_settings');
     }
 }
