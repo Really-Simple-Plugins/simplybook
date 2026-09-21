@@ -161,8 +161,7 @@ class TaskManagementListener implements ListenerInterface
         }
 
         if (!empty($subscription)) {
-            $this->handleBlackFridayTask($subscription);
-            $this->handleChristmasPromotionTask($subscription);
+            $this->handlePromotionTasks($subscription);
         }
 
         $this->handleSubscriptionLimits($limits);
@@ -328,25 +327,36 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
+     * Handle all promotion tasks. The menu bubble counter is set to the
+     * number of visible promotion tasks.
+     */
+    private function handlePromotionTasks(string $subscriptionType): void
+    {
+        $bubbleCount = 0;
+
+        if ($this->handleBlackFridayPromotionTask($subscriptionType)) {
+            $bubbleCount++;
+        }
+
+        if ($this->handleChristmasPromotionTask($subscriptionType)) {
+            $bubbleCount++;
+        }
+
+        $this->service->setTaskBubbleCounter($bubbleCount);
+    }
+
+    /**
      * Method will only set the Black Friday task visible and mark it as upgrade
      * if the current subscription is 'Trial' and the current date is between
      * the Black Friday start and end date mentioned in the env config.
+     * Returns true when the task is visible after handling.
      */
-    private function handleBlackFridayTask(string $subscriptionType): void
+    private function handleBlackFridayPromotionTask(string $subscriptionType): bool
     {
-        $isTrial = (strtolower($subscriptionType) === 'trial');
-
-        if ($isTrial && $this->promotionService->isBlackFriday()) {
-            $this->service->setTaskBubbleCounter(1);
-            $this->service->markTaskUpgrade(
-                Tasks\BlackFridayTask::IDENTIFIER
-            );
-            return;
-        }
-
-        $this->service->setTaskBubbleCounter(0);
-        $this->service->hideTask(
-            Tasks\BlackFridayTask::IDENTIFIER
+        return $this->markPromotionTaskWhenTrial(
+            Tasks\BlackFridayTask::IDENTIFIER,
+            $this->promotionService->isBlackFriday(),
+            $subscriptionType
         );
     }
 
@@ -354,24 +364,37 @@ class TaskManagementListener implements ListenerInterface
      * Method will only set the Christmas promo task visible and mark it as
      * upgrade if the current subscription is 'Trial' and the current date
      * is between the Christmas promo start and end date mentioned in the
-     * env config.
+     * env config. Returns true when the task is visible after handling.
      */
-    private function handleChristmasPromotionTask(string $subscriptionType): void
+    private function handleChristmasPromotionTask(string $subscriptionType): bool
     {
-        $isTrial = (strtolower($subscriptionType) === 'trial');
+        return $this->markPromotionTaskWhenTrial(
+            Tasks\ChristmasPromotionTask::IDENTIFIER,
+            $this->promotionService->isChristmasPeriod(),
+            $subscriptionType
+        );
+    }
 
-        if ($isTrial && $this->promotionService->isChristmasPeriod()) {
-            $this->service->setTaskBubbleCounter(1);
-            $this->service->markTaskUpgrade(
-                Tasks\ChristmasPromotionTask::IDENTIFIER
-            );
-            return;
+    /**
+     * Mark the promotion task as upgrade when the promotion is active for a
+     * Trial user. Hide the task otherwise. A dismissed task stays dismissed.
+     * Returns true when the task is visible after handling.
+     */
+    private function markPromotionTaskWhenTrial(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
+    {
+        if ($this->service->isTaskDismissed($taskId)) {
+            return false;
         }
 
-        $this->service->setTaskBubbleCounter(0);
-        $this->service->hideTask(
-            Tasks\ChristmasPromotionTask::IDENTIFIER
-        );
+        $isTrial = (strtolower($subscriptionType) === 'trial');
+
+        if ($isTrial && $isPromotionActive) {
+            $this->service->markTaskUpgrade($taskId);
+            return true;
+        }
+
+        $this->service->hideTask($taskId);
+        return false;
     }
 
     /**
@@ -382,17 +405,9 @@ class TaskManagementListener implements ListenerInterface
      */
     public function handleDateDrivenTasks(): void
     {
-        if ($this->promotionService->isBlackFriday()) {
-            $this->handleBlackFridayTask(
-                (string) $this->subscriptionDataService->search('subscription_name', '')
-            );
-        }
-
-        if ($this->promotionService->isChristmasPeriod()) {
-            $this->handleChristmasPromotionTask(
-                (string) $this->subscriptionDataService->search('subscription_name', '')
-            );
-        }
+        $this->handlePromotionTasks(
+            (string) $this->subscriptionDataService->search('subscription_name', '')
+        );
     }
 
     /**

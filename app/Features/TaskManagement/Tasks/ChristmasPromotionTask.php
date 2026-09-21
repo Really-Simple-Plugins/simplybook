@@ -4,34 +4,20 @@ namespace SimplyBook\Features\TaskManagement\Tasks;
 
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
-class ChristmasPromotionTask extends AbstractTask
+class ChristmasPromotionTask extends AbstractPromotionTask
 {
     public const IDENTIFIER = 'christmas_promo';
 
     /**
-     * @inheritDoc
-     */
-    protected bool $required = true;
-
-    /**
-     * The environment configuration
-     */
-    private EnvironmentConfig $env;
-
-    /**
-     * We hide this task by default, and it is updated to "upgrade" status
-     * during Christmas period ánd only for Trial users in the
-     * {@see TaskManagementListener}
-     *
      * @since 3.3.2 bumped version due to the new
      * plugin.plans_prices_url env key.
+     * @since 3.5.0 bumped version to 1.0.2 because the task is no longer
+     * required so it can be dismissed.
      */
     public function __construct(EnvironmentConfig $env)
     {
-        $this->hide();
-
-        $this->env = $env;
-        $this->setVersion('1.0.1');
+        parent::__construct($env);
+        $this->setVersion('1.0.2');
     }
 
     /**
@@ -45,17 +31,5 @@ class ChristmasPromotionTask extends AbstractTask
             '<strong>' . $this->env->getString('simplybook.christmas_promo.discount_percentage') . '%</strong>',
             '<code>' . $this->env->getString('simplybook.christmas_promo.promo_code') . '</code>'
         );
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getAction(): array
-    {
-        return [
-            'type' => 'button',
-            'text' => esc_html__('Claim discount', 'simplybook'),
-            'link' => $this->env->getUrl('plugin.plans_prices_url'),
-        ];
     }
 }

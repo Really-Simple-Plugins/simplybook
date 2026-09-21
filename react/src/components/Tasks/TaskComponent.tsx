@@ -2,8 +2,14 @@ import React from "react";
 import { Link } from "@tanstack/react-router";
 import LoginLink from "../Common/LoginLink";
 import { TaskProps } from "../../types/TaskProps";
+import { TaskStatus } from "../../types/Task";
 import clsx from "clsx";
 import DOMPurify from "dompurify";
+
+/**
+ * The statuses "completed", "dismissed" and "hidden" mark the task inactive.
+ */
+const inactiveStatuses: TaskStatus[] = ["completed", "dismissed", "hidden"];
 
 const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeCallback, className, onModalOpen }) => {
 
@@ -26,8 +32,12 @@ const TaskComponent: React.FC<TaskProps> = ({ task, onDismissCallback, onSnoozeC
         }
     };
 
+    /**
+     * Determine whether the task can be dismissed. Required and inactive
+     * tasks are never dismissable.
+     */
     const taskIsDismissable = (): boolean => {
-        return task.type === 'optional' && ['open', 'urgent', 'premium'].includes(task.status);
+        return task.type !== 'required' && !inactiveStatuses.includes(task.status);
     }
 
     const renderActionButton = () => {
