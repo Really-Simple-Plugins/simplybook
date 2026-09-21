@@ -9,8 +9,8 @@ const useTaskData = () => {
     const statusPriority = {
         urgent: 0,
         upgrade: 5,
-        premium: 9,
         open: 10,
+        premium: 15,
         completed: 20,
         dismissed: 30,
         hidden: 40,
