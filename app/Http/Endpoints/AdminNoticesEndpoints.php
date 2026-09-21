@@ -68,7 +68,7 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
 
         $this->service->dismissNoticeForUser($noticeId);
 
-        return $this->respond($noticeId);
+        return $this->sendHttpResponse(['notice_id' => $noticeId]);
     }
 
     /**
@@ -80,7 +80,7 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
 
         $this->service->dismissNotice($noticeId);
 
-        return $this->respond($noticeId);
+        return $this->sendHttpResponse(['notice_id' => $noticeId]);
     }
 
     /**
@@ -93,11 +93,6 @@ class AdminNoticesEndpoints implements MultiEndpointInterface
 
         $this->service->snoozeNotice($noticeId);
 
-        return $this->respond($noticeId);
-    }
-
-    private function respond(string $noticeId): \WP_REST_Response
-    {
-        return $this->sendHttpResponse(['notice_id' => $noticeId], true);
+        return $this->sendHttpResponse(['notice_id' => $noticeId]);
     }
 }
