@@ -47,7 +47,8 @@ return [
                 __('%s Consent Management as it should be', 'simplybook'),
                 'Complianz -'
             ),
-            'color' => '#009fff'
+            'color' => '#000000',
+            'redirect_transient' => 'cmplz_tc_redirect_to_settings',
         ],
     ],
 ];
