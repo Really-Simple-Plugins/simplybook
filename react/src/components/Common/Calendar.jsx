@@ -33,17 +33,13 @@ const Calendar = (
             'secondary': secondaryColor,
             'active': activeColor,
         }).then((response) => {
+           const config = response.data.widget;
 
-            let inlineScriptElement = document.createElement('script');
-            inlineScriptElement.id = 'simplybook-preview-widget-script';
-            inlineScriptElement.innerHTML = response.data.widget;
+           if (!config || typeof SimplybookWidget !== "function") {
+               return;
+           }
 
-            document.body.appendChild(inlineScriptElement);
-
-            // Dispatch custom element to load the widget
-            document.dispatchEvent(
-                new CustomEvent('loadSimplyBookPreviewWidget')
-            );
+           new SimplybookWidget(config);
         });
     }
 
