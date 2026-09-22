@@ -15,6 +15,8 @@ class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
+    private const WIDGET_SCRIPT_HANDLE = 'simplybook_widget_scripts';
+
     private ApiClient $client;
     private EnvironmentConfig $env;
     protected DesignSettingsService $service;
@@ -28,6 +30,7 @@ class WidgetController implements ControllerInterface
 
     public function register(): void
     {
+        add_action('init', [$this, 'registerRemoteWidgetScript']);
         add_shortcode('simplybook_widget', [$this, 'renderCalendarWidget']);
 
         // Removed since: NL14RSP2-219 - kept for reference
@@ -46,7 +49,7 @@ class WidgetController implements ControllerInterface
             Event::dispatch(Event::CALENDAR_PUBLISHED);
         }
 
-        return $this->loadWidgetScriptTemplate('calendar', $attributes, 'sbw_z0hg2i_calendar');
+        return $this->renderWidget('calendar', $attributes, 'sbw_z0hg2i_calendar');
     }
 
     /**
@@ -54,7 +57,7 @@ class WidgetController implements ControllerInterface
      */
     public function renderReviewsWidget(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('reviews', $attributes, 'sbw_z0hg2i_reviews');
+        return $this->renderWidget('reviews', $attributes, 'sbw_z0hg2i_reviews');
     }
 
     /**
@@ -62,14 +65,15 @@ class WidgetController implements ControllerInterface
      */
     public function renderBookingButton(array $attributes = []): string
     {
-        return $this->loadWidgetScriptTemplate('booking-button', $attributes);
+        return $this->renderWidget('booking-button', $attributes);
     }
 
     /**
-     * Load the widget script template dynamically
-     * @uses \SimplyBook\Builders\WidgetScriptBuilder
+     * Render a widget for shortcode output and enqueue its remote dependency.
+     *
+     * @uses \SimplyBook\Support\Builders\WidgetScriptBuilder
      */
-    private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
+    private function renderWidget(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
         try {
             $builder = new WidgetScriptBuilder();
@@ -100,6 +104,20 @@ class WidgetController implements ControllerInterface
      */
     private function enqueueRemoteWidgetScript(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
+        wp_enqueue_script(self::WIDGET_SCRIPT_HANDLE);
+    }
+
+    /**
+     * Register the remote dependency shared by shortcode and block rendering.
+     */
+    public function registerRemoteWidgetScript(): void
+    {
+        wp_register_script(
+            self::WIDGET_SCRIPT_HANDLE,
+            $this->env->getUrl('simplybook.widget_script_url'),
+            [],
+            $this->env->getString('simplybook.widget_script_version'),
+            false
+        );
     }
 }
