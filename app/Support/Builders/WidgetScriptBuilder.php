@@ -132,7 +132,7 @@ class WidgetScriptBuilder
      */
     public function setWrapperID(string $wrapperID): WidgetScriptBuilder
     {
-        $this->wrapperID = sanitize_text_field($wrapperID);
+        $this->wrapperID = $wrapperID;
         return $this;
     }
 
