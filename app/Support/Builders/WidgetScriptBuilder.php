@@ -57,7 +57,10 @@ class WidgetScriptBuilder
     {
         $html = $this->view('public/widget', [
             'wrapperID' => $this->wrapperID,
-            'config' => (string) wp_json_encode($this->buildConfig()),
+            'config' => (string) wp_json_encode(
+                $this->buildConfig(),
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS
+            ),
         ]);
 
         if ($this->showDemoWidget()) {
@@ -188,9 +191,13 @@ class WidgetScriptBuilder
 
     /**
      * Escape a setting value for the HTML sinks in the remote widget script.
-     * The JSON encoding only protects the script tag. The widget decodes the
-     * JSON and writes the values into an iframe attribute with innerHTML.
-     * Arrays are escaped recursively. Empty values become an empty string.
+     * The widget decodes the JSON and writes the values into an iframe
+     * attribute with innerHTML. Arrays are escaped recursively. Empty values
+     * become an empty string.
+     *
+     * @internal The entities must survive the HTML attribute in the view.
+     * The browser decodes entities in the attribute once, so build() encodes
+     * the JSON with JSON_HEX_* flags to keep these entities out of the HTML.
      *
      * @param mixed $setting
      * @return array|string
