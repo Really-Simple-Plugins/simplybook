@@ -17,12 +17,9 @@ class WidgetScriptBuilder
     protected EnvironmentConfig $env;
     protected GeneralConfig $config;
 
-    protected bool $withHTML = false;
     protected string $widgetType = '';
-    protected string $widgetTemplate = '';
-    protected array $attributes = [];
     protected string $wrapperID = '';
-    protected bool $hasWrapper = false;
+    protected array $attributes = [];
     protected array $widgetSettings = [];
     protected bool $isAuthenticated = true;
 
@@ -49,26 +46,28 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Build the widget based on the given type, settings and attributes
+     * Build the widget HTML based on the given type, settings and attributes.
+     * The HTML is a container element that carries the widget configuration
+     * as JSON in a data attribute. A separate script reads the configuration
+     * and starts the widget.
+     *
      * @throws BuilderException
      */
     public function build(): string
     {
-        if (empty($this->widgetType) || empty($this->widgetSettings)) {
-            throw new BuilderException('Widget not set up correctly');
-        }
-
-        $script = $this->getWidgetScript();
-
-        if ($this->withHTML) {
-            return $this->getWrappedScriptHTML($script);
-        }
+        $html = $this->view('public/widget', [
+            'wrapperID' => $this->wrapperID,
+            'config' => (string) wp_json_encode(
+                $this->buildConfig(),
+                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS
+            ),
+        ]);
 
         if ($this->showDemoWidget()) {
-            return $this->getDemoWidgetAlert() . $script;
+            return $this->getDemoWidgetAlert() . $html;
         }
 
-        return $script;
+        return $html;
     }
 
     /**
@@ -129,13 +128,11 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Set the wrapper ID. If this method is not used the {@see build} method
-     * will not create HTML for the wrapper.
+     * Set the ID of the element that holds the widget
      */
     public function setWrapperID(string $wrapperID): WidgetScriptBuilder
     {
-        $this->wrapperID = sanitize_text_field($wrapperID);
-        $this->hasWrapper = true;
+        $this->wrapperID = $wrapperID;
         return $this;
     }
 
@@ -154,15 +151,6 @@ class WidgetScriptBuilder
     public function setAttributes(array $attributes): WidgetScriptBuilder
     {
         $this->attributes = $this->sanitizeAttributes($attributes, true);
-        return $this;
-    }
-
-    /**
-     * Set with HTML flag.
-     */
-    public function withHTML(): WidgetScriptBuilder
-    {
-        $this->withHTML = true;
         return $this;
     }
 
@@ -202,21 +190,14 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Create the widget script based on the widget template and settings.
-     * The config is encoded as JSON and placed inside the widget script.
-     */
-    private function getWidgetScript(): string
-    {
-        return $this->view('public/widget', [
-            'config' => $this->buildConfig(),
-        ]);
-    }
-
-    /**
      * Escape a setting value for the HTML sinks in the remote widget script.
-     * The JSON encoding only protects the script tag. The widget decodes the
-     * JSON and writes the values into an iframe attribute with innerHTML.
-     * Arrays are escaped recursively. Empty values become an empty string.
+     * The widget decodes the JSON and writes the values into an iframe
+     * attribute with innerHTML. Arrays are escaped recursively. Empty values
+     * become an empty string.
+     *
+     * @internal The entities must survive the HTML attribute in the view.
+     * The browser decodes entities in the attribute once, so build() encodes
+     * the JSON with JSON_HEX_* flags to keep these entities out of the HTML.
      *
      * @param mixed $setting
      * @return array|string
@@ -235,32 +216,6 @@ class WidgetScriptBuilder
         }
 
         return esc_attr((string) $setting);
-    }
-
-    /**
-     * Create HTML for the widget script given via the parameter
-     *
-     * @since 3.2.3 Remove newlines from widget HTML to prevent WordPress's
-     * wpautop filter from breaking script content in FSE contexts.
-     * wpautop uses preg_split() on double line breaks to identify content
-     * blocks and wraps them in <p> tags. When newlines exist in the JavaScript,
-     * wpautop inserts <p> tags within the script, breaking JavaScript syntax.
-     */
-    private function getWrappedScriptHTML(string $script): string
-    {
-        $content = '';
-
-        if ($this->showDemoWidget()) {
-            $content = $this->getDemoWidgetAlert();
-        }
-
-        if ($this->hasWrapper) {
-            $content .= sprintf('<div id="%s"></div>', $this->wrapperID);
-        }
-        $content .= sprintf('<script type="text/javascript">%s</script>', $script);
-
-        // Remove all newlines
-        return str_replace(["\r\n", "\r", "\n"], '', $content);
     }
 
     /**
