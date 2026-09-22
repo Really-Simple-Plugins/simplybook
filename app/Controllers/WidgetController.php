@@ -2,6 +2,7 @@
 
 namespace SimplyBook\Controllers;
 
+use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Support\Helpers\Event;
 use SimplyBook\Exceptions\BuilderException;
@@ -14,11 +15,13 @@ class WidgetController implements ControllerInterface
 {
     use LegacyLoad;
 
+    private ApiClient $client;
     private EnvironmentConfig $env;
     protected DesignSettingsService $service;
 
-    public function __construct(EnvironmentConfig $env, DesignSettingsService $service)
+    public function __construct(ApiClient $client, EnvironmentConfig $env, DesignSettingsService $service)
     {
+        $this->client = $client;
         $this->env = $env;
         $this->service = $service;
     }
@@ -74,6 +77,9 @@ class WidgetController implements ControllerInterface
                 ->setWrapperID($wrapperID)
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
+                ->isAuthenticated(
+                    $this->client->isAuthenticated()
+                )
                 ->build();
         } catch (BuilderException $e) {
             return '';

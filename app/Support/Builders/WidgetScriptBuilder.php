@@ -21,6 +21,7 @@ class WidgetScriptBuilder
     protected string $wrapperID = '';
     protected array $attributes = [];
     protected array $widgetSettings = [];
+    protected bool $isAuthenticated = true;
 
     protected array $acceptedWidgetTypes = [
         'calendar',
@@ -147,6 +148,16 @@ class WidgetScriptBuilder
     public function setAttributes(array $attributes): WidgetScriptBuilder
     {
         $this->attributes = $this->sanitizeAttributes($attributes, true);
+        return $this;
+    }
+
+    /**
+     * Set the authenticated flag. If set to false, the widget will be
+     * displayed as a demo widget.
+     */
+    public function isAuthenticated(bool $authenticated): WidgetScriptBuilder
+    {
+        $this->isAuthenticated = $authenticated;
         return $this;
     }
 
