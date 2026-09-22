@@ -63,17 +63,7 @@ type LiveAgentGlobal = {
 
 declare const simplybook: SimplyBookGlobal;
 
-/**
- * Constructor provided by SimplyBook's external widget script.
- * It is loaded so we can render widgets in the previews and during onboarding.
- * Since the script is loaded externally, we declare it here for TypeScript typing.
- */
-declare class SimplybookWidget {
-    constructor(config: Record<string, unknown>);
-}
-
 interface Window {
     simplybook?: SimplyBookGlobal;
     LiveAgent?: LiveAgentGlobal;
-    SimplybookWidget?: typeof SimplybookWidget;
 }
