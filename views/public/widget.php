@@ -3,12 +3,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-/** @var string $config */
+/**
+ * @var string $id
+ * @var string $config JSON encoded widget configuration
+ */
 ?>
-
-function instantiateSimplyBookWidget() {
-    new SimplybookWidget(<?php echo wp_json_encode($config, (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)); ?>);
-}
-
-document.addEventListener("DOMContentLoaded", instantiateSimplyBookWidget);
-document.addEventListener("loadSimplyBookPreviewWidget", instantiateSimplyBookWidget);
+<div id="<?php echo esc_attr($id); ?>" class="simplybook-widget" data-config="<?php echo esc_attr($config); ?>"></div>
