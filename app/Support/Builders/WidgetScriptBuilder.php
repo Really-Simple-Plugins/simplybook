@@ -18,7 +18,7 @@ class WidgetScriptBuilder
     protected GeneralConfig $config;
 
     protected string $widgetType = '';
-    protected string $id = '';
+    protected string $wrapperID = '';
     protected array $attributes = [];
     protected array $widgetSettings = [];
 
@@ -55,7 +55,7 @@ class WidgetScriptBuilder
     public function build(): string
     {
         $html = $this->view('public/widget', [
-            'id' => $this->id,
+            'wrapperID' => $this->wrapperID,
             'config' => (string) wp_json_encode($this->buildConfig()),
         ]);
 
@@ -126,9 +126,9 @@ class WidgetScriptBuilder
     /**
      * Set the ID of the element that holds the widget
      */
-    public function setId(string $id): WidgetScriptBuilder
+    public function setWrapperID(string $wrapperID): WidgetScriptBuilder
     {
-        $this->id = sanitize_text_field($id);
+        $this->wrapperID = sanitize_text_field($wrapperID);
         return $this;
     }
 

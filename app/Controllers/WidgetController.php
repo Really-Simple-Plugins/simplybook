@@ -66,12 +66,12 @@ class WidgetController implements ControllerInterface
      * Load the widget HTML and enqueue the scripts that start the widget.
      * @uses \SimplyBook\Support\Builders\WidgetScriptBuilder
      */
-    private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $id = ''): string
+    private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
         try {
             $content = (new WidgetScriptBuilder())
                 ->setWidgetType($widgetType)
-                ->setId($id)
+                ->setWrapperID($wrapperID)
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
                 ->build();
