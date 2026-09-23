@@ -14,10 +14,15 @@ class PromotionService
         $this->env = $env;
     }
 
-    public function isBlackFriday(): bool
+    /**
+     * Tells you if the promotion of the identifier is active now. The
+     * identifier should match env config key of the promotion. A missing
+     * date or a wrong date in the config stops the promotion.
+     */
+    public function isPromotionActive(string $identifier): bool
     {
         $hasCache = false;
-        $cacheName = 'simplybook_promotion_service_is_black_friday';
+        $cacheName = 'simplybook_promotion_service_' . $identifier;
         $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
 
         // The $hasCache variable is set by reference in wp_cache_get
@@ -26,61 +31,46 @@ class PromotionService
         }
 
         $timezone = wp_timezone();
+        $now = Carbon::now($timezone);
 
-        $blackFridayStart = Carbon::parse(
-            $this->env->getString('simplybook.black_friday.start_date'),
-            $timezone
-        );
+        $start = $this->getPromotionDate($identifier, 'start_date', $timezone);
+        $end = $this->getPromotionDate($identifier, 'end_date', $timezone);
 
-        $blackFridayEnd = Carbon::parse(
-            $this->env->getString('simplybook.black_friday.end_date'),
-            $timezone
-        );
-
-        // Within 1 hour of the end day? Reduce cache time to 5 minutes
-        $cacheDuration = HOUR_IN_SECONDS;
-        if (Carbon::now($timezone)->diffInMinutes($blackFridayEnd->endOfDay()) <= $cacheDuration) {
-            $cacheDuration = MINUTE_IN_SECONDS * 5;
+        if (empty($start) || empty($end)) {
+            wp_cache_set($cacheName, false, 'simplybook', DAY_IN_SECONDS);
+            return false;
         }
 
-        $isBlackFriday = Carbon::now($timezone)->betweenIncluded($blackFridayStart, $blackFridayEnd);
+        $cacheDuration = HOUR_IN_SECONDS;
 
-        wp_cache_set($cacheName, $isBlackFriday, 'simplybook', $cacheDuration);
-        return $isBlackFriday;
+        $end = $end->endOfDay();
+        $isActive = $now->betweenIncluded($start, $end);
+
+        // Less than 1 hour before the end? Then cache for 5 minutes.
+        $secondsUntilEnd = $now->diffInSeconds($end, false);
+        if (($secondsUntilEnd > 0) && ($secondsUntilEnd <= HOUR_IN_SECONDS)) {
+            $cacheDuration = (MINUTE_IN_SECONDS * 5);
+        }
+
+        wp_cache_set($cacheName, $isActive, 'simplybook', $cacheDuration);
+        return $isActive;
     }
 
-    public function isChristmasPeriod(): bool
+    /**
+     * Gives the date of the promotion config key. Return Carbon instance or
+     * null on any error.
+     */
+    private function getPromotionDate(string $identifier, string $key, \DateTimeZone $timezone): ?Carbon
     {
-        $hasCache = false;
-        $cacheName = 'simplybook_promotion_service_is_christmas_period';
-        $cache = wp_cache_get($cacheName, 'simplybook', false, $hasCache);
-
-        // The $hasCache variable is set by reference in wp_cache_get
-        if ($hasCache) {
-            return (bool) $cache;
+        $date = $this->env->getString('simplybook.' . $identifier . '.' . $key);
+        if (empty($date)) {
+            return null;
         }
 
-        $timezone = wp_timezone();
-
-        $christmasStart = Carbon::parse(
-            $this->env->getString('simplybook.christmas_promo.start_date'),
-            $timezone
-        );
-
-        $christmasEnd = Carbon::parse(
-            $this->env->getString('simplybook.christmas_promo.end_date'),
-            $timezone
-        );
-
-        // Within 1 day of the end day? Reduce cache time to 1 hour
-        $cacheDuration = DAY_IN_SECONDS;
-        if (Carbon::now($timezone)->diffInHours($christmasEnd->endOfDay()) <= $cacheDuration) {
-            $cacheDuration = HOUR_IN_SECONDS;
+        try {
+            return Carbon::parse($date, $timezone);
+        } catch (\Exception $e) {
+            return null;
         }
-
-        $isChristmasPeriod = Carbon::now($timezone)->betweenIncluded($christmasStart, $christmasEnd);
-
-        wp_cache_set($cacheName, $isChristmasPeriod, 'simplybook', $cacheDuration);
-        return $isChristmasPeriod;
     }
 }

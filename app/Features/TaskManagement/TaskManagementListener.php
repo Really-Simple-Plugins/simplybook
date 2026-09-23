@@ -327,77 +327,6 @@ class TaskManagementListener implements ListenerInterface
     }
 
     /**
-     * Handle all promotion tasks. The menu bubble counter is set to the
-     * number of visible promotion tasks.
-     */
-    private function handlePromotionTasks(string $subscriptionType): void
-    {
-        $bubbleCount = 0;
-
-        if ($this->handleBlackFridayPromotionTask($subscriptionType)) {
-            $bubbleCount++;
-        }
-
-        if ($this->handleChristmasPromotionTask($subscriptionType)) {
-            $bubbleCount++;
-        }
-
-        $this->service->setTaskBubbleCounter($bubbleCount);
-    }
-
-    /**
-     * Method will only set the Black Friday task visible and mark it as upgrade
-     * if the current subscription is 'Trial' and the current date is between
-     * the Black Friday start and end date mentioned in the env config.
-     * Returns true when the task is visible after handling.
-     */
-    private function handleBlackFridayPromotionTask(string $subscriptionType): bool
-    {
-        return $this->markPromotionTaskWhenTrial(
-            Tasks\BlackFridayTask::IDENTIFIER,
-            $this->promotionService->isBlackFriday(),
-            $subscriptionType
-        );
-    }
-
-    /**
-     * Method will only set the Christmas promo task visible and mark it as
-     * upgrade if the current subscription is 'Trial' and the current date
-     * is between the Christmas promo start and end date mentioned in the
-     * env config. Returns true when the task is visible after handling.
-     */
-    private function handleChristmasPromotionTask(string $subscriptionType): bool
-    {
-        return $this->markPromotionTaskWhenTrial(
-            Tasks\ChristmasPromotionTask::IDENTIFIER,
-            $this->promotionService->isChristmasPeriod(),
-            $subscriptionType
-        );
-    }
-
-    /**
-     * Mark the promotion task as upgrade when the promotion is active for a
-     * Trial user. Hide the task otherwise. A dismissed task stays dismissed.
-     * Returns true when the task is visible after handling.
-     */
-    private function markPromotionTaskWhenTrial(string $taskId, bool $isPromotionActive, string $subscriptionType): bool
-    {
-        if ($this->service->isTaskDismissed($taskId)) {
-            return false;
-        }
-
-        $isTrial = (strtolower($subscriptionType) === 'trial');
-
-        if ($isTrial && $isPromotionActive) {
-            $this->service->markTaskUpgrade($taskId);
-            return true;
-        }
-
-        $this->service->hideTask($taskId);
-        return false;
-    }
-
-    /**
      * Method is hooked on 'admin_init' action to check for date driven tasks.
      * Because these tasks do not depend solely on events but also on the
      * current date we should check them on every page load.
@@ -408,6 +337,52 @@ class TaskManagementListener implements ListenerInterface
         $this->handlePromotionTasks(
             (string) $this->subscriptionDataService->search('subscription_name', '')
         );
+    }
+
+    /**
+     * Handle all promotion tasks. The menu bubble counter is set to the
+     * number of visible promotion tasks.
+     */
+    private function handlePromotionTasks(string $subscriptionType): void
+    {
+        $promotionTaskIds = [
+            Tasks\BlackFridayTask::IDENTIFIER,
+            Tasks\ChristmasPromotionTask::IDENTIFIER,
+        ];
+
+        $bubbleCount = 0;
+
+        foreach ($promotionTaskIds as $taskId) {
+            if ($this->processPromotionalTask($taskId, $subscriptionType)) {
+                $bubbleCount++;
+            }
+        }
+
+        $this->service->setTaskBubbleCounter($bubbleCount);
+    }
+
+    /**
+     * Marks the promotion task with the "upgrade" status when:
+     * - User is on Trial
+     * - The promotion is active
+     *
+     * Otherwise, hide the task. and return true if the task is visible after.
+     */
+    private function processPromotionalTask(string $taskId, string $subscriptionType): bool
+    {
+        if ($this->service->isTaskDismissed($taskId)) {
+            return false;
+        }
+
+        $isTrial = (strtolower($subscriptionType) === 'trial');
+
+        if ($isTrial && $this->promotionService->isPromotionActive($taskId)) {
+            $this->service->markTaskUpgrade($taskId);
+            return true;
+        }
+
+        $this->service->hideTask($taskId);
+        return false;
     }
 
     /**
