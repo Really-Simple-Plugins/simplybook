@@ -55,12 +55,18 @@ class WidgetScriptBuilder
      */
     public function build(): string
     {
+        $config = wp_json_encode(
+            $this->buildConfig(),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS
+        );
+
+        if ($config === false) {
+            throw new BuilderException('Failed to encode widget configuration');
+        }
+
         $html = $this->view('public/widget', [
             'wrapperID' => $this->wrapperID,
-            'config' => (string) wp_json_encode(
-                $this->buildConfig(),
-                JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS
-            ),
+            'config' => $config,
         ]);
 
         if ($this->showDemoWidget()) {
