@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import clsx from "clsx";
-import {__} from "@wordpress/i18n";
+import { __ } from "@wordpress/i18n";
 import { ReactComponent as Logo } from "../../../../assets/img/logo.svg";
 import SignInModal from "../Modals/SignInModal";
 import useOnboardingData from "../../hooks/useOnboardingData";
@@ -32,7 +32,7 @@ const OnboardingHeader = ({
                 {currentStepId < 4 && (
                     <div className="flex items-center text-base">
                         <span className={"m-5 text-black"}>
-                            {__("Already got an account?", "simplybook")}
+                            {__("Already have an account?", "simplybook")}
                         </span>
                         <a className="font-bold text-primary" href="#" onClick={toggleModal}>
                             {__("Sign in here")}
