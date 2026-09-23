@@ -36,7 +36,7 @@ SimplyBook.me is the easiest way to start collecting bookings on your WordPress 
 * Accepting payments and/or deposits to confirm the bookings in the booking process
 * Easily implement your booking widget with a Gutenberg block, Elementor Widget or a shortcode
 
-SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools. After the trial you can select the Free plan on the Plans & Prices page and keep using SimplyBook.me for free.
+SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools.
 
 = Why SimplyBook.me? =
 
@@ -70,7 +70,7 @@ Additionally, an online booking system offers powerful analytics that provide de
 Yes, the plugin and registering an account at SimplyBook.me is entirely free, without the need to add credit card information. You can fully use the booking widget and use our mobile app for iOS or Android to manage your bookings, up to 50 bookings per month. Additionally, you can even use 1 of our 'Special Features' within the Free plan.
 
 = Can I try SimplyBook.me's Special Features before subscribing? =
-Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you can select the Free plan on the Plans & Prices page in the plugin, or you can subscribe to one of our paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
+Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you will be reset to the Free plan, or you can decide to subscribe to our paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
 Yes, we need to authenticate your site as your bookings will be processed through our API. This allows us to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at https://simplybook.me
