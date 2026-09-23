@@ -67,14 +67,14 @@ return [
         'black_friday' => [
             'discount_percentage' => 25,
             'promo_code' => 'BLACKFRIDAY',
-            'start_date' => '2025-11-18',
-            'end_date' => '2025-11-29'
+            'start_date' => '2026-11-17',
+            'end_date' => '2026-11-28'
         ],
         'christmas_promo' => [
             'discount_percentage' => 25,
             'promo_code' => 'CHRISTMAS25',
-            'start_date' => '2025-12-01',
-            'end_date' => '2025-12-25'
+            'start_date' => '2026-12-01',
+            'end_date' => '2026-12-25'
         ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
