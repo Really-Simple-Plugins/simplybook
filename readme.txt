@@ -94,16 +94,52 @@ You can find [detailed instructions with photos](https://help.simplybook.me/inde
 == Frequently Asked Questions ==
 
 = Is SimplyBook.me free to use? =
-Yes, the plugin and registering an account at SimplyBook.me is entirely free, without the need to provide credit card information. You can fully use the booking widget and use the SimplyBook.me mobile app for iOS or Android to manage your bookings, up to 50 bookings per month. Additionally, you can even select one of the SimplyBook.me 'Special Features' within the Free plan.
+Yes. The plugin is free and SimplyBook.me offers a free plan. You do not need to enter credit card details to create an account. On the Free plan you can publish the booking widget, manage your bookings in the SimplyBook.me mobile app for iOS and Android, and accept up to 50 bookings per month. You can also use one of the SimplyBook.me Special Features on the Free plan.
 
-= Can I try SimplyBook.me's Special Features before subscribing? =
-Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you can select the Free plan on the Plans & Prices page in the plugin, or you can subscribe to one of the SimplyBook.me paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
+= Can I try the Special Features before subscribing? =
+Yes. Every new account automatically gets a 14-day trial with all Special Features, unlimited service providers and unlimited bookings. After the trial you can select the Free plan on the Plans & Prices page in the plugin, or choose a paid plan if you want to use more Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
-Yes, the plugin needs to authenticate your site as your bookings are processed through the SimplyBook.me API. This allows SimplyBook.me to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at [SimplyBook.me](https://simplybook.me).
+Yes. Your bookings are processed through the SimplyBook.me API, so the plugin needs to connect your site to a SimplyBook.me account. This is what makes features like the mobile app, email and SMS reminders and payment collection possible. The plugin guides you through a short onboarding, or you can register at [SimplyBook.me](https://simplybook.me/?ref=wordpress) first.
 
 = What if I already have a SimplyBook.me account? =
-You can skip the onboarding and log in with your existing SimplyBook.me credentials.
+Skip the onboarding and log in with your existing credentials. Custom SimplyBook.me domains and email two-factor authentication (2FA) are supported at login.
+
+= How do I add the booking calendar to my site? =
+The plugin creates a "Book now" page for you during onboarding. You can also place the booking widget anywhere on your site with the SimplyBook.me block in the Block Editor, the SimplyBook.me Elementor widget or a shortcode.
+
+= Will the booking widget match my theme? =
+Yes. The plugin reads your theme colors and uses them as the default widget style. You can change the colors and layout at any time in the plugin settings.
+
+= Where do I manage my bookings? =
+Wherever suits you. The plugin dashboard in WordPress shows your recent bookings and open setup tasks. You can also manage everything in the SimplyBook.me admin or accept, move and cancel bookings on the go in the mobile app for iOS and Android.
+
+= Can I manage my services and staff from WordPress? =
+Yes. You can create and edit services, service providers and their details directly in the plugin. More advanced options, such as multiple locations, categories and individual staff schedules, are available in the SimplyBook.me admin.
+
+= Can I accept payments or deposits? =
+Yes. You can require full payment or a deposit to confirm a booking, and you can sell products and service add-ons during the booking process. Payments are handled by SimplyBook.me and can be configured in your SimplyBook.me account.
+
+= Does SimplyBook.me send reminders to my clients? =
+Yes. SimplyBook.me sends automatic email and SMS confirmations and reminders for every booking, which helps reduce no-shows. You can also run email and push notification campaigns to your client base.
+
+= Can I take bookings for classes, events, memberships or gift cards? =
+Yes. SimplyBook.me supports classes and events with multiple attendees, and lets you sell memberships, packages and gift cards. These are part of the Special Features. You can use one Special Feature on the Free plan, or more on a paid plan.
+
+= My clients are in different time zones. Will the booking times be correct? =
+Yes. SimplyBook.me includes time zone settings so clients in other time zones see the available times in their local time.
+
+= Why do I see a demo widget on my site? =
+The plugin shows a demo widget until your site is connected to a SimplyBook.me account. Complete the onboarding or log in with an existing account and the demo widget is replaced by your own booking calendar.
+
+= What are the requirements for this plugin? =
+The plugin requires WordPress 6.6 or higher and PHP 7.4 or higher. The WordPress REST API must be enabled, as the plugin uses it to communicate with your site. The plugin will show a notice if the REST API is disabled.
+
+= Where is my booking data stored? =
+Your settings, bookings and client data are stored in your SimplyBook.me account through the SimplyBook.me API, not in your WordPress database. SimplyBook.me is ISO 27001 certified. See the External services section on this page for each service the plugin connects to and the data it sends.
+
+= Where can I get help? =
+Step-by-step instructions with screenshots are available in the [SimplyBook.me help center](https://help.simplybook.me/index.php/WordPress_integration). For questions about the plugin, you can post in the support forum on WordPress.org.
 
 == Screenshots ==
 
