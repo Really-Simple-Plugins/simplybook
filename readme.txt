@@ -58,7 +58,7 @@ This is the official SimplyBook.me plugin. SimplyBook.me and Really Simple Plugi
 The plugin brings SimplyBook.me into your WordPress dashboard. You do not need to leave WordPress to get started.
 
 * **Start in minutes.** Register a free SimplyBook.me account from the plugin onboarding, or log in with an existing account. Custom domains and 2FA are supported.
-* **Place the widget anywhere.** Add the booking calendar with the SimplyBook.me block in the Block Editor (Gutenberg), with the SimplyBook.me widget in Elementor, or with a shortcode in any page, post or template.
+* **Place the widget anywhere.** Add the booking calendar with the SimplyBook.me block in the Block Editor, with the SimplyBook.me widget in Elementor, or with a shortcode in any page, post or template.
 * **Match your theme.** The plugin reads your theme colors and uses them as the default widget style. Adjust colors and layout in the settings.
 * **Manage services in WordPress.** Create and edit services, service providers and their details from the plugin.
 * **Keep track.** The plugin dashboard shows your recent bookings and open setup tasks.
