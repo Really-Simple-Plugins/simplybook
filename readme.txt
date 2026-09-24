@@ -150,7 +150,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.5.0 - 2026-09-29
+= 3.5.0 - 2026-09-29 =
 * Security: Hardened the widget preview in the design settings against script injection.
 * Security: Added direct file access protection to all plugin files.
 * Security: All REST API routes now explicitly check user permissions.
