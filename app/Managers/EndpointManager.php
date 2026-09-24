@@ -6,6 +6,7 @@ use WP_Error;
 use WP_REST_Request;
 use InvalidArgumentException;
 use SimplyBook\Traits\HasNonces;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Interfaces\MultiEndpointInterface;
 use SimplyBook\Interfaces\SingleEndpointInterface;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
@@ -13,6 +14,7 @@ use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 final class EndpointManager extends AbstractManager
 {
     use HasNonces;
+    use HasRestAccess;
 
     private array $routes = [];
     private EnvironmentConfig $env;
@@ -131,8 +133,8 @@ final class EndpointManager extends AbstractManager
     /**
      * This method is used to add middleware to the callback function. The
      * middleware should be a callable function that takes a request as an
-     * argument and returns a response. The default middleware is to switch
-     * the user locale to the current user locale.
+     * argument and returns a response. The default middleware runs the
+     * callback in the user locale.
      */
     public function callbackMiddleware(?callable $callback, ?callable $middleware): callable
     {
@@ -142,43 +144,46 @@ final class EndpointManager extends AbstractManager
                 return $callback($request);
             }
 
-            $this->defaultMiddlewareCallback();
-            return $callback($request);
+            return $this->defaultMiddlewareCallback($callback, $request);
         };
     }
 
     /**
-     * This method is used to switch the user locale to the current user locale.
-     * This is important because we will otherwise show the default site
+     * This method is used to run the callback in the locale of the current
+     * user. This is important because we will otherwise show the default site
      * language to the user for the Tasks and Notifications. Those
-     * translations are created in PHP and not in JS.
+     * translations are created in PHP and not in JS. The locale is restored
+     * after the callback so the change stays inside our own request handling.
+     *
+     * @return mixed The response of the callback.
      */
-    private function defaultMiddlewareCallback(): void
+    private function defaultMiddlewareCallback(callable $callback, WP_REST_Request $request)
     {
         switch_to_user_locale(get_current_user_id());
+        $response = $callback($request);
+        restore_previous_locale();
+
+        return $response;
     }
 
     /**
-     * The default permission callback, will check if the nonce is valid and if
-     * the user has the required permissions to do a request.
+     * The default permission callback. Checks if the current user has the
+     * 'simplybook_manage' capability. For methods that modify data, it also
+     * checks if the nonce is valid.
+     *
      * @return bool|WP_Error
      */
     public function defaultPermissionCallback(WP_REST_Request $request)
     {
-        $method = $request->get_method();
-        $nonce = $request->get_param('nonce');
-
-        // For methods that modify data, verify the nonce
         $methodsRequiringNonce = ['POST', 'PUT', 'PATCH', 'DELETE'];
-        if (in_array($method, $methodsRequiringNonce) && ($this->verifyNonce($nonce) === false)) {
-            return new WP_Error(
-                'rest_forbidden',
-                __('Forbidden.', 'simplybook'),
-                ['status' => 403]
-            );
+        $requiresNonce = in_array($request->get_method(), $methodsRequiringNonce);
+        $validNonce = ($requiresNonce === false) || $this->verifyNonce($request->get_param('nonce'));
+
+        if (current_user_can('simplybook_manage') && $validNonce) {
+            return true;
         }
 
-        return true;
+        return $this->forbiddenError();
     }
 
     /**

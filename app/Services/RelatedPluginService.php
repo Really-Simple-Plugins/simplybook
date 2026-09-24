@@ -149,11 +149,9 @@ class RelatedPluginService
 
         $slug = $this->pluginConfig->getString('activation_slug');
 
+
         //when activated from the network admin, we assume the user wants network activated
         $networkwide = is_multisite() && is_network_admin();
-        if (!defined('DOING_CRON')) {
-            define('DOING_CRON', true);
-        }
 
         if (!function_exists('activate_plugin')) {
             require_once ABSPATH . 'wp-admin/includes/plugin.php';
@@ -164,8 +162,22 @@ class RelatedPluginService
             return false;
         }
 
-        $this->cancelShepherdTour();
+        $this->stopRedirectForPlugin();
+
         return true;
+    }
+
+    /**
+     * Disable the activation redirect by deleting the plugin's transient. Users
+     * should stay on the dashboard after activation.
+     */
+    protected function stopRedirectForPlugin(): void
+    {
+        $redirectTransientKey = $this->pluginConfig->getString('redirect_transient');
+
+        if (!empty($redirectTransientKey)) {
+            delete_transient($redirectTransientKey);
+        }
     }
 
     /**
@@ -251,18 +263,5 @@ class RelatedPluginService
 
         set_transient($transientName, $pluginInfo, WEEK_IN_SECONDS);
         return $pluginInfo;
-    }
-
-    /**
-     * Cancel shepherd tour
-     * @todo - This should be moved to a separate service as its not specific to
-     * this class. Following SRP principle.
-     */
-    public function cancelShepherdTour(): void
-    {
-        $prefix = $this->pluginConfig->getString('options_prefix');
-        update_site_option($prefix . '_tour_started', false);
-        update_site_option($prefix . '_tour_shown_once', true);
-        delete_transient($prefix . '_redirect_to_settings');
     }
 }
