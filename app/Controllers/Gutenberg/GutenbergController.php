@@ -73,10 +73,6 @@ class GutenbergController implements ControllerInterface
             $editorScriptHandle,
             'simplybook',
             [
-                'ajax_url' => admin_url('admin-ajax.php'),
-                'rest_url' => get_rest_url(),
-                'nonce' => wp_create_nonce('simplybook_nonce'),
-                'x_wp_nonce' => wp_create_nonce('wp_rest'),
                 'rest_namespace' => $this->env->getString('plugin.namespace'),
                 'rest_version' => $this->env->getString('http.version'),
                 'dashboard_url' => $this->env->getUrl('plugin.dashboard_url'),

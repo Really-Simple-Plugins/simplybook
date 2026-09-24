@@ -1,12 +1,17 @@
 import { __ } from '@wordpress/i18n';
 import { BlockControls, useBlockProps } from '@wordpress/block-editor';
-import { PanelBody, Button, Dashicon, Modal, ToolbarButton, ToolbarGroup } from '@wordpress/components';
+import { PanelBody, Button, Icon, Modal, Notice, ToolbarButton, ToolbarGroup } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import './editor.scss';
 import SettingsModal from "./setting.modal";
-import request from "../../../react/src/api/requests/request";
+import apiFetch from '@wordpress/api-fetch';
+import icon from './icon';
 
 const previewAttributes = ['location', 'category', 'service', 'provider'];
+
+const fetchData = (endpoint) => apiFetch({
+	path: `${window.simplybook.rest_namespace}/${window.simplybook.rest_version}/internal/${endpoint}`,
+});
 
 export default function Edit(props) {
 	const { attributes, setAttributes } = props;
@@ -24,17 +29,13 @@ export default function Edit(props) {
 	const [selectedProvider, setSelectedProvider] = useState(null);
 
 	useEffect(() => {
-		const fetchData = async (endpoint) => {
-			return await request(endpoint, "POST");
-		};
-
-		fetchData('internal/is-authorized').then(setIsUserAuthorized);
+		fetchData('is-authorized').then(setIsUserAuthorized);
 
 		Promise.all([
-			fetchData('internal/locations'),
-			fetchData('internal/categories'),
-			fetchData('internal/services'),
-			fetchData('internal/providers')
+			fetchData('locations'),
+			fetchData('categories'),
+			fetchData('services'),
+			fetchData('providers')
 		]).then(([locations, categories, services, providers]) => {
 			setLocations(locations);
 			setCategories(categories);
@@ -100,19 +101,20 @@ export default function Edit(props) {
 			<div {...blockProps}>
 				<PanelBody>
 					<div className={'sb-widget-container'}>
-						<Dashicon icon="simplybook" size={25} className={"sb-widget-icon"}/>
+						<Icon icon={icon} size={25} className={"sb-widget-icon"}/>
 
-						<h3 className={'wp-sb-title wp-sb-title_h3 sb-widget-title'}>{__('SimplyBook.me Widget', 'simplybook')}</h3>
+						<h3 className={'wp-sb-title wp-sb-title_h3 sb-widget-title'}>{__('SimplyBook.me Booking Widget', 'simplybook')}</h3>
 
 						<p className={"wp-sb-txt wp-sb--p wp-sb--p_secondary --subtitle"}>
 							{__('Easily customize and streamline your booking process with predefined options for services, providers, categories and locations.', 'simplybook')}
 						</p>
 
 						{!isUserAuthorized ? (
-							<p className="sb-widget-alert">
-								{__('You are not authorized in ', 'simplybook')}
-								<a href={window.simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
-							</p>
+							<Notice status="warning" isDismissible={false} className="sb-widget-alert">
+								{__('Connect your SimplyBook.me account to show the booking widget.', 'simplybook')}
+								{' '}
+								<a href={window.simplybook.dashboard_url} target="_top">{__('Open the SimplyBook.me settings', 'simplybook')}</a>
+							</Notice>
 						) : (
 							<>
 								{selectedLocation ? (

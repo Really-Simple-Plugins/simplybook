@@ -88,21 +88,8 @@
   }
 
   .sb-widget-alert {
-    color: $color-danger;
-    font-style: italic;
-    font-size: 16px;
     margin: 0;
-    display: inline-block;
-    width: 100%;
-    padding: 0px 0px 0px 0px;
-    text-align: center;
-
-    a {
-      color: $color-danger;
-      text-decoration: underline;
-      border-bottom: 0;
-      border: 0;
-    }
+    text-align: left;
   }
 }
 
