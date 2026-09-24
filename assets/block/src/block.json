@@ -1,10 +1,14 @@
 {
 	"apiVersion": 3,
 	"name": "simplybook/widget",
-	"title": "Simplybook Widget",
+	"title": "SimplyBook.me Booking Widget",
 	"category": "widgets",
-	"icon": "simplybook",
-	"description": "A widget for Simplybook.me",
+	"description": "Let visitors book your services online with SimplyBook.me.",
+	"keywords": ["booking", "appointment", "calendar", "simplybook"],
+	"textdomain": "simplybook",
+	"supports": {
+  		"multiple": false
+	},
 	"attributes": {
 		"location": {
 			"type": "number",

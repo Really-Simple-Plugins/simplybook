@@ -25,15 +25,6 @@ class GutenbergWidget
     }
 
     /**
-     * The description is localized and used to overwrite the .json entry to
-     * support translations.
-     */
-    public function getDescription(): string
-    {
-        return esc_html__('A widget for Simplybook.me', 'simplybook');
-    }
-
-    /**
      * Register the widget via {@see register_block_type}
      */
     public function register(): void
@@ -51,7 +42,6 @@ class GutenbergWidget
 
         register_block_type($blockMetaData, [
             'render_callback' => [$this, 'render'],
-            'description' => $this->getDescription(),
         ]);
 
         remove_filter('block_type_metadata', [$this, 'setEditorStyleVersion']);

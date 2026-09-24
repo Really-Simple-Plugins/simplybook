@@ -47,29 +47,29 @@ class BlockEndpoint implements MultiEndpointInterface
     {
         return [
             self::ROUTE . '/is-authorized' => [
-                'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'companyRegistrationIsCompleted'],
+                'methods' => \WP_REST_Server::READABLE,
                 'permission_callback' => [$this, 'blockEditorAccessAllowed'],
+                'callback' => [$this, 'companyRegistrationIsCompleted'],
             ],
             self::ROUTE . '/locations' => [
-                'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'getLocations'],
+                'methods' => \WP_REST_Server::READABLE,
                 'permission_callback' => [$this, 'blockEditorAccessAllowed'],
+                'callback' => [$this, 'getLocations'],
             ],
             self::ROUTE . '/services' => [
-                'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'getServices'],
+                'methods' => \WP_REST_Server::READABLE,
                 'permission_callback' => [$this, 'blockEditorAccessAllowed'],
+                'callback' => [$this, 'getServices'],
             ],
             self::ROUTE . '/categories' => [
-                'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'getCategories'],
+                'methods' => \WP_REST_Server::READABLE,
                 'permission_callback' => [$this, 'blockEditorAccessAllowed'],
+                'callback' => [$this, 'getCategories'],
             ],
             self::ROUTE . '/providers' => [
-                'methods' => \WP_REST_Server::CREATABLE,
-                'callback' => [$this, 'getProviders'],
+                'methods' => \WP_REST_Server::READABLE,
                 'permission_callback' => [$this, 'blockEditorAccessAllowed'],
+                'callback' => [$this, 'getProviders'],
             ],
         ];
     }

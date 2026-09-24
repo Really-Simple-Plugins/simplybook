@@ -50,7 +50,7 @@ class ElementorWidget extends Widget_Base
     // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
     public function get_title(): string
     {
-        return esc_html__('SimplyBook.me Widget', 'simplybook');
+        return esc_html__('SimplyBook.me Booking Widget', 'simplybook');
     }
 
     /**
