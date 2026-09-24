@@ -63,9 +63,6 @@ The plugin brings SimplyBook.me into your WordPress dashboard. You do not need t
 * **Manage services in WordPress.** Create and edit services, service providers and their details from the plugin.
 * **Keep track.** The plugin dashboard shows your recent bookings and open setup tasks.
 
-= About Really Simple Plugins =
-Really Simple Plugins is the creator of several widely used plugins, including Really Simple Security and Complianz. With a total of ~5 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
-
 == External services ==
 
 This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version to SimplyBook.me. The Plans & Prices page loads a subscription script from SimplyBook.me.
@@ -81,11 +78,14 @@ For more information:
 * Google reCAPTCHA: [Terms of Service](https://policies.google.com/terms) & [Privacy Policy](https://policies.google.com/privacy)
 * YouTube: [Terms of Service](https://www.youtube.com/t/terms) & [Privacy Policy](https://policies.google.com/privacy)
 
-= Source code =
+== Source code ==
 
 This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
 
 To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
+
+== About Really Simple Plugins ==
+Really Simple Plugins is the creator of several widely used plugins, including Really Simple Security and Complianz. With a total of ~5 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
 
 == Installation ==
 
