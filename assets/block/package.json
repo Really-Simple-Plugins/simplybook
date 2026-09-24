@@ -1,5 +1,5 @@
 {
-  "name": "simoplybook-wordpress-blocks",
+  "name": "simplybook-block-editor-blocks",
   "version": "1.0.0",
   "description": "This block is a simple block for the SimplyBook.me booking system",
   "main": "src/index.js",
