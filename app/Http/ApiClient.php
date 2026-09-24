@@ -757,6 +757,12 @@ class ApiClient
             return [];
         }
 
+        $scriptHost = (string) parse_url($scriptUrl, PHP_URL_HOST);
+        if (!$this->isSimplyBookHost($scriptHost)) {
+            $this->log('Subscription widget script host is not a SimplyBook.me domain: ' . $scriptHost);
+            return [];
+        }
+
         $params = $widgetData['params'] ?? [];
         if (!is_array($params)) {
             $this->log('Invalid subscription widget params.');
@@ -768,6 +774,39 @@ class ApiClient
             'script_url' => $scriptUrl,
             'params' => $params,
         ];
+    }
+
+    /**
+     * Used by {@see self::getSubscriptionWidgetEmbedCode()} so the plugin
+     * only loads a remote script from the connected SimplyBook.me domain or
+     * from a domain in the "simplybook.domains" environment config. A
+     * subdomain of an allowed domain is also allowed.
+     *
+     * @throws \LogicException|\ReflectionException When no domain is set.
+     */
+    private function isSimplyBookHost(string $host): bool
+    {
+        $host = strtolower($host);
+        if ($host === '') {
+            return false;
+        }
+
+        $allowedDomains = [$this->get_domain()];
+        foreach ((array) $this->env->get('simplybook.domains', []) as $domain) {
+            if (!empty($domain['label'])) {
+                $allowedDomains[] = $domain['label'];
+            }
+        }
+
+        foreach ($allowedDomains as $allowedDomain) {
+            $allowedDomain = strtolower($allowedDomain);
+            $suffix = '.' . $allowedDomain;
+            if ($host === $allowedDomain || substr($host, -strlen($suffix)) === $suffix) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
