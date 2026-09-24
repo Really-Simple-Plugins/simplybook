@@ -20,6 +20,10 @@
  * Domain Path: /assets/languages
  */
 
+if (!defined('ABSPATH')) {
+    exit;
+}
+
 /**
  * Load the Jetpack packages autoloader.
  * @see https://packagist.org/packages/automattic/jetpack-autoloader
