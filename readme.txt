@@ -34,50 +34,112 @@ SimplyBook.me is the easiest way to start collecting bookings on your WordPress 
 * Create individual schedules for staff
 * Create multiple users related to providers
 * Accepting payments and/or deposits to confirm the bookings in the booking process
-* Easily implement your booking widget with a Gutenberg block, Elementor Widget or a shortcode
+* Easily implement your booking widget with a block in the Block Editor, an Elementor widget or a shortcode
 
-SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! You will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools.
+SimplyBook.me can be used for free up to 50 appointments per month. In addition, you can use one of the Special features for free! After creating an account, you will automatically be signed up for a Free 14-day trial, which allows you to test the Special Features without any restrictions, including advanced scheduling tools. When the trial ends, you can select the Free plan on the Plans & Prices page and keep using SimplyBook.me for free.
 
 = Why SimplyBook.me? =
 
-SimplyBook.me is an advanced online booking system that creates a professional booking widget on your WordPress site where your clients can book your services at any time. You will then have access to an admin interface where you can manage your bookings, calendar, and settings. On top of that you will get an admin app where you can manage all your bookings, handle appointments, adjust scheduling, and accept payments on the go. Thousands of clients all over the world have selected our booking system to make their business easy and comfortable to use (see our testimonials). SimplyBook.me provides users with a broad range of features so that you can tailor the system to your needs, irrespective of what industry you are in.
-For a more detailed understanding of the SimplyBook.me service, you can explore at the following link: <a href="https://simplybook.me/?ref=wordpress" rel="friend" title="SimplyBook" target="_blank">https://simplybook.me/</a>
+SimplyBook.me is the online booking system behind the plugin. Your clients book your services on your site at any time. You manage the bookings in the plugin dashboard, the SimplyBook.me admin panel or the mobile app.
 
-This plugin is developed by SimplyBook.me, is ISO27001 compliant and utilizes its API to transmit and store all information, including settings and details of bookings, as well as other personal client data, directly on SimplyBook.me. Before using the plugin, we recommend that you familiarize yourself with the privacy policy and terms of use of SimplyBook.me at the following links:
+* **Fewer no-shows.** SimplyBook.me sends automatic email and SMS reminders for every booking.
+* **No double bookings.** Services, providers and schedules live in one calendar. Clients only see free time slots.
+* **Insight into your business.** See statistics on bookings, cancellations, workload and revenue.
+* **More revenue per booking.** Offer service add-ons, products, memberships, packages and gift cards during booking.
+* **Fill quiet days.** Send email campaigns and offer coupons or loyalty points to your clients.
+* **Manage on the go.** Accept, move or cancel bookings in the mobile app for iOS and Android.
 
-* <a href="https://simplybook.me/en/policy" rel="friend" title="SimplyBook Privacy Policy" target="_blank">Privacy Policy</a>
-* <a href="https://simplybook.me/en/terms-and-conditions" rel="friend" title="SimplyBook Terms of Use" target="_blank">Terms of Use</a>
+Thousands of businesses all over the world use SimplyBook.me. Read more at [SimplyBook.me](https://simplybook.me/?ref=wordpress).
 
-This will help you better understand the terms of use of the plugin and ensure your confidentiality.
+This is the official SimplyBook.me plugin. SimplyBook.me and Really Simple Plugins develop it together. SimplyBook.me is ISO 27001 certified. The plugin stores your settings, bookings and client data on SimplyBook.me through its API. Read the **External services** section below for each service the plugin connects to, the data it sends, and the privacy policy and terms of each service.
 
-This is the official SimplyBook.me plugin, developed by SimplyBook.me and Really Simple Plugins
+= What the plugin does for you =
 
-= About Really Simple Plugins: =
-Really Simple Plugins is the creator of most-used plugins Really Simple Security and Complianz. With a total of ~6 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
+The plugin brings SimplyBook.me into your WordPress dashboard. You do not need to leave WordPress to get started.
 
-= Benefits of the Online booking system =
+* **Start in minutes.** Register a free SimplyBook.me account from the plugin onboarding, or log in with an existing account. Custom domains and 2FA are supported.
+* **Place the widget anywhere.** Add the booking calendar with the SimplyBook.me block in the Block Editor, with the SimplyBook.me widget in Elementor, or with a shortcode in any page, post or template.
+* **Match your theme.** The plugin reads your theme colors and uses them as the default widget style. Adjust colors and layout in the settings.
+* **Manage services in WordPress.** Create and edit services, service providers and their details from the plugin.
+* **Keep track.** The plugin dashboard shows your recent bookings and open setup tasks.
 
-Integrating an online booking system like SimplyBook.me is crucial for service businesses aiming to improve customer experience and extend their market reach. By enabling clients to book appointments outside of traditional office hours, an online scheduling and booking system increases accessibility and customer satisfaction. This system simplifies the entire appointment process, automates important reminders, and reduces scheduling errors, freeing up staff to concentrate on delivering superior service.
-Additionally, an online booking system offers powerful analytics that provide deep insights into customer behaviors and preferences. This data is essential for making informed adjustments to service offerings and planning effective marketing strategies. Last but not least it´s the best way to boost your sales by offering service add-ons and products for sale in the booking process, by sending tailored marketing email campaigns, offering coupons on less busy days, by prompting tips during check out and so much more, the options are endless!
+== External services ==
+
+This plugin is a bridge between your WordPress site and your SimplyBook.me booking system. It connects to the SimplyBook.me API to log you in, to save your company settings, and to load your bookings and statistics in the plugin dashboard. With each request it sends your site URL and the plugin, WordPress and PHP version to SimplyBook.me. The Plans & Prices page loads a subscription script from SimplyBook.me.
+
+The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
+
+During onboarding, the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives your IP address and browser data. No cookies are set before you play the video.
+
+For more information:
+
+* SimplyBook.me: [Terms and Conditions](https://simplybook.me/en/terms-and-conditions) & [Privacy Policy](https://simplybook.me/en/policy)
+* Really Simple Plugins: [Terms of Use](https://really-simple-ssl.com/legal/terms-of-use/) & [Privacy Statement](https://really-simple-ssl.com/legal/privacy-statement/)
+* Google reCAPTCHA: [Terms of Service](https://policies.google.com/terms) & [Privacy Policy](https://policies.google.com/privacy)
+* YouTube: [Terms of Service](https://www.youtube.com/t/terms) & [Privacy Policy](https://policies.google.com/privacy)
+
+== Source code ==
+
+This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
+
+To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
+
+== About Really Simple Plugins ==
+Really Simple Plugins is the creator of several widely used plugins, including Really Simple Security and Complianz. With a total of ~5 million installs, we focus on making the most user-friendly and easy-to-use plugins. We work with SimplyBook.me to make the most powerful booking system available directly in your WordPress dashboard.
 
 == Installation ==
 
-= <a href="https://help.simplybook.me/index.php/WordPress_integration" rel="friend" title="SimplyBook Wiki" target="_blank">Detailed instructions with photos here</a> =
+You can find [detailed instructions with photos](https://help.simplybook.me/index.php/WordPress_integration) on the SimplyBook.me website.
 
 == Frequently Asked Questions ==
 
 = Is SimplyBook.me free to use? =
-Yes, the plugin and registering an account at SimplyBook.me is entirely free, without the need to add credit card information. You can fully use the booking widget and use our mobile app for iOS or Android to manage your bookings, up to 50 bookings per month. Additionally, you can even use 1 of our 'Special Features' within the Free plan.
+Yes. The plugin is free and SimplyBook.me offers a free plan. You do not need to enter credit card details to create an account. On the Free plan you can publish the booking widget, manage your bookings in the SimplyBook.me mobile app for iOS and Android, and accept up to 50 bookings per month. You can also use one of the SimplyBook.me Special Features on the Free plan.
 
-= Can I try SimplyBook.me's Special Features before subscribing? =
-Yes you can! You will automatically be granted a 14-day trial period that allows you to test all Special Features, configure all Service Providers and to gather unlimited bookings. After this trial period you will be reset to the Free plan, or you can decide to subscribe to our paid plans if you like to use multiple Special Features or need more than 50 bookings per month.
+= Can I try the Special Features before subscribing? =
+Yes. Every new account automatically gets a 14-day trial with all Special Features, unlimited service providers and unlimited bookings. After the trial you can select the Free plan on the Plans & Prices page in the plugin, or choose a paid plan if you want to use more Special Features or need more than 50 bookings per month.
 
 = Do I need to register for an account? =
-Yes, we need to authenticate your site as your bookings will be processed through our API. This allows us to provide you with the best features such as the mobile app for iOS and Android. The plugin will assist you through the short onboarding process. Alternatively, you can register an account at https://simplybook.me
+Yes. Your bookings are processed through the SimplyBook.me API, so the plugin needs to connect your site to a SimplyBook.me account. This is what makes features like the mobile app, email and SMS reminders and payment collection possible. The plugin guides you through a short onboarding, or you can register at [SimplyBook.me](https://simplybook.me/?ref=wordpress) first.
 
-= What if I already have a SimplyBook me account? =
-You can skip the onboarding and login with your existing login credentials.
+= What if I already have a SimplyBook.me account? =
+Skip the onboarding and log in with your existing credentials. Custom SimplyBook.me domains and email two-factor authentication (2FA) are supported at login.
 
+= How do I add the booking calendar to my site? =
+The plugin creates a "Book now" page for you during onboarding. You can also place the booking widget anywhere on your site with the SimplyBook.me block in the Block Editor, the SimplyBook.me Elementor widget or a shortcode.
+
+= Will the booking widget match my theme? =
+Yes. The plugin reads your theme colors and uses them as the default widget style. You can change the colors and layout at any time in the plugin settings.
+
+= Where do I manage my bookings? =
+Wherever suits you. The plugin dashboard in WordPress shows your recent bookings and open setup tasks. You can also manage everything in the SimplyBook.me admin or accept, move and cancel bookings on the go in the mobile app for iOS and Android.
+
+= Can I manage my services and staff from WordPress? =
+Yes. You can create and edit services, service providers and their details directly in the plugin. More advanced options, such as multiple locations, categories and individual staff schedules, are available in the SimplyBook.me admin.
+
+= Can I accept payments or deposits? =
+Yes. You can require full payment or a deposit to confirm a booking, and you can sell products and service add-ons during the booking process. Payments are handled by SimplyBook.me and can be configured in your SimplyBook.me account.
+
+= Does SimplyBook.me send reminders to my clients? =
+Yes. SimplyBook.me sends automatic email and SMS confirmations and reminders for every booking, which helps reduce no-shows. You can also run email and push notification campaigns to your client base.
+
+= Can I take bookings for classes, events, memberships or gift cards? =
+Yes. SimplyBook.me supports classes and events with multiple attendees, and lets you sell memberships, packages and gift cards. These are part of the Special Features. You can use one Special Feature on the Free plan, or more on a paid plan.
+
+= My clients are in different time zones. Will the booking times be correct? =
+Yes. SimplyBook.me includes time zone settings so clients in other time zones see the available times in their local time.
+
+= Why do I see a demo widget on my site? =
+The plugin shows a demo widget until your site is connected to a SimplyBook.me account. Complete the onboarding or log in with an existing account and the demo widget is replaced by your own booking calendar.
+
+= What are the requirements for this plugin? =
+The plugin requires WordPress 6.6 or higher and PHP 7.4 or higher. The WordPress REST API must be enabled, as the plugin uses it to communicate with your site. The plugin will show a notice if the REST API is disabled.
+
+= Where is my booking data stored? =
+Your settings, bookings and client data are stored in your SimplyBook.me account through the SimplyBook.me API, not in your WordPress database. SimplyBook.me is ISO 27001 certified. See the External services section on this page for each service the plugin connects to and the data it sends.
+
+= Where can I get help? =
+Step-by-step instructions with screenshots are available in the [SimplyBook.me help center](https://help.simplybook.me/index.php/WordPress_integration). For questions about the plugin, you can post in the support forum on WordPress.org.
 
 == Screenshots ==
 
@@ -109,7 +171,7 @@ You can skip the onboarding and login with your existing login credentials.
 * Removed: Font Awesome Pro icons; the plugin now uses free icons only.
 
 = 3.4.0 - 2026-08-19 =
-* Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
+* Added: The plugin now uses the [WordPress Abilities API](https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/)
 * Added: New submenu to manage your SimplyBook.me plans and prices.
 * Added: The Metricool WordPress plugin is added to the "Other plugins" section.
 * Added: Stricter theme setting validation.
