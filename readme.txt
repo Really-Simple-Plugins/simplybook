@@ -89,6 +89,9 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = 3.5.0 - 2026-09-29
+* Security: Hardened the widget preview in the design settings against script injection.
+* Security: Added direct file access protection to all plugin files.
+* Security: All REST API routes now explicitly check user permissions.
 * Fixed: Console errors in the block editor on WordPress 7.1.
 * Fixed: The plugin now stores its version correctly after an update.
 * Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
@@ -104,9 +107,6 @@ You can skip the onboarding and login with your existing login credentials.
 * Removed: The seasonal promotions from the dashboard.
 * Removed: The "Live Help" button and the third-party chat script.
 * Removed: Font Awesome Pro icons; the plugin now uses free icons only.
-* Security: Hardened the widget preview in the design settings against script injection.
-* Security: Added direct file access protection to all plugin files.
-* Security: All REST API routes now explicitly check user permissions.
 
 = 3.4.0 - 2026-08-19 =
 * Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
