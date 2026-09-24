@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 7.1.2
 Requires PHP: 7.4
-Stable tag: 3.4.0
+Stable tag: 3.5.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -88,7 +88,7 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.5.0 - 2026-10-29
+= 3.5.0 - 2026-09-29
 * Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
 * Added: Documentation of the external services the plugin uses in the readme.
 * Added: A link to the public source code on GitHub in the readme.
