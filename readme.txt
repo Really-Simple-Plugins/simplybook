@@ -156,7 +156,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Security: All REST API routes now explicitly check user permissions.
 * Fixed: Console errors in the block editor on WordPress 7.1.
 * Fixed: The plugin now stores its version correctly after an update.
-* Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
+* Added: "Remind me tomorrow" and "Don't show again" buttons to the trial expiration notice.
 * Added: Documentation of the external services the plugin uses in the readme.
 * Added: A link to the public source code on GitHub in the readme.
 * Added: A README.md with setup, installation and contribution instructions.

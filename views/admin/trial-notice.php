@@ -26,7 +26,7 @@ if (!defined('ABSPATH')) {
                 </a>
                 <div class="dashicons dashicons-calendar"></div>
                 <button type="button" class="rsp-link" data-notice-action="snooze">
-                    <?php esc_html_e('Remind me later', 'simplybook'); ?>
+                    <?php esc_html_e('Remind me tomorrow', 'simplybook'); ?>
                 </button>
                 <div class="dashicons dashicons-no-alt"></div>
                 <button type="button" class="rsp-link" data-notice-action="dismiss">
