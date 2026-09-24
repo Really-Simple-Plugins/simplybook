@@ -3,7 +3,7 @@ Contributors: simplybook, reallysimpleplugins, wimbraam, jeroenvdk, markwolters,
 Donate link: https://simplybook.me/
 Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
-Tested up to: 7.1.2
+Tested up to: 7.1
 Requires PHP: 7.4
 Stable tag: 3.5.0
 License: GPLv2 or later
@@ -89,23 +89,24 @@ You can skip the onboarding and login with your existing login credentials.
 
 == Changelog ==
 = 3.5.0 - 2026-09-29
+* Fixed: Console errors in the block editor on WordPress 7.1.
+* Fixed: The plugin now stores its version correctly after an update.
 * Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
 * Added: Documentation of the external services the plugin uses in the readme.
 * Added: A link to the public source code on GitHub in the readme.
-* Added: A README on GitHub with setup, installation and contribution instructions.
-* Added: Direct file access protection to all plugin files.
-* Changed: All REST API routes now check the user permission explicitly.
+* Added: A README.md with setup, installation and contribution instructions.
+* Changed: Improved the wording of texts in the plugin.
 * Changed: The marketing consent checkbox in the onboarding is now unchecked by default.
-* Changed: The trial expiration notice no longer shows on the plugin dashboard.
-* Changed: Third-party libraries are updated to their latest versions.
-* Changed: Installing another plugin from the "Other plugins" section no longer changes global WordPress behavior.
-* Changed: Some missing texts are now translatable.
+* Changed: The trial expiration notice is no longer shown on the plugin dashboard.
+* Changed: Installing a plugin from the "Other plugins" section no longer affects other WordPress behavior.
+* Changed: Made previously untranslated texts translatable.
+* Changed: Updated third-party libraries to their latest versions.
+* Removed: The seasonal promotions from the dashboard.
 * Removed: The "Live Help" button and the third-party chat script.
-* Removed: Font Awesome Pro icons. The plugin now uses free icons only.
-* Removed: The license field from internal package files.
-* Removed: An unused method for the onboarding tour.
-* Fixed: The plugin no longer causes console errors in the block editor on WordPress 7.1.
+* Removed: Font Awesome Pro icons; the plugin now uses free icons only.
 * Security: Hardened the widget preview in the design settings against script injection.
+* Security: Added direct file access protection to all plugin files.
+* Security: All REST API routes now explicitly check user permissions.
 
 = 3.4.0 - 2026-08-19 =
 * Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
