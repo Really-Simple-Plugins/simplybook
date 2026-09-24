@@ -69,7 +69,7 @@ This plugin is a bridge between your WordPress site and your SimplyBook.me booki
 
 The booking widget shows the booking form to your visitors. It sends the IP address of the visitor when a page with the widget loads, and the booking data when the visitor books. Without a connected account, a demo widget on demowidgetwpplugin.simplybook.it receives the IP address instead.
 
-During onboarding, the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) when onboarding starts, and your account details when you submit the form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives your IP address and browser data. No cookies are set before you play the video.
+During onboarding, the plugin can create a SimplyBook.me account for you. It sends your site URL and plugin installation data to the Really Simple Plugins account service (simplybook.rsp-auth.com) together with your account details when you submit the account form. Google reCAPTCHA Enterprise protects this form and receives the IP address and browser data of the admin. The same step shows a tutorial video from YouTube, which receives your IP address and browser data. No cookies are set before you play the video.
 
 For more information:
 
@@ -80,7 +80,7 @@ For more information:
 
 == Source code ==
 
-This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at <a href="https://github.com/Really-Simple-Plugins/simplybook" title="SimplyBook.me plugin source code on GitHub" target="_blank">https://github.com/Really-Simple-Plugins/simplybook</a>. The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
+This plugin contains compiled JavaScript in `react/build/` and `assets/block/build/`. The uncompiled source code is publicly available at [https://github.com/Really-Simple-Plugins/simplybook](https://github.com/Really-Simple-Plugins/simplybook). The source of the admin app is located in `react/src/` and the source of the block is located in `assets/block/src/`.
 
 To build the admin app, run `npm install` and `npm run build` in the `react/` directory. To build the block, run `npm install` and `npm run build` in the `assets/block/` directory.
 
