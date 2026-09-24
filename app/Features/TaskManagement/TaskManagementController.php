@@ -54,8 +54,6 @@ class TaskManagementController implements ControllerInterface
             Tasks\MaxedOutProvidersTask::class,
             Tasks\PostOnSocialMediaTask::class,
             Tasks\GatherClientInfoTask::class,
-            Tasks\BlackFridayTask::class,
-            Tasks\ChristmasPromotionTask::class,
             Tasks\AddCompanyInfoTask::class,
         ];
     }
@@ -97,12 +95,18 @@ class TaskManagementController implements ControllerInterface
      * @since 3.3.0
      *      - Removed legacy {@see PublishWidgetNotice} completed flag
      *      - Removed legacy {@see PublishWidgetTask} completed flag
+     *
+     * @since 3.5.0 Removed simplybook_task_bubble_counter as per NL14RSP2-431
      */
     public function migrateTaskOptions(string $previousVersion, string $newVersion): void
     {
         if ($previousVersion && version_compare($previousVersion, '3.3.0', '<')) {
             delete_option('simplybook_calendar_published_notification_completed');
             delete_option('simplybook_calendar_published_task_completed');
+        }
+
+        if ($previousVersion && version_compare($previousVersion, '3.5.0', '<')) {
+            delete_option('simplybook_task_bubble_counter');
         }
     }
 }

@@ -58,17 +58,11 @@ return [
         ],
         'widget_script_version' => '1.3.0',
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
-        'black_friday' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'BLACKFRIDAY',
-            'start_date' => '2025-11-18',
-            'end_date' => '2025-11-29'
-        ],
-        'christmas_promo' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'CHRISTMAS25',
-            'start_date' => '2025-12-01',
-            'end_date' => '2025-12-25'
+        'support' => [
+            'enabled' => true,
+            'widget' => [
+                'url' => 'https://simply.ladesk.com/scripts/track.js',
+            ],
         ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
