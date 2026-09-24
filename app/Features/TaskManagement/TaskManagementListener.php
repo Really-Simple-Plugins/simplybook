@@ -3,7 +3,6 @@
 namespace SimplyBook\Features\TaskManagement;
 
 use SimplyBook\Support\Helpers\Event;
-use SimplyBook\Services\PromotionService;
 use SimplyBook\Interfaces\ListenerInterface;
 use SimplyBook\Services\Entities\SubscriptionDataService;
 
@@ -18,22 +17,18 @@ use SimplyBook\Services\Entities\SubscriptionDataService;
 class TaskManagementListener implements ListenerInterface
 {
     private TaskManagementService $service;
-    private PromotionService $promotionService;
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
         TaskManagementService $service,
-        PromotionService $promotionService,
         SubscriptionDataService $subscriptionDataService
     ) {
         $this->service = $service;
-        $this->promotionService = $promotionService;
         $this->subscriptionDataService = $subscriptionDataService;
     }
 
     public function listen(): void
     {
-        add_action('admin_init', [$this, 'handleDateDrivenTasks']);
         add_action('simplybook_event_' . Event::EMPTY_SERVICES, [$this, 'handleEmptyServices']);
         add_action('simplybook_event_' . Event::EMPTY_PROVIDERS, [$this, 'handleEmptyProviders']);
         add_action('simplybook_event_' . Event::HAS_SERVICES, [$this, 'handleHasServices']);
@@ -158,10 +153,6 @@ class TaskManagementListener implements ListenerInterface
                     Tasks\TrialExpiredTask::IDENTIFIER
                 );
             }
-        }
-
-        if (!empty($subscription)) {
-            $this->handlePromotionTasks($subscription);
         }
 
         $this->handleSubscriptionLimits($limits);
@@ -324,65 +315,6 @@ class TaskManagementListener implements ListenerInterface
         $this->service->completeTask(
             Tasks\CustomizeDesignTask::IDENTIFIER
         );
-    }
-
-    /**
-     * Method is hooked on 'admin_init' action to check for date driven tasks.
-     * Because these tasks do not depend solely on events but also on the
-     * current date we should check them on every page load.
-     * @internal make sure you cache your conditionals
-     */
-    public function handleDateDrivenTasks(): void
-    {
-        $this->handlePromotionTasks(
-            (string) $this->subscriptionDataService->search('subscription_name', '')
-        );
-    }
-
-    /**
-     * Handle all promotion tasks. The menu bubble counter is set to the
-     * number of visible promotion tasks.
-     */
-    private function handlePromotionTasks(string $subscriptionType): void
-    {
-        $promotionTaskIds = [
-            Tasks\BlackFridayTask::IDENTIFIER,
-            Tasks\ChristmasPromotionTask::IDENTIFIER,
-        ];
-
-        $bubbleCount = 0;
-
-        foreach ($promotionTaskIds as $taskId) {
-            if ($this->processPromotionalTask($taskId, $subscriptionType)) {
-                $bubbleCount++;
-            }
-        }
-
-        $this->service->setTaskBubbleCounter($bubbleCount);
-    }
-
-    /**
-     * Marks the promotion task with the "upgrade" status when:
-     * - User is on Trial
-     * - The promotion is active
-     *
-     * Otherwise, hide the task. and return true if the task is visible after.
-     */
-    private function processPromotionalTask(string $taskId, string $subscriptionType): bool
-    {
-        if ($this->service->isTaskDismissed($taskId)) {
-            return false;
-        }
-
-        $isTrial = (strtolower($subscriptionType) === 'trial');
-
-        if ($isTrial && $this->promotionService->isPromotionActive($taskId)) {
-            $this->service->markTaskUpgrade($taskId);
-            return true;
-        }
-
-        $this->service->hideTask($taskId);
-        return false;
     }
 
     /**
