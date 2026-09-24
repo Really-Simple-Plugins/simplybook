@@ -57,6 +57,10 @@ return [
             'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
         ],
         'widget_script_version' => '1.3.0',
+        'subscription_widget_script_urls' => [
+            'https://app.sbpay.me/widgets/subscriptions-widget-plans.js',
+            'https://sbpay.st2.d.simplybook.ovh/widgets/subscriptions-widget-plans.js',
+        ],
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
         'support' => [
             'enabled' => true,

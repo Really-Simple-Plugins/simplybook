@@ -6,8 +6,6 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use LogicException;
-use ReflectionException;
 use Carbon\Carbon;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
@@ -754,14 +752,9 @@ class ApiClient
         $widgetData = $this->request('GET', $endpoint);
 
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
-        if (empty($scriptUrl) || parse_url($scriptUrl, PHP_URL_SCHEME) !== 'https') {
-            $this->log('Invalid subscription widget script URL.');
-            return [];
-        }
-
-        $scriptHost = (string) parse_url($scriptUrl, PHP_URL_HOST);
-        if (!$this->isSimplyBookHost($scriptHost)) {
-            $this->log('Subscription widget script host is not a SimplyBook.me domain: ' . $scriptHost);
+        $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
+        if (!in_array($scriptUrl, $allowedScriptUrls, true)) {
+            $this->log('Subscription widget script URL is not allowed: ' . $scriptUrl);
             return [];
         }
 
@@ -776,39 +769,6 @@ class ApiClient
             'script_url' => $scriptUrl,
             'params' => $params,
         ];
-    }
-
-    /**
-     * Used by {@see self::getSubscriptionWidgetEmbedCode()} so the plugin
-     * only loads a remote script from the connected SimplyBook.me domain or
-     * from a domain in the "simplybook.domains" environment config. A
-     * subdomain of an allowed domain is also allowed.
-     *
-     * @throws LogicException|ReflectionException When no domain is set.
-     */
-    private function isSimplyBookHost(string $host): bool
-    {
-        $host = strtolower($host);
-        if ($host === '') {
-            return false;
-        }
-
-        $allowedDomains = [$this->get_domain()];
-        foreach ((array) $this->env->get('simplybook.domains', []) as $domain) {
-            if (!empty($domain['label'])) {
-                $allowedDomains[] = $domain['label'];
-            }
-        }
-
-        foreach ($allowedDomains as $allowedDomain) {
-            $allowedDomain = strtolower($allowedDomain);
-            $suffix = '.' . $allowedDomain;
-            if ($host === $allowedDomain || substr($host, -strlen($suffix)) === $suffix) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
