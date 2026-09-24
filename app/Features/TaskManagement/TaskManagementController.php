@@ -54,8 +54,6 @@ class TaskManagementController implements ControllerInterface
             Tasks\MaxedOutProvidersTask::class,
             Tasks\PostOnSocialMediaTask::class,
             Tasks\GatherClientInfoTask::class,
-            Tasks\BlackFridayTask::class,
-            Tasks\ChristmasPromotionTask::class,
             Tasks\AddCompanyInfoTask::class,
         ];
     }

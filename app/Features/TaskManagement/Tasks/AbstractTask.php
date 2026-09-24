@@ -25,13 +25,6 @@ abstract class AbstractTask implements TaskInterface
     public const IDENTIFIER = '';
 
     /**
-     * Option key to store the menu bubble counter for tasks. Can be used to
-     * show the number of urgent tasks in the admin menu. Currently only used
-     * for the promotion tasks.
-     */
-    public const MENU_BUBBLE_OPTION_KEY = 'simplybook_task_bubble_counter';
-
-    /**
      * The version used to determine if the task should be upgraded during a
      * plugin update.
      */
