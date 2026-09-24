@@ -35,7 +35,7 @@ const OnboardingHeader = ({
                             {__("Already have an account?", "simplybook")}
                         </span>
                         <a className="font-bold text-primary" href="#" onClick={toggleModal}>
-                            {__("Sign in here")}
+                            {__("Sign in here", "simplybook")}
                         </a>
                     </div>
                 )}
