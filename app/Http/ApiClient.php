@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use LogicException;
+use ReflectionException;
 use Carbon\Carbon;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\LegacySave;
@@ -782,7 +784,7 @@ class ApiClient
      * from a domain in the "simplybook.domains" environment config. A
      * subdomain of an allowed domain is also allowed.
      *
-     * @throws \LogicException|\ReflectionException When no domain is set.
+     * @throws LogicException|ReflectionException When no domain is set.
      */
     private function isSimplyBookHost(string $host): bool
     {
