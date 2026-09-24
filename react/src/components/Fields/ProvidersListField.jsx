@@ -120,12 +120,6 @@ const ProvidersListField = () => {
                 )}
             </div>
 
-            {isAtSavedProviderLimit && (
-                <div className="mb-6 rounded-md bg-blue-100 px-4 py-3 text-sm font-medium text-tertiary">
-                    {__('You have reached the maximum number of Service Providers for your plan.', 'simplybook')}
-                </div>
-            )}
-
             {/* Add New Provider Form */}
             {crudState.isCreatingNewProvider && (
                 <div className="mb-6 p-4 border border-gray-200 rounded-lg bg-gray-50">

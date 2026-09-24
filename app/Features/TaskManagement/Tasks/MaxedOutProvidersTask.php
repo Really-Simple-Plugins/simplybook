@@ -50,7 +50,7 @@ class MaxedOutProvidersTask extends AbstractTask
     {
         return [
             'type' => 'button',
-            'text' => __('Upgrade', 'simplybook'),
+            'text' => __('View plans', 'simplybook'),
             'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }
