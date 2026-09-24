@@ -88,6 +88,25 @@ You can skip the onboarding and login with your existing login credentials.
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+= 3.5.0 - 2026-10-29
+* Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
+* Added: Documentation of the external services the plugin uses in the readme.
+* Added: A link to the public source code on GitHub in the readme.
+* Added: A README on GitHub with setup, installation and contribution instructions.
+* Added: Direct file access protection to all plugin files.
+* Changed: All REST API routes now check the user permission explicitly.
+* Changed: The marketing consent checkbox in the onboarding is now unchecked by default.
+* Changed: The trial expiration notice no longer shows on the plugin dashboard.
+* Changed: Third-party libraries are updated to their latest versions.
+* Changed: Installing another plugin from the "Other plugins" section no longer changes global WordPress behavior.
+* Changed: Some missing texts are now translatable.
+* Removed: The "Live Help" button and the third-party chat script.
+* Removed: Font Awesome Pro icons. The plugin now uses free icons only.
+* Removed: The license field from internal package files.
+* Removed: An unused method for the onboarding tour.
+* Fixed: The plugin no longer causes console errors in the block editor on WordPress 7.1.
+* Security: Hardened the widget preview in the design settings against script injection.
+
 = 3.4.0 - 2026-08-19 =
 * Added: The plugin now uses the <a href="https://developer.wordpress.org/news/2025/11/introducing-the-wordpress-abilities-api/" target="_blank" title="WordPress Abilities API">WordPress Abilities API</a>
 * Added: New submenu to manage your SimplyBook.me plans and prices.
