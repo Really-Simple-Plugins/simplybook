@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import useOnboardingData from "../../hooks/useOnboardingData";
 import useTaskData from "../../hooks/useTaskData";
 import ButtonLink from "../Buttons/ButtonLink";
-import LiveAgent from "./LiveAgent";
 import SubscriptionLabel from "./SubscriptionLabel";
 
 const Header = () => {
@@ -92,7 +91,6 @@ const Header = () => {
                     xl:py-0 xl:w-auto xl:justify-center xl:gap-6 xl:px-4
                 ">
                     <SubscriptionLabel />
-                    <LiveAgent/>
                 </div>
             </header>
         </div>

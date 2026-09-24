@@ -23,7 +23,7 @@ return [
     'plugin' => [
         'name' => 'SimplyBook.me',
         'namespace' => 'simplybook',
-        'version' => '3.4.0',
+        'version' => '3.5.0',
         'path' => dirname(__DIR__),
         'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
         'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
@@ -63,18 +63,6 @@ return [
             'widget' => [
                 'url' => 'https://simply.ladesk.com/scripts/track.js',
             ],
-        ],
-        'black_friday' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'BLACKFRIDAY',
-            'start_date' => '2025-11-18',
-            'end_date' => '2025-11-29'
-        ],
-        'christmas_promo' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'CHRISTMAS25',
-            'start_date' => '2025-12-01',
-            'end_date' => '2025-12-25'
         ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',

@@ -173,7 +173,8 @@ final class Plugin
             \SimplyBook\Controllers\CapabilityController::class,
             \SimplyBook\Controllers\ScheduleController::class,
             \SimplyBook\Controllers\WidgetController::class,
-            \SimplyBook\Controllers\BlockController::class,
+            \SimplyBook\Controllers\Gutenberg\GutenbergController::class,
+            \SimplyBook\Controllers\Elementor\ElementorController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,
             \SimplyBook\Controllers\ServicesController::class,
             \SimplyBook\Controllers\ServiceProvidersController::class,
@@ -211,7 +212,7 @@ final class Plugin
             \SimplyBook\Http\Endpoints\SubscriptionWidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
-            \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
+            \SimplyBook\Http\Endpoints\AdminNoticesEndpoints::class,
         ]);
     }
 

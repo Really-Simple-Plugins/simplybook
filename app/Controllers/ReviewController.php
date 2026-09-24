@@ -5,36 +5,40 @@ namespace SimplyBook\Controllers;
 use Carbon\Carbon;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Services\PluginFirstUseTimeService;
-use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Interfaces\ControllerInterface;
-use SimplyBook\Services\NoticeDismissalService;
-use SimplyBook\Support\Helpers\Storages\RequestStorage;
+use SimplyBook\Services\AdminNoticeService;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class ReviewController implements ControllerInterface
 {
-    use HasViews;
     use HasAllowlistControl;
 
-    private string $reviewAction = 'rsp_review_form_submit';
-    private string $reviewNonceName = 'rsp_review_nonce';
+    public const NOTICE_ID = 'review';
+    private const SNOOZE_DURATION = (30 * DAY_IN_SECONDS);
+
+    /**
+     * Don't render the notice on any of these screens. The SimplyBook
+     * dashboard pages do show this notice.
+     */
+    private const EXCLUDED_SCREENS = [
+        '/^post$/', // Post edit screen, exact screen name
+    ];
+
     private int $bookingThreshold = 2;
     private int $bookingsAmount; // Used as object cache
 
     private ApiClient $client;
     private PluginFirstUseTimeService $pluginFirstUseTimeService;
     private EnvironmentConfig $env;
-    private RequestStorage $request;
-    private NoticeDismissalService $noticeDismissalService;
+    private AdminNoticeService $adminNoticeService;
 
-    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService, EnvironmentConfig $env, RequestStorage $request, NoticeDismissalService $noticeDismissalService)
+    public function __construct(ApiClient $client, PluginFirstUseTimeService $pluginFirstUseTimeService, EnvironmentConfig $env, AdminNoticeService $adminNoticeService)
     {
         $this->client = $client;
         $this->pluginFirstUseTimeService = $pluginFirstUseTimeService;
         $this->env = $env;
-        $this->request = $request;
-        $this->noticeDismissalService = $noticeDismissalService;
+        $this->adminNoticeService = $adminNoticeService;
     }
 
     public function register(): void
@@ -43,9 +47,7 @@ class ReviewController implements ControllerInterface
             return;
         }
 
-        add_action('admin_enqueue_scripts', [$this, 'enqueueScripts']);
         add_action('admin_notices', [$this, 'showLeaveReviewNotice']);
-        add_action('admin_init', [$this, 'processReviewFormSubmit']);
     }
 
     /**
@@ -65,38 +67,11 @@ class ReviewController implements ControllerInterface
             '</a>'
         );
 
-        $this->render('admin/review-notice', [
+        $this->adminNoticeService->renderNotice('admin/review-notice', [
             'logoUrl' => $this->env->getUrl('plugin.assets_url') . 'img/simplybook-S-logo.png',
             'reviewUrl' => $this->env->getUrl('simplybook.review_url'),
             'reviewMessage' => $reviewMessage,
-            'reviewAction' => $this->reviewAction,
-            'reviewNonceName' => $this->reviewNonceName,
         ]);
-    }
-
-    /**
-     * Process the review form submit
-     */
-    public function processReviewFormSubmit(): void
-    {
-        if ($this->request->isEmpty('global.rsp_review_form')) {
-            return;
-        }
-
-        $nonce = $this->request->get('global.' . $this->reviewNonceName);
-        if (wp_verify_nonce($nonce, $this->reviewAction) === false) {
-            return; // Invalid nonce
-        }
-
-        $choice = $this->request->getString('global.rsp_review_choice');
-        if ($choice === 'later') {
-            update_option('simplybook_review_notice_dismissed_time', time(), false);
-            update_option('simplybook_review_notice_choice', 'later', false);
-        }
-
-        if ($choice === 'never') {
-            update_option('simplybook_review_notice_choice', 'never', false);
-        }
     }
 
     /**
@@ -104,7 +79,7 @@ class ReviewController implements ControllerInterface
      * - The user still has an authenticated SimplyBook session
      * - The user has not dismissed the notice
      * - The plugin first-use time is suitable for review
-     * - The review notice dismissed time has passed
+     * - The review notice snooze duration has passed
      * - The amount of bookings is greater than the threshold
      * - The user is not on an edit screen
      */
@@ -114,14 +89,11 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        // Check if user dismissed via X button
-        if ($this->noticeDismissalService->isNoticeDismissed(get_current_user_id(), 'review')) {
+        if ($this->adminNoticeService->currentScreenMatches(self::EXCLUDED_SCREENS)) {
             return false;
         }
 
-        // Check if user dismissed via form button
-        $previousChoice = get_option('simplybook_review_notice_choice');
-        if ($previousChoice === 'never') {
+        if ($this->adminNoticeService->isNoticeActive(self::NOTICE_ID, self::SNOOZE_DURATION) === false) {
             return false;
         }
 
@@ -129,22 +101,7 @@ class ReviewController implements ControllerInterface
             return false;
         }
 
-        if ($this->reviewNoticeDismissedTimeHasPassed() === false) {
-            return false;
-        }
-
-        if ($this->getAmountOfBookings() < $this->bookingThreshold) {
-            return false;
-        }
-
-        // Prevent showing the review on edit screen, as gutenberg removes the
-        // class which makes it editable.
-        $screen = get_current_screen();
-        if ($screen && ('post' === $screen->base)) {
-            return false;
-        }
-
-        return true;
+        return $this->getAmountOfBookings() >= $this->bookingThreshold;
     }
 
     /**
@@ -161,19 +118,6 @@ class ReviewController implements ControllerInterface
     }
 
     /**
-     * Check if the review notice dismissed time is more than 30 days ago.
-     */
-    private function reviewNoticeDismissedTimeHasPassed(): bool
-    {
-        $reviewNoticeDismissedTime = get_option('simplybook_review_notice_dismissed_time');
-        if (empty($reviewNoticeDismissedTime)) {
-            return true; // default true to show the notice
-        }
-
-        return $this->timestampIsThirtyDaysAgo($reviewNoticeDismissedTime);
-    }
-
-    /**
      * Check if the timestamp is more than 30 days ago.
      * @param float|int|string $timestamp
      */
@@ -183,19 +127,6 @@ class ReviewController implements ControllerInterface
         $thirtyDaysAgo = Carbon::now()->subDays(30);
 
         return $timestamp->isBefore($thirtyDaysAgo);
-    }
-
-    /**
-     * Enqueue scripts for notice dismiss functionality
-     */
-    public function enqueueScripts(): void
-    {
-        // Only enqueue if the notice will be shown
-        if ($this->canRenderReviewNotice() === false) {
-            return;
-        }
-
-        $this->noticeDismissalService->enqueue();
     }
 
     /**

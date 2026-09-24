@@ -217,23 +217,6 @@ class TaskManagementService
     }
 
     /**
-     * Set the task to 'upgrade' status. This is used for upsell reasons. For
-     * example with Black Friday promotions.
-     */
-    public function markTaskUpgrade(string $taskId): void
-    {
-        $this->repository->updateTaskStatus($taskId, AbstractTask::STATUS_UPGRADE);
-    }
-
-    /**
-     * Update the task bubble counter shown in the admin menu
-     */
-    public function setTaskBubbleCounter(int $count): void
-    {
-        update_option(AbstractTask::MENU_BUBBLE_OPTION_KEY, $count);
-    }
-
-    /**
      * Snooze a task for a specified duration. Only works for snoozable tasks.
      * The task's getStatus() will return 'hidden' while snoozed.
      */

@@ -1,1 +1,7 @@
+<?php
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+?>
 <div id="simplybook_app" dir="<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>"></div>
