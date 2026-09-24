@@ -3,9 +3,7 @@
 namespace SimplyBook\Http\Endpoints;
 
 use WP_Error;
-use WP_REST_Request;
 use SimplyBook\Http\ApiClient;
-use SimplyBook\Traits\HasNonces;
 use SimplyBook\Traits\HasApiAccess;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Http\Entities\Service;
@@ -14,7 +12,6 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 
 class BlockEndpoint implements MultiEndpointInterface
 {
-    use HasNonces;
     use HasApiAccess;
     use HasRestAccess;
 
@@ -75,18 +72,15 @@ class BlockEndpoint implements MultiEndpointInterface
     }
 
     /**
-     * The block editor calls these routes. Every user that can edit posts
-     * must be able to use the block. Check the 'edit_posts' capability and
-     * the nonce.
+     * The block editor calls these routes with GET. Every user that can edit
+     * posts must be able to use the block. Check the 'edit_posts' capability.
+     * WordPress validates the X-WP-Nonce header before this callback runs.
      *
      * @return bool|WP_Error
      */
-    public function blockEditorAccessAllowed(WP_REST_Request $request)
+    public function blockEditorAccessAllowed()
     {
-        $canEditPosts = current_user_can('edit_posts');
-        $validNonce = $this->verifyNonce($request->get_param('nonce'));
-
-        if ($canEditPosts && $validNonce) {
+        if (current_user_can('edit_posts')) {
             return true;
         }
 
