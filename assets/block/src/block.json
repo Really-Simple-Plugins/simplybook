@@ -1,5 +1,5 @@
 {
-	"apiVersion": 2,
+	"apiVersion": 3,
 	"name": "simplybook/widget",
 	"title": "Simplybook Widget",
 	"category": "widgets",
@@ -24,6 +24,5 @@
 		}
 	},
 	"editorScript": "file:./index.js",
-	"editorStyle": "file:./editor.scss",
-	"style": "file:./style.scss"
+	"editorStyle": "file:./index.css"
 }

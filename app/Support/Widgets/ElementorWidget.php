@@ -107,14 +107,13 @@ class ElementorWidget extends Widget_Base
     }
 
     /**
-     * Converts widget settings to SimplyBook shortcode and renders it.
+     * Converts widget settings to SimplyBook shortcode and prints it.
      */
     protected function render(): void
     {
         $settings = $this->get_settings_for_display();
-        $attributes = $this->buildShortcodeAttributes($settings);
 
-        echo do_shortcode($this->buildShortcode($attributes));
+        (new ShortcodeWidget($settings))->print();
     }
 
     /**
@@ -263,43 +262,6 @@ class ElementorWidget extends Widget_Base
             is_array($categories) ? $categories : [],
             esc_html__('Select a category', 'simplybook')
         );
-    }
-
-    /**
-     * Filters widget settings to only include valid SimplyBook shortcode parameters.
-     * Parameters must match the controls we register in {@see add_controls()}.
-     */
-    private function buildShortcodeAttributes(array $settings): array
-    {
-        $attributes = [];
-        $possibleAttributes = ['service', 'provider', 'location', 'category'];
-
-        foreach ($possibleAttributes as $key) {
-            $value = $settings[$key] ?? '';
-            if (!empty($value)) {
-                $attributes[$key] = $value;
-            }
-        }
-
-        return $attributes;
-    }
-
-    /**
-     * Formats attributes as [simplybook_widget key="value"] string.
-     */
-    private function buildShortcode(array $attributes): string
-    {
-        if (empty($attributes)) {
-            return '[' . self::NAME . ']';
-        }
-
-        $attributePairs = array_map(
-            fn($key, $value) => sprintf('%s="%s"', sanitize_text_field($key), sanitize_text_field($value)),
-            array_keys($attributes),
-            array_values($attributes)
-        );
-
-        return sprintf('[%s %s]', self::NAME, implode(' ', $attributePairs));
     }
 
     /**
