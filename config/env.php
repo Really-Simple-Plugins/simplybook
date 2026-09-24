@@ -58,8 +58,8 @@ return [
         ],
         'widget_script_version' => '1.3.0',
         'subscription_widget_script_urls' => [
-            'https://app.sbpay.me/widgets/subscriptions-widget-plans.js',
-            'https://sbpay.st2.d.simplybook.ovh/widgets/subscriptions-widget-plans.js',
+            'production' => 'https://app.sbpay.me/widgets/subscriptions-widget-plans.js',
+            'staging' => 'https://sbpay.st2.d.simplybook.ovh/widgets/subscriptions-widget-plans.js',
         ],
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
         'support' => [
