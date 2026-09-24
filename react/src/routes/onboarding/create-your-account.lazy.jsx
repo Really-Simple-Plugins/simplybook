@@ -66,7 +66,7 @@ function CreateLoginAccount() {
                         {__("Create your free account", "simplybook")}
                     </h1>
                     <h2 className={"mt-2 text-lg font-light text-black"}>
-                        {__("Start free – no creditcard required.", "simplybook")}
+                        {__("Start free – no credit card required.", "simplybook")}
                     </h2>
 
                 </div>
