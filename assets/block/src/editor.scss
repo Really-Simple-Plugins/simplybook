@@ -88,21 +88,8 @@
   }
 
   .sb-widget-alert {
-    color: $color-danger;
-    font-style: italic;
-    font-size: 16px;
     margin: 0;
-    display: inline-block;
-    width: 100%;
-    padding: 0px 0px 0px 0px;
-    text-align: center;
-
-    a {
-      color: $color-danger;
-      text-decoration: underline;
-      border-bottom: 0;
-      border: 0;
-    }
+    text-align: left;
   }
 }
 
@@ -213,6 +200,13 @@
   }
 }
 
-.sb-widget-preview-modal {
-  width: 80%;
+.components-modal__frame.sb-widget-preview-modal {
+  width: min(960px, calc(100% - 32px));
+}
+
+.sb-widget-preview-frame {
+  display: block;
+  width: 100%;
+  height: 70vh;
+  border: 0;
 }

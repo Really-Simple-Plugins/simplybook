@@ -10,13 +10,6 @@ type SimplyBookRecaptchaSettings = {
     google_terms_url?: string;
 };
 
-type SimplyBookSupportSettings = {
-    enabled?: boolean;
-    widget?: {
-        url?: string;
-    };
-};
-
 type SimplyBookThemeColors = {
     primary: string;
     secondary: string;
@@ -48,22 +41,21 @@ type SimplyBookGlobal = {
     completed_step: number | string;
     simplybook_domains: SimplyBookDomain[];
     simplybook_countries: unknown[];
-    support?: SimplyBookSupportSettings;
     fallback_colors: SimplyBookThemeColors;
     recaptcha?: SimplyBookRecaptchaSettings;
 };
 
-type LiveAgentButton = {
-    onClick?: () => void;
-};
-
-type LiveAgentGlobal = {
-    createButton: (buttonId: string, script: HTMLScriptElement) => LiveAgentButton;
-};
-
 declare const simplybook: SimplyBookGlobal;
+
+/**
+ * Constructor provided by SimplyBook's external widget script.
+ * It is loaded so we can render widgets in the previews and during onboarding.
+ * Since the script is loaded externally, we declare it here for TypeScript typing.
+ */
+declare class SimplybookWidget {
+    constructor(config: Record<string, unknown>);
+}
 
 interface Window {
     simplybook?: SimplyBookGlobal;
-    LiveAgent?: LiveAgentGlobal;
 }

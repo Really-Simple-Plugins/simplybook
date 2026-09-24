@@ -7,6 +7,7 @@ use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\HasAllowlistControl;
 use SimplyBook\Exceptions\BuilderException;
 use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
+use SimplyBook\Support\Helpers\Storages\GeneralConfig;
 
 class WidgetScriptBuilder
 {
@@ -14,13 +15,11 @@ class WidgetScriptBuilder
     use HasAllowlistControl;
 
     protected EnvironmentConfig $env;
+    protected GeneralConfig $config;
 
-    protected bool $withHTML = false;
     protected string $widgetType = '';
-    protected string $widgetTemplate = '';
-    protected array $attributes = [];
     protected string $wrapperID = '';
-    protected bool $hasWrapper = false;
+    protected array $attributes = [];
     protected array $widgetSettings = [];
     protected bool $isAuthenticated = true;
 
@@ -43,29 +42,81 @@ class WidgetScriptBuilder
     public function __construct()
     {
         $this->env = App::getInstance()->get(EnvironmentConfig::class);
+        $this->config = App::getInstance()->get(GeneralConfig::class);
     }
 
     /**
-     * Build the widget based on the given type, settings and attributes
+     * Build the widget HTML based on the given type, settings and attributes.
+     * The HTML is a container element that carries the widget configuration
+     * as JSON in a data attribute. A separate script reads the configuration
+     * and starts the widget.
+     *
      * @throws BuilderException
      */
     public function build(): string
+    {
+        $config = wp_json_encode(
+            $this->buildConfig(),
+            JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_QUOT | JSON_HEX_APOS
+        );
+
+        if ($config === false) {
+            throw new BuilderException('Failed to encode widget configuration');
+        }
+
+        $html = $this->view('public/widget', [
+            'wrapperID' => $this->wrapperID,
+            'config' => $config,
+        ]);
+
+        if ($this->showDemoWidget()) {
+            return $this->getDemoWidgetAlert() . $html;
+        }
+
+        return $html;
+    }
+
+    /**
+     * Build a widget configuration based on the given settings.
+     * The configuration is used to initialize the widget.
+     * @throws BuilderException
+     */
+    public function buildConfig(): array
     {
         if (empty($this->widgetType) || empty($this->widgetSettings)) {
             throw new BuilderException('Widget not set up correctly');
         }
 
-        $script = $this->getWidgetScript();
+        $widgetConfig = $this->config->get('widgets.' . $this->widgetType, []);
 
-        if ($this->withHTML) {
-            return $this->getWrappedScriptHTML($script);
+        if (empty($widgetConfig) || !isset($widgetConfig['settings'])) {
+            throw new BuilderException('Widget configuration not found');
         }
 
-        if ($this->showDemoWidget()) {
-            return $this->getDemoWidgetAlert() . $script;
-        }
+        $settings = $this->getWidgetSettings();
 
-        return $script;
+        // Set static config first: are set as is since it's not a user setting
+        $staticConfig = $widgetConfig['static'] ?? [];
+
+        $config = array_merge(
+            $staticConfig,
+            $this->mapSettings($widgetConfig['settings'], $settings)
+        );
+
+        return $this->escapeSettings($config);
+    }
+
+    /**
+     * Map the widget settings to the widget configuration. The mapping is
+     * defined in the widget configuration file. The mapping can be nested.
+     */
+    private function mapSettings(array $mapping, array $settings): array
+    {
+        return array_map(function ($settingName) use ($settings) {
+            return is_array($settingName)
+                ? $this->mapSettings($settingName, $settings)
+                : ($settings[$settingName] ?? '');
+        }, $mapping);
     }
 
     /**
@@ -78,19 +129,16 @@ class WidgetScriptBuilder
             throw new BuilderException('Invalid widget type');
         }
 
-        $this->setWidgetTemplate($widgetType);
         $this->widgetType = $widgetType;
         return $this;
     }
 
     /**
-     * Set the wrapper ID. If this method is not used the {@see build} method
-     * will not create HTML for the wrapper.
+     * Set the ID of the element that holds the widget
      */
     public function setWrapperID(string $wrapperID): WidgetScriptBuilder
     {
-        $this->wrapperID = sanitize_text_field($wrapperID);
-        $this->hasWrapper = true;
+        $this->wrapperID = $wrapperID;
         return $this;
     }
 
@@ -113,15 +161,6 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Set with HTML flag.
-     */
-    public function withHTML(): WidgetScriptBuilder
-    {
-        $this->withHTML = true;
-        return $this;
-    }
-
-    /**
      * Set the authenticated flag. If set to false, the widget will be
      * displayed as a demo widget.
      */
@@ -129,24 +168,6 @@ class WidgetScriptBuilder
     {
         $this->isAuthenticated = $authenticated;
         return $this;
-    }
-
-    /**
-     * Set the widget template
-     * @throws BuilderException
-     */
-    private function setWidgetTemplate(string $widgetType): void
-    {
-        $widgetTypeTemplate = $this->env->getString('plugin.assets_path') . 'js/widgets/' . $widgetType . '.js';
-        if (!file_exists($widgetTypeTemplate)) {
-            throw new BuilderException('Widget template not found');
-        }
-
-        ob_start();
-        include $widgetTypeTemplate;
-        $script = ob_get_clean();
-
-        $this->widgetTemplate = $script;
     }
 
     /**
@@ -175,88 +196,32 @@ class WidgetScriptBuilder
     }
 
     /**
-     * Create the widget script based on the widget template and settings. All
-     * settings are searched by the setting key and replaced with the value in
-     * the template.
-     */
-    private function getWidgetScript(): string
-    {
-        $placeholders = [];
-        $encodedSettings = [];
-
-        foreach ($this->getWidgetSettings() as $key => $setting) {
-            // The placeholders in the templates are always quoted, the quotes
-            // are replaced as well because the encoded value contains them.
-            $placeholders[] = '"{{ ' . $key . ' }}"';
-            $encodedSettings[] = $this->encodeSetting($setting);
-        }
-
-        return str_replace($placeholders, $encodedSettings, $this->widgetTemplate);
-    }
-
-    /**
-     * Method is used for encoding a setting value so it can safely be placed
-     * inside the JavaScript of the widget template.
-     * @param mixed $setting
-     */
-    private function encodeSetting($setting): string
-    {
-        $sanitizedSetting = $this->sanitizeSetting($setting);
-
-        return (string) wp_json_encode(
-            $sanitizedSetting,
-            (JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
-        );
-    }
-
-    /**
-     * Sanitize a setting value so it stays harmless after the JavaScript
-     * engine decodes the JSON escaping and the widget writes the value into
-     * the DOM. The JSON escaping only protects the HTML context of the
-     * script tag, not the sinks used by the widget itself.
+     * Escape a setting value for the HTML sinks in the remote widget script.
+     * The widget decodes the JSON and writes the values into an iframe
+     * attribute with innerHTML. Arrays are escaped recursively. Empty values
+     * become an empty string.
+     *
+     * @internal The entities must survive the HTML attribute in the view.
+     * The browser decodes entities in the attribute once, so build() encodes
+     * the JSON with JSON_HEX_* flags to keep these entities out of the HTML.
      *
      * @param mixed $setting
      * @return array|string
      */
-    private function sanitizeSetting($setting)
+    private function escapeSettings($setting)
     {
         if (is_array($setting)) {
-            return array_map([$this, 'sanitizeSetting'], $setting);
+            return array_map([$this, 'escapeSettings'], $setting);
         }
 
-        if (empty($setting)) {
-            // This will work the same as a false value. Therefor it is not an
-            // issue that the empty check triggers for these false(y) values.
-            return '';
+        $decoded = json_decode((string) $setting, true);
+        if (is_array($decoded)) {
+            return (string) wp_json_encode(
+                array_map([$this, 'escapeSettings'], $decoded),
+            );
         }
 
-        return sanitize_text_field((string) $setting);
-    }
-
-    /**
-     * Create HTML for the widget script given via the parameter
-     *
-     * @since 3.2.3 Remove newlines from widget HTML to prevent WordPress's
-     * wpautop filter from breaking script content in FSE contexts.
-     * wpautop uses preg_split() on double line breaks to identify content
-     * blocks and wraps them in <p> tags. When newlines exist in the JavaScript,
-     * wpautop inserts <p> tags within the script, breaking JavaScript syntax.
-     */
-    private function getWrappedScriptHTML(string $script): string
-    {
-        $content = '';
-
-        if ($this->showDemoWidget()) {
-            $content = $this->getDemoWidgetAlert();
-        }
-
-        if ($this->hasWrapper) {
-            $content .= sprintf('<div id="%s"></div>', $this->wrapperID);
-        }
-        $content .= sprintf('<script type="text/javascript">%s</script>', $script);
-
-        // Remove all newlines
-        return str_replace(["\r\n", "\r", "\n"], '', $content);
+        return esc_attr((string) $setting);
     }
 
     /**

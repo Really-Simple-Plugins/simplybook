@@ -55,7 +55,7 @@ class OnboardingNoticeController implements ControllerInterface
 
         $noticeMessage = sprintf(
             // translators: %1$s and %2$s are replaced with opening and closing a tag containing hyperlink
-            __('Hi! You have activated the SimplyBook.me plugin, but not yet completed the plugin onboarding. Take a minute to %1$scomplete the onboarding%2$s to immediately start collecting bookings on your site!'),
+            __('Hi! You have activated the SimplyBook.me plugin, but not yet completed the plugin onboarding. Take a minute to %1$scomplete the onboarding%2$s to immediately start collecting bookings on your site!', 'simplybook'),
             '<a href="' . $this->env->getUrl('plugin.dashboard_url') . '">',
             '</a>'
         );

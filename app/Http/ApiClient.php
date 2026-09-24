@@ -163,6 +163,8 @@ class ApiClient
             return (bool) $cacheValue;
         }
 
+        $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
+
         // Check if admin token exists
         if ( !$this->getToken('admin') ) {
             $companyRegistrationStartTime = get_option('simplybook_company_registration_start_time', 0);
@@ -170,8 +172,10 @@ class ApiClient
             $oneHourAgo = Carbon::now()->subHour();
             $companyRegistrationStartedAt = Carbon::createFromTimestamp($companyRegistrationStartTime);
 
-            // Registration was more than 1h ago. Clear and try again.
-            if ($companyRegistrationStartedAt->isBefore($oneHourAgo)) {
+            // Registration was more than 1h ago and never completed. Clear
+            // and try again. A completed account keeps its company login so
+            // the front-end widget keeps working when the connection is lost.
+            if (!$isOnboardingCompleted && $companyRegistrationStartedAt->isBefore($oneHourAgo)) {
                 $this->delete_company_login();
             }
 
@@ -182,7 +186,6 @@ class ApiClient
         // If the token exists, and the onboarding is completed, we know
         // the company registration is complete, and we can cache for a longer
         // time.
-        $isOnboardingCompleted = (get_option('simplybook_onboarding_completed', false) !== false);
         $cacheTime = MINUTE_IN_SECONDS * 10;
         if ($isOnboardingCompleted) {
             $cacheTime = DAY_IN_SECONDS;
