@@ -160,8 +160,10 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Added: Documentation of the external services the plugin uses in the readme.
 * Added: A link to the public source code on GitHub in the readme.
 * Added: A README.md with setup, installation and contribution instructions.
+* Added: An error message with a retry button when the Plans & Prices page could not load.
+* Changed: The Plans & Prices page is now only shown after your site is connected to SimplyBook.me.
 * Changed: Improved the wording of texts in the plugin.
-* Changed: The marketing consent checkbox in the onboarding is now unchecked by default.
+* Changed: The marketing consent checkbox in the account setup is now unchecked by default.
 * Changed: The trial expiration notice is no longer shown on the plugin dashboard.
 * Changed: Installing a plugin from the "Other plugins" section no longer affects other WordPress behavior.
 * Changed: Made previously untranslated texts translatable.
