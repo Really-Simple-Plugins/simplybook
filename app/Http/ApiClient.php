@@ -774,6 +774,7 @@ class ApiClient
     /**
      * Send a request and try one more time when the transport fails, for
      * example on a cURL timeout. HTTP error responses are not retried.
+     *
      * @throws RestDataException
      */
     private function requestWithOneRetryOnTransportError(string $method, string $endpoint): array
