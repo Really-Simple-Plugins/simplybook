@@ -749,7 +749,7 @@ class ApiClient
             'admin/subscription-widget/embed-code'
         );
 
-        $widgetData = $this->request('GET', $endpoint);
+        $widgetData = $this->requestWithOneRetryOnTransportError('GET', $endpoint);
 
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
         $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
@@ -769,6 +769,27 @@ class ApiClient
             'script_url' => $scriptUrl,
             'params' => $params,
         ];
+    }
+
+    /**
+     * Send a request and try one more time when the transport fails, for
+     * example on a cURL timeout. HTTP error responses are not retried.
+     * @throws RestDataException
+     */
+    private function requestWithOneRetryOnTransportError(string $method, string $endpoint): array
+    {
+        try {
+            return $this->request($method, $endpoint);
+        } catch (RestDataException $e) {
+            $data = $e->getData();
+            if (empty($data['wp_error_code'])) {
+                throw $e;
+            }
+
+            $this->log('Request failed, trying again once: ' . $e->getMessage());
+        }
+
+        return $this->request($method, $endpoint);
     }
 
     /**
