@@ -754,14 +754,18 @@ class ApiClient
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
         $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
         if (!in_array($scriptUrl, $allowedScriptUrls, true)) {
-            $this->log('Subscription widget script URL is not allowed: ' . $scriptUrl);
-            return [];
+            $this->log('Subscription widget script URL is not allowed: ' . esc_html($scriptUrl));
+            throw (new RestDataException('Subscription widget script URL is not allowed.'))
+                ->setResponseCode(403)
+                ->setData(['reason' => 'invalid_script_url']);
         }
 
         $params = $widgetData['params'] ?? [];
         if (!is_array($params)) {
             $this->log('Invalid subscription widget params.');
-            return [];
+            throw (new RestDataException('Subscription widget script invalid.'))
+                ->setResponseCode(422)
+                ->setData(['reason' => 'invalid_script_url']);
         }
 
         return [
