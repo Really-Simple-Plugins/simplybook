@@ -4,7 +4,7 @@ import Error from "../Errors/Error";
 import LoginLink from "../Common/LoginLink";
 
 const SubscriptionWidget = () => {
-    const { containerId, loadError, retry, isRetrying } = useSubscriptionWidget();
+    const { containerId, containerKey, loadError, retry, isRetrying } = useSubscriptionWidget();
 
     return (
         <div className="mx-auto flex max-w-screen-2xl w-full">
@@ -28,7 +28,7 @@ const SubscriptionWidget = () => {
                         </LoginLink>
                     </Error>
                 )}
-                <div id={containerId} className="w-full min-h-[640px]" />
+                <div key={containerKey} id={containerId} className="w-full min-h-[640px]" />
             </div>
         </div>
     );

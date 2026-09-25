@@ -11,11 +11,12 @@ const getWidgetLoadErrorMessage = () => __("Plans & Prices could not be loaded."
 
 const useSubscriptionWidget = () => {
     const client = useMemo(() => new HttpClient(WIDGET_ROUTE), []);
-    const initialized = useRef(false);
+    const initializedAt = useRef(0);
     const [scriptLoaded, setScriptLoaded] = useState(
         typeof window !== "undefined" && typeof window.SbPayWidget === "function"
     );
     const [loadError, setLoadError] = useState("");
+    const [containerKey, setContainerKey] = useState(0);
     const handleWidgetError = useCallback((message, widgetError) => {
         console.error(message, widgetError);
         setLoadError(getWidgetLoadErrorMessage());
@@ -65,7 +66,7 @@ const useSubscriptionWidget = () => {
     }, [handleWidgetError, scriptLoaded, widget?.script_url]);
 
     useEffect(() => {
-        if (!widget || !scriptLoaded || initialized.current) {
+        if (!widget || !scriptLoaded || initializedAt.current === dataUpdatedAt) {
             return;
         }
 
@@ -75,7 +76,7 @@ const useSubscriptionWidget = () => {
             }
 
             new window.SbPayWidget(containerId, widget.params || {});
-            initialized.current = true;
+            initializedAt.current = dataUpdatedAt;
             setLoadError("");
         } catch (widgetError) {
             handleWidgetError("Subscription widget failed to initialize:", widgetError);
@@ -84,18 +85,13 @@ const useSubscriptionWidget = () => {
 
     const retry = useCallback(() => {
         setLoadError("");
-        initialized.current = false;
-
-        const container = document.getElementById(containerId);
-        if (container) {
-            container.replaceChildren();
-        }
-
+        setContainerKey((key) => key + 1);
         refetch();
-    }, [containerId, refetch]);
+    }, [refetch]);
 
     return {
         containerId,
+        containerKey,
         loadError,
         retry,
         isRetrying: isFetching,
