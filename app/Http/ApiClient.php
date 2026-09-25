@@ -752,7 +752,7 @@ class ApiClient
         $widgetData = $this->request('GET', $endpoint);
 
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
-        $allowedScriptUrls = array_values((array) $this->env->get('simplybook.subscription_widget_script_urls', []));
+        $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
         if (!in_array($scriptUrl, $allowedScriptUrls, true)) {
             $this->log('Subscription widget script URL is not allowed: ' . $scriptUrl);
             return [];
