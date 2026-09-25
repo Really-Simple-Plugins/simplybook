@@ -86,7 +86,9 @@ class DashboardController implements ControllerInterface
 
     /**
      * Add the dashboard page to the admin menu of WordPress. Also triggers the
-     * action to enqueue scripts and styles
+     * action to enqueue scripts and styles. The Plans & Prices submenu needs a
+     * registered company, so it is only added after the onboarding.
+     *
      * @uses apply_filters simplybook_menu_position
      */
     public function addDashboardPage(): void
@@ -121,6 +123,13 @@ class DashboardController implements ControllerInterface
             [$this, 'renderReactApp']
         );
 
+        $this->enqueueReactAppForHook($pageHookSuffix);
+        $this->enqueueReactAppForHook($dashboardHookSuffix);
+
+        if (!$this->isOnboardingCompleted()) {
+            return;
+        }
+
         $plansPricesHookSuffix = add_submenu_page(
             $dashboardMenuSlug,
             esc_html__('Plans & Prices', 'simplybook'),
@@ -130,8 +139,6 @@ class DashboardController implements ControllerInterface
             [$this, 'renderReactApp']
         );
 
-        $this->enqueueReactAppForHook($pageHookSuffix);
-        $this->enqueueReactAppForHook($dashboardHookSuffix);
         $this->enqueueReactAppForHook($plansPricesHookSuffix);
     }
 
