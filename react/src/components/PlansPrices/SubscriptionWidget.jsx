@@ -18,7 +18,7 @@ const SubscriptionWidget = () => {
                 {loadError && !isLoading && (
                     <Error
                         errorHeading={__("Something went wrong", "simplybook")}
-                        error={loadError}
+                        error={true} // Just the heading is fine for this error
                         resolve={{
                             callback: retry,
                             label: __("Try again", "simplybook"),
