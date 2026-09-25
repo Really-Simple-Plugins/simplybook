@@ -21,7 +21,7 @@ const useSubscriptionWidget = () => {
         setLoadError(getWidgetLoadErrorMessage());
     }, []);
 
-    const { error, data: response } = useQuery({
+    const { error, data: response, refetch, isFetching } = useQuery({
         queryKey: [WIDGET_ROUTE],
         queryFn: () => client.get(),
         staleTime: 0,
@@ -82,9 +82,16 @@ const useSubscriptionWidget = () => {
         }
     }, [containerId, handleWidgetError, scriptLoaded, widget]);
 
+    const retry = useCallback(() => {
+        setLoadError("");
+        refetch();
+    }, [refetch]);
+
     return {
         containerId,
         loadError,
+        retry,
+        isRetrying: isFetching,
     };
 };
 
