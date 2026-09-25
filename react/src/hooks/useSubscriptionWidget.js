@@ -94,7 +94,7 @@ const useSubscriptionWidget = () => {
         containerKey,
         loadError,
         retry,
-        isRetrying: isFetching,
+        isLoading: isFetching || (widget !== null && !scriptLoaded && !loadError),
     };
 };
 
