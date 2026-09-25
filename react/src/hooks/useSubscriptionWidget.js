@@ -21,7 +21,7 @@ const useSubscriptionWidget = () => {
         setLoadError(getWidgetLoadErrorMessage());
     }, []);
 
-    const { error, data: response, refetch, isFetching } = useQuery({
+    const { error, data: response, dataUpdatedAt, refetch, isFetching } = useQuery({
         queryKey: [WIDGET_ROUTE],
         queryFn: () => client.get(),
         staleTime: 0,
@@ -80,12 +80,19 @@ const useSubscriptionWidget = () => {
         } catch (widgetError) {
             handleWidgetError("Subscription widget failed to initialize:", widgetError);
         }
-    }, [containerId, handleWidgetError, scriptLoaded, widget]);
+    }, [containerId, dataUpdatedAt, handleWidgetError, scriptLoaded, widget]);
 
     const retry = useCallback(() => {
         setLoadError("");
+        initialized.current = false;
+
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.replaceChildren();
+        }
+
         refetch();
-    }, [refetch]);
+    }, [containerId, refetch]);
 
     return {
         containerId,
