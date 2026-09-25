@@ -3,8 +3,8 @@ import {Link} from "@tanstack/react-router";
 const Error = ({
     error,
     errorHeading,
-   resolve = {},
-    ...props
+    resolve = {},
+    children = null,
 }) => {
 
     if (!error) {
@@ -25,6 +25,7 @@ const Error = ({
                     {resolve?.label}
                 </Link>
             )}
+            {children}
         </div>
     );
 };
