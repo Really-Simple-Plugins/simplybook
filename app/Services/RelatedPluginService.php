@@ -149,7 +149,6 @@ class RelatedPluginService
 
         $slug = $this->pluginConfig->getString('activation_slug');
 
-
         //when activated from the network admin, we assume the user wants network activated
         $networkwide = is_multisite() && is_network_admin();
 

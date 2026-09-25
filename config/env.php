@@ -62,12 +62,6 @@ return [
             'https://sbpay.st2.d.simplybook.ovh/widgets/subscriptions-widget-plans.js',
         ],
         'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
-        'support' => [
-            'enabled' => true,
-            'widget' => [
-                'url' => 'https://simply.ladesk.com/scripts/track.js',
-            ],
-        ],
         'tips_and_tricks' => [
             'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
             'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',

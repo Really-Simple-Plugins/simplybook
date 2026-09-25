@@ -150,13 +150,13 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
-= 3.5.0 - 2026-09-29
+= 3.5.0 - 2026-09-29 =
 * Security: Hardened the widget preview in the design settings against script injection.
 * Security: Added direct file access protection to all plugin files.
 * Security: All REST API routes now explicitly check user permissions.
 * Fixed: Console errors in the block editor on WordPress 7.1.
 * Fixed: The plugin now stores its version correctly after an update.
-* Added: "Remind me later" and "Don't show again" buttons to the trial expiration notice.
+* Added: "Remind me tomorrow" and "Don't show again" buttons to the trial expiration notice.
 * Added: Documentation of the external services the plugin uses in the readme.
 * Added: A link to the public source code on GitHub in the readme.
 * Added: A README.md with setup, installation and contribution instructions.
