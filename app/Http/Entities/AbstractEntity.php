@@ -298,7 +298,8 @@ abstract class AbstractEntity
         }
 
         if (!empty($errors)) {
-            throw (new FormException())->setErrors($errors);
+            $exception = (new FormException())->setErrors($errors);
+            throw $exception;
         }
 
         return true;

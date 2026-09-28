@@ -84,11 +84,13 @@ class CreateAccountService
         $response = wp_safe_remote_request($url, $args);
 
         if (is_wp_error($response)) {
-            throw (new ApiException(
+            $exception = (new ApiException(
                 __('Failed to connect.', 'simplybook')
             ))->setData([
                 'error' => sanitize_text_field($response->get_error_message()),
             ]);
+
+            throw $exception;
         }
 
         return $this->parseResponse($response);
@@ -126,7 +128,7 @@ class CreateAccountService
         $responseBody = json_decode($responseBodyRaw, true);
 
         if (!is_array($responseBody)) {
-            throw new ApiException(__('Invalid response.', 'simplybook'));
+            throw new ApiException(esc_html__('Invalid response.', 'simplybook'));
         }
 
         if (isset($responseBody['rspal-error'])) {
@@ -151,11 +153,13 @@ class CreateAccountService
             ? wp_json_encode($rspalError)
             : sanitize_text_field($rspalError);
 
-        throw (new ApiException(
+        $exception = (new ApiException(
             $errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')
         ))->setData([
             'error' => $errorMessage,
         ]);
+
+        throw $exception;
     }
 
     /**

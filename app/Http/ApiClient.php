@@ -553,22 +553,28 @@ class ApiClient
     public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
-            throw (new ApiException(
+            $exception = (new ApiException(
                 __('You are not authorized to do this.', 'simplybook')
             ))->setResponseCode(403);
+
+            throw $exception;
         }
 
         if ($company->isValid() === false) {
-            throw (new ApiException(
+            $exception = (new ApiException(
                 __('Please fill in all required fields to create an account.', 'simplybook')
             ))->setResponseCode(422);
+
+            throw $exception;
         }
 
         $attemptCount = $this->getRegisterAttemptsCount();
         if ($attemptCount > 3) {
-            throw (new ApiException(
+            $exception = (new ApiException(
                 __('Too many attempts to register company, please try again in a minute.', 'simplybook')
             ))->setResponseCode(429);
+
+            throw $exception;
         }
 
         $updatedAttemptCount = ($attemptCount + 1);
@@ -579,13 +585,15 @@ class ApiClient
         try {
             $this->createAccountService->createInstallationId($userAgent, false);
         } catch (\Exception $e) {
-            throw (new ApiException(
+            $exception = (new ApiException(
                 // User-friendly message during company creation flow
                 __('Account creation failed, could not verify installation.', 'simplybook')
             ))->setData([
                 // Remember specific createInstallationId exception message
                 'message' => $e->getMessage(),
             ])->setResponseCode(500);
+
+            throw $exception;
         }
 
         $companyLogin = $this->get_company_login();
@@ -617,20 +625,24 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
-            throw (new ApiException(
+            $exception = (new ApiException(
                 __('Company login was not available, retrying.', 'simplybook')
             ))->setData([
                 'retry' => true,
                 'reason' => 'login_reserved',
             ])->setResponseCode(409);
+
+            throw $exception;
         }
 
-        throw (new ApiException(
+        $exception = (new ApiException(
             __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
         ))->setData([
             'message' => $response->message ?? '',
             'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
         ])->setResponseCode(500);
+
+        throw $exception;
     }
 
     /**
@@ -732,9 +744,11 @@ class ApiClient
 
         if (!$this->tokenIsValid('admin')) {
             $this->log('Token not valid, cannot retrieve subscription widget embed code');
-            throw (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
+            $exception = (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
                 ->setResponseCode(401)
                 ->setData(['reason' => 'invalid_admin_token']);
+
+            throw $exception;
         }
 
         $responseContainerId = sanitize_html_class($containerId);
@@ -755,17 +769,21 @@ class ApiClient
         $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
         if (!in_array($scriptUrl, $allowedScriptUrls, true)) {
             $this->log('Subscription widget script URL is not allowed: ' . esc_html($scriptUrl));
-            throw (new RestDataException('Subscription widget script URL is not allowed.'))
+            $exception = (new RestDataException('Subscription widget script URL is not allowed.'))
                 ->setResponseCode(403)
                 ->setData(['reason' => 'invalid_script_url']);
+
+            throw $exception;
         }
 
         $params = $widgetData['params'] ?? [];
         if (!is_array($params)) {
             $this->log('Invalid subscription widget params.');
-            throw (new RestDataException('Subscription widget script invalid.'))
+            $exception = (new RestDataException('Subscription widget script invalid.'))
                 ->setResponseCode(422)
                 ->setData(['reason' => 'invalid_script_url']);
+
+            throw $exception;
         }
 
         return [
@@ -1107,10 +1125,12 @@ class ApiClient
                 $userMessage = __('Please enter a valid domain.', 'simplybook');
             }
 
-            throw (new RestDataException($userMessage))->setResponseCode(400)->setData([
+            $exception = (new RestDataException($userMessage))->setResponseCode(400)->setData([
                 'error_code' => $response->get_error_code(),
                 'error_message' => $errorMessage,
             ]);
+
+            throw $exception;
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
@@ -1120,16 +1140,18 @@ class ApiClient
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'], $responseBody['refresh_token'], $responseBody['domain'])) {
-            throw (new RestDataException(
+            $exception = (new RestDataException(
                 __('Login failed! Please try again later.', 'simplybook')
             ))->setResponseCode(500)->setData([
                 'response_code' => $responseCode,
                 'response_message' => __('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
+
+            throw $exception;
         }
 
         if (isset($responseBody['require2fa'], $responseBody['auth_session_id']) && ($responseBody['require2fa'] === true)) {
-            throw (new RestDataException('Two FA Required'))
+            $exception = (new RestDataException('Two FA Required'))
                 ->setResponseCode(200)
                 ->setData([
                     'require2fa' => true,
@@ -1139,6 +1161,8 @@ class ApiClient
                     'domain' => $companyDomain,
                     'allowed2fa_providers' => $this->get2FaProvidersWithLabel(($responseBody['allowed2fa_providers'] ?? ['ga'])),
                 ]);
+
+            throw $exception;
         }
 
         return $responseBody;
@@ -1176,12 +1200,14 @@ class ApiClient
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
-            throw (new RestDataException(
+            $exception = (new RestDataException(
                 __('Two factor authentication failed! Please try again later.', 'simplybook')
             ))->setData([
                 'response_code' => $responseCode,
                 'response_message' => __('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
+
+            throw $exception;
         }
 
         return $responseBody;
@@ -1537,9 +1563,11 @@ class ApiClient
             $errorData = is_array($errorData) ? $errorData : [];
             $errorData['wp_error_code'] = (string) $response->get_error_code();
 
-            throw (new RestDataException($response->get_error_message()))
+            $exception = (new RestDataException($response->get_error_message()))
                 ->setResponseCode(500)
                 ->setData($errorData);
+
+            throw $exception;
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
@@ -1554,9 +1582,11 @@ class ApiClient
         }
 
         if ($responseCode < 200 || $responseCode >= 300) {
-            throw (new RestDataException($responseMessage))
+            $exception = (new RestDataException($responseMessage))
                 ->setResponseCode($responseCode)
                 ->setData($responseData);
+
+            throw $exception;
         }
 
         return $responseData;

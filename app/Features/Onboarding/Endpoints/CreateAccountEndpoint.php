@@ -102,11 +102,13 @@ class CreateAccountEndpoint implements SingleEndpointInterface
     private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
         if (!is_email($email)) {
-            throw (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
+            throw $exception;
         }
 
         if ($termsAccepted !== true) {
-            throw (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
+            throw $exception;
         }
 
         $encryptedPassword = $this->service->encryptString(wp_generate_password(24, false));
