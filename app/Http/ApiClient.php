@@ -570,9 +570,9 @@ class ApiClient
 
         $attemptCount = $this->getRegisterAttemptsCount();
         if ($attemptCount > 3) {
-            $exception = (new ApiException(
-                __('Too many attempts to register company, please try again in a minute.', 'simplybook')
-            ))->setResponseCode(429);
+            $exception = (new ApiException('Too manu attempts.'))->setData([
+                'message' => __('Too many attempts to register company, please try again in a minute.', 'simplybook')
+            ])->setResponseCode(429);
 
             throw $exception;
         }
@@ -585,12 +585,8 @@ class ApiClient
         try {
             $this->createAccountService->createInstallationId($userAgent, false);
         } catch (\Exception $e) {
-            $exception = (new ApiException(
-                // User-friendly message during company creation flow
-                __('Account creation failed, could not verify installation.', 'simplybook')
-            ))->setData([
-                // Remember specific createInstallationId exception message
-                'message' => $e->getMessage(),
+            $exception = (new ApiException($e->getMessage()))->setData([
+                'message' => __('Account creation failed, could not verify installation.', 'simplybook'),
             ])->setResponseCode(500);
 
             throw $exception;

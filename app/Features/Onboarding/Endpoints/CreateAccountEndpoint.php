@@ -80,7 +80,7 @@ class CreateAccountEndpoint implements SingleEndpointInterface
             $response = $this->client->register_company($company, $captchaToken);
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getData('message'), $e->getResponseCode());
         } catch (Throwable $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
