@@ -4,8 +4,8 @@ namespace SimplyBook\Controllers\Gutenberg;
 
 use SimplyBook\Interfaces\ControllerInterface;
 use SimplyBook\Support\Widgets\GutenbergWidget;
-use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 use SimplyBook\Support\Widgets\ShortcodeWidget;
+use SimplyBook\Support\Helpers\Storages\EnvironmentConfig;
 
 class GutenbergController implements ControllerInterface
 {
@@ -106,6 +106,7 @@ class GutenbergController implements ControllerInterface
             admin_url('admin-post.php')
         );
     }
+
     /**
      * Render a self-contained widget preview for the block editor iframe.
      */
@@ -133,18 +134,20 @@ class GutenbergController implements ControllerInterface
 
     /**
      * Accept only supported block attributes from the preview URL.
+     * @internal phpcs ignores: nonce is verified in {@see renderBlockPreview}
+     * before this method runs.
      */
     private function getBlockPreviewAttributes(): array
     {
         $attributes = [];
 
         foreach (ShortcodeWidget::ATTRIBUTES as $attribute) {
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce is verified in renderBlockPreview() before this method runs.
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             if (!isset($_GET[$attribute])) {
                 continue;
             }
 
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce is verified in renderBlockPreview() before this method runs.
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             $value = sanitize_text_field(wp_unslash($_GET[$attribute]));
             if ($attribute === 'provider' && $value === 'any') {
                 $attributes[$attribute] = $value;
