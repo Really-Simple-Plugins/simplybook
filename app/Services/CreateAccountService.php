@@ -192,14 +192,14 @@ class CreateAccountService
         ]);
 
         if (is_wp_error($response)) {
-            throw new ApiException('Could not create Installation ID. WP Error: ' . $response->get_error_message());
+            throw new ApiException('Could not create Installation ID. WP Error: ' . esc_html($response->get_error_message()));
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($responseCode !== 200 && $responseCode !== 201) {
-            throw new ApiException('Could not create Installation ID. Invalid response code: ' . $responseCode);
+            throw new ApiException('Could not create Installation ID. Invalid response code: ' . esc_html((string) $responseCode));
         }
 
         $installationId = isset($responseBody['uuid']) ? sanitize_text_field($responseBody['uuid']) : '';

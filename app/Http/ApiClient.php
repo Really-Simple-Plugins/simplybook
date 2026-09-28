@@ -1166,7 +1166,7 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_code() . " ". $response->get_error_message());
+            throw new \Exception(esc_html($response->get_error_code() . " " . $response->get_error_message()));
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
@@ -1258,13 +1258,13 @@ class ApiClient
         ]);
 
         if (is_wp_error($response)) {
-            throw new \Exception($response->get_error_message());
+            throw new \Exception(esc_html($response->get_error_message()));
         }
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         $responseCode = wp_remote_retrieve_response_code($response);
         if ($responseCode != 200) {
-            throw new \Exception($responseBody['message'] ?? 'SMS request failed');
+            throw new \Exception(esc_html($responseBody['message'] ?? 'SMS request failed'));
         }
 
         return true; // code send.

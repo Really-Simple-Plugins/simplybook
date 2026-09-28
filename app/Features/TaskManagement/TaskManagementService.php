@@ -242,7 +242,7 @@ class TaskManagementService
     {
         $allowedStatuses = AbstractTask::allowedStatuses();
         if (!in_array($status, $allowedStatuses, true)) {
-            throw new InvalidArgumentException('Invalid status: ' . $status);
+            throw new InvalidArgumentException('Invalid status: ' . esc_html($status));
         }
 
         $this->repository->updateTaskStatus($taskId, $status);

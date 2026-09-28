@@ -91,13 +91,13 @@ abstract class AbstractManager
         foreach ($classes as $fullyClassifiedName) {
             if (is_string($fullyClassifiedName) === false) {
                 $type = gettype($fullyClassifiedName);
-                throw new LogicException("Class must be a fully qualified name. Given type: $type");
+                throw new LogicException('Class must be a fully qualified name. Given type: ' . esc_html($type));
             }
 
             $class = App::getInstance()->make($fullyClassifiedName, $this->useRegistry, $this->registerDependencies);
 
             if ($this->isRegistrable($class) === false) {
-                throw new LogicException("Class is not registrable: " . $fullyClassifiedName);
+                throw new LogicException('Class is not registrable: ' . esc_html($fullyClassifiedName));
             }
 
             $this->registerClass($class);
