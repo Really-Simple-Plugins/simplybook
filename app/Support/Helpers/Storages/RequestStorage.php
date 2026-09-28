@@ -17,8 +17,11 @@ final class RequestStorage extends Storage
     {
         $this->env = $env;
 
+        // Raw request data is only store here, consumers validate before use.
         parent::__construct([
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             'global' => $_REQUEST,
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
             'files' => $_FILES,
         ]);
     }
@@ -41,13 +44,11 @@ final class RequestStorage extends Storage
         $pluginHttpNamespace = $this->env->getString('plugin.namespace');
         $restUrlPrefix = trailingslashit(rest_get_url_prefix());
 
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-        $currentRequestUri = ($_SERVER['REQUEST_URI'] ?? '');
-        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized, WordPress.Security.NonceVerification.Recommended
-        $isPlainPermalink = (
-            isset($_GET['rest_route'])
-            && (strpos($_GET['rest_route'], $pluginHttpNamespace) !== false)
-        );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $restRoute = sanitize_text_field(wp_unslash($_GET['rest_route'] ?? ''));
+        $currentRequestUri = sanitize_text_field(wp_unslash($_SERVER['REQUEST_URI'] ?? ''));
+
+        $isPlainPermalink = (($restRoute !== '') && (strpos($restRoute, $pluginHttpNamespace) !== false));
 
         return (strpos($currentRequestUri, $restUrlPrefix) !== false) || $isPlainPermalink;
     }
