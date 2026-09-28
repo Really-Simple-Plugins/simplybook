@@ -599,16 +599,28 @@ class ApiClient
         $companyLogin = $this->get_company_login();
         $callbackUrl = $this->callbackUrlService->getFullCallbackUrl();
 
-        $rawResponse = $this->createAccountService->registerCompany(
-            $companyLogin,
-            $company->email,
-            $this->decryptString($company->password),
-            $company->marketingConsent,
-            $callbackUrl,
-            $captchaToken,
-            $company->category,
-            $userAgent
-        );
+        try {
+            $rawResponse = $this->createAccountService->registerCompany(
+                $companyLogin,
+                $company->email,
+                $this->decryptString($company->password),
+                $company->marketingConsent,
+                $callbackUrl,
+                $captchaToken,
+                $company->category,
+                $userAgent
+            );
+        } catch (ApiException $e) {
+            $exception = (new ApiException(
+                // User-friendly message during company creation flow
+                __('Account creation failed, could not register your company. Please try again.', 'simplybook')
+            ))->setData(array_merge($e->getData(), [
+                // Remember specific registerCompany exception message
+                'message' => $e->getMessage(),
+            ]))->setResponseCode($e->getResponseCode());
+
+            throw $exception;
+        }
 
         $response = (object) $rawResponse['body'];
 
