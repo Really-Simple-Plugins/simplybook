@@ -85,7 +85,7 @@ class CreateAccountService
 
         if (is_wp_error($response)) {
             $exception = (new ApiException(
-                'Failed to connect.'
+                __('Failed to connect.', 'simplybook')
             ))->setData([
                 'error' => sanitize_text_field($response->get_error_message()),
             ]);
@@ -128,7 +128,7 @@ class CreateAccountService
         $responseBody = json_decode($responseBodyRaw, true);
 
         if (!is_array($responseBody)) {
-            throw new ApiException('Invalid response.');
+            throw new ApiException(esc_html__('Invalid response.', 'simplybook'));
         }
 
         if (isset($responseBody['rspal-error'])) {
@@ -154,7 +154,7 @@ class CreateAccountService
             : sanitize_text_field($rspalError);
 
         $exception = (new ApiException(
-            $errorMessage ?: 'Account registration failed.'
+            $errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')
         ))->setData([
             'error' => $errorMessage,
         ]);
