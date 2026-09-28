@@ -7,8 +7,8 @@ defined( 'ABSPATH' ) or die( );
 /**
  * Get theme colors for default values
  */
-if (!function_exists('getThemeColorsForDefaults')) {
-    function getThemeColorsForDefaults(): array
+if (!function_exists('simplybookGetThemeColorsForDefaults')) {
+    function simplybookGetThemeColorsForDefaults(): array
     {
         static $themeColors = null;
 
@@ -22,7 +22,7 @@ if (!function_exists('getThemeColorsForDefaults')) {
 }
 
 return (static function (): array {
-    $themeColors = getThemeColorsForDefaults();
+    $themeColors = simplybookGetThemeColorsForDefaults();
 
     return [
         'timeline_type' => [
