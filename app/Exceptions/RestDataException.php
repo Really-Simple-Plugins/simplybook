@@ -24,8 +24,18 @@ class RestDataException extends \Exception
         return $this;
     }
 
-    public function getData(): array
+    /**
+     * Get extra data from the exception
+     * @param string $key Used to retrieve value from {@see $data} array based
+     * on key.
+     * @return array|string
+     */
+    public function getData(string $key = '')
     {
+        if (!empty($key)) {
+            return ($this->data[$key] ?? '');
+        }
+
         return $this->data;
     }
 }

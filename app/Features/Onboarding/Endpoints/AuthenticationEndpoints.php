@@ -91,7 +91,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
                 $this->saveLoginCompanyData($userLogin, $userPassword);
             }
 
-            return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
+            return $this->service->sendHttpResponse($exceptionData, false, $e->getData('message'), $e->getResponseCode());
         } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -131,7 +131,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
             );
         } catch (RestDataException $e) {
             // Default code 200 because React side still used request() here
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getData('message'));
         } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),

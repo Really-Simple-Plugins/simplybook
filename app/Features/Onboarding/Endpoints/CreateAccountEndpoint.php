@@ -102,12 +102,16 @@ class CreateAccountEndpoint implements SingleEndpointInterface
     private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
         if (!is_email($email)) {
-            $exception = (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException('Invalid email address.'))->setData([
+                'message' => __('Please enter a valid email address.', 'simplybook'),
+            ])->setResponseCode(422);
             throw $exception;
         }
 
         if ($termsAccepted !== true) {
-            $exception = (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException('Terms and conditions not accepted.'))->setData([
+                'message' => __('Please accept the terms and conditions.', 'simplybook'),
+            ])->setResponseCode(422);
             throw $exception;
         }
 

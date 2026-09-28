@@ -553,24 +553,24 @@ class ApiClient
     public function register_company(CompanyBuilder $company, string $captchaToken = ''): ApiResponseDTO
     {
         if ($this->adminAccessAllowed() === false) {
-            $exception = (new ApiException(
-                __('You are not authorized to do this.', 'simplybook')
-            ))->setResponseCode(403);
+            $exception = (new ApiException('Admin access not allowed.'))->setData([
+                'message' => __('You are not authorized to do this.', 'simplybook'),
+            ])->setResponseCode(403);
 
             throw $exception;
         }
 
         if ($company->isValid() === false) {
-            $exception = (new ApiException(
-                __('Please fill in all required fields to create an account.', 'simplybook')
-            ))->setResponseCode(422);
+            $exception = (new ApiException('Company data is invalid.'))->setData([
+                'message' => __('Please fill in all required fields to create an account.', 'simplybook'),
+            ])->setResponseCode(422);
 
             throw $exception;
         }
 
         $attemptCount = $this->getRegisterAttemptsCount();
         if ($attemptCount > 3) {
-            $exception = (new ApiException('Too manu attempts.'))->setData([
+            $exception = (new ApiException('Too many attempts.'))->setData([
                 'message' => __('Too many attempts to register company, please try again in a minute.', 'simplybook')
             ])->setResponseCode(429);
 
@@ -622,9 +622,8 @@ class ApiClient
         ) {
             delete_option('simplybook_company_login');
 
-            $exception = (new ApiException(
-                __('Company login was not available, retrying.', 'simplybook')
-            ))->setData([
+            $exception = (new ApiException('Company login not available.'))->setData([
+                'message' => __('Company login was not available, retrying.', 'simplybook'),
                 'retry' => true,
                 'reason' => 'login_reserved',
             ])->setResponseCode(409);
@@ -632,10 +631,9 @@ class ApiClient
             throw $exception;
         }
 
-        $exception = (new ApiException(
-            __('Unknown error encountered while registering your company. Please try again.', 'simplybook')
-        ))->setData([
-            'message' => $response->message ?? '',
+        $exception = (new ApiException('Unknown error while registering company.'))->setData([
+            'message' => __('Unknown error encountered while registering your company. Please try again.', 'simplybook'),
+            'response_message' => $response->message ?? '',
             'data' => isset($response->data) ? (is_object($response->data) ? get_object_vars($response->data) : $response->data) : null,
         ])->setResponseCode(500);
 
@@ -1126,7 +1124,8 @@ class ApiClient
                 $userMessage = __('Please enter a valid domain.', 'simplybook');
             }
 
-            $exception = (new RestDataException($userMessage))->setResponseCode(400)->setData([
+            $exception = (new RestDataException('Authentication request failed.'))->setResponseCode(400)->setData([
+                'message' => $userMessage,
                 'error_code' => $response->get_error_code(),
                 'error_message' => $errorMessage,
             ]);
@@ -1141,9 +1140,8 @@ class ApiClient
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'], $responseBody['refresh_token'], $responseBody['domain'])) {
-            $exception = (new RestDataException(
-                __('Login failed! Please try again later.', 'simplybook')
-            ))->setResponseCode(500)->setData([
+            $exception = (new RestDataException('Invalid login response.'))->setResponseCode(500)->setData([
+                'message' => __('Login failed! Please try again later.', 'simplybook'),
                 'response_code' => $responseCode,
                 'response_message' => __('Invalid response from SimplyBook.me', 'simplybook'),
             ]);
@@ -1201,9 +1199,8 @@ class ApiClient
 
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
         if (!is_array($responseBody) || !isset($responseBody['token'])) {
-            $exception = (new RestDataException(
-                __('Two factor authentication failed! Please try again later.', 'simplybook')
-            ))->setData([
+            $exception = (new RestDataException('Invalid 2FA response.'))->setData([
+                'message' => __('Two factor authentication failed! Please try again later.', 'simplybook'),
                 'response_code' => $responseCode,
                 'response_message' => __('Invalid 2FA response from SimplyBook.me', 'simplybook'),
             ]);
@@ -1254,8 +1251,9 @@ class ApiClient
                 $message = __('Authentication failed, please verify your credentials.', 'simplybook');
         }
 
-        $exception = new RestDataException($message);
+        $exception = new RestDataException(sprintf('Authentication failed with response code %d.', $responseCode));
         $exception->setData([
+            'message' => $message,
             'response_code' => $responseCode,
             'response_message' => $responseMessage,
         ]);
