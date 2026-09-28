@@ -625,6 +625,7 @@ class ApiClient
             )
         ) {
             delete_option('simplybook_company_login');
+
             $exception = (new ApiException(
                 __('Company login was not available, retrying.', 'simplybook')
             ))->setData([
@@ -744,6 +745,7 @@ class ApiClient
 
         if (!$this->tokenIsValid('admin')) {
             $this->log('Token not valid, cannot retrieve subscription widget embed code');
+
             $exception = (new RestDataException('Authentication failed, cannot retrieve subscription widget embed code.'))
                 ->setResponseCode(401)
                 ->setData(['reason' => 'invalid_admin_token']);
@@ -767,8 +769,10 @@ class ApiClient
 
         $scriptUrl = esc_url_raw((string) ($widgetData['script_url'] ?? ''));
         $allowedScriptUrls = (array) $this->env->get('simplybook.subscription_widget_script_urls', []);
+
         if (!in_array($scriptUrl, $allowedScriptUrls, true)) {
             $this->log('Subscription widget script URL is not allowed: ' . esc_html($scriptUrl));
+
             $exception = (new RestDataException('Subscription widget script URL is not allowed.'))
                 ->setResponseCode(403)
                 ->setData(['reason' => 'invalid_script_url']);
@@ -779,6 +783,7 @@ class ApiClient
         $params = $widgetData['params'] ?? [];
         if (!is_array($params)) {
             $this->log('Invalid subscription widget params.');
+
             $exception = (new RestDataException('Subscription widget script invalid.'))
                 ->setResponseCode(422)
                 ->setData(['reason' => 'invalid_script_url']);
