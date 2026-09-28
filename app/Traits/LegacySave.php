@@ -317,6 +317,9 @@ trait LegacySave {
      *
      * Direct query necessary due to lack of WordPress API support for this operation.
      *
+     * @internal ignore phpcs: query only contains literals and placeholders,
+     * values are passed via prepare()
+     *
      * @param bool $private Can be used to delete private options too.
      */
     public function delete_all_options(bool $private = false): bool
@@ -334,7 +337,7 @@ trait LegacySave {
             $params[] = '_simplybook_%';
         }
 
-        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $result = $wpdb->query(
             // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $wpdb->prepare($query, ...$params)
