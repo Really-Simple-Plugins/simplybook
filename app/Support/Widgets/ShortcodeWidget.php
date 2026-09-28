@@ -30,9 +30,11 @@ class ShortcodeWidget
 
     /**
      * Render the widget through its shortcode and print the result.
+     * @internal ignore phpcs: attributes are escaped in {@see buildShortcode}
      */
     public function print(): void
     {
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         echo $this->render();
     }
 
