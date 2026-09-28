@@ -139,10 +139,12 @@ class GutenbergController implements ControllerInterface
         $attributes = [];
 
         foreach (ShortcodeWidget::ATTRIBUTES as $attribute) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce is verified in renderBlockPreview() before this method runs.
             if (!isset($_GET[$attribute])) {
                 continue;
             }
 
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- nonce is verified in renderBlockPreview() before this method runs.
             $value = sanitize_text_field(wp_unslash($_GET[$attribute]));
             if ($attribute === 'provider' && $value === 'any') {
                 $attributes[$attribute] = $value;
