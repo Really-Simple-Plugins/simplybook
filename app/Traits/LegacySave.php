@@ -344,8 +344,9 @@ trait LegacySave {
         );
 
         // Make sure deleted options are not cached
-        $groupFlushed = wp_cache_flush_group('options');
-        
+        $supportsGroupFlush = wp_cache_supports('flush_group');
+        $groupFlushed = ($supportsGroupFlush && wp_cache_flush_group('options'));
+
         // Object caches without group support need a full flush
         if ($groupFlushed === false) {
             wp_cache_flush();
