@@ -1,0 +1,66 @@
+/**
+ * SimplyBook Admin Notices
+ */
+.toplevel_page_simplybook-integration .notice.simplybook-notice {
+    margin: 16px;
+}
+
+.notice.simplybook-notice.rsp-trial {
+    border-left-color: #d63638;
+}
+
+.notice.simplybook-notice .rsp-container {
+    display: flex;
+    padding: 12px;
+}
+
+.notice.simplybook-notice .rsp-container .dashicons {
+    margin-right: 5px;
+    margin-left: 15px;
+}
+
+.notice.simplybook-notice .rsp-notice-image {
+    width: 80px;
+    height: 80px;
+}
+
+.notice.simplybook-notice .rsp-notice-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.notice.simplybook-notice .rsp-notice-content {
+    margin-left: 30px;
+}
+
+.notice.simplybook-notice .rsp-buttons-row {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.notice.simplybook-notice button.rsp-link {
+    background: none;
+    border: none;
+    color: #2271b1;
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+
+.rtl .notice.simplybook-notice.rsp-trial {
+    border-right-color: #d63638;
+}
+
+.rtl .notice.simplybook-notice .rsp-container .dashicons {
+    margin-left: 5px;
+    margin-right: 15px;
+}
+
+.rtl .notice.simplybook-notice .rsp-notice-content {
+    margin-left: 0;
+    margin-right: 30px;
+}

@@ -1,6 +1,6 @@
 {
     "name": "really-simple-plugins/simplybookme",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "description": "Simply add a booking calendar to your site to schedule bookings, reservations, appointments and to collect payments.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -17,7 +17,7 @@
         "php": ">=7.4, <=8.3",
         "ext-json": "*",
         "adbario/php-dot-notation": "*",
-        "automattic/jetpack-autoloader": "^5",
+        "automattic/jetpack-autoloader": "^6",
         "nesbot/carbon": "*"
     },
     "require-dev": {

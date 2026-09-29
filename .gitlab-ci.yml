@@ -7,6 +7,8 @@ stages:
 .setup_php:
   image: php:7.4-cli
   before_script:
+    # Bullseye is EOL. Point apt to the Debian archive so apt-get update works.
+    - printf 'deb http://archive.debian.org/debian bullseye main\ndeb http://archive.debian.org/debian bullseye-updates main\n' > /etc/apt/sources.list
     # OS deps for Composer (needed for dist/source installs)
     - apt-get update -qq
     - apt-get install -yqq --no-install-recommends git unzip libzip-dev > /dev/null

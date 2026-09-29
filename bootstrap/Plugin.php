@@ -173,7 +173,8 @@ final class Plugin
             \SimplyBook\Controllers\CapabilityController::class,
             \SimplyBook\Controllers\ScheduleController::class,
             \SimplyBook\Controllers\WidgetController::class,
-            \SimplyBook\Controllers\BlockController::class,
+            \SimplyBook\Controllers\Gutenberg\GutenbergController::class,
+            \SimplyBook\Controllers\Elementor\ElementorController::class,
             \SimplyBook\Controllers\DesignSettingsController::class,
             \SimplyBook\Controllers\ServicesController::class,
             \SimplyBook\Controllers\ServiceProvidersController::class,
@@ -211,7 +212,40 @@ final class Plugin
             \SimplyBook\Http\Endpoints\SubscriptionWidgetEndpoint::class,
             \SimplyBook\Http\Endpoints\PublicThemeListEndpoint::class,
             \SimplyBook\Http\Endpoints\ThemeColorEndpoint::class,
-            \SimplyBook\Http\Endpoints\NoticesDismissEndpoint::class,
+            \SimplyBook\Http\Endpoints\AdminNoticesEndpoints::class,
+        ]);
+    }
+
+    /**
+     * Register the plugins listeners. The base plugin does not have any
+     * listeners yet. Currently used to hook listeners from Features into
+     * the registering process.
+     */
+    public function registerListeners(): void
+    {
+        $this->listenerManager->register([]);
+    }
+
+    /**
+     * Register the plugins Abilities with the WP Abilities API. Hooked into
+     * init so Features and Controllers can register their own Abilities via
+     * the simplybook_plugin_abilities filter and translations can be used.
+     */
+    public function registerAbilities(): void
+    {
+        $this->abilitiesManager->register([
+            \SimplyBook\Abilities\Design\ListDesignSettingsAbility::class,
+            \SimplyBook\Abilities\Design\UpdateDesignSettingsAbility::class,
+            \SimplyBook\Abilities\Providers\ListProvidersAbility::class,
+            \SimplyBook\Abilities\Providers\UpdateProviderAbility::class,
+            \SimplyBook\Abilities\Schedule\GetAvailableSlotsAbility::class,
+            \SimplyBook\Abilities\Schedule\GetScheduleAbility::class,
+            \SimplyBook\Abilities\Services\ListServicesAbility::class,
+            \SimplyBook\Abilities\Services\UpdateServiceAbility::class,
+            \SimplyBook\Abilities\Statistics\CountRecentBookingsAbility::class,
+            \SimplyBook\Abilities\Statistics\GetStatisticsAbility::class,
+            \SimplyBook\Abilities\Tasks\ListTasksAbility::class,
+            \SimplyBook\Abilities\Tasks\UpdateTaskStatusAbility::class,
         ]);
     }
 

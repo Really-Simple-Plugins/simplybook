@@ -162,7 +162,7 @@ class DesignSettingsService
     /**
      * Validate the settings based on the config. This method will throw an
      * exception if the settings do not match the config.
-     * @throws \Exception
+     * @throws FormException
      */
     public function validateSettings(array $settings): bool
     {
@@ -247,7 +247,8 @@ class DesignSettingsService
         }
 
         if (!empty($errors)) {
-            throw (new FormException())->setErrors($errors);
+            $exception = (new FormException())->setErrors($errors);
+            throw $exception;
         }
 
         return true;

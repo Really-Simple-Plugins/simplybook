@@ -5,10 +5,7 @@ import OnboardingStep from "../../components/Onboarding/OnboardingStep";
 import LeftColumn from "../../components/Grid/LeftColumn";
 import RightColumn from "../../components/Grid/RightColumn";
 import VideoFrame from "../../components/Media/VideoFrame";
-import {
-    SIMPLYBOOK_RECAPTCHA_SITE_KEY,
-    SIMPLYBOOK_RECAPTCHA_SCRIPT_URL
-} from "../../api/config";
+import { SIMPLYBOOK_RECAPTCHA_SCRIPT_URL, SIMPLYBOOK_RECAPTCHA_SITE_KEY } from "../../api/config";
 
 const path = "/onboarding/create-your-account";
 
@@ -69,7 +66,7 @@ function CreateLoginAccount() {
                         {__("Create your free account", "simplybook")}
                     </h1>
                     <h2 className={"mt-2 text-lg font-light text-black"}>
-                        {__("100% free. No credit card needed.", "simplybook")}
+                        {__("Start free – no credit card required.", "simplybook")}
                     </h2>
 
                 </div>
@@ -88,7 +85,7 @@ function CreateLoginAccount() {
                     <VideoFrame
                         FrameWrapperClass="aspect-w-16 aspect-h-9 mb-8"
                         className="w-full h-full"
-                        src="https://www.youtube.com/embed/qgMn9dKJAt4"
+                        src="https://www.youtube-nocookie.com/embed/qgMn9dKJAt4"
                         title={__("How to get started with SimplyBook.me", "simplybook")}
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         refPolicy="strict-origin-when-cross-origin"

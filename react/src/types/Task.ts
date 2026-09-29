@@ -1,8 +1,10 @@
+export type TaskStatus = "open" | "urgent" | "upgrade" | "premium" | "completed" | "dismissed" | "hidden";
+
 export interface Task {
     id: string;
     text: string;
     label: string;
-    status: "open" | "urgent" | "completed" | "dismissed" | "hidden";
+    status: TaskStatus;
     type: "required" | "optional";
     premium: boolean;
     special_feature: boolean;

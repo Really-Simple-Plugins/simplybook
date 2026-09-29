@@ -1,5 +1,7 @@
 // src/api/config.js
 
+const simplybook = window.simplybook;
+
 // Token for authenticated requests; fix to get the SimplyBook nonce
 export const SIMPLYBOOK_NONCE = simplybook.nonce;
 export const SIMPLYBOOK_X_WP_NONCE = simplybook.x_wp_nonce;

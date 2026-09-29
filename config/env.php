@@ -4,9 +4,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$dashboardMenuSlug = 'simplybook-integration';
-$plansPricesMenuSlug = 'simplybook-plans-prices';
-
 /**
  * This file is NOT loaded in the config. All other files áre loaded in one
  * config object in the container. This file is loaded separately via
@@ -19,97 +16,88 @@ $plansPricesMenuSlug = 'simplybook-plans-prices';
  * This information can be used early in the WordPress lifecycle because no
  * translations are used.
  */
-return [
-    'plugin' => [
-        'name' => 'SimplyBook.me',
-        'namespace' => 'simplybook',
-        'version' => '3.4.0',
-        'path' => dirname(__DIR__),
-        'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
-        'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
-        'lang_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
-        'view_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
-        'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',
-        'dir'  => plugin_basename(dirname(__DIR__)),
-        'base_file' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
-        'lang' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages',
-        'url'  => plugin_dir_url(__DIR__),
-        'assets_url' => plugin_dir_url(__DIR__) . 'assets/',
-        'views_url' => plugin_dir_url(__DIR__) . 'views/',
-        'react_url' => plugin_dir_url(__DIR__) . 'react',
-        'dashboard_menu_slug' => $dashboardMenuSlug,
-        'dashboard_url' => admin_url('admin.php?page=' . $dashboardMenuSlug),
-        'plans_prices_menu_slug' => $plansPricesMenuSlug,
-        'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
-        'plans_prices_return_flag' => 'simplybook_subscription_return',
-    ],
-    'http' => [
-        'version' => 'v1',
-    ],
-    'simplybook' => [
-        'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
-        'base_api_domain' => 'simplybook.it', // Do NOT commit changes
-        'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
-        'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
-        'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
-        'recaptcha' => [
-            'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
-            'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
+return (static function (): array {
+    $dashboardMenuSlug = 'simplybook-integration';
+    $plansPricesMenuSlug = 'simplybook-plans-prices';
+
+    return [
+        'plugin' => [
+            'name' => 'SimplyBook.me',
+            'namespace' => 'simplybook',
+            'version' => '3.5.0',
+            'path' => dirname(__DIR__),
+            'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
+            'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
+            'lang_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages' . DIRECTORY_SEPARATOR,
+            'view_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR,
+            'react_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'react',
+            'dir'  => plugin_basename(dirname(__DIR__)),
+            'base_file' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
+            'lang' => plugin_basename(dirname(__DIR__)) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'languages',
+            'url'  => plugin_dir_url(__DIR__),
+            'assets_url' => plugin_dir_url(__DIR__) . 'assets/',
+            'views_url' => plugin_dir_url(__DIR__) . 'views/',
+            'react_url' => plugin_dir_url(__DIR__) . 'react',
+            'dashboard_menu_slug' => $dashboardMenuSlug,
+            'dashboard_url' => admin_url('admin.php?page=' . $dashboardMenuSlug),
+            'plans_prices_menu_slug' => $plansPricesMenuSlug,
+            'plans_prices_url' => admin_url('admin.php?page=' . $plansPricesMenuSlug),
+            'plans_prices_return_flag' => 'simplybook_subscription_return',
         ],
-        'widget_script_version' => '1.3.0',
-        'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
-        'support' => [
-            'enabled' => true,
-            'widget' => [
-                'url' => 'https://simply.ladesk.com/scripts/track.js',
+        'http' => [
+            'version' => 'v1',
+        ],
+        'simplybook' => [
+            'rsp_auth_url' => 'https://simplybook.rsp-auth.com', // Do NOT commit changes
+            'base_api_domain' => 'simplybook.it', // Do NOT commit changes
+            'support_url' => 'https://wordpress.org/support/plugin/simplybook/',
+            'review_url' => 'https://wordpress.org/support/plugin/simplybook/reviews/#new-post',
+            'widget_script_url' => 'https://simplybook.me/v2/widget/widget.js',
+            'recaptcha' => [
+                'site_key' => '6LcxQC0sAAAAAM_Pg_xTRYYOjDB9WzLtS94Fmc8_',
+                'script_url' => 'https://www.google.com/recaptcha/enterprise.js',
             ],
-        ],
-        'black_friday' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'BLACKFRIDAY',
-            'start_date' => '2025-11-18',
-            'end_date' => '2025-11-29'
-        ],
-        'christmas_promo' => [
-            'discount_percentage' => 25,
-            'promo_code' => 'CHRISTMAS25',
-            'start_date' => '2025-12-01',
-            'end_date' => '2025-12-25'
-        ],
-        'tips_and_tricks' => [
-            'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
-            'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
-            'items' => [
-                [
-                    'content' => 'How to get started',
-                    'link' => 'https://help.simplybook.me/index.php/WordPress_integration',
-                ],
-                [
-                    'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar',
-                    'link' => 'https://help.simplybook.me/index.php?title=Calendar_Sync_custom_feature',
-                ],
-                [
-                    'content' => 'How to accept payments with SimplyBook.me',
-                    'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
+            'widget_script_version' => '1.3.0',
+            'subscription_widget_script_urls' => [
+                'https://app.sbpay.me/widgets/subscriptions-widget-plans.js',
+                'https://sbpay.st2.d.simplybook.ovh/widgets/subscriptions-widget-plans.js',
+            ],
+            'demo_widget_server_url' => 'https://demowidgetwpplugin.simplybook.it',
+            'tips_and_tricks' => [
+                'all' => 'https://simplybook.me/en/wordpress-booking-plugin',
+                'video_tutorials' => 'https://www.youtube.com/channel/UCQrqBCwg_C-Q6DaAQVA-U2Q',
+                'items' => [
+                    [
+                        'content' => 'How to get started',
+                        'link' => 'https://help.simplybook.me/index.php/WordPress_integration',
+                    ],
+                    [
+                        'content' => 'Sync SimplyBook.me with Google Calendar or Outlook Calendar',
+                        'link' => 'https://help.simplybook.me/index.php?title=Calendar_Sync_custom_feature',
+                    ],
+                    [
+                        'content' => 'How to accept payments with SimplyBook.me',
+                        'link' => 'https://help.simplybook.me/index.php/Accept_payments_custom_feature',
+                    ],
                 ],
             ],
-        ],
-        'domains' => [
-            ['value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
-            ['value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
-            ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
-            ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
-            ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
-            ['value' => 'default:simplybook.vip', 'label' => 'simplybook.vip'],
-            ['value' => 'default:simplybook.cc', 'label' => 'simplybook.cc'],
-            ['value' => 'default:simplybook.us', 'label' => 'simplybook.us'],
-            ['value' => 'default:simplybook.pro', 'label' => 'simplybook.pro'],
-            ['value' => 'default:enterpriseappointments.com', 'label' => 'enterpriseappointments.com'],
-            ['value' => 'default:simplybook.webnode.page', 'label' => 'simplybook.webnode.page'],
-            ['value' => 'default:servicebookings.net', 'label' => 'servicebookings.net'],
-            ['value' => 'default:booking.names.uk', 'label' => 'booking.names.uk'],
-            ['value' => 'default:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
-            ['value' => 'default:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            'domains' => [
+                ['value' => 'default:simplybook.it', 'label' => 'simplybook.it'],
+                ['value' => 'default:simplybook.me', 'label' => 'simplybook.me'],
+                ['value' => 'default:simplybook.asia', 'label' => 'simplybook.asia'],
+                ['value' => 'default:bookingsystem.nu', 'label' => 'bookingsystem.nu'],
+                ['value' => 'default:simplybooking.io', 'label' => 'simplybooking.io'],
+                ['value' => 'default:simplybook.vip', 'label' => 'simplybook.vip'],
+                ['value' => 'default:simplybook.cc', 'label' => 'simplybook.cc'],
+                ['value' => 'default:simplybook.us', 'label' => 'simplybook.us'],
+                ['value' => 'default:simplybook.pro', 'label' => 'simplybook.pro'],
+                ['value' => 'default:enterpriseappointments.com', 'label' => 'enterpriseappointments.com'],
+                ['value' => 'default:simplybook.webnode.page', 'label' => 'simplybook.webnode.page'],
+                ['value' => 'default:servicebookings.net', 'label' => 'servicebookings.net'],
+                ['value' => 'default:booking.names.uk', 'label' => 'booking.names.uk'],
+                ['value' => 'default:booking.lcn.uk', 'label' => 'booking.lcn.uk'],
+                ['value' => 'default:booking.register365.ie', 'label' => 'booking.register365.ie'],
+            ]
         ]
-    ]
-];
+    ];
+})();

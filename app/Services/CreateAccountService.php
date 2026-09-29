@@ -84,11 +84,12 @@ class CreateAccountService
         $response = wp_safe_remote_request($url, $args);
 
         if (is_wp_error($response)) {
-            throw (new ApiException(
-                __('Failed to connect.', 'simplybook')
-            ))->setData([
+            $exception = (new ApiException('Failed to connect.'))->setData([
+                'message' => __('Failed to connect.', 'simplybook'),
                 'error' => sanitize_text_field($response->get_error_message()),
             ]);
+
+            throw $exception;
         }
 
         return $this->parseResponse($response);
@@ -126,7 +127,11 @@ class CreateAccountService
         $responseBody = json_decode($responseBodyRaw, true);
 
         if (!is_array($responseBody)) {
-            throw new ApiException(__('Invalid response.', 'simplybook'));
+            $exception = (new ApiException('Invalid response.'))->setData([
+                'message' => __('Invalid response.', 'simplybook'),
+            ]);
+
+            throw $exception;
         }
 
         if (isset($responseBody['rspal-error'])) {
@@ -151,11 +156,12 @@ class CreateAccountService
             ? wp_json_encode($rspalError)
             : sanitize_text_field($rspalError);
 
-        throw (new ApiException(
-            $errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')
-        ))->setData([
+        $exception = (new ApiException('Account registration failed.'))->setData([
+            'message' => ($errorMessage ?: __('Account registration failed. Please try again.', 'simplybook')),
             'error' => $errorMessage,
         ]);
+
+        throw $exception;
     }
 
     /**
@@ -192,14 +198,14 @@ class CreateAccountService
         ]);
 
         if (is_wp_error($response)) {
-            throw new ApiException('Could not create Installation ID. WP Error: ' . $response->get_error_message());
+            throw new ApiException('Could not create Installation ID. WP Error: ' . esc_html($response->get_error_message()));
         }
 
         $responseCode = wp_remote_retrieve_response_code($response);
         $responseBody = json_decode(wp_remote_retrieve_body($response), true);
 
         if ($responseCode !== 200 && $responseCode !== 201) {
-            throw new ApiException('Could not create Installation ID. Invalid response code: ' . $responseCode);
+            throw new ApiException('Could not create Installation ID. Invalid response code: ' . esc_html((string) $responseCode));
         }
 
         $installationId = isset($responseBody['uuid']) ? sanitize_text_field($responseBody['uuid']) : '';

@@ -7,47 +7,28 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
  * be visible local and not pushed to main/production
  */
 import {
-  fas,
-  faCircle,
-  faSquareArrowUpRight,
-  faSpinner,
-  faChevronDown,
-  faChevronUp,
-  faCheck,
-  faTimes,
-  faTrophy,
-  faUserGroup,
-  faEye,
-  faBullhorn,
-  faClock,
-  faSupport,
-  faShoppingCart,
-  faCircleCheck,
-  faCircleXmark,
-  faArrowUpRightFromSquare,
-  faLinesLeaning,
-  faTriangleExclamation
- } from "@fortawesome/free-solid-svg-icons";
-
- import { 
-  faGlobe,
-  faFileSlash,
-  faFileCircleXmark,
-  faCalendarDay,
-  faCalendarWeek,
-  faCircleExclamation,
-  faInfoCircle
-} from "@fortawesome/pro-regular-svg-icons";
-
- import { 
-  faYoutube 
-} from "@fortawesome/free-brands-svg-icons";
+    faArrowUpRightFromSquare,
+    faCalendarDay,
+    faCalendarWeek,
+    faChevronDown,
+    faChevronUp,
+    faCircle,
+    faCircleCheck,
+    faCircleExclamation,
+    faCircleXmark,
+    faEye,
+    faGlobe,
+    faInfoCircle,
+    faSpinner,
+    faSquareArrowUpRight,
+    faTriangleExclamation,
+    faTrophy
+} from "@fortawesome/free-solid-svg-icons";
 
 // Map your icons to keys for easy referencing
 const iconMap = {
     "calendar-day": faCalendarDay,
     "calendar-week": faCalendarWeek,
-    "retry": faFileCircleXmark,
     "square-arrow-up-right": faSquareArrowUpRight,
     "circle-check": faCircleCheck,
     "circle-xmark": faCircleXmark,
@@ -55,21 +36,13 @@ const iconMap = {
     "spinner": faSpinner,
     "chevron-down": faChevronDown,
     "chevron-up": faChevronUp,
-    "check": faCheck,
     "info-circle": faInfoCircle,
     "warning-circle": faCircleExclamation,
-    "times": faTimes,
     "trophy": faTrophy,
-    "user-group": faUserGroup,
     "eye": faEye,
-    "bullhorn": faBullhorn,
     "support": faGlobe,
-    "clock": faClock,
     "circle": faCircle,
-    "cart": faShoppingCart,
-    "target-blank": faArrowUpRightFromSquare,
-    "youtube": faYoutube,
-    "tips": faLinesLeaning
+    "target-blank": faArrowUpRightFromSquare
 };
 
 const Icon = ({ name, color = "black", size = "1x", className = "", ...props }) => {

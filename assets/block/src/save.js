@@ -1,9 +1,7 @@
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
-
+/**
+ * Dynamic block: store only the attributes. GutenbergWidget::render outputs
+ * the widget on the front-end.
+ */
 export default function save() {
-	return (
-		<div {...useBlockProps.save()}>
-			<InnerBlocks.Content />
-		</div>
-	);
+	return null;
 }

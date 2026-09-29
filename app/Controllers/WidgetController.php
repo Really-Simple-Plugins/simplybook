@@ -66,40 +66,51 @@ class WidgetController implements ControllerInterface
     }
 
     /**
-     * Load the widget script template dynamically
-     * @uses \SimplyBook\Builders\WidgetScriptBuilder
+     * Load the widget HTML and enqueue the scripts that start the widget.
+     * @uses \SimplyBook\Support\Builders\WidgetScriptBuilder
      */
     private function loadWidgetScriptTemplate(string $widgetType, array $attributes, string $wrapperID = ''): string
     {
         try {
-            $builder = new WidgetScriptBuilder();
-            $builder->setWidgetType($widgetType)
+            $content = (new WidgetScriptBuilder())
+                ->setWidgetType($widgetType)
+                ->setWrapperID($wrapperID)
                 ->setAttributes($attributes)
                 ->setWidgetSettings($this->service->getDesignOptions())
                 ->isAuthenticated(
                     $this->client->isAuthenticated()
                 )
-                ->withHTML();
-
-            if (!empty($wrapperID)) {
-                $builder->setWrapperID($wrapperID);
-            }
-
-            $content = $builder->build();
+                ->build();
         } catch (BuilderException $e) {
             return '';
         }
 
-        $this->enqueueRemoteWidgetScript();
+        $this->enqueueWidgetScripts();
         return $content;
     }
 
     /**
-     * Enqueue the remote widget script in the header. Its needed as soon as
-     * possible as the widgets are dependent on it.
+     * Enqueue the remote widget script and the local loader script. The
+     * remote script goes in the header. The widgets depend on it, so the
+     * page needs it as soon as possible. The local loader script goes in the
+     * footer and depends on the remote script.
      */
-    private function enqueueRemoteWidgetScript(): void
+    private function enqueueWidgetScripts(): void
     {
-        wp_enqueue_script('simplybook_widget_scripts', $this->env->getUrl('simplybook.widget_script_url'), [], $this->env->getString('simplybook.widget_script_version'), false);
+        wp_enqueue_script(
+            'simplybook_widget_scripts',
+            $this->env->getUrl('simplybook.widget_script_url'),
+            [],
+            $this->env->getString('simplybook.widget_script_version'),
+            false
+        );
+
+        wp_enqueue_script(
+            'simplybook_widget_loader',
+            $this->env->getUrl('plugin.assets_url') . 'js/widget/simplybook-widget.js',
+            ['simplybook_widget_scripts'],
+            $this->env->getString('plugin.version'),
+            true
+        );
     }
 }

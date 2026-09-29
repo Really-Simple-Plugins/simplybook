@@ -7,8 +7,9 @@ defined( 'ABSPATH' ) or die( );
 /**
  * Get theme colors for default values
  */
-if (!function_exists('getThemeColorsForDefaults')) {
-    function getThemeColorsForDefaults(): array {
+if (!function_exists('simplybookGetThemeColorsForDefaults')) {
+    function simplybookGetThemeColorsForDefaults(): array
+    {
         static $themeColors = null;
 
         if ($themeColors === null) {
@@ -20,10 +21,10 @@ if (!function_exists('getThemeColorsForDefaults')) {
     }
 }
 
-$themeColors = getThemeColorsForDefaults();
+return (static function (): array {
+    $themeColors = simplybookGetThemeColorsForDefaults();
 
-return
-	[
+    return [
         'timeline_type' => [
             'id'       => 'timeline_type',
             'menu_id'  => 'design',
@@ -42,24 +43,24 @@ return
             'disabled' => false,
             'default'  => 'modern',
         ],
-		'datepicker' => [
-			'id'       => 'datepicker',
-			'menu_id'  => 'design',
-			'group_id' => 'main',
-			'type'     => 'select',
-			'label'    => __('Datepicker type', 'simplybook'),
-			'disabled' => false,
-			'options' => [
-				'inline_datepicker' => __('Inline Datepicker','simplybook'),
-				'top_calendar' => __('Top Calendar','simplybook'),
-			],
-			'default'  => 'top_calendar',
-		],
-		'is_rtl' => [
-			'id'       => 'is_rtl',
-			'menu_id'  => 'design',
-			'group_id' => 'main',
-			'type'     => 'checkbox',
+        'datepicker' => [
+            'id'       => 'datepicker',
+            'menu_id'  => 'design',
+            'group_id' => 'main',
+            'type'     => 'select',
+            'label'    => __('Datepicker type', 'simplybook'),
+            'disabled' => false,
+            'options' => [
+                'inline_datepicker' => __('Inline Datepicker','simplybook'),
+                'top_calendar' => __('Top Calendar','simplybook'),
+            ],
+            'default'  => 'top_calendar',
+        ],
+        'is_rtl' => [
+            'id'       => 'is_rtl',
+            'menu_id'  => 'design',
+            'group_id' => 'main',
+            'type'     => 'checkbox',
             'label'    => __('RTL', 'simplybook'),
             'tooltip'  => [
                 'message' => sprintf(
@@ -69,22 +70,22 @@ return
                 ),
                 'type'    => 'info',
             ],
-			'disabled' => false,
-			'default'  => is_rtl(),
-		],
-		'allow_switch_to_ada' => [
-			'id'       => 'allow_switch_to_ada',
-			'menu_id'  => 'design',
-			'group_id' => 'main',
-			'type'     => 'checkbox',
-			'label'    => __('Allow switch to ADA', 'simplybook'),
+            'disabled' => false,
+            'default'  => is_rtl(),
+        ],
+        'allow_switch_to_ada' => [
+            'id'       => 'allow_switch_to_ada',
+            'menu_id'  => 'design',
+            'group_id' => 'main',
+            'type'     => 'checkbox',
+            'label'    => __('Allow switch to ADA', 'simplybook'),
             'tooltip'  => [
                 'message' => __('This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability.', 'simplybook'),
                 'type'    => 'info',
             ],
-			'disabled' => false,
-			'default'  => false,
-		],
+            'disabled' => false,
+            'default'  => false,
+        ],
         'clear_session' => [
             'id'       => 'clear_session',
             'menu_id'  => 'design',
@@ -318,4 +319,5 @@ return
             'disabled' => false,
             'default'  => 'design_settings',
         ]
-	];
+    ];
+})();

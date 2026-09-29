@@ -1,6 +1,5 @@
-import { useBlockProps, InnerBlocks } from '@wordpress/block-editor';
 import {__} from "@wordpress/i18n";
-import {Modal, PanelBody, Button, SelectControl} from "@wordpress/components";
+import {Modal, Notice, PanelBody, Button, SelectControl} from "@wordpress/components";
 
 export default function SettingsModal(options) {
 
@@ -15,10 +14,11 @@ export default function SettingsModal(options) {
         >
             <PanelBody>
                 {!isUserAuthorized ? (
-                    <p className="sb-widget-alert">
-                        {__('You are not authorized in ', 'simplybook')}
-                        <a href={simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
-                    </p>
+                    <Notice status="warning" isDismissible={false} className="sb-widget-alert">
+                        {__('Connect your SimplyBook.me account to show the booking widget.', 'simplybook')}
+                        {' '}
+                        <a href={window.simplybook.dashboard_url} target="_top">{__('Open the SimplyBook.me settings', 'simplybook')}</a>
+                    </Notice>
                 ) : (
                     <>
                         <div className="wp-sb-popup-info">

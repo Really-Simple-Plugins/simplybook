@@ -33,7 +33,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
      */
     public function getText(): string
     {
-        return __('Please upgrade your plan to configure more Service Providers, or delete existing Providers if you want to add more.', 'simplybook');
+        return __('Your SimplyBook.me plan does not allow more Service Providers. Choose a bigger plan, or delete existing Providers if you want to add more.', 'simplybook');
     }
 
     /**
@@ -58,7 +58,7 @@ class MaxedOutProvidersNotice extends AbstractNotice
     public function getAction(): array
     {
         return [
-            'text' => __('Upgrade now', 'simplybook'),
+            'text' => __('View plans', 'simplybook'),
             'link' => $this->env->getUrl('plugin.plans_prices_url'),
         ];
     }

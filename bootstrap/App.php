@@ -127,7 +127,7 @@ final class App
         $reflector = new ReflectionClass($class);
 
         if ($reflector->isInstantiable() === false) {
-            throw new Exception("Target [{$class}] is not instantiable.");
+            throw new Exception('Target [' . esc_html($class) . '] is not instantiable.');
         }
 
         $constructor = $reflector->getConstructor();
@@ -151,8 +151,8 @@ final class App
 
                 throw new Exception(sprintf(
                     'Cannot resolve untyped parameter $%s for [%s] without a default value.',
-                    $parameter->getName(),
-                    $class
+                    esc_html($parameter->getName()),
+                    esc_html($class)
                 ));
             }
 
@@ -160,8 +160,8 @@ final class App
             if ($type instanceof ReflectionNamedType === false) {
                 throw new Exception(sprintf(
                     'Unsupported parameter type for $%s in [%s].',
-                    $parameter->getName(),
-                    $class
+                    esc_html($parameter->getName()),
+                    esc_html($class)
                 ));
             }
 
@@ -174,9 +174,9 @@ final class App
 
                 throw new Exception(sprintf(
                     'Cannot autowire builtin parameter $%s (%s) for [%s]. Provide a default or register a factory.',
-                    $parameter->getName(),
-                    $type->getName(),
-                    $class
+                    esc_html($parameter->getName()),
+                    esc_html($type->getName()),
+                    esc_html($class)
                 ));
             }
 
@@ -186,8 +186,8 @@ final class App
             if ($dependencyClass === self::class) {
                 throw new Exception(sprintf(
                     'Cannot resolve App container dependency for $%s in [%s] to prevent circular dependencies.',
-                    $parameter->getName(),
-                    $class
+                    esc_html($parameter->getName()),
+                    esc_html($class)
                 ));
             }
 

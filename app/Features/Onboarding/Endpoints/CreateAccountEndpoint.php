@@ -72,7 +72,7 @@ class CreateAccountEndpoint implements SingleEndpointInterface
             $captchaToken = $storage->getString('captcha_token');
 
             $company = $this->getNewCompanyObject(
-                $storage->getEmail('email'),
+                $storage->getString('email', '', true),
                 $storage->getBoolean('terms-and-conditions'),
                 $storage->getBoolean('marketing-consent')
             );
@@ -80,7 +80,7 @@ class CreateAccountEndpoint implements SingleEndpointInterface
             $response = $this->client->register_company($company, $captchaToken);
         } catch (ApiException $e) {
             $this->log('Account creation failed (API): ' . $e->getMessage());
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage(), $e->getResponseCode());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getData('message'), $e->getResponseCode());
         } catch (Throwable $e) {
             $this->log('Account creation failed: ' . $e->getMessage());
             return $this->service->sendHttpResponse([], false, __('An error occurred while creating your account. Please try again.', 'simplybook'), 500);
@@ -102,11 +102,17 @@ class CreateAccountEndpoint implements SingleEndpointInterface
     private function getNewCompanyObject(string $email, bool $termsAccepted, bool $marketingConsent): CompanyBuilder
     {
         if (!is_email($email)) {
-            throw (new ApiException(__('Please enter a valid email address.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException('Invalid email address.'))->setData([
+                'message' => __('Please enter a valid email address.', 'simplybook'),
+            ])->setResponseCode(422);
+            throw $exception;
         }
 
         if ($termsAccepted !== true) {
-            throw (new ApiException(__('Please accept the terms and conditions.', 'simplybook')))->setResponseCode(422);
+            $exception = (new ApiException('Terms and conditions not accepted.'))->setData([
+                'message' => __('Please accept the terms and conditions.', 'simplybook'),
+            ])->setResponseCode(422);
+            throw $exception;
         }
 
         $encryptedPassword = $this->service->encryptString(wp_generate_password(24, false));

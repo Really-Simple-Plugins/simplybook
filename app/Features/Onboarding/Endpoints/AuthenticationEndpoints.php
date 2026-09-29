@@ -6,6 +6,7 @@ use Throwable;
 use WP_REST_Request;
 use WP_REST_Response;
 use SimplyBook\Http\ApiClient;
+use SimplyBook\Traits\HasLogging;
 use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Support\Helpers\Storage;
 use SimplyBook\Traits\HasAllowlistControl;
@@ -16,6 +17,7 @@ use SimplyBook\Features\Onboarding\OnboardingService;
 
 class AuthenticationEndpoints implements MultiEndpointInterface
 {
+    use HasLogging;
     use HasRestAccess;
     use HasAllowlistControl;
 
@@ -89,7 +91,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
                 $this->saveLoginCompanyData($userLogin, $userPassword);
             }
 
-            return $this->service->sendHttpResponse($exceptionData, false, $e->getMessage(), $e->getResponseCode());
+            return $this->service->sendHttpResponse($exceptionData, false, $e->getData('message'), $e->getResponseCode());
         } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -129,7 +131,7 @@ class AuthenticationEndpoints implements MultiEndpointInterface
             );
         } catch (RestDataException $e) {
             // Default code 200 because React side still used request() here
-            return $this->service->sendHttpResponse($e->getData(), false, $e->getMessage());
+            return $this->service->sendHttpResponse($e->getData(), false, $e->getData('message'));
         } catch (Throwable $e) {
             return $this->service->sendHttpResponse([
                 'message' => $e->getMessage(),
@@ -155,7 +157,9 @@ class AuthenticationEndpoints implements MultiEndpointInterface
                 $storage->getString('auth_session_id')
             );
         } catch (Throwable $e) {
-            return $this->service->sendHttpResponse([], false, $e->getMessage()); // Default code 200 because React side still used request() here
+            $this->log('Requesting SMS code failed: ' . $e->getMessage());
+
+            return $this->service->sendHttpResponse([], false, __('Could not send the SMS code. Please try again.', 'simplybook')); // Default code 200 because React side still used request() here
         }
 
         return $this->service->sendHttpResponse([], true, __('Successfully requested SMS code', 'simplybook')); // Default code 200 because React side still used request() here

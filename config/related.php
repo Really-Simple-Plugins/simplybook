@@ -12,7 +12,7 @@ return [
             'create' => admin_url('options-general.php?page=metricool'),
             'url' => 'https://wordpress.org/plugins/metricool/',
             'title' => sprintf(
-                /* translators: %s: Plugin name: "Metricool -". */
+            /* translators: %s: Plugin name: "Metricool -". */
                 __('%s Social Media Management', 'simplybook'),
                 'Metricool -'
             ),
@@ -27,7 +27,7 @@ return [
             'url' => 'https://wordpress.org/plugins/really-simple-ssl/',
             'upgrade_url' => 'https://really-simple-ssl.com/pro?src=simplybook-plugin',
             'title' => sprintf(
-                /* translators: %s: Plugin name: "Really Simple Security -". */
+            /* translators: %s: Plugin name: "Really Simple Security -". */
                 __('%s Lightweight plugin. Heavyweight security features.', 'simplybook'),
                 'Really Simple Security -'
             ),
@@ -43,7 +43,7 @@ return [
             'url' => 'https://wordpress.org/plugins/complianz-gdpr/',
             'upgrade_url' => 'https://complianz.io?src=simplybook-plugin',
             'title' => sprintf(
-                /* translators: %s: Plugin name: "Complianz -". */
+            /* translators: %s: Plugin name: "Complianz -". */
                 __('%s Consent Management as it should be', 'simplybook'),
                 'Complianz -'
             ),
@@ -58,13 +58,14 @@ return [
             'url' => 'https://wordpress.org/plugins/complianz-terms-conditions/',
             'upgrade_url' => 'https://complianz.io?simplybook=cmplz-plugin',
             'title' => sprintf(
-                /* translators: %s: Plugin name prefix, "Complianz -".
-                 * "Terms & Conditions" is part of the plugin name and can be translated for clarity.
-                 */
+            /* translators: %s: Plugin name prefix, "Complianz -".
+             * "Terms & Conditions" is part of the plugin name and can be translated for clarity.
+             */
                 __('%s Terms & Conditions', 'simplybook'),
                 'Complianz -'
             ),
-            'color' => '#000000'
+            'color' => '#000000',
+            'redirect_transient' => 'cmplz_tc_redirect_to_settings',
         ],
     ],
 ];

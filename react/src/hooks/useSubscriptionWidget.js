@@ -11,17 +11,18 @@ const getWidgetLoadErrorMessage = () => __("Plans & Prices could not be loaded."
 
 const useSubscriptionWidget = () => {
     const client = useMemo(() => new HttpClient(WIDGET_ROUTE), []);
-    const initialized = useRef(false);
+    const initializedAt = useRef(0);
     const [scriptLoaded, setScriptLoaded] = useState(
         typeof window !== "undefined" && typeof window.SbPayWidget === "function"
     );
     const [loadError, setLoadError] = useState("");
+    const [containerKey, setContainerKey] = useState(0);
     const handleWidgetError = useCallback((message, widgetError) => {
         console.error(message, widgetError);
         setLoadError(getWidgetLoadErrorMessage());
     }, []);
 
-    const { error, data: response } = useQuery({
+    const { error, data: response, dataUpdatedAt, refetch, isFetching } = useQuery({
         queryKey: [WIDGET_ROUTE],
         queryFn: () => client.get(),
         staleTime: 0,
@@ -65,7 +66,7 @@ const useSubscriptionWidget = () => {
     }, [handleWidgetError, scriptLoaded, widget?.script_url]);
 
     useEffect(() => {
-        if (!widget || !scriptLoaded || initialized.current) {
+        if (!widget || !scriptLoaded || initializedAt.current === dataUpdatedAt) {
             return;
         }
 
@@ -75,16 +76,25 @@ const useSubscriptionWidget = () => {
             }
 
             new window.SbPayWidget(containerId, widget.params || {});
-            initialized.current = true;
+            initializedAt.current = dataUpdatedAt;
             setLoadError("");
         } catch (widgetError) {
             handleWidgetError("Subscription widget failed to initialize:", widgetError);
         }
-    }, [containerId, handleWidgetError, scriptLoaded, widget]);
+    }, [containerId, dataUpdatedAt, handleWidgetError, scriptLoaded, widget]);
+
+    const retry = useCallback(() => {
+        setLoadError("");
+        setContainerKey((key) => key + 1);
+        refetch();
+    }, [refetch]);
 
     return {
         containerId,
+        containerKey,
         loadError,
+        retry,
+        isLoading: isFetching || (widget !== null && !scriptLoaded && !loadError),
     };
 };
 

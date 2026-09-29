@@ -1,7 +1,8 @@
-import React, {useState} from "react";
-import {__} from "@wordpress/i18n";
+import React, { useState } from "react";
+import { __ } from "@wordpress/i18n";
 import Modal from "../Common/Modal";
 import useWidgetData from "../../hooks/useWidgetData";
+import Error from "../Errors/Error";
 
 type PreviewButtonInputProps = {
     btnVariant?: string;
@@ -16,6 +17,7 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
      getValues,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [previewError, setPreviewError] = useState("");
     const { createPreviewWidget } = useWidgetData();
 
     let localClassName = "rounded-full transition-all duration-200 p-4 cursor-pointer bg-secondary text-white" +
@@ -38,21 +40,21 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
 
         // Open before sending request to make sure container exists
         setIsModalOpen(true);
+        setPreviewError("");
 
         // @ts-ignore
         createPreviewWidget(formData).then((response) => {
+            const config = response.data.widget;
 
-            // Create the script element
-            let newScriptElement = document.createElement('script');
-            newScriptElement.id = 'simplybook-preview-widget-script';
-            newScriptElement.innerHTML = response.data.widget;
+            if (!config || typeof SimplybookWidget !== "function") {
+                setPreviewError(__("The preview could not be loaded. Please try again.", "simplybook"));
+                return;
+            }
 
-            document.head.appendChild(newScriptElement);
-
-            // Dispatch custom element to load the widget
-            document.dispatchEvent(
-                new CustomEvent('loadSimplyBookPreviewWidget')
-            );
+            new SimplybookWidget(config);
+        }).catch((error) => {
+            console.error("Error loading preview widget:", error);
+            setPreviewError(__("The preview could not be loaded. Please try again.", "simplybook"));
         });
     };
 
@@ -61,24 +63,31 @@ const PreviewButtonInput: React.FC<PreviewButtonInputProps> = ({
      */
     const closeModal = () => {
         setIsModalOpen(false);
+        setPreviewError('');
     };
 
     return (
-        <>  
-            <button 
+        <>
+            <button
                 type="button"
-                className={"flex items-center justify-center rounded-full font-bold  text-sm transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary cursor-pointer flex-row"} 
+                className={"flex items-center justify-center rounded-full font-bold text-sm transition-all duration-200 px-3 py-1 bg-tertiary text-white hover:bg-tertiary-light hover:text-tertiary cursor-pointer flex-row"}
                 onClick={onClick}
             >
-                {__('Preview', 'simplybook')}   
+                {__("Preview", "simplybook")}
             </button>
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeModal}
             >
                 <div id="modal-header" className={"leading-none"}>
-                    <h2>{__('Preview', 'simplybook')}</h2>
+                    <h2>{__("Preview", "simplybook")}</h2>
                 </div>
+                {previewError &&
+                    <Error
+                        errorHeading={__("Something went wrong", "simplybook")}
+                        error={previewError}
+                    />
+                }
                 <div id="sbw_z0hg2i_calendar" className={"h-[70vh] overflow-y-scroll my-4"}></div>
             </Modal>
         </>

@@ -27,7 +27,7 @@ const DataList = [
     {
         title: __("SMS Gateway", "simplybook"),
         link: "v2/management?hash=plugins/sms",
-        buttonText: __("Upgrade", "simplybook"),
+        buttonText: __("Enable", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
         id: "sms",
@@ -35,7 +35,7 @@ const DataList = [
     {
         title: __("Membership", "simplybook"),
         link: "v2/management?hash=plugins/membership",
-        buttonText: __("Upgrade", "simplybook"),
+        buttonText: __("Enable", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
         id: "membership"
@@ -43,7 +43,7 @@ const DataList = [
     {
         title: __("Paid Events", "simplybook"),
         link: "v2/management?hash=plugins/paid_events",
-        buttonText: __("Upgrade", "simplybook"),
+        buttonText: __("Enable", "simplybook"),
         btnVariant: "primary",
         isPlugin:true,
         id: "paid_events",
@@ -76,7 +76,7 @@ const Management = () => {
                             <>
                                 <div className="text-base">{block.title}</div>
                                 <div className={"flex justify-end"}>
-                                    <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Upgrade", "simplybook")}</ButtonLink>
+                                    <ButtonLink className={"border-primary text-primary"} icon={false} loginLink={block.link} btnVariant={"ghost-small"}>{__("Enable", "simplybook")}</ButtonLink>
                                 </div>
                             </>
                         )}

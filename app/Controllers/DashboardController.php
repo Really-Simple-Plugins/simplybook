@@ -2,7 +2,6 @@
 
 namespace SimplyBook\Controllers;
 
-use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasViews;
 use SimplyBook\Traits\LegacyLoad;
 use SimplyBook\Traits\HasUserAccess;
@@ -21,7 +20,6 @@ class DashboardController implements ControllerInterface
     use HasUserAccess;
     use HasAllowlistControl;
 
-    private ApiClient $client;
     private EnvironmentConfig $env;
     private RequestStorage $request;
     private GeneralConfig $config;
@@ -29,14 +27,12 @@ class DashboardController implements ControllerInterface
     private SubscriptionDataService $subscriptionDataService;
 
     public function __construct(
-        ApiClient $client,
         EnvironmentConfig $env,
         GeneralConfig $config,
         RequestStorage $request,
         ThemeColorService $themeColorService,
         SubscriptionDataService $subscriptionDataService
     ) {
-        $this->client = $client;
         $this->env = $env;
         $this->request = $request;
         $this->config = $config;
@@ -90,7 +86,9 @@ class DashboardController implements ControllerInterface
 
     /**
      * Add the dashboard page to the admin menu of WordPress. Also triggers the
-     * action to enqueue scripts and styles
+     * action to enqueue scripts and styles. The Plans & Prices submenu needs a
+     * registered company, so it is only added after the onboarding.
+     *
      * @uses apply_filters simplybook_menu_position
      */
     public function addDashboardPage(): void
@@ -106,15 +104,9 @@ class DashboardController implements ControllerInterface
          */
         $menuPosition = apply_filters('simplybook_menu_position', 59);
 
-        $menuCounterHtml = '';
-        $menuCounter = $this->getMenuCount();
-        if ($menuCounter > 0) {
-            $menuCounterHtml = "<span class='menu-counter' style='position: absolute; top: 2px; z-index: 0; right: 4px;'>{$menuCounter}</span>";
-        }
-
         $pageHookSuffix = add_menu_page(
             esc_html__('SimplyBook.me', 'simplybook'),
-            esc_html__('SimplyBook.me', 'simplybook') . $menuCounterHtml,
+            esc_html__('SimplyBook.me', 'simplybook'),
             'simplybook_manage',
             $dashboardMenuSlug,
             [$this, 'renderReactApp'],
@@ -131,6 +123,13 @@ class DashboardController implements ControllerInterface
             [$this, 'renderReactApp']
         );
 
+        $this->enqueueReactAppForHook($pageHookSuffix);
+        $this->enqueueReactAppForHook($dashboardHookSuffix);
+
+        if (!$this->isOnboardingCompleted()) {
+            return;
+        }
+
         $plansPricesHookSuffix = add_submenu_page(
             $dashboardMenuSlug,
             esc_html__('Plans & Prices', 'simplybook'),
@@ -140,8 +139,6 @@ class DashboardController implements ControllerInterface
             [$this, 'renderReactApp']
         );
 
-        $this->enqueueReactAppForHook($pageHookSuffix);
-        $this->enqueueReactAppForHook($dashboardHookSuffix);
         $this->enqueueReactAppForHook($plansPricesHookSuffix);
     }
 
@@ -324,7 +321,6 @@ class DashboardController implements ControllerInterface
                 'completed_step' => get_option('simplybook_completed_step', 0),
                 'simplybook_domains' => $this->env->get('simplybook.domains'),
                 'simplybook_countries' => $this->config->get('countries'),
-                'support' => $this->env->get('simplybook.support'),
                 'fallback_colors' => $this->themeColorService->getFallbackColors(),
                 'recaptcha' => $this->env->get('simplybook.recaptcha'),
             ]
@@ -346,19 +342,6 @@ class DashboardController implements ControllerInterface
         }
 
         $this->subscriptionDataService->clearCache();
-    }
-
-    /**
-     * Safe way to read the menu count from the options table. Returns 0 if
-     * the Task Management feature is not available in the current context.
-     */
-    private function getMenuCount(): int
-    {
-        if (class_exists('\SimplyBook\Features\TaskManagement\Tasks\AbstractTask') === false) {
-            return 0;
-        }
-
-        return get_option(\SimplyBook\Features\TaskManagement\Tasks\AbstractTask::MENU_BUBBLE_OPTION_KEY, 0);
     }
 
     /**

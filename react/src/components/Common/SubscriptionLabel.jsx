@@ -1,10 +1,15 @@
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import useSubscriptionData from "../../hooks/useSubscriptionData";
 import Label from "./Label";
 
 const getSubscriptionLabelText = (subscriptionPlan, expiresIn) => {
     if (subscriptionPlan.toUpperCase() === "TRIAL" || expiresIn < 30) {
-        return `${subscriptionPlan} - ${expiresIn} ${__("days left", "simplybook")}`;
+        return sprintf(
+            /* translators: 1: Subscription plan name. 2: Number of days left. */
+            __("%1$s - %2$d days left", "simplybook"),
+            subscriptionPlan,
+            expiresIn,
+        );
     }
 
     return subscriptionPlan;
@@ -20,7 +25,11 @@ const SubscriptionLabel = () => {
 
     const labelVariant = isExpired ? "trial-expired" : "trial";
     const labelText = isExpired
-        ? `${subscriptionPlan} ${__("is expired.", "simplybook")}`
+        ? sprintf(
+            /* translators: %s: Subscription plan name. */
+            __("%s ended - choose your plan", "simplybook"),
+            subscriptionPlan,
+        )
         : getSubscriptionLabelText(subscriptionPlan, expiresIn);
 
     const subscriptionLabel = (
@@ -34,7 +43,7 @@ const SubscriptionLabel = () => {
     }
 
     return (
-        <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden">
+        <a href={plansPricesUrl} className="no-underline hover:opacity-80 focus:outline-hidden" title={__("Choose your plan", "simplybook")}>
             {subscriptionLabel}
         </a>
     );

@@ -10,6 +10,7 @@ const useTaskData = () => {
         urgent: 0,
         upgrade: 5,
         open: 10,
+        premium: 15,
         completed: 20,
         dismissed: 30,
         hidden: 40,

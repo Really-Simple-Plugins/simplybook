@@ -93,7 +93,7 @@ const useOnboardingData = () => {
                 {
                     id: "marketing-consent",
                     type: "checkbox",
-                    default: true,
+                    default: false,
                     label: sprintf(
                         __("I wish to receive communications about news and/or promotions from %sSimplyBook.me%s", "simplybook"),
                         '<a href="https://simplybook.me/en/policy#direct-marketing" target="_blank">',

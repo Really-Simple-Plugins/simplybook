@@ -111,8 +111,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
 
         $this->afterCreate();
 
-        // translators: %s is either 'Service' or 'Service Provider'
         $successMessage = sprintf(
+            // translators: %s is either 'Service' or 'Service Provider'
             __('%s successfully saved!', 'simplybook'),
             $this->entity->getName()
         );
@@ -186,8 +186,8 @@ abstract class AbstractCrudEndpoint implements MultiEndpointInterface
             return $this->processRequestThrowable($e, 'update');
         }
 
-        // translators: %s is either 'Service' or 'Service Provider'
         $successMessage = sprintf(
+            // translators: %s is either 'Service' or 'Service Provider'
             __('%s successfully saved!', 'simplybook'),
             $this->entity->getName()
         );

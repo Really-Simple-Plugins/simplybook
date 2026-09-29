@@ -2,8 +2,10 @@
 
 namespace SimplyBook\Http\Endpoints;
 
+use WP_Error;
 use SimplyBook\Http\ApiClient;
 use SimplyBook\Traits\HasApiAccess;
+use SimplyBook\Traits\HasRestAccess;
 use SimplyBook\Http\Entities\Service;
 use SimplyBook\Http\Entities\ServiceProvider;
 use SimplyBook\Interfaces\MultiEndpointInterface;
@@ -11,6 +13,7 @@ use SimplyBook\Interfaces\MultiEndpointInterface;
 class BlockEndpoint implements MultiEndpointInterface
 {
     use HasApiAccess;
+    use HasRestAccess;
 
     public const ROUTE = 'internal';
 
@@ -41,26 +44,47 @@ class BlockEndpoint implements MultiEndpointInterface
     {
         return [
             self::ROUTE . '/is-authorized' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
                 'callback' => [$this, 'companyRegistrationIsCompleted'],
             ],
             self::ROUTE . '/locations' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
                 'callback' => [$this, 'getLocations'],
             ],
             self::ROUTE . '/services' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
                 'callback' => [$this, 'getServices'],
             ],
             self::ROUTE . '/categories' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
                 'callback' => [$this, 'getCategories'],
             ],
             self::ROUTE . '/providers' => [
-                'methods' => \WP_REST_Server::CREATABLE,
+                'methods' => \WP_REST_Server::READABLE,
+                'permission_callback' => [$this, 'blockEditorAccessAllowed'],
                 'callback' => [$this, 'getProviders'],
             ],
         ];
+    }
+
+    /**
+     * The block editor calls these routes with GET. Every user that can edit
+     * posts must be able to use the block. Check the 'edit_posts' capability.
+     * WordPress validates the X-WP-Nonce header before this callback runs.
+     *
+     * @return bool|WP_Error
+     */
+    public function blockEditorAccessAllowed()
+    {
+        if (current_user_can('edit_posts')) {
+            return true;
+        }
+
+        return $this->forbiddenError();
     }
 
     /**

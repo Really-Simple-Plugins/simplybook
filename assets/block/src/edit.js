@@ -1,17 +1,23 @@
 import { __ } from '@wordpress/i18n';
-import { useBlockProps, InspectorControls, BlockControls, InnerBlocks } from '@wordpress/block-editor';
-import { PanelBody, TextControl, Modal, Button, SelectControl, Dashicon, IconButton, ToolbarGroup, ToolbarButton } from '@wordpress/components';
+import { BlockControls, useBlockProps } from '@wordpress/block-editor';
+import { PanelBody, Button, Icon, Modal, Notice, ToolbarButton, ToolbarGroup } from '@wordpress/components';
 import { useEffect, useState } from '@wordpress/element';
 import './editor.scss';
 import SettingsModal from "./setting.modal";
-import React from "react";
-import request from "../../../react/src/api/requests/request";
+import apiFetch from '@wordpress/api-fetch';
+import icon from './icon';
+
+const previewAttributes = ['location', 'category', 'service', 'provider'];
+
+const fetchData = (endpoint) => apiFetch({
+	path: `${window.simplybook.rest_namespace}/${window.simplybook.rest_version}/internal/${endpoint}`,
+});
 
 export default function Edit(props) {
 	const { attributes, setAttributes } = props;
 	const blockProps = useBlockProps();
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+	const [previewUrl, setPreviewUrl] = useState(null);
 	const [isUserAuthorized, setIsUserAuthorized] = useState(false);
 	const [locations, setLocations] = useState([]);
 	const [categories, setCategories] = useState([]);
@@ -21,21 +27,15 @@ export default function Edit(props) {
 	const [selectedCategory, setSelectedCategory] = useState(null);
 	const [selectedService, setSelectedService] = useState(null);
 	const [selectedProvider, setSelectedProvider] = useState(null);
-	const [modalContent, setModalContent] = useState('');
-	const previewModal = React.createRef();
 
 	useEffect(() => {
-		const fetchData = async (endpoint) => {
-			return await request(endpoint, "POST");
-		};
-
-		fetchData('internal/is-authorized').then(setIsUserAuthorized);
+		fetchData('is-authorized').then(setIsUserAuthorized);
 
 		Promise.all([
-			fetchData('internal/locations'),
-			fetchData('internal/categories'),
-			fetchData('internal/services'),
-			fetchData('internal/providers')
+			fetchData('locations'),
+			fetchData('categories'),
+			fetchData('services'),
+			fetchData('providers')
 		]).then(([locations, categories, services, providers]) => {
 			setLocations(locations);
 			setCategories(categories);
@@ -46,9 +46,20 @@ export default function Edit(props) {
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
+	const closePreview = () => setPreviewUrl(null);
 
-	const openPreview = () => setIsPreviewOpen(true);
-	const closePreview = () => setIsPreviewOpen(false);
+	const openPreview = () => {
+		const url = new URL(window.simplybook.preview_url);
+
+		previewAttributes.forEach(attribute => {
+			const value = attributes[attribute];
+			if (value && value !== '0') {
+				url.searchParams.set(attribute, String(value));
+			}
+		});
+
+		setPreviewUrl(url.toString());
+	};
 
 	useEffect(() => {
 		if (locations.length > 0) {
@@ -74,97 +85,36 @@ export default function Edit(props) {
 		closeModal();
 	};
 
-	const getBlockControls = () => (
-		<BlockControls>
-			<ToolbarGroup>
-				<ToolbarButton onClick={() => previewWidget()} icon="visibility">
-					{__('Preview', 'simplybook')}
-				</ToolbarButton>
-			</ToolbarGroup>
-		</BlockControls>
-	);
-
-	const previewWidget = () => {
-		let ajaxUrl = '/wp-admin/admin-ajax.php';
-
-		let formData = new FormData();
-
-		//action: sb_preview_widget
-		//formData[predefined][provider]
-		//formData[predefined][service]
-		//formData[predefined][category]
-		//formData[predefined][location]
-
-		formData.append('action', 'sb_preview_widget');
-		if(attributes.location) {
-			formData.append('formData[predefined][location]', attributes.location);
-		}
-		if(attributes.category) {
-			formData.append('formData[predefined][category]', attributes.category);
-		}
-		if(attributes.service) {
-			formData.append('formData[predefined][service]', attributes.service);
-		}
-		if(attributes.provider) {
-			formData.append('formData[predefined][provider]', attributes.provider);
-		}
-		formData.append('_wpnonce', window.simplybook.nonce);
-
-		//convert to string  'orem=ipsum&name=binny';
-		formData = new URLSearchParams(formData).toString();
-
-		let xhr = new XMLHttpRequest();
-		xhr.open('POST', ajaxUrl, true);
-		xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
-		xhr.onreadystatechange = function () {
-			if (xhr.readyState === 4 && xhr.status === 200) {
-				console.log(xhr.responseText);
-				var data = JSON.parse(xhr.responseText);
-
-				if(data && data.html){
-					//add html to modal by ref
-					setModalContent(data.html);
-					openPreview();
-
-					setTimeout(() => {
-						var scripts = document.getElementById('simplybook-preview-modal').getElementsByTagName('script');
-						//check if script exists
-						if(scripts.length === 0){
-							console.warn('No script found in widget preview');
-							return;
-						}
-						//replace event DOMContentLoaded to custom event
-						var scriptContent = scripts[0].innerHTML.replace('DOMContentLoaded', 'sbDOMContentLoaded');
-						window.eval(scriptContent);
-						//trigger custom event
-						var event = new Event('sbDOMContentLoaded');
-						document.dispatchEvent(event);
-					}, 300);
-				}
-			}
-		};
-		xhr.send(formData);
-	}
-
 	return (
 		<>
-			{getBlockControls()}
+			<BlockControls>
+				<ToolbarGroup>
+					<ToolbarButton
+						icon="visibility"
+						disabled={!isUserAuthorized}
+						onClick={openPreview}
+					>
+						{__('Preview', 'simplybook')}
+					</ToolbarButton>
+				</ToolbarGroup>
+			</BlockControls>
 			<div {...blockProps}>
 				<PanelBody>
 					<div className={'sb-widget-container'}>
-						<Dashicon icon="simplybook" size={25} className={"sb-widget-icon"}/>
+						<Icon icon={icon} size={25} className={"sb-widget-icon"}/>
 
-						<h3 className={'wp-sb-title wp-sb-title_h3 sb-widget-title'}>{__('SimplyBook.me Widget', 'simplybook')}</h3>
+						<h3 className={'wp-sb-title wp-sb-title_h3 sb-widget-title'}>{__('SimplyBook.me Booking Widget', 'simplybook')}</h3>
 
 						<p className={"wp-sb-txt wp-sb--p wp-sb--p_secondary --subtitle"}>
 							{__('Easily customize and streamline your booking process with predefined options for services, providers, categories and locations.', 'simplybook')}
 						</p>
 
 						{!isUserAuthorized ? (
-							<p className="sb-widget-alert">
-								{__('You are not authorized in ', 'simplybook')}
-								<a href={simplybook.dashboard_url}>{__('SimplyBook.me plugin', 'simplybook')}</a>
-							</p>
+							<Notice status="warning" isDismissible={false} className="sb-widget-alert">
+								{__('Connect your SimplyBook.me account to show the booking widget.', 'simplybook')}
+								{' '}
+								<a href={window.simplybook.dashboard_url} target="_top">{__('Open the SimplyBook.me settings', 'simplybook')}</a>
+							</Notice>
 						) : (
 							<>
 								{selectedLocation ? (
@@ -204,22 +154,20 @@ export default function Edit(props) {
 				{isModalOpen &&
 					<SettingsModal isUserAuthorized={isUserAuthorized} locations={locations} categories={categories} services={services} providers={providers} attributes={attributes} setAttributes={setAttributes} saveParameters={saveParameters} closeModal={closeModal}/>
 				}
-
-				{isPreviewOpen &&
-					<Modal className="sb-widget-modal sb-widget-preview-modal"
-						   title={__('WidgetPreview', 'simplybook')}
-						   onRequestClose={closePreview}
-						   ref={previewModal}
+				{previewUrl &&
+					<Modal
+						className="sb-widget-preview-modal"
+						title={__('Widget preview', 'simplybook')}
+						onRequestClose={closePreview}
 					>
-						<PanelBody>
-							<div dangerouslySetInnerHTML={{__html: modalContent}}
-								 id="simplybook-preview-modal" />
-						</PanelBody>
+						<iframe
+							className="sb-widget-preview-frame"
+							src={previewUrl}
+							title={__('SimplyBook.me widget preview', 'simplybook')}
+							referrerPolicy="no-referrer"
+						/>
 					</Modal>
 				}
-
-
-				{/*<InnerBlocks />*/}
 			</div>
 		</>
 	);

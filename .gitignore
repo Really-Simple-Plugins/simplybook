@@ -95,3 +95,6 @@ phpstan.neon
 
 #Artifacts
 /.windsurf/
+
+# Storybook build output
+storybook-static/

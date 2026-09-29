@@ -19,6 +19,7 @@ trait HasLogging
         $prepend = 'SimplyBook.me: ';
 
         if (is_array($message) || is_object($message)) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
             $message = print_r($message, true);
         }
 
