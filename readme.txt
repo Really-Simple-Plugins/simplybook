@@ -172,6 +172,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Changed: Improved the wording of texts in the plugin.
 * Changed: Rewrote the plugin description and added more questions to the FAQ.
 * Changed: The marketing consent checkbox in the account setup is now unchecked by default.
+* Changed: The trial expiration notice is no longer shown on the plugin dashboard.
 * Changed: Installing a plugin from the "Other plugins" section no longer affects other WordPress behavior.
 * Changed: Made previously untranslated texts translatable.
 * Changed: Updated third-party libraries to their latest versions.
