@@ -151,12 +151,14 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 
 == Changelog ==
 = 3.5.0 - 2026-09-29 =
-* Security: Hardened the widget preview in the design settings against script injection.
+* Security: Hardened the booking widget on your site against script injection.
 * Security: Blocked direct browser access to plugin files that could run code when opened directly.
 * Security: All REST API routes now explicitly check user permissions.
+* Security: The Plans & Prices page now loads the payment widget only from trusted SimplyBook.me sources.
 * Fixed: Console errors in the block editor on WordPress 7.1.
 * Fixed: Account creation now validates the exact email address you entered instead of a sanitized value.
 * Fixed: The plugin now stores its version correctly after an update.
+* Fixed: The provider limit message was shown twice in the Service Providers settings.
 * Added: kellydekker is added as contributor.
 * Added: "Remind me tomorrow" and "Don't show again" buttons to the trial expiration notice.
 * Added: Documentation of the external services the plugin uses in the readme.
@@ -164,9 +166,12 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Added: A README.md with setup, installation and contribution instructions.
 * Added: An error message with a retry button when the Plans & Prices page could not load.
 * Changed: The Plans & Prices page is now only shown after your site is connected to SimplyBook.me.
+* Changed: The block can now be added only once per page.
+* Changed: The buttons in the review and onboarding notices no longer reload the page.
+* Changed: The onboarding video now sets YouTube cookies only after you play the video.
 * Changed: Improved the wording of texts in the plugin.
+* Changed: Rewrote the plugin description and added more questions to the FAQ.
 * Changed: The marketing consent checkbox in the account setup is now unchecked by default.
-* Changed: The trial expiration notice is no longer shown on the plugin dashboard.
 * Changed: Installing a plugin from the "Other plugins" section no longer affects other WordPress behavior.
 * Changed: Made previously untranslated texts translatable.
 * Changed: Updated third-party libraries to their latest versions.
