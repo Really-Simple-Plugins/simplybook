@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-25T12:00:14+00:00\n"
+"POT-Creation-Date: 2026-09-29T08:10:42+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: simplybook\n"
@@ -401,7 +401,7 @@ msgstr ""
 msgid "Plans & Prices"
 msgstr ""
 
-#: app/Controllers/Gutenberg/GutenbergController.php:115
+#: app/Controllers/Gutenberg/GutenbergController.php:116
 msgid "You are not allowed to preview this widget."
 msgstr ""
 
@@ -535,28 +535,32 @@ msgstr ""
 msgid "An error occurred while trying to remove previous data."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:79
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:119
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:81
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:121
 msgid "Please fill in all fields."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:96
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:98
 msgid "Unknown error occurred, please verify your credentials."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:103
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:105
 msgid "Login successful."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:136
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:138
 msgid "Unknown 2FA error occurred, please verify your credentials."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:141
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:143
 msgid "Successfully authenticated user"
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:161
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:162
+msgid "Could not send the SMS code. Please try again."
+msgstr ""
+
+#: app/Features/Onboarding/Endpoints/AuthenticationEndpoints.php:165
 msgid "Successfully requested SMS code"
 msgstr ""
 
@@ -576,11 +580,11 @@ msgstr ""
 msgid "An error occurred while creating your account. Please try again."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:105
+#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:106
 msgid "Please enter a valid email address."
 msgstr ""
 
-#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:109
+#: app/Features/Onboarding/Endpoints/CreateAccountEndpoint.php:113
 msgid "Please accept the terms and conditions."
 msgstr ""
 
@@ -699,89 +703,89 @@ msgstr ""
 msgid "You are not authorized to do this."
 msgstr ""
 
-#: app/Http/ApiClient.php:563
+#: app/Http/ApiClient.php:565
 msgid "Please fill in all required fields to create an account."
 msgstr ""
 
-#: app/Http/ApiClient.php:570
+#: app/Http/ApiClient.php:574
 msgid "Too many attempts to register company, please try again in a minute."
 msgstr ""
 
-#: app/Http/ApiClient.php:584
+#: app/Http/ApiClient.php:589
 msgid "Account creation failed, could not verify installation."
 msgstr ""
 
-#: app/Http/ApiClient.php:609
+#: app/Http/ApiClient.php:613
 msgid "Company successfully registered."
 msgstr ""
 
-#: app/Http/ApiClient.php:621
+#: app/Http/ApiClient.php:626
 msgid "Company login was not available, retrying."
 msgstr ""
 
-#: app/Http/ApiClient.php:629
+#: app/Http/ApiClient.php:635
 msgid "Unknown error encountered while registering your company. Please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1104
+#: app/Http/ApiClient.php:1121
 msgid "Authentication failed, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1107
+#: app/Http/ApiClient.php:1124
 msgid "Please enter a valid domain."
 msgstr ""
 
-#: app/Http/ApiClient.php:1124
+#: app/Http/ApiClient.php:1144
 msgid "Login failed! Please try again later."
 msgstr ""
 
-#: app/Http/ApiClient.php:1127
+#: app/Http/ApiClient.php:1146
 msgid "Invalid response from SimplyBook.me"
 msgstr ""
 
-#: app/Http/ApiClient.php:1180
+#: app/Http/ApiClient.php:1203
 msgid "Two factor authentication failed! Please try again later."
 msgstr ""
 
-#: app/Http/ApiClient.php:1183
+#: app/Http/ApiClient.php:1205
 msgid "Invalid 2FA response from SimplyBook.me"
 msgstr ""
 
-#: app/Http/ApiClient.php:1208
+#: app/Http/ApiClient.php:1232
 msgid "No error received from remote."
 msgstr ""
 
-#: app/Http/ApiClient.php:1215
+#: app/Http/ApiClient.php:1239
 msgid "Invalid login or password, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1217
+#: app/Http/ApiClient.php:1241
 msgid "Incorrect 2FA authentication code, please try again."
 msgstr ""
 
-#: app/Http/ApiClient.php:1221
+#: app/Http/ApiClient.php:1245
 msgid "Too many login attempts. Verify your credentials and try again in a few minutes."
 msgstr ""
 
-#: app/Http/ApiClient.php:1224
+#: app/Http/ApiClient.php:1248
 msgid "Could not find a company associated with that company login."
 msgstr ""
 
-#: app/Http/ApiClient.php:1227
+#: app/Http/ApiClient.php:1251
 msgid "Authentication failed, please verify your credentials."
 msgstr ""
 
-#: app/Http/ApiClient.php:1304
+#: app/Http/ApiClient.php:1329
 #: react/build/843.4a492c2f8b957fb5a6c2.js:1
 #: react/src/components/Modals/SignInModal.jsx:14
 msgid "Google Authenticator"
 msgstr ""
 
-#: app/Http/ApiClient.php:1305
+#: app/Http/ApiClient.php:1330
 msgid "SMS"
 msgstr ""
 
-#: app/Http/ApiClient.php:1311
+#: app/Http/ApiClient.php:1336
 msgid "Unknown 2FA provider"
 msgstr ""
 
@@ -939,11 +943,11 @@ msgstr ""
 msgid "Failed to connect."
 msgstr ""
 
-#: app/Services/CreateAccountService.php:129
+#: app/Services/CreateAccountService.php:131
 msgid "Invalid response."
 msgstr ""
 
-#: app/Services/CreateAccountService.php:155
+#: app/Services/CreateAccountService.php:160
 msgid "Account registration failed. Please try again."
 msgstr ""
 
@@ -1999,224 +2003,224 @@ msgstr ""
 msgid "Calendar shortcode"
 msgstr ""
 
-#: config/fields/design.php:33
-#: config/fields/design.php:183
+#: config/fields/design.php:34
+#: config/fields/design.php:184
 msgid "Flexible"
 msgstr ""
 
-#: config/fields/design.php:34
-#: config/fields/design.php:181
+#: config/fields/design.php:35
+#: config/fields/design.php:182
 msgid "Modern"
 msgstr ""
 
-#: config/fields/design.php:35
-#: config/fields/design.php:179
+#: config/fields/design.php:36
+#: config/fields/design.php:180
 msgid "Flexible weekly"
 msgstr ""
 
-#: config/fields/design.php:36
-#: config/fields/design.php:184
+#: config/fields/design.php:37
+#: config/fields/design.php:185
 msgid "Slots weekly"
 msgstr ""
 
-#: config/fields/design.php:37
-#: config/fields/design.php:187
+#: config/fields/design.php:38
+#: config/fields/design.php:188
 msgid "Modern Provider"
 msgstr ""
 
-#: config/fields/design.php:38
-#: config/fields/design.php:180
+#: config/fields/design.php:39
+#: config/fields/design.php:181
 msgid "Flexible Provider"
 msgstr ""
 
-#: config/fields/design.php:39
-#: config/fields/design.php:185
+#: config/fields/design.php:40
+#: config/fields/design.php:186
 msgid "Weekly classes"
 msgstr ""
 
-#: config/fields/design.php:41
+#: config/fields/design.php:42
 msgid "Calendar layout"
 msgstr ""
 
-#: config/fields/design.php:50
+#: config/fields/design.php:51
 msgid "Datepicker type"
 msgstr ""
 
-#: config/fields/design.php:53
+#: config/fields/design.php:54
 msgid "Inline Datepicker"
 msgstr ""
 
-#: config/fields/design.php:54
+#: config/fields/design.php:55
 msgid "Top Calendar"
 msgstr ""
 
-#: config/fields/design.php:63
+#: config/fields/design.php:64
 msgid "RTL"
 msgstr ""
 
 #. translators: %s - IS or IS NOT
-#: config/fields/design.php:67
+#: config/fields/design.php:68
 #, php-format
 msgid "When selected, writing starts from the right of the page and continues to the left, proceeding from top to bottom for new lines. Your website %s set to RTL."
 msgstr ""
 
-#: config/fields/design.php:80
+#: config/fields/design.php:81
 msgid "Allow switch to ADA"
 msgstr ""
 
-#: config/fields/design.php:82
+#: config/fields/design.php:83
 msgid "This adds a button to enable accessibility mode, which increases contrast for visitors with a visual disability."
 msgstr ""
 
-#: config/fields/design.php:94
+#: config/fields/design.php:95
 msgid "Useful for in-store tablets, so each customer can make a new appointment without data from earlier ones."
 msgstr ""
 
-#: config/fields/design.php:97
+#: config/fields/design.php:98
 msgid "Clear the session of each widget initialization"
 msgstr ""
 
-#: config/fields/design.php:174
+#: config/fields/design.php:175
 msgid "Theme"
 msgstr ""
 
-#: config/fields/design.php:182
+#: config/fields/design.php:183
 msgid "Default"
 msgstr ""
 
-#: config/fields/design.php:186
+#: config/fields/design.php:187
 msgid "Daily classes"
 msgstr ""
 
-#: config/fields/design.php:188
+#: config/fields/design.php:189
 msgid "As slots"
 msgstr ""
 
-#: config/fields/design.php:189
+#: config/fields/design.php:190
 msgid "As table"
 msgstr ""
 
-#: config/fields/design.php:190
+#: config/fields/design.php:191
 msgid "Block"
 msgstr ""
 
-#: config/fields/design.php:191
+#: config/fields/design.php:192
 msgid "List"
 msgstr ""
 
-#: config/fields/design.php:192
+#: config/fields/design.php:193
 msgid "Single page"
 msgstr ""
 
-#: config/fields/design.php:193
+#: config/fields/design.php:194
 msgid "Base theme color"
 msgstr ""
 
-#: config/fields/design.php:194
+#: config/fields/design.php:195
 msgid "Show end time"
 msgstr ""
 
-#: config/fields/design.php:195
+#: config/fields/design.php:196
 msgid "Display calendar"
 msgstr ""
 
-#: config/fields/design.php:196
+#: config/fields/design.php:197
 msgid "Show only available time"
 msgstr ""
 
-#: config/fields/design.php:197
+#: config/fields/design.php:198
 msgid "Hide unavailable days on calendar"
 msgstr ""
 
-#: config/fields/design.php:198
+#: config/fields/design.php:199
 msgid "Display item mode"
 msgstr ""
 
-#: config/fields/design.php:199
+#: config/fields/design.php:200
 msgid "Body background color"
 msgstr ""
 
-#: config/fields/design.php:200
+#: config/fields/design.php:201
 msgid "Review image"
 msgstr ""
 
-#: config/fields/design.php:201
+#: config/fields/design.php:202
 msgid "Dark base font color"
 msgstr ""
 
-#: config/fields/design.php:202
+#: config/fields/design.php:203
 msgid "Light base font color"
 msgstr ""
 
-#: config/fields/design.php:203
+#: config/fields/design.php:204
 msgid "Buttons color"
 msgstr ""
 
-#: config/fields/design.php:204
+#: config/fields/design.php:205
 msgid "Company title color"
 msgstr ""
 
-#: config/fields/design.php:205
+#: config/fields/design.php:206
 msgid "Hide images on booking steps"
 msgstr ""
 
-#: config/fields/design.php:206
+#: config/fields/design.php:207
 msgid "Display calendar layout sidebar"
 msgstr ""
 
-#: config/fields/design.php:207
+#: config/fields/design.php:208
 msgid "Busy time color"
 msgstr ""
 
-#: config/fields/design.php:208
+#: config/fields/design.php:209
 msgid "Available time color"
 msgstr ""
 
-#: config/fields/design.php:209
+#: config/fields/design.php:210
 msgid "Index page content grid"
 msgstr ""
 
-#: config/fields/design.php:210
+#: config/fields/design.php:211
 msgid "Navigation color"
 msgstr ""
 
-#: config/fields/design.php:211
+#: config/fields/design.php:212
 msgid "Hide company title"
 msgstr ""
 
-#: config/fields/design.php:212
+#: config/fields/design.php:213
 msgid "Links color"
 msgstr ""
 
-#: config/fields/design.php:213
+#: config/fields/design.php:214
 msgid "Secondary color"
 msgstr ""
 
-#: config/fields/design.php:214
+#: config/fields/design.php:215
 msgid "Text color"
 msgstr ""
 
-#: config/fields/design.php:215
+#: config/fields/design.php:216
 msgid "Background image"
 msgstr ""
 
-#: config/fields/design.php:216
+#: config/fields/design.php:217
 msgid "Cancellation color"
 msgstr ""
 
-#: config/fields/design.php:217
+#: config/fields/design.php:218
 msgid "Image scale mode"
 msgstr ""
 
-#: config/fields/design.php:218
+#: config/fields/design.php:219
 msgid "Navigation background color"
 msgstr ""
 
-#: config/fields/design.php:219
+#: config/fields/design.php:220
 msgid "Second Base theme color"
 msgstr ""
 
-#: config/fields/design.php:220
+#: config/fields/design.php:221
 msgid "Header color"
 msgstr ""
 
