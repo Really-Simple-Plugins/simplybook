@@ -152,7 +152,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 == Changelog ==
 = 3.5.0 - 2026-09-29 =
 * Security: Hardened the widget preview in the design settings against script injection.
-* Security: Added direct file access protection to all plugin files.
+* Security: Blocked direct browser access to plugin files that could run code when opened directly.
 * Security: All REST API routes now explicitly check user permissions.
 * Fixed: Console errors in the block editor on WordPress 7.1.
 * Fixed: Account creation now validates the exact email address you entered instead of a sanitized value.
