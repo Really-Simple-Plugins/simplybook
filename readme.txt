@@ -168,7 +168,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Changed: The Plans & Prices page is now only shown after your site is connected to SimplyBook.me.
 * Changed: The block can now be added only once per page.
 * Changed: The buttons in the review and onboarding notices no longer reload the page.
-* Changed: The onboarding video now sets YouTube cookies only after you play the video.
+* Changed: The onboarding video now loads from youtube-nocookie.com.
 * Changed: Improved the wording of texts in the plugin.
 * Changed: Rewrote the plugin description and added more questions to the FAQ.
 * Changed: The marketing consent checkbox in the account setup is now unchecked by default.
