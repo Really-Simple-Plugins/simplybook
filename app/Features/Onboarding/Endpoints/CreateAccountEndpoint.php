@@ -72,7 +72,7 @@ class CreateAccountEndpoint implements SingleEndpointInterface
             $captchaToken = $storage->getString('captcha_token');
 
             $company = $this->getNewCompanyObject(
-                $storage->getEmail('email'),
+                $storage->getString('email', '', true),
                 $storage->getBoolean('terms-and-conditions'),
                 $storage->getBoolean('marketing-consent')
             );
