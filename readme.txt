@@ -155,6 +155,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 * Security: Added direct file access protection to all plugin files.
 * Security: All REST API routes now explicitly check user permissions.
 * Fixed: Console errors in the block editor on WordPress 7.1.
+* Fixed: Account creation now validates the exact email address you entered instead of a sanitized value.
 * Fixed: The plugin now stores its version correctly after an update.
 * Added: kellydekker is added as contributor.
 * Added: "Remind me tomorrow" and "Don't show again" buttons to the trial expiration notice.
