@@ -248,37 +248,4 @@ final class Plugin
             \SimplyBook\Abilities\Tasks\UpdateTaskStatusAbility::class,
         ]);
     }
-
-    /**
-     * Register the plugins listeners. The base plugin does not have any
-     * listeners yet. Currently used to hook listeners from Features into
-     * the registering process.
-     */
-    public function registerListeners(): void
-    {
-        $this->listenerManager->register([]);
-    }
-
-    /**
-     * Register the plugins Abilities with the WP Abilities API. Hooked into
-     * init so Features and Controllers can register their own Abilities via
-     * the simplybook_plugin_abilities filter and translations can be used.
-     */
-    public function registerAbilities(): void
-    {
-        $this->abilitiesManager->register([
-            \SimplyBook\Abilities\Design\ListDesignSettingsAbility::class,
-            \SimplyBook\Abilities\Design\UpdateDesignSettingsAbility::class,
-            \SimplyBook\Abilities\Providers\ListProvidersAbility::class,
-            \SimplyBook\Abilities\Providers\UpdateProviderAbility::class,
-            \SimplyBook\Abilities\Schedule\GetAvailableSlotsAbility::class,
-            \SimplyBook\Abilities\Schedule\GetScheduleAbility::class,
-            \SimplyBook\Abilities\Services\ListServicesAbility::class,
-            \SimplyBook\Abilities\Services\UpdateServiceAbility::class,
-            \SimplyBook\Abilities\Statistics\CountRecentBookingsAbility::class,
-            \SimplyBook\Abilities\Statistics\GetStatisticsAbility::class,
-            \SimplyBook\Abilities\Tasks\ListTasksAbility::class,
-            \SimplyBook\Abilities\Tasks\UpdateTaskStatusAbility::class,
-        ]);
-    }
 }
