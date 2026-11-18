@@ -31,7 +31,7 @@ class AddAllServicesTask extends AbstractTask
         return [
             'type' => 'button',
             'text' => __('Add Services', 'simplybook'),
-            'link' => 'settings/services'
+            'link' => 'settings/services',
         ];
     }
 }
