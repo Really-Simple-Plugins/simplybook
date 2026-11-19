@@ -21,7 +21,7 @@
         "nesbot/carbon": "*"
     },
     "require-dev": {
-        "phpcompatibility/php-compatibility": "^9.3",
+        "phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
         "phpmd/phpmd": "^2.15",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
@@ -58,5 +58,7 @@
         "quality:diagnose": "vendor/bin/phpstan diagnose --memory-limit=2048M",
         "mess": "vendor/bin/phpmd app,bootstrap,simplybook.php ansi phpmd.xml.dist",
         "mess:report": "vendor/bin/phpmd app,bootstrap,simplybook.php checkstyle phpmd.xml.dist --reportfile phpmd-checkstyle.xml"
-    }
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true
 }
