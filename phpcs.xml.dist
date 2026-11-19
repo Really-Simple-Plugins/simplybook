@@ -63,7 +63,7 @@
     <exclude-pattern>simplybook.php</exclude-pattern>
     </rule>
 
-    <!-- PHPCompatibility:  -->
-    <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.4-8.3"/>
+    <!-- PHPCompatibility: WP ruleset ignores what WordPress core polyfills -->
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="7.4-8.6"/>
 </ruleset>
