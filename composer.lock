@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "eae878ff7f5ed8fc325e47ac1233834e",
+    "content-hash": "bc39d7e5c1fb498ccf8c1e1b4dc51e0f",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -1671,7 +1671,8 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-10T14:14:11+00:00"
+            "time": "2025-10-10T14:14:11+00:00",
+            "published-time": "2025-10-10T14:14:22+00:00"
         },
         {
             "name": "psr/container",
@@ -2469,7 +2470,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.4, <=8.3",
+        "php": ">=7.4",
         "ext-json": "*"
     },
     "platform-dev": {},
