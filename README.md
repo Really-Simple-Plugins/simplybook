@@ -88,6 +88,7 @@ Run these commands from the plugin root. All checks must pass before you open a 
 | Command |  |
 | - | - |
 | `composer lint` | PHP_CodeSniffer |
+| `composer lint:fix` | PHP Code Beautifier and Fixer. Fixes the PHP_CodeSniffer problems it can fix. |
 | `composer quality` | PHPStan |
 | `composer mess` | PHP Mess Detector |
 
