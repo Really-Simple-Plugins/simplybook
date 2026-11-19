@@ -21,6 +21,7 @@
         "nesbot/carbon": "*"
     },
     "require-dev": {
+        "php-stubs/wordpress-stubs": "6.8.2",
         "phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
         "phpmd/phpmd": "^2.15",
         "phpstan/extension-installer": "^1.4",
