@@ -24,7 +24,7 @@ return (static function (): array {
         'plugin' => [
             'name' => 'SimplyBook.me',
             'namespace' => 'simplybook',
-            'version' => '3.5.0',
+            'version' => '3.5.1',
             'path' => dirname(__DIR__),
             'base_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . plugin_basename(dirname(__DIR__)) . '.php',
             'assets_path' => dirname(__DIR__) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR,
