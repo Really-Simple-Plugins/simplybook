@@ -1000,8 +1000,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-05-06T08:26:05+00:00",
-            "published-time": "2026-05-06T12:56:03+00:00"
+            "time": "2026-05-06T08:26:05+00:00"
         },
         {
             "name": "pdepend/pdepend",
@@ -1205,8 +1204,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2025-11-28T11:36:33+00:00",
-            "published-time": "2025-11-28T11:41:33+00:00"
+            "time": "2025-11-28T11:36:33+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-paragonie",
@@ -1277,8 +1275,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-11-17T20:00:34+00:00",
-            "published-time": "2026-11-17T20:01:34+00:00"
+            "time": "2026-11-17T20:00:34+00:00"
         },
         {
             "name": "phpcompatibility/phpcompatibility-wp",
@@ -1345,8 +1342,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-11-17T21:25:26+00:00",
-            "published-time": "2026-11-17T21:27:01+00:00"
+            "time": "2026-11-17T21:25:26+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -1439,8 +1435,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-07-27T10:28:41+00:00",
-            "published-time": "2026-07-27T10:36:31+00:00"
+            "time": "2026-07-27T10:28:41+00:00"
         },
         {
             "name": "phpmd/phpmd",
@@ -1682,8 +1677,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-11-19T10:31:11+00:00",
-            "published-time": "2026-11-19T10:31:27+00:00"
+            "time": "2026-11-19T10:31:11+00:00"
         },
         {
             "name": "psr/container",
@@ -1925,8 +1919,7 @@
                     "type": "thanks_dev"
                 }
             ],
-            "time": "2026-08-06T00:17:32+00:00",
-            "published-time": "2026-08-06T01:05:02+00:00"
+            "time": "2026-08-06T00:17:32+00:00"
         },
         {
             "name": "symfony/config",
@@ -2470,8 +2463,7 @@
                 "issues": "https://github.com/szepeviktor/phpstan-wordpress/issues",
                 "source": "https://github.com/szepeviktor/phpstan-wordpress/tree/v2.0.4"
             },
-            "time": "2026-05-22T16:22:09+00:00",
-            "published-time": "2026-08-28T06:48:49+00:00"
+            "time": "2026-05-22T16:22:09+00:00"
         }
     ],
     "aliases": [],
@@ -2489,5 +2481,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.11.0"
+    "plugin-api-version": "2.9.0"
 }
