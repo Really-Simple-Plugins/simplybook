@@ -14,7 +14,7 @@ This repository is the publicly available source code of the SimplyBook.me WordP
 ## Requirements
 
 - WordPress 6.6 or higher
-- PHP 7.4 up to 8.3
+- PHP 7.4 or higher
 - A SimplyBook.me account. You can create a free account on [simplybook.me](https://simplybook.me/), or from this plugin.
 
 ## Install a release from GitHub
