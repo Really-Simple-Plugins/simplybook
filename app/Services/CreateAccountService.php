@@ -59,7 +59,7 @@ class CreateAccountService
         }
 
         if (!empty($language)) {
-            $requestBody['language'] = sanitize_key($language);
+            $requestBody['lang'] = sanitize_key($language);
         }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken, $userAgent);
