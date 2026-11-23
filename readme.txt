@@ -152,7 +152,7 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 == Changelog ==
 
 = 3.5.1 - 2026-11-23 =
-* Added: Account confirmation e-mails are now available in English, Spanish, French, German, Italian, Danish and Dutch.
+* Added: Account confirmation e-mails are now available in English, Spanish, French, German, Italian, and Dutch.
 * Changed: The plugin's PHP requirements now correctly show support for PHP 8.4 and higher.
 * Changed: The "Add Services" and "Add Providers" tasks now link to the plugin settings instead of an external page.
 
