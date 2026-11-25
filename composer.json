@@ -1,6 +1,6 @@
 {
     "name": "really-simple-plugins/simplybookme",
-    "version": "3.5.0",
+    "version": "3.5.1",
     "description": "Simply add a booking calendar to your site to schedule bookings, reservations, appointments and to collect payments.",
     "type": "wordpress-plugin",
     "license": "GPL-2.0-or-later",
@@ -14,14 +14,15 @@
         }
     ],
     "require": {
-        "php": ">=7.4, <=8.3",
+        "php": ">=7.4",
         "ext-json": "*",
         "adbario/php-dot-notation": "*",
         "automattic/jetpack-autoloader": "^6",
         "nesbot/carbon": "*"
     },
     "require-dev": {
-        "phpcompatibility/php-compatibility": "^9.3",
+        "php-stubs/wordpress-stubs": "6.8.2",
+        "phpcompatibility/phpcompatibility-wp": "^3.0@alpha",
         "phpmd/phpmd": "^2.15",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
@@ -52,10 +53,13 @@
         "lint:report": "vendor/bin/phpcs --report=full --report-file=phpcs-report.txt",
         "lint:summary": "vendor/bin/phpcs --report=summary",
         "lint:summary:report": "vendor/bin/phpcs --report=summary --report-file=phpcs-report.txt",
+        "lint:fix": "vendor/bin/phpcbf",
         "quality": "vendor/bin/phpstan analyse --memory-limit=2048M",
         "quality:report": "vendor/bin/phpstan analyse --memory-limit=2048M > phpstan-report.txt",
         "quality:diagnose": "vendor/bin/phpstan diagnose --memory-limit=2048M",
         "mess": "vendor/bin/phpmd app,bootstrap,simplybook.php ansi phpmd.xml.dist",
         "mess:report": "vendor/bin/phpmd app,bootstrap,simplybook.php checkstyle phpmd.xml.dist --reportfile phpmd-checkstyle.xml"
-    }
+    },
+    "minimum-stability": "alpha",
+    "prefer-stable": true
 }

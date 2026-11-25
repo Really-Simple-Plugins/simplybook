@@ -38,7 +38,8 @@ class CreateAccountService
         string $callbackUrl,
         string $captchaToken = '',
         ?int $category = null,
-        string $userAgent = ''
+        string $userAgent = '',
+        string $language = ''
     ): array {
         // Sanitize inputs
         $sanitizedCompanyLogin = sanitize_text_field($companyLogin);
@@ -55,6 +56,10 @@ class CreateAccountService
 
         if (is_int($category) && $category > 0) {
             $requestBody['category'] = $category;
+        }
+
+        if (!empty($language)) {
+            $requestBody['lang'] = sanitize_key($language);
         }
 
         return $this->request('POST', self::ENDPOINT_COMPANY, $requestBody, $sanitizedCompanyLogin, $captchaToken, $userAgent);

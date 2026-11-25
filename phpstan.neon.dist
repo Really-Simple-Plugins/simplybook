@@ -1,4 +1,7 @@
 parameters:
+    phpVersion:
+        min: 70400
+        max: 80500
     level: 6
     paths:
         - simplybook.php

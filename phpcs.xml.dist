@@ -58,12 +58,12 @@
         </properties>
     </rule>
 
-    <!-- Side-effects guard; excluding front controller/bootstrapper -->
-    <rule ref="PSR1.Files.SideEffects">
-    <exclude-pattern>simplybook.php</exclude-pattern>
+    <!-- Side-effects: ABSPATH protection is required by WordPress in every PHP file -->
+    <rule ref="PSR1.Files">
+        <exclude name="PSR1.Files.SideEffects"/>
     </rule>
 
-    <!-- PHPCompatibility:  -->
-    <rule ref="PHPCompatibility"/>
-    <config name="testVersion" value="7.4-8.3"/>
+    <!-- PHPCompatibility: WP ruleset ignores what WordPress core polyfills -->
+    <rule ref="PHPCompatibilityWP"/>
+    <config name="testVersion" value="7.4-8.6"/>
 </ruleset>
