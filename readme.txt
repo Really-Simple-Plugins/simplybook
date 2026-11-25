@@ -5,7 +5,7 @@ Tags: Booking, Calendar, Scheduling, Reservations, Appointments
 Requires at least: 6.6
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 3.5.0
+Stable tag: 3.5.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -150,6 +150,12 @@ Step-by-step instructions with screenshots are available in the [SimplyBook.me h
 5. Your appointments schedule is also accessible via the mobile app!
 
 == Changelog ==
+
+= 3.5.1 - 2026-11-25 =
+* Added: Account confirmation e-mails are now available in English, Spanish, French, German, Italian, and Dutch.
+* Changed: The plugin's PHP requirements now correctly show support for PHP 8.4 and higher.
+* Changed: The "Add Services" and "Add Providers" tasks now link to the plugin settings instead of the SimplyBook admin portal.
+
 = 3.5.0 - 2026-09-29 =
 * Security: Hardened the booking widget on your site against script injection.
 * Security: Blocked direct browser access to plugin files that could run code when opened directly.

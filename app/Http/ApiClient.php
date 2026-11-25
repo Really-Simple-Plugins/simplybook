@@ -603,7 +603,8 @@ class ApiClient
             $callbackUrl,
             $captchaToken,
             $company->category,
-            $userAgent
+            $userAgent,
+            $this->get_locale()
         );
 
         $response = (object) $rawResponse['body'];
